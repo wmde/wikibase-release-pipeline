@@ -8,4 +8,4 @@ ROOT=`pwd`
 WIKIBASE_PATH="$ROOT/Wikibase"
 
 chmod a+rw -R core
-docker run -it -v "$ROOT/core:/workspace/src" -v "$WIKIBASE_PATH:/workspace/src/extensions/Wikibase" -v "$ROOT/Vector:/workspace/src/skins/Vector/" docker-registry.wikimedia.org/releng/quibble-stretch-php73 --packages-source composer --db sqlite --skip-zuul
+docker run -v "$ROOT/core:/workspace/src" -v "$WIKIBASE_PATH:/workspace/src/extensions/Wikibase" -v "$ROOT/Vector:/workspace/src/skins/Vector/" docker-registry.wikimedia.org/releng/quibble-stretch-php73 --packages-source composer --db sqlite --skip-zuul
