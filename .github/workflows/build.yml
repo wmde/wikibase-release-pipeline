@@ -23,10 +23,12 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Build Wikibase
         run: bash build.sh REL1_35
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
           path: Wikibase.tar.gz
+      - name: Test
+        run: bash test.sh
