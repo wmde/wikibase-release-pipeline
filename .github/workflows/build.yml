@@ -24,4 +24,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: bash build.sh
+        run: bash build.sh REL1_35
