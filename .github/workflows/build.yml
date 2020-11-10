@@ -27,7 +27,7 @@ jobs:
         env:
           cache-name: cache-git-repos
         with:
-          path: ~/git_cache
+          path: git_cache
           key: cache-git-repos
 
       - name: Update the git cache
