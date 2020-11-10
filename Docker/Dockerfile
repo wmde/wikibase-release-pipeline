@@ -8,7 +8,7 @@ COPY Wikibase.tar.gz .
 RUN tar xzf Wikibase.tar.gz
 
 FROM mediawiki:1.35 as collector
-COPY Wikibase /var/www/html/extensions/Wikibase
+COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 
 
 FROM composer:1 as composer
