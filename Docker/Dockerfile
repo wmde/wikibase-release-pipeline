@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install --yes --no-install-recommends unzip=6.* jq=1.* curl=7.* ca-certificates=201* && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY ../Wikibase.tar.gz .
+COPY Wikibase.tar.gz .
 RUN tar xzf Wikibase.tar.gz
 
 FROM mediawiki:1.35 as collector
