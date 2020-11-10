@@ -11,13 +11,15 @@ ENV_FILE="$ROOT/wikibase.env"
 
 #chmod a+rw -R core -f || :
 chmod a+rw -R git_cache
+chmod a+rw -R cache
 
 #rm "$ROOT/core/LocalSettings.php"
 
 #docker run --env-file "$ENV_FILE"  -v "$ROOT/core:/workspace/src" -v "$WIKIBASE_PATH:/workspace/src/extensions/Wikibase" -v "$ROOT/Vector:/workspace/src/skins/Vector/" docker-registry.wikimedia.org/releng/quibble-stretch-php73 mediawiki/extensions/Wikibase --packages-source composer --db sqlite --skip-zuul --skip selenium,npm-test,phpunit-standalone,api-testing ----project-branch REL1_35
 
 docker run --env-file "$ENV_FILE" \
-	-v "$ROOT/git_cache:/srv/git:ro" \
+	-v "$ROOT"/cache:/cache \
+	-v "$ROOT"/git_cache:/srv/git:ro \
 	--security-opt label=disable \
 	docker-registry.wikimedia.org/releng/quibble-stretch-php73 \
 	--packages-source composer \
