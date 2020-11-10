@@ -15,13 +15,13 @@ if [ ! -d git_cache/mediawiki/skins/Vector.git ]; then
 fi
 
 cd git_cache/mediawiki/core.git
-git pull
+git fetch --all
 cd -
 
 cd git_cache/mediawiki/vendor.git
-git pull
+git fetch --all
 cd -
 
 cd git_cache/mediawiki/skins/Vector.git
-git pull
+git fetch --all
 cd -
