@@ -20,7 +20,6 @@ docker run --env-file "$ENV_FILE" \
 	--packages-source composer \
 	--db "$1" \
 	--git-cache /srv/git \
-	--run phpunit \
 	--project-branch mediawiki/core="$BRANCH" \
 	--project-branch mediawiki/extensions/UniversalLanguageSelector="$BRANCH" \
 	--project-branch mediawiki/extensions/WikibaseCirrusSearch="$BRANCH" \
