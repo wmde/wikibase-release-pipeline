@@ -52,10 +52,10 @@ jobs:
           path: Wikibase.tar.gz
 
       - name: Build Docker image
-        run: bash build_docker.sh Wikibase
+        run: bash build_docker.sh wikibase
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Docker Image
-          path: Wikibase.docker.tar.gz
+          path: wikibase.docker.tar.gz
