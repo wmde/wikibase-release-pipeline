@@ -32,4 +32,4 @@ CONTAINER_ID=`cat container_id`
 
 docker start "$CONTAINER_ID"
 docker cp "$CONTAINER_ID":/workspace/src/extensions/Wikibase /tmp/
-GZIP=-9 tar -zcvf Wikibase.tar.gz /tmp/Wikibase
+GZIP=-9 tar -C /tmp -zcvf Wikibase.tar.gz Wikibase
