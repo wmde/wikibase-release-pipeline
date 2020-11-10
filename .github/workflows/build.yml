@@ -26,7 +26,7 @@ jobs:
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
-      - name: Cache git repos
+      - name: Cache git_cache repos
         uses: actions/cache@v2
         env:
           cache-name: cache-git-repos
@@ -44,13 +44,12 @@ jobs:
 
       - name: Update the git cache
         run: bash update_cache.sh
-      # Runs a single command using the runners shell
-      - name: Build Wikibase
-        run: bash build.sh REL1_35
+
+      - name: Build
+        run: bash build.sh
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
           path: Wikibase.tar.gz
-      - name: Test
-        run: bash test.sh
