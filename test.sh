@@ -10,8 +10,7 @@ rm container_id -f
 
 mkdir cache -p
 
-chmod a+rw -R git_cache
-chmod a+rw -R cache
+chmod a+rw -R git_cache cache
 
 docker run --env-file "$ENV_FILE" \
 	--cidfile "$ROOT/container_id" \
