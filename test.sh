@@ -5,7 +5,7 @@ ROOT=`pwd`
 BRANCH="REL1_35"
 ENV_FILE="$ROOT/wikibase.env"
 
-#remove previous container id file
+# Remove previous container id file
 rm container_id -f
 
 mkdir cache -p
