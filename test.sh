@@ -19,6 +19,7 @@ docker run --env-file "$ENV_FILE" \
 	docker-registry.wikimedia.org/releng/quibble-stretch-php73 \
 	--packages-source composer \
 	--db sqlite \
+	--git-cache /srv/git \
 	--skip all \
 	--project-branch mediawiki/core="$BRANCH" \
 	--project-branch mediawiki/extensions/UniversalLanguageSelector="$BRANCH" \
