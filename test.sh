@@ -8,6 +8,8 @@ ENV_FILE="$ROOT/wikibase.env"
 #remove previous container id file
 rm container_id -f
 
+mkdir cache -p
+
 chmod a+rw -R git_cache
 chmod a+rw -R cache
 
