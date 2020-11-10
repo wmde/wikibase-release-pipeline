@@ -34,6 +34,14 @@ jobs:
           path: git_cache
           key: cache-git-repos
 
+      - name: Cache quibble cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-quibble-cache
+        with:
+          path: cache
+          key: ${{ runner.os }}-cache-quibble-cache
+
       - name: Update the git cache
         run: bash update_cache.sh
       # Runs a single command using the runners shell
