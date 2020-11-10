@@ -1,6 +1,7 @@
 #!/bin/bash
 
-docker pull docker-registry.wikimedia.org/releng/quibble-stretch-php73:latest
+DOCKER_IMAGE_NAME="docker-registry.wikimedia.org/releng/quibble-stretch-php$2:latest"
+docker pull "$DOCKER_IMAGE_NAME"
 
 ROOT=`pwd`
 BRANCH="REL1_35"
@@ -15,7 +16,7 @@ docker run --env-file "$ENV_FILE" \
 	-v "$ROOT"/cache:/cache \
 	-v "$ROOT"/git_cache:/srv/git:ro \
 	--security-opt label=disable \
-	docker-registry.wikimedia.org/releng/quibble-stretch-php73 \
+	"$DOCKER_IMAGE_NAME" \
 	--packages-source composer \
 	--db "$1" \
 	--git-cache /srv/git \

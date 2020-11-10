@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         db: [sqlite, mysql]
+        php: [73, 74]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,5 +46,5 @@ jobs:
       - name: Update the git cache
         run: bash update_cache.sh
 
-      - name: Test ${{ matrix.db }}
-        run: bash test.sh ${{ matrix.db }}
+      - name: Test ${{ matrix.db }} with PHP ${{ matrix.php }}
+        run: bash test.sh ${{ matrix.db }} ${{ matrix.php }}
