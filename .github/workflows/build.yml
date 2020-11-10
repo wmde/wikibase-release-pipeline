@@ -22,6 +22,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Cache git repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-git-repos
+        with:
+          path: ~/git_cache
+          key: cache-git-repos
+
+      - name: Update the git cache
+        run: bash update_cache.sh
       # Runs a single command using the runners shell
       - name: Build Wikibase
         run: bash build.sh REL1_35
