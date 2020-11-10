@@ -19,6 +19,7 @@ docker run --env-file "$ENV_FILE" \
 	"$DOCKER_IMAGE_NAME" \
 	--packages-source composer \
 	--db "$1" \
+	--skip selenium \
 	--git-cache /srv/git \
 	--project-branch mediawiki/core="$BRANCH" \
 	--project-branch mediawiki/extensions/UniversalLanguageSelector="$BRANCH" \

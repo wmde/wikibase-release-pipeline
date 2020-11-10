@@ -42,7 +42,7 @@ jobs:
       - name: Update the git cache
         run: bash update_cache.sh
 
-      - name: Build
+      - name: Build Tarball
         run: bash build.sh
 
       - name: Archive tar production artifacts
