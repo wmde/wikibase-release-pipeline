@@ -13,6 +13,9 @@ jobs:
   test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        db: [sqlite, mysql]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -42,5 +45,5 @@ jobs:
       - name: Update the git cache
         run: bash update_cache.sh
 
-      - name: Build
-        run: bash test.sh
+      - name: Test ${{ matrix.db }}
+        run: bash test.sh ${{ matrix.db }}

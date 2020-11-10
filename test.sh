@@ -17,7 +17,7 @@ docker run --env-file "$ENV_FILE" \
 	--security-opt label=disable \
 	docker-registry.wikimedia.org/releng/quibble-stretch-php73 \
 	--packages-source composer \
-	--db sqlite \
+	--db "$1" \
 	--git-cache /srv/git \
 	--run phpunit \
 	--project-branch mediawiki/core="$BRANCH" \
