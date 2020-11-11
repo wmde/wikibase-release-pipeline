@@ -22,11 +22,6 @@ docker run --env-file "$ENV_FILE" \
 	--db sqlite \
 	--git-cache /srv/git \
 	--skip all \
-	--project-branch mediawiki/core="$BRANCH" \
-	--project-branch mediawiki/extensions/UniversalLanguageSelector="$BRANCH" \
-	--project-branch mediawiki/extensions/WikibaseCirrusSearch="$BRANCH" \
-	--project-branch mediawiki/extensions/cldr="$BRANCH" \
-	mediawiki/extensions/UniversalLanguageSelector mediawiki/extensions/WikibaseCirrusSearch mediawiki/extensions/cldr
 
 CONTAINER_ID=`cat container_id`
 
