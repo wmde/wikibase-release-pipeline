@@ -1,0 +1,54 @@
+# Wikibase For testing
+version: '3'
+
+services:
+  wikibase:
+    image: wikibase:latest
+    links:
+      - mysql
+    ports:
+    # CONFIG - Change the 8181 here to expose Wikibase & MediaWiki on a different port
+     - "8181:80"
+    volumes:
+      - mediawiki-images-data:/var/www/html/images
+    depends_on:
+    - mysql
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+         - wikibase.svc
+         # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
+    environment:
+      - DB_SERVER=mysql.svc:3306
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
+      # CONFIG - Change the default values below
+      - MW_ADMIN_NAME=WikibaseAdmin
+      - MW_ADMIN_PASS=WikibaseDockerAdminPass
+      - MW_ADMIN_EMAIL=admin@example.com
+      - MW_WG_SECRET_KEY=secretkey
+      # CONFIG - Change the default values below (should match mysql values in this file)
+      - DB_USER=wikiuser
+      - DB_PASS=sqlpass
+      - DB_NAME=my_wiki
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
+  mysql:
+    image: mariadb:10.3
+    restart: unless-stopped
+    volumes:
+      - mediawiki-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      # CONFIG - Change the default values below (should match values passed to wikibase)
+      MYSQL_DATABASE: 'my_wiki'
+      MYSQL_USER: 'wikiuser'
+      MYSQL_PASSWORD: 'sqlpass'
+    networks:
+      default:
+        aliases:
+         - mysql.svc
+
+volumes:
+  mediawiki-mysql-data:
+  mediawiki-images-data:
