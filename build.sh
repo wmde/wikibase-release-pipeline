@@ -30,6 +30,5 @@ docker run --env-file "$ENV_FILE" \
 
 CONTAINER_ID=`cat container_id`
 
-docker start "$CONTAINER_ID"
 docker cp "$CONTAINER_ID":/workspace/src/extensions/Wikibase /tmp/
 GZIP=-9 tar -C /tmp -zcvf Wikibase.tar.gz Wikibase
