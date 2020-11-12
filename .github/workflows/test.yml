@@ -3,10 +3,11 @@ name: Test
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["Build"]
+    branches: [main]
+    types: 
+      - completed
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,5 +47,5 @@ jobs:
       - name: Update the git cache
         run: bash update_cache.sh
 
-      - name: Test ${{ matrix.db }} with PHP ${{ matrix.php }}
-        run: bash test.sh ${{ matrix.db }} ${{ matrix.php }}
+      #- name: Test ${{ matrix.db }} with PHP ${{ matrix.php }}
+      #  run: bash test.sh ${{ matrix.db }} ${{ matrix.php }}
