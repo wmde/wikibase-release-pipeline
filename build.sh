@@ -10,7 +10,7 @@ rm container_id -f
 
 mkdir cache -p
 
-chmod a+rw -R git_cache cache
+chmod a+rw -R --silent git_cache cache
 
 docker run --env-file "$ENV_FILE" \
 	--cidfile "$ROOT/container_id" \
@@ -22,8 +22,14 @@ docker run --env-file "$ENV_FILE" \
 	--db sqlite \
 	--git-cache /srv/git \
 	--skip all \
+	--skip-install
 
+# copy cloned repo and remove container
 CONTAINER_ID=`cat container_id`
-
 docker cp "$CONTAINER_ID":/workspace/src/extensions/Wikibase /tmp/
+docker rm -f "$CONTAINER_ID"
+
+# remove git things from release package
+rm /tmp/Wikibase/.git* -rfv
+
 GZIP=-9 tar -C /tmp -zcvf Wikibase.tar.gz Wikibase

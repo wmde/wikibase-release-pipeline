@@ -6,3 +6,4 @@ git_cache
 container_id
 *.swp
 Wikibase.tar.gz
+*.docker.tar.gz

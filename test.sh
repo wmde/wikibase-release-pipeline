@@ -9,7 +9,7 @@ ENV_FILE="$ROOT/wikibase.env"
 
 mkdir cache -p
 
-chmod a+rw -R git_cache cache
+chmod a+rw -R --silent git_cache cache
 
 docker run --env-file "$ENV_FILE" \
 	--cidfile "$ROOT/container_id" \
@@ -26,3 +26,7 @@ docker run --env-file "$ENV_FILE" \
 	--project-branch mediawiki/extensions/WikibaseCirrusSearch="$BRANCH" \
 	--project-branch mediawiki/extensions/cldr="$BRANCH" \
 	mediawiki/extensions/UniversalLanguageSelector mediawiki/extensions/WikibaseCirrusSearch mediawiki/extensions/cldr
+
+CONTAINER_ID=`cat container_id`
+
+docker rm -f "$CONTAINER_ID"
