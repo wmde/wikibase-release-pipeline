@@ -1,6 +1,6 @@
 #!/bin/sh
 
 mv Wikibase.tar.gz Docker
-docker build Docker/ -t "$1"
+docker build Docker/ -t "$WIKIBASE_IMAGE_NAME"
 
-docker save "$1" | gzip -9f > "$1".docker.tar.gz
+docker save "$WIKIBASE_IMAGE_NAME" | gzip -9f > "$WIKIBASE_IMAGE_NAME".docker.tar.gz

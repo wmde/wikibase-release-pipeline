@@ -3,7 +3,7 @@ version: '3'
 
 services:
   wikibase:
-    image: wikibase:latest
+    image: ${WIKIBASE_IMAGE_NAME}
     links:
       - mysql
     ports:

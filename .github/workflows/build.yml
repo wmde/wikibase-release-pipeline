@@ -8,9 +8,13 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  WIKIBASE_IMAGE_NAME: wikibase
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -59,3 +63,12 @@ jobs:
         with:
           name: Wikibase Docker Image
           path: wikibase.docker.tar.gz
+  test:
+    needs: build
+    steps:
+      - name: Get docker artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Wikibase Docker Image
+      - name: Run Docker Tests
+        run: bash test_docker.sh 
