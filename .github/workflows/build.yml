@@ -65,10 +65,12 @@ jobs:
           path: wikibase.docker.tar.gz
   test:
     needs: build
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Get docker artifact
         uses: actions/download-artifact@v2
         with:
           name: Wikibase Docker Image
       - name: Run Docker Tests
-        run: bash test_docker.sh 
+        run: bash test_docker.sh
