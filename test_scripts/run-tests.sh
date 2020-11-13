@@ -1,2 +1,7 @@
 #!/bin/bash
-curl --fail --show-error --output /dev/null --silent $WIKIBASE_SERVER/wiki/Main_Page
+if curl --fail --show-error --output /dev/null --silent $WIKIBASE_SERVER/wiki/Main_Page; then
+    echo 'Successfully loaded the wiki main page!'
+else
+    echo "Could not retrieve main page"
+    exit 1
+fi
