@@ -2,11 +2,18 @@ name: Build QueryService UI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
+#on:
+#  push:
+#    branches: [ queryservice-ui ]
+#  pull_request:
+#    branches: [ main ]
+
 on:
-  push:
-    branches: [ queryservice-ui ]
-  pull_request:
+  workflow_run:
+    workflows: [ "Build Wikibase" ]
     branches: [ main ]
+    types: 
+      - completed
 
 env:
   IMAGE_NAME: wdqs-ui

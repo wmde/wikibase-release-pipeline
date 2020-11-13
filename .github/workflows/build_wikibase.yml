@@ -4,9 +4,9 @@ name: Build Wikibase
 # events but only for the main branch
 on:
   push:
-    branches: [ main, queryservice-wip ]
-  pull_request:
     branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
 
 env:
   WIKIBASE_IMAGE_NAME: wikibase
