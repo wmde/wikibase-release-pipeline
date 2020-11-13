@@ -25,3 +25,7 @@ volume as `/srv/git` and the `cache` dir in read-write mode:
 `
 Commands write logs into `/workspace/log`, you can create one on the host and
 mount it in the container:
+
+# list artifacts for the repository
+
+https://api.github.com/repos/wmde/wikibase-release-prototype/actions/artifacts
