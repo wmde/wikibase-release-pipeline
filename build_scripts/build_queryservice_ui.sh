@@ -10,5 +10,4 @@ rm -rfv "$TEMP_DIR/.git"
 rm -fv "$TEMP_DIR/.gitignore"
 
 GZIP=-9 tar -C "$TEMP_DIR" -zcvf $TARBALL_PATH .
-echo $TARBALL_PATH
-echo "TARBALL_PATH="TARBALL_PATH"" >> $GITHUB_ENV
+echo "TARBALL_PATH="$TARBALL_PATH"" >> $GITHUB_ENV
