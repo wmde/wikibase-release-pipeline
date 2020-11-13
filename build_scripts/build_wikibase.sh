@@ -1,9 +1,10 @@
 #!/bin/bash
 docker pull docker-registry.wikimedia.org/releng/quibble-stretch-php73:latest
 
-ROOT=`pwd`
+ROOT="$(pwd)"
 BRANCH="REL1_35"
 ENV_FILE="$ROOT/wikibase.env"
+TEMP_DIR="$(mktemp -d)"
 
 # Remove previous container id file
 rm container_id -f
@@ -32,4 +33,6 @@ docker rm -f "$CONTAINER_ID"
 # remove git things from release package
 rm /tmp/Wikibase/.git* -rfv
 
-GZIP=-9 tar -C /tmp -zcvf Wikibase.tar.gz Wikibase
+GZIP=-9 tar -C /tmp -zcvf "$TEMP_DIR"/Wikibase.tar.gz Wikibase
+
+echo "TARBALL_PATH="$TEMP_DIR/Wikibase.tar.gz"" >> $GITHUB_ENV
