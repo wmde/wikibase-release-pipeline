@@ -1,17 +1,16 @@
-name: Build QueryService
+name: Build QueryService UI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
   push:
-    branches: [ main ]
+    branches: [ queryservice-ui ]
   pull_request:
     branches: [ main ]
 
 env:
-  QUERYSERVICE_IMAGE_NAME: wdqs
-  QUERYSERVICE_VERSION: 0.3.40
-
+  IMAGE_NAME: wdqs-ui
+  COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
@@ -28,21 +27,21 @@ jobs:
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
-      - name: Download QueryService Tarball
+      - name: Build QueryService UI Tarball
         id: download_step
-        run: bash build_scripts/build_queryservice.sh
+        run: bash build_scripts/build_queryservice_ui.sh
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService Tarball
+          name: QueryService UI Tarball
           path: ${{env.TARBALL_PATH}}
 
       - name: Build Docker image
-        run: bash build_scripts/build_queryservice_docker.sh wdqs
+        run: bash build_scripts/build_queryservice_ui_docker.sh ${{env.IMAGE_NAME}}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService Docker Image
-          path: wdqs.docker.tar.gz
+          name: QueryService UI Docker Image
+          path: wdqs-ui.docker.tar.gz
