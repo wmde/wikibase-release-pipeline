@@ -29,16 +29,17 @@ jobs:
         continue-on-error: true
 
       - name: Download QueryService Tarball
-        run: bash build_queryservice.sh
+        id: download_step
+        run: bash build_scripts/build_queryservice.sh
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: QueryService Tarball
-          path: service-${{env.QUERYSERVICE_VERSION}}-dist.tar.gz
+          path: ${{env.TARBALL_PATH}}
 
       - name: Build Docker image
-        run: bash build_queryservice_docker.sh wdqs
+        run: bash build_scripts/build_queryservice_docker.sh wdqs
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2

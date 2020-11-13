@@ -47,7 +47,7 @@ jobs:
         run: bash update_cache.sh
 
       - name: Build Tarball
-        run: bash build.sh
+        run: bash build_scripts/build_wikibase.sh
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -56,7 +56,7 @@ jobs:
           path: Wikibase.tar.gz
 
       - name: Build Docker image
-        run: bash build_docker.sh wikibase
+        run: bash build_scripts/build_wikibase_docker.sh wikibase
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
