@@ -73,4 +73,4 @@ jobs:
         with:
           name: Wikibase Docker Image
       - name: Run Docker Tests
-        run: bash test_docker.sh
+        run: bash test_scripts/test_docker.sh
