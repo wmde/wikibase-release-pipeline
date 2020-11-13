@@ -4,12 +4,12 @@ name: Build QueryService
 # events but only for the main branch
 on:
   push:
-    branches: [ main ]
+    branches: [ queryservice-wip ]
   pull_request:
     branches: [ main ]
 
 env:
-  QUERYSERVICE_IMAGE_NAME: wdqs 
+  QUERYSERVICE_IMAGE_NAME: wdqs
   QUERYSERVICE_VERSION: 0.3.40
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -43,5 +43,5 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Wikibase Docker Image
-          path: wikibase.docker.tar.gz
+          name: QueryService Docker Image
+          path: wdqs.docker.tar.gz

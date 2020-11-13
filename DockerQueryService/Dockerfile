@@ -4,9 +4,11 @@ RUN apt-get update && \
     apt-get install --yes --no-install-recommends unzip=6.* && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ADD https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/0.3.40/service-0.3.40-dist.tar.gz ./service-dist.tar.gz
-
-RUN tar xfv service-dist.tar.gz && rm service-dist.tar.gz
+ARG tarball
+COPY $tarball .
+RUN mkdir wdqs-service
+RUN tar xfv $tarball -C ./wdqs-service --strip-components=1
+RUN rm $tarball
 
 FROM openjdk:8-jdk-alpine
 
@@ -19,7 +21,7 @@ RUN set -x ; \
 RUN addgroup -g 66 -S blazegraph
 RUN adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
 
-COPY --from=fetcher --chown=blazegraph:blazegraph /service-0.3.40 /wdqs
+COPY --from=fetcher --chown=blazegraph:blazegraph /wdqs-service /wdqs
 
 RUN mkdir /var/log/wdqs && chown blazegraph /var/log/wdqs
 
