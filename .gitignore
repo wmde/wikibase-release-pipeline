@@ -7,3 +7,6 @@ container_id
 *.swp
 Wikibase.tar.gz
 *.docker.tar.gz
+
+#temp 
+DockerQueryService/service-*.tar.gz

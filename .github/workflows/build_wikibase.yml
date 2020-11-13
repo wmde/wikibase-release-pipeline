@@ -1,10 +1,10 @@
-name: Build
+name: Build Wikibase
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
   push:
-    branches: [ main ]
+    branches: [ main, queryservice-wip ]
   pull_request:
     branches: [ main ]
 
@@ -47,16 +47,16 @@ jobs:
         run: bash update_cache.sh
 
       - name: Build Tarball
-        run: bash build.sh
+        run: bash build_scripts/build_wikibase.sh
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
-          path: Wikibase.tar.gz
+          path: ${{env.TARBALL_PATH}}
 
       - name: Build Docker image
-        run: bash build_docker.sh wikibase
+        run: bash build_scripts/build_wikibase_docker.sh wikibase
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -73,4 +73,4 @@ jobs:
         with:
           name: Wikibase Docker Image
       - name: Run Docker Tests
-        run: bash test_docker.sh
+        run: bash test_scripts/test_docker.sh

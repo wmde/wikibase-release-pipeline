@@ -1,0 +1,48 @@
+name: Build QueryService
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ queryservice-wip ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  QUERYSERVICE_IMAGE_NAME: wdqs
+  QUERYSERVICE_VERSION: 0.3.40
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Download QueryService Tarball
+        id: download_step
+        run: bash build_scripts/build_queryservice.sh
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService Tarball
+          path: ${{env.TARBALL_PATH}}
+
+      - name: Build Docker image
+        run: bash build_scripts/build_queryservice_docker.sh wdqs
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService Docker Image
+          path: wdqs.docker.tar.gz
