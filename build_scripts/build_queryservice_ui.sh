@@ -5,6 +5,10 @@ TEMP_DIR="$(mktemp -d)"
 TARBALL_PATH="$TEMP_DIR/$TARBALL"
 
 git clone 'https://github.com/wikimedia/wikidata-query-gui.git' $TEMP_DIR
+cd $TEMP_DIR 
+
+echo "Checking out $COMMIT_HASH"
+git reset $COMMIT_HASH --hard
 
 rm -rfv "$TEMP_DIR/.git"
 rm -fv "$TEMP_DIR/.gitignore"

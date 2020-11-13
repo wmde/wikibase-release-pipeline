@@ -10,7 +10,7 @@ on:
 
 env:
   IMAGE_NAME: wdqs-ui
-  COMMIT: c6955ea7fb7da155fe101cd47c22f5906793801f
+  COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
