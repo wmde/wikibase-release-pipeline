@@ -3,7 +3,7 @@ set -e
 
 TARBALL="wikidata-query-gui.tar.gz"
 TEMP_DIR="$(mktemp -d)"
-TARBALL_PATH="$TEMP_DIR/$TARBALL"
+TARBALL_PATH="$(mktemp -d)"
 
 git clone 'https://github.com/wikimedia/wikidata-query-gui.git' $TEMP_DIR
 cd $TEMP_DIR 
