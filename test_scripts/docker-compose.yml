@@ -6,9 +6,6 @@ services:
     image: "${WIKIBASE_IMAGE_NAME}:latest"
     links:
       - mysql
-    ports:
-    # CONFIG - Change the 8181 here to expose Wikibase & MediaWiki on a different port
-     - "8181:80"
     volumes:
       - mediawiki-images-data:/var/www/html/images
     depends_on:
