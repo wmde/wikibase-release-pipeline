@@ -109,7 +109,10 @@ jobs:
 
 
   test_wikibase:
-    needs: build_wikibase
+    needs:
+      - build_wikibase
+      - build_queryservice
+      - build_queryservice_ui
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
