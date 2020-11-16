@@ -9,9 +9,9 @@ else
 fi
 
 # QueryService test
-if curl --fail --show-error --output /dev/null --silent $WIKIBASE_SERVER/wiki/Main_Page; then
-    echo 'Successfully loaded the wiki main page!'
+if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_UI_SERVER/; then
+    echo 'Successfully loaded the UI root page!'
 else
-    echo "Could not retrieve main page"
+    echo "Could not retrieve UI root page"
     exit 1
 fi
