@@ -13,3 +13,4 @@ services:
     environment:
       - WIKIBASE_SERVER=wikibase.svc:80
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
+      - QUERYSERVICE_SERVER=wdqs.svc:9999
