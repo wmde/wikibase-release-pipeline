@@ -50,7 +50,7 @@ jobs:
           path: ${{env.TARBALL_PATH}}
 
       - name: Build Docker image
-        run: bash build_scripts/build_wikibase_docker.sh wikibase
+        run: bash build_scripts/build_wikibase_docker.sh ${{ env.WIKIBASE_IMAGE_NAME }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
