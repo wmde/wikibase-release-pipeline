@@ -6,7 +6,7 @@ BRANCH="REL1_35"
 TEMP_GIT_DIR="$(mktemp -d)"
 TEMP_TAR_DIR="$(mktemp -d)"
 
-git clone --depth 1 --single-branch --branch ${BRANCH} "$ROOT/git_cache/mediawiki/extensions/Wikibase.git" "$TEMP_GIT_DIR"
+git clone --depth 1 --single-branch --branch ${BRANCH} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR"
 git -C "$TEMP_GIT_DIR/Wikibase" submodule update
 
 # remove git things from release package

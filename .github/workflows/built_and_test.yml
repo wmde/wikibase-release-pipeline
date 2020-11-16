@@ -24,10 +24,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v2
         env:
-          cache-name: cache-git-repos
+          cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
-          key: cache-git-repos
+          key: cache-wikibase-git-repo
 
       - name: Update the git cache
         run: bash update_cache.sh
