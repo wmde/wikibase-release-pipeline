@@ -10,22 +10,22 @@ fi
 
 # QueryService test blazegraph root page
 if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql; then
-    echo 'Successfully loaded the root page!'
+    echo 'Successfully loaded the QueryService page!'
 else
     echo "Could not retrieve root page"
+    exit 1
+fi
+
+# QueryService UI test
+if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_UI_SERVER/; then
+    echo 'Successfully loaded the QueryService UI page!'
+else
+    echo "Could not retrieve UI root page"
     exit 1
 fi
 
 # QueryService test simple SPARQL query
-if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql; then
-    echo 'Successfully loaded the root page!'
-else
-    echo "Could not retrieve root page"
-    exit 1
-fi
-
 SPARQL_QUERY='SELECT * WHERE{ ?s ?p ?o }'
-
 echo "Executing SPARQL query $SPARQL_QUERY ..."
 curl "$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql" \
     -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0' \
@@ -40,13 +40,5 @@ curl "$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql" \
     --data-urlencode "query=$SPARQL_QUERY" \
     --fail \
     --show-error || exit 1
-
-# QueryService UI test
-if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_UI_SERVER/; then
-    echo 'Successfully loaded the UI root page!'
-else
-    echo "Could not retrieve UI root page"
-    exit 1
-fi
 
 
