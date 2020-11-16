@@ -121,9 +121,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get docker artifact
+
+      - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
           name: Wikibase Docker Image
+
+      - name: Get QueryService docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: QueryService Docker Image
+
+      - name: Get QueryService UI docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: QueryService UI Docker Image
+
       - name: Run Docker Tests
         run: bash test_scripts/test_docker.sh
