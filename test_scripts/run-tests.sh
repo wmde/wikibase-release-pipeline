@@ -25,7 +25,7 @@ else
 fi
 
 
-curl '$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql' \
+curl "$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql" \
     -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0' \
     -H 'Accept: application/sparql-results+json' \
     -H 'Accept-Language: en-US,en;q=0.5' \
@@ -37,7 +37,7 @@ curl '$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql' \
     -H 'Referer: http://localhost:8989/bigdata/' \
     --data-raw 'query=+SELECT+*+WHERE%7B+%3Fs+%3Fp+%3Fo+%7D' \
     --fail \ 
-    --show-error
+    --show-error || exit 1
     #--output /dev/null \
     #--silent
 
