@@ -48,8 +48,6 @@ services:
   wdqs-frontend:
     image: "${QUERYSERVICE_UI_IMAGE_NAME}"
     restart: unless-stopped
-    depends_on:
-    - wdqs-proxy
     networks:
       default:
         aliases:
