@@ -7,7 +7,7 @@ on:
 env:
   WIKIBASE_IMAGE_NAME: wikibase
   QUERYSERVICE_IMAGE_NAME: wdqs
-  QUERYSERVICE_VERSION: 0.3.40
+  QUERYSERVICE_VERSION: 0.3.55
   QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
   COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
 
@@ -28,14 +28,6 @@ jobs:
         with:
           path: git_cache
           key: cache-git-repos
-
-      - name: Cache quibble cache
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-quibble-cache
-        with:
-          path: cache
-          key: ${{ runner.os }}-cache-quibble-cache
 
       - name: Update the git cache
         run: bash update_cache.sh
@@ -77,7 +69,7 @@ jobs:
           path: ${{env.TARBALL_PATH}}
 
       - name: Build Docker image
-        run: bash build_scripts/build_queryservice_docker.sh wdqs
+        run: bash build_scripts/build_queryservice_docker.sh ${{ env.QUERYSERVICE_IMAGE_NAME }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
