@@ -11,16 +11,4 @@ jobs:
   build_wikibase:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - uses: ./.github/workflows/build_wikibase
-  test:
-    needs: build_wikibase
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Get docker artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: Wikibase Docker Image
-    - name: Run Docker Tests
-      run: bash test_scripts/test_docker.sh
