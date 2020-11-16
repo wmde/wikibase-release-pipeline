@@ -1,0 +1,15 @@
+name: Build and Test Wikibase and Friends
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  WIKIBASE_IMAGE_NAME: wikibase
+
+jobs:
+  build_wikibase:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/workflows/build_wikibase.yml
