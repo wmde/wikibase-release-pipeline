@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ./.github/workflows/build_wikibase
   test:
-    needs: build_wikibase
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
