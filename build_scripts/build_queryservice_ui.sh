@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 TARBALL="wikidata-query-gui.tar.gz"
 TEMP_DIR="$(mktemp -d)"

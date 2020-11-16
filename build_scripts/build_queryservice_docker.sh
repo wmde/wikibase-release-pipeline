@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 SERVICE_DIST_TAR="$TARBALL_PATH"
 
 mv "$SERVICE_DIST_TAR" DockerQueryService

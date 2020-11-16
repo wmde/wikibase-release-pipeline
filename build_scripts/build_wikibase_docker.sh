@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 mv "$TARBALL_PATH" Docker
 docker build Docker/ -t "$1"

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 TARBALL="service-$QUERYSERVICE_VERSION-dist.tar.gz"
 TEMP_DIR="$(mktemp -d)"

@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 cp -r "$TARBALL_PATH" DockerQueryServiceUI
 docker build --build-arg tarball="$(basename "$TARBALL_PATH")" DockerQueryServiceUI/ -t "$1"
