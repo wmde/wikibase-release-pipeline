@@ -3,7 +3,7 @@ version: '3'
 
 services:
   wikibase:
-    image: ${ WIKIBASE_IMAGE_NAME }
+    image: "${WIKIBASE_IMAGE_NAME}}"
     links:
       - mysql
     ports:
@@ -46,7 +46,7 @@ services:
         aliases:
          - mysql.svc
   wdqs-frontend:
-    image: ${ QUERYSERVICE_UI_IMAGE_NAME }
+    image: "${QUERYSERVICE_UI_IMAGE_NAME}"
     restart: unless-stopped
     depends_on:
     - wdqs-proxy
@@ -58,7 +58,7 @@ services:
       - WIKIBASE_HOST=wikibase.svc
       - WDQS_HOST=wdqs.svc
   wdqs:
-    image: ${ QUERYSERVICE_IMAGE_NAME }
+    image: "${QUERYSERVICE_IMAGE_NAME}"
     restart: unless-stopped
     volumes:
       - query-service-data:/wdqs/data
@@ -74,7 +74,7 @@ services:
     expose:
       - 9999
   wdqs-updater:
-    image: ${ QUERYSERVICE_IMAGE_NAME }
+    image: "${QUERYSERVICE_IMAGE_NAME}"
     restart: unless-stopped
     command: /runUpdate.sh
     depends_on:
