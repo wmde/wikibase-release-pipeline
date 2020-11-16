@@ -1,57 +1,57 @@
-name: "Build Wikibase"
-description: "Build Wikibase tarball and docker image"
+name: Build Wikibase
+description: Build Wikibase tarball and docker image
 runs:
   using: "composite"
-  steps:
+    steps:
 
-    - uses: satackey/action-docker-layer-caching@v0.0.8
-      # Ignore the failure of a step and avoid terminating the job.
-      continue-on-error: true
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 
-    - name: Cache git_cache repos
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-git-repos
-      with:
-        path: git_cache
-        key: cache-git-repos
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-git-repos
+        with:
+          path: git_cache
+          key: cache-git-repos
 
-    - name: Cache quibble cache
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-quibble-cache
-      with:
-        path: cache
-        key: ${{ runner.os }}-cache-quibble-cache
+      - name: Cache quibble cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-quibble-cache
+        with:
+          path: cache
+          key: ${{ runner.os }}-cache-quibble-cache
 
-    - name: Update the git cache
-      run: bash update_cache.sh
+      - name: Update the git cache
+        run: bash update_cache.sh
 
-    - name: Build Tarball
-      run: bash build_scripts/build_wikibase.sh
+      - name: Build Tarball
+        run: bash build_scripts/build_wikibase.sh
 
-    - name: Archive tar production artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Wikibase Tarball
-        path: ${{env.TARBALL_PATH}}
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Wikibase Tarball
+          path: ${{env.TARBALL_PATH}}
 
-    - name: Build Docker image
-      run: bash build_scripts/build_wikibase_docker.sh wikibase
+      - name: Build Docker image
+        run: bash build_scripts/build_wikibase_docker.sh wikibase
 
-    - name: Archive docker production artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Wikibase Docker Image
-        path: wikibase.docker.tar.gz
-test:
-  needs: build
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v2
-    - name: Get docker artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: Wikibase Docker Image
-    - name: Run Docker Tests
-      run: bash test_scripts/test_docker.sh
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Wikibase Docker Image
+          path: wikibase.docker.tar.gz
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get docker artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Wikibase Docker Image
+      - name: Run Docker Tests
+        run: bash test_scripts/test_docker.sh
