@@ -1,0 +1,129 @@
+name: Build and test Wikibase and friends
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  WIKIBASE_IMAGE_NAME: wikibase
+  QUERYSERVICE_IMAGE_NAME: wdqs
+  QUERYSERVICE_VERSION: 0.3.40
+  QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
+  COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
+
+jobs:
+  build_wikibase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
+
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-git-repos
+        with:
+          path: git_cache
+          key: cache-git-repos
+
+      - name: Cache quibble cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-quibble-cache
+        with:
+          path: cache
+          key: ${{ runner.os }}-cache-quibble-cache
+
+      - name: Update the git cache
+        run: bash update_cache.sh
+
+      - name: Build Tarball
+        run: bash build_scripts/build_wikibase.sh
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Wikibase Tarball
+          path: ${{env.TARBALL_PATH}}
+
+      - name: Build Docker image
+        run: bash build_scripts/build_wikibase_docker.sh wikibase
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Wikibase Docker Image
+          path: wikibase.docker.tar.gz
+
+  build_queryservice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
+
+      - name: Download QueryService Tarball
+        id: download_step
+        run: bash build_scripts/build_queryservice.sh
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService Tarball
+          path: ${{env.TARBALL_PATH}}
+
+      - name: Build Docker image
+        run: bash build_scripts/build_queryservice_docker.sh wdqs
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService Docker Image
+          path: wdqs.docker.tar.gz
+
+  build_queryservice_ui:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
+
+      - name: Build QueryService UI Tarball
+        id: download_step
+        run: bash build_scripts/build_queryservice_ui.sh
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService UI Tarball
+          path: ${{env.TARBALL_PATH}}
+
+      - name: Build Docker image
+        run: bash build_scripts/build_queryservice_ui_docker.sh ${{env.QUERYSERVICE_UI_IMAGE_NAME}}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: QueryService UI Docker Image
+          path: wdqs-ui.docker.tar.gz
+
+
+
+  test_wikibase:
+    needs: build_wikibase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get docker artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Wikibase Docker Image
+      - name: Run Docker Tests
+        run: bash test_scripts/test_docker.sh
