@@ -2,8 +2,6 @@
 set -e
 
 cd test_scripts
-ls
-ls ../
 docker load -i "../$WIKIBASE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"

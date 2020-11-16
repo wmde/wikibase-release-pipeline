@@ -11,3 +11,4 @@ Wikibase.tar.gz
 #temp 
 DockerQueryService/service-*.tar.gz
 DockerQueryServiceUI/wikidata-query-gui.tar.gz
+.env
