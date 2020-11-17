@@ -40,7 +40,6 @@
 		"ie 11"
 	],
 	"scripts": {
-		"selenium": "killall -0 chromedriver 2>/dev/null || chromedriver --url-base=/wd/hub --port=4444 & npm run selenium-test; killall chromedriver",
 		"selenium-test": "npm-run-all --continue-on-error selenium-test:*",
 		"selenium-test:repo": "wdio wdio.conf.js"
 	}

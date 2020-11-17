@@ -2,27 +2,17 @@
 version: '3'
 
 services:
-  chromedriver:
-    image: selenium/standalone-chrome
-    links:
-      - wikibase
-    depends_on:
-    - wikibase
-    environment:
-      - WIKIBASE_SERVER=wikibase.svc:80
-      - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
-      - QUERYSERVICE_SERVER=wdqs.svc:9999
   wikibase-selenium-test:
     build:
       context: ./
       dockerfile: DockerfileSelenium
     links:
       - wikibase
-      - chromedriver
     depends_on:
       - wikibase
-      - chromedriver
     environment:
+      - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80
+      - MW_SERVER=http://wikibase.svc
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
       - QUERYSERVICE_SERVER=wdqs.svc:9999

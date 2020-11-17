@@ -1,1 +1,1 @@
-npm run selenium
+npm run selenium-test
