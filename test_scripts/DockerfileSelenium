@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.12
+FROM node:12.19.1-alpine3.10
 
 RUN apk add --update bash
 RUN apk add --update chromium

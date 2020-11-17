@@ -63,7 +63,7 @@ exports.config = {
 	screenshotPath: process.env.LOG_DIR || __dirname + '/log',
 
 	// Default timeout for each waitFor* command.
-	waitforTimeout: 10 * 1000,
+	waitforTimeout: 20 * 1000,
 
 	// See also: http://webdriver.io/guide/testrunner/reporters.html
 	reporters: [ 'spec' ],

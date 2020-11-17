@@ -6,28 +6,33 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const EntityPage = require( 'wdio-wikibase/pageobjects/entity.page' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 const sync = require("@wdio/sync").default;
+const MainPage = require('../queryservice-ui/main.page')
 
-describe( 'item', async function () {
+describe( 'Item', function () {
 	
-	it( 'can add a statement using the keyboard', async function () {
-
-		browser.url('https://webdriver.io')
-		const foo = await browser.$("#search_input_react");
-		foo.waitForExist();
-		// // high-level overview: add statement, add qualifier, add second qualifier, add reference, save
+	it( 'should shows up in queryservice ui after creation', function () {
 		
-		// // TODO make an item using the UI
-		// const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( 'T154869-' ) ) );
+		// TODO make an item using the UI
+		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( 'T154869-' ) ) );
 		
-		// // base url -> browser.config.baseUrl
+		MainPage.open('#' + 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }');
+		
+		// wait for WDQS-updater
+		browser.pause(30*1000);
 
-		// //const propertyId = browser.call( () => WikibaseApi.getProperty( 'string' ) );
-		// EntityPage.open( itemId );
-		// console.log("asdf")
-		// // wait for page to load
-		// ItemPage.addStatementLink.waitForDisplayed();
+		MainPage.submit();
+		MainPage.resultTable.waitForDisplayed();
 
-		// //browser.url()
+		const resultText = MainPage.resultTable.getText();
 
+		assert( resultText.includes('schema:version') )
+		assert( resultText.includes('schema:dateModified') )
+
+		assert( resultText.includes('rdfs:label') )
+
+		assert( resultText.includes('wikibase:timestamp') )
+		assert( resultText.includes('wikibase:sitelinks') )
+		assert( resultText.includes('wikibase:identifiers') )
+		assert( resultText.includes('wikibase:timestamp') )
 	} );
 } );
