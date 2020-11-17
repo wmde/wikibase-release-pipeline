@@ -1,0 +1,47 @@
+{
+	"name": "asd",
+	"version": "0.1.0",
+	"private": true,
+	"devDependencies": {
+		"@wdio/cli": "^6.1.16",
+		"@wdio/local-runner": "^6.1.16",
+		"@wdio/mocha-framework": "^6.1.14",
+		"@wdio/spec-reporter": "^6.1.14",
+		"@wdio/sync": "^6.1.14",
+		"api-testing": "^1.2.0",
+		"apollo-boost": "^0.4.9",
+		"cross-fetch": "^3.0.6",
+		"eslint-config-wikimedia": "0.17.0",
+		"eslint-plugin-compat": "^3.8.0",
+		"graphql": "^15.0.0",
+		"grunt": "1.3.0",
+		"grunt-banana-checker": "0.9.0",
+		"grunt-eslint": "23.0.0",
+		"grunt-stylelint": "0.15.0",
+		"mocha": "^8.1.1",
+		"npm-run-all": "^4.1.5",
+		"plotly.js": "^1.56.0",
+		"stylelint-config-wikimedia": "0.10.1",
+		"vue": "^2.6.11",
+		"wdio-mediawiki": "^1.0.0",
+		"wdio-wikibase": "^4.0.1",
+		"webdriverio": "^6.1.16"
+	},
+	"eslintIgnore": [
+		"extensions/**",
+		"vendor/**",
+		"view/lib/**",
+		"client/data-bridge/",
+		"lib/resources/lib/**",
+		"lib/tests/qunit/lib/**",
+		"view/resources/vendor/**"
+	],
+	"browserslist": [
+		"ie 11"
+	],
+	"scripts": {
+		"selenium": "killall -0 chromedriver 2>/dev/null || chromedriver --url-base=/wd/hub --port=4444 & npm run selenium-test; killall chromedriver",
+		"selenium-test": "npm-run-all --continue-on-error selenium-test:*",
+		"selenium-test:repo": "wdio wdio.conf.js"
+	}
+}
