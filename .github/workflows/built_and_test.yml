@@ -2,7 +2,7 @@ name: Build and test Wikibase and friends
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, selenium-testing ]
 
 env:
   WIKIBASE_IMAGE_NAME: wikibase
