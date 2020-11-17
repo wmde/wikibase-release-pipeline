@@ -8,8 +8,11 @@ services:
       dockerfile: DockerfileSelenium
     links:
       - wikibase
+      - wdqs-frontend
     depends_on:
       - wikibase
+      - wdqs-frontend
+      - wdqs-updater
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80
