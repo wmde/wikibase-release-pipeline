@@ -2,6 +2,13 @@
 set -e
 
 cd test_scripts
+
+
+# remove local files
+rm -f log/*
+# does not exists on github
+mkdir log -p
+
 docker load -i "../$WIKIBASE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
