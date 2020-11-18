@@ -1,5 +1,5 @@
 {
-	"name": "asd",
+	"name": "wikibase-release-selenium-testing",
 	"version": "0.1.0",
 	"private": true,
 	"devDependencies": {
@@ -27,15 +27,6 @@
 		"wdio-wikibase": "^4.0.1",
 		"webdriverio": "^6.1.16"
 	},
-	"eslintIgnore": [
-		"extensions/**",
-		"vendor/**",
-		"view/lib/**",
-		"client/data-bridge/",
-		"lib/resources/lib/**",
-		"lib/tests/qunit/lib/**",
-		"view/resources/vendor/**"
-	],
 	"browserslist": [
 		"ie 11"
 	],

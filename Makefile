@@ -2,6 +2,8 @@
 include .env
 export
 
+test:
+	bash test_scripts/test_docker.sh
 wikibase:
 	bash update_cache.sh
 	eval ". ./build_scripts/build_wikibase.sh; bash build_scripts/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"

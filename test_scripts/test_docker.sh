@@ -3,7 +3,6 @@ set -e
 
 cd test_scripts
 
-
 # remove local files
 rm -f log/*
 # does not exists on github

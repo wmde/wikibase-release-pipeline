@@ -25,11 +25,7 @@ make all
 You can run the tests in the docker container locally. Testing locally requires the built images.
 
 ```
-source .env
-```
-
-```
-bash test_scripts/test_docker.sh
+make test
 ```
 
 # quibble-caching
