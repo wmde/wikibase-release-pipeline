@@ -1,9 +1,8 @@
 'use strict';
 
-// login.page.js
 const Page = require('./page')
 
-class MainPage extends Page {
+class QueryServiceUI extends Page {
 
 	get queryEditor() { return $('.queryEditor') }
 	get submitBtn() { return $('#execute-button') }
@@ -20,4 +19,4 @@ class MainPage extends Page {
 
 }
 
-module.exports = new MainPage();
+module.exports = new QueryServiceUI();
