@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+ROOT="$(pwd)"
 TARBALL="wikidata-query-gui.tar.gz"
 TEMP_DIR="$(mktemp -d)"
 TARBALL_PATH="$(mktemp -d)"/wdqs-ui.tar.gz
@@ -15,4 +16,11 @@ rm -rfv "$TEMP_DIR/.git"
 rm -fv "$TEMP_DIR/.gitignore"
 
 GZIP=-9 tar -C "$TEMP_DIR" -zcvf $TARBALL_PATH .
-echo "TARBALL_PATH="$TARBALL_PATH"" >> $GITHUB_ENV
+
+cd $ROOT
+
+if [ -n "$GITHUB_ENV" ]; then
+    echo "TARBALL_PATH="$TARBALL_PATH"" >> $GITHUB_ENV
+else
+    export TARBALL_PATH
+fi

@@ -15,4 +15,11 @@ rm "$TEMP_GIT_DIR/Wikibase/".git* -rfv
 
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
 
-echo "TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"" >> $GITHUB_ENV
+TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"
+
+if [ -n "$GITHUB_ENV" ]; then
+    echo "TARBALL_PATH="$TARBALL_PATH"" >> $GITHUB_ENV
+else
+    export TARBALL_PATH
+fi
+
