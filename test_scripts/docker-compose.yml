@@ -45,19 +45,26 @@ services:
   wdqs-frontend:
     image: "${QUERYSERVICE_UI_IMAGE_NAME}:latest"
     restart: unless-stopped
+    ports:
+    # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
+     - "8282:80"
+    links:
+      - wdqs
     networks:
       default:
         aliases:
          - wdqs-frontend.svc
     environment:
       - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs.svc
+      - WDQS_HOST=wdqs-proxy.svc
   wdqs:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped
     volumes:
       - query-service-data:/wdqs/data
     command: /runBlazegraph.sh
+    ports:
+     - "9999:9999"
     networks:
       default:
         aliases:
@@ -68,6 +75,19 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+  wdqs-proxy:
+    image: wikibase/wdqs-proxy
+    restart: unless-stopped
+    environment:
+      - PROXY_PASS_HOST=wdqs.svc:9999
+    ports:
+     - "8989:80"
+    depends_on:
+    - wdqs
+    networks:
+      default:
+        aliases:
+         - wdqs-proxy.svc
   wdqs-updater:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped

@@ -29,3 +29,4 @@ docker-compose -f docker-compose.yml \
 docker-compose -f docker-compose.yml \
     -f docker-compose-selenium-test.yml \
     run wikibase-selenium-test
+

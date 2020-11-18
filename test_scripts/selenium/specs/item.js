@@ -16,9 +16,8 @@ describe( 'Item', function () {
 		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( 'T154869-' ) ) );
 		
 		MainPage.open('#' + 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }');
-		
 		// wait for WDQS-updater
-		browser.pause(30*1000);
+		browser.pause(20*1000);
 
 		MainPage.submit();
 		MainPage.resultTable.waitForDisplayed();
