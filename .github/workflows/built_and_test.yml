@@ -137,7 +137,9 @@ jobs:
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
-        continue-on-error: true
+        if: always()
         with:
           name: Test artifacts
-          path: test_scripts/selenium/log
+          path: |
+            test_scripts/selenium/log
+            test_scripts/log

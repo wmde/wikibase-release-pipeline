@@ -12,3 +12,4 @@ Wikibase.tar.gz
 DockerQueryService/service-*.tar.gz
 DockerQueryServiceUI/*.tar.gz
 .env
+test_scripts/log

@@ -9,6 +9,7 @@ services:
     links:
       - wikibase
       - wdqs-frontend
+      - wdqs
     depends_on:
       - wikibase
       - wdqs-frontend
