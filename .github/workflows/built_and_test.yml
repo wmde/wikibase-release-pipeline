@@ -134,11 +134,10 @@ jobs:
 
       - name: Run Docker Tests
         run: bash test_scripts/test_docker.sh
-        continue-on-error: true
-
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
+        continue-on-error: true
         with:
-          name: QueryService UI Docker Image
+          name: Test artifacts
           path: test_scripts/selenium/log
