@@ -2,19 +2,6 @@
 
 Please see tests/selenium/README.md file in mediawiki repository.
 
-## Run all specs
-
-Run test specs from mediawiki/core via:
-
-    cd mediawiki
-    npm run selenium
-
-Run test specs from Wikibase via:
-
-    cd mediawiki/extensions/Wikibase
-    npm run selenium-test
-
-
 ## Run specific tests
 
 To run only some tests, you first have to start Chromedriver in one terminal window:

@@ -3,7 +3,6 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const sync = require("@wdio/sync").default;
 const QueryServiceUI = require('../queryservice-ui/queryservice-ui.page');
 const LoginPage = require('wdio-mediawiki/LoginPage');
 const querystring = require( 'querystring' );
@@ -69,7 +68,6 @@ describe( 'Item', function () {
 
 		// timestamp always shows
 		assert( resultText.includes('wikibase:timestamp') )
-
 		
 	} );
 } );

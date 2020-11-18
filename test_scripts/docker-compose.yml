@@ -103,6 +103,7 @@ services:
      - WIKIBASE_HOST=wikibase.svc
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
+     - WDQS_START_TIMESTAMP=20180301000000
 
 volumes:
   mediawiki-mysql-data:
