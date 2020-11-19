@@ -13,7 +13,7 @@ docker load -i "../$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
 docker-compose up -d
 
-docker-compose logs --no-color > log/wikibase.log
+docker-compose logs -f --no-color > log/wikibase.log &
 
 # build curl test container 
 docker-compose -f docker-compose.yml -f docker-compose-test.yml build wikibase-test
@@ -28,4 +28,5 @@ docker-compose -f docker-compose.yml \
 docker-compose -f docker-compose.yml \
     -f docker-compose-selenium-test.yml \
     run wikibase-selenium-test
+
 

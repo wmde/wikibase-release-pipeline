@@ -9,27 +9,23 @@ const fs = require( 'fs' ),
 
 exports.config = {
 
-
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
 	// Use in a test as `browser.options.<key>`.
-	// Defaults are for convenience with MediaWiki-Vagrant
 
 	// Wiki admin
-	mwUser: process.env.MEDIAWIKI_USER || 'Admin',
-	mwPwd: process.env.MEDIAWIKI_PASSWORD || 'vagrant',
+	mwUser: process.env.MEDIAWIKI_USER,
+	mwPwd: process.env.MEDIAWIKI_PASSWORD,
 
 	// Base for browser.url() and Page#openTitle()
-	baseUrl: ( process.env.MW_SERVER || 'http://127.0.0.1:8080' ) + (
-		process.env.MW_SCRIPT_PATH || '/w'
-	),
+	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
 
 	// ==================
 	// Test Files
 	// ==================
 	specs: [
-		__dirname + '/specs/*.js',
+		__dirname + '/specs/*.js'
 	],
 
 	// ============
@@ -55,8 +51,8 @@ exports.config = {
 	// Test Configurations
 	// ===================
 
-	// Level of verbosity: silent | verbose | command | data | result | error
-	logLevel: 'error',
+	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
+	logLevel: 'trace',
 
 	// Setting this enables automatic screenshots for when a browser command fails
 	// It is also used by afterTest for capturig failed assertions.

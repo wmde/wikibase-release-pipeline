@@ -1,9 +1,10 @@
+'use strict';
 class Page {
-    constructor() {
-    }
+	constructor() {
+	}
 
-    open(path) {
-        browser.url('http://' + process.env.QUERYSERVICE_UI_SERVER + path)
-    }
+	open( path ) {
+		browser.url( 'http://' + process.env.QUERYSERVICE_UI_SERVER + path );
+	}
 }
 module.exports = Page;

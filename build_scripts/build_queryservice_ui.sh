@@ -9,8 +9,8 @@ TARBALL_PATH="$(mktemp -d)"/wdqs-ui.tar.gz
 git clone 'https://github.com/wikimedia/wikidata-query-gui.git' $TEMP_DIR
 cd $TEMP_DIR 
 
-echo "Checking out $COMMIT_HASH"
-git reset $COMMIT_HASH --hard
+echo "Checking out $QUERYSERVICE_UI_COMMIT_HASH"
+git reset $QUERYSERVICE_UI_COMMIT_HASH --hard
 
 rm -rfv "$TEMP_DIR/.git"
 rm -fv "$TEMP_DIR/.gitignore"
