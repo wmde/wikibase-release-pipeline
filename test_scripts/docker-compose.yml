@@ -6,8 +6,6 @@ services:
     image: "${WIKIBASE_IMAGE_NAME}:latest"
     links:
       - mysql
-    volumes:
-      - mediawiki-images-data:/var/www/html/images
     depends_on:
     - mysql
     restart: unless-stopped
@@ -30,8 +28,6 @@ services:
   mysql:
     image: mariadb:10.3
     restart: unless-stopped
-    volumes:
-      - mediawiki-mysql-data:/var/lib/mysql
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       # CONFIG - Change the default values below (should match values passed to wikibase)
@@ -60,11 +56,7 @@ services:
   wdqs:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped
-    volumes:
-      - query-service-data:/wdqs/data
     command: /runBlazegraph.sh
-    ports:
-     - "9999:9999"
     networks:
       default:
         aliases:
@@ -103,9 +95,3 @@ services:
      - WIKIBASE_HOST=wikibase.svc
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
-     - WDQS_START_TIMESTAMP=20180301000000
-
-volumes:
-  mediawiki-mysql-data:
-  mediawiki-images-data:
-  query-service-data:
