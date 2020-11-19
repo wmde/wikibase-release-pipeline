@@ -1,5 +1,33 @@
 # wikibase-release-prototype
 
+## Building locally
+To locally build all artifacts set the following environment variables in an .env file
+
+```
+export WIKIBASE_IMAGE_NAME=wikibase
+export QUERYSERVICE_IMAGE_NAME=wdqs
+export QUERYSERVICE_UI_IMAGE_NAME=wdqs-ui
+
+export QUERYSERVICE_VERSION=0.3.40
+export QUERYSERVICE_UI_COMMIT_HASH=e84ab35125557ff073f42ba522a684d35c288b38
+
+# For testing. Replace with your queryservice ui and queryservice, mediawiki defaults to localhost:8080
+export QUERYSERVICE_UI_SERVER=localhost:8081
+export QUERYSERVICE_SERVER=localhost:8989
+```
+
+```
+make all
+```
+
+## Testing Locally
+
+You can run the tests in the docker container locally. Testing locally requires the built images.
+
+```
+make test
+```
+
 # quibble-caching
 
 To avoid cloning MediaWiki over the network, you should initialize local bare

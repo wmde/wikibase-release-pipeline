@@ -2,14 +2,14 @@ name: Build and test Wikibase and friends
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, selenium-testing ]
 
 env:
   WIKIBASE_IMAGE_NAME: wikibase
   QUERYSERVICE_IMAGE_NAME: wdqs
   QUERYSERVICE_VERSION: 0.3.55
   QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
-  COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
+  QUERYSERVICE_UI_COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
 
 jobs:
   build_wikibase:
@@ -134,3 +134,12 @@ jobs:
 
       - name: Run Docker Tests
         run: bash test_scripts/test_docker.sh
+
+      - name: Archive docker test artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test artifacts
+          path: |
+            test_scripts/selenium/log
+            test_scripts/log
