@@ -10,8 +10,8 @@ Build the container and install the necessary tools:
 
 Generate a SVG representation of the mermaid diagram with:
 
-`docker run -it --rm -v "$PWD:/app" -w /app  diagrams node_modules/.bin/mmdc -i input.mmd -o output.svg`
+`docker run -it --rm -v "$PWD:/app" -w /app  diagrams node_modules/.bin/mmdc -i main.mmd -o output.svg`
 
 If you get a Chrome error `Running as root without --no-sandbox is not supported` you might need to use the `--no-sandbox` option of the Puppeteer.
 
-`docker run -it --rm -v "$PWD:/app" -w /app  diagrams node_modules/.bin/mmdc -p puppeteer-config.json -i input.mmd -o output.svg`
+`docker run -it --rm -v "$PWD:/app" -w /app  diagrams node_modules/.bin/mmdc -p puppeteer-config.json -i main.mmd -o output.svg`
