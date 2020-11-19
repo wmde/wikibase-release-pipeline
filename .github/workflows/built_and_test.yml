@@ -5,6 +5,7 @@ on:
     branches: [ main ]
 
 env:
+  DOCKER_CACHE_VERSION: 0
   WIKIBASE_IMAGE_NAME: wikibase
   QUERYSERVICE_IMAGE_NAME: wdqs
   QUERYSERVICE_VERSION: 0.3.55
@@ -20,6 +21,9 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
+        with:
+          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Cache git_cache repos
         uses: actions/cache@v2
@@ -57,6 +61,9 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
+        with:
+          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Download QueryService Tarball
         id: download_step
@@ -86,6 +93,9 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
+        with:
+          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI Tarball
         id: download_step
