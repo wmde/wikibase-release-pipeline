@@ -1,0 +1,9 @@
+{
+  "name": "wikibase-release-process-diagrams",
+  "version": "0.1.0",
+  "description": "TODO",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^8.8.2-beta.8"
+  }
+}

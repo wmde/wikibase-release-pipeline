@@ -13,3 +13,4 @@ DockerQueryService/service-*.tar.gz
 DockerQueryServiceUI/*.tar.gz
 .env
 test_scripts/log
+diagrams/node_modules/
