@@ -6,9 +6,9 @@ RUN apt-get update && \
 
 ARG tarball
 COPY $tarball .
-RUN mkdir wdqs-service
-RUN tar xfv $tarball -C ./wdqs-service --strip-components=1
-RUN rm $tarball
+RUN mkdir wdqs-service && \
+ tar xfv $tarball -C ./wdqs-service --strip-components=1 \
+ && rm $tarball
 
 FROM openjdk:8-jdk-alpine
 
@@ -18,8 +18,7 @@ FROM openjdk:8-jdk-alpine
 RUN set -x ; \
     apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2
 
-RUN addgroup -g 66 -S blazegraph
-RUN adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
+RUN addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /wdqs-service /wdqs
 
