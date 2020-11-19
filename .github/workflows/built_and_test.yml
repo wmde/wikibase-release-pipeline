@@ -22,8 +22,8 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
-          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+          key: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Cache git_cache repos
         uses: actions/cache@v2
@@ -62,8 +62,8 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
-          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+          key: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Download QueryService Tarball
         id: download_step
@@ -94,8 +94,8 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
-          key: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: build-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+          key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI Tarball
         id: download_step
