@@ -9,7 +9,7 @@ services:
     links:
       - wikibase
     depends_on:
-    - wikibase
+      - wikibase
     environment:
       - WIKIBASE_SERVER=wikibase.svc:80
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
