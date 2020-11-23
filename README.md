@@ -57,3 +57,7 @@ mount it in the container:
 # list artifacts for the repository
 
 https://api.github.com/repos/wmde/wikibase-release-prototype/actions/artifacts
+
+# refreshing the docker cache
+
+use the `DOCKER_CACHE_VERSION` env variable in the github workflow refresh the docker cache.
