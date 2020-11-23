@@ -74,12 +74,11 @@ Currently releases are being served by the Extension Distributor and the release
 
 ## Decision
 
-Release Tarballs will be generated from the pipeline artifacts and published there for the time being. 
-There is a desire for a WMDE owned hosting and this can be made possible by adding additional steps to publish on Wikiba.se.
+TBD
 
 ## Consequences
 
-Create [Github release] and [upload] tarballs by using the same Github actions api we are currently building our pipeline on.
+TBD
 
 [Github release]: https://github.com/actions/create-release
 [upload]: https://github.com/actions/upload-release-asset
