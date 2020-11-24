@@ -35,22 +35,21 @@ In order to get a overview on the practices by the open-source php community a b
 
 ---
 
-Mediawiki sticks out from the crowd by including most of their release specific documentation in each of the tarball releases while all other projects in the survey do not.
-Release specific documentation seems to generally be maintained on a separate website or file that comes along side the release package.
+MediaWiki sticks out from the crowd by including most of their release specific documentation in each of the tarball releases while all other projects in the survey do not. At first glance this feels like a undesirable pattern to adopt as it's uncommon among other projects. In reality this points out a tested and proven methodology for documenting changes and shipping release notes by the mediawiki community. Release notes are added to the release branch and refined throughout the release process and then used as a template for the documentation on mediawiki.org.     
 ## Decision
 
-Seeing that release notes are generally kept separate from the actual release tarball we've decided to follow this pattern and keep release notes in a central place that allows for easy access and updates. This does not mean release notes based on the git history will not be generated automatically in the release pipeline.
+Seeing that there is an already defined process for release notes by the mediawiki community it feels natural to use existing tools and adopting this process.
 
 The `vendor` folder will not be included in the tarball as composer dependencies should be merged by the [composer merge plugin](https://github.com/wikimedia/composer-merge-plugin).  
 
 The tarball package *WILL* include a part from the source-code the following additions.
 
+- Release notes (RELEASE-NOTES-N.NN) (example RELEASE-NOTES-1.36)
+- Historic changes (HISTORY) (Previous release notes in one file)
 - git submodule dependencies
 
 The tarball will *NOT* include.
 
-- Release notes (RELEASE-NOTES-N.NN) (example RELEASE-NOTES-1.36)
-- Historic changes (HISTORY) (Previous release notes in one file)
 - `vendor` folder populated by composer
 - `build` folder
 - hidden files/folders in the root folder
