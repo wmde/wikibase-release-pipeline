@@ -53,11 +53,13 @@ Currently releases are being served by the Extension Distributor and the release
 
 #### pros: 
 
-- Seems to be the goto place for mediawiki extensions
+- Seems to be the goto place for MediaWiki extensions
 
 #### cons:
 
 - Looking through the code we would need to adapt it to serve our needs which might be undesired.
+- Does not align with our needs of simple a hosting space for artifacts.
+- Does not support other software than MediaWiki extensions (WDQS, WDQS ui etc.)
 
 ---
 
