@@ -33,7 +33,7 @@ Currently releases are being served by the Extension Distributor and the release
 
 - Poor documentation (https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org) for what we are looking for.
 - Seemingly bound to puppet/modules/releases repository for configuration
-- No direct control. 
+- No direct control, needs negotiation. 
 - Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these)
 
 ## Wikiba.se
@@ -46,7 +46,8 @@ Currently releases are being served by the Extension Distributor and the release
 #### cons:
 
 - We would need to build something that either pulls the artifacts or gets them uploaded from the pipeline. 
-- Effort required is unclear.
+- Effort required is estimated to be high.
+- Meant to be a marketing website
 
 ## Extension Distributor
 
@@ -60,12 +61,12 @@ Currently releases are being served by the Extension Distributor and the release
 
 ---
 
-| Repository    | Service provider   | Free to WMDE                   | Self-Service (1)       | Method of publishing                                 | Current usage  | Estimated effort  | Documentation | URL
-| ------------- |------------------- | ------------------------------ | ---------------------- | ---------------------------------------------------- | -------------- | ----------------- | ------------- | --------------------------|
-| Github        | Microsoft          | Currently                      | Yes                    | Github Releases / Github Action Artifact             | -	           | Low               | Good          | github.com/wikimedia/     |
-| WF Releases   | Wikimedia          | Yes                            | Not currently          | FTP                                                  | -              | High              | Poor          | releases.wikimedia.org    |
-| Wikiba.se     | Wikimedia DE       | Yes                            | Yes                    | FTP or some kind of pulling by the server            | -              | Medium            | Poor          | wikiba.se                 |
-| ExtensionDist | Wikimedia          | Yes                            | Not currently          | Undefined, would need adaptations                    | Low (2)        | High              | Poor          | extdist.wmflabs.org/dist/ |
+| Repository    | Service provider   | Free to WMDE                   | Self-Service (1)       | Method of publishing                                 | Current usage  | Estimated effort  | Documentation | URL                       | Trusted |
+| ------------- |------------------- | ------------------------------ | ---------------------- | ---------------------------------------------------- | -------------- | ----------------- | ------------- | --------------------------|---------|
+| Github        | Microsoft          | Currently                      | Yes                    | Github Releases / Github Action Artifact             | -	           | Low               | Good          | github.com/wikimedia/     |   no    |
+| WMF Releases  | Wikimedia          | Yes                            | Not currently          | FTP                                                  | -              | High              | Poor          | releases.wikimedia.org    |   yes   |
+| Wikiba.se     | Wikimedia DE       | Yes                            | Yes                    | FTP or some kind of pulling by the server            | -              | High              | Poor          | wikiba.se                 |   yes   |
+| ExtensionDist | Wikimedia          | Yes                            | Not currently          | Undefined, would need adaptations                    | Low (2)        | High              | Poor          | extdist.wmflabs.org/dist/ |   yes   | 
 
 ---
 
@@ -74,11 +75,10 @@ Currently releases are being served by the Extension Distributor and the release
 
 ## Decision
 
-TBD
-
+* Wikibase release artifacts will be hosted on the foundation controlled domain https://releases.wikimedia.org/wikibase/ 
 ## Consequences
 
-TBD
+* A new release group called `releasers-wikibase` will be created for access to the repository
+* An [SRE-Access-Request] will be created for the hike team members to be added to
 
-[Github release]: https://github.com/actions/create-release
-[upload]: https://github.com/actions/upload-release-asset
+[SRE-Access-Request]: https://phabricator.wikimedia.org/tag/sre-access-requests/
