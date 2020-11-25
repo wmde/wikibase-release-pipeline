@@ -50,6 +50,7 @@ The tarball package *WILL* include apart from the source-code the following addi
 
 The tarball will *NOT* include.
 
+- `node_modules`
 - `vendor` folder populated by composer
 - `build` folder
 - hidden files/folders in the root folder
