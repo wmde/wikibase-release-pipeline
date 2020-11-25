@@ -42,11 +42,11 @@ Seeing that there is an already defined process for release notes by the mediawi
 
 The `vendor` folder will not be included in the tarball as composer dependencies should be merged by the [composer merge plugin](https://github.com/wikimedia/composer-merge-plugin).  
 
-The tarball package *WILL* include a part from the source-code the following additions.
+The tarball package *WILL* include apart from the source-code the following additions.
 
 - Release notes (RELEASE-NOTES-N.NN) (example RELEASE-NOTES-1.36)
 - Historic changes (HISTORY) (Previous release notes in one file)
-- git submodule dependencies
+- git submodules
 
 The tarball will *NOT* include.
 
@@ -63,8 +63,7 @@ The tarball will *NOT* include.
 
 ## Consequences
 
-- Do not include release notes in the tarball. 
+- Include release notes in the tarball. 
 - Do not include vendor folder
 - Remove any files that are not critical to the functionality of the software.
 
-...
