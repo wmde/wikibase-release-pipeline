@@ -2,7 +2,7 @@ name: Build and test Wikibase and friends
 
 on:
   push:
-    branches: [ main, test-cache-layer ]
+    branches: [ * ]
 
 env:
   DOCKER_CACHE_VERSION: 0
