@@ -49,7 +49,7 @@ When running in a Docker container, mount the git repositories as a READ-ONLY
 volume as `/srv/git` and the `cache` dir in read-write mode:
 
 `
-    docker run -it --rm -v "$(pwd)"/ref:/srv/git:ro -v "$(pwd)"/cache:/cache quibble
+docker run -it --rm -v "$(pwd)"/ref:/srv/git:ro -v "$(pwd)"/cache:/cache quibble
 `
 Commands write logs into `/workspace/log`, you can create one on the host and
 mount it in the container:
@@ -60,4 +60,4 @@ https://api.github.com/repos/wmde/wikibase-release-prototype/actions/artifacts
 
 # refreshing the docker cache
 
-use the `DOCKER_CACHE_VERSION` env variable in the github workflow refresh the docker cache.
+use the `DOCKER_CACHE_VERSION` env variable in the github workflow to refresh the docker cache.
