@@ -28,6 +28,8 @@
 
 # Selenium tests
 
+source the `.env` file in the root directory
+
 Please see tests/selenium/README.md file in mediawiki repository.
 
 ## Run specific tests
