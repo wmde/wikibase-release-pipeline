@@ -12,7 +12,7 @@
 ## Wikibase & QueryService/QueryService UI
 - [x] Create an item on Wikibase, and verify it can be found on Query Service (including the label etc)
 - [x] Delete an item on Wikibase, and verify that the item isn’t there on the query service any more
-- [ ] Create an item with a statement and verify that querying using prefixes work correctly (wdt:P1 etc.. )
+- [x] Create an item with a statement and verify that querying using prefixes work correctly (wdt:P1 etc.. )
 
 ## Wikibase Client & Repo
 - [ ] Create an item on repo with sitelink to client and verify that changes are dispatched
