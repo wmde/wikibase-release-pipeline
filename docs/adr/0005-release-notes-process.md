@@ -52,5 +52,3 @@ Release notes within the Wikibase MediaWiki extension repository will adopt a si
 [A template release notes document]: (../templates/RELEASE_NOTES-N.NN)
 [template]: https://gerrit.wikimedia.org/r/c/mediawiki/core/+/611247/3/RELEASE-NOTES-1.36
 [HISTORY]: https://gerrit.wikimedia.org/r/c/mediawiki/core/+/611247/3/HISTORY
-[Query Service UI]: https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/gui
-
