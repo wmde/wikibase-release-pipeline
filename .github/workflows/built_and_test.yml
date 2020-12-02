@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: QueryService UI Tarball
-          path: ${{env.TARBALL_PATH}}
+          path: artifacts/wdqs-ui.tar.gz #${{env.TARBALL_PATH}}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
