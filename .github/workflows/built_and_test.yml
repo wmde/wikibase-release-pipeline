@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
-          path: artifacts/Wikibase.tar.gz #${{env.TARBALL_PATH}}
+          path: artifacts/Wikibase.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -62,12 +62,6 @@ jobs:
       - name: Build QueryService Image 
         id: download_step
         run: bash build_github.sh queryservice
-
-      # - name: Archive tar production artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: QueryService Tarball
-      #     path: #${{env.TARBALL_PATH}}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -92,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: QueryService UI Tarball
-          path: artifacts/wdqs-ui.tar.gz #${{env.TARBALL_PATH}}
+          path: artifacts/wdqs-ui.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
