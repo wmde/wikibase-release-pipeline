@@ -34,13 +34,13 @@ jobs:
           key: cache-wikibase-git-repo
 
       - name: Build Tarball
-        run: bash build.sh wikibase
+        run: bash build_github.sh wikibase
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
-          path: ${{env.TARBALL_PATH}}
+          path: /artifacts/Wikibase.tar.gz #${{env.TARBALL_PATH}}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
