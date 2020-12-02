@@ -86,7 +86,7 @@ jobs:
           restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI
-        run: bash build queryservice-ui
+        run: bash build.sh queryservice-ui
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
