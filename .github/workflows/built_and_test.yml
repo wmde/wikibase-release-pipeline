@@ -33,11 +33,8 @@ jobs:
           path: git_cache
           key: cache-wikibase-git-repo
 
-      - name: Update the git cache
-        run: bash update_cache.sh
-
       - name: Build Tarball
-        run: bash build_scripts/build_wikibase.sh
+        run: bash build.sh wikibase
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -45,111 +42,108 @@ jobs:
           name: Wikibase Tarball
           path: ${{env.TARBALL_PATH}}
 
-      - name: Build Docker image
-        run: bash build_scripts/build_wikibase_docker.sh ${{ env.WIKIBASE_IMAGE_NAME }}
-
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Docker Image
-          path: wikibase.docker.tar.gz
+          path: /artifacts/wikibase.docker.tar.gz
 
-  build_queryservice:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  # build_queryservice:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - uses: satackey/action-docker-layer-caching@v0.0.8
-        continue-on-error: true
-        with:
-          key: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+  #     - uses: satackey/action-docker-layer-caching@v0.0.8
+  #       continue-on-error: true
+  #       with:
+  #         key: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+  #         restore-keys: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
-      - name: Download QueryService Tarball
-        id: download_step
-        run: bash build_scripts/build_queryservice.sh
+  #     - name: Download QueryService Tarball
+  #       id: download_step
+  #       run: bash build_scripts/build_queryservice.sh
 
-      - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: QueryService Tarball
-          path: ${{env.TARBALL_PATH}}
+  #     - name: Archive tar production artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: QueryService Tarball
+  #         path: ${{env.TARBALL_PATH}}
 
-      - name: Build Docker image
-        run: bash build_scripts/build_queryservice_docker.sh ${{ env.QUERYSERVICE_IMAGE_NAME }}
+  #     - name: Build Docker image
+  #       run: bash build_scripts/build_queryservice_docker.sh ${{ env.QUERYSERVICE_IMAGE_NAME }}
 
-      - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: QueryService Docker Image
-          path: wdqs.docker.tar.gz
+  #     - name: Archive docker production artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: QueryService Docker Image
+  #         path: wdqs.docker.tar.gz
 
-  build_queryservice_ui:
+  # build_queryservice_ui:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - uses: satackey/action-docker-layer-caching@v0.0.8
-        continue-on-error: true
-        with:
-          key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+  #     - uses: satackey/action-docker-layer-caching@v0.0.8
+  #       continue-on-error: true
+  #       with:
+  #         key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+  #         restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
-      - name: Build QueryService UI Tarball
-        id: download_step
-        run: bash build_scripts/build_queryservice_ui.sh
+  #     - name: Build QueryService UI Tarball
+  #       id: download_step
+  #       run: bash build_scripts/build_queryservice_ui.sh
 
-      - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: QueryService UI Tarball
-          path: ${{env.TARBALL_PATH}}
+  #     - name: Archive tar production artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: QueryService UI Tarball
+  #         path: ${{env.TARBALL_PATH}}
 
-      - name: Build Docker image
-        run: bash build_scripts/build_queryservice_ui_docker.sh ${{env.QUERYSERVICE_UI_IMAGE_NAME}}
+  #     - name: Build Docker image
+  #       run: bash build_scripts/build_queryservice_ui_docker.sh ${{env.QUERYSERVICE_UI_IMAGE_NAME}}
 
-      - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: QueryService UI Docker Image
-          path: wdqs-ui.docker.tar.gz
+  #     - name: Archive docker production artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: QueryService UI Docker Image
+  #         path: wdqs-ui.docker.tar.gz
 
 
 
-  test_wikibase:
-    needs:
-      - build_wikibase
-      - build_queryservice
-      - build_queryservice_ui
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  # test_wikibase:
+  #   needs:
+  #     - build_wikibase
+  #     - build_queryservice
+  #     - build_queryservice_ui
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: Wikibase Docker Image
+  #     - name: Get Wikibase docker image artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: Wikibase Docker Image
 
-      - name: Get QueryService docker image artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: QueryService Docker Image
+  #     - name: Get QueryService docker image artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: QueryService Docker Image
 
-      - name: Get QueryService UI docker image artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: QueryService UI Docker Image
+  #     - name: Get QueryService UI docker image artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: QueryService UI Docker Image
 
-      - name: Run Docker Tests
-        run: bash test_scripts/test_docker.sh
+  #     - name: Run Docker Tests
+  #       run: bash test_scripts/test_docker.sh
 
-      - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Test artifacts
-          path: |
-            test_scripts/selenium/log
-            test_scripts/log
+  #     - name: Archive docker test artifacts
+  #       uses: actions/upload-artifact@v2
+  #       if: always()
+  #       with:
+  #         name: Test artifacts
+  #         path: |
+  #           test_scripts/selenium/log
+  #           test_scripts/log

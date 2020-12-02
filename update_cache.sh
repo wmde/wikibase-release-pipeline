@@ -9,6 +9,6 @@ for extension in "${extensions[@]}"; do
 		git clone --bare "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension.git" "git_cache/$extension.git"
 	fi
 	cd "git_cache/$extension.git"
-	git fetch --all
+	GIT_TRACE=1 git fetch --all -v
 	cd -
 done

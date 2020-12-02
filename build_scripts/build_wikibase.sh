@@ -5,7 +5,7 @@ ROOT="$(pwd)"
 BRANCH="REL1_35"
 
 TEMP_GIT_DIR="$(mktemp -d)"
-TEMP_TAR_DIR="$(mktemp -d)"
+TEMP_TAR_DIR="/artifacts/" #"$(mktemp -d)"
 
 git clone --depth 1 --single-branch --branch ${BRANCH} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR/Wikibase"
 git -C "$TEMP_GIT_DIR/Wikibase" submodule update
@@ -22,4 +22,3 @@ if [ -n "$GITHUB_ENV" ]; then
 else
     export TARBALL_PATH
 fi
-
