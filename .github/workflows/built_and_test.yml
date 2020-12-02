@@ -100,40 +100,38 @@ jobs:
           name: QueryService UI Docker Image
           path: wdqs-ui.docker.tar.gz
 
+  test_wikibase:
+    needs:
+      - build_wikibase
+      - build_queryservice
+      - build_queryservice_ui
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
+      - name: Get Wikibase docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Wikibase Docker Image
 
-  # test_wikibase:
-  #   needs:
-  #     - build_wikibase
-  #     - build_queryservice
-  #     - build_queryservice_ui
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
+      - name: Get QueryService docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: QueryService Docker Image
 
-  #     - name: Get Wikibase docker image artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: Wikibase Docker Image
+      - name: Get QueryService UI docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: QueryService UI Docker Image
 
-  #     - name: Get QueryService docker image artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: QueryService Docker Image
+      - name: Run Docker Tests
+        run: bash test_scripts/test_docker.sh
 
-  #     - name: Get QueryService UI docker image artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: QueryService UI Docker Image
-
-  #     - name: Run Docker Tests
-  #       run: bash test_scripts/test_docker.sh
-
-  #     - name: Archive docker test artifacts
-  #       uses: actions/upload-artifact@v2
-  #       if: always()
-  #       with:
-  #         name: Test artifacts
-  #         path: |
-  #           test_scripts/selenium/log
-  #           test_scripts/log
+      - name: Archive docker test artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test artifacts
+          path: |
+            test_scripts/selenium/log
+            test_scripts/log
