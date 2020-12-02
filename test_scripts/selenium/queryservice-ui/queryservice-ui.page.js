@@ -17,6 +17,17 @@ class QueryServiceUI extends Page {
 		this.submitBtn.click();
 	}
 
+	resultIncludes( prop, value ) {
+		const text = this.resultTable.getText();
+		if ( !value ) {
+			return text.includes( prop );
+		}
+
+		const regexp = new RegExp( '(' + prop + ')(\\s+)(' + value + ')' );
+		const matches = text.match( regexp );
+		return matches !== null;
+	}
+
 }
 
 module.exports = new QueryServiceUI();

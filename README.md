@@ -11,9 +11,10 @@ export QUERYSERVICE_UI_IMAGE_NAME=wdqs-ui
 export QUERYSERVICE_VERSION=0.3.40
 export QUERYSERVICE_UI_COMMIT_HASH=e84ab35125557ff073f42ba522a684d35c288b38
 
-# For testing. Replace with your queryservice ui and queryservice, mediawiki defaults to localhost:8080
-export QUERYSERVICE_UI_SERVER=localhost:8081
+# For testing. Replace with your queryservice ui and queryservice
+export QUERYSERVICE_UI_SERVER=localhost:8081 
 export QUERYSERVICE_SERVER=localhost:8989
+export MW_SERVER=http://default.web.mw.localhost:8080
 ```
 
 ```
