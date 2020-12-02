@@ -13,7 +13,7 @@ git -C "$TEMP_GIT_DIR/Wikibase" submodule update
 # remove git things from release package
 rm "$TEMP_GIT_DIR/Wikibase/".git* -rfv
 
-GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
+GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
 
 TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"
 

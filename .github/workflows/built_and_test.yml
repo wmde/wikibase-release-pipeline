@@ -40,13 +40,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
-          path: /artifacts/Wikibase.tar.gz #${{env.TARBALL_PATH}}
+          path: artifacts/Wikibase.tar.gz #${{env.TARBALL_PATH}}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Docker Image
-          path: /artifacts/wikibase.docker.tar.gz
+          path: artifacts/wikibase.docker.tar.gz
 
   # build_queryservice:
   #   runs-on: ubuntu-latest
