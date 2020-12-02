@@ -8,9 +8,9 @@ rm -f log/*
 # does not exists on github
 mkdir log -p
 
-docker load -i "../$WIKIBASE_IMAGE_NAME.docker.tar.gz"
-docker load -i "../$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
-docker load -i "../$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WIKIBASE_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
 docker-compose up -d
 
 docker-compose logs -f --no-color > log/wikibase.log &
