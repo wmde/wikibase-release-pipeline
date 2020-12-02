@@ -9,28 +9,60 @@ const querystring = require( 'querystring' );
 
 describe( 'Item', function () {
 
-	it( 'should shows up in queryservice ui after creation', function () {
+	it( 'should shows up with property in queryservice ui after creation', function () {
 
-		// TODO make an item using the UI
-		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( 'T267743-' ) ) );
+		const itemLabel = 'T267743-';
+		const propertyValue = 'PropertyExampleStringValue';
 
+		const propertyId = browser.call( () => WikibaseApi.createProperty( 'string' ) );
+		const data = {
+			claims: [
+				{
+					mainsnak: {
+						snaktype: 'value',
+						property: propertyId,
+						datavalue: { value: propertyValue, type: 'string' } },
+					type: 'statement', rank: 'normal'
+				}
+			]
+		};
+
+		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
+
+		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
+
 		// wait for WDQS-updater
 		browser.pause( 20 * 1000 );
 
 		QueryServiceUI.submit();
 		QueryServiceUI.resultTable.waitForDisplayed();
 
-		const resultText = QueryServiceUI.resultTable.getText();
+		assert( QueryServiceUI.resultIncludes( 'schema:version' ) );
+		assert( QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
+		assert( QueryServiceUI.resultIncludes( 'wikibase:timestamp' ) );
 
-		assert( resultText.includes( 'schema:version' ) );
-		assert( resultText.includes( 'schema:dateModified' ) );
+		// label should match on the prefix
+		assert( QueryServiceUI.resultIncludes( 'rdfs:label', itemLabel ) );
 
-		assert( resultText.includes( 'rdfs:label' ) );
+		// should have one statement
+		assert( QueryServiceUI.resultIncludes( 'wikibase:statements', '1' ) );
 
-		assert( resultText.includes( 'wikibase:sitelinks' ) );
-		assert( resultText.includes( 'wikibase:identifiers' ) );
-		assert( resultText.includes( 'wikibase:timestamp' ) );
+		assert( QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) );
+		assert( QueryServiceUI.resultIncludes( 'wikibase:identifiers', '0' ) );
+
+		// property value is set with correct rdf
+		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>', propertyValue ) );
+
+		// query the property using wdt: prefix
+		QueryServiceUI.open( 'SELECT * WHERE{ ?s wdt:' + propertyId + ' ?o }' );
+
+		QueryServiceUI.submit();
+		QueryServiceUI.resultTable.waitForDisplayed();
+
+		// should be set only to the item
+		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+
 	} );
 
 	it( 'should not show up in queryservice ui after deletion', function () {
