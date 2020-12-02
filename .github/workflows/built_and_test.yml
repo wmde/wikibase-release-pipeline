@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: QueryService UI Docker Image
-          path: wdqs-ui.docker.tar.gz
+          path: artifacts/wdqs-ui.docker.tar.gz
 
   test_wikibase:
     needs:
@@ -113,16 +113,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Wikibase Docker Image
+          path: artifacts/
 
       - name: Get QueryService docker image artifact
         uses: actions/download-artifact@v2
         with:
           name: QueryService Docker Image
+          path: artifacts/
 
       - name: Get QueryService UI docker image artifact
         uses: actions/download-artifact@v2
         with:
           name: QueryService UI Docker Image
+          path: artifacts/
 
       - name: Run Docker Tests
         run: bash test_scripts/test_docker.sh
