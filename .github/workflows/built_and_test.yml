@@ -31,12 +31,14 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Tarball
+          if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Wikibase Docker Image
+          if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
   build_queryservice:
@@ -58,6 +60,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: QueryService Docker Image
+          if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
   build_queryservice_ui:
@@ -78,13 +81,15 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: QueryService UI Tarball
-          path: artifacts/wdqs-ui.tar.gz
+          if-no-files-found: error
+          path: ./artifacts/wdqs-ui.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: QueryService UI Docker Image
-          path: artifacts/wdqs-ui.docker.tar.gz
+          if-no-files-found: error
+          path: ./artifacts/wdqs-ui.docker.tar.gz
 
   test_wikibase:
     needs:
