@@ -3,14 +3,14 @@ name: Build and test Wikibase and friends
 on:
   push:
 
-env:
-  DOCKER_CACHE_VERSION: 0
-  WIKIBASE_IMAGE_NAME: wikibase
-  MEDIAWIKI_IMAGE_VERSION: 1.35
-  QUERYSERVICE_IMAGE_NAME: wdqs
-  QUERYSERVICE_VERSION: 0.3.55
-  QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
-  QUERYSERVICE_UI_COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
+# env:
+#   DOCKER_CACHE_VERSION: 0
+#   WIKIBASE_IMAGE_NAME: wikibase
+#   MEDIAWIKI_IMAGE_VERSION: 1.35
+#   QUERYSERVICE_IMAGE_NAME: wdqs
+#   QUERYSERVICE_VERSION: 0.3.55
+#   QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
+#   QUERYSERVICE_UI_COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
 
 jobs:
   build_wikibase:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+      - uses: c-py/action-dotenv-to-setenv@v2
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      - uses: c-py/action-dotenv-to-setenv@v2
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -73,6 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -102,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      - uses: c-py/action-dotenv-to-setenv@v2
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
