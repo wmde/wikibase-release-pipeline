@@ -99,7 +99,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: c-py/action-dotenv-to-setenv@v2
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -119,7 +118,7 @@ jobs:
           path: artifacts/
 
       - name: Run Docker Tests
-        run: bash test_scripts/test_docker.sh
+        run: make test
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
