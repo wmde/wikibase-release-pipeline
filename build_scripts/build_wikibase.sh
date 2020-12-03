@@ -2,12 +2,11 @@
 set -e
 
 ROOT="$(pwd)"
-BRANCH="REL1_35"
 
 TEMP_GIT_DIR="$(mktemp -d)"
-TEMP_TAR_DIR="/artifacts/" #"$(mktemp -d)"
+TEMP_TAR_DIR="$(pwd)"/artifacts
 
-git clone --depth 1 --single-branch --branch ${BRANCH} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR/Wikibase"
+git clone --depth 1 --single-branch --branch ${WIKIBASE_BRANCH_NAME} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR/Wikibase"
 git -C "$TEMP_GIT_DIR/Wikibase" submodule update
 
 # remove git things from release package

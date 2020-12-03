@@ -3,15 +3,6 @@ name: Build and test Wikibase and friends
 on:
   push:
 
-# env:
-#   DOCKER_CACHE_VERSION: 0
-#   WIKIBASE_IMAGE_NAME: wikibase
-#   MEDIAWIKI_IMAGE_VERSION: 1.35
-#   QUERYSERVICE_IMAGE_NAME: wdqs
-#   QUERYSERVICE_VERSION: 0.3.55
-#   QUERYSERVICE_UI_IMAGE_NAME: wdqs-ui
-#   QUERYSERVICE_UI_COMMIT_HASH: e84ab35125557ff073f42ba522a684d35c288b38
-
 jobs:
   build_wikibase:
     runs-on: ubuntu-latest

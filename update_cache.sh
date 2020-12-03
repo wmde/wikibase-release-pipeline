@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cd "$(dirname "$0")"
+mkdir -p 'artifacts'
 
+cd "$(dirname "$0")"
 extensions=("Wikibase")
 
 for extension in "${extensions[@]}"; do
