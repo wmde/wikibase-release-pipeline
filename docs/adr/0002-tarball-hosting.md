@@ -9,18 +9,18 @@ proposed
 ## Context
 
 We need to determine a place to host our new release artifacts (tarballs). 
-Currently releases are being served by the Extension Distributor and the release branches of the git repository. 
+Currently releases are being served by the Extension Distributor and the release branches of the git repositories.
 
 ## Github
 
 #### pros: 
 
-- The same framework we use to produce the artifacts
+- The same framework we use to produce the artifacts (in the current implementation of the release pipeline)
 - Minimal effort required.
 
 #### cons:
 
-- Not a Foundation service
+- Not a WMF/WMDE service
 - Needs to use the github frontend or routing with a token to get the artifacts (unless it's made into a release)
 
 ## releases.wikimedia.org
@@ -34,14 +34,14 @@ Currently releases are being served by the Extension Distributor and the release
 - Poor documentation (https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org) for what we are looking for.
 - Seemingly bound to puppet/modules/releases repository for configuration
 - No direct control, needs negotiation. 
-- Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these)
+- Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these). However, Mediawiki with bundled extensions is released there https://releases.wikimedia.org/mediawiki/1.35/
 
 ## Wikiba.se
 
 #### pros: 
 
 - WMDE owned means direct control
-- The official site for Wikibase 
+- The official site for Wikibase
 
 #### cons:
 
@@ -53,27 +53,28 @@ Currently releases are being served by the Extension Distributor and the release
 
 #### pros: 
 
-- Seems to be the goto place for MediaWiki extensions
+- Seems to be the "goto place" for MediaWiki extensions
 
 #### cons:
 
-- Looking through the code we would need to adapt it to serve our needs which might be undesired.
+- Looking through [the code](https://github.com/wikimedia/labs-tools-extdist) we would need to adapt it to serve our needs which might be undesired.
 - Does not align with our needs of simple a hosting space for artifacts.
 - Does not support other software than MediaWiki extensions (WDQS, WDQS ui etc.)
 
 ---
 
-| Repository    | Service provider   | Free to WMDE                   | Self-Service (1)       | Method of publishing                                 | Current usage  | Estimated effort  | Documentation | URL                       | Trusted |
+| Repository    | Service provider   | Free to WMDE                   | Self-Service (1)       | Method of publishing                                 | Visibility/Current usage  | Estimated effort  | Documentation | URL                       | Trusted |
 | ------------- |------------------- | ------------------------------ | ---------------------- | ---------------------------------------------------- | -------------- | ----------------- | ------------- | --------------------------|---------|
-| Github        | Microsoft          | Currently                      | Yes                    | Github Releases / Github Action Artifact             | -	           | Low               | Good          | github.com/wikimedia/     |   no    |
-| WMF Releases  | Wikimedia          | Yes                            | Not currently          | FTP                                                  | -              | High              | Poor          | releases.wikimedia.org    |   yes   |
-| Wikiba.se     | Wikimedia DE       | Yes                            | Yes                    | FTP or some kind of pulling by the server            | -              | High              | Poor          | wikiba.se                 |   yes   |
-| ExtensionDist | Wikimedia          | Yes                            | Not currently          | Undefined, would need adaptations                    | Low (2)        | High              | Poor          | extdist.wmflabs.org/dist/ |   yes   | 
+| Github        | Github/Microsoft          | Currently, Might change in the future. (2)                      | Yes                    | Github Releases / Github Action Artifact             | -	           | Low               | Good          | github.com/wikimedia/     |   no    |
+| WMF Releases  | WMF          | Yes                            | No (negotiation needed - likely only initially)         | FTP/SFTP/SCP                                                  | -              | High              | Poor          | releases.wikimedia.org    |   yes   |
+| Wikiba.se     | WMDE       | Yes                            | Yes                    | FTP or some kind of pulling by the server (TBD - not existing yet)           | -              | High              | Poor (non existent)         | wikiba.se, or releases.wikiba.se                 |   yes   |
+| ExtensionDist | WMF/Volunteers?          | Yes                            | No (negotiation needed - likely only initially)          | Undefined, would need adaptations                    | Low (3)        | Very High              | Poor          | extdist.wmflabs.org/dist/ |   yes   | 
 
 ---
 
 1. We can create new tarballs and publish without filing a ticket or speaking to admins
-2. https://grafana.wikimedia.org/d/000000161/extension-distributor-downloads?orgId=1&from=now-5y&to=now
+2. WMDE (github.com/wmde) has a free open source plan with Github. WMF (github.com/wikimedia) does not
+3. https://grafana.wikimedia.org/d/000000161/extension-distributor-downloads?orgId=1&from=now-5y&to=now
 
 ## Decision
 
