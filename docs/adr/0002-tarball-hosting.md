@@ -1,4 +1,4 @@
-# 1) Use Github for hosting release tarballs {#adr_0002}
+# 1) Use releases.wikimedia.org for hosting release tarballs {#adr_0002}
 
 Date: 2020-11-20
 
@@ -78,10 +78,12 @@ Currently releases are being served by the Extension Distributor and the release
 
 ## Decision
 
-* Wikibase release artifacts will be hosted on the foundation controlled domain https://releases.wikimedia.org/wikibase/ 
+* Wikibase release artifacts will be hosted on the WMF-controlled domain https://releases.wikimedia.org/.
+
 ## Consequences
 
 * A new release group called `releasers-wikibase` will be created for access to the repository
-* An [SRE-Access-Request] will be created for the hike team members to be added to
+* An [SRE-Access-Request] will be created, and the hike team members will be added as initial maintainers. The group will be later on expanded to cover other relevant WMDE staff.
+* Publishing step of Wikibase release pipeline will be adjusted to publish tarball release artifacts to https://releases.wikimedia.org/wikibase/ (or similar directory - final name to be defined during the implementation).
 
 [SRE-Access-Request]: https://phabricator.wikimedia.org/tag/sre-access-requests/
