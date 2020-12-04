@@ -1,6 +1,6 @@
-# N) Repository for docker images {#adr_0001}
+# 1) Use Dockerhub as a repository for docker images {#adr_0001}
 
-Date: 2020-11-20
+Date: 2020-12-04
 
 ## Status
 
@@ -30,8 +30,9 @@ Some key properties of existing registries were considered in the table below:
 
 ## Decision
 
-...
+We will publish Docker release images to Dockerhub. Dockerhub is the goto location for publishing Docker images.
+We do not consider publishing Wikibase Docker images to WMF Docker Registry yet, as its purpose is to hold images to be used in Wikimedia production infrastructure. This might change once Wikibase (i.e. MediaWiki and extensions) will be deployed using container images - not the case as of December 2020.
 
 ## Consequences
 
-...
+Publishing step of the Wikibase release pipeline will be adjusted to publish release Docker container images to Dockerhub (under https://hub.docker.com/u/wikibase).
