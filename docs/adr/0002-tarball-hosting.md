@@ -86,4 +86,4 @@ Currently releases are being served by the Extension Distributor and the release
 * An [SRE-Access-Request] will be created, and the hike team members will be added as initial maintainers. The group will be later on expanded to cover other relevant WMDE staff.
 * Publishing step of Wikibase release pipeline will be adjusted to publish tarball release artifacts to https://releases.wikimedia.org/wikibase/ (or similar directory - final name to be defined during the implementation).
 
-[SRE-Access-Request]: https://phabricator.wikimedia.org/tag/sre-access-requests/
+[SRE-Access-Request]: https://phabricator.wikimedia.org/T268818
