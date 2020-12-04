@@ -1,10 +1,10 @@
 # 1) Use releases.wikimedia.org for hosting release tarballs {#adr_0002}
 
-Date: 2020-11-20
+Date: 2020-12-04
 
 ## Status
 
-proposed
+accepted
 
 ## Context
 
