@@ -11,22 +11,14 @@ mkdir log -p
 docker load -i "../$WIKIBASE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
-docker-compose up -d --force-recreate
 
-docker-compose logs -f --no-color > log/wikibase.log &
+#docker-compose down
+#docker-compose logs -f --no-color > "log/wikibase.curl.log" &
 
-# build curl test container 
-docker-compose -f docker-compose.yml -f docker-compose-test.yml build wikibase-test
-# run curl tests
-docker-compose -f docker-compose.yml -f docker-compose-test.yml run wikibase-test bash /run-tests.sh
+# run curl test container 
+#docker-compose -f docker-compose.yml -f docker-compose-test.yml build wikibase-test
+#docker-compose -f docker-compose.yml -f docker-compose-test.yml run wikibase-test bash /run-tests.sh
 
-## build selenium test container
-docker-compose -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    build wikibase-selenium-test
-## run selenium tests
-docker-compose -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    run wikibase-selenium-test
+bash run_selenium.sh repo /var/www/html/LocalSettings/LocalSettings.debug.php
 
-
+bash run_selenium.sh fedprops /var/www/html/LocalSettings/LocalSettings.federatedProperties.php

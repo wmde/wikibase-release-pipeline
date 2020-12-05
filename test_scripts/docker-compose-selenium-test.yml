@@ -6,14 +6,10 @@ services:
     build:
       context: ./
       dockerfile: DockerfileSelenium
-    links:
-      - wikibase
-      - wdqs-frontend
-      - wdqs
     depends_on:
       - wikibase
       - wdqs-frontend
-      - wdqs-updater
+      - wdqs
     volumes:
       - ./selenium/log/:/usr/src/app/selenium/log/
     environment:

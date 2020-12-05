@@ -31,24 +31,6 @@
 source the `.env` file in the root directory
 
 Please see tests/selenium/README.md file in mediawiki repository.
-
-## Run specific tests
-
-To run only some tests, you first have to start Chromedriver in one terminal window:
-
-    chromedriver --url-base=wd/hub --port=4444
-
-Then, in another terminal window run this the current extension directory:
-
-    npm install
-    npm run selenium-test -- --spec specs/FILE-NAME.js
-
-You can also filter specific test(s) by name:
-
-    npm run selenium-test -- --spec specs/FILE-NAME.js --mochaOpts.grep TEST-NAME
-
-Make sure Chromedriver is running when executing the above command.
-
 ## Environment
 
 The behavior of the tests can be modified with several environment variables.

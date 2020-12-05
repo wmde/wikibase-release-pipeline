@@ -25,8 +25,8 @@
 		"ie 11"
 	],
 	"scripts": {
-		"selenium-test": "npm-run-all --continue-on-error selenium-test:*",
-		"selenium-test:repo": "wdio wdio.conf.js",
+		"test:repo": "wdio wdio.conf.js --spec specs/repo/*",
+		"test:fedprops": "wdio wdio.conf.js --spec specs/federated-properties/*",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
 	}

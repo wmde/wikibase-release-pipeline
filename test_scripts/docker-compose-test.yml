@@ -7,9 +7,13 @@ services:
       context: ./
       dockerfile: Dockerfile
     links:
-      - wikibase
+      - wikibase:wikibase.svc
+      - wdqs-frontend
+      - wdqs
     depends_on:
       - wikibase
+      - wdqs-frontend
+      - wdqs
     environment:
       - WIKIBASE_SERVER=wikibase.svc:80
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80

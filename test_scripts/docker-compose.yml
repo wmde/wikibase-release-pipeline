@@ -7,8 +7,12 @@ services:
     links:
       - mysql
     depends_on:
-    - mysql
+      - mysql
     restart: unless-stopped
+    volumes:
+      - ./LocalSettings/:/var/www/html/LocalSettings
+    ports:
+      - "8585:80"
     networks:
       default:
         aliases:
@@ -25,6 +29,7 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
+      - DOCKER_INCLUDE_SETTINGS=${DOCKER_INCLUDE_SETTINGS}
   mysql:
     image: mariadb:10.3
     restart: unless-stopped
@@ -55,7 +60,7 @@ services:
       - WDQS_HOST=wdqs-proxy.svc
   wdqs:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
-    restart: unless-stopped
+    restart: always
     command: /runBlazegraph.sh
     networks:
       default:
@@ -95,3 +100,6 @@ services:
      - WIKIBASE_HOST=wikibase.svc
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
+
+volumes:
+  LocalSettings:
