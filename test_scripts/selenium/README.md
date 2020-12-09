@@ -21,7 +21,7 @@
 - [ ] Create an item on repo and verify Lua cpu time is not exceeding some threshold (Scribunto)
 
 ## Wikibase Federated properties (using wikidata.org as source wiki)
-- [ ] Create an item on Wikibase and add a statement using a federated property
+- [X] Create an item on Wikibase and add a statement using a federated property
   - [ ] verify it is available with the correct rdf through the Entity page
   - [ ] verify it is available through the QueryService with the correct prefixes
 
