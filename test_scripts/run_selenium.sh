@@ -3,7 +3,7 @@ set -e
 
 export DOCKER_INCLUDE_SETTINGS=$2
 
-#docker-compose down
+docker-compose down
 docker-compose up -d --force-recreate
 docker-compose logs -f --no-color > "log/wikibase.$1.log" &
 
