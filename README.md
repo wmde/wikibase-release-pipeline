@@ -1,21 +1,28 @@
 # wikibase-release-prototype
 
-## Building locally
-To locally build all artifacts set the following environment variables in an .env file
+## Building locally using docker
+
+To build using docker run the following command
+
+```
+./build_github.sh <wikibase|queryservice-ui|queryservice|all>
+```
+
+## Building locally using make
+To locally build all artifacts set the following environment variables in the .env file
 
 ```
 export WIKIBASE_IMAGE_NAME=wikibase
 export QUERYSERVICE_IMAGE_NAME=wdqs
 export QUERYSERVICE_UI_IMAGE_NAME=wdqs-ui
 
+export WIKIBASE_BRANCH_NAME=REL1_35
+export MEDIAWIKI_IMAGE_VERSION=1.35
 export QUERYSERVICE_VERSION=0.3.40
 export QUERYSERVICE_UI_COMMIT_HASH=e84ab35125557ff073f42ba522a684d35c288b38
-
-# For testing. Replace with your queryservice ui and queryservice
-export QUERYSERVICE_UI_SERVER=localhost:8081 
-export QUERYSERVICE_SERVER=localhost:8989
-export MW_SERVER=http://default.web.mw.localhost:8080
 ```
+
+then run to build everything
 
 ```
 make all
