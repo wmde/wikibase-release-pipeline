@@ -77,8 +77,6 @@ services:
     restart: unless-stopped
     environment:
       - PROXY_PASS_HOST=wdqs.svc:9999
-    ports:
-     - "8989:80"
     depends_on:
     - wdqs
     networks:

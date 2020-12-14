@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_IMAGE_VERSION
+ARG MEDIAWIKI_IMAGE_NAME
 FROM ubuntu:xenial as unpacker
 
 RUN apt-get update && \
@@ -8,7 +8,7 @@ RUN apt-get update && \
 COPY Wikibase.tar.gz .
 RUN tar xzf Wikibase.tar.gz
 
-FROM mediawiki:${MEDIAWIKI_IMAGE_VERSION} as collector
+FROM ${MEDIAWIKI_IMAGE_NAME} as collector
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 
 FROM composer:1 as composer
@@ -17,7 +17,7 @@ WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
 RUN composer install --no-dev
 
-FROM mediawiki:${MEDIAWIKI_IMAGE_VERSION}
+FROM ${MEDIAWIKI_IMAGE_NAME}
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base=0.19.* && \

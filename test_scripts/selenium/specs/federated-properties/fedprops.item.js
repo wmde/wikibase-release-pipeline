@@ -6,13 +6,23 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-
+const request = require('request');
+const path = require('path')
+const fs = require('fs')
+const { URL } = require('url')
 const propertyId = 'P213';
 const propertyValue = 'ISNI';
 const itemId = 'Q1';
 const itemLabel = 'T267743-';
 
 describe( 'Fed props Item', function () {
+
+	before(function() {
+		browser.addCommand('makeRequest', function (url, cb) {
+			request.get(url, cb);
+		})
+	  });
+	
 
 	it( 'can add a federated property and it shows up in the ui', function() {
 
@@ -35,9 +45,39 @@ describe( 'Fed props Item', function () {
 		$('.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add').waitForDisplayed();
 	})
 
-	it.skip( 'should show up in Special:EntityData with rdf', function() {
-		browser.url( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.rdf' ) // why does it not work?
+
+	it( 'should show up in Special:EntityData with ttl', function() {
+		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl');
 	})
+
+	it( 'should show up in Special:EntityData with json', function() {
+		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json');
+	})
+
+
+	it.skip( 'should show up in Special:EntityData with rdf', function() {
+		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf?flavor=dump&revision=2');
+	})
+
+	it( 'shows property in ui after creation using prefixes', function () {
+
+		const prefixes = [
+			'prefix fpwdt: <http://www.wikidata.org/prop/direct/>'
+		]
+		const query = 'SELECT * WHERE{ ?s fpwdt:' + propertyId + ' ?o }'
+		
+		QueryServiceUI.open( query, prefixes );
+
+		// wait for WDQS-updater
+		browser.pause( 20 * 1000 );
+
+		QueryServiceUI.submit();
+		QueryServiceUI.resultTable.waitForDisplayed();
+
+		// label should match on the prefix
+		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+
+	} );
 
 	it( 'shows up in queryservice ui after creation', function () {
 
