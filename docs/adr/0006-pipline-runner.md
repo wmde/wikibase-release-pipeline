@@ -1,10 +1,10 @@
 # 6) Pipeline runner {#adr_0006}
 
-Date: 2020-12-03
+Date: 2020-12-14
 
 ## Status
 
-proposed
+accepted
 
 ## Context
 
