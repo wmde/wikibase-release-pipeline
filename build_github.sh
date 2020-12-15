@@ -3,8 +3,8 @@ TARGET=$1
 RELEASE_ENV_FILE=$2
 
 if [ ! -f "$RELEASE_ENV_FILE" ]; then
-    echo "RELEASE_ENV_FILE is not set. Defaulting to .env"
-    RELEASE_ENV_FILE=.env
+    echo "RELEASE_ENV_FILE is not set!"
+    exit 1
 fi
 
 echo

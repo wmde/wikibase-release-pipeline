@@ -6,7 +6,7 @@ on:
       env_file:
         description: 'Environment file'
         required: true
-        default: '.env'
+        default: '.env' # only gets set on a "workflow_dispatch" run
   push:
 
 env:
@@ -90,7 +90,7 @@ jobs:
           restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI
-        run: bash build_github.sh queryservice-ui ${{ github.event.inputs.env_file }}
+        run: bash build_github.sh queryservice-ui ${{ env.env_file }}
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
