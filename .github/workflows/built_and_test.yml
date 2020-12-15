@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: ${{  }}
+          env-file: ${{ env.env_file }}
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -36,7 +36,7 @@ jobs:
           key: cache-wikibase-git-repo
 
       - name: Build Tarball
-        run: bash build_github.sh wikibase ${{ github.event.inputs.env_file }}
+        run: bash build_github.sh wikibase ${{ env.env_file }}
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: ${{ github.event.inputs.env_file }}
+          env-file: ${{ env.env_file }}
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -67,7 +67,7 @@ jobs:
 
       - name: Build QueryService Image 
         id: download_step
-        run: bash build_github.sh queryservice ${{ github.event.inputs.env_file }}
+        run: bash build_github.sh queryservice ${{ env.env_file }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
