@@ -3,7 +3,7 @@ name: Build and test Wikibase and friends
 on:
   workflow_dispatch:
     inputs:
-      name:
+      env_file:
         description: 'Environment file'
         required: true
         default: '.env'
@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ github.event.inputs.env_file }}
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -31,7 +33,7 @@ jobs:
           key: cache-wikibase-git-repo
 
       - name: Build Tarball
-        run: bash build_github.sh wikibase
+        run: bash build_github.sh wikibase ${{ github.event.inputs.env_file }}
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -52,6 +54,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ github.event.inputs.env_file }}
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -60,7 +64,7 @@ jobs:
 
       - name: Build QueryService Image 
         id: download_step
-        run: bash build_github.sh queryservice
+        run: bash build_github.sh queryservice ${{ github.event.inputs.env_file }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -74,6 +78,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ github.event.inputs.env_file }}
       - uses: satackey/action-docker-layer-caching@v0.0.8
         continue-on-error: true
         with:
@@ -81,7 +87,7 @@ jobs:
           restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI
-        run: bash build_github.sh queryservice-ui
+        run: bash build_github.sh queryservice-ui ${{ github.event.inputs.env_file }}
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
