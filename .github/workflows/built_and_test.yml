@@ -9,7 +9,6 @@ on:
         default: 'warning'
       tags:
         description: 'Test scenario tags'  
-  push:
 
 jobs:
   build_wikibase:
