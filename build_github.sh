@@ -11,8 +11,9 @@ echo
 cat $RELEASE_ENV_FILE
 echo
 
-docker build --build-arg RELEASE_ENV_FILE=$RELEASE_ENV_FILE . -t builder && \
+docker build . -t builder && \
  docker run -i \
+ -v $(pwd)/$RELEASE_ENV_FILE:/app/.env \
  -v $(pwd)/artifacts:/app/artifacts \
  -v $(pwd)/git_cache:/app/git_cache \
  -v /var/run/docker.sock:/var/run/docker.sock \
