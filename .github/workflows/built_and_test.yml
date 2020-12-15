@@ -1,6 +1,14 @@
 name: Build and test Wikibase and friends
 
 on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'ENVIRONMENT FILE'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
   push:
 
 jobs:
