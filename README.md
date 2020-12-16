@@ -1,13 +1,5 @@
 # wikibase-release-prototype
 
-## Building locally using docker
-
-To build using docker run the following command
-
-```
-./build_github.sh <wikibase|queryservice-ui|queryservice|all>
-```
-
 ## Building locally using make
 To locally build all artifacts set the following environment variables in the .env file
 
@@ -36,7 +28,7 @@ You can run the tests in the docker container locally. Testing locally requires 
 make test
 ```
 
-# quibble-caching
+# Git-caching
 
 To avoid cloning MediaWiki over the network, you should initialize local bare
 repositories to be used as a reference for git to copy them from:
