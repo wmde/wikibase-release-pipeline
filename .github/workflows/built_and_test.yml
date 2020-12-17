@@ -36,7 +36,7 @@ jobs:
           key: cache-wikibase-git-repo
 
       - name: Build Tarball
-        run: bash build_github.sh wikibase ${{ env.env_file }}
+        run: bash build_github.sh "mediawiki wikibase" ${{ env.env_file }}
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2

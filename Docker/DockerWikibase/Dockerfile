@@ -8,16 +8,17 @@ RUN apt-get update && \
 COPY Wikibase.tar.gz .
 RUN tar xzf Wikibase.tar.gz
 
-FROM ${MEDIAWIKI_IMAGE_NAME} as collector
+FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 
-FROM composer:1 as composer
+FROM composer:1.10.19 as composer
 COPY --from=collector /var/www/html /var/www/html
 WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
-RUN composer install --no-dev
+RUN apk add icu-dev && docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-configure intl && docker-php-ext-install intl
+RUN composer install --no-dev --verbose -n
 
-FROM ${MEDIAWIKI_IMAGE_NAME}
+FROM ${MEDIAWIKI_IMAGE_NAME}:latest
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base=0.19.* && \
