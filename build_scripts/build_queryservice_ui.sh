@@ -4,12 +4,18 @@ set -e
 ROOT="$(pwd)"
 TARBALL="wikidata-query-gui.tar.gz"
 TEMP_DIR="$(mktemp -d)"
-TARBALL_PATH="$(mktemp -d)"/wdqs-ui.tar.gz
+TARBALL_PATH="$ROOT"/artifacts/wdqs-ui.tar.gz
 
 git clone 'https://github.com/wikimedia/wikidata-query-gui.git' $TEMP_DIR
 cd $TEMP_DIR 
 
-echo "Checking out $QUERYSERVICE_UI_COMMIT_HASH"
+if [ -n "$QUERYSERVICE_UI_COMMIT_HASH" ]; then
+    echo "Checking out $QUERYSERVICE_UI_COMMIT_HASH"
+else
+    echo '$QUERYSERVICE_UI_COMMIT_HASH not set.'
+    exit 1;
+fi
+
 git reset $QUERYSERVICE_UI_COMMIT_HASH --hard
 
 rm -rfv "$TEMP_DIR/.git"

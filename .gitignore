@@ -9,8 +9,7 @@ Wikibase.tar.gz
 *.docker.tar.gz
 
 #temp 
-DockerQueryService/service-*.tar.gz
-DockerQueryServiceUI/*.tar.gz
-.env
+Docker/**/*.tar.gz
 test_scripts/log
 diagrams/node_modules/
+artifacts/*
