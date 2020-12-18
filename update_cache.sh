@@ -18,20 +18,26 @@ function fetch_all {
 
 mkdir -p 'artifacts'
 mkdir -p 'git_cache/skins/'
-
 cd "$(dirname "$0")"
 
 skins=("Vector")
-for skin in "${skins[@]}"; do
-	clone_if_not_present skins/$skin.git "https://gerrit.wikimedia.org/r/mediawiki/skins/$skin"
-	fetch_all skins/$skin.git
-done
-
 extensions=("Wikibase")
-for extension in "${extensions[@]}"; do
-	clone_if_not_present $extension.git "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
-	fetch_all $extension.git
-done
 
-clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
-fetch_all core.git
+for arg in "$@"; do
+
+	if [ $arg = "skins" ]; then
+		for skin in "${skins[@]}"; do
+			clone_if_not_present skins/$skin.git "https://gerrit.wikimedia.org/r/mediawiki/skins/$skin"
+			fetch_all skins/$skin.git
+		done
+
+	elif [ $arg = "extensions" ]; then
+		for extension in "${extensions[@]}"; do
+			clone_if_not_present $extension.git "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
+			fetch_all $extension.git
+		done
+	elif [ $arg = "core" ]; then
+		clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
+		fetch_all core.git
+	fi
+done

@@ -89,6 +89,5 @@ COPY mediawiki.tar.gz /tmp/mediawiki.tar.gz
 RUN tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz;
 RUN rm /tmp/mediawiki.tar.gz;
 RUN chown -R www-data:www-data extensions skins cache images;
-RUN rm -rf /var/lib/apt/lists/*
 
 CMD ["apache2-foreground"]
