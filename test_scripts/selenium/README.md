@@ -22,8 +22,8 @@
 
 ## Wikibase Federated properties (using wikidata.org as source wiki)
 - [X] Create an item on Wikibase and add a statement using a federated property
-  - [ ] verify it is available with the correct rdf through the Entity page
-  - [ ] verify it is available through the QueryService with the correct prefixes
+  - [X] verify it is available with the correct rdf through the Entity page
+  - [X] verify it is available through the QueryService with the correct prefixes
 
 
 # Selenium tests

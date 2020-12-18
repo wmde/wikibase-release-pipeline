@@ -14,15 +14,15 @@ const propertyId = 'P213';
 const propertyValue = 'ISNI';
 const itemId = 'Q1';
 const itemLabel = 'T267743-';
+const axios = require('axios');
 
 describe( 'Fed props Item', function () {
 
-	before(function() {
-		browser.addCommand('makeRequest', function (url, cb) {
-			request.get(url, cb);
-		})
-	  });
-	
+	before(function () {
+		browser.addCommand('makeRequest', function async (url) {
+			return axios.get(url)
+		});
+	})
 
 	it( 'can add a federated property and it shows up in the ui', function() {
 
@@ -47,19 +47,30 @@ describe( 'Fed props Item', function () {
 
 
 	it( 'should show up in Special:EntityData with ttl', function() {
-		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl');
+		const response = browser.makeRequest(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl');
+		const body = response.data;
+
+		assert(body.includes('@prefix fpwdt: <http://www.wikidata.org/prop/direct/>'));
+		assert(body.includes('fpwdt:P213 "ISNI"'));
 	})
 
 	it( 'should show up in Special:EntityData with json', function() {
-		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json');
+		const response = browser.makeRequest(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json');
+		const body = response.data;
+
+		assert(body.entities['Q1']['claims'][propertyId] != null)
 	})
 
 
-	it.skip( 'should show up in Special:EntityData with rdf', function() {
-		browser.url(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf?flavor=dump&revision=2');
+	it( 'should show up in Special:EntityData with rdf', function() {
+		const response = browser.makeRequest(process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf');
+		const body = response.data;
+		
+		assert(body.includes('xmlns:fpwdt="http://www.wikidata.org/prop/direct/"'));
+		assert(body.includes('<fpwdt:P213>ISNI</fpwdt:P213>'));
 	})
 
-	it( 'shows property in ui after creation using prefixes', function () {
+	it( 'shows property in queryservice ui after creation using prefixes', function () {
 
 		const prefixes = [
 			'prefix fpwdt: <http://www.wikidata.org/prop/direct/>'
@@ -69,7 +80,7 @@ describe( 'Fed props Item', function () {
 		QueryServiceUI.open( query, prefixes );
 
 		// wait for WDQS-updater
-		browser.pause( 20 * 1000 );
+		browser.pause( 11 * 1000 );
 
 		QueryServiceUI.submit();
 		QueryServiceUI.resultTable.waitForDisplayed();
@@ -83,9 +94,6 @@ describe( 'Fed props Item', function () {
 
 		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
-
-		// wait for WDQS-updater
-		browser.pause( 20 * 1000 );
 
 		QueryServiceUI.submit();
 		QueryServiceUI.resultTable.waitForDisplayed();
@@ -104,7 +112,7 @@ describe( 'Fed props Item', function () {
 		assert( QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) );
 
 		// property value is set with correct rdf
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>', propertyValue ) );
+		assert( QueryServiceUI.resultIncludes( 'p:P213' ) );
 
 	} );
 

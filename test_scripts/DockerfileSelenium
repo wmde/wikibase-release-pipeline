@@ -9,5 +9,3 @@ WORKDIR /usr/src/app
 COPY selenium selenium
 WORKDIR /usr/src/app/selenium
 RUN npm ci
-
-CMD [ "/bin/bash" ]

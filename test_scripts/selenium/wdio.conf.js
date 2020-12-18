@@ -52,7 +52,7 @@ exports.config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: 'trace',
+	logLevel: 'warn',
 
 	// Setting this enables automatic screenshots for when a browser command fails
 	// It is also used by afterTest for capturig failed assertions.
