@@ -76,24 +76,18 @@ RUN set -eux; \
 	mkdir -p /var/www/data; \
 	chown -R www-data:www-data /var/www/data
 
-# Version
-ENV MEDIAWIKI_MAJOR_VERSION 1.35
-ENV MEDIAWIKI_VERSION 1.35.0
+# Major version ex. 1.35
+ARG MEDIAWIKI_MAJOR_VERSION
+ENV MEDIAWIKI_MAJOR_VERSION ${MEDIAWIKI_MAJOR_VERSION}
+
+# Version ex. 1.35.0
+ARG MEDIAWIKI_VERSION
+ENV MEDIAWIKI_VERSION ${MEDIAWIKI_VERSION}
 
 # MediaWiki setup
 COPY mediawiki.tar.gz /tmp/mediawiki.tar.gz
-RUN set -eux; \
-	fetchDeps=" \
-		gnupg \
-		dirmngr \
-	"; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends $fetchDeps; \
-	tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz; \
-	rm /tmp/mediawiki.tar.gz; \
-	chown -R www-data:www-data extensions skins cache images; \
-	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
-	rm -rf /var/lib/apt/lists/*
+RUN tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz;
+RUN rm /tmp/mediawiki.tar.gz;
+RUN chown -R www-data:www-data extensions skins cache images;
 
 CMD ["apache2-foreground"]
