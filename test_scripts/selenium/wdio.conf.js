@@ -21,13 +21,6 @@ exports.config = {
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
 
-	// ==================
-	// Test Files
-	// ==================
-	specs: [
-		__dirname + '/specs/*.js'
-	],
-
 	// ============
 	// Capabilities
 	// ============
