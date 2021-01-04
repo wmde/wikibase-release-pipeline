@@ -139,6 +139,9 @@ jobs:
           path: ./artifacts/wdqs-ui.docker.tar.gz
 
   test_wikibase:
+    strategy:
+      matrix:
+        suite: [ repo, fedprops ]
     needs:
       - build_wikibase
       - build_queryservice
@@ -164,8 +167,8 @@ jobs:
           name: QueryService UI Docker Image
           path: artifacts/
 
-      - name: Run Docker Tests
-        run: make test
+      - name: Run Tests - ${{ matrix.suite }}
+        run: make test SUITE=${{ matrix.suite }}
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2

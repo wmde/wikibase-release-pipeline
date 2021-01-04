@@ -24,8 +24,15 @@ make all
 
 You can run the tests in the docker container locally. Testing locally requires the built images.
 
+To run all
 ```
-make test
+make test-all
+```
+
+To only run a single suite
+
+```
+make test repo
 ```
 
 # Git-caching

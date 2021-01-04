@@ -26,8 +26,12 @@ docker-compose \
     -f docker-compose-selenium-test.yml \
     build wikibase-selenium-test
 
-# repo
-bash run_selenium.sh repo /var/www/html/LocalSettings/LocalSettings.debug.php
+# check if the suite has a specific Settings file
+LOCALSETTINGS_FILE="LocalSettings/LocalSettings.$1.php"
 
-# federated properties
-bash run_selenium.sh fedprops /var/www/html/LocalSettings/LocalSettings.federatedProperties.php
+# fallback to debug output
+if [ ! -f $LOCALSETTINGS_FILE ]; then
+    LOCALSETTINGS_FILE="LocalSettings/LocalSettings.debug.php"
+fi
+
+bash run_selenium.sh $1 $LOCALSETTINGS_FILE
