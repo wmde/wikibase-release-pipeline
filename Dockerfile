@@ -1,5 +1,5 @@
 FROM docker:latest
-RUN apk add --no-cache git make bash
+RUN apk add --no-cache git make bash composer
 
 WORKDIR "/app/"
 ADD Docker Docker
