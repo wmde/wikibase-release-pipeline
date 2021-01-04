@@ -1,9 +1,5 @@
-FROM ubuntu
+FROM curlimages/curl:7.71.0
 
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends curl=7.* wget && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY test_curl.sh test_curl.sh
 
-COPY test_curl.sh /test_curl.sh
-
-CMD [ "/bin/bash", "/test_curl.sh"  ]
+ENTRYPOINT sh /test_curl.sh
