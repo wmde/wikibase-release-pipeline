@@ -47,8 +47,8 @@ To minimize binding to a specific infrastructure, Wikibase release pipeline will
 ## Consequences
 
 WMDE will continue running Wikibase release pipeline on Github Actions but will replace the proof of concept implementation with a container-based more abstract solution.
-Technical solution ensuring the integrity of packages generated on the third-party infrastrcture will be introduced.
-Process of actual publishing release artifacts to final locations will be defined separately. It is considered that the final step might happened from WMDE infrastructure.
+Technical solution ensuring the integrity of packages generated on the third-party infrastructure will be introduced.
+Process of actual publishing release artifacts to final locations will be defined separately. It is considered that the final step might happen from WMDE infrastructure.
 
 
 [Github]: https://docs.github.com/en/free-pro-team@latest/actions
