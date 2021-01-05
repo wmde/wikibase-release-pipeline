@@ -12,6 +12,11 @@ git -C "$TEMP_GIT_DIR/Wikibase" submodule update
 # remove git things from release package
 rm "$TEMP_GIT_DIR/Wikibase/".git* -rfv
 
+# install composer dependencies for tarball
+cd "$TEMP_GIT_DIR/Wikibase/"
+composer install --no-dev --ignore-platform-reqs
+cd -
+
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
 
 TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"

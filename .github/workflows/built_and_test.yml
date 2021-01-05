@@ -27,6 +27,14 @@ jobs:
           key: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
           restore-keys: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
+      - name: Cache composer
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wikibase-composer
+        with:
+          path: cache
+          key: cache-wikibase-composer
+
       - name: Cache git_cache repos
         uses: actions/cache@v2
         env:

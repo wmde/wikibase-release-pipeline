@@ -16,5 +16,6 @@ docker build . -t builder && \
  -v $(pwd)/$RELEASE_ENV_FILE:/app/.env \
  -v $(pwd)/artifacts:/app/artifacts \
  -v $(pwd)/git_cache:/app/git_cache \
+ -v $(pwd)/cache:/app/cache \
  -v /var/run/docker.sock:/var/run/docker.sock \
  builder:latest make $TARGET
