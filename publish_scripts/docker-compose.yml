@@ -14,9 +14,10 @@ services:
     build:
       context: ../Docker/upload_dockerhub
       dockerfile: Dockerfile
+    privileged: true
     environment:
-     - WIKIBASE_DOCKER_PATH
-     - QUERYSERVICE_BACKEND_DOCKER_PATH
-     - QUERYSERVICE_FRONTEND_DOCKER_PATH
+     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/wikibase.docker.tar.gz
+     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/wdqs.docker.tar.gz
+     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/wdqs-ui.docker.tar.gz
     volumes:
       - ../artifacts:/extractedArtifacts

@@ -13,8 +13,8 @@ for artifact in artifactsMetadata['artifacts']:
     zipfilePath = os.path.join('/zips' ,artifact['name'] + '.zip')
     open(zipfilePath, 'wb').write(r.content)
     with zipfile.ZipFile(zipfilePath, 'r') as zip_ref:
-        extractedFileFath = os.path.join('/extractedArtifacts', artifact['name'])
+        extractedFileFath = '/extractedArtifacts' #os.path.join('/extractedArtifacts', artifact['name'])
         zip_ref.extractall(extractedFileFath)
 
 
-print(os.system('ls -lh "/extractedArtifacts/QueryService UI Docker Image"'))
+print(os.system('ls -lh "/extractedArtifacts/"'))
