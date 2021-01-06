@@ -1,15 +1,22 @@
 version: '3'
 
 services:
-  publish_docker:
+  download_artifacts:
     build:
-      context: ./
+      context: ../Docker/download_artifacts
       dockerfile: Dockerfile
     environment:
-     - WIKIBASE_TAR_PATH=/Wikibase.tar.gz
-     - QUERYSERVICE_BACKEND_TAR_PATH=/service-$QUERYSERVICE_VERSION-dist.tar.gz
-     - QUERYSERVICE_FRONTEND_TAR_PATH
+     - GITHUB_TOKEN
+     - WORKFLOW_RUN_NUMBER=465817659
+    volumes:
+      - ../artifacts:/extractedArtifacts
+  upload_dockerhub:
+    build:
+      context: ../Docker/upload_dockerhub
+      dockerfile: Dockerfile
+    environment:
      - WIKIBASE_DOCKER_PATH
      - QUERYSERVICE_BACKEND_DOCKER_PATH
      - QUERYSERVICE_FRONTEND_DOCKER_PATH
-     - GITHUB_TOKEN
+    volumes:
+      - ../artifacts:/extractedArtifacts

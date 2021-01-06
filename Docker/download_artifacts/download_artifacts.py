@@ -1,16 +1,11 @@
 import os
 import requests
 import zipfile
-import logging
-logging.basicConfig(level=logging.DEBUG)
 
 headers = {'Accept': 'application/vnd.github.v3+json'}
-r = requests.get('https://api.github.com/repos/wmde/wikibase-release-prototype/actions/runs/465817659/artifacts',  headers=headers)
+r = requests.get('https://api.github.com/repos/wmde/wikibase-release-prototype/actions/runs/' + os.getenv('WORKFLOW_RUN_NUMBER') + '/artifacts',  headers=headers)
 
 artifactsMetadata =  r.json()
-
-print( 'token:' + os.getenv('GITHUB_TOKEN')[1] + 'token ends' )
-
 for artifact in artifactsMetadata['artifacts']:
     # if artifact['name'] != 'QueryService UI Docker Image':
     #     continue
