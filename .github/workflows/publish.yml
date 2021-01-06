@@ -10,6 +10,7 @@ on:
 
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   publish_docker:
@@ -20,4 +21,4 @@ jobs:
         with:
           env-file: ${{ env.env_file }}
       - name: run the publish script
-        run: bash publish_docker.sh wikibase ${{ env.env_file }}
+        run: bash publish_docker.sh

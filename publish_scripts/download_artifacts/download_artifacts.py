@@ -9,6 +9,7 @@ r = requests.get('https://api.github.com/repos/wmde/wikibase-release-prototype/a
 
 artifactsMetadata =  r.json()
 
+print( 'token:' + os.getenv('GITHUB_TOKEN')[1] + 'token ends' )
 
 for artifact in artifactsMetadata['artifacts']:
     # if artifact['name'] != 'QueryService UI Docker Image':
