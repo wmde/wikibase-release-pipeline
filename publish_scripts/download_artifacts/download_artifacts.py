@@ -1,6 +1,8 @@
 import os
 import requests
 import zipfile
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 headers = {'Accept': 'application/vnd.github.v3+json'}
 r = requests.get('https://api.github.com/repos/wmde/wikibase-release-prototype/actions/runs/465817659/artifacts',  headers=headers)
