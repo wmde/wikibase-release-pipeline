@@ -110,7 +110,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService UI Docker Image
+          name: ${{ env.QueryService_UI_Docker_Image_Artifact_Name }}
           if-no-files-found: error
           path: ./artifacts/wdqs-ui.docker.tar.gz
 

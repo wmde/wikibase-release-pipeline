@@ -1,9 +1,10 @@
-FROM ubuntu
+FROM python:3
 
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends curl=7.* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN pip install requests
 
-COPY publish_docker.sh /publish_docker.sh
+COPY download_artifacts/download_artifacts.py /download_artifacts.py
 
-CMD [ "/bin/bash", "/publish_docker.sh"  ]
+RUN mkdir /zips
+RUN mkdir /extractedArtifacts
+
+CMD [ "python", "./download_artifacts.py" ]
