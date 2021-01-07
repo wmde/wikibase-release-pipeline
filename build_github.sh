@@ -13,6 +13,7 @@ echo
 
 docker build . -t builder && \
  docker run -i \
+ -v $(pwd)/variables.env:/app/variables.env \
  -v $(pwd)/$RELEASE_ENV_FILE:/app/.env \
  -v $(pwd)/artifacts:/app/artifacts \
  -v $(pwd)/git_cache:/app/git_cache \

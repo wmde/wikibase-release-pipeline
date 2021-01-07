@@ -1,5 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 set -e
+
+if [ -z $QUERYSERVICE_BACKEND_DOCKER_PATH ] || \
+[ -z $QUERYSERVICE_FRONTEND_DOCKER_PATH ] || \
+[ -z $QUERYSERVICE_UI_IMAGE_NAME ] || \
+[ -z $QUERYSERVICE_IMAGE_NAME ] || \
+[ -z $WIKIBASE_IMAGE_NAME ] || \
+[ -z $DOCKER_HUB_ID ] || \
+[ -z $DOCKER_HUB_REPOSITORY_NAME ] || \
+[ -z $TEST_DOCKER_HUB_ACCESS_TOKEN ] ; then
+    echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
+    exit 1;
+fi
 
 function tag_and_push {
 	IMAGE_NAME=$1

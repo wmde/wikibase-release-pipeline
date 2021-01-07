@@ -16,10 +16,9 @@ services:
       dockerfile: Dockerfile
     privileged: true
     environment:
-     - WORKFLOW_RUN_NUMBER
-     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${WIKIBASE_DOCKER_IMAGE_ARTIFACT_NAME}/wikibase.docker.tar.gz
-     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${QUERYSERVICE_DOCKER_IMAGE_ARTIFACT_NAME}/wdqs.docker.tar.gz
-     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${QUERYSERVICE_UI_DOCKER_IMAGE_ARTIFACT_NAME}/wdqs-ui.docker.tar.gz
+     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
+     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
+     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-ui.docker.tar.gz
      - QUERYSERVICE_IMAGE_NAME
      - QUERYSERVICE_UI_IMAGE_NAME
      - WIKIBASE_IMAGE_NAME
@@ -30,4 +29,4 @@ services:
      - DOCKER_HUB_ID
      - TEST_DOCKER_HUB_ACCESS_TOKEN
     volumes:
-      - ../artifacts:/extractedArtifacts
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
