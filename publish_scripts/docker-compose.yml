@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     environment:
      - GITHUB_TOKEN
-     - WORKFLOW_RUN_NUMBER=465817659
+     - WORKFLOW_RUN_NUMBER
     volumes:
       - ../artifacts:/extractedArtifacts
   upload_dockerhub:
@@ -16,8 +16,18 @@ services:
       dockerfile: Dockerfile
     privileged: true
     environment:
-     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/wikibase.docker.tar.gz
-     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/wdqs.docker.tar.gz
-     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/wdqs-ui.docker.tar.gz
+     - WORKFLOW_RUN_NUMBER
+     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${WIKIBASE_DOCKER_IMAGE_ARTIFACT_NAME}/wikibase.docker.tar.gz
+     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${QUERYSERVICE_DOCKER_IMAGE_ARTIFACT_NAME}/wdqs.docker.tar.gz
+     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/${WORKFLOW_RUN_NUMBER}/${QUERYSERVICE_UI_DOCKER_IMAGE_ARTIFACT_NAME}/wdqs-ui.docker.tar.gz
+     - QUERYSERVICE_IMAGE_NAME
+     - QUERYSERVICE_UI_IMAGE_NAME
+     - WIKIBASE_IMAGE_NAME
+     - QUERYSERVICE_VERSION
+     - WIKIBASE_BRANCH_NAME
+     - DOCKER_HUB_REPOSITORY_NAME
+     - DOCKER_HUB_ACCESS_TOKEN
+     - DOCKER_HUB_ID
+     - TEST_DOCKER_HUB_ACCESS_TOKEN
     volumes:
       - ../artifacts:/extractedArtifacts

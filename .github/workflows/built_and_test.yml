@@ -56,7 +56,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Wikibase Docker Image
+          name: ${{ env.WIKIBASE_DOCKER_IMAGE_ARTIFACT_NAME }}
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
@@ -80,7 +80,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService Docker Image
+          name: ${{ env.QUERYSERVICE_DOCKER_IMAGE_ARTIFACT_NAME }}
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
@@ -110,7 +110,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.QueryService_UI_Docker_Image_Artifact_Name }}
+          name: ${{ env.QUERYSERVICE_UI_DOCKER_IMAGE_ARTIFACT_NAME }}
           if-no-files-found: error
           path: ./artifacts/wdqs-ui.docker.tar.gz
 
@@ -147,7 +147,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: Test artifacts
+          name: ${{ env.TEST_ARTIFACT_NAME }}
           path: |
             test_scripts/selenium/log
             test_scripts/log

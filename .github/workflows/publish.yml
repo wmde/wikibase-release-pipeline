@@ -11,6 +11,7 @@ on:
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  TEST_DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.TEST_DOCKER_HUB_ACCESS_TOKEN }}
 
 jobs:
   publish_docker:
