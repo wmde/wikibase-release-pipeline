@@ -11,6 +11,7 @@ on:
 
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
+  DOCKER_CACHE_VERSION: 0
 
 jobs:
   build_wikibase:
@@ -49,14 +50,14 @@ jobs:
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Wikibase Tarball
+          name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Wikibase Docker Image
+          name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
@@ -80,7 +81,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService Docker Image
+          name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
@@ -103,14 +104,14 @@ jobs:
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: QueryService UI Tarball
+          name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-ui.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.QueryService_UI_Docker_Image_Artifact_Name }}
+          name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-ui.docker.tar.gz
 
@@ -125,19 +126,7 @@ jobs:
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
-          name: Wikibase Docker Image
-          path: artifacts/
-
-      - name: Get QueryService docker image artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: QueryService Docker Image
-          path: artifacts/
-
-      - name: Get QueryService UI docker image artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: QueryService UI Docker Image
+          name: BuildArtifacts
           path: artifacts/
 
       - name: Run Docker Tests
@@ -147,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: Test artifacts
+          name: TestArtifacts
           path: |
             test_scripts/selenium/log
             test_scripts/log
