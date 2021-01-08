@@ -14,3 +14,4 @@ Docker/DockerQueryServiceUI/*.tar.gz
 test_scripts/log
 diagrams/node_modules/
 artifacts/*
+local.env
