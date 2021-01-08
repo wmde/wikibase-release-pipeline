@@ -15,10 +15,6 @@ mediawiki:
 	bash update_cache.sh core skins
 	eval ". ./build_scripts/build_mediawiki.sh; bash build_scripts/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"
 
-mediawiki:
-	bash update_cache.sh core skins
-	eval ". ./build_scripts/build_mediawiki.sh; bash build_scripts/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"
-
 wikibase:
 	bash update_cache.sh extensions
 	eval ". ./build_scripts/build_wikibase.sh; bash build_scripts/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
