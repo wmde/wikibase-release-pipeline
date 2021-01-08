@@ -1,0 +1,34 @@
+name: Publish to Dockerhub Wikibase and Friends
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_file:
+        description: 'Environment file'
+        required: true
+        default: '.env'
+      workflow_run_number:
+        description: 'Workflow run number'
+        required: true
+        default: '469329946'
+
+env:
+  env_file: ${{ github.event.inputs.env_file }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  TEST_DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.TEST_DOCKER_HUB_ACCESS_TOKEN }}
+  DOCKER_HUB_REPOSITORY_NAME: toanwmde
+  DOCKER_HUB_ID: toanwmde
+  WORKFLOW_RUN_NUMBER: ${{ github.event.inputs.workflow_run_number }}
+jobs:
+  publish_docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+      - name: run the publish script
+        run: bash publish_docker.sh
