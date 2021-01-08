@@ -8,4 +8,4 @@ docker build \
     --build-arg=MEDIAWIKI_VERSION=$MEDIAWIKI_VERSION \
     Docker/DockerMediawiki/ -t "$1"
 
-docker save "$1" | gzip -9f > "$(pwd)"/artifacts/"$1".docker.tar.gz
+docker save "$1" | gzip -9f > "$(pwd)"/artifacts/mediawiki.docker.tar.gz

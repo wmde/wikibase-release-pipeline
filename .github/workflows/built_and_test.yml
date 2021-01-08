@@ -44,7 +44,7 @@ jobs:
         with:
           name: BuildArtifacts
           if-no-files-found: error
-          path: artifacts/${{ env.MEDIAWIKI_IMAGE_NAME }}.docker.tar.gz
+          path: artifacts/mediawiki.docker.tar.gz
 
   build_wikibase:
     runs-on: ubuntu-latest
