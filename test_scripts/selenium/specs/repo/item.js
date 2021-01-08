@@ -27,7 +27,9 @@ describe( 'Item', function () {
 			]
 		};
 
-		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
+		const itemId = browser.call(
+			() => WikibaseApi.createItem( Util.getTestString( itemLabel ), data )
+		);
 
 		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
