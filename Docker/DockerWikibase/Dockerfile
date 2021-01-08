@@ -10,6 +10,7 @@ RUN tar xzf Wikibase.tar.gz
 
 FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
+RUN rm /var/www/html/extensions/Wikibase/vendor -rf
 
 FROM composer:1.10.19 as composer
 COPY --from=collector /var/www/html /var/www/html

@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  download_artifacts:
+    build:
+      context: ../Docker/download_artifacts
+      dockerfile: Dockerfile
+    environment:
+     - GITHUB_TOKEN
+     - WORKFLOW_RUN_NUMBER
+    volumes:
+      - ../artifacts:/extractedArtifacts
+  upload_dockerhub:
+    build:
+      context: ../Docker/upload_dockerhub
+      dockerfile: Dockerfile
+    privileged: true
+    environment:
+     - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
+     - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
+     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-ui.docker.tar.gz
+     - QUERYSERVICE_IMAGE_NAME
+     - QUERYSERVICE_UI_IMAGE_NAME
+     - WIKIBASE_IMAGE_NAME
+     - QUERYSERVICE_VERSION
+     - WIKIBASE_BRANCH_NAME
+     - DOCKER_HUB_REPOSITORY_NAME
+     - DOCKER_HUB_ACCESS_TOKEN
+     - DOCKER_HUB_ID
+     - TEST_DOCKER_HUB_ACCESS_TOKEN
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts

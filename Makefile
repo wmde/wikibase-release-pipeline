@@ -1,5 +1,7 @@
 #!make
 include .env
+include variables.env
+
 export
 
 test:
