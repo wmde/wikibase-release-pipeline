@@ -7,7 +7,8 @@ TEMP_GIT_DIR="$(mktemp -d)"
 TEMP_TAR_DIR="$(pwd)"/artifacts
 
 git clone --depth 1 --single-branch --branch ${WIKIBASE_BRANCH_NAME} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR/Wikibase"
-git -C "$TEMP_GIT_DIR/Wikibase" submodule update
+
+GIT_TRACE=1 git -C "$TEMP_GIT_DIR/Wikibase" submodule update --init --recursive
 
 # remove git things from release package
 rm "$TEMP_GIT_DIR/Wikibase/".git* -rfv

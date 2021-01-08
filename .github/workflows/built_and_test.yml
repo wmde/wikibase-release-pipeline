@@ -14,7 +14,7 @@ env:
   DOCKER_CACHE_VERSION: 0
 
 jobs:
-  build_wikibase:
+  build_mediawiki:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,40 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.8
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+        with:
+          key: mediawiki-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
+          restore-keys: mediawiki-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
+
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mediawiki-git-repo
+        with:
+          path: git_cache
+          key: cache-mediawiki-git-repo
+
+      - name: Build Tarball
+        run: bash build_github.sh mediawiki ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/mediawiki.docker.tar.gz
+
+  build_wikibase:
+    runs-on: ubuntu-latest
+    needs:
+      - build_mediawiki
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+      - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
           key: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
@@ -43,6 +76,12 @@ jobs:
         with:
           path: git_cache
           key: cache-wikibase-git-repo
+
+      - name: Get Mediawiki docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: artifacts/
 
       - name: Build Tarball
         run: bash build_github.sh wikibase ${{ env.env_file }}
@@ -68,7 +107,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.8
+      - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
           key: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
@@ -92,7 +131,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.8
+      - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
           key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
