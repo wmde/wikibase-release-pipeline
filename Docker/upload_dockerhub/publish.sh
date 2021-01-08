@@ -14,14 +14,13 @@ if [ -z $QUERYSERVICE_BACKEND_DOCKER_PATH ] || \
 fi
 
 function tag_and_push {
-	IMAGE_NAME=$1
+    IMAGE_NAME=$1
     IMAGE_VERSION=$2
 
-	IMAGE_TAG="$DOCKER_HUB_REPOSITORY_NAME/$IMAGE_NAME:$IMAGE_VERSION"
+    IMAGE_TAG="$DOCKER_HUB_REPOSITORY_NAME/$IMAGE_NAME:$IMAGE_VERSION"
     docker tag "$IMAGE_NAME:latest" $IMAGE_TAG
     docker push $IMAGE_TAG
 }
-
 
 # start and wait for dockerd and set the correct socket
 docker --version

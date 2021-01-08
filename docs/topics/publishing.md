@@ -12,4 +12,8 @@ GITHUB_TOKEN=mygithubtoken
 If desired you can keep the tokens and the usernames set in a `local.env` that is git ignored
 
 Run with:
-`./publish_docker.sh`
+
+```
+set -o allexport; source .env; source local.env; source variables.env; set +o allexport 
+./publish_docker.sh
+```
