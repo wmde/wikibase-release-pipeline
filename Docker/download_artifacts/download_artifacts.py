@@ -11,18 +11,19 @@ r = requests.get(artifactsPath,  headers=headers)
 basepath = os.path.join('/extractedArtifacts', os.getenv('WORKFLOW_RUN_NUMBER'))
 artifactsMetadata =  r.json()
 
-if(artifactsMetadata['total_count'] == 0):
+if artifactsMetadata['total_count'] == 0:
     raise Exception("This run does not contain any artifacts to publish!") 
 
-for artifact in artifactsMetadata['artifacts']:
-    print('Downloading %d bytes from %s' % (artifact['size_in_bytes'], artifact['name']))
+if not os.path.exists(basepath):
+    for artifact in artifactsMetadata['artifacts']:
+        print('Downloading %d bytes from %s' % (artifact['size_in_bytes'], artifact['name']))
 
-    r = requests.get( artifact['archive_download_url'], allow_redirects=True, headers={"Authorization": 'Bearer ' + os.getenv('GITHUB_TOKEN') } )
-    zipfilePath = os.path.join('/zips' ,artifact['name'] + '.zip')
-    open(zipfilePath, 'wb').write(r.content)
+        r = requests.get( artifact['archive_download_url'], allow_redirects=True, headers={"Authorization": 'Bearer ' + os.getenv('GITHUB_TOKEN') } )
+        zipfilePath = os.path.join('/zips' ,artifact['name'] + '.zip')
+        open(zipfilePath, 'wb').write(r.content)
 
-    with zipfile.ZipFile(zipfilePath, 'r') as zip_ref:
-        extractedFileFath = os.path.join(basepath, artifact['name'])
-        zip_ref.extractall(extractedFileFath)
+        with zipfile.ZipFile(zipfilePath, 'r') as zip_ref:
+            extractedFileFath = os.path.join(basepath, artifact['name'])
+            zip_ref.extractall(extractedFileFath)
 
 print(os.system('ls -lh ' + basepath))
