@@ -8,8 +8,10 @@ services:
       dockerfile: Dockerfile
     links:
       - wikibase
-    depends_on:
-      - wikibase
+      - wdqs-frontend
+      - wdqs
+      - wdqs-updater
+      - mysql
     environment:
       - WIKIBASE_SERVER=wikibase.svc:80
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80

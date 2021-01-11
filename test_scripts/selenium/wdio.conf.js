@@ -21,13 +21,6 @@ exports.config = {
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
 
-	// ==================
-	// Test Files
-	// ==================
-	specs: [
-		__dirname + '/specs/*.js'
-	],
-
 	// ============
 	// Capabilities
 	// ============
@@ -52,7 +45,7 @@ exports.config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: 'trace',
+	logLevel: 'warn',
 
 	// Setting this enables automatic screenshots for when a browser command fails
 	// It is also used by afterTest for capturig failed assertions.

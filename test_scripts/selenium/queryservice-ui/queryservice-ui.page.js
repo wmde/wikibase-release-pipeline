@@ -9,7 +9,10 @@ class QueryServiceUI extends Page {
 	get resultTable() { return $( '#query-result table.table.table-hover' ); }
 	get resultTableRows() { return $( '#query-result table.table.table-hover tr' ); }
 
-	open( query ) {
+	open( query, prefixes ) {
+		if ( prefixes ) {
+			query = prefixes.join( '\n' ) + '\n' + query;
+		}
 		super.open( '/#' + encodeURI( query ) );
 	}
 

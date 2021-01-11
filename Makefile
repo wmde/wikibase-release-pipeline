@@ -5,7 +5,11 @@ include variables.env
 export
 
 test:
-	bash test_scripts/test_docker.sh
+	bash test_scripts/test_docker.sh ${SUITE}
+
+test-all:
+	bash test_scripts/test_docker.sh repo
+	bash test_scripts/test_docker.sh fedprops
 
 mediawiki:
 	bash update_cache.sh core skins

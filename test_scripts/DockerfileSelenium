@@ -6,9 +6,6 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /usr/src/app
-COPY run-selenium.sh run-selenium.sh
 COPY selenium selenium
 WORKDIR /usr/src/app/selenium
 RUN npm ci
-
-CMD [ "/bin/bash", "/usr/src/app/run-selenium.sh" ]

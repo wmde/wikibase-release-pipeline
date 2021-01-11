@@ -3,7 +3,7 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const QueryServiceUI = require( '../queryservice-ui/queryservice-ui.page' );
+const QueryServiceUI = require( '../../queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 
@@ -27,7 +27,9 @@ describe( 'Item', function () {
 			]
 		};
 
-		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
+		const itemId = browser.call(
+			() => WikibaseApi.createItem( Util.getTestString( itemLabel ), data )
+		);
 
 		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
