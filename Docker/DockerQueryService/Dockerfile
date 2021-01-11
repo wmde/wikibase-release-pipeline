@@ -34,7 +34,7 @@ ENV MEMORY=""\
 
 WORKDIR /wdqs
 
-COPY --chown=blazegraph:blazegraph entrypoint.sh runBlazegraph.sh runUpdate.sh /
+COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
 COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt /wdqs/
 
@@ -42,4 +42,3 @@ COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt /wdqs/
 RUN chmod +x /wdqs/runUpdate.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "/usr/bin/curl", "--fail", "--show-error", "--output", "/dev/null", "--silent", "localhost:9999/bigdata/namespace/wdq/sparql" ]
