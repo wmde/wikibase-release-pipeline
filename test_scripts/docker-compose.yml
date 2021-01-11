@@ -43,6 +43,10 @@ services:
       default:
         aliases:
          - mysql.svc
+    healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 20s
+            retries: 10
   wdqs-frontend:
     image: "${QUERYSERVICE_UI_IMAGE_NAME}:latest"
     restart: unless-stopped
@@ -98,6 +102,9 @@ services:
      - WIKIBASE_HOST=wikibase.svc
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
+    healthcheck:
+      disable: true
+
 
 volumes:
   LocalSettings:

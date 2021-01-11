@@ -32,7 +32,6 @@ RUN install -d /var/log/mediawiki -o www-data
 RUN docker-php-ext-install calendar bz2
 
 COPY --from=composer /var/www/html /var/www/html
-COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 COPY LocalSettings.php.template /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
@@ -44,3 +43,4 @@ ENV MW_SITE_NAME=wikibase-docker\
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "/usr/bin/curl", "--fail", "--show-error", "--output", "/dev/null", "--silent", "http://localhost/wiki/Main_Page" ]
