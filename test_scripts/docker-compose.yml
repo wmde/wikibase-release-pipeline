@@ -10,7 +10,7 @@ services:
       - mysql
     restart: unless-stopped
     volumes:
-      - ./LocalSettings/:/var/www/html/LocalSettings
+      - ./LocalSettings/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
     ports:
       - "8585:80"
     networks:
@@ -29,7 +29,6 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
-      - DOCKER_INCLUDE_SETTINGS=${DOCKER_INCLUDE_SETTINGS}
   mysql:
     image: mariadb:10.3
     restart: unless-stopped

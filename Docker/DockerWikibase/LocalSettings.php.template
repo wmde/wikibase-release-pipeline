@@ -55,6 +55,7 @@ require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
-if( isset(${DOLLAR}_ENV["DOCKER_INCLUDE_SETTINGS"]) && ${DOLLAR}_ENV["DOCKER_INCLUDE_SETTINGS"] != '' ) {
-	require_once(${DOLLAR}_ENV["DOCKER_INCLUDE_SETTINGS"]);
+foreach (glob("LocalSettings/*.php") as ${DOLLAR}filename)
+{
+    include ${DOLLAR}filename;
 }

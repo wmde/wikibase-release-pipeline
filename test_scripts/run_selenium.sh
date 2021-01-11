@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-export DOCKER_INCLUDE_SETTINGS=$2
-
 # start container with settings
 docker-compose up -d --force-recreate
 docker-compose logs -f --no-color > "log/wikibase.$1.log" &
