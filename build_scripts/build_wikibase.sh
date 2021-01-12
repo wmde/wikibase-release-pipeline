@@ -11,7 +11,7 @@ git clone --depth 1 --single-branch --branch ${WIKIBASE_BRANCH_NAME} "$ROOT/git_
 
 GIT_TRACE=1 git -C $WIKIBASE_PATH submodule update --init --recursive
 
-bash $ROOT/build_scripts/write_git_metadata.sh $WIKIBASE_PATH $ROOT/artifacts/build_metadata.env "WIKIBASE_COMMIT_HASH"
+bash $ROOT/build_scripts/write_git_metadata.sh $WIKIBASE_PATH $ROOT/artifacts/build_metadata_wikibase.env "WIKIBASE_COMMIT_HASH"
 
 # remove git things from release package
 rm $WIKIBASE_PATH/.git* -rfv

@@ -4,7 +4,7 @@ set -ex
 ROOT="$(pwd)"
 TEMP_GIT_DIR="$(mktemp -d)"
 TARBALL_PATH="$ROOT"/artifacts/wdqs-ui.tar.gz
-BUILD_METADATA_ENV_FILE=$ROOT/artifacts/build_metadata.env
+BUILD_METADATA_ENV_FILE=$ROOT/artifacts/build_metadata_wdqs_ui.env
 
 git clone --single-branch --branch master "$ROOT/git_cache/services/wikidata-query-gui.git" $TEMP_GIT_DIR
 

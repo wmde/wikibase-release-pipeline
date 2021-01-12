@@ -11,7 +11,7 @@ on:
 
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
-  DOCKER_CACHE_VERSION: 0
+  DOCKER_CACHE_VERSION: 2
 
 jobs:
   build_mediawiki:
@@ -91,7 +91,7 @@ jobs:
         with:
           name: BuildMetadata
           if-no-files-found: error
-          path: artifacts/build_metadata.env
+          path: artifacts/build_metadata_wikibase.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -146,6 +146,13 @@ jobs:
 
       - name: Build QueryService UI
         run: bash build_github.sh queryservice-ui ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata_wdqs_ui.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2

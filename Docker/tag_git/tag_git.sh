@@ -1,32 +1,46 @@
 #!/bin/bash
 
-# contains the commit hashes
-BUILD_METADATA_ENV_FILE=/extractedArtifacts/BuildMetadata/build_metadata.env
+set -ex
 
-if [ ! -f $BUILD_METADATA_FILE ]; then
-    echo "This build does not contain a metadata file!"
-    exit 1
-fi
-
-source $BUILD_METADATA_ENV_FILE
+# source all metadata files
+for f in /extractedArtifacts/BuildMetadata/build_metadata_*.env; do source $f; done
 
 if [ -z $WIKIBASE_BRANCH_NAME ] || \
 [ -z $RELEASE_VERSION ] || \
+[ -z $QUERYSERVICE_UI_COMMIT_HASH ] || \
 [ -z $WIKIBASE_COMMIT_HASH ] || \
 [ -z $WORKFLOW_RUN_NUMBER ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
 fi
 
-git clone --single-branch --branch ${WIKIBASE_BRANCH_NAME} "/git_cache/Wikibase.git" "/repo/Wikibase"
-cd /repo/Wikibase
+function tag_and_push {
+    REPOSITORY_CACHE_NAME=$1
+    CHECKOUT_DIR=$2
+    BRANCH_NAME=$3
+    COMMIT_HASH=$4
 
-echo "Tagging $RELEASE_VERSION at $WIKIBASE_COMMIT_HASH"
-git tag --force -a $RELEASE_VERSION $WIKIBASE_COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
+    git clone --single-branch --branch ${BRANCH_NAME} $REPOSITORY_CACHE_NAME $CHECKOUT_DIR
+    cd $CHECKOUT_DIR
 
-if [ -z $DRY_RUN ]; then
-    echo "DRY RUN! Not pushing anything"
-else
-    git remote set-url origin ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
-    git push --tags
-fi
+    echo "Tagging $RELEASE_VERSION at $COMMIT_HASH"
+    git tag --force -a $RELEASE_VERSION $COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
+
+    if [ -z $DRY_RUN ]; then
+        git remote set-url origin ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
+        #git push --tags
+    else
+        echo "DRY RUN! Not pushing anything"
+    fi
+
+    cd -
+}
+
+# tag and push Wikibase
+tag_and_push "/git_cache/Wikibase.git" "/repo/Wikibase" $WIKIBASE_BRANCH_NAME $WIKIBASE_COMMIT_HASH
+
+# tag and push queryservice ui
+tag_and_push "/git_cache/services/wikidata-query-gui.git" "/repo/wdqs-ui" master $QUERYSERVICE_UI_COMMIT_HASH
+
+
+
