@@ -1,27 +1,29 @@
 #!/bin/bash
-set -e
+set -ex
 
 ROOT="$(pwd)"
-TARBALL="wikidata-query-gui.tar.gz"
-TEMP_DIR="$(mktemp -d)"
+TEMP_GIT_DIR="$(mktemp -d)"
 TARBALL_PATH="$ROOT"/artifacts/wdqs-ui.tar.gz
+BUILD_METADATA_ENV_FILE=$ROOT/artifacts/build_metadata.env
 
-git clone 'https://github.com/wikimedia/wikidata-query-gui.git' $TEMP_DIR
-cd $TEMP_DIR 
+git clone --single-branch --branch master "$ROOT/git_cache/services/wikidata-query-gui.git" $TEMP_GIT_DIR
 
+cd $TEMP_GIT_DIR
+
+# either use HEAD on master, or tied to a specific commit
 if [ -n "$QUERYSERVICE_UI_COMMIT_HASH" ]; then
     echo "Checking out $QUERYSERVICE_UI_COMMIT_HASH"
+    git reset --hard $QUERYSERVICE_UI_COMMIT_HASH
+    bash $ROOT/build_scripts/write_git_metadata.sh $TEMP_GIT_DIR $BUILD_METADATA_ENV_FILE "QUERYSERVICE_UI_COMMIT_HASH" $QUERYSERVICE_UI_COMMIT_HASH
 else
     echo '$QUERYSERVICE_UI_COMMIT_HASH not set.'
-    exit 1;
+    bash $ROOT/build_scripts/write_git_metadata.sh $TEMP_GIT_DIR $BUILD_METADATA_ENV_FILE "QUERYSERVICE_UI_COMMIT_HASH"
 fi
 
-git reset $QUERYSERVICE_UI_COMMIT_HASH --hard
+rm -rfv "$TEMP_GIT_DIR/.git"
+rm -fv "$TEMP_GIT_DIR/.gitignore"
 
-rm -rfv "$TEMP_DIR/.git"
-rm -fv "$TEMP_DIR/.gitignore"
-
-GZIP=-9 tar -C "$TEMP_DIR" -zcvf $TARBALL_PATH .
+GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf $TARBALL_PATH .
 
 cd $ROOT
 

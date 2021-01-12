@@ -18,6 +18,8 @@ function fetch_all {
 
 mkdir -p 'artifacts'
 mkdir -p 'git_cache/skins/'
+mkdir -p 'git_cache/services/'
+
 cd "$(dirname "$0")"
 
 skins=("Vector")
@@ -36,6 +38,9 @@ for arg in "$@"; do
 			clone_if_not_present $extension.git "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
 			fetch_all $extension.git
 		done
+	elif [ $arg = "services" ]; then
+		clone_if_not_present services/wikidata-query-gui.git "https://github.com/wikimedia/wikidata-query-gui.git"
+		fetch_all services/wikidata-query-gui.git
 	elif [ $arg = "core" ]; then
 		clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
 		fetch_all core.git
