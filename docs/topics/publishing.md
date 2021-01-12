@@ -23,6 +23,18 @@ set -o allexport; source .env; source variables.env; source local.env; set +o al
 
 Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats run within a docker-container. It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
 
+Make sure the `~/.ssh/config` contains a bastion host section where the user is specified.
+
+```
+# Configure the initial connection to the bastion host, with the one
+# HostName closest to you
+Host bast
+    HostName bast3004.wikimedia.org
+    IdentityFile ~/.ssh/id_production
+    User <YourUsername>
+```
+
+
 Make sure you have the follow env variables set in your `local.env` file. Tarballs are to be hosted on releases.wikimedia.org. More information about this can be found [here](https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org).
 ```
 WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
