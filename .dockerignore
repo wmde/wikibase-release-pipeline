@@ -1,0 +1,8 @@
+# comment
+cache/*
+git_cache/*
+Docker/**/*.tar.gz
+test_scripts/log
+diagrams/node_modules/
+artifacts/*
+docs/*
