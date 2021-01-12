@@ -18,6 +18,7 @@ services:
      - WORKFLOW_RUN_NUMBER
      - WIKIBASE_BRANCH_NAME=master
      - RELEASE_VERSION
+     - DRY_RUN
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
       - ${HOME}/.gitconfig:/root/.gitconfig:ro

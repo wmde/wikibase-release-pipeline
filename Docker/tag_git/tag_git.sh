@@ -22,7 +22,11 @@ git clone --single-branch --branch ${WIKIBASE_BRANCH_NAME} "/git_cache/Wikibase.
 cd /repo/Wikibase
 
 echo "Tagging $RELEASE_VERSION at $WIKIBASE_COMMIT_HASH"
-git tag -a $RELEASE_VERSION $WIKIBASE_COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
+git tag --force -a $RELEASE_VERSION $WIKIBASE_COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
 
-# set remote
-# push origin
+if [ -z $DRY_RUN ]; then
+    echo "DRY RUN! Not pushing anything"
+else
+    git remote set-url origin ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
+    git push --tags
+fi
