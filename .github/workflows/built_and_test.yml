@@ -86,7 +86,7 @@ jobs:
       - name: Build Tarball
         run: bash build_github.sh wikibase ${{ env.env_file }}
 
-      - name: Archive tar production artifacts
+      - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
         with:
           name: BuildMetadata
