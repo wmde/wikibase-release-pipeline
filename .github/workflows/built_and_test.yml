@@ -89,6 +89,13 @@ jobs:
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
         with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata.env
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/Wikibase.tar.gz

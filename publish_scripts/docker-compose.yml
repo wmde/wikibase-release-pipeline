@@ -20,6 +20,7 @@ services:
      - RELEASE_VERSION
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - ${HOME}/.gitconfig:/root/.gitconfig:ro
       - ../git_cache/:/git_cache
   upload_dockerhub:
     build:
