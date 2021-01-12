@@ -17,7 +17,7 @@ RELEASE_FULL_PATH=$RELEASE_DIR/$RELEASE_MAJOR_VERSION
 cp -R /ssh-keys/ /root/.ssh
 chmod 700 /root/.ssh
 
-echo "Start uploading tarballs to $RELEASE_HOST at $RELEASE_FULL_PATH"
+echo "Will upload tarballs to $RELEASE_HOST at $RELEASE_FULL_PATH"
 
 # sign in
 eval `ssh-agent -s`
