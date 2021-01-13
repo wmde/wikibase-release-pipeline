@@ -40,7 +40,8 @@ services:
      - DOCKER_HUB_REPOSITORY_NAME
      - DOCKER_HUB_ACCESS_TOKEN
      - DOCKER_HUB_ID
-     - TEST_DOCKER_HUB_ACCESS_TOKEN
+     - DRY_RUN
+     - RELEASE_MAJOR_VERSION
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
   upload_tar:
