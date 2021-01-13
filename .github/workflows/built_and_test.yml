@@ -144,6 +144,14 @@ jobs:
           key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
           restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wdqs-ui-git-repo
+        with:
+          path: git_cache
+          key: cache-wdqs-ui-git-repo
+
       - name: Build QueryService UI
         run: bash build_github.sh queryservice-ui ${{ env.env_file }}
 
