@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 # source all metadata files
 for f in /extractedArtifacts/BuildMetadata/build_metadata_*.env; do source $f; done
@@ -19,6 +19,7 @@ function tag_and_push {
     CHECKOUT_DIR=$2
     BRANCH_NAME=$3
     COMMIT_HASH=$4
+    REMOTE_URL=$5
 
     git clone --single-branch --branch ${BRANCH_NAME} $REPOSITORY_CACHE_NAME $CHECKOUT_DIR
     cd $CHECKOUT_DIR
@@ -27,8 +28,8 @@ function tag_and_push {
     git tag --force -a $RELEASE_VERSION $COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
 
     if [ -z $DRY_RUN ]; then
-        git remote set-url origin ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
-        #git push --tags
+        git remote set-url origin $REMOTE_URL
+        git push --tags
     else
         echo "DRY RUN! Not pushing anything"
     fi
@@ -37,10 +38,18 @@ function tag_and_push {
 }
 
 # tag and push Wikibase
-tag_and_push "/git_cache/Wikibase.git" "/repo/Wikibase" $WIKIBASE_BRANCH_NAME $WIKIBASE_COMMIT_HASH
+tag_and_push "/git_cache/Wikibase.git" \
+    "/repo/Wikibase" \
+    $WIKIBASE_BRANCH_NAME \
+    $WIKIBASE_COMMIT_HASH \
+    ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
 
 # tag and push queryservice ui
-tag_and_push "/git_cache/services/wikidata-query-gui.git" "/repo/wdqs-ui" master $QUERYSERVICE_UI_COMMIT_HASH
+tag_and_push "/git_cache/services/wikidata-query-gui.git" \
+    "/repo/wdqs-ui" \
+    master \
+    $QUERYSERVICE_UI_COMMIT_HASH \
+    ssh://gerrit.wikimedia.org:29418/wikidata/query/gui
 
 
 
