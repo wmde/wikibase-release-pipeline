@@ -28,7 +28,7 @@ ssh $RELEASE_USER@$RELEASE_HOST mkdir -p $RELEASE_FULL_PATH
 
 # move to uploads with release tag
 cp $ARTIFACT_PATH/Wikibase.tar.gz /uploads/wikibase.$RELEASE_VERSION.tar.gz
-cp $ARTIFACT_PATH/wdqs-ui.tar.gz /uploads/wdqs-ui.$RELEASE_VERSION.tar.gz
+cp $ARTIFACT_PATH/wdqs-frontend.tar.gz /uploads/wdqs-frontend.$RELEASE_VERSION.tar.gz
 
 # upload
 scp /uploads/* $RELEASE_USER@$RELEASE_HOST:$RELEASE_FULL_PATH

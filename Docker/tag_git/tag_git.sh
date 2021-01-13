@@ -46,7 +46,7 @@ tag_and_push "/git_cache/Wikibase.git" \
 
 # tag and push queryservice ui
 tag_and_push "/git_cache/services/wikidata-query-gui.git" \
-    "/repo/wdqs-ui" \
+    "/repo/wdqs-frontend" \
     master \
     $QUERYSERVICE_UI_COMMIT_HASH \
     ssh://gerrit.wikimedia.org:29418/wikidata/query/gui
