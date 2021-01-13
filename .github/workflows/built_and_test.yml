@@ -11,7 +11,6 @@ on:
 
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
-  DOCKER_CACHE_VERSION: 0
 
 jobs:
   build_mediawiki:
@@ -22,11 +21,6 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: mediawiki-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: mediawiki-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Cache git_cache repos
         uses: actions/cache@v2
@@ -55,11 +49,6 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: wikibase-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Cache composer
         uses: actions/cache@v2
@@ -107,11 +96,6 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: queryservice-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService Image 
         id: download_step
@@ -131,11 +115,6 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-{hash}
-          restore-keys: ui-docker-cache-${{env.DOCKER_CACHE_VERSION}}-
 
       - name: Build QueryService UI
         run: bash build_github.sh queryservice-ui ${{ env.env_file }}
