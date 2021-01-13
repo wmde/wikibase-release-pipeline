@@ -126,10 +126,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v2
         env:
-          cache-name: cache-wdqs-ui-git-repo
+          cache-name: cache-wdqs-frontend-git-repo
         with:
           path: git_cache
-          key: cache-wdqs-ui-git-repo
+          key: cache-wdqs-frontend-git-repo
 
       - name: Build QueryService UI
         run: bash build_github.sh queryservice-ui ${{ env.env_file }}
@@ -146,14 +146,14 @@ jobs:
         with:
           name: BuildArtifacts
           if-no-files-found: error
-          path: ./artifacts/wdqs-ui.tar.gz
+          path: ./artifacts/wdqs-frontend.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: BuildArtifacts
           if-no-files-found: error
-          path: ./artifacts/wdqs-ui.docker.tar.gz
+          path: ./artifacts/wdqs-frontend.docker.tar.gz
 
   test_wikibase:
     strategy:
