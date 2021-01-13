@@ -30,3 +30,18 @@ services:
      - TEST_DOCKER_HUB_ACCESS_TOKEN
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+  upload_tar:
+    build:
+      context: ../Docker/upload_tar
+      dockerfile: Dockerfile
+    privileged: true
+    environment:
+     - RELEASE_HOST
+     - RELEASE_USER=${USER}
+     - RELEASE_VERSION
+     - RELEASE_MAJOR_VERSION
+     - RELEASE_DIR
+     - RELEASE_SSH_IDENTITY
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - ${HOME}/.ssh/:/ssh-keys/:ro
