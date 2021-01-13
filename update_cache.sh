@@ -39,7 +39,7 @@ for arg in "$@"; do
 			fetch_all $extension.git
 		done
 	elif [ $arg = "services" ]; then
-		clone_if_not_present services/wikidata-query-gui.git "https://github.com/wikimedia/wikidata-query-gui.git"
+		clone_if_not_present services/wikidata-query-gui.git "https://gerrit.wikimedia.org/r/wikidata/query/gui"
 		fetch_all services/wikidata-query-gui.git
 	elif [ $arg = "core" ]; then
 		clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
