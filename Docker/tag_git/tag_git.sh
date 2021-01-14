@@ -50,6 +50,3 @@ tag_and_push "/git_cache/services/wikidata-query-gui.git" \
     master \
     $QUERYSERVICE_UI_COMMIT_HASH \
     ssh://gerrit.wikimedia.org:29418/wikidata/query/gui
-
-
-
