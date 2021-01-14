@@ -10,6 +10,19 @@ services:
      - WORKFLOW_RUN_NUMBER
     volumes:
       - ../artifacts:/extractedArtifacts
+  tag_git:
+    build:
+      context: ../Docker/tag_git
+      dockerfile: Dockerfile
+    environment:
+     - WORKFLOW_RUN_NUMBER
+     - WIKIBASE_BRANCH_NAME=master
+     - RELEASE_VERSION
+     - DRY_RUN
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - ${HOME}/.gitconfig:/root/.gitconfig:ro
+      - ../git_cache/:/git_cache
   upload_dockerhub:
     build:
       context: ../Docker/upload_dockerhub
@@ -18,7 +31,7 @@ services:
     environment:
      - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
      - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
-     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-ui.docker.tar.gz
+     - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
      - QUERYSERVICE_IMAGE_NAME
      - QUERYSERVICE_UI_IMAGE_NAME
      - WIKIBASE_IMAGE_NAME
@@ -27,7 +40,8 @@ services:
      - DOCKER_HUB_REPOSITORY_NAME
      - DOCKER_HUB_ACCESS_TOKEN
      - DOCKER_HUB_ID
-     - TEST_DOCKER_HUB_ACCESS_TOKEN
+     - DRY_RUN
+     - RELEASE_MAJOR_VERSION
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
   upload_tar:

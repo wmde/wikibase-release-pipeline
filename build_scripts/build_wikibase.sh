@@ -5,16 +5,19 @@ ROOT="$(pwd)"
 
 TEMP_GIT_DIR="$(mktemp -d)"
 TEMP_TAR_DIR="$(pwd)"/artifacts
+WIKIBASE_PATH="$TEMP_GIT_DIR/Wikibase"
 
-git clone --depth 1 --single-branch --branch ${WIKIBASE_BRANCH_NAME} "$ROOT/git_cache/Wikibase.git" "$TEMP_GIT_DIR/Wikibase"
+git clone --depth 1 --single-branch --branch ${WIKIBASE_BRANCH_NAME} "$ROOT/git_cache/Wikibase.git" $WIKIBASE_PATH
 
-GIT_TRACE=1 git -C "$TEMP_GIT_DIR/Wikibase" submodule update --init --recursive
+GIT_TRACE=1 git -C $WIKIBASE_PATH submodule update --init --recursive
+
+bash $ROOT/build_scripts/write_git_metadata.sh $WIKIBASE_PATH $ROOT/artifacts/build_metadata_wikibase.env "WIKIBASE_COMMIT_HASH"
 
 # remove git things from release package
-rm "$TEMP_GIT_DIR/Wikibase/".git* -rfv
+rm $WIKIBASE_PATH/.git* -rfv
 
 # install composer dependencies for tarball
-cd "$TEMP_GIT_DIR/Wikibase/"
+cd $WIKIBASE_PATH
 composer install --no-dev --ignore-platform-reqs
 cd -
 
