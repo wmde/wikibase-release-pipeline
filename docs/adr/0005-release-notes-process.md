@@ -1,4 +1,4 @@
-# 5) Release notes process {#adr_0005}
+# 5) Wikibase Extension Release notes process {#adr_0005}
 
 Date: 2020-11-30
 
