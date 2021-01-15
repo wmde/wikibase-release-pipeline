@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd test_scripts
+cd test
 
 # remove local files
 rm -f log/*

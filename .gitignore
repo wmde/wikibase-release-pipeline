@@ -10,7 +10,7 @@ Wikibase.tar.gz
 
 #temp 
 Docker/**/*.tar.gz
-test_scripts/log
+test/log
 diagrams/node_modules/
 artifacts/*
 local.env

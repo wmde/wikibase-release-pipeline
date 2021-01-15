@@ -25,4 +25,4 @@ export QUERYSERVICE_UI_SERVER=localhost:8081
 export QUERYSERVICE_SERVER=localhost:8989
 ```
 
-For more information on selenium testing see the [README](../../test_scripts/selenium/README.md) file in the selenium folder.
+For more information on selenium testing see the [README](../../test/selenium/README.md) file in the selenium folder.
