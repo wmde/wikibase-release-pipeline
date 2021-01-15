@@ -3,8 +3,6 @@ set -e
 
 cd test
 
-# remove local files
-rm -f log/*
 # does not exists on github
 mkdir log -p
 

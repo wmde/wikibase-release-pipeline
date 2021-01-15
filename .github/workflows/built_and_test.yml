@@ -181,5 +181,4 @@ jobs:
         with:
           name: TestArtifacts
           path: |
-            test/selenium/log
             test/log
