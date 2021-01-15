@@ -7,7 +7,7 @@ on:
         description: 'Environment file'
         required: true
         default: '.env' # only gets set on a "workflow_dispatch" run
-  push:
+#  push:
 
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
