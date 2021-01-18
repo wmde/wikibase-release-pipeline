@@ -7,6 +7,9 @@ container_id
 Wikibase.tar.gz
 *.docker.tar.gz
 
+Docker/build/Wikibase/wait-for-it.sh
+Docker/build/QueryService/wait-for-it.sh
+
 #temp 
 Docker/**/*.tar.gz
 test/log

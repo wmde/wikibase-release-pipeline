@@ -10,7 +10,7 @@ wget "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/s
 TARBALL_PATH="$TEMP_DIR/$TARBALL"
 
 if [ -n "$GITHUB_ENV" ]; then
-    echo "TARBALL_PATH="$TARBALL_PATH"" >> $GITHUB_ENV
+    echo "TARBALL_PATH=""$TARBALL_PATH""" >> "$GITHUB_ENV"
 else
     export TARBALL_PATH
 fi
