@@ -5,9 +5,8 @@ include variables.env
 
 export
 
-test: test/wikibase.${SUITE}.log
-
-test/wikibase.${SUITE}.log:
+.PHONY: test
+test:
 	bash test/test_suite.sh ${SUITE}
 
 test-all:
