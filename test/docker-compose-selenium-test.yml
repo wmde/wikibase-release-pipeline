@@ -11,7 +11,7 @@ services:
       - wdqs-frontend
       - wdqs
     volumes:
-      - ./log/selenium/:/usr/src/app/selenium/log/
+      - ./log/selenium/:/usr/src/app/log/
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80

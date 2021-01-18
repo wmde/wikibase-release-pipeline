@@ -1,11 +1,14 @@
 #!make
 include .env
 include variables.env
+-include local.env
 
 export
 
-test:
-	bash test/test_docker.sh ${SUITE}
+test: test/wikibase.${SUITE}.log
+
+test/wikibase.${SUITE}.log:
+	bash test/test_suite.sh ${SUITE}
 
 test-all:
 	bash test/test_docker.sh repo
@@ -25,5 +28,13 @@ queryservice:
 queryservice-ui:
 	bash update_cache.sh services
 	eval ". ./build/build_queryservice_ui.sh; bash build/build_queryservice_ui_docker.sh ${QUERYSERVICE_UI_IMAGE_NAME}"
+
+clean-cache:
+	rm -rf cache/*
+	rm -rf git_cache/*
+
+clean:
+	rm -rf artifacts/*.tar.gz
+	rm -rf artifacts/*.env
 
 all: mediawiki wikibase queryservice queryservice-ui
