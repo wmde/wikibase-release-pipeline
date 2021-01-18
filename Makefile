@@ -10,8 +10,8 @@ test:
 	bash test/test_suite.sh ${SUITE}
 
 test-all:
-	bash test/test_docker.sh repo
-	bash test/test_docker.sh fedprops
+	bash test/test_suite.sh repo
+	bash test/test_suite.sh fedprops
 
 mediawiki:
 	bash update_cache.sh core skins
