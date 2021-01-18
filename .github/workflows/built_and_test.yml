@@ -104,6 +104,14 @@ jobs:
         with:
           env-file: ${{ env.env_file }}
 
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wdqs-backend-git-repo
+        with:
+          path: git_cache
+          key: cache-wdqs-backend-git-repo
+
       - name: Build QueryService Image 
         id: download_step
         run: bash build.sh queryservice ${{ env.env_file }}
