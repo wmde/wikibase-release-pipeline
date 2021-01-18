@@ -5,7 +5,6 @@ RUN ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
-WORKDIR /usr/src/app
-COPY selenium selenium
-WORKDIR /usr/src/app/selenium
+WORKDIR /usr/src/app/
+COPY . .
 RUN npm ci

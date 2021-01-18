@@ -31,7 +31,7 @@ jobs:
           key: cache-mediawiki-git-repo
 
       - name: Build Tarball
-        run: bash build_github.sh mediawiki ${{ env.env_file }}
+        run: bash build.sh mediawiki ${{ env.env_file }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -73,7 +73,7 @@ jobs:
           path: artifacts/
 
       - name: Build Tarball
-        run: bash build_github.sh wikibase ${{ env.env_file }}
+        run: bash build.sh wikibase ${{ env.env_file }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
@@ -106,7 +106,7 @@ jobs:
 
       - name: Build QueryService Image 
         id: download_step
-        run: bash build_github.sh queryservice ${{ env.env_file }}
+        run: bash build.sh queryservice ${{ env.env_file }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -132,7 +132,7 @@ jobs:
           key: cache-wdqs-frontend-git-repo
 
       - name: Build QueryService UI
-        run: bash build_github.sh queryservice-ui ${{ env.env_file }}
+        run: bash build.sh queryservice-ui ${{ env.env_file }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
@@ -181,5 +181,4 @@ jobs:
         with:
           name: TestArtifacts
           path: |
-            test_scripts/selenium/log
-            test_scripts/log
+            test/log

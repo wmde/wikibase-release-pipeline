@@ -12,7 +12,7 @@ services:
     volumes:
       - ./LocalSettings/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
     ports:
-      - "8585:80"
+      - "8181:80"
     networks:
       default:
         aliases:

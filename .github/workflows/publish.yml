@@ -31,4 +31,4 @@ jobs:
         with:
           env-file: ${{ env.env_file }}
       - name: run the publish script
-        run: bash publish_docker.sh
+        run: bash publish/dockerhub.sh

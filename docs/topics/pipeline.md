@@ -31,7 +31,7 @@ The github pipeline produces new artifacts on each run and they can all be viewe
 To build artifacts using docker run the following command which would execute the wikibase pipeline step and produce the artifacts in the `artifacts` folder using the `REL1_34.env` environment file. See the [Makefile](../../Makefile) for more build options.
 
 ```sh
-bash build_github.sh wikibase versions/REL1_34.env
+bash build.sh wikibase versions/REL1_34.env
 ```
 
 [Wikibase REL1_34]: https://gerrit.wikimedia.org/g/mediawiki/extensions/Wikibase/+/refs/heads/REL1_34

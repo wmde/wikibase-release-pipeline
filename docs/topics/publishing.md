@@ -16,7 +16,7 @@ Run with:
 
 ```
 set -o allexport; source .env; source variables.env; source local.env; set +o allexport
-./publish_docker.sh
+./publish/dockerhub.sh
 ```
 
 ## Publishing tarballs
@@ -47,7 +47,7 @@ Run with in the terminal
 
 ```
 set -o allexport; source .env; source variables.env; source local.env; set +o allexport
-./publish_tar.sh
+./publish/tar.sh
 ```
 
 After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
@@ -76,5 +76,5 @@ $ unset DRY_RUN
 Run with:
 ```
 set -o allexport; source .env; source variables.env; source local.env; set +o allexport
-./publish_git_tag.sh
+./publish/git_tag.sh
 ```

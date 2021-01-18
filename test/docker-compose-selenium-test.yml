@@ -4,14 +4,14 @@ version: '3'
 services:
   wikibase-selenium-test:
     build:
-      context: ./
-      dockerfile: DockerfileSelenium
+      context: ../Docker/test/selenium/
+      dockerfile: Dockerfile
     depends_on:
       - wikibase
       - wdqs-frontend
       - wdqs
     volumes:
-      - ./selenium/log/:/usr/src/app/selenium/log/
+      - ./log/selenium/:/usr/src/app/log/
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80

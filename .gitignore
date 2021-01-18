@@ -1,6 +1,5 @@
 core
 Vector
-Wikibase
 cache
 git_cache
 container_id
@@ -10,7 +9,7 @@ Wikibase.tar.gz
 
 #temp 
 Docker/**/*.tar.gz
-test_scripts/log
+test/log
 diagrams/node_modules/
 artifacts/*
 local.env

@@ -1,10 +1,8 @@
 #!/bin/bash
 set -e
 
-cd test_scripts
+cd test
 
-# remove local files
-rm -f log/*
 # does not exists on github
 mkdir log -p
 
