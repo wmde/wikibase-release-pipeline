@@ -28,7 +28,7 @@ GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf "$TARBALL_PATH" .
 cd "$ROOT"
 
 if [ -n "$GITHUB_ENV" ]; then
-    echo "TARBALL_PATH=""$TARBALL_PATH""" >> "$GITHUB_ENV"
+    echo "TARBALL_PATH=$TARBALL_PATH" >> "$GITHUB_ENV"
 else
     export TARBALL_PATH
 fi
