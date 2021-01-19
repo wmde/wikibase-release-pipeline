@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wikibase test
-if curl --fail  --retry 5 --retry-all-errors --retry-delay 10 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$WIKIBASE_SERVER"/wiki/Main_Page; then
+if curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$WIKIBASE_SERVER"/wiki/Main_Page; then
     echo 'Successfully loaded the wiki main page!'
 else
     echo "Could not retrieve main page"

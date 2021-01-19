@@ -73,9 +73,7 @@ exports.config = {
 	 * @param {Object} test Mocha Test object
 	 */
 	afterTest: function ( test ) {
-		if ( !test.passed ) {
-			const filePath = saveScreenshot( test.title );
-			console.log( '\n\tScreenshot: ' + filePath + '\n' );
-		}
+		const filePath = saveScreenshot( process.env.SUITE + '--' + test.title );
+		console.log( '\n\tScreenshot: ' + filePath + '\n' );
 	}
 };
