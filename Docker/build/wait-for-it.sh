@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# This file is provided by the wikibase/wikibase docker image.
 # Use this script to test if a given TCP host/port are available
-
+# shellcheck disable=SC2064,SC2086,SC2206,SC2124,SC2230,SC2046
 cmdname=$(basename $0)
 
 echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
@@ -142,7 +141,6 @@ STRICT=${STRICT:-0}
 CHILD=${CHILD:-0}
 QUIET=${QUIET:-0}
 
-# check to see if timeout is from busybox?
 # check to see if timeout is from busybox?
 TIMEOUT_PATH=$(realpath $(which timeout))
 if [[ $TIMEOUT_PATH =~ "busybox" ]]; then

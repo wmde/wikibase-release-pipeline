@@ -3,8 +3,8 @@
 
 # Test if required environment variables have been set
 REQUIRED_VARIABLES=(WIKIBASE_HOST WDQS_HOST WDQS_PORT)
-for i in ${REQUIRED_VARIABLES[@]}; do
-    eval THISSHOULDBESET=\$$i
+for i in "${REQUIRED_VARIABLES[@]}"; do
+    eval THISSHOULDBESET=\$"$i"
     if [ -z "$THISSHOULDBESET" ]; then
     echo "$i is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;

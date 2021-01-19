@@ -27,22 +27,22 @@ extensions=("Wikibase")
 
 for arg in "$@"; do
 
-	if [ $arg = "skins" ]; then
+	if [ "$arg" = "skins" ]; then
 		for skin in "${skins[@]}"; do
-			clone_if_not_present skins/$skin.git "https://gerrit.wikimedia.org/r/mediawiki/skins/$skin"
-			fetch_all skins/$skin.git
+			clone_if_not_present "skins/$skin.git" "https://gerrit.wikimedia.org/r/mediawiki/skins/$skin"
+			fetch_all "skins/$skin.git"
 		done
 
-	elif [ $arg = "extensions" ]; then
+	elif [ "$arg" = "extensions" ]; then
 		for extension in "${extensions[@]}"; do
-			clone_if_not_present $extension.git "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
-			fetch_all $extension.git
+			clone_if_not_present "$extension.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
+			fetch_all "$extension.git"
 		done
-	elif [ $arg = "services" ]; then
-		clone_if_not_present services/wikidata-query-gui.git "https://gerrit.wikimedia.org/r/wikidata/query/gui"
-		fetch_all services/wikidata-query-gui.git
-	elif [ $arg = "core" ]; then
+	elif [ "$arg" = "services" ]; then
+		clone_if_not_present "services/wikidata-query-gui.git" "https://gerrit.wikimedia.org/r/wikidata/query/gui"
+		fetch_all "services/wikidata-query-gui.git"
+	elif [ "$arg" = "core" ]; then
 		clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
-		fetch_all core.git
+		fetch_all "core.git"
 	fi
 done

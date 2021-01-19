@@ -3,13 +3,18 @@
 set -e
 
 # source all metadata files
-for f in /extractedArtifacts/BuildMetadata/build_metadata_*.env; do source $f; done
+for file in  /extractedArtifacts/BuildMetadata/build_metadata_*.env ; do
+  if [ -f "$file" ] ; then
+    # shellcheck disable=SC1090
+    . "$file"
+  fi
+done
 
-if [ -z $WIKIBASE_BRANCH_NAME ] || \
-[ -z $RELEASE_VERSION ] || \
-[ -z $QUERYSERVICE_UI_COMMIT_HASH ] || \
-[ -z $WIKIBASE_COMMIT_HASH ] || \
-[ -z $WORKFLOW_RUN_NUMBER ] ; then
+if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
+[ -z "$RELEASE_VERSION" ] || \
+[ -z "$QUERYSERVICE_UI_COMMIT_HASH" ] || \
+[ -z "$WIKIBASE_COMMIT_HASH" ] || \
+[ -z "$WORKFLOW_RUN_NUMBER" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
 fi
@@ -21,14 +26,14 @@ function tag_and_push {
     COMMIT_HASH=$4
     REMOTE_URL=$5
 
-    git clone --single-branch --branch ${BRANCH_NAME} $REPOSITORY_CACHE_NAME $CHECKOUT_DIR
-    cd $CHECKOUT_DIR
+    git clone --single-branch --branch "${BRANCH_NAME}" "$REPOSITORY_CACHE_NAME" "$CHECKOUT_DIR"
+    cd "$CHECKOUT_DIR"
 
     echo "Tagging $RELEASE_VERSION at $COMMIT_HASH"
-    git tag --force -a $RELEASE_VERSION $COMMIT_HASH -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
+    git tag --force -a "$RELEASE_VERSION" "$COMMIT_HASH" -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
 
-    if [ -z $DRY_RUN ]; then
-        git remote set-url origin $REMOTE_URL
+    if [ -z "$DRY_RUN" ]; then
+        git remote set-url origin "$REMOTE_URL"
         git push --tags
     else
         echo "DRY RUN! Not pushing anything"
@@ -40,13 +45,13 @@ function tag_and_push {
 # tag and push Wikibase
 tag_and_push "/git_cache/Wikibase.git" \
     "/repo/Wikibase" \
-    $WIKIBASE_BRANCH_NAME \
-    $WIKIBASE_COMMIT_HASH \
+    "$WIKIBASE_BRANCH_NAME" \
+    "$WIKIBASE_COMMIT_HASH" \
     ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
 
 # tag and push queryservice ui
 tag_and_push "/git_cache/services/wikidata-query-gui.git" \
     "/repo/wdqs-frontend" \
     master \
-    $QUERYSERVICE_UI_COMMIT_HASH \
+    "$QUERYSERVICE_UI_COMMIT_HASH" \
     ssh://gerrit.wikimedia.org:29418/wikidata/query/gui
