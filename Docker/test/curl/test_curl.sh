@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wikibase test
-if curl --fail  --retry 5 --retry-all-errors --retry-delay 10 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent $WIKIBASE_SERVER/wiki/Main_Page; then
+if curl --fail  --retry 5 --retry-all-errors --retry-delay 10 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$WIKIBASE_SERVER"/wiki/Main_Page; then
     echo 'Successfully loaded the wiki main page!'
 else
     echo "Could not retrieve main page"
@@ -9,7 +9,7 @@ else
 fi
 
 # QueryService test blazegraph root page
-if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql; then
+if curl --fail --show-error --output /dev/null --silent "$QUERYSERVICE_SERVER"/bigdata/namespace/wdq/sparql; then
     echo 'Successfully loaded the QueryService page!'
 else
     echo "Could not retrieve root page"
@@ -17,7 +17,7 @@ else
 fi
 
 # QueryService UI test
-if curl --fail --show-error --output /dev/null --silent $QUERYSERVICE_UI_SERVER/; then
+if curl --fail --show-error --output /dev/null --silent "$QUERYSERVICE_UI_SERVER"/; then
     echo 'Successfully loaded the QueryService UI page!'
 else
     echo "Could not retrieve UI root page"

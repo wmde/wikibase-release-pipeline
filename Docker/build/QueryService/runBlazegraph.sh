@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This file is provided by the wikibase/wdqs docker image.
 
-cd /wdqs
+cd /wdqs || exit
 
 ./runBlazegraph.sh

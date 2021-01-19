@@ -3,8 +3,8 @@
 
 # Test if required environment variables have been set
 REQUIRED_VARIABLES=(MW_ADMIN_NAME MW_ADMIN_PASS MW_ADMIN_EMAIL MW_WG_SECRET_KEY DB_SERVER DB_USER DB_PASS DB_NAME)
-for i in ${REQUIRED_VARIABLES[@]}; do
-    eval THISSHOULDBESET=\$$i
+for i in "${REQUIRED_VARIABLES[@]}"; do
+    eval THISSHOULDBESET=\$"$i"
     if [ -z "$THISSHOULDBESET" ]; then
     echo "$i is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
@@ -14,16 +14,16 @@ done
 set -eu
 
 # Wait for the db to come up
-/wait-for-it.sh $DB_SERVER -t 300
+/wait-for-it.sh "$DB_SERVER" -t 300
 # Sometimes it appears to come up and then go back down meaning MW install fails
 # So wait for a second and double check!
 sleep 1
-/wait-for-it.sh $DB_SERVER -t 300
+/wait-for-it.sh "$DB_SERVER" -t 300
 
 # Do the mediawiki install (only if LocalSettings doesn't already exist)
 if [ ! -e "/var/www/html/LocalSettings.php" ]; then
-    php /var/www/html/maintenance/install.php --dbuser $DB_USER --dbpass $DB_PASS --dbname $DB_NAME --dbserver $DB_SERVER --lang $MW_SITE_LANG --pass $MW_ADMIN_PASS $MW_SITE_NAME $MW_ADMIN_NAME
-    php /var/www/html/maintenance/resetUserEmail.php --no-reset-password $MW_ADMIN_NAME $MW_ADMIN_EMAIL
+    php /var/www/html/maintenance/install.php --dbuser "$DB_USER" --dbpass "$DB_PASS" --dbname "$DB_NAME" --dbserver "$DB_SERVER" --lang "$MW_SITE_LANG" --pass "$MW_ADMIN_PASS" "$MW_SITE_NAME" "$MW_ADMIN_NAME"
+    php /var/www/html/maintenance/resetUserEmail.php --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
 
     # Copy our LocalSettings into place after install from the template
     # https://stackoverflow.com/a/24964089/4746236
@@ -35,6 +35,7 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
 
     # Run extrascripts on first run
     if [ -f /extra-install.sh ]; then
+        # shellcheck disable=SC1091
         source /extra-install.sh
     fi
 fi

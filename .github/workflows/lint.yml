@@ -1,0 +1,31 @@
+name: Linting
+
+on:
+  push:
+
+jobs:
+  lint_shell_scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bewuethr/shellcheck-action@v2
+
+  lint_selenium_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: npm-lint-cache
+      - name: lint the selenium javascript tests
+        run: |
+          cd Docker/test/selenium 
+          npm install
+          npm run lint
+          

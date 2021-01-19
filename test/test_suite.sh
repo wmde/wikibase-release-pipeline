@@ -26,4 +26,4 @@ docker-compose \
     -f docker-compose-selenium-test.yml \
     build wikibase-selenium-test
 
-bash run_selenium.sh $1
+bash run_selenium.sh "$1"
