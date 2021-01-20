@@ -8,7 +8,7 @@ proposed
 
 ## Context
 
-We intend to package and release software that is not maintained by WMDE. For example, the Wikidata Query Service (WDQS)
+We intend to package and release software that is not maintained by WMDE. For example, the Wikidata Query Service (WDQS).
 
 This software comes from a variety of sources including software that is used and maintained by the WMF in Wikimedia
 production Wikis but also some from complete third parties.
