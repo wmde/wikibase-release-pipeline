@@ -53,8 +53,9 @@ describe( 'Client Item', function () {
 		$( '#wb-setsitelink-submit button' ).click();
 
 		$( '.wikibase-sitelinklistview-listview li' ).waitForDisplayed();
+
 		const siteLinkValue = $( '.wikibase-sitelinklistview-listview li' ).getText();
-		console.log( siteLinkValue );
+
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( 'Main Page' ) );
 	} );
