@@ -10,7 +10,7 @@ services:
       - mysql
     restart: always
     volumes:
-      - ./LocalSettings/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
+      - ./suite-config/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
     ports:
       - "8181:80"
     networks:
