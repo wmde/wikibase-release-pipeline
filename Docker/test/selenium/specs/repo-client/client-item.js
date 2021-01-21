@@ -8,10 +8,10 @@ describe( 'Client Item', function () {
 
 	it( 'Special:NewItem should not be accessible on client', function () {
 
-		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem' );
+		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const notFoundText = $( 'h1#firstHeading' ).getText();
-		assert( notFoundText === 'No such special page' );
+		assert( notFoundText === '(nosuchspecialpage)' );
 	} );
 
 	it( 'Should create an item on repo and use it on a client page with wikitext', function () {
