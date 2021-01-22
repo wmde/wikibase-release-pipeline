@@ -192,6 +192,7 @@ jobs:
 
   test_wikibase:
     strategy:
+      fail-fast: false
       matrix:
         suite: [ repo, fedprops, repo-client ]
     needs:
