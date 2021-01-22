@@ -30,10 +30,8 @@ jobs:
 
       - name: Download artifacts ${{ github.event.inputs.workflow_run_number }}
         run: |
-          cd publish
-          docker-compose build download_artifacts && docker-compose run download_artifacts
-          cd ..
-          cp artifacts/${{ github.event.inputs.workflow_run_number }}/BuildArtifacts/* artifacts/
+          bash publish/download.sh
+          mv artifacts/${{ github.event.inputs.workflow_run_number }}/BuildArtifacts/* artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
         run: make test SUITE=${{ matrix.suite }}

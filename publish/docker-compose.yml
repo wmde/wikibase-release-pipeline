@@ -2,6 +2,7 @@ version: '3'
 
 services:
   download_artifacts:
+    user: $USER_ID:$GROUP_ID
     build:
       context: ../Docker/publish/download_artifacts
       dockerfile: Dockerfile
