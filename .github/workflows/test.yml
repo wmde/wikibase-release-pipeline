@@ -1,0 +1,50 @@
+name: Test existing workflow run
+
+on:
+  workflow_dispatch:
+    inputs:
+      workflow_run_number:
+        description: 'Workflow run number'
+        required: true
+        default: '503165443'
+
+env:
+  env_file: .env
+  WORKFLOW_RUN_NUMBER: ${{ github.event.inputs.workflow_run_number }}
+jobs:
+  test_wikibase:
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [ repo, fedprops, repo-client ]
+    needs:
+      - build_wikibase
+      - build_queryservice
+      - build_queryservice_ui
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Download artifacts ${{ github.event.inputs.workflow_run_number }}
+        run: |
+          cd publish
+          docker-compose build download_artifacts && docker-compose run download_artifacts
+          cd ..
+          mv artifacts/${{ github.event.inputs.workflow_run_number }}/BuildArtifacts/* artifacts/
+
+      - name: Run Tests - ${{ matrix.suite }}
+        run: make test SUITE=${{ matrix.suite }}
+
+      - name: Archive docker test artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: TestArtifacts
+          path: |
+            test/log
