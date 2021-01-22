@@ -25,10 +25,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v2
         env:
-          cache-name: cache-mediawiki-git-repo
+          cache-name: cache-mediawiki-git-repo-temp-bump
         with:
           path: git_cache
-          key: cache-mediawiki-git-repo
+          key: cache-mediawiki-git-repo-temp-bump
 
       - name: Build Tarball
         run: bash build.sh mediawiki ${{ env.env_file }}
@@ -56,15 +56,15 @@ jobs:
           cache-name: cache-wikibase-composer
         with:
           path: cache
-          key: cache-wikibase-composer
+          key: cache-wikibase-composer-
 
       - name: Cache git_cache repos
         uses: actions/cache@v2
         env:
-          cache-name: cache-wikibase-git-repo
+          cache-name: cache-wikibase-git-repo-temp-bump
         with:
           path: git_cache
-          key: cache-wikibase-git-repo
+          key: cache-wikibase-git-repo-temp-bump
 
       - name: Get Mediawiki docker image artifact
         uses: actions/download-artifact@v2
