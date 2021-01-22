@@ -12,7 +12,7 @@ echo "INSERT INTO \`interwiki\` (\`iw_prefix\`, \`iw_url\`, \`iw_api\`, \`iw_wik
 php /var/www/html/maintenance/patchSql.php --wiki=my_wiki /tmp/repo.sql
 
 ## run dispatcher
-php /var/www/html/extensions/Wikibase/repo/maintenance/dispatchChanges.php --wiki my_wiki --idle-delay 2 --dispatch-interval 2 --client client_wiki &
+php /var/www/html/extensions/Wikibase/repo/maintenance/dispatchChanges.php --wiki my_wiki --idle-delay 1 --dispatch-interval 1 --client client_wiki &
 
 # startup jobs
 php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait &
