@@ -26,4 +26,7 @@ if not os.path.exists(basepath):
             extractedFileFath = os.path.join(basepath, artifact['name'])
             zip_ref.extractall(extractedFileFath)
 
+
+os.system('chmod -R 0777 ' + basepath)
+
 print(os.system('ls -lh ' + basepath))
