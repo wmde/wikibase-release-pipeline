@@ -56,7 +56,7 @@ jobs:
           cache-name: cache-wikibase-composer
         with:
           path: cache
-          key: cache-wikibase-composer-
+          key: cache-wikibase-composer
 
       - name: Cache git_cache repos
         uses: actions/cache@v2
