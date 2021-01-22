@@ -20,7 +20,8 @@
 		"wdio-mediawiki": "^1.0.0",
 		"wdio-wikibase": "^4.0.1",
 		"webdriverio": "^6.1.16",
-		"axios": "^0.21.0"
+		"axios": "^0.21.0",
+		"lodash": "^4.17.20"
 	},
 	"browserslist": [
 		"ie 11"

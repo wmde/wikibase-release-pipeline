@@ -19,6 +19,9 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
+# stop any dangling things
+docker-compose $SUITE_CONFIG -f docker-compose-selenium-test.yml down
+
 # start container with settings
 docker-compose $SUITE_CONFIG up -d --force-recreate
 docker-compose logs -f --no-color > "log/wikibase.$1.log" &
@@ -32,5 +35,3 @@ docker-compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
     wikibase-selenium-test npm run "test:$1"
-
-docker-compose $SUITE_CONFIG -f docker-compose-selenium-test.yml down

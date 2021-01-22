@@ -24,7 +24,7 @@ COPY --from=collector /var/www/html /var/www/html
 WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
 RUN apk add icu-dev && docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-configure intl && docker-php-ext-install intl
-RUN composer install --no-dev --verbose -n
+RUN composer install --verbose -n --no-dev
 
 FROM ${MEDIAWIKI_IMAGE_NAME}:latest
 
