@@ -18,6 +18,9 @@
 - [x] Create an item on repo with sitelink to client
 - [x] Create an item on repo and verify that client can reference it using wikitext
 - [ ] Verify that changes on repo are dispatched to client ( TODO figure out all use-cases )
+  - [x] Sitelink created
+  - [x] Item delete
+  - [ ] TODO ...
 - [ ] Create an item on repo and verify that client can use it using Lua (Scribunto)
 - [ ] Create an item on repo and verify Lua cpu time is not exceeding some threshold (Scribunto)
 

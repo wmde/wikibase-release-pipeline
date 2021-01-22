@@ -67,20 +67,6 @@ describe( 'Item', function () {
 
 	} );
 
-	it( 'Should be able to create site-links on repo items to client wiki', function () {
-
-		// Create a wikitext link on a new page
-		browser.url( process.env.MW_SERVER + '/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=Main_Page' );
-		$( '#wb-setsitelink-submit button' ).click();
-
-		$( '.wikibase-sitelinklistview-listview li' ).waitForDisplayed();
-
-		const siteLinkValue = $( '.wikibase-sitelinklistview-listview li' ).getText();
-
-		// label should come from repo property
-		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( 'Main Page' ) );
-	} );
-
 	// This will generate a change that will dispatch
 	it( 'Should be able to create site-links from item to client', function () {
 
@@ -132,7 +118,7 @@ describe( 'Item', function () {
 		};
 
 		// Wait a bit for the jobs/dispatcher to run
-		browser.pause( 20 * 1000 );
+		browser.pause( 30 * 1000 );
 
 		// get all external changes
 		const apiURL = process.env.MW_CLIENT_SERVER + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
