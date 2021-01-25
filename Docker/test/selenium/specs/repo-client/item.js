@@ -58,7 +58,6 @@ describe( 'Item', function () {
 
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
-		browser.pause( 10 * 1000 );
 	} );
 
 	// This will generate a change that will dispatch
@@ -74,7 +73,6 @@ describe( 'Item', function () {
 
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( 'Main Page' ) );
-		browser.pause( 10 * 1000 );
 
 	} );
 
@@ -88,8 +86,6 @@ describe( 'Item', function () {
 
 		// label should come from repo property
 		assert( bodyText === propertyValue );
-		browser.pause( 10 * 1000 );
-
 	} );
 
 	// This will generate a change that will dispatch
@@ -108,10 +104,11 @@ describe( 'Item', function () {
 		$( '.oo-ui-flaggedElement-destructive button' ).click();
 
 		browser.url( process.env.MW_SERVER + '/wiki/Item:Q1' );
-		browser.pause( 10 * 1000 );
 	} );
 
 	it( 'Should be able to see changes on repo item is dispatched to client', function () {
+
+		browser.pause( 10 * 1000 );
 
 		const expectedSiteLinkChange = {
 			type: 'external',
@@ -126,9 +123,6 @@ describe( 'Item', function () {
 			title: 'Main Page',
 			comment: 'Associated Wikidata item deleted. Language links removed.'
 		};
-
-		// Wait a bit for the jobs/dispatcher to run
-		browser.pause( 30 * 1000 );
 
 		// get all external changes
 		const apiURL = process.env.MW_CLIENT_SERVER + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
