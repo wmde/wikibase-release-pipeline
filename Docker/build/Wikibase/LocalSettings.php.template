@@ -59,3 +59,10 @@ foreach (glob("LocalSettings/*.php") as ${DOLLAR}filename)
 {
     include ${DOLLAR}filename;
 }
+
+## OAuth Extension
+wfLoadExtension( 'OAuth' );
+${DOLLAR}wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
+${DOLLAR}wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
+${DOLLAR}wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
+${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;

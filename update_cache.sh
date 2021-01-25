@@ -12,7 +12,7 @@ function clone_if_not_present {
 function fetch_all {
 	REPOSITORY_CACHE_NAME=$1
 	cd "git_cache/$REPOSITORY_CACHE_NAME"
-	GIT_TRACE=1 git fetch --all -v
+	git fetch --all
 	cd -
 }
 
@@ -23,7 +23,10 @@ mkdir -p 'git_cache/services/'
 cd "$(dirname "$0")"
 
 skins=("Vector")
-extensions=("Wikibase")
+extensions=( \
+		"Wikibase" \
+		"OAuth" \
+		)
 
 for arg in "$@"; do
 

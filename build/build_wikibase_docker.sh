@@ -1,13 +1,17 @@
 #!/bin/bash
-set -e
+set -ex
+
+mkdir -p Docker/build/Wikibase/artifacts
+mkdir -p Docker/build/Wikibase/artifacts/extensions
 
 docker load -i "artifacts/mediawiki.docker.tar.gz"
 
 if [ -f "$TARBALL_PATH" ]; then
-    cp "$TARBALL_PATH" Docker/build/Wikibase
+    cp "$TARBALL_PATH" Docker/build/Wikibase/artifacts/
 fi
 
-cp Docker/build/wait-for-it.sh Docker/build/Wikibase/
+cp -r artifacts/oauth.tar.gz Docker/build/Wikibase/artifacts/
+cp Docker/build/wait-for-it.sh Docker/build/Wikibase/artifacts/
 
 docker build --build-arg MEDIAWIKI_IMAGE_NAME="$MEDIAWIKI_IMAGE_NAME" Docker/build/Wikibase/ -t "$1"
 
