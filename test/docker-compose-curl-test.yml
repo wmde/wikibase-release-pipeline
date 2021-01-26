@@ -12,7 +12,9 @@ services:
       - wdqs
       - wdqs-updater
       - mysql
+      - quickstatements
     environment:
+      - QS_SERVER=quickstatements.svc:80
       - WIKIBASE_SERVER=wikibase.svc:80
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
       - QUERYSERVICE_SERVER=wdqs.svc:9999
