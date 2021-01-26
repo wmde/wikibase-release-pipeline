@@ -22,6 +22,7 @@ wikibase:
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
 
 quickstatements:
+	bash update_cache.sh services
 	eval ". ./build/build_quickstatements.sh; bash build/build_quickstatements_docker.sh ${QUICKSTATEMENTS_IMAGE_NAME}"
 
 queryservice:
