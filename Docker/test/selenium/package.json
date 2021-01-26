@@ -28,6 +28,7 @@
 	"scripts": {
 		"test:repo": "wdio wdio.conf.js --spec specs/repo/*",
 		"test:fedprops": "wdio wdio.conf.js --spec specs/federated-properties/*",
+		"test:quickstatements": "wdio wdio.conf.js --spec specs/quickstatements/*",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
 	},

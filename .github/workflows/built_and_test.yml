@@ -123,6 +123,25 @@ jobs:
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
+  build_quickstatements:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build QuickStatements Image 
+        id: download_step
+        run: bash build.sh quickstatements ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/quickstatements.docker.tar.gz
+
   build_queryservice:
     runs-on: ubuntu-latest
     steps:
@@ -193,11 +212,12 @@ jobs:
   test_wikibase:
     strategy:
       matrix:
-        suite: [ repo, fedprops ]
+        suite: [ repo, fedprops, quickstatements ]
     needs:
       - build_wikibase
       - build_queryservice
       - build_queryservice_ui
+      - build_quickstatements
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
