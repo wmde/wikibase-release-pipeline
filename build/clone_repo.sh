@@ -24,7 +24,7 @@ if [ -n "$COMMIT_HASH" ]; then
 else
     echo 'COMMIT_HASH not set.'
     # TODO GET IT FROM REPO
-    COMMIT_HASH=TODO
+    COMMIT_HASH="$(git rev-parse HEAD)"
 fi
 
 if [ "$UPDATE_SUBMODULE" = 1 ] ; then
