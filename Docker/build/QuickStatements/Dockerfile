@@ -4,11 +4,8 @@ RUN apt-get update && \
     apt-get install --yes --no-install-recommends git=1:2.* ca-certificates=201* && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://phabricator.wikimedia.org/source/tool-quickstatements.git quickstatements
-RUN git clone --depth 1 https://bitbucket.org/magnusmanske/magnustools.git magnustools
-
-RUN rm -rf quickstatements/.git
-RUN rm -rf magnustools/.git
+COPY artifacts/quickstatements.tar.gz artifacts/quickstatements.tar.gz
+RUN tar xzf artifacts/quickstatements.tar.gz
 
 FROM composer:1 as composer
 

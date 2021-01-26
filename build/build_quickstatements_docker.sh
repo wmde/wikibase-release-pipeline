@@ -1,12 +1,8 @@
 #!/bin/bash
-set -e
+set -ex
 
-echo "hello"
-#SERVICE_DIST_TAR="$TARBALL_PATH"
+mkdir -p Docker/build/QuickStatements/artifacts
+cp "$TARBALL_PATH" Docker/build/QuickStatements/artifacts/
 
-#cp "$SERVICE_DIST_TAR" Docker/build/QueryService/
-#cp Docker/build/wait-for-it.sh Docker/build/QueryService/
-
-#docker build --pull --build-arg tarball="$(basename "$SERVICE_DIST_TAR")" Docker/build/QueryService/ -t "$1"
-
-#docker save "$1" | gzip -9f > artifacts/"$1".docker.tar.gz
+docker build --pull Docker/build/QuickStatements/ -t "$1"
+docker save "$1" | gzip -9f > artifacts/"$1".docker.tar.gz

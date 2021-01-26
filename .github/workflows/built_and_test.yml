@@ -209,6 +209,7 @@ jobs:
       - build_wikibase
       - build_queryservice
       - build_queryservice_ui
+      - build_quickstatements
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
