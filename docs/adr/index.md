@@ -11,7 +11,13 @@ Superseding decisions should reference ADRs they're changing or overriding.
 
 Current ADRs include:
 
-* @subpage adr_0001
-* @subpage adr_0002
-* @subpage adr_0003
-* @subpage adr_0004
+* [1 - docker image repository](0001-docker-image-repository.md)
+* [2 - tarball hosting](0002-tarball-hosting.md)
+* [3 - tarball contents](0003-tarball-contents.md)
+* [4 - wdqs tarball contents](0004-wdqs-tarball-content.md)
+* [5 - release notes process](0005-release-notes-process.md)
+* [6 - pipeline runner](0006-pipline-runner.md)
+* [7 - wikibase release notes publishing](0007-wikibase-release-notes-publish.md)
+* [9 - non-WMDE release notes](0009-non-WMDE-release-notes.md)
+* [10 - queryservice tarball](0010-queryservice-tarball.md)
+* [11 - wikibase bundle](0011-wikibase-bundle.md)
