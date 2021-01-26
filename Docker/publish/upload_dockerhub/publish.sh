@@ -46,6 +46,7 @@ echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login --username "$DOCKER_HUB_ID" --pas
 docker load -i "$WIKIBASE_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_BACKEND_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_FRONTEND_DOCKER_PATH"
+docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 
 # Tag Queryservice UI with version
 tag_and_push "$QUERYSERVICE_UI_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
@@ -55,6 +56,9 @@ tag_and_push "$QUERYSERVICE_IMAGE_NAME" "$QUERYSERVICE_VERSION"
 
 # Tag Wikibase with version
 tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+
+# Tag Quickstatements with version
+tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
 
 # logout and remove credentials 
 docker logout

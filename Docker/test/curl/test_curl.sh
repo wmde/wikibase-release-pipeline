@@ -34,3 +34,11 @@ curl "$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql" \
     --fail \
     --show-error \
     --output /dev/null || exit 1
+
+# QuickStatements test
+if curl --fail --show-error --output /dev/null --silent "$QS_SERVER"/; then
+    echo 'Successfully loaded the QuickStatements server!'
+else
+    echo "Could not retrieve QuickStatements server"
+    exit 1
+fi
