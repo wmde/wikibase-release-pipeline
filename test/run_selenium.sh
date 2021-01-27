@@ -20,11 +20,11 @@ if [ -f "$SUITE_OVERRIDE" ]; then
 fi
 
 # stop any dangling things
-docker-compose $SUITE_CONFIG -f docker-compose-selenium-test.yml down
+docker-compose $SUITE_CONFIG -f docker-compose-selenium-test.yml down --volumes
 
 # start container with settings
 docker-compose $SUITE_CONFIG up -d --force-recreate
-docker-compose logs -f --no-color > "log/wikibase.$1.log" &
+docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$1.log" &
 
 # run status checks and wait until containers start
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
