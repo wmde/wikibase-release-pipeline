@@ -34,4 +34,4 @@ When adding components to the release pipeline that have curated release notes w
 
 If upstream components start providing release notes we should make changes to include them in the appropriate artifacts when possible.
 
-Other components may have significant changes that we fail to inform users of in advance.
+Other components may have significant changes that we might fail to inform users of in advance.
