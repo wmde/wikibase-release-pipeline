@@ -6,7 +6,6 @@ services:
   wikibase:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-      - MW_WG_SECRET_KEY=abc123
     volumes:
       - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
       - quickstatements-data:/quickstatements/data
