@@ -9,7 +9,7 @@ services:
     volumes:
       - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
       - quickstatements-data:/quickstatements/data
-      - ../Docker/build/QuickStatements/oauth.ini:/templates/oauth.ini 
+      - ../Docker/build/QuickStatements/oauth.ini:/templates/oauth.ini
 
   quickstatements:
     image: "${QUICKSTATEMENTS_IMAGE_NAME}:latest"
