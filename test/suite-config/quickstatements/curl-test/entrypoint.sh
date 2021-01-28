@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# still run the original tests
 sh /test_curl.sh
 
 # QuickStatements test
