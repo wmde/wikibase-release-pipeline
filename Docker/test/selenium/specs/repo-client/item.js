@@ -108,7 +108,7 @@ describe( 'Item', function () {
 
 	it( 'Should be able to see changes on repo item is dispatched to client', function () {
 
-		browser.pause( 10 * 1000 );
+		browser.pause( 30 * 1000 );
 
 		const expectedSiteLinkChange = {
 			type: 'external',
