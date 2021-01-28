@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Wikibase test
 if curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$WIKIBASE_SERVER"/wiki/Main_Page; then
@@ -34,11 +34,3 @@ curl "$QUERYSERVICE_SERVER/bigdata/namespace/wdq/sparql" \
     --fail \
     --show-error \
     --output /dev/null || exit 1
-
-# QuickStatements test
-if curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$QS_SERVER"/; then
-    echo 'Successfully loaded the QuickStatements server!'
-else
-    echo "Could not retrieve QuickStatements server"
-    exit 1
-fi

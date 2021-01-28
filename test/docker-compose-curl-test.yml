@@ -6,13 +6,6 @@ services:
     build:
       context: ../Docker/test/curl/
       dockerfile: Dockerfile
-    links:
-      - wikibase
-      - wdqs-frontend
-      - wdqs
-      - wdqs-updater
-      - mysql
-      - quickstatements
     environment:
       - QS_SERVER=quickstatements.svc:80
       - WIKIBASE_SERVER=wikibase.svc:80

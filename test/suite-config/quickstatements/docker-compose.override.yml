@@ -3,6 +3,15 @@ version: '3'
 
 services:
 
+  wikibase-test:
+    build:
+      context: ../Docker/test/curl/
+      dockerfile: Dockerfile
+    volumes:
+      - ./suite-config/quickstatements/curl-test/quickstatements.sh:/entrypoint.sh
+    entrypoint: /bin/sh
+    command:  /entrypoint.sh
+
   wikibase:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
