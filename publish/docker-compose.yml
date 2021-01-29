@@ -2,13 +2,13 @@ version: '3'
 
 services:
   download_artifacts:
-    user: $USER_ID:$GROUP_ID
     build:
       context: ../Docker/publish/download_artifacts
       dockerfile: Dockerfile
     environment:
      - GITHUB_TOKEN
      - WORKFLOW_RUN_NUMBER
+     - HOST_UID=${USER_ID}
     volumes:
       - ../artifacts:/extractedArtifacts
   tag_git:
