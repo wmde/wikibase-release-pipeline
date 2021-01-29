@@ -19,7 +19,7 @@ if not os.path.exists(basepath):
         print('Downloading %d bytes from %s' % (artifact['size_in_bytes'], artifact['name']))
 
         r = requests.get( artifact['archive_download_url'], allow_redirects=True, headers={"Authorization": 'Bearer ' + os.getenv('GITHUB_TOKEN') } )
-        zipfilePath = os.path.join('/zips' ,artifact['name'] + '.zip')
+        zipfilePath = os.path.join('/tmp' ,artifact['name'] + '.zip')
         open(zipfilePath, 'wb').write(r.content)
 
         with zipfile.ZipFile(zipfilePath, 'r') as zip_ref:
