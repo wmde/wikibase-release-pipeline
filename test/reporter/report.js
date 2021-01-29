@@ -35,7 +35,7 @@ if (fs.existsSync(filePath)) {
             core.info( 'OK: ' + test.fullTitle );
         });
 
-        core.info('\u001b[1m All good 👍')
+        core.info('\u001b[1mAll good 👍')
     }
 } else {
     core.error('No tests executed!');
