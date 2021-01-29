@@ -7,6 +7,8 @@
 const fs = require( 'fs' ),
 	saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 
+const JsonReporter = require( './json-reporter.js' );
+
 exports.config = {
 
 	// ======
@@ -55,7 +57,10 @@ exports.config = {
 	waitforTimeout: 20 * 1000,
 
 	// See also: http://webdriver.io/guide/testrunner/reporters.html
-	reporters: [ 'spec' ],
+	reporters: [
+		'spec',
+		[ JsonReporter, {} ]
+	],
 
 	// See also: http://mochajs.org
 	mochaOpts: {

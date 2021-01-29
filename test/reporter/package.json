@@ -1,0 +1,12 @@
+{
+	"name": "reporter",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"report": "report.js"
+	},
+	"dependencies": {
+		"@actions/core": "1.2.6",
+		"mocha-json-streamier-reporter": "^1.4.2"
+	}
+}

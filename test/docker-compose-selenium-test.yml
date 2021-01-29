@@ -21,3 +21,4 @@ services:
       - MEDIAWIKI_USER=WikibaseAdmin
       - MEDIAWIKI_PASSWORD=WikibaseDockerAdminPass
       - MW_SCRIPT_PATH=/w
+      - SUITE
