@@ -2,6 +2,16 @@
 version: '3'
 
 services:
+  wikibase-test:
+    build:
+      context: ../Docker/test/curl/
+      dockerfile: Dockerfile
+    volumes:
+      - ./suite-config/repo-client/curl-test/entrypoint.sh:/entrypoint.sh
+    entrypoint: /bin/sh
+    command:  /entrypoint.sh
+    environment: 
+      - WIKIBASE_CLIENT_SERVER=wikibase-client.svc:80
 
   mysql:
     volumes:  
