@@ -18,6 +18,21 @@ describe( 'Item', function () {
 		browser.addCommand( 'makeRequest', function async( url ) {
 			return axios.get( url );
 		} );
+
+		browser.addCommand( 'assertChangeDispatched', function async( expectedChange ) {
+
+			// get all external changes
+			const apiURL = process.env.MW_CLIENT_SERVER + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
+			const result = browser.makeRequest( apiURL );
+			const changes = result.data.query.recentchanges;
+
+			console.log( changes );
+
+			// to get a screenshot
+			browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
+
+			assert( _.find( changes, expectedChange ) );
+		} );
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
@@ -60,6 +75,19 @@ describe( 'Item', function () {
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
+	// creates usage
+	it( 'Should be able to use the item on client with wikitext', function () {
+
+		// Create a wikitext link on a new page
+		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Main_Page?action=edit' );
+		$( '#wpTextbox1' ).setValue( '{{#statements:' + propertyId + '|from=' + itemId + '}}' );
+		$( '#wpSave' ).click();
+		const bodyText = $( '.mw-parser-output' ).getText();
+
+		// label should come from repo property
+		assert( bodyText === propertyValue );
+	} );
+
 	// This will generate a change that will dispatch
 	it( 'Should be able to create site-links from item to client', function () {
 
@@ -76,16 +104,19 @@ describe( 'Item', function () {
 
 	} );
 
-	it( 'Should be able to use the item on client with wikitext', function () {
+	it( 'Should be able to see site-link change is dispatched to client', function () {
 
-		// Create a wikitext link on a new page
-		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Main_Page?action=edit' );
-		$( '#wpTextbox1' ).setValue( '{{#statements:' + propertyId + '|from=' + itemId + '}}' );
-		$( '#wpSave' ).click();
-		const bodyText = $( '.mw-parser-output' ).getText();
+		browser.pause( 30 * 1000 );
 
-		// label should come from repo property
-		assert( bodyText === propertyValue );
+		const expectedSiteLinkChange = {
+			type: 'external',
+			ns: 0,
+			title: 'Main Page',
+			comment: 'A Wikidata item has been linked to this page.'
+		};
+
+		browser.assertChangeDispatched( expectedSiteLinkChange );
+
 	} );
 
 	// This will generate a change that will dispatch
@@ -106,16 +137,9 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Item:Q1' );
 	} );
 
-	it( 'Should be able to see changes on repo item is dispatched to client', function () {
+	it( 'Should be able to see delete changes is dispatched to client', function () {
 
 		browser.pause( 30 * 1000 );
-
-		const expectedSiteLinkChange = {
-			type: 'external',
-			ns: 0,
-			title: 'Main Page',
-			comment: 'A Wikidata item has been linked to this page.'
-		};
 
 		const expectedDeletionChange = {
 			type: 'external',
@@ -124,19 +148,7 @@ describe( 'Item', function () {
 			comment: 'Associated Wikidata item deleted. Language links removed.'
 		};
 
-		// get all external changes
-		const apiURL = process.env.MW_CLIENT_SERVER + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
-		const result = browser.makeRequest( apiURL );
-		const changes = result.data.query.recentchanges;
-
-		console.log( changes );
-
-		// to get a screenshot
-		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
-
-		assert( !_.find( changes, expectedSiteLinkChange ) ); // this gets merged?
-
-		assert( _.find( changes, expectedDeletionChange ) );
+		browser.assertChangeDispatched( expectedDeletionChange );
 
 	} );
 
