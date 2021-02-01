@@ -194,7 +194,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client ]
+        suite: [ repo-client ]
     needs:
       - build_wikibase
       - build_queryservice
