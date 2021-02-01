@@ -1,17 +1,12 @@
 # Quickstatements docker image
 
-Quickstatements2 as seen at  [https://tools.wmflabs.org/quickstatements/](https://tools.wmflabs.org/quickstatements/)
-
-### Tags
-Image name                            | Parent image                                    | Quickstatements version
--------------------------------       | ------------------------                        | --------------        
-`wikibase/quickstatements` : `latest` | [php:7.2-apache](https://hub.docker.com/_/php/) | master                
+Quickstatements2 as seen at  [https://github.com/magnusmanske/quickstatements](https://github.com/magnusmanske/quickstatements)
 
 ### Environment variables
 
 Variable                   | Default  | Description                                            
--------------------------- | -------- | -----------                                            
-`WIKIBASE_HOST`            | NONE     | Host of wikibase instance as seen by QS container      
+-------------------------- | -------- | -----------
+`WIKIBASE_SCHEME_AND_HOST` | NONE     | Host and port of wikibase instance as seen by QS container                                                  
 `WB_PUBLIC_HOST_AND_PORT`  | NONE     | Host and port of wikibase as seen by the user's browser
 `QS_PUBLIC_HOST_AND_PORT`  | NONE     | Host and port of QS as seen by the user's browser      
 `OAUTH_CONSUMER_KEY`       | NONE     | OAuth consumer key (obtained from wikibase)            
@@ -37,7 +32,7 @@ File                      | Description
 
 #### Set up quickstatements
 In order for quickstatements to communicate with wikibase it needs to know where your instance is and how it can find it.
-This must be done by setting the ENV variable WIKIBASE_HOST. n.b. This should reflect how this container when running
+This must be done by setting the ENV variable `WIKIBASE_SCHEME_AND_HOST`. n.b. This should reflect how this container when running
 sees the wikibase container. For example the docker container alias like wikibase.svc.
 
 The user's browser will also be redirected to the Wikibase instance and finally back to quickstatements. The address
@@ -46,10 +41,10 @@ on localhost on a specific port. e.g. http://localhost:8181. This should be pass
 WB_PUBLIC_HOST_AND_PORT
 
 One must also know how this container will be visible to the user as well so it can ask the wikibase to redirect the
-user back here. This should be passed as QS_PUBLIC_HOST_AND_PORT
+user back here. This should be passed as `QS_PUBLIC_HOST_AND_PORT`
 
 You can pass the consumer and secret token you got from the wikibase to this container as the environment variables
- OAUTH_CONSUMER_KEY and OAUTH_CONSUMER_SECRET. If you don't, docker-compose automatically handles this.
+ `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, docker-compose automatically handles this.
 
 You can now test it works by navigating to http://\<your quickstatements host\> and logging in using the button top right.
 
