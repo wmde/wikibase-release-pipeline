@@ -80,6 +80,7 @@ describe( 'Item', function () {
 
 		// Create a wikitext link on a new page
 		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Main_Page?action=edit' );
+		$( '#wpTextbox1' ).waitForDisplayed();
 		$( '#wpTextbox1' ).setValue( '{{#statements:' + propertyId + '|from=' + itemId + '}}' );
 		$( '#wpSave' ).click();
 		const bodyText = $( '.mw-parser-output' ).getText();
@@ -91,8 +92,9 @@ describe( 'Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to create site-links from item to client', function () {
 
-		// Create a wikitext link on a new page
+		// Create a site-link on a the Main_Page
 		browser.url( process.env.MW_SERVER + '/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=Main_Page' );
+		$( '#wb-setsitelink-submit button' ).waitForDisplayed();
 		$( '#wb-setsitelink-submit button' ).click();
 
 		$( '.wikibase-sitelinklistview-listview li' ).waitForDisplayed();
