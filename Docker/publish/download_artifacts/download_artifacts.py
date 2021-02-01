@@ -27,4 +27,6 @@ if not os.path.exists(basepath):
             zip_ref.extractall(extractedFileFath)
 
 
+os.system('chmod -R 0777 ' + basepath)
+
 print(os.system('ls -lh ' + basepath))
