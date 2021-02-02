@@ -42,8 +42,18 @@ for arg in "$@"; do
 			fetch_all "$extension.git"
 		done
 	elif [ "$arg" = "services" ]; then
+		# queryservice
 		clone_if_not_present "services/wikidata-query-gui.git" "https://gerrit.wikimedia.org/r/wikidata/query/gui"
 		fetch_all "services/wikidata-query-gui.git"
+		
+		# quickstatements
+		clone_if_not_present "services/quickstatements.git" https://github.com/magnusmanske/quickstatements
+		fetch_all "services/quickstatements.git"
+
+		# magnus tools
+		clone_if_not_present "services/magnustools.git" https://bitbucket.org/magnusmanske/magnustools.git
+		fetch_all "services/magnustools.git"
+
 	elif [ "$arg" = "core" ]; then
 		clone_if_not_present core.git "https://gerrit.wikimedia.org/r/mediawiki/core"
 		fetch_all "core.git"
