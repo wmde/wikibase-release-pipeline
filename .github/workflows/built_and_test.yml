@@ -213,11 +213,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client ]
+        suite: [ repo, fedprops, repo-client, quickstatements ]
     needs:
       - build_wikibase
       - build_queryservice
       - build_queryservice_ui
+      - build_quickstatements
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
