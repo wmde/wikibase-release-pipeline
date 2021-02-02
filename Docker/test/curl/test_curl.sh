@@ -1,8 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
-function check_if_up {
+check_if_up() {
     URL=$1
-    if curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$URL"; then
+    PATH=$2
+
+    FULL_URL="$1$2"
+
+    if [ -z "$URL" ]; then
+        exit 0
+    fi
+
+    if /usr/bin/curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$FULL_URL"; then
         echo "Successfully loaded $URL!"
     else
         echo "Could not retrieve $URL"
@@ -10,8 +18,8 @@ function check_if_up {
     fi
 }
 
-check_if_up "$WIKIBASE_SERVER"/wiki/Main_Page
+check_if_up "$WIKIBASE_SERVER" "/wiki/Main_Page"
 
-check_if_up "$QUERYSERVICE_SERVER"/bigdata/namespace/wdq/sparql
+check_if_up "$QUERYSERVICE_SERVER" "/bigdata/namespace/wdq/sparql"
 
-check_if_up "$QUERYSERVICE_UI_SERVER"
+check_if_up "$QUERYSERVICE_UI_SERVER" "/"

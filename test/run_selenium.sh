@@ -30,7 +30,6 @@ docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$1.log" &
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
-
 docker-compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
