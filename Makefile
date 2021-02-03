@@ -32,6 +32,9 @@ oauth:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh OAuth ${WIKIBASE_BRANCH_NAME}
 
+elasticsearch:
+	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
+
 clean-cache:
 	rm -rf cache/*
 	rm -rf git_cache/*
