@@ -22,6 +22,10 @@ wikibase:
 	bash update_cache.sh extensions
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
 
+wikibase_bundle:
+	bash update_cache.sh extensions
+	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
+
 queryservice:
 	eval ". ./build/build_queryservice.sh; bash build/build_queryservice_docker.sh ${QUERYSERVICE_IMAGE_NAME}"
 
