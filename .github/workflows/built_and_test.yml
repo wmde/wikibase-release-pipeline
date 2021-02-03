@@ -200,13 +200,6 @@ jobs:
       - name: Build Elasticsearch
         run: bash build.sh elasticsearch ${{ env.env_file }}
 
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: BuildMetadata
-          if-no-files-found: error
-          path: artifacts/build_metadata_elasticsearch.env
-
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
         with:
