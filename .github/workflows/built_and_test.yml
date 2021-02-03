@@ -106,10 +106,12 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Build oauth
-        id: download_step
         run: bash build.sh oauth ${{ env.env_file }}
 
-      - name: Archive oauth tarball
+      - name: Build scribunto
+        run: bash build.sh scribunto ${{ env.env_file }}
+
+      - name: Archive extension tarballs
         uses: actions/upload-artifact@v2
         with:
           name: BuildArtifacts

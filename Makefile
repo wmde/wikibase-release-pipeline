@@ -32,6 +32,10 @@ oauth:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh OAuth ${WIKIBASE_BRANCH_NAME}
 
+scribunto: 
+	bash update_cache.sh extensions
+	bash build/build_extension.sh Scribunto ${WIKIBASE_BRANCH_NAME}
+
 clean-cache:
 	rm -rf cache/*
 	rm -rf git_cache/*
@@ -40,4 +44,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki oauth wikibase queryservice queryservice-ui
+all: mediawiki oauth scribunto wikibase queryservice queryservice-ui

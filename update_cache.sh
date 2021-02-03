@@ -26,6 +26,7 @@ skins=("Vector")
 extensions=( \
 		"Wikibase" \
 		"OAuth" \
+		"Scribunto" \
 		)
 
 for arg in "$@"; do

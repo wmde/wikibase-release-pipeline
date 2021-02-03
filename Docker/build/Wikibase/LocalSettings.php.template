@@ -66,3 +66,8 @@ ${DOLLAR}wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
 ${DOLLAR}wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
 ${DOLLAR}wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
 ${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
+
+## Scribunto 
+
+wfLoadExtension( 'Scribunto' );
+${DOLLAR}wgScribuntoDefaultEngine = 'luastandalone';

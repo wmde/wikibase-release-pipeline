@@ -8,14 +8,17 @@ RUN apt-get update && \
 RUN mkdir artifacts
 COPY artifacts/Wikibase.tar.gz artifacts
 COPY artifacts/oauth.tar.gz artifacts
+COPY artifacts/scribunto.tar.gz artifacts
 
 RUN tar xzf artifacts/Wikibase.tar.gz
 RUN tar xzf artifacts/oauth.tar.gz
+RUN tar xzf artifacts/scribunto.tar.gz
 
 FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
 
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 COPY --from=unpacker OAuth /var/www/html/extensions/OAuth
+COPY --from=unpacker Scribunto /var/www/html/extensions/Scribunto
 
 RUN rm /var/www/html/extensions/Wikibase/vendor -rf
 
