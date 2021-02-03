@@ -189,7 +189,7 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.docker.tar.gz
-build_elasticsearch:
+  build_elasticsearch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
