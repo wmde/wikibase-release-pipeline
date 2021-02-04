@@ -29,6 +29,8 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
   mysql:
     image: mariadb:10.3
     restart: always
@@ -84,6 +86,16 @@ services:
       default:
         aliases:
          - wdqs-proxy.svc
+  elasticsearch:
+    image: "${ELASTICSEARCH_IMAGE_NAME}:latest"
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+         - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
   wdqs-updater:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped

@@ -33,6 +33,18 @@ oauth:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh OAuth ${WIKIBASE_BRANCH_NAME}
 
+elastica:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh Elastica ${WIKIBASE_BRANCH_NAME}
+
+cirrussearch:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh CirrusSearch ${WIKIBASE_BRANCH_NAME}
+
+wikibasecirrussearch:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh WikibaseCirrusSearch ${WIKIBASE_BRANCH_NAME}
+
 elasticsearch:
 	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
 
@@ -44,4 +56,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki oauth wikibase queryservice queryservice-ui
+all: mediawiki elastica cirrussearch wikibasecirrussearch oauth wikibase queryservice queryservice-ui
