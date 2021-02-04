@@ -71,4 +71,7 @@ ${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
 wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'CirrusSearch' );
 wfLoadExtension( 'WikibaseCirrusSearch' );
-${DOLLAR}wgCirrusSearchServers = ${CIRRUS_SEARCH_SERVERS};
+${DOLLAR}wgCirrusSearchServers = [ '${MW_ELASTIC_HOST}' ];
+${DOLLAR}wgSearchType = 'CirrusSearch';
+${DOLLAR}wgCirrusSearchExtraIndexSettings['index.mapping.total_fields.limit'] = 5000;
+${DOLLAR}wgWBCSUseCirrus = true;
