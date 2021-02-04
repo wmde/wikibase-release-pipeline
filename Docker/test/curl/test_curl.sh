@@ -7,7 +7,7 @@ check_if_up() {
     FULL_URL="$1$2"
 
     if [ -z "$URL" ]; then
-        exit 0
+        return
     fi
 
     if /usr/bin/curl --fail --retry 60 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 60 --show-error --output /dev/null --silent "$FULL_URL"; then

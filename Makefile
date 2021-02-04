@@ -12,6 +12,7 @@ test:
 test-all:
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops
+	bash test/test_suite.sh repo-client
 
 mediawiki:
 	bash update_cache.sh core skins
