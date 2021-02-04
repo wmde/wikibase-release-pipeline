@@ -27,6 +27,7 @@ extensions=( \
 		"CirrusSearch" \
 		"Elastica" \
 		"OAuth" \
+		"Scribunto" \
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
 		)

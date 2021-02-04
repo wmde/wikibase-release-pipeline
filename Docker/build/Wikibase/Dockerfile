@@ -8,12 +8,14 @@ RUN apt-get update && \
 RUN mkdir artifacts
 COPY artifacts/Wikibase.tar.gz artifacts
 COPY artifacts/oauth.tar.gz artifacts
+COPY artifacts/scribunto.tar.gz artifacts
 COPY artifacts/elastica.tar.gz artifacts
 COPY artifacts/cirrussearch.tar.gz artifacts
 COPY artifacts/wikibasecirrussearch.tar.gz artifacts
 
 RUN tar xzf artifacts/Wikibase.tar.gz
 RUN tar xzf artifacts/oauth.tar.gz
+RUN tar xzf artifacts/scribunto.tar.gz
 RUN tar xzf artifacts/elastica.tar.gz
 RUN tar xzf artifacts/cirrussearch.tar.gz
 RUN tar xzf artifacts/wikibasecirrussearch.tar.gz
@@ -22,6 +24,7 @@ FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
 
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 COPY --from=unpacker OAuth /var/www/html/extensions/OAuth
+COPY --from=unpacker Scribunto /var/www/html/extensions/Scribunto
 COPY --from=unpacker WikibaseCirrusSearch /var/www/html/extensions/WikibaseCirrusSearch
 COPY --from=unpacker CirrusSearch /var/www/html/extensions/CirrusSearch
 COPY --from=unpacker Elastica /var/www/html/extensions/Elastica

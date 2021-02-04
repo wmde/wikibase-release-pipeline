@@ -10,6 +10,7 @@ if [ -f "$TARBALL_PATH" ]; then
     cp "$TARBALL_PATH" Docker/build/Wikibase/artifacts/
 fi
 
+cp -r artifacts/scribunto.tar.gz Docker/build/Wikibase/artifacts/
 cp -r artifacts/oauth.tar.gz Docker/build/Wikibase/artifacts/
 cp -r artifacts/elastica.tar.gz Docker/build/Wikibase/artifacts/
 cp -r artifacts/cirrussearch.tar.gz Docker/build/Wikibase/artifacts/

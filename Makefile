@@ -33,6 +33,10 @@ oauth:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh OAuth ${WIKIBASE_BRANCH_NAME}
 
+scribunto: 
+	bash update_cache.sh extensions
+	bash build/build_extension.sh Scribunto ${WIKIBASE_BRANCH_NAME}
+
 elastica:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh Elastica ${WIKIBASE_BRANCH_NAME}
@@ -56,4 +60,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki elastica cirrussearch wikibasecirrussearch oauth wikibase queryservice queryservice-ui
+all: mediawiki elastica cirrussearch wikibasecirrussearch scribunto oauth wikibase queryservice queryservice-ui

@@ -6,7 +6,8 @@ describe( 'Special:Version', function () {
 
 	const extensions = {
 		wikibase: [ 'WikibaseClient', 'WikibaseRepository' ],
-		other: [ 'OAuth' ]
+		other: [ 'OAuth' ],
+		parserhook: [ 'Scribunto' ]
 	};
 
 	// should be disabled for dynamic tests

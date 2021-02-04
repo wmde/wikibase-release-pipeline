@@ -3,10 +3,12 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const axios = require( 'axios' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const _ = require( 'lodash' );
+const fs = require( 'fs' );
+const defaultFunctions = require( '../../helpers/default-functions' );
+
+const itemLabel = Util.getTestString( 'The Item' );
 
 describe( 'Item', function () {
 
@@ -16,24 +18,7 @@ describe( 'Item', function () {
 	const pageTitle = 'Test';
 
 	before( function () {
-
-		browser.addCommand( 'makeRequest', function async( url ) {
-			return axios.get( url );
-		} );
-
-		browser.addCommand( 'assertChangeDispatched', function async( expectedChange ) {
-			// to get a screenshot
-			browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
-
-			// get all external changes
-			const apiURL = process.env.MW_CLIENT_SERVER + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
-			const result = browser.makeRequest( apiURL );
-			const changes = result.data.query.recentchanges;
-
-			assert( result.status === 200 );
-
-			assert( _.find( changes, expectedChange ) );
-		} );
+		defaultFunctions();
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
@@ -54,7 +39,6 @@ describe( 'Item', function () {
 
 	it( 'Should create an item on repo', function () {
 
-		const itemLabel = 'The Item';
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'string' ) );
 		const data = {
 			claims: [
@@ -69,7 +53,7 @@ describe( 'Item', function () {
 		};
 
 		itemId = browser.call(
-			() => WikibaseApi.createItem( Util.getTestString( itemLabel ), data )
+			() => WikibaseApi.createItem( itemLabel, data )
 		);
 
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
@@ -81,13 +65,10 @@ describe( 'Item', function () {
 
 		browser.pause( 10 * 1000 );
 
-		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/' + pageTitle + '?action=edit' );
-		$( '#wpTextbox1' ).waitForDisplayed();
-		$( '#wpTextbox1' ).setValue( '{{#statements:' + propertyId + '|from=' + itemId + '}}' );
-		$( '#wpSave' ).click();
-		$( '#bodyContent' ).waitForDisplayed();
-		const bodyText = $( '#bodyContent' ).getText();
-
+		const bodyText = browser.editPage(
+			process.env.MW_CLIENT_SERVER,
+			pageTitle, '{{#statements:' + propertyId + '|from=' + itemId + '}}'
+		);
 		// label should come from repo property
 		assert( bodyText.includes( propertyValue ) );
 	} );
@@ -120,7 +101,29 @@ describe( 'Item', function () {
 			comment: 'A Wikidata item has been linked to this page.'
 		};
 
-		browser.assertChangeDispatched( expectedSiteLinkChange );
+		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedSiteLinkChange );
+	} );
+
+	it( 'Should be able to reference an item on client using Lua', function () {
+
+		const template = fs.readFileSync( 'data/repo-client.lua', 'utf8' );
+		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
+		console.log( luaScript );
+
+		browser.editPage(
+			process.env.MW_CLIENT_SERVER,
+			'Module:RepoClient',
+			luaScript
+		);
+
+		const executionContent = browser.editPage(
+			process.env.MW_CLIENT_SERVER,
+			'RepoClientLuaTest',
+			'{{#invoke:RepoClient|testLuaExecution}}'
+		);
+
+		// should come from executed lua script
+		assert( executionContent.includes( itemLabel ) );
 	} );
 
 	// This will generate a change that will dispatch
@@ -152,17 +155,8 @@ describe( 'Item', function () {
 			comment: 'Associated Wikidata item deleted. Language links removed.'
 		};
 
-		browser.assertChangeDispatched( expectedDeletionChange );
+		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedDeletionChange );
 
-	} );
-
-	it.skip( 'Should be able to reference an item on client using Lua', function () {
-		// TODO
-	} );
-
-	it.skip( 'Should be able to reference an item on client using Lua and have it render on time', function () {
-		// TODO
-		// review the lua profiler comment in the body
 	} );
 
 } );

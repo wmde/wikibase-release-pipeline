@@ -106,8 +106,10 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Build oauth
-        id: download_step
         run: bash build.sh oauth ${{ env.env_file }}
+
+      - name: Build scribunto
+        run: bash build.sh scribunto ${{ env.env_file }}
 
       - name: Build elastica
         run: bash build.sh elastica ${{ env.env_file }}
@@ -118,7 +120,7 @@ jobs:
       - name: Build wikibasecirrussearch
         run: bash build.sh wikibasecirrussearch ${{ env.env_file }}
 
-      - name: Archive extension tarball
+      - name: Archive extension tarballs
         uses: actions/upload-artifact@v2
         with:
           name: BuildArtifacts
