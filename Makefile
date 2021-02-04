@@ -12,6 +12,7 @@ test:
 test-all:
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops
+	bash test/test_suite.sh repo-client
 
 mediawiki:
 	bash update_cache.sh core skins
@@ -36,6 +37,21 @@ scribunto:
 	bash update_cache.sh extensions
 	bash build/build_extension.sh Scribunto ${WIKIBASE_BRANCH_NAME}
 
+elastica:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh Elastica ${WIKIBASE_BRANCH_NAME}
+
+cirrussearch:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh CirrusSearch ${WIKIBASE_BRANCH_NAME}
+
+wikibasecirrussearch:
+	bash update_cache.sh extensions
+	bash build/build_extension.sh WikibaseCirrusSearch ${WIKIBASE_BRANCH_NAME}
+
+elasticsearch:
+	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
+
 clean-cache:
 	rm -rf cache/*
 	rm -rf git_cache/*
@@ -44,4 +60,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki oauth scribunto wikibase queryservice queryservice-ui
+all: mediawiki elastica cirrussearch wikibasecirrussearch scribunto oauth wikibase queryservice queryservice-ui

@@ -12,7 +12,9 @@ fi
 
 cp -r artifacts/scribunto.tar.gz Docker/build/Wikibase/artifacts/
 cp -r artifacts/oauth.tar.gz Docker/build/Wikibase/artifacts/
-
+cp -r artifacts/elastica.tar.gz Docker/build/Wikibase/artifacts/
+cp -r artifacts/cirrussearch.tar.gz Docker/build/Wikibase/artifacts/
+cp -r artifacts/wikibasecirrussearch.tar.gz Docker/build/Wikibase/artifacts/
 cp Docker/build/wait-for-it.sh Docker/build/Wikibase/artifacts/
 
 docker build --build-arg MEDIAWIKI_IMAGE_NAME="$MEDIAWIKI_IMAGE_NAME" Docker/build/Wikibase/ -t "$1"
