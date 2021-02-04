@@ -7,4 +7,4 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /usr/src/app/
 COPY . .
-RUN npm ci
+RUN if [ ! -d "/usr/src/app/node_modules" ]; then npm ci --verbose ; fi
