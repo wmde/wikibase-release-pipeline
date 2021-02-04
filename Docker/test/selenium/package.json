@@ -20,18 +20,19 @@
 		"wdio-mediawiki": "^1.0.0",
 		"wdio-wikibase": "^4.0.1",
 		"webdriverio": "^6.1.16",
-		"axios": "^0.21.0"
+		"axios": "^0.21.0",
+		"lodash": "^4.17.20"
 	},
 	"browserslist": [
 		"ie 11"
 	],
 	"scripts": {
 		"test:repo": "wdio wdio.conf.js --spec specs/repo/*",
+		"test:repo-client": "wdio wdio.conf.js --spec specs/repo-client/*",
 		"test:fedprops": "wdio wdio.conf.js --spec specs/federated-properties/*",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
 	},
 	"dependencies": {
-		"axios": "^0.21.0"
 	}
 }

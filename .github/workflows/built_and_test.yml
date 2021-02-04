@@ -208,8 +208,9 @@ jobs:
           path: ./artifacts/elasticsearch.docker.tar.gz
   test_wikibase:
     strategy:
+      fail-fast: false
       matrix:
-        suite: [ repo, fedprops ]
+        suite: [ repo, fedprops, repo-client ]
     needs:
       - build_wikibase
       - build_queryservice
