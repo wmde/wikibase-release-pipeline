@@ -71,4 +71,4 @@ ${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
 wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'CirrusSearch' );
 wfLoadExtension( 'WikibaseCirrusSearch' );
-${DOLLAR}wgCirrusSearchServers = "${CIRRUS_SEARCH_SERVERS}";
+${DOLLAR}wgCirrusSearchServers = ${CIRRUS_SEARCH_SERVERS};

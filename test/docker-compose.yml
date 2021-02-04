@@ -29,7 +29,7 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
-      - CIRRUS_SEARCH_SERVERS=TODO
+      - CIRRUS_SEARCH_SERVERS="[ 'elasticsearch0', 'elasticsearch1', 'elasticsearch2', 'elasticsearch3' ]"
   mysql:
     image: mariadb:10.3
     restart: always
