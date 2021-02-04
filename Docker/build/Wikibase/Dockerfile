@@ -22,6 +22,9 @@ FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
 
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 COPY --from=unpacker OAuth /var/www/html/extensions/OAuth
+COPY --from=unpacker WikibaseCirrusSearch /var/www/html/extensions/WikibaseCirrusSearch
+COPY --from=unpacker CirrusSearch /var/www/html/extensions/CirrusSearch
+COPY --from=unpacker Elastica /var/www/html/extensions/Elastica
 
 RUN rm /var/www/html/extensions/Wikibase/vendor -rf
 
