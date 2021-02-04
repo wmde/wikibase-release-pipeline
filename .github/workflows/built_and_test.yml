@@ -198,6 +198,7 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.docker.tar.gz
+
   build_elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -215,6 +216,7 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
+
   test_wikibase:
     strategy:
       fail-fast: false
@@ -223,6 +225,7 @@ jobs:
     needs:
       - build_wikibase
       - build_queryservice
+      - build_elasticsearch
       - build_queryservice_ui
     runs-on: ubuntu-latest
     steps:
