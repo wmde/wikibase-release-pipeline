@@ -109,7 +109,16 @@ jobs:
         id: download_step
         run: bash build.sh oauth ${{ env.env_file }}
 
-      - name: Archive oauth tarball
+      - name: Build elastica
+        run: bash build.sh elastica ${{ env.env_file }}
+
+      - name: Build cirrussearch
+        run: bash build.sh cirrussearch ${{ env.env_file }}
+
+      - name: Build wikibasecirrussearch
+        run: bash build.sh wikibasecirrussearch ${{ env.env_file }}
+
+      - name: Archive extension tarball
         uses: actions/upload-artifact@v2
         with:
           name: BuildArtifacts
