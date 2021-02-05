@@ -17,14 +17,14 @@ const defaultFunctions = function () {
 	browser.addCommand( 'dockerExecute', function async( container, command ) {
 		const fullCommand = 'docker exec ' + container + ' ' + command;
 		console.log( 'executing: ' + fullCommand );
-		
+
 		return new Promise( ( resolve ) => {
 			exec( fullCommand, ( error, stdout, stderr ) => {
-	
+
 				if ( error ) {
 					console.warn( error );
 				}
-	
+
 				resolve( stdout || stderr );
 			} );
 		} );

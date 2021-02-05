@@ -5,7 +5,6 @@ const Util = require( 'wdio-mediawiki/Util' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const defaultFunctions = require( '../../helpers/default-functions' );
 
-
 const itemAlias = Util.getTestString( 'alias' );
 const itemLabel = Util.getTestString( 'testItem' );
 
@@ -29,7 +28,7 @@ describe( 'ElasticSearch', function () {
 	it( 'should be able to set alias', function () {
 
 		browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
-		
+
 		// input id
 		$( '#wb-modifyentity-id input' ).waitForDisplayed();
 		$( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -56,23 +55,23 @@ describe( 'ElasticSearch', function () {
 
 	it( 'Should be able to run ForceSearchIndex.php', function () {
 
-		const resultCommand = browser.dockerExecute( 
-			process.env.DOCKER_WIKIBASE_REPO_NAME, 
-			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip --buildChunks 250000' 
+		const resultCommand = browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip --buildChunks 250000'
 		);
 
 		// returns a secondary command
-		assert( resultCommand.startsWith('php extensions/CirrusSearch/maintenance/ForceSearchIndex.php') )
+		assert( resultCommand.startsWith( 'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php' ) );
 
-		const resultCommandTwo = browser.dockerExecute( 
-			process.env.DOCKER_WIKIBASE_REPO_NAME, 
-			resultCommand 
+		const resultCommandTwo = browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			resultCommand
 		);
-		
-		console.log(resultCommandTwo);
-		
+
+		console.log( resultCommandTwo );
+
 		// should have queued some stuff
-		assert( resultCommandTwo.includes('Queued a total of') === true );
+		assert( resultCommandTwo.includes( 'Queued a total of' ) === true );
 	} );
 
 	it( 'should be able to search case-insensitive', function () {
@@ -87,7 +86,6 @@ describe( 'ElasticSearch', function () {
 		const searchHit = $( 'li.mw-search-result a' ).getText();
 		assert( searchHit === itemLabel + ' (' + itemId + ')' );
 	} );
-
 
 	it( 'should be able to search via alias', function () {
 
