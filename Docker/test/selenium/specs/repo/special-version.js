@@ -5,7 +5,7 @@ const assert = require( 'assert' );
 describe( 'Special:Version', function () {
 
 	const extensions = {
-		wikibase: [ 'WikibaseClient', 'WikibaseRepository' ],
+		wikibase: [ 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository' ],
 		other: [ 'CirrusSearch', 'Elastica, OAuth' ],
 		parserhook: [ 'Scribunto' ]
 	};
