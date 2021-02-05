@@ -11,6 +11,8 @@ services:
     restart: always
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
+      - ./config/repo/wikibase/run-jobs.sh:/extra-install.sh
+
     ports:
       - "8181:80"
     networks:
