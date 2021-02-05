@@ -32,6 +32,10 @@
   - [X] verify it is available with the correct rdf through the Entity page
   - [X] verify it is available through the QueryService with the correct prefixes
 
+## Elasticsearch
+- [X] Create item with an alias and search by item alias
+- [X] Case-insensitive search should work through Wikibase
+
 
 # Selenium tests
 
