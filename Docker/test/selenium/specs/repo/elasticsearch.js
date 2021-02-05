@@ -25,7 +25,7 @@ describe( 'ElasticSearch', function () {
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
-	it( 'should be able to set alias', function () {
+	it( 'Should be able to set alias', function () {
 
 		browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
 
@@ -45,7 +45,10 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'Should able able to run UpdateSearchIndexConfig.php', function () {
-		const result = browser.dockerExecute( process.env.DOCKER_WIKIBASE_REPO_NAME, 'php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver' );
+		const result = browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			'php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver'
+		);
 
 		assert( result.includes( 'content index...' ) === true );
 		assert( result.includes( 'general index...' ) === true );
@@ -67,8 +70,6 @@ describe( 'ElasticSearch', function () {
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
 			resultCommand
 		);
-
-		console.log( resultCommandTwo );
 
 		// should have queued some stuff
 		assert( resultCommandTwo.includes( 'Queued a total of' ) === true );

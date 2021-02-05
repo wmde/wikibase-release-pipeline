@@ -14,6 +14,9 @@ const defaultFunctions = function () {
 		return axios.get( url );
 	} );
 
+	/**
+	 * Execute docker command on container and get output
+	 */
 	browser.addCommand( 'dockerExecute', function async( container, command ) {
 		const fullCommand = 'docker exec ' + container + ' ' + command;
 		console.log( 'executing: ' + fullCommand );
