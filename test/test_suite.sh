@@ -25,6 +25,9 @@ export LOCALSETTINGS_VARIANT=$1
 docker-compose \
     -f docker-compose.yml \
     -f docker-compose-selenium-test.yml \
-    build wikibase-selenium-test
+    build \
+    --build-arg SKIP_INSTALL_TEST_DEPENDENCIES="$SKIP_INSTALL_TEST_DEPENDENCIES" \
+    wikibase-selenium-test
+
 
 bash run_selenium.sh "$1"

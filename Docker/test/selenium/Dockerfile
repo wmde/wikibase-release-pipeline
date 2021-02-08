@@ -7,4 +7,8 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /usr/src/app/
 COPY . .
-RUN if [ ! -d "/usr/src/app/node_modules" ]; then npm ci --verbose ; fi
+
+# if installed locally these files are copied to make this go a bit quicker
+# set this variable in local.env to something to use it
+ARG SKIP_INSTALL_TEST_DEPENDENCIES
+RUN if [ -z ${SKIP_INSTALL_TEST_DEPENDENCIES} ]; then npm ci --verbose ; fi
