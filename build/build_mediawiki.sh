@@ -12,11 +12,8 @@ if [ ! -d "$MEDIAWIKI_DIR" ]; then
    git clone --branch "$MEDIAWIKI_BRANCH_NAME" "$ROOT/git_cache/core.git" "$MEDIAWIKI_DIR"
 fi
 
-# remove any existing folders
-if [ -d "$MEDIAWIKI_DIR/skins/Vector" ]; then
-    rm -rf "$MEDIAWIKI_DIR/skins/Vector"
-fi
-
+# Add Vector skin
+rm -rf "$MEDIAWIKI_DIR/skins/Vector" # remove any existing folders
 git clone --branch "$MEDIAWIKI_BRANCH_NAME" "$ROOT/git_cache/skins/Vector.git" "$MEDIAWIKI_DIR/skins/Vector"
 
 # remove git things from release package

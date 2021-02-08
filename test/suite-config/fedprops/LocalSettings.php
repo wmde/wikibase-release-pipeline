@@ -8,8 +8,12 @@ $wgDebugDumpSql  = true;
 $wgShowDBErrorBacktrace = true;
 
 $wgWBRepoSettings['federatedPropertiesEnabled'] = true;
-$wgWBRepoSettings['federatedPropertiesSourceScriptUrl'] = 'https://www.wikidata.org/w/';
 
+/**
+ *  Manually setup the default federated properties entitySources
+ *  The following can be removed once we drop support for 1.35
+ */
+$wgWBRepoSettings['federatedPropertiesSourceScriptUrl'] = 'https://www.wikidata.org/w/';
 $wgWBRepoSettings['entitySources'] = [
     'local' => [
         'entityNamespaces' => [ 'item' => 120 ],
