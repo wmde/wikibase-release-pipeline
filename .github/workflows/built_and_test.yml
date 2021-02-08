@@ -97,6 +97,62 @@ jobs:
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
+  build_wikibase_no_extensions:
+    runs-on: ubuntu-latest
+    needs:
+      - build_mediawiki
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache composer
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wikibase-composer
+        with:
+          path: cache
+          key: cache-wikibase-composer
+
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wikibase-git-repo-temp-bump
+        with:
+          path: git_cache
+          key: cache-wikibase-git-repo-temp-bump
+
+      - name: Get dependency build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: artifacts/
+
+      - name: Build Tarball
+        run: bash build.sh wikibase ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata_wikibase.env
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/Wikibase.tar.gz
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/wikibase.docker.tar.gz
+
   build_extensions:
     runs-on: ubuntu-latest
     steps:
