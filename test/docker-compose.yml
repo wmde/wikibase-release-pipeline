@@ -8,9 +8,9 @@ services:
       - mysql
     depends_on:
       - mysql
-    restart: unless-stopped
+    restart: always
     volumes:
-      - ./LocalSettings/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
+      - ./suite-config/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
     ports:
       - "8181:80"
     networks:
@@ -29,19 +29,23 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
   mysql:
     image: mariadb:10.3
-    restart: unless-stopped
+    restart: always
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: 'my_wiki'
       MYSQL_USER: 'wikiuser'
       MYSQL_PASSWORD: 'sqlpass'
+      MYSQL_ROOT_PASSWORD: 'toor'
     networks:
       default:
         aliases:
          - mysql.svc
+    volumes: 
+    - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
   wdqs-frontend:
     image: "${QUERYSERVICE_UI_IMAGE_NAME}:latest"
     restart: unless-stopped
@@ -82,6 +86,16 @@ services:
       default:
         aliases:
          - wdqs-proxy.svc
+  elasticsearch:
+    image: "${ELASTICSEARCH_IMAGE_NAME}:latest"
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+         - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
   wdqs-updater:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped

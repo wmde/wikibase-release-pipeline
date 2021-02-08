@@ -1,0 +1,54 @@
+# Wikibase override for testing client-repo setups
+version: '3'
+
+services:
+  wikibase-test:
+    build:
+      context: ../Docker/test/curl/
+      dockerfile: Dockerfile
+    volumes:
+      - ./suite-config/repo-client/curl-test/entrypoint.sh:/entrypoint.sh
+    entrypoint: /bin/sh
+    command:  /entrypoint.sh
+    environment: 
+      - WIKIBASE_CLIENT_SERVER=wikibase-client.svc:80
+
+  mysql:
+    volumes:  
+      - ./config/client/mysql/create-client-db.sql:/docker-entrypoint-initdb.d/02-create-client-db.sql
+
+  wikibase:
+    volumes:
+      - ./config/client/wikibase/extra-install-repo.sh:/extra-install.sh
+      - ./suite-config/repo-client/repo/LocalSettings.php.template:/LocalSettings.php.template
+
+  wikibase-client:
+    image: "${WIKIBASE_IMAGE_NAME}:latest"
+    links:
+      - mysql
+      - wikibase
+    depends_on:
+      - mysql
+      - wikibase
+    restart: always
+    volumes:
+      - ./suite-config/repo-client/client/LocalSettings.php.template:/LocalSettings.php.template
+      - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
+    ports:
+      - "8383:80"
+    networks:
+      default:
+        aliases:
+         - wikibase-client.svc
+    environment:
+      - DB_SERVER=mysql.svc:3306
+      - MW_ADMIN_NAME=WikibaseAdmin
+      - MW_ADMIN_PASS=WikibaseDockerAdminPass
+      - MW_ADMIN_EMAIL=admin@example.com
+      - MW_WG_SECRET_KEY=secretkey
+      - DB_USER=wikiuser
+      - DB_PASS=sqlpass
+      - DB_NAME=client_wiki
+
+volumes:
+  LocalSettings:

@@ -48,34 +48,30 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 
 wfLoadSkin( 'Vector' );
 
-## Wikibase
-# Load Wikibase repo & client with the example / default settings.
-require_once "${DOLLAR}IP/extensions/Wikibase/repo/Wikibase.php";
-require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
+${DOLLAR}wgEnableWikibaseRepo = false;
+${DOLLAR}wgEnableWikibaseClient = true;
+
 require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
+${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase.svc:80';
+${DOLLAR}wgWBClientSettings['repoScriptPath'] = '/w';
+${DOLLAR}wgWBClientSettings['repoArticlePath'] = '/wiki/${DOLLAR}1';
+${DOLLAR}wgWBClientSettings['repositories']['']['repoDatabase'] = 'my_wiki';
+${DOLLAR}wgWBClientSettings['repositories']['']['changesDatabase'] = 'my_wiki';
+${DOLLAR}wgWBClientSettings['repositories']['']['baseUri'] = 'http://wikibase.svc/entity/';
+${DOLLAR}wgWBClientSettings['repositories']['']['entityNamespaces'] = [
+			'item' => 120,
+			'property' => 122,
+		];
+${DOLLAR}wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];
+${DOLLAR}wgWBClientSettings['siteGlobalID'] = 'client_wiki';
 
-foreach (glob("LocalSettings/*.php") as ${DOLLAR}filename)
-{
-    include ${DOLLAR}filename;
-}
-
-## OAuth Extension
-wfLoadExtension( 'OAuth' );
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
+${DOLLAR}wgEnableParserCache = false;
+${DOLLAR}wgCachePages = false;
+${DOLLAR}wgParserCacheType = CACHE_NONE;
+${DOLLAR}wgMainCacheType = CACHE_NONE;
 
 ## Scribunto 
+
 wfLoadExtension( 'Scribunto' );
 ${DOLLAR}wgScribuntoDefaultEngine = 'luastandalone';
-
-# ElasticSearch related extensions
-wfLoadExtension( 'Elastica' );
-wfLoadExtension( 'CirrusSearch' );
-wfLoadExtension( 'WikibaseCirrusSearch' );
-${DOLLAR}wgCirrusSearchServers = [ '${MW_ELASTIC_HOST}' ];
-${DOLLAR}wgSearchType = 'CirrusSearch';
-${DOLLAR}wgCirrusSearchExtraIndexSettings['index.mapping.total_fields.limit'] = 5000;
-${DOLLAR}wgWBCSUseCirrus = true;

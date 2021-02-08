@@ -16,6 +16,7 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80
       - MW_SERVER=http://wikibase.svc
+      - MW_CLIENT_SERVER=http://wikibase-client.svc
       - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
       - QUERYSERVICE_SERVER=wdqs.svc:9999
       - MEDIAWIKI_USER=WikibaseAdmin

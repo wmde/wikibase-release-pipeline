@@ -48,34 +48,23 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 
 wfLoadSkin( 'Vector' );
 
-## Wikibase
-# Load Wikibase repo & client with the example / default settings.
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
+${DOLLAR}wgShowExceptionDetails = true;
+${DOLLAR}wgShowSQLErrors = true;
+${DOLLAR}wgDebugDumpSql  = true;
+${DOLLAR}wgShowDBErrorBacktrace = true;
+
+${DOLLAR}wgEnableWikibaseRepo = true;
+${DOLLAR}wgEnableWikibaseClient = false;
+
 require_once "${DOLLAR}IP/extensions/Wikibase/repo/Wikibase.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
-require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
-require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
+${DOLLAR}wgWBRepoSettings['siteLinkGroups'] = [ 'mywikigroup' ];
+${DOLLAR}wgLocalDatabases = ${DOLLAR}wgWBRepoSettings['localClientDatabases'] = [ 'client_wiki', ];
 
-foreach (glob("LocalSettings/*.php") as ${DOLLAR}filename)
-{
-    include ${DOLLAR}filename;
-}
+${DOLLAR}wgEnableParserCache = false;
+${DOLLAR}wgCachePages = false;
+${DOLLAR}wgParserCacheType = CACHE_NONE;
+${DOLLAR}wgMainCacheType = CACHE_NONE;
 
-## OAuth Extension
-wfLoadExtension( 'OAuth' );
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
-
-## Scribunto 
-wfLoadExtension( 'Scribunto' );
-${DOLLAR}wgScribuntoDefaultEngine = 'luastandalone';
-
-# ElasticSearch related extensions
-wfLoadExtension( 'Elastica' );
-wfLoadExtension( 'CirrusSearch' );
-wfLoadExtension( 'WikibaseCirrusSearch' );
-${DOLLAR}wgCirrusSearchServers = [ '${MW_ELASTIC_HOST}' ];
-${DOLLAR}wgSearchType = 'CirrusSearch';
-${DOLLAR}wgCirrusSearchExtraIndexSettings['index.mapping.total_fields.limit'] = 5000;
-${DOLLAR}wgWBCSUseCirrus = true;

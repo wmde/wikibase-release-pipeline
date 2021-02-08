@@ -15,10 +15,17 @@
 - [x] Create an item with a statement and verify that querying using prefixes work correctly (wdt:P1 etc.. )
 
 ## Wikibase Client & Repo
-- [ ] Create an item on repo with sitelink to client and verify that changes are dispatched
-- [ ] Create an item on repo and verify that client can reference it using wikitext
-- [ ] Create an item on repo and verify that client can use it using Lua (Scribunto)
-- [ ] Create an item on repo and verify Lua cpu time is not exceeding some threshold (Scribunto)
+- [x] Create an item on repo with sitelink to client
+- [x] Create an item on repo and verify that client can reference it using wikitext
+- [ ] Verify that changes on repo are dispatched to client ( TODO figure out all use-cases )
+  - [x] Sitelink created
+  - [x] Item delete
+  - [ ] TODO ...
+- [x] Create an item on repo and verify that client can use it using Lua (Scribunto)
+
+## Scribunto
+- [x] Verify Lua module can be executed
+- [x] Verify Lua module can be executed within time-limit
 
 ## Wikibase Federated properties (using wikidata.org as source wiki)
 - [X] Create an item on Wikibase and add a statement using a federated property

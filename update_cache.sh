@@ -24,8 +24,12 @@ cd "$(dirname "$0")"
 
 skins=("Vector")
 extensions=( \
-		"Wikibase" \
+		"CirrusSearch" \
+		"Elastica" \
 		"OAuth" \
+		"Scribunto" \
+		"Wikibase" \
+		"WikibaseCirrusSearch" \
 		)
 
 for arg in "$@"; do
