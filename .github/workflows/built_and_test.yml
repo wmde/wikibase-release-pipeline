@@ -193,7 +193,7 @@ jobs:
   test_wikibase:
     strategy:
       matrix:
-        suite: [ repo, fedprops ]
+        suite: [ repo, fedprops, repo-client ]
     needs:
       - build_wikibase
       - build_queryservice

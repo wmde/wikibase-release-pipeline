@@ -6,9 +6,7 @@ const reporter = require( '@wdio/reporter' );
 class JsonReporter extends reporter.default {
 
 	constructor( options ) {
-		/*
-         * make reporter to write to the output stream by default
-         */
+		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
 		super( options );
 
