@@ -1,6 +1,6 @@
-FROM node:12.19.1-alpine3.10
+FROM docker:latest
 
-RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3
+RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3 nodejs npm
 RUN ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools

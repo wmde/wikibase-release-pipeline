@@ -2,6 +2,7 @@
 
 const axios = require( 'axios' );
 const assert = require( 'assert' );
+const exec = require( 'child_process' ).exec;
 const _ = require( 'lodash' );
 
 const defaultFunctions = function () {
@@ -11,6 +12,25 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'makeRequest', function async( url ) {
 		return axios.get( url );
+	} );
+
+	/**
+	 * Execute docker command on container and get output
+	 */
+	browser.addCommand( 'dockerExecute', function async( container, command ) {
+		const fullCommand = 'docker exec ' + container + ' ' + command;
+		console.log( 'executing: ' + fullCommand );
+
+		return new Promise( ( resolve ) => {
+			exec( fullCommand, ( error, stdout, stderr ) => {
+
+				if ( error ) {
+					console.warn( error );
+				}
+
+				resolve( stdout || stderr );
+			} );
+		} );
 	} );
 
 	/**
