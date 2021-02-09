@@ -15,18 +15,32 @@ Both of these types of branches are maintained by the WMF and will be used by th
 As there we will still rely on the release branches and deployment branches, we don't see any real benefit by maintaining an additional set of branches for minor releases. These releases could still be maintained through git tagging the WMDE controlled repositories at the point in time a release is produced ([similar to how mediawiki is maintaining their release candidates](https://gerrit.wikimedia.org/g/mediawiki/core/+/refs/tags/1.35.0-rc.0)). 
 
 
-As for the tag itself we also need to decide on version-numbering scheme for differentiating releases where the WMF version number does not change. Seeing that MediaWiki is already using the semantic versioning for incrementing their (maintenance releases) releases in between new release branches being cut it makes sense for wikibase to adopt a similar process as we will still rely on the release branches for future releases.
+As for the tag itself we also need to decide on version-numbering scheme for differentiating releases where the WMF version number does not change. Seeing that MediaWiki is already using the semantic versioning for incrementing their (maintenance releases) releases in between new release branches being cut it could make sense for wikibase to adopt a similar process as we will still rely on the release branches for future releases.
 
-Example: The patch release following 1.35 (1.35.0) will be known as 1.35.1 
+Example: The patch release following 1.35 (1.35.0) will be known as 1.35.1
+
+However adopting the same semantic versioning for Wikibase also presents some additional risks of adding confusion to what is to be included in a release as our release cycle will not always align perfectly with the one of MediaWiki.
+
+Example:
+
+1. We release 1.35.0 which contains Mediawiki 1.35.0.
+2. We release 1.35.1 which contains Mediawiki 1.35.0 and also some additional extensions and bug fix to Quickstatements.
+3. WMF releases a 1.35.1 security patch release of Mediawiki
+4. We release 1.35.2 which contains Mediawiki 1.35.1 (and the previous changes mentioned)
+
+For this reason we probably want to adopt adopt another scheme in order to avoid this confusion. Looking at the MediaWiki naming convention for release candidates (`1.35.0-rc.0`) something along these lines might be sufficient to prevent any confusion. 
 
 ## Decision
 
 - Do not create branches for every release
-- Use the semantic versioning scheme already in place.
+- Use `-wmde.N` as a suffix to indicate version where N is incremented between releases
 
 ## Consequences
 
 - We will not create branches of every minor version number we release. Instead we will use tagging.
-- Releases in between new release branches being cut will be versioned using the semantic versioning scheme already in place. 
+- Releases in between new release branches being cut will be versioned by appending our own version number to the mediawiki version.
+
+Example: A release based on 1.35.0 would be versioned as 1.35.0-wmde.0
+
 
 
