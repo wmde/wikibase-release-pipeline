@@ -33,26 +33,6 @@ queryservice-ui:
 	bash update_cache.sh services
 	eval ". ./build/build_queryservice_ui.sh; bash build/build_queryservice_ui_docker.sh ${QUERYSERVICE_UI_IMAGE_NAME}"
 
-oauth: 
-	bash update_cache.sh extensions
-	bash build/build_extension.sh OAuth ${WIKIBASE_BRANCH_NAME}
-
-scribunto: 
-	bash update_cache.sh extensions
-	bash build/build_extension.sh Scribunto ${WIKIBASE_BRANCH_NAME}
-
-elastica:
-	bash update_cache.sh extensions
-	bash build/build_extension.sh Elastica ${WIKIBASE_BRANCH_NAME}
-
-cirrussearch:
-	bash update_cache.sh extensions
-	bash build/build_extension.sh CirrusSearch ${WIKIBASE_BRANCH_NAME}
-
-wikibasecirrussearch:
-	bash update_cache.sh extensions
-	bash build/build_extension.sh WikibaseCirrusSearch ${WIKIBASE_BRANCH_NAME}
-
 elasticsearch:
 	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
 

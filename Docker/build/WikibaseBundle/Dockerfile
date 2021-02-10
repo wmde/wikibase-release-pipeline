@@ -4,7 +4,7 @@ FROM ${WIKIBASE_IMAGE_NAME}:latest as base
 FROM composer:1.10.19 as composer
 
 COPY --from=base /var/www/html /var/www/html
-COPY extensions /var/www/html/extensions
+COPY artifacts/extensions /var/www/html/extensions
 
 WORKDIR /var/www/html/
 RUN apk add icu-dev && docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-configure intl && docker-php-ext-install intl
