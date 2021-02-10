@@ -10,5 +10,5 @@ COPY . .
 
 # if installed locally these files are copied to make this go a bit quicker
 # set this variable in local.env to something to use it
-ARG SKIP_INSTALL_TEST_DEPENDENCIES
-RUN if [ -z ${SKIP_INSTALL_TEST_DEPENDENCIES} ]; then npm ci --verbose ; fi
+ARG SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES
+RUN if [ -z ${SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES} ]; then npm ci --verbose ; fi
