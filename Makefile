@@ -44,4 +44,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki elastica cirrussearch wikibasecirrussearch scribunto oauth wikibase queryservice queryservice-ui
+all: mediawiki wikibase wikibase_bundle queryservice queryservice-ui
