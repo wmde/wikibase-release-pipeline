@@ -44,4 +44,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki wikibase wikibase_bundle queryservice queryservice-ui
+all: mediawiki wikibase wikibase_bundle elasticsearch queryservice queryservice-ui

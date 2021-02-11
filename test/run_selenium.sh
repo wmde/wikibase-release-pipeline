@@ -13,6 +13,12 @@ DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
 SUITE_OVERRIDE="suite-config/$SUITE/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
+ALL_SUITES_FILES="$(find suite-config/ -name "docker-compose.override.yml")"
+ALL_SUITES=""
+for FILE in $ALL_SUITES_FILES; do
+    ALL_SUITES="$ALL_SUITES -f $FILE"
+done
+
 
 if [ -f "$SUITE_OVERRIDE" ]; then
     echo "Using docker-compose override file $SUITE_OVERRIDE"
@@ -20,7 +26,7 @@ if [ -f "$SUITE_OVERRIDE" ]; then
 fi
 
 # stop any dangling things
-docker-compose $SUITE_CONFIG -f docker-compose-selenium-test.yml down
+docker-compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down
 
 # start container with settings
 docker-compose $SUITE_CONFIG up -d --force-recreate

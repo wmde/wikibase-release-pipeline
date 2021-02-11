@@ -2,28 +2,19 @@
 set -ex
 
 ROOT="$(pwd)"
-TEMP_GIT_DIR="$(mktemp -d)"
+WDQS_UI_GIT_DIR="$(mktemp -d)"
 TARBALL_PATH="$ROOT"/artifacts/wdqs-frontend.tar.gz
-BUILD_METADATA_ENV_FILE=$ROOT/artifacts/build_metadata_wdqs_ui.env
 
-git clone --single-branch --branch master "$ROOT/git_cache/services/wikidata-query-gui.git" "$TEMP_GIT_DIR"
+UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
+    "$QUERYSERVICE_UI_COMMIT_HASH" \
+    "$ROOT/git_cache/services/wikidata-query-gui.git" \
+    WDQS_UI \
+    "$WDQS_UI_GIT_DIR" \
+    master
 
-cd "$TEMP_GIT_DIR"
+bash "$ROOT"/build/clean_repo.sh "$WDQS_UI_GIT_DIR"
 
-# either use HEAD on master, or tied to a specific commit
-if [ -n "$QUERYSERVICE_UI_COMMIT_HASH" ]; then
-    echo "Checking out $QUERYSERVICE_UI_COMMIT_HASH"
-    git reset --hard "$QUERYSERVICE_UI_COMMIT_HASH"
-    bash "$ROOT"/build/write_git_metadata.sh "$TEMP_GIT_DIR" "$BUILD_METADATA_ENV_FILE" "QUERYSERVICE_UI_COMMIT_HASH" "$QUERYSERVICE_UI_COMMIT_HASH"
-else
-    echo 'QUERYSERVICE_UI_COMMIT_HASH not set.'
-    bash "$ROOT"/build/write_git_metadata.sh "$TEMP_GIT_DIR" "$BUILD_METADATA_ENV_FILE" "QUERYSERVICE_UI_COMMIT_HASH"
-fi
-
-rm -rfv "$TEMP_GIT_DIR/.git"
-rm -fv "$TEMP_GIT_DIR/.gitignore"
-
-GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf "$TARBALL_PATH" .
+GZIP=-9 tar -C "$WDQS_UI_GIT_DIR" -zcvf "$TARBALL_PATH" .
 
 cd "$ROOT"
 

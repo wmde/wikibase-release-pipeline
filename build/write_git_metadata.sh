@@ -3,7 +3,7 @@ set -e
 
 REPO_PATH=$1
 BUILD_METADATA_ENV_FILE=$2
-VARIABLE_NAME=$3
+VARIABLE_NAME="METADATA_$3"
 
 # if passed as 4th argument this is the hash
 if [ -z "$4" ]; then

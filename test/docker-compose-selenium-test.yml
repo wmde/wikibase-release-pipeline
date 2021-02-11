@@ -12,6 +12,7 @@ services:
       - wdqs
     volumes:
       - ./log/selenium/:/usr/src/app/log/
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - WIKIBASE_SERVER=wikibase.svc:80
@@ -23,3 +24,6 @@ services:
       - MEDIAWIKI_PASSWORD=WikibaseDockerAdminPass
       - MW_SCRIPT_PATH=/w
       - SUITE
+
+      - DOCKER_WIKIBASE_REPO_NAME=test_wikibase_1
+      - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client_1
