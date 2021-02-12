@@ -1,3 +1,5 @@
+<?php
+
 ## OAuth Extension
 wfLoadExtension( 'OAuth' );
 $wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;

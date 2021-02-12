@@ -8,10 +8,12 @@ COPY artifacts/extensions /var/www/html/extensions
 
 WORKDIR /var/www/html/
 RUN apk add icu-dev && docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-configure intl && docker-php-ext-install intl
+RUN rm -rf /var/www/html/vendor
+RUN rm -rf /var/www/html/composer.lock
 RUN composer install --no-dev --verbose -n
 
 FROM ${WIKIBASE_IMAGE_NAME}:latest
-
+RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install.sh /extra-install.sh
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php

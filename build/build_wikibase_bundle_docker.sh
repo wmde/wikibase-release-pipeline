@@ -11,7 +11,6 @@ if [ -f "$TARBALL_PATH" ]; then
     cp "$TARBALL_PATH" Docker/build/WikibaseBundle/artifacts/
 fi
 
-
 bash build/build_extension.sh OAuth "$WIKIBASE_BRANCH_NAME" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Scribunto "${WIKIBASE_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Elastica "${WIKIBASE_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"

@@ -1,3 +1,5 @@
+<?php
+
 # ElasticSearch related extensions
 wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'CirrusSearch' );

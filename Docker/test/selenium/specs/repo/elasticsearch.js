@@ -45,6 +45,14 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'Should able able to run UpdateSearchIndexConfig.php', function () {
+
+		// run 30 jobs detached
+		browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 30',
+			'--detach'
+		);
+
 		const result = browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
 			'php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver'
