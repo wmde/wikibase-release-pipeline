@@ -55,27 +55,7 @@ require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
-foreach (glob("LocalSettings/*.php") as ${DOLLAR}filename)
+foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 {
     include ${DOLLAR}filename;
 }
-
-## OAuth Extension
-wfLoadExtension( 'OAuth' );
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
-${DOLLAR}wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
-
-## Scribunto 
-wfLoadExtension( 'Scribunto' );
-${DOLLAR}wgScribuntoDefaultEngine = 'luastandalone';
-
-# ElasticSearch related extensions
-wfLoadExtension( 'Elastica' );
-wfLoadExtension( 'CirrusSearch' );
-wfLoadExtension( 'WikibaseCirrusSearch' );
-${DOLLAR}wgCirrusSearchServers = [ '${MW_ELASTIC_HOST}' ];
-${DOLLAR}wgSearchType = 'CirrusSearch';
-${DOLLAR}wgCirrusSearchExtraIndexSettings['index.mapping.total_fields.limit'] = 5000;
-${DOLLAR}wgWBCSUseCirrus = true;

@@ -12,8 +12,8 @@ done
 
 if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
 [ -z "$RELEASE_VERSION" ] || \
-[ -z "$QUERYSERVICE_UI_COMMIT_HASH" ] || \
-[ -z "$WIKIBASE_COMMIT_HASH" ] || \
+[ -z "$METADATA_WDQS_UI_COMMIT_HASH" ] || \
+[ -z "$METADATA_WIKIBASE_COMMIT_HASH" ] || \
 [ -z "$WORKFLOW_RUN_NUMBER" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
@@ -46,12 +46,12 @@ function tag_and_push {
 tag_and_push "/git_cache/Wikibase.git" \
     "/repo/Wikibase" \
     "$WIKIBASE_BRANCH_NAME" \
-    "$WIKIBASE_COMMIT_HASH" \
+    "$METADATA_WIKIBASE_COMMIT_HASH" \
     ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
 
 # tag and push queryservice ui
 tag_and_push "/git_cache/services/wikidata-query-gui.git" \
     "/repo/wdqs-frontend" \
     master \
-    "$QUERYSERVICE_UI_COMMIT_HASH" \
+    "$METADATA_WDQS_UI_COMMIT_HASH" \
     ssh://gerrit.wikimedia.org:29418/wikidata/query/gui

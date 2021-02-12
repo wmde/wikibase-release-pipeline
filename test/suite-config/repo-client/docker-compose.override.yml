@@ -23,7 +23,7 @@ services:
       - ./suite-config/repo-client/repo/LocalSettings.php.template:/LocalSettings.php.template
 
   wikibase-client:
-    image: "${WIKIBASE_IMAGE_NAME}:latest"
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}:latest"
     links:
       - mysql
       - wikibase
