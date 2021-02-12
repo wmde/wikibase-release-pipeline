@@ -16,6 +16,7 @@ describe( 'Item', function () {
 	let propertyId = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
+	const luaPageTitle = 'RepoClientLuaTest';
 
 	before( function () {
 		defaultFunctions();
@@ -98,7 +99,7 @@ describe( 'Item', function () {
 			type: 'external',
 			ns: 0,
 			title: pageTitle,
-			comment: 'A Wikidata item has been linked to this page.'
+			comment: 'A Wikibase item has been linked to this page.'
 		};
 
 		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedSiteLinkChange );
@@ -108,7 +109,6 @@ describe( 'Item', function () {
 
 		const template = fs.readFileSync( 'data/repo-client.lua', 'utf8' );
 		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
-		console.log( luaScript );
 
 		browser.editPage(
 			process.env.MW_CLIENT_SERVER,
@@ -118,7 +118,7 @@ describe( 'Item', function () {
 
 		const executionContent = browser.editPage(
 			process.env.MW_CLIENT_SERVER,
-			'RepoClientLuaTest',
+			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
 
@@ -144,7 +144,7 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Item:Q1' );
 	} );
 
-	it( 'Should be able to see delete changes is dispatched to client', function () {
+	it( 'Should be able to see delete changes is dispatched to client for test page', function () {
 
 		browser.pause( 30 * 1000 );
 
@@ -152,7 +152,20 @@ describe( 'Item', function () {
 			type: 'external',
 			ns: 0,
 			title: pageTitle,
-			comment: 'Associated Wikidata item deleted. Language links removed.'
+			comment: 'Associated Wikibase item deleted. Language links removed.'
+		};
+
+		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedDeletionChange );
+
+	} );
+
+	it( 'Should be able to see delete changes is dispatched to client for lua page', function () {
+
+		const expectedDeletionChange = {
+			type: 'external',
+			ns: 0,
+			title: luaPageTitle,
+			comment: 'Associated Wikibase item deleted. Language links removed.'
 		};
 
 		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedDeletionChange );

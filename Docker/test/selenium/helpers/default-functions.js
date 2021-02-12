@@ -17,8 +17,13 @@ const defaultFunctions = function () {
 	/**
 	 * Execute docker command on container and get output
 	 */
-	browser.addCommand( 'dockerExecute', function async( container, command ) {
-		const fullCommand = 'docker exec ' + container + ' ' + command;
+	browser.addCommand( 'dockerExecute', function async( container, command, opts ) {
+
+		if ( !opts ) {
+			opts = '';
+		}
+
+		const fullCommand = 'docker exec ' + opts + ' ' + container + ' ' + command;
 		console.log( 'executing: ' + fullCommand );
 
 		return new Promise( ( resolve ) => {
@@ -57,10 +62,18 @@ const defaultFunctions = function () {
 		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
 		const result = browser.makeRequest( apiURL );
 		const changes = result.data.query.recentchanges;
+		const foundResult = _.find( changes, expectedChange );
 
 		assert( result.status === 200 );
 
-		assert( _.find( changes, expectedChange ) );
+		if ( !foundResult ) {
+			console.error( 'Could not find:' );
+			console.log( expectedChange );
+			console.error( 'Response: ' );
+			console.log( changes );
+		}
+
+		assert( foundResult !== null );
 	} );
 
 	/**

@@ -3,15 +3,14 @@ version: '3'
 
 services:
   wikibase:
-    image: "${WIKIBASE_IMAGE_NAME}:latest"
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}:latest"
     links:
       - mysql
     depends_on:
       - mysql
     restart: always
     volumes:
-      - ./suite-config/${LOCALSETTINGS_VARIANT}:/var/www/html/LocalSettings
-      - ./config/repo/wikibase/run-jobs.sh:/extra-install.sh
+      - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
     ports:
       - "8181:80"
     networks:

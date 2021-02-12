@@ -68,3 +68,7 @@ ${DOLLAR}wgCachePages = false;
 ${DOLLAR}wgParserCacheType = CACHE_NONE;
 ${DOLLAR}wgMainCacheType = CACHE_NONE;
 
+foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
+{
+    include ${DOLLAR}filename;
+}

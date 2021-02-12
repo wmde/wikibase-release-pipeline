@@ -3,11 +3,20 @@ set -e
 
 if [ -z "$QUERYSERVICE_BACKEND_DOCKER_PATH" ] || \
 [ -z "$QUERYSERVICE_FRONTEND_DOCKER_PATH" ] || \
+[ -z "$WIKIBASE_DOCKER_PATH" ] || \
+[ -z "$WIKIBASE_BUNDLE_DOCKER_PATH" ] || \
+[ -z "$ELASTICSEARCH_DOCKER_PATH" ] || \
+\
 [ -z "$QUERYSERVICE_UI_IMAGE_NAME" ] || \
 [ -z "$QUERYSERVICE_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_IMAGE_NAME" ] || \
+[ -z "$WIKIBASE_BUNDLE_IMAGE_NAME" ] || \
+[ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
+\
 [ -z "$RELEASE_MAJOR_VERSION" ] || \
 [ -z "$QUERYSERVICE_VERSION" ] || \
+[ -z "$ELASTICSEARCH_VERSION" ] || \
+\
 [ -z "$DOCKER_HUB_ID" ] || \
 [ -z "$DOCKER_HUB_REPOSITORY_NAME" ] || \
 [ -z "$DOCKER_HUB_ACCESS_TOKEN" ] ; then
@@ -44,8 +53,10 @@ echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login --username "$DOCKER_HUB_ID" --pas
 
 # load images
 docker load -i "$WIKIBASE_DOCKER_PATH"
+docker load -i "$WIKIBASE_BUNDLE_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_BACKEND_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_FRONTEND_DOCKER_PATH"
+docker load -i "$ELASTICSEARCH_DOCKER_PATH"
 
 # Tag Queryservice UI with version
 tag_and_push "$QUERYSERVICE_UI_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
@@ -55,6 +66,12 @@ tag_and_push "$QUERYSERVICE_IMAGE_NAME" "$QUERYSERVICE_VERSION"
 
 # Tag Wikibase with version
 tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+
+# Tag Wikibase-bundle with version
+tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+
+# Tag Wikibase-bundle with version
+tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION"
 
 # logout and remove credentials 
 docker logout
