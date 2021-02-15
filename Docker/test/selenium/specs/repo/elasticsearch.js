@@ -68,19 +68,11 @@ describe( 'ElasticSearch', function () {
 
 		const resultCommand = browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip --buildChunks 250000'
-		);
-
-		// returns a secondary command
-		assert( resultCommand.startsWith( 'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php' ) );
-
-		const resultCommandTwo = browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			resultCommand
+			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip'
 		);
 
 		// should have queued some stuff
-		assert( resultCommandTwo.includes( 'Queued a total of' ) === true );
+		assert( resultCommand.includes( 'Queued a total of' ) === true );
 	} );
 
 	it( 'should be able to search case-insensitive', function () {
