@@ -9,6 +9,9 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
+# remove reporter log
+rm -f "log/selenium/result-$SUITE.json"
+
 DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
 SUITE_OVERRIDE="suite-config/$SUITE/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
