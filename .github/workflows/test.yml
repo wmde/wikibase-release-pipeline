@@ -36,6 +36,13 @@ jobs:
       - name: Run Tests - ${{ matrix.suite }}
         run: make test SUITE=${{ matrix.suite }}
 
+      - name: Report
+        if: always()
+        run: |
+          cd test/reporter
+          npm install
+          SUITE=${{ matrix.suite }} node report.js
+
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
         if: always()
