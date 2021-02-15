@@ -54,7 +54,7 @@ const defaultFunctions = function () {
 	/**
 	 * Moves browser to recent changes then asserts that a change is in the api result
 	 */
-	browser.addCommand( 'assertChangeDispatched', function async( host, expectedChange ) {
+	browser.addCommand( 'getDispatchedExternalChange', function async( host, expectedChange ) {
 		// to get a screenshot
 		browser.url( host + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
 
@@ -73,7 +73,7 @@ const defaultFunctions = function () {
 			console.log( changes );
 		}
 
-		assert( foundResult !== null );
+		return foundResult;
 	} );
 
 	/**

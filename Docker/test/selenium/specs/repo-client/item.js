@@ -7,6 +7,7 @@ const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 const fs = require( 'fs' );
 const defaultFunctions = require( '../../helpers/default-functions' );
+const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -89,11 +90,12 @@ describe( 'Item', function () {
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( pageTitle ) );
 
+		// wait for dispatching
+		browser.pause( 20 * 1000 );
+
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', function () {
-
-		browser.pause( 30 * 1000 );
 
 		const expectedSiteLinkChange = {
 			type: 'external',
@@ -102,7 +104,12 @@ describe( 'Item', function () {
 			comment: 'A Wikibase item has been linked to this page.'
 		};
 
-		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedSiteLinkChange );
+		const actualChange = browser.getDispatchedExternalChange(
+			process.env.MW_CLIENT_SERVER,
+			expectedSiteLinkChange
+		);
+
+		assert( _.isEqual( actualChange, expectedSiteLinkChange ) );
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', function () {
@@ -148,14 +155,19 @@ describe( 'Item', function () {
 
 		browser.pause( 30 * 1000 );
 
-		const expectedDeletionChange = {
+		const expectedTestDeletionChange = {
 			type: 'external',
 			ns: 0,
 			title: pageTitle,
 			comment: 'Associated Wikibase item deleted. Language links removed.'
 		};
 
-		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedDeletionChange );
+		const actualChange = browser.getDispatchedExternalChange(
+			process.env.MW_CLIENT_SERVER,
+			expectedTestDeletionChange
+		);
+
+		assert( _.isEqual( actualChange, expectedTestDeletionChange ) );
 
 	} );
 
@@ -168,7 +180,12 @@ describe( 'Item', function () {
 			comment: 'Associated Wikibase item deleted. Language links removed.'
 		};
 
-		browser.assertChangeDispatched( process.env.MW_CLIENT_SERVER, expectedDeletionChange );
+		const actualChange = browser.getDispatchedExternalChange(
+			process.env.MW_CLIENT_SERVER,
+			expectedDeletionChange
+		);
+
+		assert( _.isEqual( actualChange, expectedDeletionChange ) );
 
 	} );
 
