@@ -6,12 +6,14 @@ if [ -z "$QUERYSERVICE_BACKEND_DOCKER_PATH" ] || \
 [ -z "$WIKIBASE_DOCKER_PATH" ] || \
 [ -z "$WIKIBASE_BUNDLE_DOCKER_PATH" ] || \
 [ -z "$ELASTICSEARCH_DOCKER_PATH" ] || \
+[ -z "$QUICKSTATEMENTS_DOCKER_PATH" ] || \
 \
 [ -z "$QUERYSERVICE_UI_IMAGE_NAME" ] || \
 [ -z "$QUERYSERVICE_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_BUNDLE_IMAGE_NAME" ] || \
 [ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
+[ -z "$QUICKSTATEMENTS_IMAGE_NAME" ] || \
 \
 [ -z "$RELEASE_MAJOR_VERSION" ] || \
 [ -z "$QUERYSERVICE_VERSION" ] || \
@@ -57,6 +59,7 @@ docker load -i "$WIKIBASE_BUNDLE_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_BACKEND_DOCKER_PATH"
 docker load -i "$QUERYSERVICE_FRONTEND_DOCKER_PATH"
 docker load -i "$ELASTICSEARCH_DOCKER_PATH"
+docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 
 # Tag Queryservice UI with version
 tag_and_push "$QUERYSERVICE_UI_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
@@ -72,6 +75,9 @@ tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
 
 # Tag Wikibase-bundle with version
 tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION"
+
+# Tag Quickstatements with version
+tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
 
 # logout and remove credentials 
 docker logout

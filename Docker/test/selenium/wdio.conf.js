@@ -15,8 +15,8 @@ exports.config = {
 	// Use in a test as `browser.options.<key>`.
 
 	// Wiki admin
-	mwUser: process.env.MEDIAWIKI_USER,
-	mwPwd: process.env.MEDIAWIKI_PASSWORD,
+	mwUser: process.env.MW_ADMIN_NAME,
+	mwPwd: process.env.MW_ADMIN_PASS,
 
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
