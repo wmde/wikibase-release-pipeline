@@ -7,6 +7,10 @@ if [ ! -f "$RELEASE_ENV_FILE" ]; then
     exit 1
 fi
 
+if [ ! -f "local.env" ]; then
+    touch local.env
+fi
+
 echo
 cat "$RELEASE_ENV_FILE"
 echo
