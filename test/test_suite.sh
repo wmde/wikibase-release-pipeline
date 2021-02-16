@@ -18,6 +18,7 @@ docker load -i "../artifacts/$WIKIBASE_BUNDLE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
 
 export LOCALSETTINGS_VARIANT=$1
 

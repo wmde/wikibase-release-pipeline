@@ -29,7 +29,7 @@ if [ -f "$SUITE_OVERRIDE" ]; then
 fi
 
 # stop any dangling things
-docker-compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down
+docker-compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down --volumes
 
 # start container with settings
 docker-compose $SUITE_CONFIG up -d --force-recreate
