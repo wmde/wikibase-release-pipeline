@@ -4,11 +4,11 @@
 
 The `versions` folder contains .env files with the specific versions of the components to be build for that specific release.
 
-For example, the `REL1_34.env` file contains the following variables to tell the pipeline to use the [Wikibase REL1_34] branch and the `mediawiki` image.
+For example, the `REL1_35.env` file contains the following variables to tell the pipeline to use the [Wikibase REL1_35] branch and the `mediawiki` image.
 
 ```
 ...
-WIKIBASE_BRANCH_NAME=REL1_34
+WIKIBASE_BRANCH_NAME=REL1_35
 MEDIAWIKI_IMAGE_NAME=mediawiki
 ...
 ``` 
@@ -28,10 +28,10 @@ The github pipeline produces new artifacts on each run and they can all be viewe
 
 ## Building artifacts locally
 
-To build artifacts using docker run the following command which would execute the wikibase pipeline step and produce the artifacts in the `artifacts` folder using the `REL1_34.env` environment file. See the [Makefile](../../Makefile) for more build options.
+To build artifacts using docker run the following command which would execute the wikibase pipeline step and produce the artifacts in the `artifacts` folder using the `REL1_35.env` environment file. See the [Makefile](../../Makefile) for more build options.
 
 ```sh
-bash build.sh wikibase versions/REL1_34.env
+bash build.sh wikibase versions/REL1_35.env
 ```
 
-[Wikibase REL1_34]: https://gerrit.wikimedia.org/g/mediawiki/extensions/Wikibase/+/refs/heads/REL1_34
+[Wikibase REL1_35]: https://gerrit.wikimedia.org/g/mediawiki/extensions/Wikibase/+/refs/heads/REL1_35
