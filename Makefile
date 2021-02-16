@@ -26,6 +26,10 @@ wikibase_bundle:
 	bash update_cache.sh extensions
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
 
+quickstatements:
+	bash update_cache.sh services
+	eval ". ./build/build_quickstatements.sh; bash build/build_quickstatements_docker.sh ${QUICKSTATEMENTS_IMAGE_NAME}"
+
 queryservice:
 	eval ". ./build/build_queryservice.sh; bash build/build_queryservice_docker.sh ${QUERYSERVICE_IMAGE_NAME}"
 
@@ -44,4 +48,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki wikibase wikibase_bundle elasticsearch queryservice queryservice-ui
+all: mediawiki wikibase wikibase_bundle elasticsearch queryservice queryservice-ui quickstatements
