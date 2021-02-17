@@ -13,6 +13,7 @@ test-all:
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops
 	bash test/test_suite.sh repo-client
+	bash test/test_suite.sh quickstatements
 
 mediawiki:
 	bash update_cache.sh core skins
