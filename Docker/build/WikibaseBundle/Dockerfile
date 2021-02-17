@@ -10,7 +10,7 @@ WORKDIR /var/www/html/
 RUN apk add icu-dev && docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-configure intl && docker-php-ext-install intl
 RUN rm -rf /var/www/html/vendor
 RUN rm -rf /var/www/html/composer.lock
-RUN composer install --no-dev --verbose -n
+RUN composer install --no-dev -vv -n
 
 FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN rm -rf /var/www/html/vendor
