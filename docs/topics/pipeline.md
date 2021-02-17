@@ -1,5 +1,23 @@
 # The pipeline
 
+## The local.env file
+
+On build a local.env file can be used to override any default settings
+
+#### Use locally installed selenium test dependencies
+```
+SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES=1
+```
+
+#### Override for branch name of extensions cloned from gerrit
+```
+GERRIT_EXTENSION_BRANCH_NAME=REL1_35
+```
+#### Lower the compression rate to make local builds faster
+```
+GZIP_COMPRESSION_RATE=1
+```
+
 ## The versions folder
 
 The `versions` folder contains .env files with the specific versions of the components to be build for that specific release.
