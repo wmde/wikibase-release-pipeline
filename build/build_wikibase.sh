@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 ROOT="$(pwd)"
 
@@ -16,10 +16,17 @@ bash "$ROOT"/build/write_git_metadata.sh "$WIKIBASE_PATH" "$ROOT"/artifacts/buil
 # remove git things from release package
 rm "$WIKIBASE_PATH"/.git* -rfv
 
-# install composer dependencies for tarball
-cd "$WIKIBASE_PATH"
-composer install --no-dev --ignore-platform-reqs
-cd -
+COMPOSER_FILE="$TEMP_GIT_DIR/Wikibase/composer.json"
+COMPOSER_VENDOR="$TEMP_GIT_DIR/Wikibase/vendor/"
+
+mkdir "$COMPOSER_VENDOR"
+chmod 777 "$COMPOSER_VENDOR" -R
+
+docker run \
+    --volume "$COMPOSER_FILE":/tmp/composer.json \
+    --volume "$COMPOSER_VENDOR":/tmp/vendor/ \
+    "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
+    install --no-dev --ignore-platform-reqs -vv -d "/tmp/"
 
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
 
