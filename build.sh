@@ -22,5 +22,6 @@ docker build . -t builder && \
  -v "$(pwd)/artifacts":/app/artifacts \
  -v "$(pwd)/git_cache":/app/git_cache \
  -v "$(pwd)/cache":/app/cache \
+ -v "/tmp":/tmp \
  -v /var/run/docker.sock:/var/run/docker.sock \
  builder:latest make "$TARGET"

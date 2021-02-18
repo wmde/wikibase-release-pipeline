@@ -1,5 +1,5 @@
 FROM docker:latest
-RUN apk add --no-cache git make bash composer
+RUN apk add --no-cache git make bash
 
 WORKDIR "/app/"
 ENV XDG_CACHE_HOME=/app/cache
