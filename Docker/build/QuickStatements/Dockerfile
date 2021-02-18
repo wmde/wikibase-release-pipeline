@@ -1,15 +1,12 @@
+ARG COMPOSER_IMAGE_NAME
 FROM ubuntu:xenial as fetcher
-
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends git=1:2.* ca-certificates=201* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY artifacts/quickstatements.tar.gz artifacts/quickstatements.tar.gz
 RUN tar xzf artifacts/quickstatements.tar.gz
 
-FROM composer:1 as composer
-
-COPY --from=fetcher /quickstatements /quickstatements
+FROM docker-registry.wikimedia.org/releng/composer:0.1.9 as composer
+RUN php --version
+COPY --from=fetcher --chown=nobody:nogroup /quickstatements /quickstatements
 
 WORKDIR /quickstatements
 RUN composer install --no-dev
