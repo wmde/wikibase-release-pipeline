@@ -1,12 +1,12 @@
 ARG COMPOSER_IMAGE_NAME
+ARG COMPOSER_IMAGE_VERSION
 FROM ubuntu:xenial as fetcher
 
 COPY artifacts/quickstatements.tar.gz artifacts/quickstatements.tar.gz
 RUN tar xzf artifacts/quickstatements.tar.gz
 
-FROM docker-registry.wikimedia.org/releng/composer:0.1.9 as composer
-RUN php --version
-COPY --from=fetcher --chown=nobody:nogroup /quickstatements /quickstatements
+FROM ${COMPOSER_IMAGE_NAME}:${COMPOSER_IMAGE_VERSION} as composer
+COPY --from=fetcher --chown=nobody:nogroup /quickstatements/composer.json /quickstatements/composer.json
 
 WORKDIR /quickstatements
 RUN composer install --no-dev
@@ -18,7 +18,8 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base=0.19.* jq=1.5* && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer /quickstatements /var/www/html/quickstatements
+COPY --from=fetcher /quickstatements /var/www/html/quickstatements
+COPY --from=composer --chown=root:root /quickstatements/vendor /var/www/html/quickstatements/vendor
 COPY --from=fetcher /magnustools /var/www/html/magnustools
 
 COPY entrypoint.sh /entrypoint.sh
