@@ -15,6 +15,8 @@ bash "$ROOT"/build/write_git_metadata.sh "$WIKIBASE_PATH" "$ROOT"/artifacts/buil
 
 # remove git things from release package
 rm "$WIKIBASE_PATH"/.git* -rfv
+# remove travis build file
+rm "$WIKIBASE_PATH"/.travis.yml -vf
 
 COMPOSER_FILE="$TEMP_GIT_DIR/Wikibase/composer.json"
 COMPOSER_VENDOR="$TEMP_GIT_DIR/Wikibase/vendor/"
