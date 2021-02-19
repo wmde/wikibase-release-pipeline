@@ -8,7 +8,7 @@ accepted
 
 ## Context
 
-WMF does during their release process create a number of branches which are used during the release process to orchestrate the different tools to produce the correct artifacts and to support the continuous deployment to production. The release branches (ex. REL1_35) are cut for MediaWiki and every extension repository with the purpose of maintaining releases and the weekly deployment branches are (ex. wmf/1.36.0-wmf.13) are used to deployments to the different [groups](https://versions.toolforge.org/). 
+WMF does during their release process create a number of branches which are used during the release process to orchestrate the different tools to produce the correct artifacts and to support the continuous deployment to production. The release branches (ex. REL1_35) are cut for MediaWiki and every extension repository with the purpose of maintaining releases and the weekly deployment branches are (ex. wmf/1.36.0-wmf.13) are used to deployments to the different [deployment groups](https://versions.toolforge.org/). 
 
 Both of these types of branches are maintained by the WMF and will be used by the wikibase release strategy for our major releases and deployment. However we need to decide how to maintain our own intermediate releases that will be published on releases.wikimedia.org, dockerhub and tagged on git.
 
@@ -41,6 +41,5 @@ For this reason we probably want to adopt adopt another scheme in order to avoid
 - Releases in between new release branches being cut will be versioned by appending our own version number to the mediawiki version.
 
 Example: A release based on 1.35.0 would be versioned as 1.35.0-wmde.0
-
 
 
