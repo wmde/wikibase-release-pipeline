@@ -15,7 +15,8 @@ if [ -z "$QUERYSERVICE_BACKEND_DOCKER_PATH" ] || \
 [ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
 [ -z "$QUICKSTATEMENTS_IMAGE_NAME" ] || \
 \
-[ -z "$RELEASE_MAJOR_VERSION" ] || \
+[ -z "$RELEASE_VERSION" ] || \
+[ -z "$WMDE_RELEASE_VERSION" ] || \
 [ -z "$QUERYSERVICE_VERSION" ] || \
 [ -z "$ELASTICSEARCH_VERSION" ] || \
 \
@@ -62,22 +63,22 @@ docker load -i "$ELASTICSEARCH_DOCKER_PATH"
 docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 
 # Tag Queryservice UI with version
-tag_and_push "$QUERYSERVICE_UI_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+tag_and_push "$QUERYSERVICE_UI_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
 
 # Tag Queryservice with version
-tag_and_push "$QUERYSERVICE_IMAGE_NAME" "$QUERYSERVICE_VERSION"
+tag_and_push "$QUERYSERVICE_IMAGE_NAME" "$QUERYSERVICE_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Wikibase with version
-tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Wikibase-bundle with version
-tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Wikibase-bundle with version
-tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION"
+tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Quickstatements with version
-tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$RELEASE_MAJOR_VERSION"
+tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
 
 # logout and remove credentials 
 docker logout
