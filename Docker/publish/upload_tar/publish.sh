@@ -5,6 +5,7 @@ if [ -z "$RELEASE_HOST" ] || \
 [ -z "$RELEASE_VERSION" ] || \
 [ -z "$RELEASE_SSH_IDENTITY" ] || \
 [ -z "$RELEASE_MAJOR_VERSION" ] || \
+[ -z "$WMDE_RELEASE_VERSION" ] || \
 [ -z "$RELEASE_USER" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;

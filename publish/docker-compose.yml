@@ -67,6 +67,7 @@ services:
      - RELEASE_MAJOR_VERSION
      - RELEASE_DIR
      - RELEASE_SSH_IDENTITY
+     - WMDE_RELEASE_VERSION
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
       - ${HOME}/.ssh/:/ssh-keys/:ro
