@@ -5,6 +5,7 @@ if [ -z "$RELEASE_HOST" ] || \
 [ -z "$RELEASE_VERSION" ] || \
 [ -z "$RELEASE_SSH_IDENTITY" ] || \
 [ -z "$RELEASE_MAJOR_VERSION" ] || \
+[ -z "$WMDE_RELEASE_VERSION" ] || \
 [ -z "$RELEASE_USER" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
@@ -27,8 +28,8 @@ ssh-add /root/.ssh/"$RELEASE_SSH_IDENTITY"
 ssh "$RELEASE_USER"@"$RELEASE_HOST" mkdir -p "$RELEASE_FULL_PATH"
 
 # move to uploads with release tag
-cp $ARTIFACT_PATH/Wikibase.tar.gz /uploads/wikibase."$RELEASE_VERSION".tar.gz
-cp $ARTIFACT_PATH/wdqs-frontend.tar.gz /uploads/wdqs-frontend."$RELEASE_VERSION".tar.gz
+cp $ARTIFACT_PATH/Wikibase.tar.gz /uploads/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
+cp $ARTIFACT_PATH/wdqs-frontend.tar.gz /uploads/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
 
 # upload
 scp /uploads/* "$RELEASE_USER"@"$RELEASE_HOST":"$RELEASE_FULL_PATH"

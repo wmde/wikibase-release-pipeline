@@ -18,6 +18,7 @@ services:
      - WORKFLOW_RUN_NUMBER
      - WIKIBASE_BRANCH_NAME=master
      - RELEASE_VERSION
+     - WMDE_RELEASE_VERSION
      - DRY_RUN
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
@@ -44,7 +45,8 @@ services:
       - ELASTICSEARCH_IMAGE_NAME
 
       - QUERYSERVICE_VERSION
-      - RELEASE_MAJOR_VERSION
+      - RELEASE_VERSION
+      - WMDE_RELEASE_VERSION
       - ELASTICSEARCH_VERSION
 
       - DOCKER_HUB_REPOSITORY_NAME
@@ -65,6 +67,7 @@ services:
      - RELEASE_MAJOR_VERSION
      - RELEASE_DIR
      - RELEASE_SSH_IDENTITY
+     - WMDE_RELEASE_VERSION
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
       - ${HOME}/.ssh/:/ssh-keys/:ro

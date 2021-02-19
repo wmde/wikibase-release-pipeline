@@ -12,6 +12,7 @@ done
 
 if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
 [ -z "$RELEASE_VERSION" ] || \
+[ -z "$WMDE_RELEASE_VERSION" ] || \
 [ -z "$METADATA_WDQS_UI_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASE_COMMIT_HASH" ] || \
 [ -z "$WORKFLOW_RUN_NUMBER" ] ; then
@@ -29,8 +30,8 @@ function tag_and_push {
     git clone --single-branch --branch "${BRANCH_NAME}" "$REPOSITORY_CACHE_NAME" "$CHECKOUT_DIR"
     cd "$CHECKOUT_DIR"
 
-    echo "Tagging $RELEASE_VERSION at $COMMIT_HASH"
-    git tag --force -a "$RELEASE_VERSION" "$COMMIT_HASH" -m "Tagging: $RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
+    echo "Tagging $WMDE_RELEASE_VERSION at $COMMIT_HASH"
+    git tag --force -a "$WMDE_RELEASE_VERSION" "$COMMIT_HASH" -m "Tagging: $WMDE_RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
 
     if [ -z "$DRY_RUN" ]; then
         git remote set-url origin "$REMOTE_URL"
