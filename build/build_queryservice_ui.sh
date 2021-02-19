@@ -14,7 +14,8 @@ UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
 
 bash "$ROOT"/build/clean_repo.sh "$WDQS_UI_GIT_DIR"
 
-GZIP=-9 tar -C "$WDQS_UI_GIT_DIR" -zcvf "$TARBALL_PATH" .
+cd "$WDQS_UI_GIT_DIR"
+GZIP=-9 tar -zcvf "$TARBALL_PATH" -- *
 
 cd "$ROOT"
 

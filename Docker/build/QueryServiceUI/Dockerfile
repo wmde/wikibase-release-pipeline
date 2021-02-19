@@ -1,14 +1,10 @@
 FROM ubuntu:xenial as fetcher
 
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends unzip=6.* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 ARG tarball
 COPY $tarball .
-RUN mkdir wikidata-query-gui
-RUN tar xfv $tarball -C ./wikidata-query-gui --strip-components=1
-RUN rm $tarball
+RUN mkdir wikidata-query-gui \
+    && tar xfv $tarball -C ./wikidata-query-gui \
+    && rm $tarball
 
 # TODO this should probably just be a node image?
 FROM nginx:stable-alpine as builder
