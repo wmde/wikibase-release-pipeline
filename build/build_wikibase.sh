@@ -20,13 +20,15 @@ COMPOSER_FILE="$TEMP_GIT_DIR/Wikibase/composer.json"
 COMPOSER_VENDOR="$TEMP_GIT_DIR/Wikibase/vendor/"
 
 mkdir "$COMPOSER_VENDOR"
-chmod 777 "$COMPOSER_VENDOR" -R
+chmod 777 "$COMPOSER_VENDOR"
 
 docker run \
     --volume "$COMPOSER_FILE":/tmp/composer.json \
     --volume "$COMPOSER_VENDOR":/tmp/vendor/ \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/"
+
+chmod 755 "$COMPOSER_VENDOR"
 
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
 
