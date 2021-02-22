@@ -11,8 +11,6 @@ const filePath = '../log/selenium/result-'+ process.env.SUITE + '.json';
 
 var resultObject = {};
 
-core.startGroup('Test results');
-
 if (fs.existsSync(filePath)) {
     resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
@@ -40,5 +38,3 @@ if (fs.existsSync(filePath)) {
 } else {
     core.error('No tests executed!');
 }
-
-core.endGroup();

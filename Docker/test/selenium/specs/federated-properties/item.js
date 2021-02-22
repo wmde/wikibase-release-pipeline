@@ -4,18 +4,17 @@ const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../queryservice-ui/queryservice-ui.page' );
-const propertyId = 'P213';
-const propertyValue = 'ISNI';
-const itemId = 'Q1';
-const itemLabel = 'T267743-';
-const axios = require( 'axios' );
+const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Fed props Item', function () {
 
+	const propertyId = 'P213';
+	const propertyValue = 'ISNI';
+	const itemId = 'Q1';
+	const itemLabel = 'T267743-';
+
 	before( function () {
-		browser.addCommand( 'makeRequest', function async( url ) {
-			return axios.get( url );
-		} );
+		defaultFunctions();
 	} );
 
 	it( 'can add a federated property and it shows up in the ui', function () {

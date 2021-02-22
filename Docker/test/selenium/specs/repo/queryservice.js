@@ -7,7 +7,7 @@ const QueryServiceUI = require( '../../queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 
-describe( 'Item', function () {
+describe( 'QueryService Item', function () {
 
 	it( 'should shows up with property in queryservice ui after creation', function () {
 
