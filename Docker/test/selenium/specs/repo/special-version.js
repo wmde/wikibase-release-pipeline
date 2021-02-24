@@ -6,7 +6,7 @@ describe( 'Special:Version', function () {
 
 	const extensions = {
 		wikibase: [ 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository' ],
-		other: [ 'CirrusSearch', 'Elastica, OAuth' ],
+		other: [ 'CirrusSearch', 'Elastica, OAuth', 'Nuke' ],
 		parserhook: [ 'Scribunto' ]
 	};
 
