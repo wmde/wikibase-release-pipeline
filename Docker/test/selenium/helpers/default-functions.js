@@ -4,6 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const _ = require( 'lodash' );
+const MWBot = require( 'mwbot' );
 
 const defaultFunctions = function () {
 
@@ -12,6 +13,29 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'makeRequest', function async( url ) {
 		return axios.get( url );
+	} );
+
+	/**
+	 * Make a get request to get full request response
+	 */
+	browser.addCommand( 'deleteProperty', function async( claimGuid ) {
+		const bot = new MWBot( {
+			apiUrl: `${browser.config.baseUrl}/api.php`
+		} );
+
+		return new Promise( ( resolve ) => {
+			bot.getEditToken()
+				.then( () => {
+					bot.request( {
+						action: 'wbremoveclaims',
+						claim: claimGuid,
+						token: bot.editToken
+					} ).then( ( response ) => {
+						resolve( response );
+					} );
+				} );
+
+		} );
 	} );
 
 	/**
