@@ -33,8 +33,10 @@ describe( 'Fed props Item', function () {
 		browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
 
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-		$( '.wikibase-statementgroupview-property' ).getText().includes( propertyValue ); // value is the label
-		$( '.wikibase-snakview-value-container' ).getText().includes( propertyValue );
+
+		const actualPropertyValue = $( '.wikibase-statementgroupview-property' ).getText();
+		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
+
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
