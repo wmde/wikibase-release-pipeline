@@ -55,6 +55,9 @@ require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
+#Pingback
+${DOLLAR}wgWBRepoSettings['wikibasePingback'] = ${WIKIBASE_PINGBACK};
+
 foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 {
     include ${DOLLAR}filename;

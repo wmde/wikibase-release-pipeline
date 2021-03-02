@@ -21,7 +21,8 @@ mediawiki:
 
 wikibase:
 	bash update_cache.sh extensions
-	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
+	#eval ". ./build/build_wikibase.sh; #
+	bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}
 
 wikibase_bundle:
 	bash update_cache.sh extensions

@@ -4,6 +4,8 @@ set -ex
 mkdir -p Docker/build/Wikibase/artifacts
 mkdir -p Docker/build/Wikibase/artifacts/extensions
 
+TARBALL_PATH=artifacts/Wikibase.tar.gz
+
 docker load -i "artifacts/mediawiki.docker.tar.gz"
 
 if [ -f "$TARBALL_PATH" ]; then
