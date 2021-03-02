@@ -32,6 +32,7 @@
 		"test:repo-client": "wdio wdio.conf.js --spec specs/repo-client/*",
 		"test:fedprops": "wdio wdio.conf.js --spec specs/federated-properties/*",
 		"test:quickstatements": "wdio wdio.conf.js --spec specs/quickstatements/*",
+		"test:pingback": "wdio wdio.conf.js --spec specs/pingback/*",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
 	},
