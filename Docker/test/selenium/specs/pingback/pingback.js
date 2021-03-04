@@ -17,8 +17,8 @@ describe( 'Pingback', function () {
 
 		const sqlResult = browser.dockerExecute(
 			process.env.DOCKER_MYSQL_NAME,
-			'mysql --user ' + process.env.DB_USER +
-			' --password=' + process.env.DB_PASS + ' ' + process.env.DB_NAME +
+			'mysql --user "' + process.env.DB_USER + '"' +
+			' --password="' + process.env.DB_PASS + '" "' + process.env.DB_NAME + '"' +
 			" -e 'SELECT * from updatelog where ul_key LIKE \"WikibasePingback%\"'"
 		);
 
