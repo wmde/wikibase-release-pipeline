@@ -16,8 +16,7 @@ describe( 'Pingback', function () {
 		browser.pause( 5 * 1000 );
 
 		const sqlResult = browser.dbQuery( 'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"' );
-
-		assert( sqlResult.includes( 'WikibasePingback' ) === true );
+		assert( sqlResult.includes( 'WikibasePingback\t' ) === true );
 		assert( sqlResult.includes( 'WikibasePingback-1.' ) === true );
 
 		const result = browser.makeRequest( process.env.PINGBACK_BEACON_SERVER );

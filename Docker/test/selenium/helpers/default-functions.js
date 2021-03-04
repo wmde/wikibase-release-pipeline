@@ -4,6 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const _ = require( 'lodash' );
+const MWBot = require( 'mwbot' );
 
 const defaultFunctions = function () {
 
@@ -32,6 +33,28 @@ const defaultFunctions = function () {
 			' --password="' + config.pass + '" "' + config.database + '"' +
 			" -e '" + query + "'"
 		);
+	} );
+
+	/**
+	 * Delete a claim by guid or pipe-separated list of guids
+	 */
+	browser.addCommand( 'deleteClaim', function async( claimGuid ) {
+		const bot = new MWBot( {
+			apiUrl: `${browser.config.baseUrl}/api.php`
+		} );
+
+		return new Promise( ( resolve ) => {
+			bot.getEditToken()
+				.then( () => {
+					bot.request( {
+						action: 'wbremoveclaims',
+						claim: claimGuid,
+						token: bot.editToken
+					} ).then( ( response ) => {
+						resolve( response );
+					} );
+				} );
+		} );
 	} );
 
 	/**
