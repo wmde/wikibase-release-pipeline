@@ -6,3 +6,5 @@ $wgShowExceptionDetails = true;
 $wgShowSQLErrors = true;
 $wgDebugDumpSql  = true;
 $wgShowDBErrorBacktrace = true;
+
+$wgWBRepoSettings['pingbackHost'] = 'http://mediawiki.svc';
