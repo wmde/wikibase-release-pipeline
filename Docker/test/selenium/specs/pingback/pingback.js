@@ -15,12 +15,7 @@ describe( 'Pingback', function () {
 
 		browser.pause( 5 * 1000 );
 
-		const sqlResult = browser.dockerExecute(
-			process.env.DOCKER_MYSQL_NAME,
-			'mysql --user "' + process.env.DB_USER + '"' +
-			' --password="' + process.env.DB_PASS + '" "' + process.env.DB_NAME + '"' +
-			" -e 'SELECT * from updatelog where ul_key LIKE \"WikibasePingback%\"'"
-		);
+		const sqlResult = browser.dbQuery( 'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"' );
 
 		assert( sqlResult.includes( 'WikibasePingback' ) === true );
 		assert( sqlResult.includes( 'WikibasePingback-1.' ) === true );

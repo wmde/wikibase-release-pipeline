@@ -15,6 +15,26 @@ const defaultFunctions = function () {
 	} );
 
 	/**
+	 * Execute query on database
+	 */
+	browser.addCommand( 'dbQuery', function async( query, config ) {
+		if ( !config ) {
+			config = {
+				user: process.env.DB_USER,
+				pass: process.env.DB_PASS,
+				database: process.env.DB_NAME
+			};
+		}
+
+		return browser.dockerExecute(
+			process.env.DOCKER_MYSQL_NAME,
+			'mysql --user "' + config.user + '"' +
+			' --password="' + config.pass + '" "' + config.database + '"' +
+			" -e '" + query + "'"
+		);
+	} );
+
+	/**
 	 * Execute docker command on container and get output
 	 */
 	browser.addCommand( 'dockerExecute', function async( container, command, opts ) {
