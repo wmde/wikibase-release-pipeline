@@ -46,13 +46,6 @@ describe( 'ElasticSearch', function () {
 
 	it( 'Should able able to run UpdateSearchIndexConfig.php', function () {
 
-		// run 30 jobs detached
-		browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 30',
-			'--detach'
-		);
-
 		const result = browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
 			'php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver'
@@ -66,6 +59,13 @@ describe( 'ElasticSearch', function () {
 
 	it( 'Should be able to run ForceSearchIndex.php', function () {
 
+		// run jobs detached
+		browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 10',
+			'--detach'
+		);
+
 		const resultCommand = browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
 			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip'
@@ -76,6 +76,9 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'should be able to search case-insensitive', function () {
+
+		// wait for elasticsearch
+		browser.pause( 10 * 1000 );
 
 		// Search for uppercase Test
 		browser.url( process.env.MW_SERVER + '/wiki/Special:Search' );
