@@ -1,8 +1,7 @@
 <?php
 
+// https://www.mediawiki.org/wiki/Extension:WikibaseManifest
 
-## WikibaseManifest Extension
+## WikibaseManifest Configuration
 $wgEnableRestAPI = true;
-
 wfLoadExtension( 'WikibaseManifest' );
-
