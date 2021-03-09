@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client ]
+        suite: [ repo, fedprops, repo-client, quickstatements, pingback ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
