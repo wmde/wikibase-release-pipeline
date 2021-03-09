@@ -45,7 +45,8 @@ RUN ln -s /var/www/html/ /var/www/html/w
 
 ENV MW_SITE_NAME=wikibase-docker\
     MW_SITE_LANG=en\
-    MW_WG_JOB_RUN_RATE=2
+    MW_WG_JOB_RUN_RATE=2\
+    WIKIBASE_PINGBACK=false
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
