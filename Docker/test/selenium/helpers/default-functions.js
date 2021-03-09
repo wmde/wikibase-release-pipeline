@@ -16,6 +16,26 @@ const defaultFunctions = function () {
 	} );
 
 	/**
+	 * Execute query on database
+	 */
+	browser.addCommand( 'dbQuery', function async( query, config ) {
+		if ( !config ) {
+			config = {
+				user: process.env.DB_USER,
+				pass: process.env.DB_PASS,
+				database: process.env.DB_NAME
+			};
+		}
+
+		return browser.dockerExecute(
+			process.env.DOCKER_MYSQL_NAME,
+			'mysql --user "' + config.user + '"' +
+			' --password="' + config.pass + '" "' + config.database + '"' +
+			" -e '" + query + "'"
+		);
+	} );
+
+	/**
 	 * Delete a claim by guid or pipe-separated list of guids
 	 */
 	browser.addCommand( 'deleteClaim', function async( claimGuid ) {
@@ -34,7 +54,6 @@ const defaultFunctions = function () {
 						resolve( response );
 					} );
 				} );
-
 		} );
 	} );
 
