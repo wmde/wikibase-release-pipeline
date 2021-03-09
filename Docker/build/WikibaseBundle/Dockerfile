@@ -18,5 +18,6 @@ RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install.sh /extra-install.sh
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
+COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
 COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/

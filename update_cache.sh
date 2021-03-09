@@ -28,6 +28,7 @@ extensions=( \
 		"Elastica" \
 		"OAuth" \
 		"Scribunto" \
+		"UniversalLanguageSelector"
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
 		)
