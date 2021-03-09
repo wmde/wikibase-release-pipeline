@@ -14,6 +14,7 @@ test-all:
 	bash test/test_suite.sh fedprops
 	bash test/test_suite.sh repo-client
 	bash test/test_suite.sh quickstatements
+	bash test/test_suite.sh pingback
 
 mediawiki:
 	bash update_cache.sh core skins
