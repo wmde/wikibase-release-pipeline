@@ -31,6 +31,7 @@ extensions=( \
 		"Scribunto" \
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
+		"WikibaseManifest" \
 		)
 
 for arg in "$@"; do

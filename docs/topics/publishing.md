@@ -54,27 +54,40 @@ After successfully uploading the tarballs they should be accessible at https://r
 
 ## Publish git tags
 
-Together with the other publishing steps we also need to tag what commit in the gerrit repository with the version number we built and published. This is done by the [tag_git](../../Docker/tag_git/tag_git.sh) bash script that is run within a docker container. 
+Together with the other publishing steps we also need to tag what commit in the gerrit repository with the version number we built and published. This is done by executing the commands given by the [tag_git](../../Docker/tag_git/tag_git.sh) bash script that is run within a docker container.
 
-The script clones from the git_cache then relies on the build artifact found within `BuildMetadata/build_metadata.env` which stores the commit hashes for the repositories we want to tag.    
+The script relies on the build metadata artifacts found within the folder of the downloaded workflow run.
+
+Example: `artifacts/<WORKFLOW_RUN_NUMBER>/BuildMetadata/build_metadata_wikibase.env`
+
+This file stores the commit hashes for the repositories we want to tag.
 
 Make sure you have the follow env variables set in your `local.env` file. 
 ```
 WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
 ```
 
-In order to test the script you can set the env variable `DRY_RUN` to something in your `local.env` file to do the tagging locally without pushing anything to gerrit.
-
-Example:
-```
-DRY_RUN=1 # add this to the command or your local.env file
-
-# to unset it write
-$ unset DRY_RUN
-```
-
 Run with:
 ```
 set -o allexport; source .env; source variables.env; source local.env; set +o allexport
 ./publish/git_tag.sh
+```
+
+Example output:
+```
+...
+
+Use the following tag on Wikibase
+git tag --force -a "wmde.0" "d9422cf7fe2c19d2096a158a68b1fa2d69e84406" -m "Tagging: wmde.0 Build: 581263144"
+
+
+Use the following tag on Queryservice UI
+git tag --force -a "wmde.0" "e84ab35125557ff073f42ba522a684d35c288b38" -m "Tagging: wmde.0 Build: 581263144"
+
+...
+```
+
+Execute the commands in your local checked out repositories and push the tags using:
+```
+git push --tags
 ```
