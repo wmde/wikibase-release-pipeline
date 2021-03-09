@@ -3,8 +3,6 @@ version: '3'
 
 services:
   wikibase:
-    extra_hosts:
-      - "mediawiki.org:127.0.0.1"
     environment: 
       - WIKIBASE_PINGBACK=true
 
