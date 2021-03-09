@@ -25,6 +25,7 @@ cd "$(dirname "$0")"
 skins=("Vector")
 extensions=( \
 		"CirrusSearch" \
+		"cldr" \
 		"Elastica" \
 		"OAuth" \
 		"Scribunto" \
