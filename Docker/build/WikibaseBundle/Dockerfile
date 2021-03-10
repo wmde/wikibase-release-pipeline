@@ -22,6 +22,7 @@ COPY extra-install.sh /extra-install.sh
 COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
+COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
 
 # copy template for envsubst

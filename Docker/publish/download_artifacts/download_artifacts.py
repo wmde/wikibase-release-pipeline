@@ -19,6 +19,14 @@ if not os.path.exists(basepath):
         print('Downloading %d bytes from %s' % (artifact['size_in_bytes'], artifact['name']))
 
         r = requests.get( artifact['archive_download_url'], allow_redirects=True, headers={"Authorization": 'Bearer ' + os.getenv('GITHUB_TOKEN') } )
+        if r.status_code != 200:
+            errorMessage = "Unknown error (http " + str(r.status_code) + ")."
+            try:
+                errorMessage = r.json()['message']
+            except:
+                pass
+            raise Exception("Github API request failed: " + errorMessage)
+
         zipfilePath = os.path.join('/zips' ,artifact['name'] + '.zip')
         open(zipfilePath, 'wb').write(r.content)
 

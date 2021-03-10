@@ -18,7 +18,10 @@ if (fs.existsSync(filePath)) {
 
         resultObject.fail.forEach(test => {
             const error = extractModuleLineAndColumn(test.error.stack);
-            const filePath = error.file.replace('/usr/src/app/', 'Docker/test/selenium/');
+            let filePath = '';
+            if( error.file ) {
+                filePath = error.file.replace('/usr/src/app/', 'Docker/test/selenium/');
+            }
             const message = test.fullTitle + ": " + test.error.message;
             
             issueCommand('error', {

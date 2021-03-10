@@ -47,7 +47,7 @@ exports.config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: 'warn',
+	logLevel: process.env.SELENIUM_LOG_LEVEL || 'warn',
 
 	// Setting this enables automatic screenshots for when a browser command fails
 	// It is also used by afterTest for capturig failed assertions.
