@@ -15,6 +15,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
+      - SELENIUM_LOG_LEVEL
 
       - WIKIBASE_SERVER=wikibase.svc:80
       - MW_SERVER=http://wikibase.svc
