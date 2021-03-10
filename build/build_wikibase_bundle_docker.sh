@@ -13,12 +13,14 @@ fi
 
 bash build/build_extension.sh OAuth "$GERRIT_EXTENSION_BRANCH_NAME" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Scribunto "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
+bash build/build_extension.sh UniversalLanguageSelector "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh EntitySchema "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Elastica "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh CirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh VisualEditor "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseCirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseManifest "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
+bash build/build_extension.sh cldr "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 
 docker build --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \

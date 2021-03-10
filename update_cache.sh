@@ -25,11 +25,13 @@ cd "$(dirname "$0")"
 skins=("Vector")
 extensions=( \
 		"CirrusSearch" \
+		"cldr" \
 		"Elastica" \
 		"EntitySchema"
 		"OAuth" \
 		"Scribunto" \
 		"VisualEditor" \
+		"UniversalLanguageSelector"
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
 		"WikibaseManifest" \
