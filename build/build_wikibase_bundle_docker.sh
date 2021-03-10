@@ -18,6 +18,7 @@ bash build/build_extension.sh Elastica "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT
 bash build/build_extension.sh CirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseCirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseManifest "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
+bash build/build_extension.sh cldr "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 
 docker build --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \

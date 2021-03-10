@@ -23,6 +23,5 @@ COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseMa
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
-
-# copy template for envsubst
+COPY LocalSettings.cldr.php /var/www/html/LocalSettings.d/cldr.php
 COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/
