@@ -6,8 +6,9 @@ describe( 'Special:Version', function () {
 
 	const extensions = {
 		wikibase: [ 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository', 'WikibaseManifest' ],
-		other: [ 'CirrusSearch', 'Elastica, OAuth' ],
-		parserhook: [ 'Scribunto' ]
+		other: [ 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid' ],
+		parserhook: [ 'Scribunto' ],
+		editor: [ 'VisualEditor' ]
 	};
 
 	// should be disabled for dynamic tests

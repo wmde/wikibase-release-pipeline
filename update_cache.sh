@@ -28,6 +28,7 @@ extensions=( \
 		"Elastica" \
 		"OAuth" \
 		"Scribunto" \
+		"VisualEditor" \
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
 		"WikibaseManifest" \
