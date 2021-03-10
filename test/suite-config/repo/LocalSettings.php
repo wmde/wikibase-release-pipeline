@@ -5,3 +5,6 @@ $wgShowExceptionDetails = true;
 $wgShowSQLErrors = true;
 $wgDebugDumpSql  = true;
 $wgShowDBErrorBacktrace = true;
+
+// EntitySchema
+$wgEntitySchemaShExSimpleUrl = "http://validator.svc";
