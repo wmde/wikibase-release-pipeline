@@ -86,10 +86,27 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'editPage', function editPage( host, title, content ) {
 		browser.url( host + '/wiki/' + title + '?action=edit' );
+
+		// wait for javascript to settle
+		browser.pause( 5 * 1000 );
+
+		// this shows up one time for anonymous users (VisualEditor)
+		const startEditbutton = $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
+		if ( startEditbutton.elementId ) {
+			startEditbutton.click();
+		}
+
+		// fill out form
 		$( '#wpTextbox1' ).waitForDisplayed();
 		$( '#wpTextbox1' ).setValue( content );
-		$( '#wpSave' ).click();
-		browser.pause( 1 * 1000 );
+
+		// save page
+		browser.execute( function () {
+			$( '#editform.mw-editform' ).submit();
+		}, this );
+
+		browser.pause( 2 * 1000 );
+
 		$( '#bodyContent' ).waitForDisplayed();
 		return $( '#bodyContent' ).getText();
 	} );

@@ -24,5 +24,8 @@ COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
 COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
+COPY LocalSettings.VisualEditor.php /var/www/html/LocalSettings.d/VisualEditor.php
 COPY LocalSettings.cldr.php /var/www/html/LocalSettings.d/cldr.php
+
+# copy template for envsubst
 COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/
