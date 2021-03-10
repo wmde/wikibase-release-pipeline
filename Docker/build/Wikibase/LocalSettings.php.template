@@ -48,6 +48,9 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 
 wfLoadSkin( 'Vector' );
 
+// T276905 - default set in Dockerfile
+${DOLLAR}wgJobRunRate = ${MW_WG_JOB_RUN_RATE};
+
 ## Wikibase
 # Load Wikibase repo & client with the example / default settings.
 require_once "${DOLLAR}IP/extensions/Wikibase/repo/Wikibase.php";

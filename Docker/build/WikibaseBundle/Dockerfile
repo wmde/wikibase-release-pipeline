@@ -21,6 +21,7 @@ COPY extra-install.sh /extra-install.sh
 # copy extension settings
 COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
+COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
 COPY LocalSettings.VisualEditor.php /var/www/html/LocalSettings.d/VisualEditor.php
 

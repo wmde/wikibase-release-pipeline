@@ -26,6 +26,7 @@ skins=("Vector")
 extensions=( \
 		"CirrusSearch" \
 		"Elastica" \
+		"EntitySchema"
 		"OAuth" \
 		"Scribunto" \
 		"VisualEditor" \
