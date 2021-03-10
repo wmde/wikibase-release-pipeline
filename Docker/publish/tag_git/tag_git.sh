@@ -15,6 +15,7 @@ if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
 [ -z "$WMDE_RELEASE_VERSION" ] || \
 [ -z "$METADATA_WDQS_UI_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASE_COMMIT_HASH" ] || \
+[ -z "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" ] || \
 [ -z "$WORKFLOW_RUN_NUMBER" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
@@ -34,3 +35,6 @@ echo_tag "$METADATA_WIKIBASE_COMMIT_HASH" "Wikibase"
 
 # tag and push queryservice ui
 echo_tag "$METADATA_WDQS_UI_COMMIT_HASH" "Queryservice UI"
+
+# tag and push WikibaseManifest
+echo_tag "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" "Wikibase Manifest"
