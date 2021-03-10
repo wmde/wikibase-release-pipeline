@@ -30,6 +30,7 @@ extensions=( \
 		"EntitySchema"
 		"OAuth" \
 		"Scribunto" \
+		"UniversalLanguageSelector"
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
 		"WikibaseManifest" \
