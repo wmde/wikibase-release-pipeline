@@ -31,6 +31,7 @@ extensions=( \
 		"UniversalLanguageSelector"
 		"Wikibase" \
 		"WikibaseCirrusSearch" \
+		"WikibaseManifest" \
 		)
 
 for arg in "$@"; do

@@ -5,5 +5,4 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./tag_git.sh /tag_git.sh
-RUN mkdir /repo
 ENTRYPOINT [ "/bin/bash", "/tag_git.sh" ]

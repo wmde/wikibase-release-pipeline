@@ -20,39 +20,17 @@ if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
     exit 1;
 fi
 
-function tag_and_push {
-    REPOSITORY_CACHE_NAME=$1
-    CHECKOUT_DIR=$2
-    BRANCH_NAME=$3
-    COMMIT_HASH=$4
-    REMOTE_URL=$5
-
-    git clone --single-branch --branch "${BRANCH_NAME}" "$REPOSITORY_CACHE_NAME" "$CHECKOUT_DIR"
-    cd "$CHECKOUT_DIR"
-
-    echo "Tagging $WMDE_RELEASE_VERSION at $COMMIT_HASH"
-    git tag --force -a "$WMDE_RELEASE_VERSION" "$COMMIT_HASH" -m "Tagging: $WMDE_RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER"
-
-    if [ -z "$DRY_RUN" ]; then
-        git remote set-url origin "$REMOTE_URL"
-        git push --tags
-    else
-        echo "DRY RUN! Not pushing anything"
-    fi
-
-    cd -
+function echo_tag {
+    COMMIT_HASH=$1
+    REPO_NAME=$2
+    echo
+    echo "Use the following tag on $REPO_NAME"
+    echo "git tag --force -a \"$WMDE_RELEASE_VERSION\" \"$COMMIT_HASH\" -m \"Tagging: $WMDE_RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER\""
+    echo
 }
 
 # tag and push Wikibase
-tag_and_push "/git_cache/Wikibase.git" \
-    "/repo/Wikibase" \
-    "$WIKIBASE_BRANCH_NAME" \
-    "$METADATA_WIKIBASE_COMMIT_HASH" \
-    ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/Wikibase
+echo_tag "$METADATA_WIKIBASE_COMMIT_HASH" "Wikibase"
 
 # tag and push queryservice ui
-tag_and_push "/git_cache/services/wikidata-query-gui.git" \
-    "/repo/wdqs-frontend" \
-    master \
-    "$METADATA_WDQS_UI_COMMIT_HASH" \
-    ssh://gerrit.wikimedia.org:29418/wikidata/query/gui
+echo_tag "$METADATA_WDQS_UI_COMMIT_HASH" "Queryservice UI"

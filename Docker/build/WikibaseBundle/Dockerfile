@@ -17,7 +17,12 @@ FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install.sh /extra-install.sh
+
+# copy extension settings
+COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
+
+# copy template for envsubst
 COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/
