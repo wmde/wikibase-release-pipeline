@@ -13,7 +13,7 @@ describe( 'UniversalLanguageSelector', function () {
 
 		browser.url( process.env.MW_SERVER );
 		$( '#searchInput' ).waitForDisplayed();
-		$( '#searchInput' ).focus();
+		$( '#searchInput' ).click();
 		$( '.imeselector' ).waitForDisplayed();
 		$( '.imeselector' ).click();
 

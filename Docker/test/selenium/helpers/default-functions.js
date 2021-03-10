@@ -132,15 +132,6 @@ const defaultFunctions = function () {
 		return { value: cpuTime, scale: cpuTimeScale };
 	} );
 
-	/**
-	 * Focus on an element
-	 */
-	browser.addCommand( 'focus', function () {
-		browser.execute( function ( domElement ) {
-			domElement.focus();
-		}, this );
-	}, true );
-
 };
 
 module.exports = defaultFunctions;
