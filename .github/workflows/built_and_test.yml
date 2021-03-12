@@ -12,6 +12,12 @@ on:
 env:
   env_file: ${{ github.event.inputs.env_file || '.env' }}
 
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.TEST_DOCKER_HUB_ACCESS_TOKEN }}
+  DOCKER_HUB_REPOSITORY_NAME: toanwmde
+  DOCKER_HUB_ID: toanwmde
+  WORKFLOW_RUN_NUMBER: ${{ github.run_id }}
+
 jobs:
   build_mediawiki:
     runs-on: ubuntu-latest
@@ -254,7 +260,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client, quickstatements, pingback ]
+        suite: [ pingback ]
     needs:
       - build_wikibase_bundle
       - build_queryservice
@@ -287,3 +293,33 @@ jobs:
           name: TestArtifacts
           path: |
             test/log
+
+  should_publish:
+    needs:
+      - test_wikibase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-build-metadata
+        with:
+          path: artifacts/LastBuildMetadata
+          key: cache-build-metadata
+
+      - name: Get BuildMetadata artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildMetadata
+          path: artifacts/
+
+      - name: Check if something changed
+        run: bash publish/should_publish.sh
