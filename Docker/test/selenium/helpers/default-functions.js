@@ -84,7 +84,7 @@ const defaultFunctions = function () {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', function editPage( host, title, content ) {
+	browser.addCommand( 'editPage', function editPage( host, title, content, captcha ) {
 		browser.url( host + '/wiki/' + title + '?action=edit' );
 
 		// wait for javascript to settle
@@ -99,6 +99,10 @@ const defaultFunctions = function () {
 		// fill out form
 		$( '#wpTextbox1' ).waitForDisplayed();
 		$( '#wpTextbox1' ).setValue( content );
+
+		if ( captcha ) {
+			$( '#wpCaptchaWord' ).setValue( captcha );
+		}
 
 		// save page
 		browser.execute( function () {

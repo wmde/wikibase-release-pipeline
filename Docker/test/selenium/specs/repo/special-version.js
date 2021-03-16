@@ -8,7 +8,8 @@ describe( 'Special:Version', function () {
 		wikibase: [ 'EntitySchema', 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository', 'WikibaseManifest' ],
 		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
 		parserhook: [ 'Scribunto' ],
-		editor: [ 'VisualEditor' ]
+		editor: [ 'VisualEditor' ],
+		antispam: [ 'ConfirmEdit' ]
 	};
 
 	// should be disabled for dynamic tests
