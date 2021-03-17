@@ -4,6 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const _ = require( 'lodash' );
+const MWBot = require( 'mwbot' );
 
 const defaultFunctions = function () {
 
@@ -12,6 +13,48 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'makeRequest', function async( url ) {
 		return axios.get( url );
+	} );
+
+	/**
+	 * Execute query on database
+	 */
+	browser.addCommand( 'dbQuery', function async( query, config ) {
+		if ( !config ) {
+			config = {
+				user: process.env.DB_USER,
+				pass: process.env.DB_PASS,
+				database: process.env.DB_NAME
+			};
+		}
+
+		return browser.dockerExecute(
+			process.env.DOCKER_MYSQL_NAME,
+			'mysql --user "' + config.user + '"' +
+			' --password="' + config.pass + '" "' + config.database + '"' +
+			" -e '" + query + "'"
+		);
+	} );
+
+	/**
+	 * Delete a claim by guid or pipe-separated list of guids
+	 */
+	browser.addCommand( 'deleteClaim', function async( claimGuid ) {
+		const bot = new MWBot( {
+			apiUrl: `${browser.config.baseUrl}/api.php`
+		} );
+
+		return new Promise( ( resolve ) => {
+			bot.getEditToken()
+				.then( () => {
+					bot.request( {
+						action: 'wbremoveclaims',
+						claim: claimGuid,
+						token: bot.editToken
+					} ).then( ( response ) => {
+						resolve( response );
+					} );
+				} );
+		} );
 	} );
 
 	/**
@@ -43,10 +86,27 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'editPage', function editPage( host, title, content ) {
 		browser.url( host + '/wiki/' + title + '?action=edit' );
+
+		// wait for javascript to settle
+		browser.pause( 5 * 1000 );
+
+		// this shows up one time for anonymous users (VisualEditor)
+		const startEditbutton = $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
+		if ( startEditbutton.elementId ) {
+			startEditbutton.click();
+		}
+
+		// fill out form
 		$( '#wpTextbox1' ).waitForDisplayed();
 		$( '#wpTextbox1' ).setValue( content );
-		$( '#wpSave' ).click();
-		browser.pause( 1 * 1000 );
+
+		// save page
+		browser.execute( function () {
+			$( '#editform.mw-editform' ).submit();
+		}, this );
+
+		browser.pause( 2 * 1000 );
+
 		$( '#bodyContent' ).waitForDisplayed();
 		return $( '#bodyContent' ).getText();
 	} );

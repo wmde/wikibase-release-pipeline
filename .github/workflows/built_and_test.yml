@@ -139,6 +139,13 @@ jobs:
           if-no-files-found: error
           path: artifacts/wikibase-bundle.docker.tar.gz
 
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata_*.env
+
   build_quickstatements:
     runs-on: ubuntu-latest
     steps:
@@ -247,7 +254,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client, quickstatements ]
+        suite: [ repo, fedprops, repo-client, quickstatements, pingback ]
     needs:
       - build_wikibase_bundle
       - build_queryservice

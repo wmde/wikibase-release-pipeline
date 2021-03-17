@@ -1,0 +1,24 @@
+# Wikibase override for testing client-repo setups
+version: '3'
+
+services:
+  wikibase:
+    environment: 
+      - WIKIBASE_PINGBACK=true
+
+  pingback_beacon:
+    image: "node:lts-alpine"
+    user: "node"
+    working_dir: /home/node/app
+    restart: always
+    volumes:
+      - ./suite-config/pingback/beacon/beacon.js:/home/node/app/beacon.js
+    command: "node beacon.js"
+    ports:
+      - "7171:80"
+    depends_on:
+      - wikibase
+    networks:
+      default:
+        aliases:
+         - mediawiki.svc

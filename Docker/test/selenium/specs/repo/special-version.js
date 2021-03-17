@@ -5,9 +5,10 @@ const assert = require( 'assert' );
 describe( 'Special:Version', function () {
 
 	const extensions = {
-		wikibase: [ 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository' ],
-		other: [ 'CirrusSearch', 'Elastica, OAuth', 'Nuke' ],
-		parserhook: [ 'Scribunto' ]
+		wikibase: [ 'EntitySchema', 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository', 'WikibaseManifest' ],
+		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'Nuke', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
+		parserhook: [ 'Scribunto' ],
+		editor: [ 'VisualEditor' ]
 	};
 
 	// should be disabled for dynamic tests
