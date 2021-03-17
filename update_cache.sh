@@ -28,6 +28,7 @@ extensions=( \
 		"cldr" \
 		"Elastica" \
 		"EntitySchema"
+		"Nuke" \
 		"OAuth" \
 		"Scribunto" \
 		"VisualEditor" \
