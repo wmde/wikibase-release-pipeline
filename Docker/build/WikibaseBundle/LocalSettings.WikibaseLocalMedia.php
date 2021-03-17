@@ -3,4 +3,6 @@
 // https://github.com/ProfessionalWiki/WikibaseLocalMedia
 
 ## WikibaseLocalMedia Configuration
-wfLoadExtension( 'WikibaseLocalMedia' );
+if ( ExtensionRegistry::getInstance()->isLoaded( 'WikibaseRepository' ) ) {
+    wfLoadExtension( 'WikibaseLocalMedia' );
+}
