@@ -62,7 +62,7 @@ describe( 'ElasticSearch', function () {
 		// run jobs detached
 		browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 10',
+			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 20',
 			'--detach'
 		);
 
