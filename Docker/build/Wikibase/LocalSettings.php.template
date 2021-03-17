@@ -51,6 +51,10 @@ wfLoadSkin( 'Vector' );
 // T276905 - default set in Dockerfile
 ${DOLLAR}wgJobRunRate = ${MW_WG_JOB_RUN_RATE};
 
+${DOLLAR}wgEnableUploads = ${MW_WG_ENABLE_UPLOADS};
+
+${DOLLAR}wgUploadDirectory = "${MW_WG_UPLOAD_DIRECTORY}";
+
 ## Wikibase
 # Load Wikibase repo & client with the example / default settings.
 require_once "${DOLLAR}IP/extensions/Wikibase/repo/Wikibase.php";

@@ -46,7 +46,11 @@ RUN ln -s /var/www/html/ /var/www/html/w
 ENV MW_SITE_NAME=wikibase-docker\
     MW_SITE_LANG=en\
     MW_WG_JOB_RUN_RATE=2\
+    MW_WG_ENABLE_UPLOADS=false\
+    MW_WG_UPLOAD_DIRECTORY=/var/www/html/images\
     WIKIBASE_PINGBACK=false
+
+RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]

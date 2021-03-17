@@ -18,7 +18,11 @@ RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install.sh /extra-install.sh
 
+# MW_WG_UPLOAD_DIRECTORY set in base image
+RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
+
 # copy extension settings
+COPY LocalSettings.WikibaseLocalMedia.php /var/www/html/LocalSettings.d/WikibaseLocalMedia.php
 COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
