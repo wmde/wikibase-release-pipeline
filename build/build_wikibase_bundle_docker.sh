@@ -11,6 +11,7 @@ if [ -z "$GERRIT_EXTENSION_BRANCH_NAME" ]; then
     GERRIT_EXTENSION_BRANCH_NAME="$WIKIBASE_BRANCH_NAME"
 fi
 
+## Extensions from gerrit
 bash build/build_extension.sh OAuth "$GERRIT_EXTENSION_BRANCH_NAME" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Scribunto "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh UniversalLanguageSelector "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
@@ -19,10 +20,19 @@ bash build/build_extension.sh Elastica "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT
 bash build/build_extension.sh CirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh VisualEditor "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseCirrusSearch "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
-bash build/build_extension.sh WikibaseLocalMedia "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH" # hosted on github
 bash build/build_extension.sh Nuke "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh WikibaseManifest "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh cldr "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
+
+## Extensions without branch compatibility
+## WikibaseLocalMedia
+UPDATE_SUBMODULE=0 bash build/clone_repo.sh \
+    "$WIKIBASELOCALMEDIA_COMMIT_HASH" \
+    "git_cache/WikibaseLocalMedia.git" \
+    WIKIBASELOCALMEDIA \
+    "$BUILT_EXTENSIONS_PATH/WikibaseLocalMedia" \
+    master && bash build/clean_repo.sh "$BUILT_EXTENSIONS_PATH/WikibaseLocalMedia"
+
 
 docker build --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \
