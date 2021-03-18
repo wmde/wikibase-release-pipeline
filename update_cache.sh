@@ -29,6 +29,7 @@ extensions=( \
 		"ConfirmEdit" \
 		"Elastica" \
 		"EntitySchema"
+		"Nuke" \
 		"OAuth" \
 		"Scribunto" \
 		"VisualEditor" \
