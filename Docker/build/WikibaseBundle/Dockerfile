@@ -30,6 +30,7 @@ COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.p
 COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
 COPY LocalSettings.VisualEditor.php /var/www/html/LocalSettings.d/VisualEditor.php
 COPY LocalSettings.cldr.php /var/www/html/LocalSettings.d/cldr.php
+COPY LocalSettings.Nuke.php /var/www/html/LocalSettings.d/Nuke.php
 
 # copy template for envsubst
 COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/

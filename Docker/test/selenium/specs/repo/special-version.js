@@ -15,7 +15,8 @@ describe( 'Special:Version', function () {
 		],
 		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
 		parserhook: [ 'Scribunto' ],
-		editor: [ 'VisualEditor' ]
+		editor: [ 'VisualEditor' ],
+		specialpage: [ 'Nuke' ]
 	};
 
 	// should be disabled for dynamic tests
