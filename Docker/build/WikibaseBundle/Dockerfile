@@ -19,6 +19,7 @@ COPY --from=composer /var/www/html /var/www/html
 COPY extra-install.sh /extra-install.sh
 
 # copy extension settings
+COPY LocalSettings.Babel.php /var/www/html/LocalSettings.d/Babel.php
 COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
 COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php

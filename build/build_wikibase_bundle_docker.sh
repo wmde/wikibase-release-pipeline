@@ -11,6 +11,7 @@ if [ -z "$GERRIT_EXTENSION_BRANCH_NAME" ]; then
     GERRIT_EXTENSION_BRANCH_NAME="$WIKIBASE_BRANCH_NAME"
 fi
 
+bash build/build_extension.sh Babel "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh OAuth "$GERRIT_EXTENSION_BRANCH_NAME" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh Scribunto "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
 bash build/build_extension.sh UniversalLanguageSelector "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
