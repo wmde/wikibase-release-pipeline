@@ -9,6 +9,7 @@ describe( 'Special:Version', function () {
 		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
 		parserhook: [ 'Scribunto' ],
 		editor: [ 'VisualEditor' ],
+		antispam: [ 'ConfirmEdit' ],
 		specialpage: [ 'Nuke' ]
 	};
 

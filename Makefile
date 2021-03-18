@@ -15,6 +15,7 @@ test-all:
 	bash test/test_suite.sh repo-client
 	bash test/test_suite.sh quickstatements
 	bash test/test_suite.sh pingback
+	bash test/test_suite.sh confirm-edit
 
 mediawiki:
 	bash update_cache.sh core skins

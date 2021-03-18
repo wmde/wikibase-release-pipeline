@@ -26,6 +26,7 @@ skins=("Vector")
 extensions=( \
 		"CirrusSearch" \
 		"cldr" \
+		"ConfirmEdit" \
 		"Elastica" \
 		"EntitySchema"
 		"Nuke" \
