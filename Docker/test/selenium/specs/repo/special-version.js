@@ -14,8 +14,9 @@ describe( 'Special:Version', function () {
 			'WikibaseManifest'
 		],
 		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
-		parserhook: [ 'Scribunto' ],
+		parserhook: [ 'Babel', 'Scribunto' ],
 		editor: [ 'VisualEditor' ],
+		antispam: [ 'ConfirmEdit' ],
 		specialpage: [ 'Nuke' ]
 	};
 

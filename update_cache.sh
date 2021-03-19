@@ -24,8 +24,10 @@ cd "$(dirname "$0")"
 
 skins=("Vector")
 extensions=( \
+		"Babel" \
 		"CirrusSearch" \
 		"cldr" \
+		"ConfirmEdit" \
 		"Elastica" \
 		"EntitySchema"
 		"Nuke" \
