@@ -54,7 +54,7 @@ exports.config = {
 	screenshotPath: process.env.LOG_DIR || __dirname + '/log',
 
 	// Default timeout for each waitFor* command.
-	waitforTimeout: 20 * 1000,
+	waitforTimeout: 30 * 1000,
 
 	// See also: http://webdriver.io/guide/testrunner/reporters.html
 	reporters: [
@@ -65,7 +65,7 @@ exports.config = {
 	// See also: http://mochajs.org
 	mochaOpts: {
 		ui: 'bdd',
-		timeout: 60 * 1000
+		timeout: 90 * 1000
 	},
 
 	// =====
