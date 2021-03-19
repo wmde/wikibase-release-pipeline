@@ -1,5 +1,20 @@
 # Publishing a successful build and test workflow
 
+## Dry running
+
+Publishing docker images and tarballs can be a scary business. To do a test-run of the publish scripts you can set the env variable `DRY_RUN` variable in your local.env file to test the execution with applying or uploading any changes.
+
+```
+DRY_RUN=1
+```
+This is supported by the tarball uploading and the dockerhub publishing scripts. The git-tagging scripts is just outputting the commands for later execution.
+
+After a first dry run you can issue the following to command to remove the variable.
+
+```
+unset DRY_RUN
+```
+
 ## Publish to dockerhub
 ### Make sure to set variables like this before running:
 ```

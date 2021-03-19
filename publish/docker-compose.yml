@@ -68,6 +68,7 @@ services:
      - RELEASE_DIR
      - RELEASE_SSH_IDENTITY
      - WMDE_RELEASE_VERSION
+     - DRY_RUN
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
       - ${HOME}/.ssh/:/ssh-keys/:ro
