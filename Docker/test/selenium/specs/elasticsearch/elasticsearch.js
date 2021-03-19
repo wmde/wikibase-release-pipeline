@@ -62,7 +62,7 @@ describe( 'ElasticSearch', function () {
 		// run jobs detached
 		browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 20',
+			"bash -c 'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 2 > /var/log/runJobs.log'",
 			'--detach'
 		);
 
@@ -70,6 +70,14 @@ describe( 'ElasticSearch', function () {
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
 			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip'
 		);
+
+		const logResult = browser.dockerExecute(
+			process.env.DOCKER_WIKIBASE_REPO_NAME,
+			'cat /var/log/runJobs.log'
+		);
+
+		assert( logResult.includes( 'cirrusSearchMassIndex Special: pageDBKeys=["Main_Page","Item:Q1"]' ) === true );
+		assert( logResult.includes( 'cirrusSearchElasticaWrite' ) === true );
 
 		// should have queued some stuff
 		assert( resultCommand.includes( 'Queued a total of' ) === true );
