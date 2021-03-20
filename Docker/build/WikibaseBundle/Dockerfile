@@ -16,7 +16,9 @@ RUN composer install --no-dev -vv -n
 FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
+COPY extra-install/ /extra-install/
 COPY extra-install.sh /extra-install.sh
+COPY artifacts/oauth.ini /templates/oauth.ini
 
 # copy extension settings
 COPY LocalSettings.Babel.php /var/www/html/LocalSettings.d/Babel.php

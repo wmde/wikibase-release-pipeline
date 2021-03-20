@@ -16,19 +16,13 @@ services:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
-      - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
       - quickstatements-data:/quickstatements/data
-      - ../Docker/build/QuickStatements/oauth.ini:/templates/oauth.ini
 
   quickstatements:
     image: "${QUICKSTATEMENTS_IMAGE_NAME}:latest"
     restart: always
     volumes:
-      - ../Docker/build/wait-for-it.sh:/wait-for-it.sh
-      - ./suite-config/quickstatements/quickstatements/wait-entrypoint.sh:/wait-entrypoint.sh
       - quickstatements-data:/quickstatements/data
-    entrypoint: /bin/bash
-    command: /wait-entrypoint.sh
     ports:
       - "9191:80"
     depends_on:
