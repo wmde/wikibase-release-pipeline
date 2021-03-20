@@ -28,6 +28,7 @@
 		"ie 11"
 	],
 	"scripts": {
+		"test:elasticsearch": "wdio wdio.conf.js --spec specs/elasticsearch/*",
 		"test:repo": "wdio wdio.conf.js --spec specs/repo/*",
 		"test:repo-client": "wdio wdio.conf.js --spec specs/repo-client/*",
 		"test:fedprops": "wdio wdio.conf.js --spec specs/federated-properties/*",
