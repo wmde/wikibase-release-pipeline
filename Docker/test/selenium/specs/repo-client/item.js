@@ -23,6 +23,30 @@ describe( 'Item', function () {
 		defaultFunctions();
 	} );
 
+	it( 'Should be able to insert interwiki links', function () {
+
+		const repoLink = fs.readFileSync( 'data/interwiki-link.sql', 'utf8' )
+			.replace( /<WIKI_ID>/g, 'client_wiki' )
+			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
+		const repoResult = browser.dbQuery( repoLink );
+
+		const config = {
+			user: process.env.DB_USER,
+			pass: process.env.DB_PASS,
+			database: 'client_wiki'
+		};
+		const clientLink = fs.readFileSync( 'data/interwiki-link.sql', 'utf8' )
+			.replace( /<WIKI_ID>/g, 'my_wiki' )
+			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
+
+		const clientResult = browser.dbQuery( clientLink, config );
+
+		// should not return any errors
+		assert( repoResult === '' );
+		assert( clientResult === '' );
+
+	} );
+
 	it( 'Special:NewItem should not be accessible on client', function () {
 
 		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
