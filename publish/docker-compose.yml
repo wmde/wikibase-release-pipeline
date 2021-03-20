@@ -62,7 +62,7 @@ services:
     privileged: true
     environment:
      - RELEASE_HOST
-     - RELEASE_USER=${USER}
+     - RELEASE_USER
      - RELEASE_VERSION
      - RELEASE_MAJOR_VERSION
      - RELEASE_DIR
