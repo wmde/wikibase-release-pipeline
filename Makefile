@@ -16,6 +16,7 @@ test-all:
 	bash test/test_suite.sh quickstatements
 	bash test/test_suite.sh pingback
 	bash test/test_suite.sh confirm-edit
+	bash test/test_suite.sh elasticsearch
 
 mediawiki:
 	bash update_cache.sh core skins
