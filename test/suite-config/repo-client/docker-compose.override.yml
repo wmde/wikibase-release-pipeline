@@ -33,7 +33,6 @@ services:
     restart: always
     volumes:
       - ./suite-config/repo-client/client/LocalSettings.php.template:/LocalSettings.php.template
-      - ./suite-config/repo-client/LocalSettings.php:/var/www/html/LocalSettings.d/WikibaseLocalMedia.php # disable WikibaseLocalMedia
       - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
     ports:
       - "8383:80"
