@@ -1,5 +1,4 @@
 #!/bin/bash
-# Install extra things for wikibase <-> quickstatements setup
 set -ex
 
 php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
