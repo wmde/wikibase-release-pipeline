@@ -3,8 +3,9 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const QueryServiceUI = require( '../../queryservice-ui/queryservice-ui.page' );
+const QueryServiceUI = require( '../../pages/queryservice-ui/queryservice-ui.page' );
 const defaultFunctions = require( '../../helpers/default-functions' );
+const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 
 describe( 'Fed props Item', function () {
 
@@ -37,7 +38,7 @@ describe( 'Fed props Item', function () {
 		const actualPropertyValue = $( '.wikibase-statementgroupview-property' ).getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
+		ItemPage.addStatementLink.waitForDisplayed();
 	} );
 
 	it( 'should show up in Special:EntityData with ttl', function () {

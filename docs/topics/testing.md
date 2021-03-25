@@ -13,10 +13,17 @@ make test-all
 To only run a single suite
 
 ```
-make test repo
+make test SUITE=repo
 ```
 
 In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested. 
+
+
+To only run a specific file in the repo tests
+
+```
+make test SUITE=repo FILTER=babel*
+```
 
 ```
 # for testing locally

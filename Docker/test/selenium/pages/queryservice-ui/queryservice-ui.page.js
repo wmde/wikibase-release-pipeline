@@ -1,6 +1,6 @@
 'use strict';
 
-const Page = require( './page' );
+const Page = require( '../page' );
 
 class QueryServiceUI extends Page {
 
