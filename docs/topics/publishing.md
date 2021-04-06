@@ -51,10 +51,13 @@ Host bast
 
 
 Make sure you have the follow env variables set in your `local.env` file. Tarballs are to be hosted on releases.wikimedia.org. More information about this can be found [here](https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org).
+
 ```
 WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
 RELEASE_HOST=releases1002.eqiad.wmnet
+RELEASE_USER=username # Name of the user on RELEASE_HOST to use
 RELEASE_SSH_IDENTITY=id_rsa # the production ssh identity filename to use
+
 ```
 
 Run with in the terminal

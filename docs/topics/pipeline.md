@@ -29,6 +29,9 @@ FILTER=something.js
 $ make test SUITE=fedprops FILTER=prefetch*
 ```
 
+#### Settings related to tarball publishing
+See [publishing](publishing.md).
+
 ## The versions folder
 
 The `versions` folder contains .env files with the specific versions of the components to be build for that specific release.
