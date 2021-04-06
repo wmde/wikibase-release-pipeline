@@ -2,6 +2,6 @@
 
 // https://github.com/ProfessionalWiki/WikibaseLocalMedia
 ## WikibaseLocalMedia Configuration
-if ( $wgEnableWikibaseRepo === true ) {
+if ( ExtensionRegistry::getInstance()->isLoaded( 'WikibaseRepository' ) ) {
     wfLoadExtension( 'WikibaseLocalMedia' );
 }
