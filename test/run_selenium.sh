@@ -9,6 +9,10 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
+if [ -z "$FILTER" ]; then
+    export FILTER="*"
+fi
+
 # remove reporter log
 rm -f "log/selenium/result-$SUITE.json"
 
@@ -42,4 +46,4 @@ docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 docker-compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
-    wikibase-selenium-test npm run "test:$1"
+    wikibase-selenium-test npm run "test:run"

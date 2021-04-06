@@ -21,6 +21,16 @@ GZIP_COMPRESSION_RATE=1
 ```
 SELENIUM_LOG_LEVEL=trace
 ```
+#### Filter test-runs by file
+```
+FILTER=something.js
+
+# Example on how to use it when running tests:
+$ make test SUITE=fedprops FILTER=prefetch*
+```
+
+#### Settings related to tarball publishing
+See [publishing](publishing.md).
 
 ## The versions folder
 
