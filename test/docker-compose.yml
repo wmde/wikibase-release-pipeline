@@ -87,16 +87,6 @@ services:
       default:
         aliases:
          - wdqs-proxy.svc
-  elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}:latest"
-    restart: unless-stopped
-    networks:
-      default:
-        aliases:
-         - elasticsearch.svc
-    environment:
-      discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
   wdqs-updater:
     image: "${QUERYSERVICE_IMAGE_NAME}:latest"
     restart: unless-stopped
