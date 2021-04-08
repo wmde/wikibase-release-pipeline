@@ -17,7 +17,6 @@ FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install/ /extra-install/
-COPY extra-install.sh /extra-install.sh
 COPY artifacts/oauth.ini /templates/oauth.ini
 
 # copy extension settings
@@ -31,6 +30,4 @@ COPY LocalSettings.VisualEditor.php /var/www/html/LocalSettings.d/VisualEditor.p
 COPY LocalSettings.cldr.php /var/www/html/LocalSettings.d/cldr.php
 COPY LocalSettings.ConfirmEdit.php /var/www/html/LocalSettings.d/ConfirmEdit.php
 COPY LocalSettings.Nuke.php /var/www/html/LocalSettings.d/Nuke.php
-
-# copy template for envsubst
-COPY LocalSettings.Elasticsearch.php.template /var/www/html/LocalSettings.template.d/
+COPY LocalSettings.Elasticsearch.php /var/www/html/LocalSettings.d/ElasticSearch.php

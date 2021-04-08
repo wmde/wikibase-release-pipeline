@@ -44,7 +44,7 @@ describe( 'ElasticSearch', function () {
 		assert( alias === itemAlias );
 	} );
 
-	it( 'Should able able to run UpdateSearchIndexConfig.php', function () {
+	it.skip( 'Should able able to run UpdateSearchIndexConfig.php', function () {
 
 		const result = browser.dockerExecute(
 			process.env.DOCKER_WIKIBASE_REPO_NAME,
@@ -57,7 +57,7 @@ describe( 'ElasticSearch', function () {
 
 	} );
 
-	it( 'Should be able to run ForceSearchIndex.php', function () {
+	it.skip( 'Should be able to run ForceSearchIndex.php', function () {
 
 		// run jobs detached
 		browser.dockerExecute(
