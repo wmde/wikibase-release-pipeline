@@ -30,6 +30,7 @@ bash build/build_extension.sh ConfirmEdit "${GERRIT_EXTENSION_BRANCH_NAME}" "$BU
 
 ## Extensions without branch compatibility
 ## WikibaseLocalMedia
+## NOTE: WikibaseLocalMedia does currently not work in a client only setup.
 UPDATE_SUBMODULE=0 bash build/clone_repo.sh \
     "$WIKIBASELOCALMEDIA_COMMIT_HASH" \
     "git_cache/WikibaseLocalMedia.git" \
