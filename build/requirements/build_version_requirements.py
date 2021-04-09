@@ -1,0 +1,31 @@
+import yaml
+import os
+
+def getVar( varName ):
+    if varName in os.environ:
+        name = components[varName]
+        return name + " " + os.environ[varName]
+    else:
+        return 'undefined'
+
+components =	{
+  "RELEASE_MAJOR_VERSION": "Mediawiki",
+  "ELASTICSEARCH_VERSION": "Elasticsearch",
+  "QUERYSERVICE_VERSION": "WDQS",
+  "PHP_VERSION": "PHP"
+}
+
+databases = []
+
+# read databases
+with open('config.yml') as f:
+  data = yaml.load(f, Loader=yaml.FullLoader)
+  databases = data['jobs']['test_wikibase']['strategy']['matrix']['databaseImageName']
+
+f = open("artifacts/built_versions.log", "w+")
+
+for key in components:
+  f.write(getVar(key) + '\n')
+
+f.write('Tested databases: ' + ', '.join(databases))
+f.close()

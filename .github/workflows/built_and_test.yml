@@ -290,3 +290,23 @@ jobs:
           name: TestArtifacts
           path: |
             test/log
+
+  versions:
+    needs:
+      - test_wikibase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build version requirements
+        run: bash build.sh requirements ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/built_versions.log
