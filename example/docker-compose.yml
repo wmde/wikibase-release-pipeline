@@ -1,0 +1,62 @@
+# Wikibase for testing
+version: '3'
+
+services:
+  wikibase:
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - quickstatements-data:/quickstatements/data
+
+      # Uncomment this next line to enable installation of additional services
+      #- ./extra-install.sh:/extra-install.sh
+
+      # Uncomment this next line to mount your own LocalSettings.php file
+      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+
+    networks:
+      default:
+        aliases:
+         - wikibase.svc
+         - ${WIKIBASE_HOST}
+    environment:
+      - DB_SERVER=mysql.svc:3306
+      - MW_ADMIN_NAME=${MW_ADMIN_NAME}
+      - MW_ADMIN_PASS=${MW_ADMIN_PASS}
+      - MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL}
+      - MW_WG_SECRET_KEY=${MW_SECRET_KEY}
+      - DB_USER=${MYSQL_USER}
+      - DB_PASS=${MYSQL_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
+      - MW_SERVER=${WB_PUBLIC_SCHEME_HOST_AND_PORT}
+      - WIKIBASE_HOST
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT
+      - WIKIBASE_PINGBACK
+  mysql:
+    image: "${MYSQL_IMAGE_NAME}"
+    restart: unless-stopped
+    volumes:
+      - mediawiki-mysql-data:/var/lib/mysql
+    environment:
+      # CONFIG - Change the default values below (should match values passed to wikibase)
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    networks:
+      default:
+        aliases:
+         - mysql.svc
+
+volumes:
+  LocalSettings:
+  mediawiki-mysql-data:
+  quickstatements-data: # this volume can be removed if quickstatements isn't running 
