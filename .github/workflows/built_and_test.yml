@@ -255,6 +255,7 @@ jobs:
       fail-fast: false
       matrix:
         suite: [ repo, fedprops, repo-client, quickstatements, pingback, confirm-edit, elasticsearch ]
+        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
     needs:
       - build_wikibase_bundle
       - build_queryservice
@@ -271,6 +272,8 @@ jobs:
           path: artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
+        env:
+          DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
         run: make test SUITE=${{ matrix.suite }}
 
       - name: Report
