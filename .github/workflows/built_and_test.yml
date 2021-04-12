@@ -254,8 +254,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client, quickstatements, pingback, confirm-edit, elasticsearch ]
         databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        suite: [ 
+          repo, 
+          fedprops, 
+          repo_client, 
+          quickstatements, 
+          pingback, 
+          confirm_edit,
+          elasticsearch,
+
+          base__repo,
+          base__repo_client,
+          base__pingback,
+          base__fedprops,
+        ]
     needs:
       - build_wikibase_bundle
       - build_queryservice

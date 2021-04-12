@@ -1,3 +1,4 @@
+/* eslint camelcase: ["error", {properties: "never"}] */
 /**
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
@@ -66,6 +67,40 @@ exports.config = {
 	mochaOpts: {
 		ui: 'bdd',
 		timeout: 90 * 1000
+	},
+
+	// define all tests
+	specs: [ './specs/**/*.js' ],
+
+	suites: {
+
+		// bundle-specs
+		repo: [ './specs/repo/*.js' ],
+		repo_client: [ './specs/repo_client/*.js' ],
+		fedprops: [ './specs/fedprops/*.js' ],
+		pingback: [ './specs/pingback/*.js' ],
+
+		quickstatements: [ './specs/quickstatements/*.js' ],
+		elasticsearch: [ './specs/elasticsearch/*.js' ],
+		confirm_edit: [ './specs/confirm_edit/*.js' ],
+
+		// base-specs
+		base__repo: [
+			'./specs/repo/property.js',
+			'./specs/repo/special-property.js',
+			'./specs/repo/queryservice.js'
+		],
+		base__repo_client: [
+			'./specs/repo_client/interwiki-links.js',
+			'./specs/repo_client/item.js'
+		],
+		base__fedprops: [
+			'./specs/fedprops/*.js'
+		],
+		base__pingback: [
+			'./specs/pingback/*.js'
+		]
+
 	},
 
 	// =====

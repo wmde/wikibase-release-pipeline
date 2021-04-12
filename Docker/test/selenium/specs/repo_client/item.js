@@ -5,7 +5,6 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const fs = require( 'fs' );
 const defaultFunctions = require( '../../helpers/default-functions' );
 const _ = require( 'lodash' );
 
@@ -17,37 +16,9 @@ describe( 'Item', function () {
 	let propertyId = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
-	const luaPageTitle = 'RepoClientLuaTest';
 
 	before( function () {
 		defaultFunctions();
-	} );
-
-	it( 'Should be able to insert interwiki links', function () {
-
-		const repoLink = fs.readFileSync( 'data/interwiki-link.sql', 'utf8' )
-			.replace( /<WIKI_ID>/g, 'client_wiki' )
-			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
-		browser.dbQuery( repoLink );
-		assert(
-			browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"' )
-				.indexOf( process.env.MW_CLIENT_SERVER ) > -1
-		);
-
-		const config = {
-			user: process.env.DB_USER,
-			pass: process.env.DB_PASS,
-			database: 'client_wiki'
-		};
-		const clientLink = fs.readFileSync( 'data/interwiki-link.sql', 'utf8' )
-			.replace( /<WIKI_ID>/g, 'my_wiki' )
-			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
-
-		browser.dbQuery( clientLink, config );
-		assert(
-			browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"', config )
-				.indexOf( process.env.MW_SERVER ) > -1
-		);
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
@@ -139,27 +110,6 @@ describe( 'Item', function () {
 		assert( _.isEqual( actualChange, expectedSiteLinkChange ) );
 	} );
 
-	it( 'Should be able to reference an item on client using Lua', function () {
-
-		const template = fs.readFileSync( 'data/repo-client.lua', 'utf8' );
-		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
-
-		browser.editPage(
-			process.env.MW_CLIENT_SERVER,
-			'Module:RepoClient',
-			luaScript
-		);
-
-		const executionContent = browser.editPage(
-			process.env.MW_CLIENT_SERVER,
-			luaPageTitle,
-			'{{#invoke:RepoClient|testLuaExecution}}'
-		);
-
-		// should come from executed lua script
-		assert( executionContent.includes( itemLabel ) );
-	} );
-
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', function () {
 
@@ -175,7 +125,7 @@ describe( 'Item', function () {
 		$( '.oo-ui-flaggedElement-destructive button' ).waitForDisplayed();
 		$( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:Q1' );
+		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 	} );
 
 	it( 'Should be able to see delete changes is dispatched to client for test page', function () {
@@ -195,24 +145,6 @@ describe( 'Item', function () {
 		);
 
 		assert( _.isEqual( actualChange, expectedTestDeletionChange ) );
-
-	} );
-
-	it( 'Should be able to see delete changes is dispatched to client for lua page', function () {
-
-		const expectedDeletionChange = {
-			type: 'external',
-			ns: 0,
-			title: luaPageTitle,
-			comment: 'Associated Wikibase item deleted. Language links removed.'
-		};
-
-		const actualChange = browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
-			expectedDeletionChange
-		);
-
-		assert( _.isEqual( actualChange, expectedDeletionChange ) );
 
 	} );
 
