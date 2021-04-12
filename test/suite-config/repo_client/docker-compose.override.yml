@@ -7,7 +7,7 @@ services:
       context: ../Docker/test/curl/
       dockerfile: Dockerfile
     volumes:
-      - ./suite-config/repo-client/curl-test/entrypoint.sh:/entrypoint.sh
+      - ./suite-config/repo_client/curl-test/entrypoint.sh:/entrypoint.sh
     entrypoint: /bin/sh
     command:  /entrypoint.sh
     environment: 
@@ -20,10 +20,10 @@ services:
   wikibase:
     volumes:
       - ./config/client/wikibase/extra-install-repo.sh:/extra-install.sh
-      - ./suite-config/repo-client/repo/LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/repo_client/repo/LocalSettings.php.template:/LocalSettings.php.template
 
   wikibase-client:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}:latest"
+    image: "${WIKIBASE_TEST_IMAGE_NAME}:latest"
     links:
       - mysql
       - wikibase
@@ -32,7 +32,7 @@ services:
       - wikibase
     restart: always
     volumes:
-      - ./suite-config/repo-client/client/LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/repo_client/client/LocalSettings.php.template:/LocalSettings.php.template
       - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
     ports:
       - "8383:80"

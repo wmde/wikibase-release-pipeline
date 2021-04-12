@@ -3,7 +3,7 @@ version: '3'
 
 services:
   wikibase:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}:latest"
+    image: "${WIKIBASE_TEST_IMAGE_NAME}:latest"
     links:
       - mysql
     depends_on:
