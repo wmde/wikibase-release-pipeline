@@ -29,6 +29,10 @@ describe( 'Item', function () {
 			.replace( /<WIKI_ID>/g, 'client_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
 		browser.dbQuery( repoLink );
+		assert(
+			browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"' )
+				.indexOf( process.env.MW_CLIENT_SERVER ) > -1
+		);
 
 		const config = {
 			user: process.env.DB_USER,
@@ -40,6 +44,10 @@ describe( 'Item', function () {
 			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
 
 		browser.dbQuery( clientLink, config );
+		assert(
+			browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"', config )
+				.indexOf( process.env.MW_SERVER ) > -1
+		);
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
