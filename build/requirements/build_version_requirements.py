@@ -9,7 +9,7 @@ def getVar( varName ):
         return 'undefined'
 
 components =	{
-  "RELEASE_MAJOR_VERSION": "Mediawiki",
+  "RELEASE_MAJOR_VERSION": "MediaWiki",
   "ELASTICSEARCH_VERSION": "Elasticsearch",
   "QUERYSERVICE_VERSION": "WDQS",
   "PHP_VERSION": "PHP"
@@ -27,5 +27,5 @@ f = open("artifacts/built_versions.log", "w+")
 for key in components:
   f.write(getVar(key) + '\n')
 
-f.write('Tested databases: ' + ', '.join(databases))
+f.write('Databases: ' + ', '.join(databases))
 f.close()
