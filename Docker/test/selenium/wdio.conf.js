@@ -78,7 +78,15 @@ exports.config = {
 	 * @param {Object} test Mocha Test object
 	 */
 	afterTest: function ( test ) {
-		const filePath = saveScreenshot( process.env.SUITE + '--' + test.title );
-		console.log( '\n\tScreenshot: ' + filePath + '\n' );
+		const screenshotPath = browser.config.screenshotPath;
+		const folder = ( process.env.DATABASE_IMAGE_NAME + '-' + process.env.SUITE ).replace( /[^a-zA-Z_0-9]/g, '_' );
+		browser.config.screenshotPath = screenshotPath + '/' + folder;
+		try {
+			saveScreenshot( test.title );
+		} catch ( error ) {
+			console.error( 'failed writing screenshot ...' );
+			console.error( error );
+		}
+		browser.config.screenshotPath = screenshotPath;
 	}
 };

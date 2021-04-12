@@ -29,6 +29,7 @@ services:
       - MW_ADMIN_PASS=WikibaseDockerAdminPass
       - MW_SCRIPT_PATH=/w
 
+      - DATABASE_IMAGE_NAME
       - SUITE
       - FILTER
 

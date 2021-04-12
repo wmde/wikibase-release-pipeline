@@ -1,4 +1,5 @@
-FROM php:7.3-apache
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-apache
 
 # System dependencies
 RUN set -eux; \

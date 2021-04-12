@@ -18,6 +18,9 @@ test-all:
 	bash test/test_suite.sh confirm-edit
 	bash test/test_suite.sh elasticsearch
 
+requirements:
+	python3 build/requirements/build_version_requirements.py
+
 mediawiki:
 	bash update_cache.sh core skins
 	eval ". ./build/build_mediawiki.sh; bash build/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"

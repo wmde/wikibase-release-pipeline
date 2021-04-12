@@ -32,7 +32,7 @@ services:
       - MW_ELASTIC_HOST=elasticsearch.svc
       - MW_ELASTIC_PORT=9200
   mysql:
-    image: mariadb:10.3
+    image: ${DATABASE_IMAGE_NAME}
     restart: always
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
