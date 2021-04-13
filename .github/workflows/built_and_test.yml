@@ -192,6 +192,24 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
+  build_wdqs_proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build WDQS-proxy image 
+        run: bash build.sh wdqs-proxy ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/wdqs-proxy.docker.tar.gz
+
   build_queryservice_ui:
     runs-on: ubuntu-latest
     steps:
@@ -261,6 +279,7 @@ jobs:
       - build_queryservice
       - build_elasticsearch
       - build_queryservice_ui
+      - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
     steps:

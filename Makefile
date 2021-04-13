@@ -40,6 +40,9 @@ quickstatements:
 queryservice:
 	eval ". ./build/build_queryservice.sh; bash build/build_queryservice_docker.sh ${QUERYSERVICE_IMAGE_NAME}"
 
+wdqs-proxy:
+	bash build/build_wdqs_proxy_docker.sh ${WDQS_PROXY_IMAGE_NAME}
+
 queryservice-ui:
 	bash update_cache.sh services
 	eval ". ./build/build_queryservice_ui.sh; bash build/build_queryservice_ui_docker.sh ${QUERYSERVICE_UI_IMAGE_NAME}"
@@ -55,4 +58,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki wikibase wikibase_bundle elasticsearch queryservice queryservice-ui quickstatements
+all: mediawiki wikibase wikibase_bundle elasticsearch queryservice wdqs-proxy queryservice-ui quickstatements
