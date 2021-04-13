@@ -49,6 +49,11 @@ for arg in "$@"; do
 		done
 
 	elif [ "$arg" = "extensions" ]; then
+
+		# WikibaseLocalMedia
+		clone_if_not_present WikibaseLocalMedia.git https://github.com/ProfessionalWiki/WikibaseLocalMedia.git
+		fetch_all WikibaseLocalMedia.git
+
 		for extension in "${extensions[@]}"; do
 			clone_if_not_present "$extension.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
 			fetch_all "$extension.git"

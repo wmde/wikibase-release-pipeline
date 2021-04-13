@@ -20,7 +20,11 @@ COPY extra-install/ /extra-install/
 COPY extra-install.sh /extra-install.sh
 COPY artifacts/oauth.ini /templates/oauth.ini
 
+# MW_WG_UPLOAD_DIRECTORY set in base image
+RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
+
 # copy extension settings
+COPY LocalSettings.WikibaseLocalMedia.php /var/www/html/LocalSettings.d/WikibaseLocalMedia.php
 COPY LocalSettings.Babel.php /var/www/html/LocalSettings.d/Babel.php
 COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
 COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
