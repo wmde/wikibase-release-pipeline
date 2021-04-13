@@ -31,7 +31,6 @@ services:
       - DB_NAME=my_wiki
       - MW_ELASTIC_HOST=elasticsearch.svc
       - MW_ELASTIC_PORT=9200
-      - WIKIBASE_HOST=wikibase.svc
       - MW_WG_ENABLE_UPLOADS=true
   mysql:
     image: ${DATABASE_IMAGE_NAME}
