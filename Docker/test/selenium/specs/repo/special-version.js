@@ -5,7 +5,14 @@ const assert = require( 'assert' );
 describe( 'Special:Version', function () {
 
 	const extensions = {
-		wikibase: [ 'EntitySchema', 'WikibaseCirrusSearch', 'WikibaseClient', 'WikibaseRepository', 'WikibaseManifest' ],
+		wikibase: [
+			'EntitySchema',
+			'WikibaseCirrusSearch',
+			'WikibaseClient',
+			'Wikibase Local Media',
+			'WikibaseRepository',
+			'WikibaseManifest'
+		],
 		other: [ 'CLDR', 'CirrusSearch', 'Elastica', 'OAuth', 'Parsoid', 'UniversalLanguageSelector' ],
 		parserhook: [ 'Babel', 'Scribunto' ],
 		editor: [ 'VisualEditor' ],
@@ -23,7 +30,7 @@ describe( 'Special:Version', function () {
 			extensions[ extensionPackage ].forEach( ( extension ) => {
 
 				// /wiki/Special:Version generate these for each installed extension
-				const elementSelector = $( '#mw-version-ext-' + extensionPackage + '-' + extension );
+				const elementSelector = $( '#mw-version-ext-' + extensionPackage + '-' + extension.replace( / /g, '_' ) );
 				elementSelector.waitForDisplayed();
 				elementSelector.scrollIntoView();
 

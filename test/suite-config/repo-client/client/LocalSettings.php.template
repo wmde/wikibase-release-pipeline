@@ -73,5 +73,8 @@ ${DOLLAR}wgMainCacheType = CACHE_NONE;
 
 foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 {
+	if (strpos(${DOLLAR}filename, 'WikibaseLocalMedia') !== false) {
+		continue;
+	}
     include ${DOLLAR}filename;
 }
