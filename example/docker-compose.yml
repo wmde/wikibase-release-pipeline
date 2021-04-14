@@ -10,7 +10,7 @@ services:
       - mysql
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "${WIKIBASE_PORT}:80"
     volumes:
       - quickstatements-data:/quickstatements/data
 
@@ -36,9 +36,8 @@ services:
       - DB_NAME=${MYSQL_DATABASE}
       - MW_ELASTIC_HOST=elasticsearch.svc
       - MW_ELASTIC_PORT=9200
-      - MW_SERVER=${WB_PUBLIC_SCHEME_HOST_AND_PORT}
       - WIKIBASE_HOST
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
       - WIKIBASE_PINGBACK
   mysql:
     image: "${MYSQL_IMAGE_NAME}"

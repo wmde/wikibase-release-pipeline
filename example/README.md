@@ -29,10 +29,7 @@ The wikibase bundle comes with some additional services that can be enabled.
 - quickstatements
 - elasticsearch
 
-### 1. Rename the `docker-compose.extra.yml` file
-In order to enable additional services in the Wikibase bundle rename `docker-compose.extra.yml` to `docker-compose.override.yml` which will make docker-compose also use this when started with `docker-compose up`
-
-### 2. Uncomment the extra-install scripts in `docker-compose.yml` 
+### 1. Uncomment the extra-install scripts in `docker-compose.yml` 
 
 In the volumes section of the wikibase service there is one commented line that allow the additional services to start automatically.
 
@@ -42,8 +39,8 @@ In the volumes section of the wikibase service there is one commented line that 
 
 Looking inside extra-install.sh it executes two scripts that sets up an OAuth consumer for quickstatements and creates indicies for elasticsearch.
 
-### 3. Run the configuration 
+### 2. Run with the extra configuration
 
 ```
-docker-compose up
+docker-compose -f docker-compose.yml -f docker-compose.extra.yml up
 ```
