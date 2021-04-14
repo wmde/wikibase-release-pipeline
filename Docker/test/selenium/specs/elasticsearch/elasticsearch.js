@@ -44,45 +44,6 @@ describe( 'ElasticSearch', function () {
 		assert( alias === itemAlias );
 	} );
 
-	it( 'Should able able to run UpdateSearchIndexConfig.php', function () {
-
-		const result = browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php --startOver'
-		);
-
-		assert( result.includes( 'content index...' ) === true );
-		assert( result.includes( 'general index...' ) === true );
-		assert( result.includes( 'archive index...' ) === true );
-
-	} );
-
-	it( 'Should be able to run ForceSearchIndex.php', function () {
-
-		// run jobs detached
-		browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			"bash -c 'php /var/www/html/maintenance/runJobs.php --wiki my_wiki --wait --maxjobs 2 > /var/log/runJobs.log'",
-			'--detach'
-		);
-
-		const resultCommand = browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --queue --maxJobs 10000 --pauseForJobs 1000 --skipLinks --indexOnSkip'
-		);
-
-		const logResult = browser.dockerExecute(
-			process.env.DOCKER_WIKIBASE_REPO_NAME,
-			'cat /var/log/runJobs.log'
-		);
-
-		assert( logResult.includes( 'cirrusSearchMassIndex Special: pageDBKeys=["Main_Page","Item:Q1"]' ) === true );
-		assert( logResult.includes( 'cirrusSearchElasticaWrite' ) === true );
-
-		// should have queued some stuff
-		assert( resultCommand.includes( 'Queued a total of' ) === true );
-	} );
-
 	it( 'should be able to search case-insensitive', function () {
 
 		// wait for elasticsearch
