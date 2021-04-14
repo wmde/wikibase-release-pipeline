@@ -20,6 +20,6 @@ check_if_up() {
 
 check_if_up "$WIKIBASE_SERVER" "/wiki/Main_Page"
 
-check_if_up "$QUERYSERVICE_SERVER" "/bigdata/namespace/wdq/sparql"
+check_if_up "$WDQS_SERVER" "/bigdata/namespace/wdq/sparql"
 
-check_if_up "$QUERYSERVICE_UI_SERVER" "/"
+check_if_up "$WDQS_FRONTEND_SERVER" "/"

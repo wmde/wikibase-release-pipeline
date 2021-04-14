@@ -9,7 +9,7 @@
   - [ ] add a statement
   - [ ] add a qualifier
   - [ ] add a reference
-## Wikibase & QueryService/QueryService UI
+## Wikibase & WDQS/WDQS-frontend
 - [x] Create an item on Wikibase, and verify it can be found on Query Service (including the label etc)
 - [x] Delete an item on Wikibase, and verify that the item isn’t there on the query service any more
 - [x] Create an item with a statement and verify that querying using prefixes work correctly (wdt:P1 etc.. )
@@ -30,7 +30,7 @@
 ## Wikibase Federated properties (using wikidata.org as source wiki)
 - [X] Create an item on Wikibase and add a statement using a federated property
   - [X] verify it is available with the correct rdf through the Entity page
-  - [X] verify it is available through the QueryService with the correct prefixes
+  - [X] verify it is available through the WDQS-frontend with the correct prefixes
 
 ## Elasticsearch
 - [X] Create item with an alias and search by item alias

@@ -33,18 +33,18 @@ services:
       - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch.docker.tar.gz
       - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase-bundle.docker.tar.gz
       - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
-      - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
-      - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
+      - WDQS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
+      - WDQS_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
       - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/quickstatements.docker.tar.gz
 
-      - QUERYSERVICE_IMAGE_NAME
-      - QUERYSERVICE_UI_IMAGE_NAME
+      - WDQS_IMAGE_NAME
+      - WDQS_FRONTEND_IMAGE_NAME
       - QUICKSTATEMENTS_IMAGE_NAME
       - WIKIBASE_IMAGE_NAME
       - WIKIBASE_BUNDLE_IMAGE_NAME
       - ELASTICSEARCH_IMAGE_NAME
 
-      - QUERYSERVICE_VERSION
+      - WDQS_VERSION
       - RELEASE_VERSION
       - WMDE_RELEASE_VERSION
       - ELASTICSEARCH_VERSION

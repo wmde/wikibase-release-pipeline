@@ -11,7 +11,7 @@ def getVar( varName ):
 components =	{
   "RELEASE_MAJOR_VERSION": "MediaWiki",
   "ELASTICSEARCH_VERSION": "Elasticsearch",
-  "QUERYSERVICE_VERSION": "WDQS",
+  "WDQS_VERSION": "WDQS",
   "PHP_VERSION": "PHP"
 }
 

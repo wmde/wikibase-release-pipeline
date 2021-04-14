@@ -9,5 +9,5 @@ services:
     environment:
       - QS_SERVER=quickstatements.svc:80
       - WIKIBASE_SERVER=wikibase.svc:80
-      - QUERYSERVICE_UI_SERVER=wdqs-frontend.svc:80
-      - QUERYSERVICE_SERVER=wdqs.svc:9999
+      - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
+      - WDQS_SERVER=wdqs.svc:9999
