@@ -4,14 +4,20 @@ Quickstatements2 as seen at  [https://github.com/magnusmanske/quickstatements](h
 
 ### Environment variables
 
-Variable                   | Default  | Description                                            
--------------------------- | -------- | -----------
-`WIKIBASE_SCHEME_AND_HOST` | NONE     | Host and port of wikibase instance as seen by QS container                                                  
-`WB_PUBLIC_HOST_AND_PORT`  | NONE     | Host and port of wikibase as seen by the user's browser
-`QS_PUBLIC_HOST_AND_PORT`  | NONE     | Host and port of QS as seen by the user's browser      
-`OAUTH_CONSUMER_KEY`       | NONE     | OAuth consumer key (obtained from wikibase)            
-`OAUTH_CONSUMER_SECRET`    | NONE     | OAuth consumer key (obtained from wikibase)            
-`PHP_TIMEZONE`             | UTC      | setting of php.ini date.timezone                       
+Variable                             | Default      | Description                                            
+-------------------------------------|--------------|------------
+`WIKIBASE_SCHEME_AND_HOST`           | NONE         | Host and port of wikibase instance as seen by QS
+`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of wikibase as seen by the user's browser
+`QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of QS as seen by the user's browser      
+`OAUTH_CONSUMER_KEY`                 | NONE         | OAuth consumer key (obtained from wikibase)            
+`OAUTH_CONSUMER_SECRET`              | NONE         | OAuth consumer key (obtained from wikibase)            
+`PHP_TIMEZONE`                       | UTC          | setting of php.ini date.timezone
+`MW_SITE_LANG`                       | NONE         | Site language
+`MW_SITE_NAME`                       | NONE         | Site name
+`WB_PROPERTY_NAMESPACE`              | NONE         | Wikibase Property namespace
+`WB_ITEM_NAMESPACE`                  | NONE         | Wikibase Item namespace
+`WB_PROPERTY_PREFIX`                 | NONE         | Wikibase Property prefix
+`WB_ITEM_PREFIX`                     | NONE         | Wikibase Item prefix
 
 ### Filesystem layout
 
@@ -60,11 +66,3 @@ and secret token to quickstatements.
 
 If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made the consumer you'll need to make another new consumer or
 reissue the secret token for the old one.
-
-### Development
-
-These images are build from the master branch of the quickstatements and magnustools repos.
-
-For this reason the images may sometimes break due to upstream changes and need fixing.
-
-Additional images for new releases do not need to be created.
