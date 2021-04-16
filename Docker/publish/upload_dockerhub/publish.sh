@@ -65,7 +65,7 @@ docker load -i "$ELASTICSEARCH_DOCKER_PATH"
 docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 docker load -i "$WDQS_PROXY_DOCKER_PATH"
 
-# Tag Queryservice with version
+# Tag Queryservice Proxy with version
 tag_and_push "$WDQS_PROXY_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
 
 # Tag Queryservice UI with version
