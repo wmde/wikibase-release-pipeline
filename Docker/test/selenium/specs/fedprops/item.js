@@ -18,6 +18,17 @@ describe( 'Fed props Item', function () {
 		defaultFunctions();
 	} );
 
+	it( 'Should search wikidata.org through wbsearchentities', function () {
+		const result = browser.makeRequest(
+			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
+		);
+		const success = result.data.success;
+		const searchResults = result.data.search;
+
+		assert( success === 1 );
+		assert( searchResults.length > 0 );
+	} );
+
 	it( 'can add a federated property and it shows up in the ui', function () {
 
 		const data = {
