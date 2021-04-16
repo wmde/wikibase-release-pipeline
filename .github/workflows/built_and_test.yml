@@ -265,8 +265,9 @@ jobs:
 
       - name: Store docker image on GHCR
         run: |
-             docker tag elasticsearch:latest elasticsearch:${{ github.run_id }}
-             docker push ghcr.io/${{ github.repository_owner }}/elasticsearch:${{ github.run_id }}
+             TAG=ghcr.io/${{ github.repository_owner }}/elasticsearch:${{ github.run_id }}
+             docker tag elasticsearch:latest $TAG
+             docker push $TAG
 
   test_wikibase:
     strategy:
