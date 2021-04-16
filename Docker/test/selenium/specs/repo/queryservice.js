@@ -6,10 +6,53 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../pages/queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
+const defaultFunctions = require( '../../helpers/default-functions' );
 
-describe( 'QueryService Item', function () {
+describe( 'QueryService', function () {
 
-	it( 'should shows up with property in queryservice ui after creation', function () {
+	before( function () {
+		defaultFunctions();
+	} );
+
+	it( 'Should not be able to post to sparql endpoint', function () {
+		const result = browser.makeRequest(
+			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
+			{ validateStatus: false },
+			{}
+		);
+		assert( result.status === 405 );
+	} );
+
+	it( 'Should be able to get sparql endpoint', function () {
+		const result = browser.makeRequest( process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql' );
+		assert( result.status === 200 );
+	} );
+
+	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', function () {
+		const result = browser.makeRequest(
+			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/ldf',
+			{ validateStatus: false }
+		);
+		assert( result.status === 404 );
+	} );
+
+	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', function () {
+		const result = browser.makeRequest(
+			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/assets',
+			{ validateStatus: false }
+		);
+		assert( result.status === 404 );
+	} );
+
+	it( 'Should not be possible to reach blazegraph workbench', function () {
+		const result = browser.makeRequest(
+			process.env.WDQS_PROXY_SERVER + '/bigdata/#query',
+			{ validateStatus: false }
+		);
+		assert( result.status === 404 );
+	} );
+
+	it( 'Should shows up with property in queryservice ui after creation', function () {
 
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
@@ -67,7 +110,7 @@ describe( 'QueryService Item', function () {
 
 	} );
 
-	it( 'should not show up in queryservice ui after deletion', function () {
+	it( 'Should not show up in queryservice ui after deletion', function () {
 
 		// TODO make an item using the UI
 		const itemId = browser.call( () => WikibaseApi.createItem( Util.getTestString( 'T267743-' ) ) );

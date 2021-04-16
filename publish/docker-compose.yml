@@ -36,7 +36,9 @@ services:
       - QUERYSERVICE_BACKEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
       - QUERYSERVICE_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
       - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/quickstatements.docker.tar.gz
+      - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-proxy.docker.tar.gz
 
+      - WDQS_PROXY_IMAGE_NAME
       - QUERYSERVICE_IMAGE_NAME
       - QUERYSERVICE_UI_IMAGE_NAME
       - QUICKSTATEMENTS_IMAGE_NAME
