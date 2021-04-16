@@ -265,13 +265,13 @@ jobs:
 
       - name: Store latest docker image on GHCR
         if: github.ref == 'refs/heads/main'
-        uses: wmde/tag-push-ghcr-action@v1
+        uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: elasticsearch
           tag: latest
 
       - name: Store workflow id image on GHCR
-        uses: wmde/tag-push-ghcr-action@v1
+        uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: elasticsearch
           tag: ${{ github.run_id }}
