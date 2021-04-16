@@ -49,8 +49,6 @@ services:
       - PROXY_PASS_HOST=wdqs.svc:9999
     depends_on:
       - wdqs
-    ports:
-      - "8989:80"
     networks:
       default:
         aliases:
