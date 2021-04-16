@@ -373,13 +373,13 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
           tag: latest
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
   build_elasticsearch:
@@ -416,13 +416,13 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: elasticsearch
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           tag: latest
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: elasticsearch
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
   test_wikibase:
