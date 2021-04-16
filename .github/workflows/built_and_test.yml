@@ -256,19 +256,6 @@ jobs:
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Store docker image on GHCR
-        run: |
-             TAG=ghcr.io/${{ github.repository_owner }}/elasticsearch:${{ github.run_id }}
-             docker tag elasticsearch:latest $TAG
-             docker push $TAG
-
   test_wikibase:
     strategy:
       fail-fast: false
@@ -309,6 +296,19 @@ jobs:
           name: TestArtifacts
           path: |
             test/log
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store docker image on GHCR
+        run: |
+             TAG=ghcr.io/${{ github.repository_owner }}/elasticsearch:latest
+             docker tag elasticsearch:latest $TAG
+             docker push $TAG
 
   versions:
     needs:
