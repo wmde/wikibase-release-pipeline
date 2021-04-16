@@ -18,6 +18,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -39,18 +40,6 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/mediawiki.docker.tar.gz
-          
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Store docker image on GHCR
-        run: |
-             docker tag wbmediawiki:latest wbmediawiki:${{ github.run_id }}
-             docker push ghcr.io/${{ github.repository_owner }}/wbmediawiki :${{ github.run_id }}
         
   build_wikibase:
     runs-on: ubuntu-latest
@@ -248,6 +237,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -261,6 +255,18 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store docker image on GHCR
+        run: |
+             docker tag elasticsearch:latest elasticsearch:${{ github.run_id }}
+             docker push ghcr.io/${{ github.repository_owner }}/elasticsearch:${{ github.run_id }}
 
   test_wikibase:
     strategy:
