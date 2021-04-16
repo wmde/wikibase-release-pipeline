@@ -39,7 +39,19 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/mediawiki.docker.tar.gz
-
+          
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Store docker image on GHCR
+        run: |
+             docker tag ghcr.io/${{ github.repository_owner }}/"${{ env.MEDIAWIKI_IMAGE_NAME }}:latest" ${{ env.MEDIAWIKI_IMAGE_NAME }}":${{ github.run_id }}
+             docker push ghcr.io/${{ github.repository_owner }}/${{ env.MEDIAWIKI_IMAGE_NAME }} :${{ github.run_id }}
+        
   build_wikibase:
     runs-on: ubuntu-latest
     needs:
