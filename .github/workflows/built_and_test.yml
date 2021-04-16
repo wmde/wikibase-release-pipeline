@@ -49,8 +49,8 @@ jobs:
           
       - name: Store docker image on GHCR
         run: |
-             docker tag ghcr.io/${{ github.repository_owner }}/${{ env.MEDIAWIKI_IMAGE_NAME }}:latest ${{ env.MEDIAWIKI_IMAGE_NAME }}:${{ github.run_id }}
-             docker push ghcr.io/${{ github.repository_owner }}/${{ env.MEDIAWIKI_IMAGE_NAME }} :${{ github.run_id }}
+             docker tag mediawiki:latest mediawiki:${{ github.run_id }}
+             docker push ghcr.io/${{ github.repository_owner }}/mediawiki :${{ github.run_id }}
         
   build_wikibase:
     runs-on: ubuntu-latest
