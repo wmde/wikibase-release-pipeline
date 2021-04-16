@@ -18,6 +18,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -40,12 +45,37 @@ jobs:
           if-no-files-found: error
           path: artifacts/mediawiki.docker.tar.gz
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+        
   build_wikibase:
     runs-on: ubuntu-latest
     needs:
       - build_mediawiki
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -89,6 +119,26 @@ jobs:
           if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
       - name: Archive base docker production artifact
         uses: actions/upload-artifact@v2
         with:
@@ -103,6 +153,11 @@ jobs:
       - build_wikibase
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -132,6 +187,26 @@ jobs:
       - name: Build Bundle Docker Image
         run: bash build.sh wikibase_bundle ${{ env.env_file }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
       - name: Archive bundle docker production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -150,6 +225,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -157,6 +237,26 @@ jobs:
       - name: Build QuickStatements Image 
         id: download_step
         run: bash build.sh quickstatements ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -169,6 +269,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -184,6 +289,26 @@ jobs:
       - name: Build QueryService Image 
         id: download_step
         run: bash build.sh queryservice ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUERYSERVICE_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUERYSERVICE_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -214,6 +339,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -250,10 +380,35 @@ jobs:
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.docker.tar.gz
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
   build_elasticsearch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
@@ -267,6 +422,26 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store latest docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          tag: latest
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
 
   test_wikibase:
     strategy:
