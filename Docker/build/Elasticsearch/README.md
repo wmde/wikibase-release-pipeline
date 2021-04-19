@@ -1,4 +1,4 @@
-## wikibase elasticsearch image
+## Wikibase Elasticsearch image
 
 Wikibase needs the extra plugins for elasticsearch:
 
