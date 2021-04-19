@@ -17,6 +17,7 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
 
+      - WIKIBASE_CONCEPT_URI=http://wikibase-concept-uri.svc
       - WIKIBASE_SERVER=wikibase.svc:80
       - MW_SERVER=http://wikibase.svc
       - MW_CLIENT_SERVER=http://wikibase-client.svc

@@ -17,6 +17,7 @@ services:
       default:
         aliases:
          - wikibase.svc
+         - wikibase-concept-uri.svc
          # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
     environment:
       - DB_SERVER=mysql.svc:3306
@@ -72,6 +73,7 @@ services:
          - wdqs.svc
     environment:
       - WIKIBASE_HOST=wikibase.svc
+      - WIKIBASE_CONCEPT_URI=http://wikibase-concept-uri.svc
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
     expose:
@@ -99,7 +101,8 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=wikibase.svc
+     - WIKIBASE_CONCEPT_URI=http://wikibase-concept-uri.svc
+     - WIKIBASE_HOST=wikibase-concept-uri.svc
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
 
