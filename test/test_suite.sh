@@ -42,6 +42,7 @@ export WIKIBASE_TEST_IMAGE_NAME
 docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$QUERYSERVICE_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$QUERYSERVICE_UI_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
 
 ## build selenium test container
 docker-compose \

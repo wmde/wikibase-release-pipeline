@@ -11,8 +11,12 @@ const defaultFunctions = function () {
 	/**
 	 * Make a get request to get full request response
 	 */
-	browser.addCommand( 'makeRequest', function async( url ) {
-		return axios.get( url );
+	browser.addCommand( 'makeRequest', function async( url, params, postData ) {
+		if ( postData ) {
+			return axios.post( url, postData, params );
+		} else {
+			return axios.get( url, params );
+		}
 	} );
 
 	/**
