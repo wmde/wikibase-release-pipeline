@@ -52,12 +52,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -126,12 +126,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -194,12 +194,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -245,12 +245,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -297,12 +297,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.QUERYSERVICE_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -340,12 +340,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -412,12 +412,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -455,12 +455,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
