@@ -48,7 +48,10 @@ for arg in "$@"; do
 			fetch_all "skins/$skin.git"
 		done
 
-	elif [ "$arg" = "extensions" ]; then
+	elif [ "$arg" = "base" ]; then
+			clone_if_not_present "Wikibase.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase"
+			fetch_all "Wikibase.git"
+	elif [ "$arg" = "bundle" ]; then
 
 		# WikibaseLocalMedia
 		clone_if_not_present WikibaseLocalMedia.git https://github.com/ProfessionalWiki/WikibaseLocalMedia.git
