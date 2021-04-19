@@ -1,17 +1,17 @@
 #!/bin/bash
-# Build script for queryservice
+# Build script for WDQS
 # Downloads the service-dist.tar file from archiva and caches it 
 set -e
 
-TARBALL="service-$QUERYSERVICE_VERSION-dist.tar.gz"
+TARBALL="service-$WDQS_VERSION-dist.tar.gz"
 TARBALL_SIGNATURE="$TARBALL".md5
 
-MD5_SIGNATURE="$(wget -qO- "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$QUERYSERVICE_VERSION/$TARBALL_SIGNATURE")"
-CACHE_PATH="cache/queryservice/$QUERYSERVICE_VERSION"
+MD5_SIGNATURE="$(wget -qO- "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$TARBALL_SIGNATURE")"
+CACHE_PATH="cache/wdqs/$WDQS_VERSION"
 
 if [ ! -f "$CACHE_PATH/$TARBALL" ]; then
     mkdir -p "$CACHE_PATH"
-    wget "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$QUERYSERVICE_VERSION/$TARBALL" \
+    wget "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$TARBALL" \
         -O "$CACHE_PATH/$TARBALL"
 fi
 

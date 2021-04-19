@@ -165,7 +165,7 @@ jobs:
           if-no-files-found: error
           path: artifacts/quickstatements.docker.tar.gz
 
-  build_queryservice:
+  build_wdqs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -173,7 +173,7 @@ jobs:
         with:
           env-file: ${{ env.env_file }}
 
-      - name: Cache queryservice service tar
+      - name: Cache wdqs service tar
         uses: actions/cache@v2
         env:
           cache-name: cache-wdqs-backend-git-repo
@@ -181,9 +181,9 @@ jobs:
           path: cache
           key: cache-wdqs-backend-git-repo
 
-      - name: Build QueryService Image 
+      - name: Build WDQS Image 
         id: download_step
-        run: bash build.sh queryservice ${{ env.env_file }}
+        run: bash build.sh wdqs ${{ env.env_file }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -192,7 +192,7 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
-  build_queryservice_ui:
+  build_wdqs_frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -208,15 +208,15 @@ jobs:
           path: git_cache
           key: cache-wdqs-frontend-git-repo
 
-      - name: Build QueryService UI
-        run: bash build.sh queryservice-ui ${{ env.env_file }}
+      - name: Build WDQS-frontend
+        run: bash build.sh wdqs-frontend ${{ env.env_file }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
         with:
           name: BuildMetadata
           if-no-files-found: error
-          path: artifacts/build_metadata_wdqs_ui.env
+          path: artifacts/build_metadata_wdqs_frontend.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -258,9 +258,9 @@ jobs:
         databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
     needs:
       - build_wikibase_bundle
-      - build_queryservice
+      - build_wdqs
       - build_elasticsearch
-      - build_queryservice_ui
+      - build_wdqs_frontend
       - build_quickstatements
     runs-on: ubuntu-latest
     steps:
