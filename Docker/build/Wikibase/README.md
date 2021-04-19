@@ -1,4 +1,4 @@
-## wikibase docker image
+## Wikibase Docker image
 
 Wikibase running on Mediawiki.
 
@@ -30,5 +30,5 @@ Directory                         | Description
 
 File                              | Description
 --------------------------------- | ------------------------------------------------------------------------------
-`/LocalSettings.php.template`     | Template for Mediawiki Localsettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime)
+`/LocalSettings.php.template`     | Template for Mediawiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime)
 `/var/www/html/LocalSettings.php` | LocalSettings.php location, when passed in `/LocalSettings.php.template` will not be used. install.php & update.php will also not be run.

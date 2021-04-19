@@ -1,6 +1,6 @@
-## wdqs-frontend docker image
+## WDQS-Frontend Docker image
 
-Frontend for the wikibase query service, as seen @ [https://query.wikidata.org](https://query.wikidata.org) for Wikidata.
+Frontend for the Wikibase Query Service, as seen at [https://query.wikidata.org](https://query.wikidata.org) for Wikidata.
 
 ### Environment variables
 

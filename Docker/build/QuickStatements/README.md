@@ -6,10 +6,10 @@ Quickstatements2 as seen at  [https://github.com/magnusmanske/quickstatements](h
 
 Variable                             | Default      | Description                                            
 -------------------------------------|--------------|------------
-`WIKIBASE_SCHEME_AND_HOST`           | NONE         | Host and port of wikibase instance as seen by QS
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of wikibase as seen by the user's browser
-`QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of QS as seen by the user's browser      
-`OAUTH_CONSUMER_KEY`                 | NONE         | OAuth consumer key (obtained from wikibase)            
+`WIKIBASE_SCHEME_AND_HOST`           | NONE         | Host and port of Wikibase instance as seen by Quick Statements
+`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of Wikibase as seen by the user's browser
+`QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of Quick Statements as seen by the user's browser      
+`OAUTH_CONSUMER_KEY`                 | NONE         | OAuth consumer key (obtained from Wikibase)            
 `OAUTH_CONSUMER_SECRET`              | NONE         | OAuth consumer key (obtained from wikibase)            
 `PHP_TIMEZONE`                       | UTC          | setting of php.ini date.timezone
 `MW_SITE_LANG`                       | NONE         | Site language

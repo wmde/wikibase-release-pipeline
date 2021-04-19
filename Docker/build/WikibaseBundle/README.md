@@ -1,4 +1,4 @@
-## wikibase bundle docker image
+## Wikibase Bundle Docker image
 
 Wikibase running on Mediawiki bundled with other extensions.
 
@@ -34,7 +34,7 @@ Directory                             | Description
 
 File                                  | Description
 --------------------------------------|-------------------------------------------------------------------------------
-`/LocalSettings.php.template`         | Template for Mediawiki Localsettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime)
+`/LocalSettings.php.template`         | Template for Mediawiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime)
 `/var/www/html/LocalSettings.php`     | LocalSettings.php location, when passed in `/LocalSettings.php.template` will not be used. install.php & update.php will also not be run.
-`/extra-install/ElasticSearch.sh`     | Script for automatically creating elasticsearch indicies
-`/extra-install/QuickStatements.sh`   | Script for automatically creating Oauth consumer for quickstatements
+`/extra-install/ElasticSearch.sh`     | Script for automatically creating Elasticsearch indices
+`/extra-install/QuickStatements.sh`   | Script for automatically creating OAuth consumer for Quick Statements
