@@ -31,28 +31,20 @@ Variable                 | Default            | Since   | Description
 
 File                              | Description
 --------------------------------- | ------------------------------------------------------------------------------
-`/wdqs/whitelist.txt`             | Whitelist file for other SPARQL endpoints
+`/wdqs/whitelist.txt`             | SPARQL endpoints that are allowed for federation
 `/wdqs/RWStore.properties`        | Properties for the service
 `/templates/mwservices.json`      | Template for MediaWiki services (substituted to `/wdqs/mwservices.json` at runtime)
 
 ### Troubleshooting
 
-* The Query Service is not running or seems to get killed by the OS?
-* The image requires more than 2GB of available RAM to start. While being developed the dev machine had 4GB of RAM.
+The image requires more than 2GB of available RAM to start.
 
 ### Development
 
-New versions of this image should be created alongside new versions of WDQS that are used in production for Wikidata.
-
 New releases that are available for images to be created can be found on Archiva: https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/
 
-When creating a new image RWStore.properties will need to be updated to match the properties used in Wikidata production at the time the snapshot was being used.
+When creating a new image RWStore.properties might need to be updated to match the properties used in Wikidata production.
 
-For this reason it is easier to only create new releases for WDQS versions currently being used in Wikidata production.
+For this reason it is easier to create new releases for WDQS versions that have been tested in Wikidata production.
 
-When creating a new release the WMF Search platform team should be contacted for help syncing the wdqs version and RWStore.properties file.
-
-The process is generally:
- - Create a new directory using a previous one as an example
- - Update the service snapshot that is being fetched
- - Update the CI build by checking the steps in the main README Development section in this repo.
+When creating a new release the WMF Search platform team can be contacted for help syncing the wdqs version and RWStore.properties file.
