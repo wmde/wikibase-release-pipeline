@@ -26,11 +26,11 @@ mediawiki:
 	eval ". ./build/build_mediawiki.sh; bash build/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"
 
 wikibase:
-	bash update_cache.sh extensions
+	bash update_cache.sh base
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
 
 wikibase_bundle:
-	bash update_cache.sh extensions
+	bash update_cache.sh bundle
 	bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}
 
 quickstatements:
