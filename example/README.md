@@ -13,7 +13,7 @@ Copy the `template.env` to `.env` and replace the passwords and secrets with you
 
 ## Running a Wikibase instance
 
-To run a single Wikibase instance one port 80 run the command:
+To run a single Wikibase instance on port 80 run the command:
 
 ```
 docker-compose up
