@@ -52,12 +52,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -126,12 +126,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -194,12 +194,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -245,12 +245,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -265,7 +265,7 @@ jobs:
           if-no-files-found: error
           path: artifacts/quickstatements.docker.tar.gz
 
-  build_queryservice:
+  build_wdqs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -278,7 +278,7 @@ jobs:
         with:
           env-file: ${{ env.env_file }}
 
-      - name: Cache queryservice service tar
+      - name: Cache wdqs service tar
         uses: actions/cache@v2
         env:
           cache-name: cache-wdqs-backend-git-repo
@@ -286,9 +286,9 @@ jobs:
           path: cache
           key: cache-wdqs-backend-git-repo
 
-      - name: Build QueryService Image 
+      - name: Build WDQS Image 
         id: download_step
-        run: bash build.sh queryservice ${{ env.env_file }}
+        run: bash build.sh wdqs ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -297,17 +297,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.QUERYSERVICE_IMAGE_NAME }}
-          tag: latest
+          image_name: ${{ env.WDQS_IMAGE_NAME }}
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.QUERYSERVICE_IMAGE_NAME }}
+          image_name: ${{ env.WDQS_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
@@ -321,12 +321,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ${{ env.env_file }}
 
       - name: Build WDQS-proxy image 
         run: bash build.sh wdqs-proxy ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
+
+      - name: Store workflow id image on GHCR
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -335,7 +360,7 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs-proxy.docker.tar.gz
 
-  build_queryservice_ui:
+  build_wdqs_frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -356,15 +381,15 @@ jobs:
           path: git_cache
           key: cache-wdqs-frontend-git-repo
 
-      - name: Build QueryService UI
-        run: bash build.sh queryservice-ui ${{ env.env_file }}
+      - name: Build WDQS-frontend
+        run: bash build.sh wdqs-frontend ${{ env.env_file }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
         with:
           name: BuildMetadata
           if-no-files-found: error
-          path: artifacts/build_metadata_wdqs_ui.env
+          path: artifacts/build_metadata_wdqs_frontend.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
@@ -387,17 +412,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
-          tag: latest
-
+          image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: ${{ env.QUERYSERVICE_UI_IMAGE_NAME }}
+          image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
   build_elasticsearch:
@@ -430,12 +454,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store latest docker image on GHCR
+      - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
-          tag: latest
+          tag: ${{ env.WMDE_RELEASE_VERSION }}
 
       - name: Store workflow id image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
@@ -464,9 +488,9 @@ jobs:
         ]
     needs:
       - build_wikibase_bundle
-      - build_queryservice
+      - build_wdqs
       - build_elasticsearch
-      - build_queryservice_ui
+      - build_wdqs_frontend
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
