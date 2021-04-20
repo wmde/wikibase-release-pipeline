@@ -1,0 +1,100 @@
+# Wikibase for testing
+version: '3'
+
+services:
+  elasticsearch:
+    image: "${ELASTICSEARCH_IMAGE_NAME}"
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+         - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+  wdqs-frontend:
+    image: "${WDQS_FRONTEND_IMAGE_NAME}"
+    restart: unless-stopped
+    ports:
+     - "${WDQS_FRONTEND_PORT}:80"
+    depends_on:
+      - wdqs-proxy
+    networks:
+      default:
+        aliases:
+         - wdqs-frontend.svc
+    environment:
+      - WIKIBASE_HOST=${WIKIBASE_HOST}
+      - WDQS_HOST=wdqs-proxy.svc
+  wdqs:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runBlazegraph.sh
+    volumes:
+      - query-service-data:/wdqs/data
+    networks:
+      default:
+        aliases:
+         - wdqs.svc
+    environment:
+      - WIKIBASE_HOST=${WIKIBASE_HOST}
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
+    expose:
+      - 9999
+  wdqs-proxy:
+    image: "${WDQS_PROXY_IMAGE_NAME}"
+    restart: unless-stopped
+    environment:
+      - PROXY_PASS_HOST=wdqs.svc:9999
+    depends_on:
+      - wdqs
+    networks:
+      default:
+        aliases:
+         - wdqs-proxy.svc
+  wdqs-updater:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runUpdate.sh
+    depends_on:
+    - wdqs
+    - wikibase
+    networks:
+      default:
+        aliases:
+         - wdqs-updater.svc
+    environment:
+     - WIKIBASE_HOST=wikibase.svc
+     - WDQS_HOST=wdqs.svc
+     - WDQS_PORT=9999
+  quickstatements:
+    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    ports:
+      - "${QUICKSTATEMENTS_PORT}:80"
+    depends_on:
+      - wikibase
+    networks:
+      default:
+        aliases:
+         - ${QUICKSTATEMENTS_HOST}
+    environment:
+      - QUICKSTATEMENTS_HOST
+      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
+      - WB_PROPERTY_NAMESPACE=122
+      - "WB_PROPERTY_PREFIX=Property:"
+      - WB_ITEM_NAMESPACE=120
+      - "WB_ITEM_PREFIX=Item:"
+      - OAUTH_CONSUMER_KEY=${OAUTH_CONSUMER_KEY}
+      - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
+
+volumes:
+  LocalSettings:
+  query-service-data:
+  quickstatements-data:
+  mediawiki-mysql-data:

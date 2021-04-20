@@ -2,19 +2,19 @@
 set -ex
 
 ROOT="$(pwd)"
-WDQS_UI_GIT_DIR="$(mktemp -d)"
+WDQS_FRONTEND_GIT_DIR="$(mktemp -d)"
 TARBALL_PATH="$ROOT"/artifacts/wdqs-frontend.tar.gz
 
 UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
-    "$QUERYSERVICE_UI_COMMIT_HASH" \
+    "$WDQS_FRONTEND_COMMIT_HASH" \
     "$ROOT/git_cache/services/wikidata-query-gui.git" \
-    WDQS_UI \
-    "$WDQS_UI_GIT_DIR" \
+    WDQS_FRONTEND \
+    "$WDQS_FRONTEND_GIT_DIR" \
     master
 
-bash "$ROOT"/build/clean_repo.sh "$WDQS_UI_GIT_DIR"
+bash "$ROOT"/build/clean_repo.sh "$WDQS_FRONTEND_GIT_DIR"
 
-cd "$WDQS_UI_GIT_DIR"
+cd "$WDQS_FRONTEND_GIT_DIR"
 GZIP=-9 tar -zcvf "$TARBALL_PATH" -- *
 
 cd "$ROOT"

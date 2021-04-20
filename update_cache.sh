@@ -62,7 +62,7 @@ for arg in "$@"; do
 			fetch_all "$extension.git"
 		done
 	elif [ "$arg" = "services" ]; then
-		# queryservice
+		# wdqs-frontend
 		clone_if_not_present "services/wikidata-query-gui.git" "https://gerrit.wikimedia.org/r/wikidata/query/gui"
 		fetch_all "services/wikidata-query-gui.git"
 		

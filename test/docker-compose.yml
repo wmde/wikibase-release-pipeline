@@ -48,7 +48,7 @@ services:
     volumes: 
     - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
   wdqs-frontend:
-    image: "${QUERYSERVICE_UI_IMAGE_NAME}:latest"
+    image: "${WDQS_FRONTEND_IMAGE_NAME}:latest"
     restart: unless-stopped
     ports:
     # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
@@ -63,7 +63,7 @@ services:
       - WIKIBASE_HOST=wikibase.svc
       - WDQS_HOST=wdqs-proxy.svc
   wdqs:
-    image: "${QUERYSERVICE_IMAGE_NAME}:latest"
+    image: "${WDQS_IMAGE_NAME}:latest"
     restart: always
     command: /runBlazegraph.sh
     networks:
@@ -90,7 +90,7 @@ services:
         aliases:
          - wdqs-proxy.svc
   wdqs-updater:
-    image: "${QUERYSERVICE_IMAGE_NAME}:latest"
+    image: "${WDQS_IMAGE_NAME}:latest"
     restart: unless-stopped
     command: /runUpdate.sh
     depends_on:

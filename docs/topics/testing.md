@@ -28,8 +28,8 @@ make test SUITE=repo FILTER=babel*
 ```
 # for testing locally
 export MW_SERVER=http://localhost:8585
-export QUERYSERVICE_UI_SERVER=localhost:8081
-export QUERYSERVICE_SERVER=localhost:8989
+export WDQS_FRONTEND_SERVER=localhost:8081
+export WDQS_SERVER=localhost:8989
 ```
 
 For more information on selenium testing see the [README](../../Docker/test/selenium/README.md) file in the selenium folder.
