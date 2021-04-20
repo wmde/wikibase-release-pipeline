@@ -17,7 +17,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ repo, fedprops, repo-client, quickstatements, pingback, confirm-edit, elasticsearch ]
+        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        suite: [
+          repo,
+          fedprops,
+          repo_client,
+          quickstatements,
+          pingback,
+          confirm_edit,
+          elasticsearch,
+
+          base__repo,
+          base__repo_client,
+          base__pingback,
+          base__fedprops,
+        ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,6 +48,8 @@ jobs:
           sudo cp artifacts/${{ github.event.inputs.workflow_run_number }}/BuildArtifacts/* artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
+        env:
+          DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
         run: make test SUITE=${{ matrix.suite }}
 
       - name: Report

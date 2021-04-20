@@ -28,7 +28,8 @@
 		"ie 11"
 	],
 	"scripts": {
-		"test:run": "wdio wdio.conf.js --spec specs/$SUITE/$FILTER",
+		"test:run": "wdio wdio.conf.js --suite $SUITE",
+		"test:run-filter": "wdio wdio.conf.js --spec $FILTER",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
 	},

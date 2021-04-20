@@ -10,13 +10,20 @@ test:
 	bash test/test_suite.sh ${SUITE}
 
 test-all:
+	# bundle tests
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops
-	bash test/test_suite.sh repo-client
+	bash test/test_suite.sh repo_client
 	bash test/test_suite.sh quickstatements
 	bash test/test_suite.sh pingback
-	bash test/test_suite.sh confirm-edit
+	bash test/test_suite.sh confirm_edit
 	bash test/test_suite.sh elasticsearch
+
+	# base tests
+	bash test/test_suite.sh base__repo
+	bash test/test_suite.sh base__repo_client
+	bash test/test_suite.sh base__fedprops
+	bash test/test_suite.sh base__pingback
 
 requirements:
 	python3 build/requirements/build_version_requirements.py
