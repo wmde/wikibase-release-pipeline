@@ -7,11 +7,16 @@ Wikibase specific Blazegraph image.
 When upgrading between WDQS versions the data stored in `/wdqs/data` may not be compatible with the newer version.
 When testing the new image if no data appears to be loaded into the Query Service you will need to reload the data.
 
-If all changes are still in RecentChanges then simply removing `/wdqs/data` and restarting the service should reload all data.
+If all changes are still in [RecentChanges] then simply removing `/wdqs/data` and restarting the service should reload all data.
 
-If you can not use RecentChanges then you will need to reload from an RDF dump:
- - Make an RDF dump from your Wikibase instance: https://github.com/wikimedia/mediawiki-extensions-Wikibase/blob/master/repo/maintenance/dumpRdf.php
- - Load an RDF dump into the query service: https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump
+[RecentChanges] are however periodically purged with anything older determined by the mediawiki configuration [\$wgRCMaxAge](https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge).
+
+If you can not use [RecentChanges] then you will need to reload from an RDF dump:
+
+ - Make an RDF dump from your Wikibase repository using the [dumpRdf.php](https://github.com/wikimedia/mediawiki-extensions-Wikibase/blob/master/repo/maintenance/dumpRdf.php) maintenance script.
+
+
+ - [Load the RDF dump into the query service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
 
 ### Environment variables
 
@@ -48,3 +53,5 @@ When creating a new image RWStore.properties might need to be updated to match t
 For this reason it is easier to create new releases for WDQS versions that have been tested in Wikidata production.
 
 When creating a new release the WMF Search platform team can be contacted for help syncing the wdqs version and RWStore.properties file.
+
+[RecentChanges]: https://www.mediawiki.org/wiki/API:RecentChanges
