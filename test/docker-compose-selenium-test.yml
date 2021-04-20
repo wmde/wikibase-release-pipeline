@@ -24,6 +24,7 @@ services:
       - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
       - WDQS_SERVER=wdqs.svc:9999
       - PINGBACK_BEACON_SERVER=http://mediawiki.svc
+      - WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
       
       - MW_ADMIN_NAME=WikibaseAdmin
       - MW_ADMIN_PASS=WikibaseDockerAdminPass

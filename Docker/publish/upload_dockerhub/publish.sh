@@ -7,9 +7,11 @@ if [ -z "$WDQS_DOCKER_PATH" ] || \
 [ -z "$WIKIBASE_BUNDLE_DOCKER_PATH" ] || \
 [ -z "$ELASTICSEARCH_DOCKER_PATH" ] || \
 [ -z "$QUICKSTATEMENTS_DOCKER_PATH" ] || \
+[ -z "$WDQS_PROXY_DOCKER_PATH" ] || \
 \
 [ -z "$WDQS_FRONTEND_IMAGE_NAME" ] || \
 [ -z "$WDQS_IMAGE_NAME" ] || \
+[ -z "$WDQS_PROXY_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_BUNDLE_IMAGE_NAME" ] || \
 [ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
@@ -61,6 +63,10 @@ docker load -i "$WDQS_DOCKER_PATH"
 docker load -i "$WDQS_FRONTEND_DOCKER_PATH"
 docker load -i "$ELASTICSEARCH_DOCKER_PATH"
 docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
+docker load -i "$WDQS_PROXY_DOCKER_PATH"
+
+# Tag Queryservice Proxy with version
+tag_and_push "$WDQS_PROXY_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
 
 # Tag WDQS-frontend with version
 tag_and_push "$WDQS_FRONTEND_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
@@ -74,7 +80,7 @@ tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 # Tag Wikibase-bundle with version
 tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
-# Tag Wikibase-bundle with version
+# Tag Elasticsearch with version
 tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Quickstatements with version

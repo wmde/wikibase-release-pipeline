@@ -36,9 +36,11 @@ services:
       - WDQS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
       - WDQS_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
       - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/quickstatements.docker.tar.gz
+      - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-proxy.docker.tar.gz
 
       - WDQS_IMAGE_NAME
       - WDQS_FRONTEND_IMAGE_NAME
+      - WDQS_PROXY_IMAGE_NAME
       - QUICKSTATEMENTS_IMAGE_NAME
       - WIKIBASE_IMAGE_NAME
       - WIKIBASE_BUNDLE_IMAGE_NAME

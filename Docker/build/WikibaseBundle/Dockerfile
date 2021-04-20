@@ -23,15 +23,4 @@ COPY artifacts/oauth.ini /templates/oauth.ini
 RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
 
 # copy extension settings
-COPY LocalSettings.WikibaseLocalMedia.php /var/www/html/LocalSettings.d/WikibaseLocalMedia.php
-COPY LocalSettings.Babel.php /var/www/html/LocalSettings.d/Babel.php
-COPY LocalSettings.WikibaseManifest.php /var/www/html/LocalSettings.d/WikibaseManifest.php
-COPY LocalSettings.OAuth.php /var/www/html/LocalSettings.d/OAuth.php
-COPY LocalSettings.UniversalLanguageSelector.php /var/www/html/LocalSettings.d/UniversalLanguageSelector.php
-COPY LocalSettings.EntitySchema.php /var/www/html/LocalSettings.d/EntitySchema.php
-COPY LocalSettings.Scribunto.php /var/www/html/LocalSettings.d/Scribunto.php
-COPY LocalSettings.VisualEditor.php /var/www/html/LocalSettings.d/VisualEditor.php
-COPY LocalSettings.cldr.php /var/www/html/LocalSettings.d/cldr.php
-COPY LocalSettings.ConfirmEdit.php /var/www/html/LocalSettings.d/ConfirmEdit.php
-COPY LocalSettings.Nuke.php /var/www/html/LocalSettings.d/Nuke.php
-COPY LocalSettings.Elasticsearch.php /var/www/html/LocalSettings.d/ElasticSearch.php
+COPY LocalSettings.d /var/www/html/LocalSettings.d
