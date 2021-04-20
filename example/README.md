@@ -2,8 +2,8 @@
 
 The example docker-compose configuration consists of two files
 
-* `docker-compose.yml` contains two services wikibase and mysql
-* `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements 
+* `docker-compose.yml` contains two services: wikibase and mysql
+* `docker-compose.extra.yml` contains additional services such as: wdqs, wdqs-frontend, elasticsearch and quickstatements 
 
 **We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
 
@@ -13,7 +13,7 @@ Copy the `template.env` to `.env` and replace the passwords and secrets with you
 
 ## Running a Wikibase instance
 
-To run a single Wikibase instance run and you should be able to reach it on port 80.
+To run a single Wikibase instance one port 80 run the command:
 
 ```
 docker-compose up
@@ -31,7 +31,7 @@ The wikibase bundle comes with some additional services that can be enabled.
 
 ### 1. Uncomment the extra-install scripts in `docker-compose.yml` 
 
-In the volumes section of the wikibase service there is one commented line that allow the additional services to start automatically.
+In the volumes section of the wikibase service there is one commented line that automatically sets up the extensions needed for the additional services.
 
 ```
 - ./extra-install.sh:/extra-install.sh
