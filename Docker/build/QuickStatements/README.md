@@ -4,20 +4,20 @@ Quickstatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 ### Environment variables
 
-Variable                             | Default      | Description                                            
--------------------------------------|--------------|------------
-`WIKIBASE_SCHEME_AND_HOST`           | NONE         | Host and port of Wikibase instance as seen by Quick Statements
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of Wikibase as seen by the user's browser
-`QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE         | Host and port of Quick Statements as seen by the user's browser      
-`OAUTH_CONSUMER_KEY`                 | NONE         | OAuth consumer key (obtained from Wikibase)            
-`OAUTH_CONSUMER_SECRET`              | NONE         | OAuth consumer secret (obtained from wikibase)
-`PHP_TIMEZONE`                       | UTC          | setting of php.ini date.timezone
-`MW_SITE_LANG`                       | NONE         | Site language
-`MW_SITE_NAME`                       | NONE         | Site name
-`WB_PROPERTY_NAMESPACE`              | NONE         | Wikibase Property namespace
-`WB_ITEM_NAMESPACE`                  | NONE         | Wikibase Item namespace
-`WB_PROPERTY_PREFIX`                 | NONE         | Wikibase Property prefix
-`WB_ITEM_PREFIX`                     | NONE         | Wikibase Item prefix
+Variable                             | Default                  | Description
+-------------------------------------|--------------------------|------------
+`WIKIBASE_SCHEME_AND_HOST`           | NONE                     | Host and port of Wikibase instance as seen by Quick Statements
+`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE                     | Host and port of Wikibase as seen by the user's browser
+`QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE                     | Host and port of Quick Statements as seen by the user's browser
+`OAUTH_CONSUMER_KEY`                 | NONE                     | OAuth consumer key (obtained from Wikibase)
+`OAUTH_CONSUMER_SECRET`              | NONE                     | OAuth consumer secret (obtained from wikibase)
+`PHP_TIMEZONE`                       | UTC                      | setting of php.ini date.timezone
+`MW_SITE_LANG`                       | "en"                     | Site language
+`MW_SITE_NAME`                       | "wikibase-docker"        | Site name
+`WB_PROPERTY_NAMESPACE`              | NONE                     | Wikibase Property namespace
+`WB_ITEM_NAMESPACE`                  | NONE                     | Wikibase Item namespace
+`WB_PROPERTY_PREFIX`                 | NONE                     | Wikibase Property prefix
+`WB_ITEM_PREFIX`                     | NONE                     | Wikibase Item prefix
 
 ### Filesystem layout
 
@@ -48,7 +48,7 @@ One must also know how this container will be visible to the user as well so it 
 user back here. This should be passed as `QS_PUBLIC_SCHEME_HOST_AND_PORT`.
 
 You can pass the consumer and secret token you got from the wikibase to this container as the environment variables
- `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handles this.
+ `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handle this.
 
 You can now test that it works by navigating to `QS_PUBLIC_SCHEME_HOST_AND_PORT` and logging in.
 
