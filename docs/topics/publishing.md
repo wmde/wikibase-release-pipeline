@@ -99,7 +99,7 @@ Use the following tag on Wikibase
 git tag --force -a "wmde.0" "d9422cf7fe2c19d2096a158a68b1fa2d69e84406" -m "Tagging: wmde.0 Build: 581263144"
 
 
-Use the following tag on Queryservice UI
+Use the following tag on WDQS frontend
 git tag --force -a "wmde.0" "e84ab35125557ff073f42ba522a684d35c288b38" -m "Tagging: wmde.0 Build: 581263144"
 
 ...

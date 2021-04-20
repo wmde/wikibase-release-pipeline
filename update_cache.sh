@@ -48,7 +48,10 @@ for arg in "$@"; do
 			fetch_all "skins/$skin.git"
 		done
 
-	elif [ "$arg" = "extensions" ]; then
+	elif [ "$arg" = "base" ]; then
+			clone_if_not_present "Wikibase.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase"
+			fetch_all "Wikibase.git"
+	elif [ "$arg" = "bundle" ]; then
 
 		# WikibaseLocalMedia
 		clone_if_not_present WikibaseLocalMedia.git https://github.com/ProfessionalWiki/WikibaseLocalMedia.git
@@ -59,7 +62,7 @@ for arg in "$@"; do
 			fetch_all "$extension.git"
 		done
 	elif [ "$arg" = "services" ]; then
-		# queryservice
+		# wdqs-frontend
 		clone_if_not_present "services/wikidata-query-gui.git" "https://gerrit.wikimedia.org/r/wikidata/query/gui"
 		fetch_all "services/wikidata-query-gui.git"
 		

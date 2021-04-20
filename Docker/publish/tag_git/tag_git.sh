@@ -33,8 +33,8 @@ function echo_tag {
 # tag and push Wikibase
 echo_tag "$METADATA_WIKIBASE_COMMIT_HASH" "Wikibase"
 
-# tag and push queryservice ui
-echo_tag "$METADATA_WDQS_UI_COMMIT_HASH" "Queryservice UI"
+# tag and push wdqs-frontend
+echo_tag "$METADATA_WDQS_UI_COMMIT_HASH" "WDQS frontend"
 
 # tag and push WikibaseManifest
 echo_tag "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" "Wikibase Manifest"

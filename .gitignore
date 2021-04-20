@@ -9,7 +9,7 @@ Wikibase.tar.gz
 
 Docker/build/Wikibase/artifacts
 
-Docker/build/QueryService/wait-for-it.sh
+Docker/build/WDQS/wait-for-it.sh
 
 #temp 
 Docker/**/*.tar.gz
