@@ -86,19 +86,26 @@ exports.config = {
 
 		// base-specs
 		base__repo: [
+			'./specs/repo/api.js',
 			'./specs/repo/property.js',
+			'./specs/repo/special-item.js',
 			'./specs/repo/special-property.js',
 			'./specs/repo/queryservice.js'
 		],
 		base__repo_client: [
 			'./specs/repo_client/interwiki-links.js',
-			'./specs/repo_client/item.js'
+			'./specs/repo_client/item.js',
+			'./specs/repo/api.js'
 		],
 		base__fedprops: [
 			'./specs/fedprops/*.js'
 		],
 		base__pingback: [
 			'./specs/pingback/*.js'
+		],
+
+		upgrade: [
+			'./specs/repo/api.js'
 		]
 
 	},

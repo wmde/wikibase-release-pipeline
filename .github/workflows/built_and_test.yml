@@ -483,6 +483,40 @@ jobs:
           path: |
             test/log
 
+  test_upgrade:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [
+          '1.32-base',
+          '1.33-base',
+          '1.35-base',
+          'latest-base',
+          'lts-base',
+          'wmde.0'
+        ]
+    needs:
+      - build_wikibase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Wikibase docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: artifacts/
+
+      - name: Test upgrade version - ${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }}
+
+      - name: Archive docker test artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: TestUpgradeArtifacts
+          path: |
+            test/log
+
   versions:
     needs:
       - test_wikibase

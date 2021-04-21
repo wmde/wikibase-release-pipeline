@@ -3,12 +3,12 @@ version: '3'
 
 services:
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}:latest"
+    image: "${WIKIBASE_TEST_IMAGE_NAME}"
     links:
       - mysql
     depends_on:
       - mysql
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
     ports:
@@ -34,7 +34,7 @@ services:
       - MW_WG_ENABLE_UPLOADS=true
   mysql:
     image: ${DATABASE_IMAGE_NAME}
-    restart: always
+    restart: unless-stopped
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: 'my_wiki'
@@ -48,7 +48,7 @@ services:
     volumes: 
     - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
   wdqs-frontend:
-    image: "${WDQS_FRONTEND_IMAGE_NAME}:latest"
+    image: "${WDQS_FRONTEND_IMAGE_NAME}"
     restart: unless-stopped
     ports:
     # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
@@ -63,7 +63,7 @@ services:
       - WIKIBASE_HOST=wikibase.svc
       - WDQS_HOST=wdqs-proxy.svc
   wdqs:
-    image: "${WDQS_IMAGE_NAME}:latest"
+    image: "${WDQS_IMAGE_NAME}"
     restart: always
     command: /runBlazegraph.sh
     networks:
@@ -77,7 +77,7 @@ services:
     expose:
       - 9999
   wdqs-proxy:
-    image: "${WDQS_PROXY_IMAGE_NAME}:latest"
+    image: "${WDQS_PROXY_IMAGE_NAME}"
     restart: unless-stopped
     environment:
       - PROXY_PASS_HOST=wdqs.svc:9999
@@ -90,7 +90,7 @@ services:
         aliases:
          - wdqs-proxy.svc
   wdqs-updater:
-    image: "${WDQS_IMAGE_NAME}:latest"
+    image: "${WDQS_IMAGE_NAME}"
     restart: unless-stopped
     command: /runUpdate.sh
     depends_on:
