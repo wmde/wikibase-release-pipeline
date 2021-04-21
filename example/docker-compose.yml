@@ -31,9 +31,9 @@ services:
       - MW_ADMIN_PASS=${MW_ADMIN_PASS}
       - MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL}
       - MW_WG_SECRET_KEY=${MW_SECRET_KEY}
-      - DB_USER=${MYSQL_USER}
-      - DB_PASS=${MYSQL_PASSWORD}
-      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
       - MW_ELASTIC_HOST=elasticsearch.svc
       - MW_ELASTIC_PORT=9200
       - WIKIBASE_HOST
@@ -46,9 +46,9 @@ services:
       - mediawiki-mysql-data:/var/lib/mysql
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     networks:
       default:
