@@ -13,8 +13,8 @@ COPY --from=fetcher /wikidata-query-gui /tmp/wikidata-query-gui
 
 WORKDIR /tmp/wikidata-query-gui
 
-# Put wdqs gui in the right place
-RUN apk --no-cache add --virtual build-dependencies ca-certificates~=20191127-r2 git~=2.24 nodejs~=12 npm~=12 jq~=1.6 python~=2.7 make~=4.2 g++~=9.3
+# install dependencies
+RUN apk update && apk --no-cache add --virtual build-dependencies ca-certificates git~=2.30 nodejs~=14 npm~=14 jq~=1.6 make~=4.3 g++~=10.2
 
 # TODO do npm build instead of leaving any dev node modules hanging around
 RUN mv package.json package.json.orig \
