@@ -14,7 +14,7 @@ COPY --from=fetcher /wikidata-query-gui /tmp/wikidata-query-gui
 WORKDIR /tmp/wikidata-query-gui
 
 # install dependencies
-RUN apk update && apk --no-cache add --virtual build-dependencies ca-certificates git~=2.30 nodejs~=14 npm~=14 jq~=1.6 make~=4.3 g++~=10.2
+RUN apk --no-cache add --virtual build-dependencies ca-certificates git~=2.30 nodejs~=14 npm~=14 jq~=1.6 make~=4.3 g++~=10.2
 
 # TODO do npm build instead of leaving any dev node modules hanging around
 RUN mv package.json package.json.orig \
