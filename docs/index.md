@@ -5,5 +5,5 @@
 - [Testing](topics/testing.md)
 - [Publishing](topics/publishing.md)
 - [Caching](topics/caching.md)
-- [Extension documentation](adr/extension.md)
+- [Extension documentation](topics/extensions.md)
 - [Architecture Decision Records](adr/index.md)
