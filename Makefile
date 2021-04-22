@@ -9,6 +9,14 @@ export
 test:
 	bash test/test_suite.sh ${SUITE}
 
+.PHONY: test-upgrade
+test-upgrade:
+	bash test/test_upgrade.sh ${VERSION}
+
+.PHONY: test-stop
+test-stop:
+	cd test && bash test_stop.sh
+
 test-all:
 	# bundle tests
 	bash test/test_suite.sh repo

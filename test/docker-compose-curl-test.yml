@@ -11,3 +11,4 @@ services:
       - WIKIBASE_SERVER=wikibase.svc:80
       - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
       - WDQS_SERVER=wdqs.svc:9999
+      - SKIP_WDQS

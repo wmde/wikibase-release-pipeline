@@ -8,8 +8,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - wikibase
-      - wdqs-frontend
-      - wdqs
     volumes:
       - ./log/selenium/:/usr/src/app/log/
       - /var/run/docker.sock:/var/run/docker.sock

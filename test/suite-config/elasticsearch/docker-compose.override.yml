@@ -23,7 +23,7 @@ services:
       - ./suite-config/elasticsearch/wikibase/extra-install.sh:/extra-install.sh
 
   elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}:latest"
+    image: "${ELASTICSEARCH_IMAGE_NAME}"
     restart: unless-stopped
     networks:
       default:

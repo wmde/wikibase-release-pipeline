@@ -20,7 +20,7 @@ services:
       - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
 
   quickstatements:
-    image: "${QUICKSTATEMENTS_IMAGE_NAME}:latest"
+    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
     restart: always
     volumes:
       - quickstatements-data:/quickstatements/data

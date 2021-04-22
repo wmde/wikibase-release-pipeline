@@ -1,0 +1,12 @@
+# Wikibase for testing
+version: '3'
+
+services:
+  wikibase:
+    volumes:
+      - ${TMP_LOCALSETTINGS}:/var/www/html/LocalSettings.php
+
+volumes:
+  LocalSettings:
+  mediawiki-mysql-data:
+  quickstatements-data:
