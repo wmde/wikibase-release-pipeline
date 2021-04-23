@@ -67,7 +67,7 @@ for arg in "$@"; do
 		fetch_all "services/wikidata-query-gui.git"
 		
 		# quickstatements
-		clone_if_not_present "services/quickstatements.git" https://github.com/frog23/quickstatements #https://github.com/magnusmanske/quickstatements
+		clone_if_not_present "services/quickstatements.git" https://github.com/magnusmanske/quickstatements
 		fetch_all "services/quickstatements.git"
 
 		# magnus tools
