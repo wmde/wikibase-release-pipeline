@@ -145,7 +145,7 @@ const defaultFunctions = function () {
 	} );
 
 	/**
-	 * Moves browser to recent changes then asserts that a change is in the api result
+	 * Makes a request to a page and returns the lua cpu profiling data
 	 */
 	browser.addCommand( 'getLuaCpuTime', function async( host, page ) {
 		const response = browser.makeRequest( host + '/wiki/' + page );
@@ -155,6 +155,31 @@ const defaultFunctions = function () {
 		const cpuTimeScale = cpuMatches[ 3 ];
 
 		return { value: cpuTime, scale: cpuTimeScale };
+	} );
+
+	/**
+	 * Execute quickstatements query
+	 */
+	browser.addCommand( 'executeQuickStatement', function async( theQuery ) {
+
+		browser.url( process.env.QS_SERVER + '/#/batch' );
+
+		// create a batch
+		$( '.create_batch_box textarea' ).waitForDisplayed();
+		$( '.create_batch_box textarea' ).setValue( theQuery );
+
+		browser.pause( 1000 );
+
+		// click import
+		$( "button[tt='dialog_import_v1']" ).click();
+
+		browser.pause( 1000 );
+
+		// click run
+		$( "button[tt='run']" ).waitForDisplayed();
+		$( "button[tt='run']" ).click();
+
+		browser.pause( 10 * 1000 );
 	} );
 
 };
