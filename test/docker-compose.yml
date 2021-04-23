@@ -29,8 +29,6 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
-      - MW_ELASTIC_HOST=elasticsearch.svc
-      - MW_ELASTIC_PORT=9200
       - MW_WG_ENABLE_UPLOADS=true
   mysql:
     image: ${DATABASE_IMAGE_NAME}

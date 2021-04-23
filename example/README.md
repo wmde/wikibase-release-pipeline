@@ -39,7 +39,15 @@ In the volumes section of the wikibase service there is one commented line that 
 
 Looking inside extra-install.sh it executes two scripts that sets up an OAuth consumer for quickstatements and creates indicies for elasticsearch.
 
-### 2. Run with the extra configuration
+### 2. Uncomment MW_ELASTIC_HOST and MW_ELASTIC_PORT in `docker-compose.yml`
+
+To configure wikibase to use elasticsearch we need to uncomment the following two lines in the example docker-compose.yml file
+```
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
+``` 
+
+### 3. Run with the extra configuration
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose.extra.yml up
