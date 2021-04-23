@@ -1,9 +1,8 @@
 # Upgrading wikibase docker images
 
-## Backup your database
+## Back up your database
 
-
-In all of our images we are relying a database to persist data. Normally these are stored in docker volumes and can be seen in the mysql container in the docker example as `mediawiki-mysql-data`.
+In all of our images we rely on a database to persist data. Normally these are stored in Docker volumes and can be seen in the mysql container in the Docker example as `mediawiki-mysql-data`.
 
 ```yml
   mysql:
@@ -13,27 +12,27 @@ In all of our images we are relying a database to persist data. Normally these a
       - mediawiki-mysql-data:/var/lib/mysql
 ```
 
-Ideally you shouldn't have to rely on the backup to upgrade to a new version, however there is the possibility of something going wrong and having a backup is always a good idea.
+Ideally you shouldn't have to rely on the backup to upgrade to a new version; however, there is always the possibility of something going wrong, and having a backup is always a good idea.
 
-In the next section we describe two different ways of backing up and restoring your database and docker volumes.
+In the next section we describe two different ways of backing up and restoring your database and Docker volumes.
 
-### 1.1 Backing up / restoring database using [mysqldump](https://mariadb.com/kb/en/mysqldump/)
+### 1.1 Backing up/restoring database using [mysqldump](https://mariadb.com/kb/en/mysqldump/)
 
-To backup your data
+To back up your data:
 
 ```sh
 docker exec <DATABASE_CONTAINER_NAME> mysqldump -u $DBUSER -p$DBPASS $DBNAME > backup.sql
 ```
 
-To restore your data
+To restore your data:
 
 ```sh
 docker exec <DATABASE_CONTAINER_NAME> mysql -u $DBUSER -p$DBPASS $DBNAME < backup.sql
 ```
 
-### 1.2 Backing up / restoring volumes using [loomchild/volume-backup](https://hub.docker.com/p/loomchild/volume-backup)
+### 1.2 Backing up/restoring volumes using [loomchild/volume-backup](https://hub.docker.com/p/loomchild/volume-backup)
 
-Find out the name of your docker volume
+Determine the name of your Docker database volume:
 
 ```sh
 $ docker volume ls
@@ -41,26 +40,26 @@ DRIVER    VOLUME NAME
 local     wikibase_mediawiki-mysql-data
 ```
 
-To backup your volume
+To back up your volume:
 
 ```sh
 docker run -v wikibase_mediawiki-mysql-data:/volume -v /tmp/wikibase-data:/backup --rm loomchild/volume-backup backup mediawiki-mysql-data
 ```
 
-Will result in a `mediawiki-mysql-data.tar.bz2` archive of the volume in `/tmp/wikibase-data`.
+The above command will produce an archive of the volume named `mediawiki-mysql-data.tar.bz2` in `/tmp/wikibase-data`.
 
-To restore your volume
+To restore your volume:
 
 ```sh
 docker run -v wikibase_mediawiki-mysql-data:/volume -v /tmp/wikibase-data:/backup --rm loomchild/volume-backup restore mediawiki-mysql-data
 ```
 
-## Backup other data
+## Back up other data
 ### 1.1 Copy your LocalSettings.php file
 
-If you haven't mounted in your own LocalSettings.php file thats placed in `/var/www/html/LocalSettings.php` there is a risk of this getting lost when upgrading.
+If you haven't mounted your own LocalSettings.php file, located in `/var/www/html/LocalSettings.php`, you run the risk of losing this important file when upgrading.
 
-Make a copy to `/tmp/LocalSettings.php` by running
+Copy the file to `/tmp/LocalSettings.php` by running:
 
 ```sh
 docker cp <WIKIBASE_CONTAINER_NAME>:/var/www/html/LocalSettings.php /tmp/LocalSettings.php
@@ -68,13 +67,13 @@ docker cp <WIKIBASE_CONTAINER_NAME>:/var/www/html/LocalSettings.php /tmp/LocalSe
 
 ### 1.2 Review old LocalSettings.php file
 
-Review your old LocalSettings file for any changes that might be required by the [new version](../../Docker/build/Wikibase/LocalSettings.php.template).
+Review your old LocalSettings.php file for any changes that the [new version](../../Docker/build/Wikibase/LocalSettings.php.template) may require.
 
-### 1.3 Mount your LocalSettings.php file into the new container
+### 1.3 Mount your LocalSettings.php file in the new container
 
-Unless you aren't already mounting a LocalSettings file into `/var/www/html/LocalSettings.php` the docker [entrypoint](../../Docker/build/Wikibase/entrypoint.sh) script will assume that your instance is a fresh install and create one for you and try to run the install scripts.
+If you aren't already mounting your LocalSettings file at `/var/www/html/LocalSettings.php`, the Docker [entrypoint](../../Docker/build/Wikibase/entrypoint.sh) script will assume that your instance is a fresh install. In that case it wil create one for you and try to run the install scripts.
 
-To avoid this we need to make sure to have a LocalSettings file mounted before we use the new image.
+To prevent this from happening during your upgrade, you must mount your LocalSettings file before using the new image. In your docker-compose.yml, make sure you see a line like the following:
 
 ```yml
 services:
@@ -84,11 +83,11 @@ services:
 ```
 ### 2. Copy other data written inside container
 
-In some of the newer images the default value of upload images is to be written inside the container at `/var/www/html/images`. Review your configuration and make backups of any logs or other data that you wish to save.
+In some newer images, the default value of upload images is written inside the container at `/var/www/html/images`. Review your configuration and make backups of any logs or other data that you wish to save.
 
 ## Change the image
 
-Update the `image` section in your `docker-compose.yml` file to the new version or by changing the environment variable in your `.env` file from the docker example.
+Update the entry in the `image` section of your `docker-compose.yml` file to the new version. You can also do this by changing the environment variable in your `.env` file, as seen in the Docker example.
 
 ```yml
 services:
@@ -98,15 +97,15 @@ services:
 
 ## Update
 
-Finally it's time to run the mediawiki [update.php](https://www.mediawiki.org/wiki/Manual:Update.php) script.
+At last it's time to run the mediawiki [update.php](https://www.mediawiki.org/wiki/Manual:Update.php) script.
 
-This can be done from outside the docker container by running
+You can do this from outside the Docker container by running:
 
 ```
 docker exec <WIKIBASE_CONTAINER_NAME> php /var/www/html/maintenance/update.php
 ```
 
-Running this command will execute the MediaWiki Updater. After this has completed your upgrade should've been successful!
+Running this command will execute the MediaWiki Updater. After it has completed, your upgrade should be successful!
 
 
-For a more reading regarding upgrading there is a [blog post](https://addshore.com/2019/01/wikibase-docker-mediawiki-wikibase-update/) by addshore describing how it was done for the [wikibase registry](https://wikibase-registry.wmflabs.org) which has custom extensions installed.
+For more information on upgrading, consult addshore's [blog post](https://addshore.com/2019/01/wikibase-docker-mediawiki-wikibase-update/) describing how it was done for the [wikibase registry](https://wikibase-registry.wmflabs.org) (which has custom extensions installed).
