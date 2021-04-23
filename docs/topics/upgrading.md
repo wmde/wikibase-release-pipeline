@@ -12,7 +12,7 @@ In all of our images we rely on a database to persist data. Normally these are s
       - mediawiki-mysql-data:/var/lib/mysql
 ```
 
-Ideally you shouldn't have to rely on the backup to upgrade to a new version; however, there is always the possibility of something going wrong, and having a backup is always a good idea.
+Under ideal circumstances, a backup isn't necessary to upgrade to a new version; however, there is always the possibility of something going wrong, and having a backup is always a good idea.
 
 In the next section we describe two different ways of backing up and restoring your database and Docker volumes.
 
