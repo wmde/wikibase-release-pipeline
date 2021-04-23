@@ -34,8 +34,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
-      - MW_ELASTIC_HOST=elasticsearch.svc
-      - MW_ELASTIC_PORT=9200
+      #- MW_ELASTIC_HOST=elasticsearch.svc
+      #- MW_ELASTIC_PORT=9200
       - WIKIBASE_HOST
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
       - WIKIBASE_PINGBACK
