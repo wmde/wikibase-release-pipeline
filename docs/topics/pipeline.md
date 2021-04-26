@@ -8,7 +8,6 @@ On build a local.env file can be used to override any default settings
 ```
 SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES=1
 ```
-
 #### Override for branch name of extensions cloned from gerrit
 ```
 GERRIT_EXTENSION_BRANCH_NAME=REL1_35
@@ -20,13 +19,6 @@ GZIP_COMPRESSION_RATE=1
 #### Log level for selenium tests see wdio.conf.js for options
 ```
 SELENIUM_LOG_LEVEL=trace
-```
-#### Filter test-runs by file
-```
-FILTER=something.js
-
-# Example on how to use it when running tests:
-$ make test SUITE=fedprops FILTER=prefetch*
 ```
 
 #### Settings related to tarball publishing
@@ -47,15 +39,11 @@ MEDIAWIKI_IMAGE_NAME=mediawiki
 
 ## Running the pipeline on github
 
-The workflow will trigger periodically and on pushes to this repository using the [.env](../../.env) file which should be set to build against the master branch of Wikibase and related components.
+The workflow will trigger on pushes to the main branch using the [.env](../../.env) file.
 
 If there is a requirement to build a specific configuration this can be done by going to actions, clicking the workflow and run the workflow with the desired env file.
 
 ![Queuing the pipeline](../images/queue_job.gif "Queuing the pipeline")
-
-## List all artifacts on Github
-
-The github pipeline produces new artifacts on each run and they can all be viewed by using the [github API](https://api.github.com/repos/wmde/wikibase-release-prototype/actions/artifacts). 
 
 
 ## Building artifacts locally
