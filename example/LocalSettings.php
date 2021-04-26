@@ -19,3 +19,8 @@
 #$wgCaptchaTriggers['addurl']        = true;
 #$wgCaptchaTriggers['createaccount'] = true;
 #$wgCaptchaTriggers['badlogin']      = true;
+
+/*******************************/
+/* Disable UI error-reporting  */
+/*******************************/
+#ini_set( 'display_errors', 0 );
