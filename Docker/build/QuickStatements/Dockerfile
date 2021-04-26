@@ -15,8 +15,11 @@ FROM php:7.2-apache
 
 # Install envsubst
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base=0.19.* jq=1.5* && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base=0.19.* jq=1.5* libicu-dev=63* && \
     rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure intl \
+&& docker-php-ext-install intl
 
 COPY --from=fetcher /quickstatements /var/www/html/quickstatements
 COPY --from=composer --chown=root:root /quickstatements/vendor /var/www/html/quickstatements/vendor
