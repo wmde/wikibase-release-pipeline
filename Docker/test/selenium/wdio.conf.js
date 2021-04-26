@@ -80,7 +80,10 @@ exports.config = {
 		fedprops: [ './specs/fedprops/*.js' ],
 		pingback: [ './specs/pingback/*.js' ],
 
-		quickstatements: [ './specs/quickstatements/*.js' ],
+		quickstatements: [
+			'./specs/repo_client/interwiki-links.js',
+			'./specs/quickstatements/*.js'
+		],
 		elasticsearch: [ './specs/elasticsearch/*.js' ],
 		confirm_edit: [ './specs/confirm_edit/*.js' ],
 
