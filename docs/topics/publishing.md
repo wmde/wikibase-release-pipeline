@@ -1,4 +1,47 @@
-# Publishing a successful build and test workflow
+
+
+# Publishing a successful build
+
+After the build and test workflow has successfully completed it is time to download the results and prepare to publish it as a release.
+
+This can be done by setting the `WORKFLOW_RUN_NUMBER` variable in your local.env file and source it into the shell and execute the following command.
+
+```sh
+$ ./publish/download.sh
+```
+
+This will download the build, test and metadata artifacts for the workflow run into `artifacts/WORKFLOW_RUN_NUMBER/`
+
+### Verifying the downloaded artifacts
+
+Before we consider a build for publishing some manual inspection of the artifacts should be done.
+
+`artifacts/WORKFLOW_RUN_NUMBER/BuildMetadata/`
+
+Contains the commit hashes for most of the components that was included in the build. Each file should contain a commit hash.
+
+`artifacts/WORKFLOW_RUN_NUMBER/TestArtifacts/`
+
+Contains the docker log files for each suite and can easily be reviewed for any exceptions or error messages that might have passed testing unnoticed.
+
+`artifacts/WORKFLOW_RUN_NUMBER/TestArtifacts/selenium/`
+
+This folder contains screenshots that were taken after each test and can easily be reviewed for anything that looks off.
+
+
+### Run tests on downloaded artifacts
+
+To test the downloaded artifacts you can either load the images manually and use the [example](../../example/README.md) or to test a specific suite you can remove your local artifacts and replace them with the downloaded ones.
+
+Remove locally created artifacts and use the downloaded ones
+
+```
+$ make clean
+$ cp artifacts/WORKFLOW_RUN_NUMBER/BuildArtifacts/* artifacts/
+$ make test SUITE=fedprops
+```
+
+After this you can follow the instructions as defined in [testing](testing.md) to run the desired tests. Remember that the test containers will remain running after a test run is completed. This can be useful when manually testing that the build looks ok. 
 
 ## Dry running
 
