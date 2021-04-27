@@ -5,6 +5,11 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const defaultFunctions = require( '../../helpers/default-functions' );
 const _ = require( 'lodash' );
 
+const getReferenceValue = function ( response, propertyId, refPropertyId ) {
+	const references = response.data.claims[ propertyId ][ 0 ].references;
+	return references[ 0 ].snaks[ refPropertyId ][ 0 ].datavalue.value;
+};
+
 describe( 'QuickStatements Service', function () {
 
 	let propertyId = null;
@@ -118,57 +123,59 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to add a property with "wikibase-item" reference', function () {
 
+		const itemId = browser.call( () => WikibaseApi.createItem( 'reference-item', {} ) );
+
 		propertyIdItem = browser.call( () => WikibaseApi.getProperty( 'wikibase-item' ) );
 		const propertyNumber = propertyIdItem.replace( 'P', '' );
-		browser.executeQuickStatement( 'Q2|' + propertyIdItem + '|Q2|S' + propertyNumber + '|Q2|S' + propertyNumber + '|Q2' );
+		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q2|S' + propertyNumber + '|Q2|S' + propertyNumber + '|Q2' );
 
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
-		assert( ( propertyIdItem in responseQ2.data.entities.Q2.claims ) === true );
+		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const refValue = getReferenceValue( response, propertyIdItem, propertyIdItem );
+
+		assert( refValue.id === 'Q2' );
 	} );
 
 	it( 'Should be able to add a property with "url" reference', function () {
 
+		const itemId = browser.call( () => WikibaseApi.createItem( 'reference-url', {} ) );
 		propertyURL = browser.call( () => WikibaseApi.getProperty( 'url' ) );
 		const url = '"https://www.wikidata.org"';
 		const propertyNumber = propertyURL.replace( 'P', '' );
-		browser.executeQuickStatement( 'Q2|' + propertyIdItem + '|Q3|S' + propertyNumber + '|' + url );
 
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
-		assert( ( propertyURL in responseQ2.data.entities.Q2.claims ) === true );
+		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + url );
+
+		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
+
+		assert( refValue === 'https://www.wikidata.org' );
 	} );
 
 	it( 'Should be able to add a property with "string" reference', function () {
 
+		const itemId = browser.call( () => WikibaseApi.createItem( 'reference-string', {} ) );
 		const stringValue = '"some string"';
 		const propertyNumber = propertyId.replace( 'P', '' );
-		browser.executeQuickStatement( 'Q2|' + propertyIdItem + '|Q3|S' + propertyNumber + '|' + stringValue );
+		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + stringValue );
 
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
-		assert( ( propertyURL in responseQ2.data.entities.Q2.claims ) === true );
-	} );
+		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
-	it( 'Should be able to create another item', function () {
-
-		browser.url( process.env.QS_SERVER + '/#/batch' );
-
-		browser.executeQuickStatement( 'CREATE' );
-
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q3.json' );
-
-		assert( response.data.entities.Q3.id === 'Q3' );
+		assert( refValue === 'some string' );
 	} );
 
 	it( 'Should be able to add and remove a property on an item', function () {
 
-		browser.executeQuickStatement( 'Q3|' + propertyIdItem + '|Q1' );
+		const itemId = browser.call( () => WikibaseApi.createItem( 'add-remove', {} ) );
 
-		let responseQ3 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q3.json' );
-		assert( ( propertyIdItem in responseQ3.data.entities.Q3.claims ) === true );
+		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
 
-		browser.executeQuickStatement( '-Q3|' + propertyIdItem + '|Q1' );
+		let response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
+		assert( ( propertyIdItem in response.data.entities[ itemId ].claims ) === true );
 
-		responseQ3 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q3.json' );
-		assert( ( propertyIdItem in responseQ3.data.entities.Q3.claims ) === false );
+		browser.executeQuickStatement( '-' + itemId + '|' + propertyIdItem + '|Q1' );
+
+		response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
+		assert( ( propertyIdItem in response.data.entities[ itemId ].claims ) === false );
 
 	} );
 

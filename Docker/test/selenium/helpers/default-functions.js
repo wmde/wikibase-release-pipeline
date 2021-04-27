@@ -180,7 +180,16 @@ const defaultFunctions = function () {
 		$( "button[tt='run']" ).click();
 		console.log( 'executing quickstatements query: ' + theQuery );
 
-		browser.pause( 10 * 1000 );
+		const commands = $$( '.command_status' );
+
+		browser.waitUntil(
+			() => _.every( commands, function ( command ) { return command.getText() === 'done'; } ),
+			{
+				timeout: 10000,
+				timeoutMsg: 'Expected to be done after 10 seconds'
+			}
+		);
+
 	} );
 
 };
