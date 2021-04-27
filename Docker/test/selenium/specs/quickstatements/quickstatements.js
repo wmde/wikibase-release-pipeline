@@ -119,12 +119,14 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
+
+
 		const mainSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ]
 		const qualifierSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ]
 		const exampleSnakValues = {
 			string: '"cat"',
 			'wikibase-item': 'Q1',
-			url: 'https://example.com',
+			url: '"https://example.com"',
 			quantity: '5',
 			time: '+1967-01-17T00:00:00Z/11'
 		}
@@ -134,16 +136,18 @@ describe( 'QuickStatements Service', function () {
 				it(
 					'Should be able to add a ' + mainSnakDataType + ' statement with a ' + qualifierSnakDataType + ' qualifier.',
 					() => {
+						const itemId = browser.call( () => WikibaseApi.createItem( 'qualifier-item', {} ) );
+
 						const mainPropertyId = browser.call( () => WikibaseApi.getProperty( mainSnakDataType ) );
 						console.log(mainPropertyId);
 						const qualifierPropertyId = browser.call( () => WikibaseApi.getProperty( qualifierSnakDataType ) );
 						console.log(qualifierPropertyId);
 						browser.executeQuickStatement(
-							'Q1|' + mainPropertyId + '|'+ exampleSnakValues[mainSnakDataType] +'|' +
+							itemId + '|' + mainPropertyId + '|'+ exampleSnakValues[mainSnakDataType] +'|' +
 						qualifierPropertyId + '|' + exampleSnakValues[qualifierSnakDataType]
 						);
 
-						const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + 'Q1' );
+						const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 						assert.strictEqual( getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ), qualifierSnakDataType );
 					}
 				)
