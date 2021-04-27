@@ -12,8 +12,10 @@ const getReferenceValue = function ( response, propertyId, refPropertyId ) {
 
 const getQualifierType = function ( response, propertyId, qualPropertyId ) {
 	for ( let statements of response.data.claims[ propertyId ] ) {
-		if ( qualPropertyId in statements.qualifiers ) {
-			return statements.qualifiers[ qualPropertyId ][ 0 ].datatype
+		if ( 'qualifiers' in statements ) {
+			if ( qualPropertyId in statements.qualifiers ) {
+				return statements.qualifiers[ qualPropertyId ][ 0 ].datatype
+			}
 		}
 	}
 };
