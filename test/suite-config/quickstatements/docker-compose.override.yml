@@ -19,6 +19,10 @@ services:
       - ./config/client/mysql/create-client-db.sql:/docker-entrypoint-initdb.d/02-create-client-db.sql
 
   wikibase:
+    ports:
+      # not needed by the test but makes debugging in a browser easier/less broken
+      # update /etc/hosts to point 127.0.0.1 to wikibase.svc
+      - "80:80"
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
