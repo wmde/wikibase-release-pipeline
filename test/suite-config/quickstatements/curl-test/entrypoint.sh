@@ -6,3 +6,6 @@
 
 # QuickStatements test
 check_if_up "$QS_SERVER"
+
+# Client test
+check_if_up "$WIKIBASE_CLIENT_SERVER" "/"
