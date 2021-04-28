@@ -490,6 +490,7 @@ jobs:
         version: [
           '1.32-base',
           '1.33-base',
+          '1.34-base',
           '1.35-base',
           'latest-base',
           'lts-base',
