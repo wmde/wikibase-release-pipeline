@@ -11,10 +11,10 @@ const getReferenceValue = function ( response, propertyId, refPropertyId ) {
 };
 
 const getQualifierType = function ( response, propertyId, qualPropertyId ) {
-	for ( let statements of response.data.claims[ propertyId ] ) {
+	for ( const statements of response.data.claims[ propertyId ] ) {
 		if ( 'qualifiers' in statements ) {
 			if ( qualPropertyId in statements.qualifiers ) {
-				return statements.qualifiers[ qualPropertyId ][ 0 ].datatype
+				return statements.qualifiers[ qualPropertyId ][ 0 ].datatype;
 			}
 		}
 	}
@@ -122,39 +122,48 @@ describe( 'QuickStatements Service', function () {
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
 
-
-		const mainSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ]
-		const qualifierSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ]
+		const mainSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ];
+		const qualifierSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ];
 		const exampleSnakValues = {
 			string: '"cat"',
 			'wikibase-item': 'Q1',
 			url: '"https://example.com"',
 			quantity: '5',
 			time: '+1967-01-17T00:00:00Z/11'
-		}
-
-		mainSnakDataTypes.forEach(mainSnakDataType => {
-			qualifierSnakDataTypes.forEach( qualifierSnakDataType => {
+		};
+		// should be disabled for dynamic tests
+		// eslint-disable-next-line mocha/no-setup-in-describe
+		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
+			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
 				it(
 					'Should be able to add a ' + mainSnakDataType + ' statement with a ' + qualifierSnakDataType + ' qualifier.',
 					() => {
 						const itemId = browser.call( () => WikibaseApi.createItem( 'qualifier-item', {} ) );
 
-						const mainPropertyId = browser.call( () => WikibaseApi.getProperty( mainSnakDataType ) );
-						console.log(mainPropertyId);
-						const qualifierPropertyId = browser.call( () => WikibaseApi.getProperty( qualifierSnakDataType ) );
-						console.log(qualifierPropertyId);
+						const mainPropertyId = browser.call(
+							() => WikibaseApi.getProperty( mainSnakDataType )
+						);
+						const qualifierPropertyId = browser.call(
+							() => WikibaseApi.getProperty( qualifierSnakDataType )
+						);
 						browser.executeQuickStatement(
-							itemId + '|' + mainPropertyId + '|'+ exampleSnakValues[mainSnakDataType] +'|' +
-						qualifierPropertyId + '|' + exampleSnakValues[qualifierSnakDataType]
+							itemId + '|' + mainPropertyId + '|' + exampleSnakValues[ mainSnakDataType ] + '|' +
+						qualifierPropertyId + '|' + exampleSnakValues[ qualifierSnakDataType ]
 						);
 
 						const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
-						assert.strictEqual( getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ), qualifierSnakDataType );
+						assert.strictEqual(
+							getQualifierType(
+								responseQ1,
+								mainPropertyId,
+								qualifierPropertyId
+							),
+							qualifierSnakDataType
+						);
 					}
-				)
-			} )
-		});
+				);
+			} );
+		} );
 	} );
 
 	it( 'Should be able to add statement with qualifiers', function () {
