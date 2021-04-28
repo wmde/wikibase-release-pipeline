@@ -35,6 +35,7 @@ test-all:
 
 requirements:
 	python3 build/requirements/build_version_requirements.py
+	cat artifacts/built_versions.log
 
 mediawiki:
 	bash update_cache.sh core skins
@@ -71,6 +72,7 @@ clean-cache:
 
 clean:
 	rm -rf artifacts/*.tar.gz
+	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
 all: mediawiki wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
