@@ -390,6 +390,29 @@ jobs:
           image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
           tag: ${{ env.WMDE_RELEASE_VERSION }}
 
+  build_test_image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build test-image
+        run: bash build.sh test-image ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: ./artifacts/wikibase-selenium-test.docker.tar.gz
+
   build_elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -454,6 +477,7 @@ jobs:
       - build_wdqs_frontend
       - build_wdqs_proxy
       - build_quickstatements
+      - build_test_image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

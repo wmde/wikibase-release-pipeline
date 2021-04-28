@@ -36,6 +36,9 @@ test-all:
 requirements:
 	python3 build/requirements/build_version_requirements.py
 
+test-image:
+	bash build/build_test_container.sh ${TEST_IMAGE_NAME}
+
 mediawiki:
 	bash update_cache.sh core skins
 	eval ". ./build/build_mediawiki.sh; bash build/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"
@@ -73,4 +76,4 @@ clean:
 	rm -rf artifacts/*.tar.gz
 	rm -rf artifacts/*.env
 
-all: mediawiki wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
+all: mediawiki wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements test-image

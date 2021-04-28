@@ -43,6 +43,7 @@ docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$TEST_IMAGE_NAME.docker.tar.gz"
 
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"
@@ -50,6 +51,7 @@ export QUERYSERVICE_UI_IMAGE_NAME="$QUERYSERVICE_UI_IMAGE_NAME:latest"
 export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
+export TEST_IMAGE_NAME="$TEST_IMAGE_NAME:latest"
 
 ## build selenium test container
 docker-compose \

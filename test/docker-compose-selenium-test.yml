@@ -3,9 +3,7 @@ version: '3'
 
 services:
   wikibase-selenium-test:
-    build:
-      context: ../Docker/test/selenium/
-      dockerfile: Dockerfile
+    image: "${TEST_IMAGE_NAME}"
     depends_on:
       - wikibase
     volumes:

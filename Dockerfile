@@ -4,6 +4,7 @@ RUN pip3 install pyyaml
 WORKDIR "/app/"
 ENV XDG_CACHE_HOME=/app/cache
 ADD Docker/build/ Docker/build/
+ADD Docker/test/ Docker/test/
 ADD build/ build
 ADD .github/workflows/built_and_test.yml config.yml
 ADD variables.env variables.env
