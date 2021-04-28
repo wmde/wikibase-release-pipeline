@@ -23,8 +23,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase.svc
-         - ${WIKIBASE_HOST}
+         - wikibase.svc # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
     environment:
       - DB_SERVER=mysql.svc:3306
       - MW_ADMIN_NAME=${MW_ADMIN_NAME}
