@@ -10,7 +10,7 @@ on:
   push:
 
 env:
-  env_file: ${{ github.event.inputs.env_file || '.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde1.env' }}
 
 jobs:
   build_mediawiki:
