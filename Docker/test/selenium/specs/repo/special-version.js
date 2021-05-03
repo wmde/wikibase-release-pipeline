@@ -4,6 +4,17 @@ const assert = require( 'assert' );
 
 describe( 'Special:Version', function () {
 
+	it( 'Should contain the correct MediaWiki version', function () {
+		if ( process.env.WMDE_RELEASE_VERSION === 'wmdeprerelease' ) {
+			return this.skip();
+		}
+
+		browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+		const text = $( '#sv-software' ).getText();
+		assert( text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ) === true );
+
+	} );
+
 	const extensions = {
 		wikibase: [
 			'EntitySchema',
