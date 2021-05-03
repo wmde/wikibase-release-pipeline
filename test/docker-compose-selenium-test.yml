@@ -28,11 +28,12 @@ services:
       - MW_ADMIN_PASS=WikibaseDockerAdminPass
       - MW_SCRIPT_PATH=/w
 
+      - WMDE_RELEASE_VERSION
+      - MEDIAWIKI_VERSION
       - DATABASE_IMAGE_NAME
       - SUITE
       - FILTER
-
-
+      
       - DOCKER_WIKIBASE_REPO_NAME=test_wikibase_1
       - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client_1
       - DOCKER_MYSQL_NAME=test_mysql_1
