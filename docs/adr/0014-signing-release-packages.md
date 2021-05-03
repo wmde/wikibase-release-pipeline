@@ -19,9 +19,15 @@ Signing the artifacts our release pipeline produces is a step that can be taken 
 
 Tarball files can be signed with [GPG](https://gnupg.org/gph/en/manual/x135.html) in a similar way to which MediaWiki are signing theirs. In the case of MediaWiki a private and public key-pair is generated for release engineering members and published on https://www.mediawiki.org/keys/keys.html. 
 
-By importing the list of public keys the end-user can then verify the release tarball and it's signature by issuing the following command.
+By importing the list of public keys the end-user can then verify the release tarball and it's signature by issuing the following commands.
 
+Import keys:
+```sh
+$ gpg --fetch-keys "https://www.mediawiki.org/keys/keys.txt"
 ```
+
+Verify release package:
+```sh
 $ gpg --verify mediawiki-core-1.35.2.zip.sig mediawiki-core-1.35.2.zip
 gpg: Signature made tor  8 apr 2021 20:40:08 CEST
 gpg:                using DSA key 1D98867E82982C8FE0ABC25F9B69B3109D3BB7B0
@@ -54,7 +60,7 @@ The signer key is what is added to the docker registry and can be delegated in s
 
 For DCT the signer and the publisher does not necessarily have to be the same person. A image can be published and then the signer can add a signature later by pulling and signing. (This way managing keys does not have to be a burden on everyone).
 
-Root keys and GPG keys that represent WMDE as an organization should be generated and kept in a secure location. As there has been no previous singing of release packages the methods and processes required for maintaining, using and backing up these keys would have to be defined and formalized before they are applied.
+Root keys and GPG keys that represent WMDE as an organization should be generated and kept in a secure location. As there has been no previous signing of release packages the methods and processes required for maintaining, using and backing up these keys would have to be defined and formalized before they are applied.
 
 Therefore the decision for the release pipeline will be not to sign any of the release packages in the first version (wmde.0 and wmde.1).
 
@@ -64,12 +70,11 @@ However the benefits of signing are obvious and therefore it's probably a good i
     - Needs access to organization in docker registry
     - Needs access to organization in github
     - Need access to `releasers-wikibase` group
-    - Would need to publish and maintain a GPG key
-    - Would potentially need to maintain a DCT signer key and a public version unless the GPG key can be re-used.
+    - Would need to publish and maintain a GPG key used for signing Docker and release tarballs
 
 - How do we securely store/generate offline "organization" private keys?
 
-- Where do WMDE publish public keys?
+- Where does WMDE publish public keys?
 
 ## Decision
 
