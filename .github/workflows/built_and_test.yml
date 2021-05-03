@@ -1,6 +1,8 @@
 name: Build and test Wikibase and friends
 
 on:
+  schedule:
+    - cron:  '0 */6 * * *'
   workflow_dispatch:
     inputs:
       env_file:
@@ -10,8 +12,7 @@ on:
   push:
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde1.env' }}
-
+  env_file: ${{ github.event.inputs.env_file ||  github.event.schedule=='0 */6 * * *' && '.env' || 'versions/wmde1.env' }}
 jobs:
   build_mediawiki:
     runs-on: ubuntu-latest
