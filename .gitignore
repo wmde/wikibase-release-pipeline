@@ -17,3 +17,4 @@ test/log
 diagrams/node_modules/
 artifacts/*
 local.env
+publish/release_notes/**/__pycache__

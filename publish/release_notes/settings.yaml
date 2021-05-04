@@ -1,0 +1,43 @@
+# vim: set et ts=4 sw=4: -*- mode: yaml-mode; yaml-indent-offset: 4 -*-
+base_url: https://gerrit.wikimedia.org/r/
+bundles:
+    wikibase:
+        - "mediawiki/extensions/Wikibase"
+
+manual_branch_points:
+    REL1_27:
+        mediawiki/core: 0cd28e19cb0f9385a2a1cc11a4d8c9c21ff0b830
+    REL1_29:
+        mediawiki/core: 0cd28e19cb0f9385a2a1cc11a4d8c9c21ff0b830
+    REL1_30:
+        mediawiki/core: 0cd28e19cb0f9385a2a1cc11a4d8c9c21ff0b830
+diff:
+    ignore:
+        - "*~"
+        - ".js*"
+        - ".git*"
+        - "#*#"
+        - ".#*"
+        - ".rubocop*"
+        - ".travis.yml"
+        - "package.json"
+        - "messages"
+        - "Gemfile*"
+        - ".mailmap"
+        - "*.png"
+        - "*.jpg"
+        - "*.xcf"
+        - "*.gif"
+        - "*.svg"
+        - "*.tiff"
+        - "*.zip"
+        - "*.xmp"
+tar:
+    ignore:
+        - "*~"
+        - "#*#"
+        - ".*"
+        - "package.json"
+        - "README.mediawiki"
+        - "Gemfile*"
+        - "vendor/pear/net_smtp/README.rst"
