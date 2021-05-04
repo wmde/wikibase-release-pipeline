@@ -8,7 +8,7 @@ proposed
 
 ## Context
 
-WMDE needs to decide on a process of including security fixes of non-WMDE maintained software (e.g. Mediawiki, Elasticearch, WDQS) as well as WMDE maintained software (Wikibase, WDQS-frontend) and how to publish security fix releases of Wikibase suite in such cases.
+WMDE needs to decide on a process for including security fixes of non-WMDE maintained software (e.g. Mediawiki, Elasticearch, WDQS) as well as WMDE maintained software (Wikibase, WDQS-frontend) and how to publish security fix releases of Wikibase suite in such cases.
 
 Security fixes will fall under the maintenance category and will most likely be worked on by campsite, however as the running of the pipeline and publishing of docker images requires special privileges it could make sense that this step is tasked to a certain group of people or that all engineers of WMDE are given the rights to publish releases.
 
@@ -22,19 +22,19 @@ Security fixes will fall under the maintenance category and will most likely be 
 
 ### 2. Resolving
 
-- Don't publish the solution before it's deployed in WMF production environment
+- Don't publish the fix before it's deployed in WMF production environment
   - Dont use public repositories
 
-### 3. Deployment to production
-- [Follow deployment instructions from here](https://www.mediawiki.org/wiki/GitLab/Workflows/Security_patches)
+### 3. Deploy fix to WMF production environment
+- [Follow deployment instructions from here](https://wikitech.wikimedia.org/wiki/How_to_deploy_code#Creating_a_Security_Patch)
 
 ### 4. Releasing
 
-- (WMDE maintained code) Merge security patch into public repository
+- (WMDE maintained code) Merge security patch into public repository.
 - Build a new release.
 - Verify the patch resolved the security problem.
-- Publish the release
-- Announce new release
+- Publish the release.
+- Announce new release.
 
 ### Components Included
 
