@@ -10,9 +10,9 @@ proposed
 
 WMDE needs to decide on a process for including security fixes of non-WMDE maintained software (e.g. Mediawiki, Elasticearch, WDQS) as well as WMDE maintained software (Wikibase, WDQS-frontend) and how to publish security fix releases of Wikibase suite in such cases.
 
-Security fixes will fall under the maintenance category and will most likely be worked on by campsite, however as the running of the pipeline and publishing of docker images requires special privileges it could make sense that this step is tasked to a certain group of people or that all engineers of WMDE are given the rights to publish releases.
+Security fixes for WMDE maintained software will fall under the maintenance category and will most likely be worked on by campsite, however as the running of the pipeline and publishing of docker images requires special privileges it could make sense that this step is tasked to a certain group of people or that all engineers of WMDE are given the rights to publish releases.
 
-## List of steps reporting, fixing and releasing security updates
+## List of steps reporting, fixing and releasing security updates for WMDE maintained software
 
 ### 1. Recognizing / Reporting
 
@@ -29,7 +29,7 @@ Security fixes will fall under the maintenance category and will most likely be 
 
 ### 4. Releasing
 
-- (WMDE maintained code) Merge security patch into public repository.
+- Merge security patch into public repository.
 - Build a new release.
 - Verify the patch resolved the security problem.
 - Publish the release.
@@ -47,7 +47,7 @@ As for ElasticSearch we first need to acknowledge the fact that upgrading to any
 
 #### WDQS
 
-As for WDQS we only need to identify what version contains the security fix and make sure it's been made [publicly available](https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/) for us to pin it to a new release then run the pipeline and publish the resulting docker images.
+As for WDQS we need to identify what version contains the security fix and make sure it's been made [publicly available](https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/) for us to pin it to a new release then run the pipeline and publish the resulting docker images.
 
 ### Announcing the release to community
 
