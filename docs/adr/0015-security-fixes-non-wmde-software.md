@@ -12,6 +12,8 @@ WMDE needs to decide on a process for including security fixes of non-WMDE maint
 
 Security fixes for WMDE maintained software will fall under the maintenance category and will most likely be worked on by campsite, however as the running of the pipeline and publishing of docker images requires special privileges it could make sense that this step is tasked to a certain group of people or that all engineers of WMDE are given the rights to publish releases.
 
+Applying security fixes to the running Wikibase instance (or other Wikibase related software system) is a time-sensitive operation. Therefore WMDE will pre-announce the upcoming security release a bit in advance before making the fixes (hence also vulnerabilities) public, to allow maintainers of Wikibase instances to plan for their updates.
+
 ## List of steps reporting, fixing and releasing security updates for WMDE maintained software
 
 ### 1. Recognizing / Reporting
@@ -32,6 +34,7 @@ Security fixes for WMDE maintained software will fall under the maintenance cate
 - Merge security patch into public repository.
 - Build a new release.
 - Verify the patch resolved the security problem.
+- Announce that there will be a "security fix" release coming up shortly (24-36 hours before the planned publishing of the new release).
 - Publish the release.
 - Announce new release.
 
@@ -54,6 +57,8 @@ As for WDQS we need to identify what version contains the security fix and make 
 All releases, major or minor should be announced on the following mailing-list:
 
 - https://lists.wikimedia.org/mailman/listinfo/wikibaseug
+
+Pre-release announcement about the security releases will also be published on the above listed channels.
 
 ### Recognizing the need to release
 
