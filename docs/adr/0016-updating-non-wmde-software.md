@@ -10,7 +10,7 @@ proposed
 
 Wikibase Suite includes a number of software components that are not maintained by Wikimedia Deutschland (WMDE). Those include (examples as of May 2021):
 - Software which is maintained by the Wikimedia Foundation (WMF), e.g. Wikidata Query Service (WDQS); in case of docker images also MediaWiki software.
-- Broadly-used software which is maintained by non-Wikimedia parties, e.g. Elastic Search, MySQL.
+- Broadly-used software which is maintained by non-Wikimedia parties, e.g. Elastic Search.
 - Wikibase/Wikidata-specific software which is maintained by Wikimedia community (volunteer) developers, e.g. Quick Statements.
 
 All these software components receive updates from their maintainers in a way which is not necessarily synchronized with the release cycle of Wikibase Suite.
@@ -34,6 +34,6 @@ In order to maximize the impact WMDE software development teams can bring for th
 ## Consequences
 
 1. WMDE establishes a process of incorporating and releasing fixes to severe security issues in the components not maintained by WMDE. See more on this in [ADR 15](0015-security-fixes-non-wmde-software.md).
-2. WMDE will monitor changes to the components of Wikibase Suite which are not maintained by WMDE to understand non-security-related changes happening in those components. The list of channels to follow by WMDE staff will be published by the internal use.
+2. WMDE will monitor changes to the components of Wikibase Suite which are not maintained by WMDE to understand non-security-related changes happening in those components. The list of channels to follow by WMDE staff will be published for internal use.
 3. WMDE will not accept feature requests and other change requests related to the software components that WMDE does not maintain.
 4. WMDE will direct users of Wikibase Suite, e.g. inform of visibly documenting this information, on channels they should use to report problems or feature requests in the components not maintained by WMDE (it might be Phabricator for some software, and dedicated bug trackers, etc for other). 
