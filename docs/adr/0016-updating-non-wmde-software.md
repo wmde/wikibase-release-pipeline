@@ -25,7 +25,7 @@ Making changes to the software not maintained by WMDE would mean additional effo
 
 ## Decision
 
-To ensure the security and integrity of systems running Wikibase Suite, WMDE will releasing updated versions of the Wikibase Suite that will include fixes to significant security issues discovered in the software components not maintained by WMDE, once those fixes have been published by respective maintainers.
+To ensure the security and integrity of systems running Wikibase Suite, WMDE will be releasing updated versions of the Wikibase Suite that will include fixes to significant security issues discovered in the software components not maintained by WMDE, once those fixes have been published by respective maintainers.
 
 Occassionally, WMDE might also publish releases of Wikibase Suite that will include updates to the components not maintained by WMDE that bring important additional functionality.
 
