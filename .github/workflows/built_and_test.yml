@@ -12,7 +12,8 @@ on:
   push:
 
 env:
-  env_file: ${{ github.event.inputs.env_file ||  github.event.schedule=='0 */6 * * *' && '.env' || 'versions/wmde1.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde1.env' }}
+
 jobs:
   build_mediawiki:
     runs-on: ubuntu-latest
