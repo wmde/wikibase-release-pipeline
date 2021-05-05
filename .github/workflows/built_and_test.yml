@@ -10,9 +10,19 @@ on:
   push:
 
 env:
+  LAST_RELEASE: 'versions/wmde1.env'
   env_file: ${{ github.event.inputs.env_file || 'versions/wmde1.env' }}
 
 jobs:
+  check_last_stable_mediawiki:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.LAST_RELEASE }}
+      - run: curl --silent https://www.mediawiki.org/wiki/Template:MW_stable_release_number 2>&1 | grep "$MEDIAWIKI_VERSION"
+
   build_mediawiki:
     runs-on: ubuntu-latest
 
