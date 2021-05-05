@@ -23,7 +23,6 @@ Security fixes will fall under the maintenance category and will most likely be 
 ### 2. Resolving
 
 - Don't publish the fix before it's deployed in WMF production environment
-  - Dont use public repositories
 
 ### 3. Deploy fix to WMF production environment
 - [Follow deployment instructions from here](https://wikitech.wikimedia.org/wiki/How_to_deploy_code#Creating_a_Security_Patch)
