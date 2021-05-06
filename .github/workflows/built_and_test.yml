@@ -68,7 +68,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
         
   build_wikibase:
     runs-on: ubuntu-latest
@@ -137,7 +137,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
       - name: Archive base docker production artifact
         uses: actions/upload-artifact@v2
@@ -200,7 +200,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
       - name: Archive bundle docker production artifacts
         uses: actions/upload-artifact@v2
@@ -246,7 +246,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -293,7 +293,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WDQS_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -331,7 +331,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
@@ -398,7 +398,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
   build_elasticsearch:
     runs-on: ubuntu-latest
@@ -436,7 +436,7 @@ jobs:
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
-          tag: ${{ env.WMDE_RELEASE_VERSION }}
+          tag: ${{ github.run_id }}
 
   test_wikibase:
     strategy:
