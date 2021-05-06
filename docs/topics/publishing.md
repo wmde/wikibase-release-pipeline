@@ -83,7 +83,7 @@ If desired you can keep the tokens and the usernames set in a `local.env` that i
 Run with:
 
 ```
-set -o allexport; source .env; source variables.env; source local.env; set +o allexport
+set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
 ./publish/dockerhub.sh
 ```
 
@@ -117,7 +117,7 @@ Run with in the terminal
 *(Will ask you for the password to the identity file once)*
 
 ```
-set -o allexport; source .env; source variables.env; source local.env; set +o allexport
+set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
 ./publish/tar.sh
 ```
 
@@ -140,7 +140,7 @@ WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
 
 Run with:
 ```
-set -o allexport; source .env; source variables.env; source local.env; set +o allexport
+set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
 ./publish/git_tag.sh
 ```
 
