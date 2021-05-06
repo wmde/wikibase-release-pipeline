@@ -2,6 +2,16 @@
 
 # Publishing a successful build
 
+## Checklist for releasing
+
+- [ ] Download and verify release artifacts
+- [ ] Publish to dockerhub
+- [ ] Publish to releases.wikimedia.org
+- [ ] Publish git tags
+- [ ] Announce new release on [wikibaseug](https://lists.wikimedia.org/mailman/listinfo/wikibaseug)
+
+### Download release artifacts
+
 After the build and test workflow has successfully completed it is time to download the results and prepare to publish it as a release.
 
 This can be done by setting the `WORKFLOW_RUN_NUMBER` variable in your local.env file and source it into the shell and execute the following command.
@@ -152,3 +162,9 @@ Execute the commands in your local checked out repositories and push the tags us
 ```
 git push --tags
 ```
+
+## Announce new versions
+
+Announcing new releases should be done to:
+
+- external https://lists.wikimedia.org/mailman/listinfo/wikibaseug
