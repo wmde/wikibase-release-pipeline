@@ -1,6 +1,8 @@
 name: Build and test Wikibase and friends
 
 on:
+  schedule:
+    - cron:  '0 */6 * * *'
   workflow_dispatch:
     inputs:
       env_file:
