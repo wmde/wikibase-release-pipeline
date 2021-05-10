@@ -1,3 +1,6 @@
+# Inspired by mediawiki-docker's apache Dockerfile:
+# https://github.com/wikimedia/mediawiki-docker/blob/dc240fc8771ce74bc2c420eb1283d718ebf1abe0/1.35/apache/Dockerfile
+
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-apache
 
