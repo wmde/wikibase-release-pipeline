@@ -8,17 +8,29 @@ MEDIAWIKI_DIR="$TEMP_GIT_DIR/mediawiki"
 TARBALL_PATH="$ROOT/artifacts/mediawiki-$MEDIAWIKI_BRANCH_NAME.tar.gz"
 
 chmod 777 "$ROOT/artifacts/"
-if [ ! -d "$MEDIAWIKI_DIR" ]; then
-   git clone --branch "$MEDIAWIKI_BRANCH_NAME" "$ROOT/git_cache/core.git" "$MEDIAWIKI_DIR"
-fi
+
+UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
+    "$MEDIAWIKI_COMMIT_HASH" \
+    "$ROOT/git_cache/core.git" \
+    MEDIAWIKI \
+    "$MEDIAWIKI_DIR" \
+    "$MEDIAWIKI_BRANCH_NAME"
+
+bash "$ROOT"/build/clean_repo.sh "$MEDIAWIKI_DIR"
+
+rm -rf "$MEDIAWIKI_DIR/skins/Vector" # remove any existing folders
 
 # Add Vector skin
-rm -rf "$MEDIAWIKI_DIR/skins/Vector" # remove any existing folders
-git clone --branch "$MEDIAWIKI_BRANCH_NAME" "$ROOT/git_cache/skins/Vector.git" "$MEDIAWIKI_DIR/skins/Vector"
+UPDATE_SUBMODULE=0 bash "$ROOT"/build/clone_repo.sh \
+    "$VECTOR_COMMIT_HASH" \
+    "$ROOT/git_cache/skins/Vector.git" \
+    VECTOR \
+    "$MEDIAWIKI_DIR/skins/Vector" \
+    "$MEDIAWIKI_BRANCH_NAME"
 
 # remove git things from release package
-rm "$MEDIAWIKI_DIR/skins/Vector".git* -rfv
-rm "$MEDIAWIKI_DIR/".git* -rfv
+bash "$ROOT"/build/clean_repo.sh "$MEDIAWIKI_DIR"
+bash "$ROOT"/build/clean_repo.sh "$MEDIAWIKI_DIR/skins/Vector"
 
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TARBALL_PATH" mediawiki
 
