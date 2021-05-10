@@ -54,9 +54,7 @@ As for WDQS we need to identify what version contains the security fix and make 
 
 ### Announcing the release to community
 
-All releases, major or minor should be announced on the following mailing-list:
-
-- https://lists.wikimedia.org/mailman/listinfo/wikibaseug
+All releases, major or minor should be announced on the [Wikibase User Group](https://lists.wikimedia.org/mailman/listinfo/wikibaseug) and [Wikidata Tech](https://lists.wikimedia.org/mailman/listinfo/wikidata-tech) mailing lists, in the [Wikidata Weekly Summary](https://www.wikidata.org/wiki/Wikidata:Status_updates), as well as on the [Wikibase Telegram Group](https://t.me/joinchat/HGjGexZ9NE7BwpXzMsoDLA).
 
 Pre-release announcement about the security releases will also be published on the above listed channels.
 
