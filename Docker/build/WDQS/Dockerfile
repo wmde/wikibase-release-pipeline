@@ -16,9 +16,8 @@ FROM openjdk:8-jdk-alpine
 # Install gettext for envsubst command, (it needs libintl package)
 # Install curl for the loadData.sh wdqs script (if someone needs it)
 RUN set -x ; \
-    apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2
-
-RUN addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
+    apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2 && \
+    addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /wdqs-service /wdqs
 
