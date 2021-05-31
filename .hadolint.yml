@@ -1,0 +1,20 @@
+ignored:
+  - DL3007
+  - DL3008
+  - DL3009
+  - DL3010
+  - DL3013
+  - DL3015
+  - DL3018
+  - DL3019
+  - DL3020
+  - DL3025
+  - DL3042
+  - DL3045
+  - SC2034
+  - SC2086
+
+override:
+  # Raise severity from info
+  warning:
+    - DL3059
