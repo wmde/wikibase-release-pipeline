@@ -9,9 +9,9 @@ COPY --from=base --chown=nobody:nogroup /var/www/html /var/www/html
 COPY artifacts/extensions /var/www/html/extensions
 
 WORKDIR /var/www/html/
-RUN rm -rf /var/www/html/vendor
-RUN rm -rf /var/www/html/composer.lock
-RUN composer install --no-dev -vv -n
+RUN rm -rf /var/www/html/vendor && \
+    rm -rf /var/www/html/composer.lock && \
+    composer install --no-dev -vv -n
 
 FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN rm -rf /var/www/html/vendor

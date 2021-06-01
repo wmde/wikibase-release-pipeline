@@ -56,8 +56,8 @@ ENV MEDIAWIKI_VERSION ${MEDIAWIKI_VERSION}
 
 # MediaWiki setup
 COPY mediawiki.tar.gz /tmp/mediawiki.tar.gz
-RUN tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz;
-RUN rm /tmp/mediawiki.tar.gz;
-RUN chown -R www-data:www-data extensions skins cache images;
+RUN tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz && \
+	rm /tmp/mediawiki.tar.gz && \
+	chown -R www-data:www-data extensions skins cache images;
 
 CMD ["apache2-foreground"]

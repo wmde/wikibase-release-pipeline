@@ -16,10 +16,9 @@ FROM php:7.2-apache
 # Install envsubst
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base=0.19.* jq=1.5* libicu-dev=63* && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-configure intl \
-&& docker-php-ext-install intl
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install intl
 
 COPY --from=fetcher /quickstatements /var/www/html/quickstatements
 COPY --from=composer --chown=root:root /quickstatements/vendor /var/www/html/quickstatements/vendor
@@ -32,8 +31,8 @@ COPY oauth.ini /templates/oauth.ini
 COPY php.ini /templates/php.ini
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/quickstatements/public_html
-RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf
-RUN sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf && \
+    sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 ENV MW_SITE_NAME=wikibase-docker\
     MW_SITE_LANG=en\

@@ -1,9 +1,9 @@
 FROM docker:latest
 
-RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3 nodejs npm
-RUN ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3 nodejs npm && \
+    ln -sf python3 /usr/bin/python && \
+    python3 -m ensurepip && \
+    pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /usr/src/app/
 COPY . .

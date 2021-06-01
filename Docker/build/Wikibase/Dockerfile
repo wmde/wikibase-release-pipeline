@@ -5,9 +5,9 @@ FROM ubuntu:xenial as unpacker
 
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends unzip=6.* jq=1.* curl=7.* ca-certificates=201* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    mkdir artifacts
 
-RUN mkdir artifacts
 COPY artifacts/Wikibase.tar.gz artifacts
 RUN tar xzf artifacts/Wikibase.tar.gz
 
@@ -27,13 +27,10 @@ FROM ${MEDIAWIKI_IMAGE_NAME}:latest
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base=0.19.* && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod rewrite
-
-RUN install -d /var/log/mediawiki -o www-data
-
-RUN docker-php-ext-install calendar bz2
+    rm -rf /var/lib/apt/lists/* && \
+    a2enmod rewrite && \
+    install -d /var/log/mediawiki -o www-data && \
+    docker-php-ext-install calendar bz2
 
 COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY artifacts/wait-for-it.sh /wait-for-it.sh
