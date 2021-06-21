@@ -27,6 +27,7 @@ Directory                         | Description
 `/var/www/html`                   | Base Mediawiki directory
 `/var/www/html/skins`             | Mediawiki skins directory
 `/var/www/html/extensions`        | Mediawiki extensions directory
+`/var/www/html/LocalSettings.d`   | LocalSettings snippet directory. All PHP files from here will be loaded at the end of the default `/LocalSettings.php.template`
 
 File                              | Description
 --------------------------------- | ------------------------------------------------------------------------------
