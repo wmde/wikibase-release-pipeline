@@ -37,10 +37,6 @@ requirements:
 	python3 build/requirements/build_version_requirements.py
 	cat artifacts/built_versions.log
 
-mediawiki:
-	bash update_cache.sh core skins
-	eval ". ./build/build_mediawiki.sh; bash build/build_mediawiki_docker.sh ${MEDIAWIKI_IMAGE_NAME}"
-
 wikibase:
 	bash update_cache.sh base
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
@@ -75,4 +71,4 @@ clean:
 	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
-all: mediawiki wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
+all: wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
