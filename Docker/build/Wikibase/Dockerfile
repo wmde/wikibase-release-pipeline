@@ -1,6 +1,7 @@
 ARG COMPOSER_IMAGE_NAME
 ARG COMPOSER_IMAGE_VERSION
 ARG MEDIAWIKI_IMAGE_NAME
+ARG MEDIAWIKI_IMAGE_VERSION
 FROM ubuntu:xenial as unpacker
 
 RUN apt-get update && \
@@ -11,7 +12,7 @@ RUN apt-get update && \
 COPY artifacts/Wikibase.tar.gz artifacts
 RUN tar xzf artifacts/Wikibase.tar.gz
 
-FROM ${MEDIAWIKI_IMAGE_NAME}:latest as collector
+FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION} as collector
 
 COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
 
@@ -23,7 +24,7 @@ WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
 RUN composer install --verbose -n --no-dev
 
-FROM ${MEDIAWIKI_IMAGE_NAME}:latest
+FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION}
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base=0.19.* && \

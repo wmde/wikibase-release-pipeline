@@ -14,64 +14,8 @@ env:
 
 jobs:
 
-  build_mediawiki:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: variables.env
-
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: ${{ env.env_file }}
-
-      - name: Cache git_cache repos
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-mediawiki-git-repo-temp-bump
-        with:
-          path: git_cache
-          key: cache-mediawiki-git-repo-temp-bump
-
-      - name: Build Tarball
-        run: bash build.sh mediawiki ${{ env.env_file }}
-
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: BuildMetadata
-          if-no-files-found: error
-          path: artifacts/build_metadata_*.env
-
-      - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: BuildArtifacts
-          if-no-files-found: error
-          path: artifacts/mediawiki.docker.tar.gz
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        if: github.ref == 'refs/heads/main'
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Store release version docker image on GHCR
-        if: github.ref == 'refs/heads/main'
-        uses: wmde/tag-push-ghcr-action@v3
-        with:
-          image_name: ${{ env.MEDIAWIKI_IMAGE_NAME }}
-          tag: ${{ github.run_id }}
-        
   build_wikibase:
     runs-on: ubuntu-latest
-    needs:
-      - build_mediawiki
     steps:
       - uses: actions/checkout@v2
 
@@ -98,12 +42,6 @@ jobs:
         with:
           path: git_cache
           key: cache-wikibase-git-repo-temp-bump
-
-      - name: Get dependency build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: BuildArtifacts
-          path: artifacts/
 
       - name: Build Tarball
         run: bash build.sh wikibase ${{ env.env_file }}
@@ -147,7 +85,6 @@ jobs:
   build_wikibase_bundle:
     runs-on: ubuntu-latest
     needs:
-      - build_mediawiki
       - build_wikibase
     steps:
       - uses: actions/checkout@v2
