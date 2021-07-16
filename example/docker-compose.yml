@@ -14,10 +14,10 @@ services:
     volumes:
       - quickstatements-data:/quickstatements/data
 
-      # Uncomment this next line to enable installation of additional services
+      ## Uncomment this next line to enable installation of additional services
       #- ./extra-install.sh:/extra-install.sh
 
-      # Uncomment this next line to mount your own LocalSettings.php file
+      ## Uncomment this next line to mount your own LocalSettings.php file
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
 
     networks:

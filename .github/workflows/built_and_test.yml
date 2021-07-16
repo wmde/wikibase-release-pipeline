@@ -470,6 +470,35 @@ jobs:
           path: |
             test/log
 
+  test_example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test example
+        run: bash test/test_example.sh
+
+      - name: Wait for WDQS to start polling wikibase
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 100
+          retry_wait_seconds: 5
+          warning_on_retry: false
+          command: cat /tmp/example_test/log/example.log | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
+
+      - run: curl -L -s -N "http://localhost/" | grep -q "Main Page"
+
+      - run: curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
+
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: /tmp/example_test/log
+
   versions:
     needs:
       - test_wikibase
