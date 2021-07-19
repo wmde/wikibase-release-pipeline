@@ -5,6 +5,8 @@ services:
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
     restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       default:
         aliases:
@@ -97,5 +99,6 @@ services:
 volumes:
   LocalSettings:
   query-service-data:
+  elasticsearch-data:
   quickstatements-data:
   mediawiki-mysql-data:
