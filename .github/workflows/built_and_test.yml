@@ -487,10 +487,14 @@ jobs:
           warning_on_retry: false
           command: cat /tmp/example_test/log/example.log | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
 
+      - run: docker ps
+      - name: Ensure 8 services have been created
+        run: docker ps --format "{{.ID}}_{{.Names}}: {{.Status}}" | wc -l | grep 8
+      - name: Ensure 8 services are up and running
+        run: docker ps --filter "status=running" --format "{{.ID}}_{{.Names}}: {{.Status}}" | wc -l | grep 8
+
       - run: curl -L -s -N "http://localhost/" | grep -q "Main Page"
-
       - run: curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
-
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
