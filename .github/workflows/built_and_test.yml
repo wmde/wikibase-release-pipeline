@@ -1,445 +1,405 @@
---- 
-env: 
-  env_file: "${{ github.event.inputs.env_file || 'versions/wmde1.env' }}"
-jobs: 
-  build_elasticsearch: 
+name: Build and test Wikibase and friends
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_file:
+        description: 'Environment file'
+        required: true
+        default: '.env' # only gets set on a "workflow_dispatch" run
+  push:
+
+env:
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde1.env' }}
+
+jobs:
+
+  build_wikibase:
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
           env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        name: "Build Elasticsearch"
-        run: "bash build.sh elasticsearch ${{ env.env_file }}"
-      - 
-        name: "Archive docker production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: ./artifacts/elasticsearch.docker.tar.gz
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
-        uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.ELASTICSEARCH_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-  build_quickstatements: 
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        id: download_step
-        name: "Build QuickStatements Image"
-        run: "bash build.sh quickstatements ${{ env.env_file }}"
-      - 
-        name: "Archive metadata artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildMetadata
-          path: artifacts/build_metadata_*.env
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
-        uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.QUICKSTATEMENTS_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-      - 
-        name: "Archive docker production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: artifacts/quickstatements.docker.tar.gz
-  build_wdqs: 
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        env: 
-          cache-name: cache-wdqs-backend-git-repo
-        name: "Cache wdqs service tar"
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache composer
         uses: actions/cache@v2
-        with: 
-          key: cache-wdqs-backend-git-repo
-          path: cache
-      - 
-        id: download_step
-        name: "Build WDQS Image"
-        run: "bash build.sh wdqs ${{ env.env_file }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
-        uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.WDQS_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-      - 
-        name: "Archive docker production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: artifacts/wdqs.docker.tar.gz
-  build_wdqs_frontend: 
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        env: 
-          cache-name: cache-wdqs-frontend-git-repo
-        name: "Cache git_cache repos"
-        uses: actions/cache@v2
-        with: 
-          key: cache-wdqs-frontend-git-repo
-          path: git_cache
-      - 
-        name: "Build WDQS-frontend"
-        run: "bash build.sh wdqs-frontend ${{ env.env_file }}"
-      - 
-        name: "Archive metadata artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildMetadata
-          path: artifacts/build_metadata_wdqs_frontend.env
-      - 
-        name: "Archive tar production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: ./artifacts/wdqs-frontend.tar.gz
-      - 
-        name: "Archive docker production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: ./artifacts/wdqs-frontend.docker.tar.gz
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
-        uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.WDQS_FRONTEND_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-  build_wdqs_proxy: 
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        name: "Build WDQS-proxy image"
-        run: "bash build.sh wdqs-proxy ${{ env.env_file }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
-        uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.WDQS_PROXY_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-      - 
-        name: "Archive docker production artifacts"
-        uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
-          name: BuildArtifacts
-          path: artifacts/wdqs-proxy.docker.tar.gz
-  build_wikibase: 
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        env: 
+        env:
           cache-name: cache-wikibase-composer
-        name: "Cache composer"
-        uses: actions/cache@v2
-        with: 
-          key: cache-wikibase-composer
+        with:
           path: cache
-      - 
-        env: 
-          cache-name: cache-wikibase-git-repo-temp-bump
-        name: "Cache git_cache repos"
+          key: cache-wikibase-composer
+
+      - name: Cache git_cache repos
         uses: actions/cache@v2
-        with: 
-          key: cache-wikibase-git-repo-temp-bump
+        env:
+          cache-name: cache-wikibase-git-repo-temp-bump
+        with:
           path: git_cache
-      - 
-        name: "Build Tarball"
-        run: "bash build.sh wikibase ${{ env.env_file }}"
-      - 
-        name: "Archive metadata artifacts"
+          key: cache-wikibase-git-repo-temp-bump
+
+      - name: Build Tarball
+        run: bash build.sh wikibase ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildMetadata
+          if-no-files-found: error
           path: artifacts/build_metadata_wikibase.env
-      - 
-        name: "Archive tar production artifacts"
+
+      - name: Archive tar production artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildArtifacts
+          if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
+
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
+        if: github.ref == 'refs/heads/main'
+        with:
           registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.WIKIBASE_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-      - 
-        name: "Archive base docker production artifact"
+        with:
+          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive base docker production artifact
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildArtifacts
+          if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
-  build_wikibase_bundle: 
-    needs: 
-      - build_wikibase
+
+  build_wikibase_bundle:
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
+    needs:
+      - build_wikibase
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
           env-file: variables.env
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        env: 
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache composer
+        uses: actions/cache@v2
+        env:
           cache-name: cache-wikibase-composer
-        name: "Cache composer"
-        uses: actions/cache@v2
-        with: 
-          key: cache-wikibase-composer
+        with:
           path: cache
-      - 
-        env: 
-          cache-name: cache-wikibase-git-repo-temp-bump
-        name: "Cache git_cache repos"
+          key: cache-wikibase-composer
+
+      - name: Cache git_cache repos
         uses: actions/cache@v2
-        with: 
-          key: cache-wikibase-git-repo-temp-bump
+        env:
+          cache-name: cache-wikibase-git-repo-temp-bump
+        with:
           path: git_cache
-      - 
-        name: "Get dependency build artifacts"
+          key: cache-wikibase-git-repo-temp-bump
+
+      - name: Get dependency build artifacts
         uses: actions/download-artifact@v2
-        with: 
+        with:
           name: BuildArtifacts
           path: artifacts/
-      - 
-        name: "Build Bundle Docker Image"
-        run: "bash build.sh wikibase_bundle ${{ env.env_file }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Login to GitHub Container Registry"
+
+      - name: Build Bundle Docker Image
+        run: bash build.sh wikibase_bundle ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
-        with: 
-          password: "${{ secrets.GITHUB_TOKEN }}"
+        if: github.ref == 'refs/heads/main'
+        with:
           registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-      - 
-        if: "github.ref == 'refs/heads/main'"
-        name: "Store release version docker image on GHCR"
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
-        with: 
-          image_name: "${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}"
-          tag: "${{ github.run_id }}"
-      - 
-        name: "Archive bundle docker production artifacts"
+        with:
+          image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive bundle docker production artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildArtifacts
+          if-no-files-found: error
           path: artifacts/wikibase-bundle.docker.tar.gz
-      - 
-        name: "Archive metadata artifacts"
+
+      - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildMetadata
+          if-no-files-found: error
           path: artifacts/build_metadata_*.env
-  test_example: 
+
+  build_quickstatements:
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        name: "Test example"
-        run: "bash test/test_example.sh"
-      - 
-        name: "Wait for WDQS to start polling wikibase"
-        uses: nick-invision/retry@v2
-        with: 
-          command: "cat /tmp/example_test/log/example.log | grep \"RecentChangesPoller - Got no real changes\" | wc -l | grep 5"
-          max_attempts: 100
-          retry_wait_seconds: 5
-          timeout_minutes: 5
-          warning_on_retry: false
-      - 
-        run: "docker ps"
-      - 
-        name: "Ensure 8 services have been created"
-        run: "docker ps --format \"{{.ID}}_{{.Names}} {{.Status}}\" | wc -l | grep 8"
-      - 
-        name: "Ensure 8 services are up and running"
-        run: "docker ps --filter \"status=running\" --format \"{{.ID}}_{{.Names}} {{.Status}}\" | wc -l | grep 8"
-      - 
-        run: "curl -L -s -N \"http://localhost/\" | grep -q \"Main Page\""
-      - 
-        run: "curl -L -s -N \"http://localhost:8834/\" | grep  -q \"Wikidata_Query_Help\""
-      - 
-        name: "Archive metadata artifacts"
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build QuickStatements Image 
+        id: download_step
+        run: bash build.sh quickstatements ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildMetadata
-          path: /tmp/example_test/log
-  test_upgrade: 
-    needs: 
-      - build_wikibase
-    runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        name: "Get Wikibase docker image artifact"
-        uses: actions/download-artifact@v2
-        with: 
-          name: BuildArtifacts
-          path: artifacts/
-      - 
-        name: "Test upgrade version - ${{ matrix.version }}"
-        run: "make test-upgrade VERSION=${{ matrix.version }}"
-      - 
-        if: always()
-        name: "Archive docker test artifacts"
+          if-no-files-found: error
+          path: artifacts/build_metadata_*.env
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive docker production artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          name: TestUpgradeArtifacts
-          path: "test/log\n"
-    strategy: 
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/quickstatements.docker.tar.gz
+
+  build_wdqs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache wdqs service tar
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wdqs-backend-git-repo
+        with:
+          path: cache
+          key: cache-wdqs-backend-git-repo
+
+      - name: Build WDQS Image 
+        id: download_step
+        run: bash build.sh wdqs ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WDQS_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/wdqs.docker.tar.gz
+
+  build_wdqs_proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build WDQS-proxy image 
+        run: bash build.sh wdqs-proxy ${{ env.env_file }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/wdqs-proxy.docker.tar.gz
+
+  build_wdqs_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Cache git_cache repos
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-wdqs-frontend-git-repo
+        with:
+          path: git_cache
+          key: cache-wdqs-frontend-git-repo
+
+      - name: Build WDQS-frontend
+        run: bash build.sh wdqs-frontend ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata_wdqs_frontend.env
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: ./artifacts/wdqs-frontend.tar.gz
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: ./artifacts/wdqs-frontend.docker.tar.gz
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+  build_elasticsearch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build Elasticsearch
+        run: bash build.sh elasticsearch ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: ./artifacts/elasticsearch.docker.tar.gz
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+  test_wikibase:
+    strategy:
       fail-fast: false
-      matrix: 
-        version: 
-          - 1.32-base
-          - 1.33-base
-          - 1.34-base
-          - 1.35-base
-          - latest-base
-          - lts-base
-          - wmde.0
-  test_wikibase: 
-    needs: 
+      matrix:
+        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        suite: [ 
+          repo, 
+          fedprops, 
+          repo_client, 
+          quickstatements, 
+          pingback, 
+          confirm_edit,
+          elasticsearch,
+
+          base__repo,
+          base__repo_client,
+          base__pingback,
+          base__fedprops,
+        ]
+    needs:
       - build_wikibase_bundle
       - build_wdqs
       - build_elasticsearch
@@ -447,79 +407,118 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        name: "Get Wikibase docker image artifact"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
-        with: 
+        with:
           name: BuildArtifacts
           path: artifacts/
-      - 
-        env: 
-          DATABASE_IMAGE_NAME: "${{ matrix.databaseImageName }}"
-        name: "Run Tests - ${{ matrix.suite }}"
-        run: "make test SUITE=${{ matrix.suite }}"
-      - 
+
+      - name: Run Tests - ${{ matrix.suite }}
+        env:
+          DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
+        run: make test SUITE=${{ matrix.suite }}
+
+      - name: Report
         if: always()
-        name: Report
         run: |
-            cd test/reporter
-            npm install
-            SUITE=${{ matrix.suite }} node report.js
-      - 
-        if: always()
-        name: "Archive docker test artifacts"
+          cd test/reporter
+          npm install
+          SUITE=${{ matrix.suite }} node report.js
+
+      - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
-        with: 
+        if: always()
+        with:
           name: TestArtifacts
-          path: "test/log\n"
-    strategy: 
+          path: |
+            test/log
+
+  test_upgrade:
+    strategy:
       fail-fast: false
-      matrix: 
-        databaseImageName: 
-          - "mysql:5.6"
-          - "mariadb:10.3"
-        suite: 
-          - repo
-          - fedprops
-          - repo_client
-          - quickstatements
-          - pingback
-          - confirm_edit
-          - elasticsearch
-          - base__repo
-          - base__repo_client
-          - base__pingback
-          - base__fedprops
-  versions: 
-    needs: 
+      matrix:
+        version: [
+          '1.32-base',
+          '1.33-base',
+          '1.34-base',
+          '1.35-base',
+          'latest-base',
+          'lts-base',
+          'wmde.0'
+        ]
+    needs:
+      - build_wikibase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Wikibase docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildArtifacts
+          path: artifacts/
+
+      - name: Test upgrade version - ${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }}
+
+      - name: Archive docker test artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: TestUpgradeArtifacts
+          path: |
+            test/log
+
+  test_example:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test example
+        run: bash test/test_example.sh
+
+      - name: Wait for WDQS to start polling wikibase
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 100
+          retry_wait_seconds: 5
+          warning_on_retry: false
+          command: cat /tmp/example_test/log/example.log | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
+
+      - run: docker ps
+      - name: Ensure 8 services have been created
+        run: docker ps --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep 8
+      - name: Ensure 8 services are up and running
+        run: docker ps --filter "status=running" --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep 8
+
+      - run: curl -L -s -N "http://localhost/" | grep -q "Main Page"
+      - run: curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
+
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: /tmp/example_test/log
+
+  versions:
+    needs:
       - test_wikibase
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        uses: actions/checkout@v2
-      - 
-        uses: c-py/action-dotenv-to-setenv@v2
-        with: 
-          env-file: "${{ env.env_file }}"
-      - 
-        name: "Build version requirements"
-        run: "bash build.sh requirements ${{ env.env_file }}"
-      - 
-        name: "Archive metadata artifacts"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build version requirements
+        run: bash build.sh requirements ${{ env.env_file }}
+
+      - name: Archive metadata artifacts
         uses: actions/upload-artifact@v2
-        with: 
-          if-no-files-found: error
+        with:
           name: BuildMetadata
+          if-no-files-found: error
           path: artifacts/built_versions.log
-name: "Build and test Wikibase and friends"
-true: 
-  push: ~
-  workflow_dispatch: 
-    inputs: 
-      env_file: 
-        default: .env
-        description: "Environment file"
-        required: true
