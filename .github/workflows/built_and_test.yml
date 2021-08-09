@@ -496,10 +496,10 @@ jobs:
       - run: curl -L -s -N "http://localhost/" | grep -q "Main Page"
       - run: curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
 
-      - name: Archive metadata artifacts
+      - name: Archive test example artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: BuildMetadata
+          name: TestExampleArtifacts
           if-no-files-found: error
           path: /tmp/example_test/log
 
