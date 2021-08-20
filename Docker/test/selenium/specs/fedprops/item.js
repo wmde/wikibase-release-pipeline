@@ -4,7 +4,6 @@ const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../pages/queryservice-ui/queryservice-ui.page' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 
 describe( 'Fed props Item', function () {
@@ -13,10 +12,6 @@ describe( 'Fed props Item', function () {
 	const propertyValue = 'ISNI';
 	const itemId = 'Q1';
 	const itemLabel = 'T267743-';
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should search wikidata.org through wbsearchentities', function () {
 		const result = browser.makeRequest(

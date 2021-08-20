@@ -2,7 +2,6 @@
 
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 const _ = require( 'lodash' );
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {
@@ -25,10 +24,6 @@ describe( 'QuickStatements Service', function () {
 	let propertyId = null;
 	let propertyIdItem = null;
 	let propertyURL = null;
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should be able to load the start page', function () {
 		browser.url( process.env.QS_SERVER );

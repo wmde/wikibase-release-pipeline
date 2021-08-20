@@ -5,7 +5,6 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
@@ -16,10 +15,6 @@ describe( 'Item', function () {
 	let propertyId = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
 

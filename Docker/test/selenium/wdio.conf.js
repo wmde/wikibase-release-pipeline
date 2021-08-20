@@ -9,6 +9,7 @@ const fs = require( 'fs' ),
 	saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 
 const JsonReporter = require( './json-reporter.js' );
+const defaultFunctions = require( './helpers/default-functions.js' );
 
 exports.config = {
 
@@ -75,8 +76,8 @@ exports.config = {
 	suites: {
 
 		// bundle-specs
-		repo: [ './specs/repo/*.js' ],
-		repo_client: [ './specs/repo_client/*.js' ],
+		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
+		repo_client: [ './specs/repo_client/*.js', './specs/repo_client/extensions/*.js' ],
 		fedprops: [ './specs/fedprops/*.js' ],
 		pingback: [ './specs/pingback/*.js' ],
 
@@ -84,6 +85,7 @@ exports.config = {
 			'./specs/repo_client/interwiki-links.js',
 			'./specs/quickstatements/*.js'
 		],
+
 		elasticsearch: [ './specs/elasticsearch/*.js' ],
 		confirm_edit: [ './specs/confirm_edit/*.js' ],
 
@@ -116,6 +118,26 @@ exports.config = {
 	// =====
 	// Hooks
 	// =====
+	/**
+	 * Initializes the default functions for every test and
+	 * polls the wikibase docker container for installed extensions
+	 */
+	before: function () {
+		defaultFunctions.init();
+		if ( !browser.config.installed_extensions ) {
+			const extensions = browser.dockerExecute(
+				process.env.DOCKER_WIKIBASE_REPO_NAME,
+				"bash -c 'echo $INSTALLED_EXTENSIONS'"
+			);
+
+			if ( extensions ) {
+				browser.config.installed_extensions = extensions.replace( /\n/g, '' ).split( ',' );
+			} else {
+				browser.config.installed_extensions = [];
+			}
+
+		}
+	},
 
 	/**
 	 * Save a screenshot when test fails.

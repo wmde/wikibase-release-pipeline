@@ -1,13 +1,8 @@
 'use strict';
 
 const { assert } = require( 'console' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'ConfirmEdit', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should allow to edit with captcha', function () {
 

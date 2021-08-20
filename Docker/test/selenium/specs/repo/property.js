@@ -1,17 +1,12 @@
 'use strict';
 
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Property = require( '../../pages/entity/property.page' );
 
 describe( 'Property', function () {
 
 	let propertyId = null;
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should be able to add statement and reference to property', function () {
 

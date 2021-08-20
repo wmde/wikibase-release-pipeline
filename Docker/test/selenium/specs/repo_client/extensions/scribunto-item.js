@@ -6,7 +6,7 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 const fs = require( 'fs' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
@@ -18,11 +18,9 @@ describe( 'Scribunto Item', function () {
 	const propertyValue = 'PropertyExampleStringValue';
 	const luaPageTitle = 'RepoClientLuaTest';
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should create an item on repo', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'string' ) );
 		const data = {
@@ -47,6 +45,8 @@ describe( 'Scribunto Item', function () {
 
 	it( 'Should be able to reference an item on client using Lua', function () {
 
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+
 		const template = fs.readFileSync( 'data/repo-client.lua', 'utf8' );
 		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
 
@@ -69,6 +69,8 @@ describe( 'Scribunto Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', function () {
 
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+
 		LoginPage.loginAdmin();
 
 		// goto delete page
@@ -85,6 +87,8 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it( 'Should be able to see delete changes is dispatched to client for lua page', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		browser.pause( 30 * 1000 );
 

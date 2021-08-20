@@ -1,15 +1,10 @@
 'use strict';
 
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Util = require( 'wdio-mediawiki/Util' );
 
 describe( 'Wikibase API', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should be able to create many properties and items', function () {
 

@@ -1,15 +1,13 @@
 'use strict';
 
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'VisualEditor', function () {
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should be able to edit a page using the editor', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'VisualEditor' );
 
 		browser.url( process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit' );
 
