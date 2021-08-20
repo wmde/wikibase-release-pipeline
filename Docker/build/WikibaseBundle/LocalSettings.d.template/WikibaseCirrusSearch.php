@@ -1,8 +1,6 @@
 <?php
 
-# ElasticSearch related extensions
-wfLoadExtension( 'Elastica' );
-wfLoadExtension( 'CirrusSearch' );
+// https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch
 wfLoadExtension( 'WikibaseCirrusSearch' );
 
 if ( getenv('MW_ELASTIC_HOST') !== false ) {
