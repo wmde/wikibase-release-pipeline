@@ -14,10 +14,13 @@
 
 After the build and test workflow has successfully completed it is time to download the results and prepare to publish it as a release.
 
-This can be done by setting the `WORKFLOW_RUN_NUMBER` variable in your local.env file and source it into the shell and execute the following command.
+This can be done by setting the `WORKFLOW_RUN_NUMBER` variable in your local.env and execute the following command.
 
-```sh
-$ ./publish/download.sh
+```
+$ make download
+...
+Getting artifacts for run 1157808966
+...
 ```
 
 This will download the build, test and metadata artifacts for the workflow run into `artifacts/WORKFLOW_RUN_NUMBER/`
