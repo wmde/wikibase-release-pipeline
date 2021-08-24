@@ -1,0 +1,24 @@
+graph TD
+    A{Time to make a release} -->|A pull request is made with a new versions/wmde.N file| B(pullrequest is merged into main of pipeline)
+
+    A -->|A patch is made on gerrit finalizing the Release notes| AA(Patch is merged into Wikibase)
+    AA --> BB(All open backports gets reviewed)
+    BB --> B
+
+    B --> |Pipeline is executed and release candidate artifacts are on github| C[Release candidates get tested and verified]
+    C --> D(Release artifacts downloaded by engineer)
+    C --> | Release artifacts deployed to test-system by engineer| F(Release artifacts tested by product manager)
+    D --> E(Release candidates verified)
+    D -...-> EE(Release candidates rejected)
+    EE --> A
+    F-.-> EE
+    F --> E
+    E --> G[Publish release candidate]
+    G --> H(Dockerhub)
+    H --> K(Publish from github)
+    H --> L(Publish locally downloaded artifacts)
+    
+    G --> I(Tarball)
+    I --> II(Engineer publish locally downloaded artifacts)
+    G --> J(Tagging)
+    J -->JJ(Engineer publish git tags)

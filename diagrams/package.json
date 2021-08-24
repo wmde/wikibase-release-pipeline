@@ -4,6 +4,17 @@
   "description": "TODO",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^8.8.2-beta.8"
+    "@mermaid-js/mermaid-cli": "^8.8.2-beta.8",
+    "eslint": "^7.13.0",
+    "eslint-config-wikimedia": "0.17.0",
+    "eslint-plugin-compat": "^3.8.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "lint": "npx eslint .",
+    "fix": "npx eslint . --fix"
   }
 }
