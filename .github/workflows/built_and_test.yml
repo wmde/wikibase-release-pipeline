@@ -432,8 +432,7 @@ jobs:
         if: always()
         with:
           name: TestArtifacts
-          path: |
-            test/log
+          path: test/log
 
   test_upgrade:
     strategy:
@@ -467,8 +466,7 @@ jobs:
         if: always()
         with:
           name: TestUpgradeArtifacts
-          path: |
-            test/log
+          path: test/log
 
   test_example:
     runs-on: ubuntu-latest
