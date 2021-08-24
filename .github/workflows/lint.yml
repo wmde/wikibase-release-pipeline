@@ -37,4 +37,26 @@ jobs:
           cd Docker/test/selenium 
           npm install
           npm run lint
+  lint_diagrams:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: variables.env
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: npm-lint-cache
+      - name: lint the selenium javascript tests
+        run: |
+          cd diagrams
+          npm install
+          npm run lint
+      - name: test building diagram
+        run: |
+          cd diagrams
+          node make_overview.js
           
