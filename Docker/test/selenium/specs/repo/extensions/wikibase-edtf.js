@@ -8,17 +8,13 @@ describe( 'WikibaseEdtf', function () {
 
 	let propertyId, itemId;
 
-	it( 'Should allow to create the EDTF property', function () {
+	it( 'Should allow to create and use the EDTF property', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseEdtf' );
 
+		// create the property
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'edtf' ) );
 		assert( propertyId.startsWith( 'P' ) === true );
-	} );
-
-	it( 'Should allow to use the new property', function () {
-
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseEdtf' );
 
 		const rawValue = '1985-04-12T23:20:30';
 
@@ -35,7 +31,7 @@ describe( 'WikibaseEdtf', function () {
 		};
 
 		itemId = browser.call(
-			() => WikibaseApi.createItem( 'image-test', data )
+			() => WikibaseApi.createItem( 'edtf-test', data )
 		);
 
 		// go look at wikibase
