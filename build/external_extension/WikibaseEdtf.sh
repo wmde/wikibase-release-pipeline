@@ -7,4 +7,6 @@ UPDATE_SUBMODULE=0 bash build/clone_repo.sh \
     "git_cache/WikibaseEdtf.git" \
     WIKIBASEEDTF \
     "$BUILT_EXTENSIONS_PATH/WikibaseEdtf" \
-    master && bash build/clean_repo.sh "$BUILT_EXTENSIONS_PATH/WikibaseEdtf"
+    master
+
+bash build/clean_repo.sh "$BUILT_EXTENSIONS_PATH/WikibaseEdtf"

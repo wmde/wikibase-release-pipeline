@@ -58,7 +58,7 @@ for arg in "$@"; do
 		fetch_all WikibaseLocalMedia.git
 
 		# WikibaseEdtf
-		clone_if_not_present WikibaseEdtf.git https://github.com/ProfessionalWiki/WikibaseEdtf
+		clone_if_not_present WikibaseEdtf.git https://github.com/ProfessionalWiki/WikibaseEdtf.git
 		fetch_all WikibaseEdtf.git
 
 		for extension in "${extensions[@]}"; do

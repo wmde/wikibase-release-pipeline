@@ -8,4 +8,6 @@ UPDATE_SUBMODULE=0 bash build/clone_repo.sh \
     "git_cache/WikibaseLocalMedia.git" \
     WIKIBASELOCALMEDIA \
     "$BUILT_EXTENSIONS_PATH/WikibaseLocalMedia" \
-    master && bash build/clean_repo.sh "$BUILT_EXTENSIONS_PATH/WikibaseLocalMedia"
+    master
+
+bash build/clean_repo.sh "$BUILT_EXTENSIONS_PATH/WikibaseLocalMedia"
