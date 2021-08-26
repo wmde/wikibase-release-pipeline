@@ -30,9 +30,6 @@ fi
 
 bash test_stop.sh
 
-# remove reporter log
-rm -f "log/selenium/result-$SUITE.json"
-
 # start container with settings
 STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
 docker-compose $SUITE_CONFIG up -d --force-recreate
@@ -50,4 +47,4 @@ fi
 docker-compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
-    wikibase-selenium-test npm run $NODE_COMMAND
+    wikibase-selenium-test bash -c "rm -f /usr/src/app/log/selenium/result-$SUITE.json && npm run $NODE_COMMAND"
