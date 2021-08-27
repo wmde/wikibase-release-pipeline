@@ -76,5 +76,10 @@ foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 	if (strpos(${DOLLAR}filename, 'WikibaseLocalMedia') !== false) {
 		continue;
 	}
+
+	if (strpos(${DOLLAR}filename, 'WikibaseEdtf') !== false) {
+		continue;
+	}
+
     include ${DOLLAR}filename;
 }
