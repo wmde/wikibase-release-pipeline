@@ -1,5 +1,5 @@
-# Wikibase for testing
-version: '3'
+# Additional services example
+version: '3.4'
 
 services:
   elasticsearch:

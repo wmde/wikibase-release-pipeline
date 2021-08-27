@@ -1,4 +1,4 @@
-# Wikibase for testing
+# Example Wikibase docker-compose setup
 version: '3.4'
 
 x-common-variables: &wikibase_variables
