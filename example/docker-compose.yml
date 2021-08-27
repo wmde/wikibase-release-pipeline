@@ -64,7 +64,7 @@ services:
           - wikibase-jobrunner.svc
     environment:
       <<: *wikibase_variables
-      MAX_JOBS: 1
+      MAX_JOBS: ${MAX_JOBS}
 
   mysql:
     image: "${MYSQL_IMAGE_NAME}"
