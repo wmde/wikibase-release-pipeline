@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 function clone_if_not_present {
 	REPOSITORY_CACHE_NAME=$1
@@ -56,6 +56,10 @@ for arg in "$@"; do
 		# WikibaseLocalMedia
 		clone_if_not_present WikibaseLocalMedia.git https://github.com/ProfessionalWiki/WikibaseLocalMedia.git
 		fetch_all WikibaseLocalMedia.git
+
+		# WikibaseEdtf
+		clone_if_not_present WikibaseEdtf.git https://github.com/ProfessionalWiki/WikibaseEdtf.git
+		fetch_all WikibaseEdtf.git
 
 		for extension in "${extensions[@]}"; do
 			clone_if_not_present "$extension.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
