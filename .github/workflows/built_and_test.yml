@@ -470,6 +470,9 @@ jobs:
 
   test_example:
     runs-on: ubuntu-latest
+    env:
+      NUM_SERVICES: 9
+      LOG_FILE: /tmp/example_test/log/example.log
     steps:
       - uses: actions/checkout@v2
 
@@ -483,23 +486,33 @@ jobs:
           max_attempts: 100
           retry_wait_seconds: 5
           warning_on_retry: false
-          command: cat /tmp/example_test/log/example.log | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
+          command: cat ${{ env.LOG_FILE }} | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
 
       - run: docker ps
-      - name: Ensure 8 services have been created
-        run: docker ps --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep 8
-      - name: Ensure 8 services are up and running
-        run: docker ps --filter "status=running" --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep 8
+      - name: Ensure ${{ env.NUM_SERVICES }} services have been created
+        run: docker ps --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep ${{ env.NUM_SERVICES }}
+      - name: Ensure ${{ env.NUM_SERVICES }} services are up and running
+        run: docker ps --filter "status=running" --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep ${{ env.NUM_SERVICES }}
+      
+      - name: Ensure some services respond to requests
+        run: |
+          curl -L -s -N "http://localhost/" | grep -q "Main Page"
+          curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
+      
+      - name: Ensure job-runner ran recentChangesUpdate
+        run: cat ${{ env.LOG_FILE }} | grep "recentChangesUpdate Special:RecentChanges type=cacheUpdate" | wc -l | grep 2
 
-      - run: curl -L -s -N "http://localhost/" | grep -q "Main Page"
-      - run: curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
-
+      - name: Output log to terminal
+        if: always()
+        run: cat ${{ env.LOG_FILE }}
+      
       - name: Archive test example artifacts
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: TestExampleArtifacts
           if-no-files-found: error
-          path: /tmp/example_test/log
+          path: ${{ env.LOG_FILE }}
 
   versions:
     needs:
