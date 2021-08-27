@@ -12,8 +12,13 @@ class JsonReporter extends reporter.default {
 
 		this.failures = [];
 		this.success = [];
+		this.skipped = [];
 	}
-
+	onTestSkip( test ) {
+		this.skipped.push( {
+			fullTitle: test.fullTitle
+		} );
+	}
 	onTestPass( test ) {
 		this.success.push( {
 			fullTitle: test.fullTitle
@@ -30,7 +35,8 @@ class JsonReporter extends reporter.default {
 
 		const result = {
 			fail: this.failures,
-			pass: this.success
+			pass: this.success,
+			skip: this.skipped
 		};
 
 		const suite = process.env.SUITE || 'unknown';
@@ -43,6 +49,7 @@ class JsonReporter extends reporter.default {
 			if ( existing ) {
 				result.pass = result.pass.concat( existing.pass );
 				result.fail = result.fail.concat( existing.fail );
+				result.skip = result.skip.concat( existing.skip );
 			}
 		}
 
