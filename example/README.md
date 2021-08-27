@@ -43,26 +43,23 @@ The wikibase bundle comes with some additional services that can be enabled.
 - quickstatements
 - elasticsearch
 
-### 1. Uncomment the extra-install scripts in `docker-compose.yml` 
-
-In the volumes section of the wikibase service there is one commented line that automatically sets up the extensions needed for the additional services.
+### 1. Run with the extra configuration
 
 ```
+docker-compose -f docker-compose.yml -f docker-compose.extra.yml up
+```
+
+In the volumes section of the wikibase service in [docker-compose.extra.yml](docker-compose.extra.yml) there is one additional script inside the container that automatically sets up the extensions needed for the additional services.
+
+```yml
 - ./extra-install.sh:/extra-install.sh
 ```
 
 Looking inside extra-install.sh it executes two scripts that sets up an OAuth consumer for quickstatements and creates indicies for elasticsearch.
 
-### 2. Uncomment MW_ELASTIC_HOST and MW_ELASTIC_PORT in `docker-compose.yml`
 
-To configure wikibase to use elasticsearch we need to uncomment the following two lines in the example docker-compose.yml file
-```
-      - MW_ELASTIC_HOST=elasticsearch.svc
-      - MW_ELASTIC_PORT=9200
-``` 
-
-### 3. Run with the extra configuration
-
-```
-docker-compose -f docker-compose.yml -f docker-compose.extra.yml up
+There are also additional environment variables passed into wikibase to configure the  elasticsearch host and port.
+```yml
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 ```

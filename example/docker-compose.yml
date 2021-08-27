@@ -12,8 +12,6 @@ x-common-variables: &wikibase_variables
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  #MW_ELASTIC_HOST: elasticsearch.svc
-  #MW_ELASTIC_PORT: 9200
   WIKIBASEHOST:
   QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
 
@@ -29,15 +27,12 @@ services:
       - "${WIKIBASE_PORT}:80"
     volumes:
       - quickstatements-data:/quickstatements/data
-
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
-      
-      ## Uncomment this next line to enable installation of additional services
-      #- ./extra-install.sh:/extra-install.sh
 
       ## Uncomment this next line to mount your own LocalSettings.php file
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+
     networks:
       default:
         aliases:
