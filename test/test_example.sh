@@ -14,6 +14,5 @@ mkdir -p log
 cp template.env .env
 
 # uncomment extra-install scripts
-sed -i '16,22 s/#//' docker-compose.yml
 docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 docker-compose -f docker-compose.yml -f docker-compose.extra.yml logs -f --no-color > "log/example.log" &
