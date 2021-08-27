@@ -64,14 +64,16 @@ const defaultFunctions = function () {
 	/**
 	 * Execute docker command on container and get output
 	 */
-	browser.addCommand( 'dockerExecute', function async( container, command, opts ) {
+	browser.addCommand( 'dockerExecute', function async( container, command, opts, shouldLog ) {
 
 		if ( !opts ) {
 			opts = '';
 		}
 
 		const fullCommand = 'docker exec ' + opts + ' ' + container + ' ' + command;
-		console.log( 'executing: ' + fullCommand );
+		if ( shouldLog ) {
+			console.log( 'executing: ' + fullCommand );
+		}
 
 		return new Promise( ( resolve ) => {
 			exec( fullCommand, ( error, stdout, stderr ) => {
@@ -196,4 +198,16 @@ const defaultFunctions = function () {
 
 };
 
-module.exports = defaultFunctions;
+module.exports = {
+	init: defaultFunctions,
+	skipIfExtensionNotPresent: function ( test, extension ) {
+		const installedExtensions = browser.config.installed_extensions;
+		if ( !installedExtensions || installedExtensions.length === 0 ) {
+			return;
+		} else if ( installedExtensions && installedExtensions.includes( 'Wikibase' ) && installedExtensions.includes( extension ) ) {
+			return;
+		} else {
+			test.skip();
+		}
+	}
+};

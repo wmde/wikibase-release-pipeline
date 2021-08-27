@@ -2,13 +2,8 @@
 
 const fs = require( 'fs' );
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Interwiki links', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should be able to insert interwiki links', function () {
 		const repoLink = fs.readFileSync( 'data/interwiki-link.sql', 'utf8' )

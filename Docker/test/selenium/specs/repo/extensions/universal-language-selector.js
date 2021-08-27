@@ -1,15 +1,13 @@
 'use strict';
 
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'UniversalLanguageSelector', function () {
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should be able to see the language selector menu', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
 
 		browser.url( process.env.MW_SERVER );
 		$( '#searchInput' ).waitForDisplayed();

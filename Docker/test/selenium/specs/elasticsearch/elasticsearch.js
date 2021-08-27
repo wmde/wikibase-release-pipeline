@@ -3,16 +3,11 @@
 const { assert } = require( 'console' );
 const Util = require( 'wdio-mediawiki/Util' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 const itemAlias = Util.getTestString( 'alias' );
 const itemLabel = Util.getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	let itemId = null;
 

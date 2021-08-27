@@ -3,7 +3,6 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Property Prefetching', function () {
 
@@ -12,10 +11,6 @@ describe( 'Property Prefetching', function () {
 	const properties = [];
 	const propertyGuids = [];
 	const NUM_PROPERTIES = 25;
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'can add many federated properties and it shows up in the ui', function () {
 

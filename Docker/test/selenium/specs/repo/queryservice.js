@@ -6,13 +6,8 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../pages/queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'QueryService', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should not be able to post to sparql endpoint', function () {
 		const result = browser.makeRequest(

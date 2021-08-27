@@ -4,6 +4,7 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const path = require( 'path' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseLocalMedia', function () {
 
@@ -12,6 +13,8 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to upload an image', function () {
 
+		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
+
 		LoginPage.loginAdmin();
 
 		browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
@@ -19,7 +22,7 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '#wpUploadFile' ).waitForDisplayed();
 
 		const fileUpload = $( '#wpUploadFile' );
-		const filePath = path.join( __dirname, '../../data/image.png' );
+		const filePath = path.join( __dirname, '../../../data/image.png' );
 		fileUpload.setValue( filePath );
 
 		$( 'input.mw-htmlform-submit' ).click();
@@ -31,6 +34,8 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
 
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'localMedia' ) );
 		assert( propertyId.startsWith( 'P' ) === true );
@@ -44,6 +49,8 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
 
 		const data = {
 			claims: [

@@ -2,15 +2,13 @@
 
 const assert = require( 'assert' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Nuke', function () {
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should be able to see Special:Nuke page with a list of pages', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
 
 		browser.editPage(
 			process.env.MW_SERVER,

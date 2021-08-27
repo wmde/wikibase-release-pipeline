@@ -2,13 +2,8 @@
 
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Search', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should be able to create an item and search for it', function () {
 

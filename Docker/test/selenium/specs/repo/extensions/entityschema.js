@@ -2,18 +2,16 @@
 
 const assert = require( 'assert' );
 const fs = require( 'fs' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'EntitySchema', function () {
 
 	const testLabel = 'A label';
 	const testDescription = 'A description';
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should be able to create an EntitySchema', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'EntitySchema' );
 
 		browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 

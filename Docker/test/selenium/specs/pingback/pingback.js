@@ -1,13 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Pingback', function () {
-
-	before( function () {
-		defaultFunctions();
-	} );
 
 	it( 'Should ping on first page request', function () {
 

@@ -2,15 +2,13 @@
 
 const assert = require( 'assert' );
 const fs = require( 'fs' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Scribunto', function () {
 
-	before( function () {
-		defaultFunctions();
-	} );
-
 	it( 'Should be able to execute lua module', function () {
+
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		browser.editPage(
 			process.env.MW_SERVER,
