@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require( 'assert' );
+const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Special:Version', function () {
 
@@ -31,14 +32,27 @@ describe( 'Special:Version', function () {
 		specialpage: [ 'Nuke' ]
 	};
 
+	const envExtensions = {
+		WikibaseRepository: 'Wikibase',
+		WikibaseClient: 'Wikibase',
+		CLDR: 'cldr',
+		Parsoid: 'VisualEditor',
+		'Wikibase Local Media': 'WikibaseLocalMedia'
+	};
+
 	// should be disabled for dynamic tests
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	Object.keys( extensions ).forEach( ( extensionPackage ) => {
 
-		it( 'Should contain ' + extensionPackage + ' extensions', function () {
-			browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+		extensions[ extensionPackage ].forEach( ( extension ) => {
+			// Get the extension name from the override if available
+			const name = envExtensions[ extension ] ? envExtensions[ extension ] : extension;
 
-			extensions[ extensionPackage ].forEach( ( extension ) => {
+			it( 'Should contain ' + name + ' extensions', function () {
+
+				defaultFunctions.skipIfExtensionNotPresent( this, name );
+
+				browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = $( '#mw-version-ext-' + extensionPackage + '-' + extension.replace( / /g, '_' ) );
@@ -47,6 +61,7 @@ describe( 'Special:Version', function () {
 
 				assert( elementSelector.getText() !== null );
 			} );
+
 		} );
 	} );
 } );
