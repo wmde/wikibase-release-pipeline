@@ -33,6 +33,7 @@ extensions=( \
 		"Nuke" \
 		"OAuth" \
 		"Scribunto" \
+		"SyntaxHighlight_GeSHi" \
 		"VisualEditor" \
 		"UniversalLanguageSelector"
 		"Wikibase" \
