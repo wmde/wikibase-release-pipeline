@@ -36,6 +36,10 @@ if (fs.existsSync(filePath)) {
             core.info( 'OK: ' + test.fullTitle );
         });
 
+        resultObject.skip.forEach(test => {
+            core.warning( 'SKIP: ' + test.fullTitle );
+        });
+
         core.info('\u001b[1mAll good 👍')
     }
 } else {
