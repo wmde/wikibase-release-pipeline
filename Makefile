@@ -5,6 +5,10 @@ include .env
 
 export
 
+.PHONY: download
+download:
+	bash publish/download.sh
+
 .PHONY: test
 test:
 	bash test/test_suite.sh ${SUITE}
