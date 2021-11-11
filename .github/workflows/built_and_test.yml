@@ -10,7 +10,7 @@ on:
   push:
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde2.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde4-alpha.env' }}
 
 jobs:
 
