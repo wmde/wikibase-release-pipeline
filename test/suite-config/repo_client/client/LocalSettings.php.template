@@ -83,3 +83,28 @@ foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 
     include ${DOLLAR}filename;
 }
+
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
+${DOLLAR}wgShowExceptionDetails = true;
+${DOLLAR}wgShowSQLErrors = true;
+${DOLLAR}wgDebugDumpSql  = true;
+${DOLLAR}wgShowDBErrorBacktrace = true;
+
+// TODO hide behind some version check
+${DOLLAR}baseRepoNs = 120;
+define( 'WB_REPO_NS_ITEM', ${DOLLAR}baseRepoNs );
+define( 'WB_REPO_NS_PROPERTY', ${DOLLAR}baseRepoNs + 2 );
+${DOLLAR}wgWBClientSettings['entitySources'] = [
+	'local' => [
+		'repoDatabase' => 'my_wiki',
+		'baseUri' => 'http://wikibase.svc/entity',
+		'entityNamespaces' => [
+			'item' => WB_REPO_NS_ITEM,
+			'property' => WB_REPO_NS_PROPERTY
+		],
+		'rdfNodeNamespacePrefix' => 'wd',
+		'rdfPredicateNamespacePrefix' => '',
+		'interwikiPrefix' => '',
+	],
+];

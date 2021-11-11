@@ -106,8 +106,13 @@ describe( 'Item', function () {
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to delete the item on repo', function () {
+	it( 'Should be able to delete the item on repo and see the dispatch', function () {
 
+		// this doesn't happen from 1.37 branch of wikibase
+		const version = browser.getWikiVersion( process.env.MW_CLIENT_SERVER );
+		if ( version.minor >= 37 ) {
+			this.skip();
+		}
 		LoginPage.loginAdmin();
 
 		// goto delete page
@@ -120,11 +125,7 @@ describe( 'Item', function () {
 		$( '.oo-ui-flaggedElement-destructive button' ).waitForDisplayed();
 		$( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-	} );
-
-	it( 'Should be able to see delete changes is dispatched to client for test page', function () {
-
+		// wait for dispatching
 		browser.pause( 30 * 1000 );
 
 		const expectedTestDeletionChange = {

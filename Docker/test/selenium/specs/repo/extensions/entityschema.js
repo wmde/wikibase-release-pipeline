@@ -31,15 +31,14 @@ describe( 'EntitySchema', function () {
 
 		$( '#entityschema-schema-text' ).waitForDisplayed();
 
-		const actualTemplate = $( '#entityschema-schema-text' ).getText();
+		const outputTemplate = $( '#entityschema-schema-text' ).getText();
 		const actualLabel = $( '.entityschema-title-label' ).getText();
 		const actualId = $( '.entityschema-title-id' ).getText();
 		const actualDescription = $( '.entityschema-description' ).getText();
-
-		assert( actualDescription === testDescription );
-		assert( actualTemplate === shexTemplate );
-		assert( actualLabel === testLabel );
-		assert( actualId === '(E1)' );
+		assert.equal( actualDescription, testDescription );
+		assert( outputTemplate.includes( shexTemplate ) === true );
+		assert.equal( actualLabel, testLabel );
+		assert.equal( actualId, '(E1)' );
 
 		const linkUrl = $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
 

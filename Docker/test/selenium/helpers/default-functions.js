@@ -5,6 +5,7 @@ const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const _ = require( 'lodash' );
 const MWBot = require( 'mwbot' );
+const parseVersion = require( 'parse-version' );
 
 const defaultFunctions = function () {
 
@@ -17,6 +18,21 @@ const defaultFunctions = function () {
 		} else {
 			return axios.get( url, params );
 		}
+	} );
+
+	/**
+	 * Make a get request to get wiki version
+	 */
+	browser.addCommand( 'getWikiVersion', function async( server ) {
+		if ( !server ) {
+			throw new Error( 'Sever not set' );
+		}
+
+		const apiURL = server + '/w/api.php?action=query&meta=siteinfo&siprop=general%7Cnamespaces%7Cnamespacealiases%7Cstatistics&format=json';
+		const result = browser.makeRequest( apiURL );
+		console.log( result );
+		const version = result.data.query.general.generator;
+		return parseVersion( version );
 	} );
 
 	/**

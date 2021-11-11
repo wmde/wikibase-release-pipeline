@@ -21,7 +21,8 @@
 		"wdio-mediawiki": "^1.1.1",
 		"wdio-wikibase": "^5.1.0",
 		"axios": "^0.21.0",
-		"lodash": "^4.17.20"
+		"lodash": "^4.17.20",
+		"parse-version": "^0.7.0"
 	},
 	"browserslist": [
 		"ie 11"
@@ -31,6 +32,5 @@
 		"test:run-filter": "wdio wdio.conf.js --spec $FILTER",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
-	},
-	"dependencies": {}
+	}
 }
