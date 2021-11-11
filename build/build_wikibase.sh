@@ -7,14 +7,15 @@ TEMP_GIT_DIR="$(mktemp -d)"
 TEMP_TAR_DIR="$(pwd)"/artifacts
 WIKIBASE_PATH="$TEMP_GIT_DIR/Wikibase"
 
-git clone --depth 1 --single-branch --branch "${WIKIBASE_BRANCH_NAME}" "$ROOT/git_cache/Wikibase.git" "$WIKIBASE_PATH"
+UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
+    "$WIKIBASE_COMMIT_HASH" \
+    "$ROOT/git_cache/Wikibase.git" \
+    WIKIBASE \
+    "$WIKIBASE_PATH" \
+    "${WIKIBASE_BRANCH_NAME}"
 
-GIT_TRACE=1 git -C "$WIKIBASE_PATH" submodule update --init --recursive
+bash "$ROOT"/build/clean_repo.sh "$WIKIBASE_PATH"
 
-bash "$ROOT"/build/write_git_metadata.sh "$WIKIBASE_PATH" "$ROOT"/artifacts/build_metadata_wikibase.env "WIKIBASE_COMMIT_HASH"
-
-# remove git things from release package
-rm "$WIKIBASE_PATH"/.git* -rfv
 # remove travis build file
 rm "$WIKIBASE_PATH"/.travis.yml -vf
 
