@@ -3,6 +3,9 @@
 set -e
 
 export SUITE=$1
+export SLOW=$2
+
+BUILD_IMAGES=$SLOW
 
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
@@ -28,15 +31,15 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
-bash test_stop.sh
-
 # start container with settings
 STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
 docker-compose $SUITE_CONFIG up -d --force-recreate
 docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE_IMAGE_NAME.$1.log" &
 
 # run status checks and wait until containers start
-docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+if [[ $BUILD_IMAGES == 'true' ]]; then
+    docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+fi
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 NODE_COMMAND='test:run'

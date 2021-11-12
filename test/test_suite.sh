@@ -15,15 +15,20 @@ echo "#########################################"
 docker --version
 
 export SUITE=$1
-
 if [ -z "$SUITE" ]; then
     echo "SUITE is not set"
     exit 1
 fi
 
+SLOW='false'
+LOAD_IMAGES=$SLOW
+BUILD_IMAGES=$SLOW
+STOP_IMAGES='true'
+
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
 fi
+
 
 # select image based on prepended suite name
 if [[ $SUITE == base__* ]]; then
@@ -31,18 +36,23 @@ if [[ $SUITE == base__* ]]; then
 else
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_BUNDLE_IMAGE_NAME"
 
-    # load additional bundle images
-    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
+    if [[ $LOAD_IMAGES == 'true' ]]; then
+
+        # load additional bundle images
+        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
+        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
+    fi
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME
 
-# load default images
-docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+if [[ $LOAD_IMAGES == 'true' ]]; then
+    # load default images
+    docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+fi
 
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"
@@ -51,12 +61,18 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-## build selenium test container
-docker-compose \
-    -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
-    wikibase-selenium-test
+if [[ $BUILD_IMAGES == 'true' ]]; then
+    ## build selenium test container
+    docker-compose \
+        -f docker-compose.yml \
+        -f docker-compose-selenium-test.yml \
+        build \
+        --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
+        wikibase-selenium-test
+fi
 
-bash run_selenium.sh "$1"
+if [[ $STOP_IMAGES == 'true' ]]; then
+    bash test_stop.sh
+fi
+
+bash run_selenium.sh "$1" "$SLOW"
