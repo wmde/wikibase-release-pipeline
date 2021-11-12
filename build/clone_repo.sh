@@ -1,6 +1,6 @@
 #!/bin/bash
 # Clones a repository and writes the metadata file
-set -ex
+set -e
 
 COMMIT_HASH=$1
 GIT_REPO=$2

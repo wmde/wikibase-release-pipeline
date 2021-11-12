@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC1090
-set -ex
+set -e
 
 BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
 
