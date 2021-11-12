@@ -107,6 +107,11 @@ For more info on downloading artifacts from github see [publishing](publishing.m
 
 On build a local.env file can be used to override any default settings
 
+#### Run linter before testing starts
+```
+PRE_INSTALL_SELENIUM_TEST_LINTING=1
+```
+
 #### Use locally installed selenium test dependencies
 ```
 SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES=1

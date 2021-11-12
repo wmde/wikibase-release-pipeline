@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+if [ -n "$PRE_INSTALL_SELENIUM_TEST_LINTING" ]; then
+    echo "Running javascript linter because PRE_INSTALL_SELENIUM_TEST_LINTING is set"
+    cd Docker/test/selenium/
+    npx eslint .
+    cd - > /dev/null
+fi
+
 cd test
 
 echo "#########################################"
