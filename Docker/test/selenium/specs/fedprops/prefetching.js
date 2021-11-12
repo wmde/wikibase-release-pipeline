@@ -28,7 +28,7 @@ describe( 'Property Prefetching', function () {
 				{
 					mainsnak: {
 						snaktype: 'value',
-						property: prop,
+						property: 'http://www.wikidata.org/entity/' + prop,
 						datavalue: { value: 'test-value', type: 'string' } },
 					type: 'statement', rank: 'normal'
 				}

@@ -31,23 +31,38 @@ describe( 'Fed props Item', function () {
 				{
 					mainsnak: {
 						snaktype: 'value',
-						property: 'P213',
+						property: 'http://www.wikidata.org/entity/P231',
 						datavalue: { value: propertyValue, type: 'string' } },
 					type: 'statement', rank: 'normal'
 				}
 			]
 		};
-		browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
 
+		browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 
-		const actualPropertyValue = $( '.wikibase-statementgroupview-property' ).getText();
-		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
+		// Not true on 1.37
+		// this doesn't happen from 1.37 branch of wikibase
+		// TODO REMOVE
+		const version = browser.getWikiVersion( process.env.MW_SERVER );
+		if ( version.minor < 37 ) {
+			const actualPropertyValue = $( '.wikibase-statementgroupview-property' ).getText();
+			assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
+		}
 
 		ItemPage.addStatementLink.waitForDisplayed();
 	} );
 
 	it( 'should show up in Special:EntityData with ttl', function () {
+
+		// Not true on 1.37
+		// this doesn't happen from 1.37 branch of wikibase
+		// TODO REMOVE
+		const version = browser.getWikiVersion( process.env.MW_SERVER );
+		if ( version.minor === 37 ) {
+			this.skip();
+		}
+
 		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl' );
 		const body = response.data;
 
@@ -63,6 +78,15 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'should show up in Special:EntityData with rdf', function () {
+
+		// Not true on 1.37
+		// this doesn't happen from 1.37 branch of wikibase
+		// TODO REMOVE
+		const version = browser.getWikiVersion( process.env.MW_SERVER );
+		if ( version.minor === 37 ) {
+			this.skip();
+		}
+
 		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf' );
 		const body = response.data;
 
@@ -71,6 +95,14 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'shows property in queryservice ui after creation using prefixes', function () {
+
+		// Not true on 1.37
+		// this doesn't happen from 1.37 branch of wikibase
+		// TODO REMOVE
+		const version = browser.getWikiVersion( process.env.MW_SERVER );
+		if ( version.minor === 37 ) {
+			this.skip();
+		}
 
 		const prefixes = [
 			'prefix fpwdt: <http://www.wikidata.org/prop/direct/>'
@@ -91,6 +123,14 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'shows up in queryservice ui after creation', function () {
+
+		// Not true on 1.37
+		// this doesn't happen from 1.37 branch of wikibase
+		// TODO REMOVE
+		const version = browser.getWikiVersion( process.env.MW_SERVER );
+		if ( version.minor === 37 ) {
+			this.skip();
+		}
 
 		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
