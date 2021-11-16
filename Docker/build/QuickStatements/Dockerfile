@@ -11,11 +11,11 @@ COPY --from=fetcher --chown=nobody:nogroup /quickstatements/composer.json /quick
 WORKDIR /quickstatements
 RUN composer install --no-dev
 
-FROM php:7.2-apache
+FROM php:7.3-apache
 
 # Install envsubst
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base=0.19.* jq=1.5* libicu-dev=63* && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base jq libicu-dev && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl

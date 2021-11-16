@@ -16,6 +16,14 @@ describe( 'Nuke', function () {
 			'Vandals In Motion'
 		);
 
+		const result = browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Vandalism',
+			{ validateStatus: false },
+			{}
+		);
+
+		assert( result.status === 200 );
+
 		LoginPage.loginAdmin();
 
 		browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
@@ -32,9 +40,23 @@ describe( 'Nuke', function () {
 		browser.acceptAlert();
 
 		$( '#mw-content-text' ).waitForDisplayed();
-		const resultText = $( '#mw-content-text' ).getText();
 
-		assert( resultText.includes( 'Page Vandalism has been deleted.' ) === true );
+		browser.pause( 5 * 1000 );
+
+		browser.waitUntil(
+			() => function () {
+				return browser.makeRequest(
+					process.env.MW_SERVER + '/wiki/Vandalism',
+					{ validateStatus: false },
+					{}
+				).status === 404;
+			},
+			{
+				timeout: 10000,
+				timeoutMsg: 'Expected to be done after 10 seconds'
+			}
+		);
+
 	} );
 
 } );
