@@ -6,15 +6,14 @@ RUN mkdir wikidata-query-gui \
     && tar xfv $tarball -C ./wikidata-query-gui \
     && rm $tarball
 
-# TODO this should probably just be a node image?
-FROM nginx:stable-alpine as builder
+FROM node:14-alpine as builder
 
 COPY --from=fetcher /wikidata-query-gui /tmp/wikidata-query-gui
 
 WORKDIR /tmp/wikidata-query-gui
 
 # install dependencies
-RUN apk --no-cache add --virtual build-dependencies ca-certificates git~=2.30 nodejs~=14 npm~=14 jq~=1.6 make~=4.3 g++~=10.2
+RUN apk --no-cache add --virtual build-dependencies ca-certificates git jq make g++
 
 # TODO do npm build instead of leaving any dev node modules hanging around
 RUN mv package.json package.json.orig \
