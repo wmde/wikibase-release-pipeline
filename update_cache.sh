@@ -13,7 +13,7 @@ function fetch_all {
 	REPOSITORY_CACHE_NAME=$1
 	cd "git_cache/$REPOSITORY_CACHE_NAME"
 	git fetch --all -q
-	cd -
+	cd - > /dev/null
 }
 
 mkdir -p 'artifacts'
