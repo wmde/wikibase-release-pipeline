@@ -82,6 +82,12 @@ jobs:
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
+          image_tag: latest
+
   build_wikibase_bundle:
     runs-on: ubuntu-latest
     needs:
@@ -151,6 +157,12 @@ jobs:
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
+          image_tag: latest
+
   build_quickstatements:
     runs-on: ubuntu-latest
     steps:
@@ -175,6 +187,13 @@ jobs:
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/quickstatements.docker.tar.gz
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         if: github.ref == 'refs/heads/main'
@@ -190,12 +209,11 @@ jobs:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
-      - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+      - name: Scan image
+        uses: ./.github/actions/scan-image
         with:
-          name: BuildArtifacts
-          if-no-files-found: error
-          path: artifacts/quickstatements.docker.tar.gz
+          image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
+          image_tag: latest
 
   build_wdqs:
     runs-on: ubuntu-latest
@@ -244,6 +262,12 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.WDQS_IMAGE_NAME }}
+          image_tag: latest
+
   build_wdqs_proxy:
     runs-on: ubuntu-latest
     steps:
@@ -281,6 +305,12 @@ jobs:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/wdqs-proxy.docker.tar.gz
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
+          image_tag: latest
 
   build_wdqs_frontend:
     runs-on: ubuntu-latest
@@ -342,6 +372,12 @@ jobs:
           image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
+          image_tag: latest
+
   build_elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -379,6 +415,12 @@ jobs:
         with:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           tag: ${{ github.run_id }}
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        with:
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          image_tag: latest
 
   test_wikibase:
     strategy:
