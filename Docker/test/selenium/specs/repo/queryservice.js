@@ -47,7 +47,7 @@ describe( 'QueryService', function () {
 		assert( result.status === 404 );
 	} );
 
-	it( 'Should shows up with property in queryservice ui after creation', function () {
+	it( 'Should show up with property in queryservice ui after creation', function () {
 
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
