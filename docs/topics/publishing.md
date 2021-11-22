@@ -128,6 +128,24 @@ After successfully uploading the tarballs they should be accessible at https://r
 
 ## Publish git tags
 
+### Tag this repository
+
+In order to keep a paper-trail of what commit was used to produce a certain release candidate.
+
+This can be done by running the following commands and replacing the necessary placeholders ...
+
+```
+git tag --force -a "<WMDE_RELEASE_VERSION>" "<COMMIT_HASH_FROM_THIS_REPO>" -m "<WMDE_RELEASE_VERSION>"
+```
+
+And pushing ...
+
+```
+git push --tags
+```
+
+### Tag WMDE maintained repositories
+
 Together with the other publishing steps we also need to tag what commit in the gerrit repository with the version number we built and published. This is done by executing the commands given by the [tag_git](../../Docker/tag_git/tag_git.sh) bash script that is run within a docker container.
 
 The script relies on the build metadata artifacts found within the folder of the downloaded workflow run.
@@ -165,6 +183,12 @@ Execute the commands in your local checked out repositories and push the tags us
 ```
 git push --tags
 ```
+
+## Update documentation references
+
+Update the links to this repository in the [mediawiki.org documentation](https://www.mediawiki.org/wiki/Wikibase/Docker) to point to the tag [that was added to this repository](#tag-this-repository)
+
+In particular links to the [example](../../example/README.md) folder.
 
 ## Announce new versions
 

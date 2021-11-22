@@ -20,5 +20,7 @@ graph TD
     
     G --> I(Tarball)
     I --> II(Engineer publish locally downloaded artifacts)
-    G --> J(Tagging)
-    J -->JJ(Engineer publish git tags)
+    G --> J(Engineer pushes tags)
+    J -->JJ(Wikibase, WDQS-frontend etc ..)
+    J -->AH(The commit used to build the release)
+    AH -->BH(Update documentation with new links)
