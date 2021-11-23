@@ -40,7 +40,7 @@ services:
     networks:
       default:
         aliases:
-         - wdqs-frontend.svc
+         - ${WDQS_FRONTEND_HOST}
     environment:
       - WIKIBASE_HOST=${WIKIBASE_HOST}
       - WDQS_HOST=wdqs-proxy.svc
