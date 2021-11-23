@@ -449,6 +449,7 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - name: Get Wikibase docker image artifact
