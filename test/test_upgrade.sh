@@ -4,6 +4,8 @@ set -e
 
 cd test
 
+bash test_stop.sh
+
 mkdir -p log
 
 ENV_VERSION=$1
@@ -32,6 +34,8 @@ docker-compose \
     wikibase-selenium-test
 
 # run tests specified by upgrade/default_variables.env
+export SUITE=pre_upgrade
+
 docker-compose \
     -f docker-compose.upgrade.yml \
     -f docker-compose-selenium-test.yml \
@@ -49,14 +53,22 @@ envsubst < ../Docker/build/Wikibase/LocalSettings.php.template > "$TMP_LOCALSETT
 # docker-compose down to simulate upgrade
 docker-compose -f docker-compose.upgrade.yml down
 
-# set new version and start it up
-export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_IMAGE_NAME:latest"
-docker load -i "../artifacts/$WIKIBASE_IMAGE_NAME.docker.tar.gz"
+# allow overriding target
+if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
+    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
+fi
+
+export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
+echo "Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
+
+# load new version and start it 
+docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz"
 docker-compose -f docker-compose.upgrade.yml -f upgrade/docker-compose.override.yml up -d
 
 # run update.php
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick
 
+export SUITE=post_upgrade
 # run the tests again
 docker-compose \
     -f docker-compose.upgrade.yml \

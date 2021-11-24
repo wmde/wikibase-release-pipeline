@@ -109,8 +109,14 @@ exports.config = {
 			'./specs/pingback/*.js'
 		],
 
-		upgrade: [
-			'./specs/repo/api.js'
+		pre_upgrade: [
+			'./specs/repo/api.js',
+			'./specs/upgrade/pre-upgrade.js'
+		],
+
+		post_upgrade: [
+			'./specs/repo/api.js',
+			'./specs/upgrade/post-upgrade.js'
 		]
 
 	},
