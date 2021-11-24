@@ -12,7 +12,7 @@ x-common-variables: &wikibase_variables
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  WIKIBASEHOST:
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
   QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
 
 services:
@@ -36,7 +36,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase.svc # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
+         - ${WIKIBASE_HOST}
     environment:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
