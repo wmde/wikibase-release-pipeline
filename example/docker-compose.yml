@@ -37,6 +37,7 @@ services:
       default:
         aliases:
          - ${WIKIBASE_HOST}
+         - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
