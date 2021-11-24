@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        databaseImageName: [ 'mariadb:10.3' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [
           repo,
           fedprops,
