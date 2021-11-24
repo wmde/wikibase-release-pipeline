@@ -41,7 +41,7 @@ Normally `example-full` is the environment you want to use. The folder should co
 $ docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
 ```
 
-### 2. Update image version 
+### 2. Update image version and source variables to shell
 
 Example for workflow run [1157808966](https://github.com/wmde/wikibase-release-pipeline/actions/runs/1157808966).
 
@@ -55,6 +55,18 @@ QUICKSTATEMENTS_IMAGE_NAME=ghcr.io/wmde/quickstatements:1157808966
 WDQS_PROXY_IMAGE_NAME=ghcr.io/wmde/wdqs-proxy:1157808966
 MYSQL_IMAGE_NAME=mariadb:10.3
 ```
+
+Source the updated `.env` file with the new variables 
+```sh
+$ set -o allexport; source .env; set +o allexport
+```
+
+Optionally confirm that it worked by echoing the variable
+
+```sh
+$ echo $WIKIBASE_IMAGE_NAME
+```
+
 ### 3. start containers again 
 
 ```sh
