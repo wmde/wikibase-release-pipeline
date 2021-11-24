@@ -21,13 +21,13 @@ In the next section we describe two different ways of backing up and restoring y
 To back up your data:
 
 ```sh
-docker exec <DATABASE_CONTAINER_NAME> mysqldump -u $DBUSER -p$DBPASS $DBNAME > backup.sql
+docker exec <DATABASE_CONTAINER_NAME> mysqldump -u $DB_USER -p$DB_PASS $DB_NAME > backup.sql
 ```
 
 To restore your data:
 
 ```sh
-docker exec <DATABASE_CONTAINER_NAME> mysql -u $DBUSER -p$DBPASS $DBNAME < backup.sql
+docker exec <DATABASE_CONTAINER_NAME> mysql -u $DB_USER -p$DB_PASS $DB_NAME < backup.sql
 ```
 
 ### 1.2 Backing up/restoring volumes using [loomchild/volume-backup](https://hub.docker.com/p/loomchild/volume-backup)
