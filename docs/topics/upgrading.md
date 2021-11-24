@@ -35,7 +35,7 @@ docker exec <DATABASE_CONTAINER_NAME> mysql -u $DBUSER -p$DBPASS $DBNAME < backu
 Determine the name of your Docker database volume:
 
 ```sh
-$ docker volume ls
+docker volume ls
 DRIVER    VOLUME NAME
 local     wikibase_mediawiki-mysql-data
 ```

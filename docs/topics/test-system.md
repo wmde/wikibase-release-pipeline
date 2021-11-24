@@ -38,7 +38,7 @@ Normally `example-full` is the environment you want to use. The folder should co
 ### 1. stop the containers 
 
 ```sh
-$ docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
+docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
 ```
 
 ### 2. Update image version 
@@ -58,13 +58,13 @@ MYSQL_IMAGE_NAME=mariadb:10.3
 ### 3. start containers again 
 
 ```sh
-$ docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 ### 4. Check logs to see what happens
 
 ```sh
-$ docker-compose -f docker-compose.yml -f docker-compose.extra.yml logs -f
+docker-compose -f docker-compose.yml -f docker-compose.extra.yml logs -f
 ```
 
 
