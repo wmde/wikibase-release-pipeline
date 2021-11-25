@@ -22,7 +22,8 @@ docker-compose up
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), a Wikibase instance, database and a jobrunner.
 
 ## Jobrunner
-The example docker-compose.yml sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
+
+The example docker-compose.yml sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.§
 
 If you run large batches of edits, this job runner may not be able to keep up with edits.
 
