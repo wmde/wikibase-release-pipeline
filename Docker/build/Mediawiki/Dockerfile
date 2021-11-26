@@ -61,3 +61,5 @@ RUN tar -x --strip-components=1 -f /tmp/mediawiki.tar.gz && \
 	chown -R www-data:www-data extensions skins cache images;
 
 CMD ["apache2-foreground"]
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

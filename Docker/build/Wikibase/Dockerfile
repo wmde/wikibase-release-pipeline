@@ -49,3 +49,5 @@ RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

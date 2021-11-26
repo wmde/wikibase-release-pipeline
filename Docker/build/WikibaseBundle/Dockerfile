@@ -27,3 +27,5 @@ COPY LocalSettings.d /var/www/html/LocalSettings.d
 
 ARG INSTALLED_EXTENSIONS
 ENV INSTALLED_EXTENSIONS=${INSTALLED_EXTENSIONS}
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
