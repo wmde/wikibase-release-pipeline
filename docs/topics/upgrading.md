@@ -1,10 +1,10 @@
 # Upgrading wikibase docker images
 
-This document describes the process that can be applied when backing up and upgrading your wikibase base and bundle images.
+This document describes the process that can be applied when backing up and upgrading your Wikibase base and bundle images.
 
-# Backup your data!
+# Back up your data
 
-Always backup your data before attempting an upgrade! Backing up the database is **NOT** enough to be able to restore a failed upgrade. Remember that any content in the containers, in particular the `/var/www/html/LocalSettings.php` file is generated at startup and is at **risk of being lost once the old containers are removed!**
+Always back up your data before attempting an upgrade! Backing up the database is **NOT** sufficient to restore a failed upgrade. Remember that any content in the containers, in particular the `/var/www/html/LocalSettings.php` file is generated at startup and is at **risk of being lost once the old containers are removed!**
 ## Back up your database
 
 In all of our images we rely on a database to persist data. Normally these are stored in Docker volumes and can be seen in the mysql container in the Docker example as `mediawiki-mysql-data`.
@@ -78,7 +78,7 @@ Review your old LocalSettings.php file for any changes that the [new version](..
 
 ### 1.3 Mount your LocalSettings.php file in the container
 
-If you aren't already mounting your LocalSettings.php file at `/var/www/html/LocalSettings.php`, the Docker [entrypoint](../../Docker/build/Wikibase/entrypoint.sh) script will assume that your instance is a fresh install. In that case it wil create one for you and try to run the install scripts.
+If you aren't already mounting your LocalSettings.php file at `/var/www/html/LocalSettings.php`, the Docker [entrypoint](../../Docker/build/Wikibase/entrypoint.sh) script will assume that your instance is a fresh install. In this case it will create one for you and try to run the install scripts.
 
 To prevent this from happening during your upgrade, you must mount your LocalSettings file before using the new image. In your docker-compose.yml, make sure you see a line like the following pointing to your copy of the `LocalSettings.php` file.
 
@@ -110,9 +110,9 @@ $ docker inspect -f '{{ .Mounts }}' 916ac3ce384e
 [ {volume example_shared /var/lib/docker/volumes/example_shared/_data /var/www/html local rw true } ]
 ```
 
-The above example returns one mount used by the container called `example_shared`, this is the one that is shared between the jobrunner and the wikibase web container.
+The above example returns a single mount used by the container called `example_shared`; this is the one that is shared between the jobrunner and the Wikibase web container.
 
-We need to remember this name as we will have to remove it manually after the containers has been shutdown and removed.
+We need to remember this name as we will have to remove it manually after the containers has been shut down and removed.
 
 1. Stop the containers
 
@@ -126,7 +126,7 @@ docker-compose stop wikibase wikibase_jobrunner
 docker-compose rm wikibase wikibase_jobrunner
 ```
 
-3. And finally remove the shared container
+3. Finally, remove the shared container
 
 ```sh
 docker volume rm example_share
