@@ -4,6 +4,14 @@ set -e
 
 export SUITE=$1
 
+## build selenium test container
+docker-compose \
+    -f docker-compose.yml \
+    -f docker-compose-selenium-test.yml \
+    build \
+    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
+    wikibase-selenium-test
+
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
     SUITE_CONFIG_NAME=${SUITE//base__/}
@@ -19,7 +27,11 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
-DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
+# Allow overriding default test subjects
+if [ -z "$DEFAULT_SUITE_CONFIG" ]; then
+    DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
+fi
+
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 

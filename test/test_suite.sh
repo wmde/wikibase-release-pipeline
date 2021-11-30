@@ -51,12 +51,4 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-## build selenium test container
-docker-compose \
-    -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
-    wikibase-selenium-test
-
 bash run_selenium.sh "$1"

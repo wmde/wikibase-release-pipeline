@@ -27,6 +27,8 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', function () {
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+
 		const cpuTime = browser.getLuaCpuTime( process.env.MW_SERVER, 'LuaTest' );
 
 		assert( cpuTime.value < 0.05 );

@@ -17,6 +17,15 @@ test:
 test-upgrade:
 	bash test/test_upgrade.sh ${VERSION}
 
+.PHONY: test-example
+test-example:
+	bash test/test_example.sh
+
+.PHONY: example-stop
+example-stop:
+	docker kill $$(docker-compose --env-file example/template.env -f example/docker-compose.yml -f example/docker-compose.extra.yml ps -q)
+	docker-compose --env-file example/template.env -f example/docker-compose.yml -f example/docker-compose.extra.yml down --volumes
+
 .PHONY: test-stop
 test-stop:
 	cd test && bash test_stop.sh

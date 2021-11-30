@@ -1,0 +1,27 @@
+# Example Wikibase docker-compose setup
+version: '3.4'
+
+services:
+
+  # wikibase:
+
+
+  # wikibase_jobrunner:
+
+
+  # elasticsearch:
+
+  wdqs-frontend:
+    ports:
+    - 8834:80
+  wdqs:
+    ports:
+    - 9999:9999
+    expose:
+      - 9999
+  # wdqs-proxy:
+
+  # wdqs-updater:
+
+  # quickstatements:
+
