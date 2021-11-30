@@ -27,11 +27,6 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
-# Allow overriding default test subjects
-if [ -z "$DEFAULT_SUITE_CONFIG" ]; then
-    DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
-fi
-
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 

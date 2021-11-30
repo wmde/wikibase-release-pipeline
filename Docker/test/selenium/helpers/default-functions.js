@@ -31,6 +31,10 @@ const defaultFunctions = function () {
 			};
 		}
 
+		if ( !config.user || !config.pass || !config.database ) {
+			throw new Error("dbQuery: Configuration error! " + JSON.stringify(config));
+		}
+
 		return browser.dockerExecute(
 			process.env.DOCKER_MYSQL_NAME,
 			'mysql --user "' + config.user + '"' +

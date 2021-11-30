@@ -19,7 +19,7 @@ test-upgrade:
 
 .PHONY: test-example
 test-example:
-	bash test/test_example.sh
+	bash test/test_example.sh ${SUITE}
 
 .PHONY: example-stop
 example-stop:

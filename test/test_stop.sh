@@ -1,10 +1,10 @@
 #!/bin/bash
-# shellcheck disable=SC1091,SC2086
+# shellcheck disable=SC1091,SC2086,SC2046
 set -e
 
 # stop any upgrade tests
 set -o allexport; source upgrade/default_variables.env; set +o allexport
-docker-compose -f docker-compose.upgrade.yml down --volumes --remove-orphans
+#docker-compose -f docker-compose.upgrade.yml down --volumes --remove-orphans
 
 DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
 
@@ -14,5 +14,9 @@ for FILE in $ALL_SUITES_FILES; do
     ALL_SUITES="$ALL_SUITES -f $FILE"
 done
 
+
+set +e
 # stop any suite things
+docker kill $(docker-compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml ps -q) > /dev/null
 docker-compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down --volumes
+set -e
