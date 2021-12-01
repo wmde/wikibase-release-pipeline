@@ -4,8 +4,6 @@ set -e
 
 cd test
 
-bash test_stop.sh
-
 mkdir -p log
 
 ENV_VERSION=$1
