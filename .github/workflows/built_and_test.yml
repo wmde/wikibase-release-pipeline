@@ -557,7 +557,9 @@ jobs:
         with:
           name: TestExampleArtifacts
           if-no-files-found: error
-          path: example/log
+          path: |
+            example/log
+            test/log
 
   versions:
     needs:

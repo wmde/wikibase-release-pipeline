@@ -11,9 +11,11 @@ fi
 
 cd test
 
-set -o allexport; source example-test.env; set +o allexport
+set -o allexport; source ../example/template.env; source example.env; set +o allexport
+
+export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 
 ## Use in combination with example compose files 
-export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
+export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
 
 bash run_selenium.sh "$SUITE"

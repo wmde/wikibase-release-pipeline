@@ -3,9 +3,6 @@ set -e
 
 cd test
 
-# does not exists on github
-mkdir log -p
-
 echo "#########################################"
 echo "#########################################"
 echo "####         Start testing! 🤞       ####"

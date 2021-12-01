@@ -1,8 +1,10 @@
 #!/bin/bash
 # shellcheck disable=SC2086
-set -e
+set -ex
 
 export SUITE=$1
+
+mkdir -p log
 
 ## build selenium test container
 docker-compose \

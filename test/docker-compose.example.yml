@@ -1,0 +1,8 @@
+# Wikibase For testing
+version: '3'
+
+services:
+  wikibase:
+    volumes:
+      # this gets executed in example/
+      - ../test/suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
