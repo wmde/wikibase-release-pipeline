@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC1091,SC1090
-set -ex
+set -e
 
 export SUITE=$1
 
