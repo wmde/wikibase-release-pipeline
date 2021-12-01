@@ -4,6 +4,8 @@ set -e
 
 export SUITE=$1
 
+mkdir -p log
+
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
     SUITE_CONFIG_NAME=${SUITE//base__/}
@@ -19,7 +21,6 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
-DEFAULT_SUITE_CONFIG="-f docker-compose.yml"
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
@@ -28,12 +29,16 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
-bash test_stop.sh
-
 # start container with settings
 STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
 docker-compose $SUITE_CONFIG up -d --force-recreate
 docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE_IMAGE_NAME.$1.log" &
+
+docker-compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    build \
+    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
+    wikibase-selenium-test
 
 # run status checks and wait until containers start
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
