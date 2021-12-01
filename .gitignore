@@ -18,4 +18,3 @@ diagrams/node_modules/
 artifacts/*
 local.env
 example/log
-test/docker-compose.override.yml

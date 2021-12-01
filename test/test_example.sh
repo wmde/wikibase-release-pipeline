@@ -14,6 +14,6 @@ cd test
 set -o allexport; source example-test.env; set +o allexport
 
 ## Use in combination with example compose files 
-export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
+export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 bash run_selenium.sh "$SUITE"
