@@ -77,7 +77,6 @@ exports.config = {
 
 		// example-specs
 		example: [
-			'./specs/repo/api.js',
 			'./specs/repo/queryservice.js',
 			'./specs/elasticsearch/*.js'
 		],
@@ -137,6 +136,7 @@ exports.config = {
 	 */
 	before: function () {
 		defaultFunctions.init();
+		/*
 		if ( !browser.config.installed_extensions ) {
 			const extensions = browser.dockerExecute(
 				process.env.DOCKER_WIKIBASE_REPO_NAME,
@@ -149,7 +149,8 @@ exports.config = {
 				browser.config.installed_extensions = [];
 			}
 
-		}
+		} */
+		browser.config.installed_extensions = [];
 	},
 
 	/**

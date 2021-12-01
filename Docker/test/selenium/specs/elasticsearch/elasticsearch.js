@@ -48,7 +48,7 @@ describe( 'ElasticSearch', function () {
 
 				$( 'li.mw-search-result a' ).waitForDisplayed();
 				const searchHit = $( 'li.mw-search-result a' ).getText();
-				return searchHit === itemLabel + ' (' + itemId + ')' ;
+				return searchHit === itemLabel + ' (' + itemId + ')';
 			},
 			{
 				timeout: 10000,
@@ -66,7 +66,7 @@ describe( 'ElasticSearch', function () {
 
 				$( 'li.mw-search-result a' ).waitForDisplayed();
 				const searchHit = $( 'li.mw-search-result a' ).getText();
-				return searchHit === itemLabel + ' (' + itemId + ')' ;
+				return searchHit === itemLabel + ' (' + itemId + ')';
 			},
 			{
 				timeout: 10000,
