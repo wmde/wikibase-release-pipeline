@@ -35,7 +35,7 @@ fi
 
 export WIKIBASE_TEST_IMAGE_NAME
 
-## load default images
+# load default images
 docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"

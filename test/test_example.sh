@@ -13,6 +13,7 @@ cd test
 
 set -o allexport; source ../example/template.env; source example.env; set +o allexport
 
+# TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 
 ## Use in combination with example compose files 

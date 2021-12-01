@@ -6,14 +6,6 @@ export SUITE=$1
 
 mkdir -p log
 
-## build selenium test container
-docker-compose \
-    -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
-    wikibase-selenium-test
-
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
     SUITE_CONFIG_NAME=${SUITE//base__/}
