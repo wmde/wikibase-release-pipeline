@@ -21,14 +21,17 @@ test-upgrade:
 test-example:
 	bash test/test_example.sh ${SUITE}
 
-.PHONY: example-stop
-example-stop:
-	docker kill $$(docker-compose --env-file example/template.env -f example/docker-compose.yml -f example/docker-compose.extra.yml ps -q)
-	docker-compose --env-file example/template.env -f example/docker-compose.yml -f example/docker-compose.extra.yml down --volumes
-
 .PHONY: test-stop
 test-stop:
-	cd test && bash test_stop.sh
+	cd test && bash test_stop.sh "$(ARGS_CONFIG)"
+
+.PHONY: upgrade-stop
+upgrade-stop:
+	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml"
+
+.PHONY: example-stop
+example-stop:
+	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
 	# bundle tests

@@ -38,11 +38,11 @@ fi
 
 export WIKIBASE_TEST_IMAGE_NAME
 
-# # load default images
-# docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
-# docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-# docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
-# docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+## load default images
+docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
 
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"

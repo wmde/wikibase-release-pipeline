@@ -1,18 +1,16 @@
 #!/bin/bash
 # shellcheck disable=SC1091,SC1090
-set -e
+set -ex
 
 export SUITE=$1
 
-ROOT=$PWD
-TEMP_DIR="/tmp/example_test"
+if [ -z "$SUITE" ]; then
+    echo "SUITE is not set"
+    exit 1
+fi
 
-rm -rf "$TEMP_DIR"
-mkdir -p "$TEMP_DIR"
-cp -r example/* "$TEMP_DIR"
-cd "$TEMP_DIR"
+cd test
 
-cd "$ROOT/test"
 set -o allexport; source example-test.env; set +o allexport
 
 ## Use in combination with example compose files 

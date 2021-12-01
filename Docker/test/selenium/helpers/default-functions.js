@@ -70,6 +70,10 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'dockerExecute', function async( container, command, opts, shouldLog ) {
 
+		if( !container ) {
+			throw new Error('dockerExecute: Container not specified!');
+		}
+
 		if ( !opts ) {
 			opts = '';
 		}
