@@ -13,7 +13,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to upload an image', function () {
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		LoginPage.loginAdmin();
 
@@ -35,7 +35,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to create a property with localMedia datatype', function () {
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'localMedia' ) );
 		assert( propertyId.startsWith( 'P' ) === true );
@@ -50,7 +50,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to use uploaded image on statement', function () {
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		const data = {
 			claims: [
