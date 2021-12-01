@@ -549,7 +549,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Test example
-        run: make test-example SUITE=repo
+        run: make test-example SUITE=example
       
       - name: Archive test example artifacts
         uses: actions/upload-artifact@v2
