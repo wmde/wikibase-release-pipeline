@@ -64,13 +64,13 @@ const defaultFunctions = function () {
 				} );
 		} );
 	} );
-	
+
 	/**
 	 * Get installed extensions on wiki
 	 */
-	 browser.addCommand( 'getInstalledExtensions', function async( server ) {
+	browser.addCommand( 'getInstalledExtensions', function async( server ) {
 		const result = browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
-		return _.map(result.data.query.extensions, 'name');
+		return _.map( result.data.query.extensions, 'name' );
 	} );
 
 	/**

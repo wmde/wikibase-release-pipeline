@@ -136,7 +136,7 @@ exports.config = {
 	 */
 	before: function () {
 		defaultFunctions.init();
-		
+
 		if ( !browser.config.installed_extensions ) {
 			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
 			if ( extensions ) {
