@@ -64,6 +64,14 @@ const defaultFunctions = function () {
 				} );
 		} );
 	} );
+	
+	/**
+	 * Get installed extensions on wiki
+	 */
+	 browser.addCommand( 'getInstalledExtensions', function async( server ) {
+		const result = browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
+		return _.map(result.data.query.extensions, 'name');
+	} );
 
 	/**
 	 * Execute docker command on container and get output
@@ -212,7 +220,7 @@ module.exports = {
 		const installedExtensions = browser.config.installed_extensions;
 		if ( !installedExtensions || installedExtensions.length === 0 ) {
 			return;
-		} else if ( installedExtensions && installedExtensions.includes( 'Wikibase' ) && installedExtensions.includes( extension ) ) {
+		} else if ( installedExtensions && installedExtensions.includes( 'WikibaseRepository' ) && installedExtensions.includes( extension ) ) {
 			return;
 		} else {
 			test.skip();

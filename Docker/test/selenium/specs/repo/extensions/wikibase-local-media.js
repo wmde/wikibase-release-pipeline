@@ -13,7 +13,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to upload an image', function () {
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseLocalMedia' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		LoginPage.loginAdmin();
 
