@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2086
-set -ex
+set -e
 
 export SUITE=$1
 
@@ -29,12 +29,16 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
-bash test_stop.sh
-
 # start container with settings
 STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
 docker-compose $SUITE_CONFIG up -d --force-recreate
 docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE_IMAGE_NAME.$1.log" &
+
+docker-compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    build \
+    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
+    wikibase-selenium-test
 
 # run status checks and wait until containers start
 docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test

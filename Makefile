@@ -10,15 +10,15 @@ download:
 	bash publish/download.sh
 
 .PHONY: test
-test:
+test: test-stop
 	bash test/test_suite.sh ${SUITE}
 
 .PHONY: test-upgrade
-test-upgrade:
+test-upgrade: upgrade-stop
 	bash test/test_upgrade.sh ${VERSION}
 
 .PHONY: test-example
-test-example:
+test-example: example-stop
 	bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
