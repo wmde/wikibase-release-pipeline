@@ -41,30 +41,37 @@ describe( 'ElasticSearch', function () {
 
 	it( 'should be able to search case-insensitive', function () {
 
-		// wait for elasticsearch
-		browser.pause( 10 * 1000 );
+		// Search for case-insensitive label
+		browser.waitUntil(
+			() => function () {
+				browser.url( process.env.MW_SERVER + '/wiki/Special:Search?search=Test' );
 
-		// Search for uppercase Test
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Search' );
-		$( '#searchText input' ).waitForDisplayed();
-		$( '#searchText input' ).setValue( 'Test' );
-		$( 'button.oo-ui-inputWidget-input' ).click();
-
-		$( 'li.mw-search-result a' ).waitForDisplayed();
-		const searchHit = $( 'li.mw-search-result a' ).getText();
-		assert( searchHit === itemLabel + ' (' + itemId + ')' );
+				$( 'li.mw-search-result a' ).waitForDisplayed();
+				const searchHit = $( 'li.mw-search-result a' ).getText();
+				return searchHit === itemLabel + ' (' + itemId + ')';
+			},
+			{
+				timeout: 10000,
+				timeoutMsg: 'Expected to be done after 10 seconds'
+			}
+		);
 	} );
 
 	it( 'should be able to search via alias', function () {
 
 		// Search for alias "alias"
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Search' );
-		$( '#searchText input' ).waitForDisplayed();
-		$( '#searchText input' ).setValue( 'alias' );
-		$( 'button.oo-ui-inputWidget-input' ).click();
+		browser.waitUntil(
+			() => function () {
+				browser.url( process.env.MW_SERVER + '/wiki/Special:Search?search=alias' );
 
-		$( 'li.mw-search-result a' ).waitForDisplayed();
-		const searchHit = $( 'li.mw-search-result a' ).getText();
-		assert( searchHit === itemLabel + ' (' + itemId + ')' );
+				$( 'li.mw-search-result a' ).waitForDisplayed();
+				const searchHit = $( 'li.mw-search-result a' ).getText();
+				return searchHit === itemLabel + ' (' + itemId + ')';
+			},
+			{
+				timeout: 10000,
+				timeoutMsg: 'Expected to be done after 10 seconds'
+			}
+		);
 	} );
 } );
