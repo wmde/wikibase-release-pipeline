@@ -32,7 +32,7 @@ const defaultFunctions = function () {
 		}
 
 		if ( !config.user || !config.pass || !config.database ) {
-			throw new Error("dbQuery: Configuration error! " + JSON.stringify(config));
+			throw new Error( 'dbQuery: Configuration error! ' + JSON.stringify( config ) );
 		}
 
 		return browser.dockerExecute(
@@ -70,8 +70,8 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'dockerExecute', function async( container, command, opts, shouldLog ) {
 
-		if( !container ) {
-			throw new Error('dockerExecute: Container not specified!');
+		if ( !container ) {
+			throw new Error( 'dockerExecute: Container not specified!' );
 		}
 
 		if ( !opts ) {

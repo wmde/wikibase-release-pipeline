@@ -2,7 +2,6 @@
 # shellcheck disable=SC1091,SC2086,SC2046
 set -e
 
-
 DEFAULT_SUITE_CONFIG=$1
 
 if [[ -z "${DEFAULT_SUITE_CONFIG// }" ]]; then
