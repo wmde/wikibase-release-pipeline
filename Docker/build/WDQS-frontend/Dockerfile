@@ -41,3 +41,5 @@ ENV LANGUAGE=en\
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

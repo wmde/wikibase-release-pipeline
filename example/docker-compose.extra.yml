@@ -9,6 +9,7 @@ services:
 
   wikibase:
     volumes:
+      - quickstatements-data:/quickstatements/data
       - ./extra-install.sh:/extra-install.sh
     environment:
       <<: *wikibase_extra_variables
@@ -39,7 +40,7 @@ services:
     networks:
       default:
         aliases:
-         - wdqs-frontend.svc
+         - ${WDQS_FRONTEND_HOST}
     environment:
       - WIKIBASE_HOST=${WIKIBASE_HOST}
       - WDQS_HOST=wdqs-proxy.svc
@@ -101,7 +102,7 @@ services:
          - ${QUICKSTATEMENTS_HOST}
     environment:
       - QUICKSTATEMENTS_HOST
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
+      - WIKIBASE_SCHEME_AND_HOST=http://wikibase-docker.svc
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
       - WB_PROPERTY_NAMESPACE=122
