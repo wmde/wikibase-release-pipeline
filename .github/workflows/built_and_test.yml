@@ -84,6 +84,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
           image_tag: latest
@@ -159,6 +160,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
           image_tag: latest
@@ -211,6 +213,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
           image_tag: latest
@@ -264,6 +267,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.WDQS_IMAGE_NAME }}
           image_tag: latest
@@ -308,6 +312,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
           image_tag: latest
@@ -374,6 +379,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
           image_tag: latest
@@ -418,6 +424,7 @@ jobs:
 
       - name: Scan image
         uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           image_tag: latest
