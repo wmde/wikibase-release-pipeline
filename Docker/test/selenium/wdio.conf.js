@@ -122,7 +122,8 @@ exports.config = {
 
 		post_upgrade: [
 			'./specs/repo/api.js',
-			'./specs/upgrade/post-upgrade.js'
+			'./specs/upgrade/post-upgrade.js',
+			'./specs/upgrade/queryservice-post-upgrade.js'
 		]
 
 	},

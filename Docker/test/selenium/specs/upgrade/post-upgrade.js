@@ -4,7 +4,7 @@ const assert = require( 'assert' );
 
 describe( 'Wikibase post upgrade', function () {
 
-	let itemID;
+	let oldItemID;
 
 	it( 'Should be able find the item after upgrade', function () {
 
@@ -19,17 +19,16 @@ describe( 'Wikibase post upgrade', function () {
 		assert( searchResults[ 0 ].match.text === 'Q101' );
 		assert( searchResults[ 0 ].match.type === 'entityId' );
 
-		itemID = searchResults[ 0 ].id;
+		oldItemID = searchResults[ 0 ].id;
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemID );
+		browser.url( process.env.MW_SERVER + '/wiki/Item:' + oldItemID );
 
 	} );
 
 	it( 'should show up in Special:EntityData with json', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemID + '.json' );
+		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + oldItemID + '.json' );
 		const body = response.data;
 
-		assert( body.entities[ itemID ].claims[ 0 ] !== null );
+		assert( body.entities[ oldItemID ].claims[ 0 ] !== null );
 	} );
-
 } );

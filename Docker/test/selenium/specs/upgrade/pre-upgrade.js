@@ -5,7 +5,7 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
 describe( 'Wikibase pre upgrade', function () {
 
-	it( 'Should be able to create a specific item ', function () {
+	it( 'Should be able to create a specific item', function () {
 
 		const itemLabel = 'UpgradeItem';
 		const propertyValue = 'UpgradeItemStringValue';

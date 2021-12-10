@@ -41,3 +41,5 @@ services:
       - DB_USER
       - DB_PASS
       - DB_NAME
+
+      - RUN_QUERYSERVICE_POST_UPGRADE_TEST

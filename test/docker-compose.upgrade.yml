@@ -1,4 +1,4 @@
-# Wikibase for testing
+# Wikibase and Database for testing when upgrading
 version: '3'
 
 services:
@@ -45,6 +45,4 @@ services:
          - mysql.svc
 
 volumes:
-  LocalSettings:
   mediawiki-mysql-data:
-  quickstatements-data: # this volume can be removed if quickstatements isn't running 
