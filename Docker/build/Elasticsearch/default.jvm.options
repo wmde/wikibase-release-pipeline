@@ -1,0 +1,2 @@
+# T297674
+-Dlog4j2.formatMsgNoLookups=true
