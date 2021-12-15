@@ -212,6 +212,23 @@ const defaultFunctions = function () {
 
 	} );
 
+	/**
+	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
+	 */
+	browser.addCommand( 'queryBlazeGraphItem', function async( itemId ) {
+		const sparqlEndpoint = 'http://wdqs.svc:9999/bigdata/namespace/wdq/sparql';
+		const params = {
+			headers: { Accept: 'application/sparql-results+json' },
+			validateStatus: false
+		};
+
+		// essentially 'SELECT * WHERE { <http://wikibase.svc/entity/Q101> ?p ?o }' but encoded
+		const queryString = 'query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F' + itemId + '%3E+%3Fp+%3Fo+%7D';
+
+		const response = browser.makeRequest( sparqlEndpoint, params, queryString );
+		return response.data.results.bindings;
+	} );
+
 };
 
 module.exports = {

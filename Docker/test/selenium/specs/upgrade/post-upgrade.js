@@ -9,15 +9,15 @@ describe( 'Wikibase post upgrade', function () {
 	it( 'Should be able find the item after upgrade', function () {
 
 		const result = browser.makeRequest(
-			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=Q101&format=json&language=en&type=item'
+			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
 		assert( success === 1 );
 		assert( searchResults.length === 1 );
-		assert( searchResults[ 0 ].match.text === 'Q101' );
-		assert( searchResults[ 0 ].match.type === 'entityId' );
+		assert( searchResults[ 0 ].match.text === 'UpgradeItem' );
+		assert( searchResults[ 0 ].match.type === 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
