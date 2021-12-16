@@ -75,6 +75,12 @@ exports.config = {
 
 	suites: {
 
+		// example-specs
+		example: [
+			'./specs/repo/queryservice.js',
+			'./specs/elasticsearch/*.js'
+		],
+
 		// bundle-specs
 		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
 		repo_client: [ './specs/repo_client/*.js', './specs/repo_client/extensions/*.js' ],
@@ -130,14 +136,11 @@ exports.config = {
 	 */
 	before: function () {
 		defaultFunctions.init();
-		if ( !browser.config.installed_extensions ) {
-			const extensions = browser.dockerExecute(
-				process.env.DOCKER_WIKIBASE_REPO_NAME,
-				"bash -c 'echo $INSTALLED_EXTENSIONS'"
-			);
 
+		if ( !browser.config.installed_extensions ) {
+			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
 			if ( extensions ) {
-				browser.config.installed_extensions = extensions.replace( /\n/g, '' ).split( ',' );
+				browser.config.installed_extensions = extensions;
 			} else {
 				browser.config.installed_extensions = [];
 			}

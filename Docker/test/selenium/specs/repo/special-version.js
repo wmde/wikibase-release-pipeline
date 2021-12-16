@@ -32,21 +32,13 @@ describe( 'Special:Version', function () {
 		specialpage: [ 'Nuke' ]
 	};
 
-	const envExtensions = {
-		WikibaseRepository: 'Wikibase',
-		WikibaseClient: 'Wikibase',
-		CLDR: 'cldr',
-		Parsoid: 'VisualEditor',
-		'Wikibase Local Media': 'WikibaseLocalMedia'
-	};
-
 	// should be disabled for dynamic tests
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	Object.keys( extensions ).forEach( ( extensionPackage ) => {
 
 		extensions[ extensionPackage ].forEach( ( extension ) => {
 			// Get the extension name from the override if available
-			const name = envExtensions[ extension ] ? envExtensions[ extension ] : extension;
+			const name = extension;
 
 			it( 'Should contain ' + name + ' extensions', function () {
 

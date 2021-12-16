@@ -40,6 +40,7 @@ services:
     environment:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
+      MW_WG_ENABLE_UPLOADS:
 
   wikibase_jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"

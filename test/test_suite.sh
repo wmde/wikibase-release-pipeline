@@ -3,9 +3,6 @@ set -e
 
 cd test
 
-# does not exists on github
-mkdir log -p
-
 echo "#########################################"
 echo "#########################################"
 echo "####         Start testing! 🤞       ####"
@@ -51,12 +48,6 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-## build selenium test container
-docker-compose \
-    -f docker-compose.yml \
-    -f docker-compose-selenium-test.yml \
-    build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
-    wikibase-selenium-test
+export DEFAULT_SUITE_CONFIG="--env-file default.env -f docker-compose.yml"
 
 bash run_selenium.sh "$1"

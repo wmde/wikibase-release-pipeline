@@ -29,7 +29,8 @@ services:
          - elasticsearch.svc
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
     restart: unless-stopped
@@ -60,6 +61,7 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+
   wdqs-proxy:
     image: "${WDQS_PROXY_IMAGE_NAME}"
     restart: unless-stopped
@@ -71,6 +73,7 @@ services:
       default:
         aliases:
          - wdqs-proxy.svc
+
   wdqs-updater:
     image: "${WDQS_IMAGE_NAME}"
     restart: unless-stopped
@@ -87,6 +90,7 @@ services:
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
+
   quickstatements:
     image: "${QUICKSTATEMENTS_IMAGE_NAME}"
     restart: unless-stopped

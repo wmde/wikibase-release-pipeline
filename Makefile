@@ -10,16 +10,28 @@ download:
 	bash publish/download.sh
 
 .PHONY: test
-test:
+test: test-stop
 	bash test/test_suite.sh ${SUITE}
 
 .PHONY: test-upgrade
-test-upgrade:
+test-upgrade: upgrade-stop
 	bash test/test_upgrade.sh ${VERSION}
+
+.PHONY: test-example
+test-example: example-stop
+	bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
 test-stop:
-	cd test && bash test_stop.sh
+	cd test && bash test_stop.sh "$(ARGS_CONFIG)"
+
+.PHONY: upgrade-stop
+upgrade-stop:
+	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml"
+
+.PHONY: example-stop
+example-stop:
+	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
 	# bundle tests
