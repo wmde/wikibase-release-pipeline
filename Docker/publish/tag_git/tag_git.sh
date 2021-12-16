@@ -13,7 +13,7 @@ done
 if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
 [ -z "$RELEASE_VERSION" ] || \
 [ -z "$WMDE_RELEASE_VERSION" ] || \
-[ -z "$METADATA_WDQS_UI_COMMIT_HASH" ] || \
+[ -z "$METADATA_WDQS_FRONTEND_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASE_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" ] || \
 [ -z "$WORKFLOW_RUN_NUMBER" ] ; then
@@ -34,7 +34,7 @@ function echo_tag {
 echo_tag "$METADATA_WIKIBASE_COMMIT_HASH" "Wikibase"
 
 # tag and push wdqs-frontend
-echo_tag "$METADATA_WDQS_UI_COMMIT_HASH" "WDQS frontend"
+echo_tag "$METADATA_WDQS_FRONTEND_COMMIT_HASH" "WDQS frontend"
 
 # tag and push WikibaseManifest
 echo_tag "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" "Wikibase Manifest"
