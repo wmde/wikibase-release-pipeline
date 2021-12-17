@@ -194,4 +194,6 @@ In particular links to the [example](../../example/README.md) folder.
 
 Announcing new releases should be done to:
 
-- external https://lists.wikimedia.org/mailman/listinfo/wikibaseug
+- external https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/
+- external https://lists.wikimedia.org/hyperkitty/list/wikidata-tech@lists.wikimedia.org/
+- external Wikibase Telegram channel
