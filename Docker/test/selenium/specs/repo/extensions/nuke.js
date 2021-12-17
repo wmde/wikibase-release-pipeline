@@ -6,7 +6,7 @@ const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Nuke', function () {
 
-	it( 'Should be able to see Special:Nuke page with a list of pages', function () {
+	it( 'Should be able to queue a page for deletion through Special:Nuke', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
 
@@ -41,22 +41,27 @@ describe( 'Nuke', function () {
 
 		$( '#mw-content-text' ).waitForDisplayed();
 
-		browser.pause( 5 * 1000 );
+	} );
 
-		browser.waitUntil(
-			() => function () {
-				return browser.makeRequest(
+	it( 'Should delete the page in a job', async function () {
+		let result;
+
+		await browser.waitUntil(
+			async () => {
+				result = await browser.makeRequest(
 					process.env.MW_SERVER + '/wiki/Vandalism',
 					{ validateStatus: false },
 					{}
-				).status === 404;
+				);
+
+				return result.status === 404;
 			},
 			{
 				timeout: 10000,
-				timeoutMsg: 'Expected to be done after 10 seconds'
+				timeoutMsg: 'Page should be deleted by now.'
 			}
 		);
 
+		assert( result.status === 404 );
 	} );
-
 } );

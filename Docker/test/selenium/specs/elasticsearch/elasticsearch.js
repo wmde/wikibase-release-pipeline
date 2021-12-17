@@ -9,13 +9,14 @@ const itemLabel = Util.getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
 
-	let itemId = null;
+	let itemId;
 
 	it( 'Should create an item', function () {
 
 		itemId = browser.call(
 			() => WikibaseApi.createItem( itemLabel )
 		);
+
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
@@ -39,39 +40,58 @@ describe( 'ElasticSearch', function () {
 		assert( alias === itemAlias );
 	} );
 
-	it( 'should be able to search case-insensitive', function () {
+	it( 'should be able to search case-insensitive', async function () {
 
-		// Search for case-insensitive label
-		browser.waitUntil(
-			() => function () {
-				browser.url( process.env.MW_SERVER + '/wiki/Special:Search?search=Test' );
+		let searchResult;
 
-				$( 'li.mw-search-result a' ).waitForDisplayed();
-				const searchHit = $( 'li.mw-search-result a' ).getText();
-				return searchHit === itemLabel + ' (' + itemId + ')';
+		await browser.waitUntil(
+			async () => {
+				const resp = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
+				searchResult = resp.data.search;
+
+				return searchResult.length === 1 &&
+					searchResult[ 0 ].id === itemId &&
+					searchResult[ 0 ].match.type === 'label' &&
+					searchResult[ 0 ].match.text === itemLabel;
 			},
 			{
 				timeout: 10000,
-				timeoutMsg: 'Expected to be done after 10 seconds'
+				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
+		);
+		assert( searchResult.length === 1 &&
+			searchResult[ 0 ].id === itemId &&
+			searchResult[ 0 ].match.type === 'label' &&
+			searchResult[ 0 ].match.text === itemLabel
 		);
 	} );
 
-	it( 'should be able to search via alias', function () {
+	it( 'should be able to search via alias', async function () {
 
-		// Search for alias "alias"
-		browser.waitUntil(
-			() => function () {
-				browser.url( process.env.MW_SERVER + '/wiki/Special:Search?search=alias' );
+		let searchResult;
 
-				$( 'li.mw-search-result a' ).waitForDisplayed();
-				const searchHit = $( 'li.mw-search-result a' ).getText();
-				return searchHit === itemLabel + ' (' + itemId + ')';
+		await browser.waitUntil(
+			async () => {
+				const resp = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
+				searchResult = resp.data.search;
+
+				return searchResult.length === 1 &&
+					searchResult[ 0 ].id === itemId &&
+					searchResult[ 0 ].match.type === 'alias' &&
+					searchResult[ 0 ].match.text === itemAlias;
 			},
 			{
 				timeout: 10000,
-				timeoutMsg: 'Expected to be done after 10 seconds'
+				timeoutMsg: 'Elasticsearch should have updated the alias by now.'
 			}
 		);
+
+		assert(
+			searchResult.length === 1 &&
+			searchResult[ 0 ].id === itemId &&
+			searchResult[ 0 ].match.type === 'alias' &&
+			searchResult[ 0 ].match.text === itemAlias
+		);
+
 	} );
 } );
