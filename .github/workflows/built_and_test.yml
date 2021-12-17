@@ -493,10 +493,10 @@ jobs:
           '1.33-base',
           '1.34-base',
           '1.35-base',
-          'latest-base',
-          'lts-base',
           'wmde.0',
-          'wmde.1'
+          'wmde.1',
+          'wmde.2',
+          'wmde.3'
         ]
     needs:
       - build_wikibase
@@ -524,7 +524,9 @@ jobs:
       fail-fast: false
       matrix:
         version: [
-          'wmde.1-bundle'
+          'wmde.1-bundle',
+          'wmde.2-bundle',
+          'wmde.3-bundle',
         ]
     needs:
       - build_wikibase_bundle
