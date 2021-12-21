@@ -54,7 +54,7 @@ describe( 'Wikibase post upgrade', function () {
 			},
 			{
 				timeout: 15000,
-				timeoutMsg: 'Blazegraph should have updated up the item by now'
+				timeoutMsg: 'Blazegraph should have updated the item by now'
 			}
 		);
 
