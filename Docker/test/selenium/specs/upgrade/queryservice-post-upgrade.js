@@ -41,10 +41,22 @@ describe( 'Wikibase post upgrade', function () {
 
 	} );
 
-	it( 'New item should show up in Queryservice', function () {
+	it( 'New item should show up in Queryservice', async function () {
 
-		browser.pause( 15 * 1000 );
-		const bindings = browser.queryBlazeGraphItem( newItemId );
+		let bindings;
+
+		await browser.waitUntil(
+			async () => {
+
+				bindings = browser.queryBlazeGraphItem( newItemId );
+
+				return bindings.length === 9;
+			},
+			{
+				timeout: 15000,
+				timeoutMsg: 'Blazegraph should have updated up the item by now'
+			}
+		);
 
 		assert( bindings.length === 9 );
 
