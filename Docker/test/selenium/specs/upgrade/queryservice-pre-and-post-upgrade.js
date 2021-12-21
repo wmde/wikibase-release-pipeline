@@ -6,6 +6,7 @@ const { getElementByURI } = require( '../../helpers/blazegraph' );
 describe( 'Wikibase post upgrade', function () {
 
 	let oldItemID;
+	let oldPropertyID;
 
 	before( function () {
 		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
@@ -32,16 +33,42 @@ describe( 'Wikibase post upgrade', function () {
 
 	} );
 
-	it( 'Old item should show up in Queryservice', function () {
+	it( 'Should show up in Special:EntityData with json', function () {
 
-		browser.pause( 15 * 1000 );
+		const response = browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/' + oldItemID + '.json'
+		);
 
-		const bindings = browser.queryBlazeGraphItem( oldItemID );
+		const body = response.data;
+		const properties = Object.keys( body.entities[ oldItemID ].claims );
+
+		assert( properties.length === 1 );
+
+		oldPropertyID = properties[ 0 ];
+
+	} );
+
+	it( 'Should show up in the Queryservice', async function () {
+
+		let bindings;
+
+		await browser.waitUntil(
+			async () => {
+
+				bindings = browser.queryBlazeGraphItem( oldItemID );
+
+				return bindings.length === 9;
+			},
+			{
+				timeout: 15000,
+				timeoutMsg: 'Blazegraph should have updated up the item by now'
+			}
+		);
 
 		assert( bindings.length === 9 );
 
-		const statement = getElementByURI( process.env.MW_SERVER + '/prop/P101', bindings );
-		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/P101', bindings );
+		const statement = getElementByURI( process.env.MW_SERVER + '/prop/' + oldPropertyID, bindings );
+		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/' + oldPropertyID, bindings );
 
 		const itemLabelValue = getElementByURI( 'http://www.w3.org/2000/01/rdf-schema#label', bindings );
 
@@ -62,5 +89,4 @@ describe( 'Wikibase post upgrade', function () {
 		assert( itemLabelValue.o.value === 'UpgradeItem' );
 
 	} );
-
 } );
