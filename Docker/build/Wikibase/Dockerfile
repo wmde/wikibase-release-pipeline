@@ -35,7 +35,9 @@ RUN apt-get update && \
 COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY artifacts/wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
-COPY LocalSettings.php.template /LocalSettings.php.template
+
+ARG MEDIAWIKI_DOCKER_TEMPLATE_FILE
+COPY ${MEDIAWIKI_DOCKER_TEMPLATE_FILE} /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
