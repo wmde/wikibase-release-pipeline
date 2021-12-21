@@ -23,12 +23,48 @@ In order to test your own instances of the services, make sure to set the follow
 make test SUITE=repo FILTER=babel*
 ```
 
-## Test upgrading between images
+## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/upgrade/old-versions/` and the newly built version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
 make test-upgrade VERSION=wmde.0
+```
+
+To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE_NAME` variable.
+
+```
+make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle
+```
+
+## Test the example
+
+Tests the example configuration by running the `example` suite against it.
+
+```
+make test-example SUITE=example
+```
+
+## Stopping running containers
+
+In order to stop any running containers from testing there are some Makefile targets that can be used to to this.
+
+Stop and remove the example containers
+
+```sh
+make example-stop
+```
+
+Stop and remove the test containers
+
+```sh
+make test-stop
+```
+
+Stop and remove the upgrade containers
+
+```sh
+make upgrade-stop
 ```
 
 ##  Variables for testing some other instance
