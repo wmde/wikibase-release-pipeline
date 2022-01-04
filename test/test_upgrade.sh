@@ -55,7 +55,7 @@ TMP_LOCALSETTINGS="$TMP_DIR/LocalSettings.php"
 
 # Source the default env vars used for building and create a new LocalSettings file 
 set -o allexport; source ../Docker/build/Wikibase/default.env; set +o allexport
-envsubst < "../Docker/build/Wikibase/$MEDIAWIKI_DOCKER_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
+envsubst < "../Docker/build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
 export TMP_LOCALSETTINGS
 
 # docker-compose down to simulate upgrade
