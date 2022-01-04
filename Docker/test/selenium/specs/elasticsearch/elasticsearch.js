@@ -55,7 +55,7 @@ describe( 'ElasticSearch', function () {
 					searchResult[ 0 ].match.text === itemLabel;
 			},
 			{
-				timeout: 10000,
+				timeout: 20000,
 				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
 		);
@@ -81,7 +81,7 @@ describe( 'ElasticSearch', function () {
 					searchResult[ 0 ].match.text === itemAlias;
 			},
 			{
-				timeout: 10000,
+				timeout: 20000,
 				timeoutMsg: 'Elasticsearch should have updated the alias by now.'
 			}
 		);
