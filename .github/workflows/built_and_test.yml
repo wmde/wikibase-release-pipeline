@@ -485,6 +485,7 @@ jobs:
           path: test/log
 
   test_upgrade_base:
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -520,6 +521,7 @@ jobs:
           path: test/log
 
   test_upgrade_bundle:
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
