@@ -1,4 +1,4 @@
-# Wikibase for testing
+# Wikibase and Database for testing when upgrading
 version: '3'
 
 services:
@@ -24,10 +24,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
-      - MW_ELASTIC_HOST=mysql.svc
-      - MW_ELASTIC_PORT=3306
       - WIKIBASE_HOST
-      - WIKIBASE_PINGBACK
+      - WIKIBASE_PINGBACK=false
   mysql:
     image: "${DEFAULT_DATABASE_IMAGE_NAME}"
     restart: unless-stopped
@@ -45,6 +43,4 @@ services:
          - mysql.svc
 
 volumes:
-  LocalSettings:
   mediawiki-mysql-data:
-  quickstatements-data: # this volume can be removed if quickstatements isn't running 

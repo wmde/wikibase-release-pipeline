@@ -1,0 +1,42 @@
+# WDQS and WDQS-updater for testing when upgrading
+version: '3'
+
+services:
+
+  wdqs:
+    image: "${WDQS_TEST_IMAGE_NAME}"
+    restart: always
+    command: /runBlazegraph.sh
+    networks:
+      default:
+        aliases:
+         - wdqs.svc
+    volumes:
+      - query-service-data:/wdqs/data
+    environment:
+      - WIKIBASE_HOST=wikibase.svc
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
+    ports:
+      - 9999:9999
+    expose:
+      - 9999
+
+  wdqs-updater:
+    image: "${WDQS_TEST_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runUpdate.sh
+    depends_on:
+    - wdqs
+    - wikibase
+    networks:
+      default:
+        aliases:
+         - wdqs-updater.svc
+    environment:
+     - WIKIBASE_HOST=wikibase.svc
+     - WDQS_HOST=wdqs.svc
+     - WDQS_PORT=9999
+
+volumes:
+  query-service-data:

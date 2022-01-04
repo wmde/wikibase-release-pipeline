@@ -27,7 +27,7 @@ test-stop:
 
 .PHONY: upgrade-stop
 upgrade-stop:
-	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml"
+	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml -f docker-compose.upgrade.wdqs.yml"
 
 .PHONY: example-stop
 example-stop:
