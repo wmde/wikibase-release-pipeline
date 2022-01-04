@@ -456,7 +456,7 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
       - name: Get Wikibase docker image artifact
@@ -485,6 +485,7 @@ jobs:
           path: test/log
 
   test_upgrade_base:
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -520,6 +521,7 @@ jobs:
           path: test/log
 
   test_upgrade_bundle:
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
