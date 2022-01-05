@@ -36,7 +36,6 @@ COPY custom-config.json /templates/custom-config.json
 COPY default.conf /templates/default.conf
 
 ENV LANGUAGE=en\
-    BRAND_TITLE=DockerWikibaseQueryService\
     COPYRIGHT_URL=undefined
 
 ENTRYPOINT ["/entrypoint.sh"]
