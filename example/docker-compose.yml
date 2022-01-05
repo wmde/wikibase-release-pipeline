@@ -41,6 +41,7 @@ services:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
+      MW_SITE_NAME: ${MW_SITE_NAME}
 
   wikibase_jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
