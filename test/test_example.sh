@@ -5,8 +5,8 @@ set -e
 export SUITE=$1
 
 if [ -z "$SUITE" ]; then
-    echo "SUITE is not set"
-    exit 1
+    echo "SUITE is not set. defaulting to example"
+    export SUITE="example"
 fi
 
 cd test
