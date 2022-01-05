@@ -115,6 +115,7 @@ services:
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY=${OAUTH_CONSUMER_KEY}
       - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
+      - MW_SITE_NAME=${MW_SITE_NAME}
 
 volumes:
   LocalSettings:
