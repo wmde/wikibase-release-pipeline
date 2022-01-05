@@ -129,7 +129,7 @@ docker-compose rm wikibase wikibase_jobrunner
 3. Finally, remove the shared container
 
 ```sh
-docker volume rm example_share
+docker volume rm example_shared
 ```
 
 ## Change the image
