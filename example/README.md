@@ -7,6 +7,8 @@ The example docker-compose configuration consists of two files:
 
 **We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
 
+**This configuration serves as an example of how the images could be used together and isn't production ready**
+
 ## Configure your installation
 
 Copy `template.env` to `.env` and replace the passwords and secrets with your own.
