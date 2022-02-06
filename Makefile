@@ -1,6 +1,6 @@
 #!make
 include variables.env
-include .env
+-include builder_configuration.env
 -include local.env
 
 export
