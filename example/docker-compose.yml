@@ -13,7 +13,6 @@ x-common-variables: &wikibase_variables
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
   WIKIBASE_HOST: ${WIKIBASE_HOST}
-  QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
 
 services:
   wikibase:
