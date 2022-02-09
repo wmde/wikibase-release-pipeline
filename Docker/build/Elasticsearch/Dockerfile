@@ -1,11 +1,11 @@
 ARG ELASTICSEARCH_VERSION
 FROM elasticsearch:${ELASTICSEARCH_VERSION}
 
-ARG ELASTICSEARCH_VERSION
-RUN ./bin/elasticsearch-plugin install org.wikimedia.search:extra:${ELASTICSEARCH_VERSION}
+ARG ELASTICSEARCH_PLUGIN_VERSION
+RUN ./bin/elasticsearch-plugin install org.wikimedia.search:extra:${ELASTICSEARCH_PLUGIN_VERSION}
 
-ARG ELASTICSEARCH_VERSION
-RUN ./bin/elasticsearch-plugin install org.wikimedia.search.highlighter:experimental-highlighter-elasticsearch-plugin:${ELASTICSEARCH_VERSION}
+ARG ELASTICSEARCH_PLUGIN_VERSION
+RUN ./bin/elasticsearch-plugin install org.wikimedia.search.highlighter:experimental-highlighter-elasticsearch-plugin:${ELASTICSEARCH_PLUGIN_VERSION}
 
 COPY default.jvm.options /default.jvm.options
 RUN cat /default.jvm.options >> /usr/share/elasticsearch/config/jvm.options && rm /default.jvm.options
