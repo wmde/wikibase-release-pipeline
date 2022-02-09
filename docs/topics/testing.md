@@ -77,6 +77,32 @@ WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
 WDQS_SERVER=wdqs.svc:9999
 PINGBACK_BEACON_SERVER=http://mediawiki.svc
 WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
+MW_ADMIN_NAME=
+MW_ADMIN_PASS=
+MW_SCRIPT_PATH=/w
+```
+
+## Variables for running the a specific test file against a wikibase.cloud/localhost instance
+
+Create a `Docker/test/selenium/wbaas.minikube.repo.env` file with the following contents
+
+```
+WIKIBASE_SERVER=minikube.wbaas.localhost:80
+MW_SERVER=http://minikube.wbaas.localhost
+
+MW_ADMIN_NAME=Minikube
+MW_ADMIN_PASS=superpassword
+
+MW_SCRIPT_PATH=/w
+
+FILTER=api.js
+MOCHA_OPTS_TIMEOUT=3600000000
+```
+
+Source the file on each run and execute the `test:run-filter` target on the selenium package in `Docker/test/selenium/`.
+
+```bash
+set -o allexport; source wbaas.minikube.repo.env; set +o allexport && npm run test:run-filter
 ```
 
 For more information on selenium testing see the [README](../../Docker/test/selenium/README.md) file in the selenium folder.

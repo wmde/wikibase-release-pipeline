@@ -67,7 +67,7 @@ exports.config = {
 	// See also: http://mochajs.org
 	mochaOpts: {
 		ui: 'bdd',
-		timeout: 90 * 1000
+		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
 	// define all tests
