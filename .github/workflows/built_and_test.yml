@@ -16,6 +16,7 @@ jobs:
 
   build_wikibase:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -91,6 +92,7 @@ jobs:
 
   build_wikibase_bundle:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs:
       - build_wikibase
     steps:
@@ -167,6 +169,7 @@ jobs:
 
   build_quickstatements:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -220,6 +223,7 @@ jobs:
 
   build_wdqs:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -274,6 +278,7 @@ jobs:
 
   build_wdqs_proxy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -319,6 +324,7 @@ jobs:
 
   build_wdqs_frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -386,6 +392,7 @@ jobs:
 
   build_elasticsearch:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -456,7 +463,7 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
       - name: Get Wikibase docker image artifact
@@ -485,7 +492,7 @@ jobs:
           path: test/log
 
   test_upgrade_base:
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -521,7 +528,7 @@ jobs:
           path: test/log
 
   test_upgrade_bundle:
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -555,7 +562,7 @@ jobs:
 
   test_example:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
 
@@ -576,6 +583,7 @@ jobs:
     needs:
       - test_wikibase
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v3
