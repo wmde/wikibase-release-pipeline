@@ -40,5 +40,14 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
     fi
 fi
 
+# Copy LocalSettings.php to a shared directory, if the image is being used with this shared directory existing
+# This is generally only done for the docker-compose example which currently works out of the box
+# This is used to share a install generated LocalSettings.php with a job runner on first run for example
+if [[ -d "/var/shared-localsettings" ]] && [[ -e "/var/www/html/LocalSettings.php" ]]
+then
+    echo "/var/shared-localsettings & /var/www/html/LocalSettings.php found, so copying LocalSetting.php into shared directory"
+    cp /var/www/html/LocalSettings.php /var/shared-localsettings/LocalSettings.php
+fi
+
 # Run the actual entry point
 docker-php-entrypoint apache2-foreground
