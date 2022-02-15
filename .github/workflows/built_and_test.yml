@@ -11,7 +11,7 @@ on:
 
 env:
   env_file_latest: 'versions/wmde5.env'
-  env_file_previous: 'versions/wmde6.env'
+  env_file_previous: 'versions/wmde3.env'
 
 jobs:
 
