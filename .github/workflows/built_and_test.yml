@@ -3,20 +3,51 @@ name: Build and test Wikibase and friends
 on:
   workflow_dispatch:
     inputs:
-      env_file:
+      env_file_manual:
         description: 'Environment file'
         required: true
         default: '.env' # only gets set on a "workflow_dispatch" run
   push:
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde5.env' }}
+  env_file_latest: 'versions/wmde5.env'
+  env_file_previous: 'versions/wmde6.env'
 
 jobs:
+
+  provide_env_files:
+    name: Collect env files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output env file matrix
+        id: output-step
+        env:
+          LATEST: ${{ env.env_file_latest }}
+          PREVIOUS: ${{ env.env_file_previous }}
+          MANUAL: ${{ github.event.inputs.env_file_manual }}
+        run: |
+          set +x
+          if [ ${{ github.event_name }} = "workflow_dispatch" ]; then
+              echo "Workflow is being dispatched"
+              OUTPUT="[ \"$MANUAL\" ]"
+          else
+              echo "Workflow is being run as pat of CI"
+              OUTPUT="[ \"$LATEST\", \"$PREVIOUS\" ]"
+          fi
+          echo $OUTPUT
+          echo "::set-output name=matrix::$OUTPUT"
+    outputs:
+      matrix: ${{ steps.output-step.outputs.matrix }}
 
   build_wikibase:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -93,7 +124,12 @@ jobs:
   build_wikibase_bundle:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
     needs:
+      - provide_env_files
       - build_wikibase
     steps:
       - uses: actions/checkout@v2
@@ -170,6 +206,12 @@ jobs:
   build_quickstatements:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -224,6 +266,12 @@ jobs:
   build_wdqs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -279,6 +327,12 @@ jobs:
   build_wdqs_proxy:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -325,6 +379,12 @@ jobs:
   build_wdqs_frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -393,6 +453,12 @@ jobs:
   build_elasticsearch:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
+    needs:
+      - provide_env_files
     steps:
       - uses: actions/checkout@v2
 
@@ -440,6 +506,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
         databaseImageName: [ 'mariadb:10.3' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [ 
           repo, 
@@ -456,6 +523,7 @@ jobs:
           base__fedprops,
         ]
     needs:
+      - provide_env_files
       - build_wikibase_bundle
       - build_wdqs
       - build_elasticsearch
@@ -496,6 +564,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
         version: [
           '1.32-base',
           '1.33-base',
@@ -507,6 +576,7 @@ jobs:
           'wmde.3'
         ]
     needs:
+      - provide_env_files
       - build_wikibase
     runs-on: ubuntu-latest
     steps:
@@ -532,12 +602,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
         version: [
           'wmde.1-bundle',
           'wmde.2-bundle',
           'wmde.3-bundle',
         ]
     needs:
+      - provide_env_files
       - build_wikibase_bundle
     runs-on: ubuntu-latest
     env:
@@ -560,27 +632,13 @@ jobs:
           name: TestUpgradeArtifactsBundle
           path: test/log
 
-  test_example:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Test example
-        run: make test-example SUITE=example
-      
-      - name: Archive test example artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: TestExampleArtifacts
-          if-no-files-found: error
-          path: |
-            example/log
-            test/log
-
   versions:
+    strategy:
+      fail-fast: false
+      matrix:
+        env_file: ${{fromJson(needs.provide_env_files.outputs.matrix)}}
     needs:
+      - provide_env_files
       - test_wikibase
     runs-on: ubuntu-latest
     timeout-minutes: 20
