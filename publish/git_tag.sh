@@ -2,5 +2,5 @@
 set -e
 
 cd publish
-docker-compose build download_artifacts && docker-compose run download_artifacts
-docker-compose build tag_git && docker-compose run tag_git --rm
+docker-compose build download_artifacts && docker-compose run --rm download_artifacts
+docker-compose build tag_git && docker-compose run --rm tag_git
