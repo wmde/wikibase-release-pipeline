@@ -15,7 +15,7 @@ test: test-stop
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
-	bash test/test_upgrade.sh ${VERSION}
+	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example: example-stop

@@ -3,14 +3,25 @@
 set -e
 
 cd test
-
 mkdir -p log
 
 ENV_VERSION=$1
+TO_VERSION=$2
+
+if [ -z "$TO_VERSION" ]; then
+    echo "TO_VERSION is not set"
+    exit 1
+fi
+
+if [ ! -f "../$TO_VERSION" ]; then
+    echo "TO_VERSION does not exist"
+    exit 1
+fi
+
 WIKIBASE_TEST_CONTAINER=test_wikibase_1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
-set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; set +o allexport
+set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
 
 # old wikibase version
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"

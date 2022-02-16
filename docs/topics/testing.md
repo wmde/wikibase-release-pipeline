@@ -28,13 +28,13 @@ make test SUITE=repo FILTER=babel*
 Tests upgrading between a previous release defined in `test/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
-make test-upgrade VERSION=wmde.0
+make test-upgrade VERSION=wmde.0 TO_VERSION=versions/wmdeN.env
 ```
 
 To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE_NAME` variable.
 
 ```
-make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle
+make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle TO_VERSION=versions/wmde.N
 ```
 
 ## Test the example
