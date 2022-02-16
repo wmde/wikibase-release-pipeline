@@ -15,6 +15,7 @@ fi
 
 if [ ! -f "../$TO_VERSION" ]; then
     echo "TO_VERSION does not exist"
+    exit 1
 fi
 
 WIKIBASE_TEST_CONTAINER=test_wikibase_1
