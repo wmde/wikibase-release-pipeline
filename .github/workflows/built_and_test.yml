@@ -518,7 +518,7 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
-        run: make test-upgrade VERSION=${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
@@ -551,7 +551,7 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
-        run: make test-upgrade VERSION=${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
