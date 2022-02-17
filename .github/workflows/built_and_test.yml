@@ -560,25 +560,6 @@ jobs:
           name: TestUpgradeArtifactsBundle
           path: test/log
 
-  test_example:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Test example
-        run: make test-example SUITE=example
-      
-      - name: Archive test example artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: TestExampleArtifacts
-          if-no-files-found: error
-          path: |
-            example/log
-            test/log
-
   versions:
     needs:
       - test_wikibase
