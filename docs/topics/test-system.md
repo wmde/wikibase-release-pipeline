@@ -109,7 +109,7 @@ mv gistfile1.txt ./extra.LocalSettings.php
 sed -i 's/#- .\/LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.override.php/- .\/extra.LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.extra.php/' ./docker-compose.yml
 ```
 
-You should the be able to start the test system from your regular user.
+To start the test system:
 
 ```sh
 # Run the thing
