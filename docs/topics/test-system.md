@@ -95,8 +95,13 @@ echo "WDQS_PROXY_IMAGE_NAME=ghcr.io/wmde/wdqs-proxy:$BUILD_NUMBER" >> ./.env
 # Ports to expose
 echo "WIKIBASE_PORT=${PORT_BASE}80" >> ./.env
 echo "WDQS_FRONTEND_PORT=${PORT_BASE}81" >> ./.env
-echo "QS_PUBLIC_SCHEME_HOST_AND_PORT=https://wikibase-qs-testing$DOMAIN_SUFFIX.wmflabs.org:${PORT_BASE}82" >> ./.env
+echo "QS_PUBLIC_SCHEME_HOST_AND_PORT=https://wikibase-qs-testing$DOMAIN_SUFFIX.wmcloud.org" >> ./.env
+echo "WB_PUBLIC_SCHEME_HOST_AND_PORT=https://wikibase-product-testing$DOMAIN_SUFFIX.wmcloud.org" >> ./.env
 echo "QUICKSTATEMENTS_PORT=${PORT_BASE}82" >> ./.env
+
+# Modify the quickstatements WB_PUBLIC_SCHEME_HOST_AND_PORT in the example
+# TODO if this works for the test system, push this to the real example...
+sed -i 's/WB_PUBLIC_SCHEME_HOST_AND_PORT=http:\/\/${WIKIBASE_HOST}:${WIKIBASE_PORT}/WB_PUBLIC_SCHEME_HOST_AND_PORT=${WB_PUBLIC_SCHEME_HOST_AND_PORT}/' ./docker-compose.extra.yml
 
 # Create an extra LocalSettings.php file to load
 wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/92a464ca0ee6b2432cc1af9c977166f794c78488/gistfile1.txt
