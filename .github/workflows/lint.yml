@@ -8,8 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # TODO: Replace with the official hadolint/hadolint-action once change is upstreamed
-      - uses: itamargiv/hadolint-action@v1.5.1-h
+      - uses: hadolint/hadolint-action@v1.6.0
         with:
           recursive: true
 
