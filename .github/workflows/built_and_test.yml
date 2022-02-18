@@ -8,6 +8,8 @@ on:
         required: true
         default: '.env' # only gets set on a "workflow_dispatch" run
   push:
+    branches:
+      - "main"
   pull_request:
     paths-ignore:
       - 'docs/**'

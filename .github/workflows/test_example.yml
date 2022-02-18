@@ -2,6 +2,8 @@ name: Test Example
 
 on:
   push:
+    branches:
+      - "main"
   pull_request:
     paths-ignore:
       - 'docs/**'
