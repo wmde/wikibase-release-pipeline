@@ -2,6 +2,10 @@ name: Test Example
 
 on:
   push:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 jobs:
   test_example:
