@@ -70,9 +70,9 @@ BUILD_NUMBER=1824280943
 #EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
 #BUILD_NUMBER=1853048237
 
-TEST_SYSTEM=fedprops-previous
-EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
-BUILD_NUMBER=1853048237
+#TEST_SYSTEM=fedprops-previous
+#EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
+#BUILD_NUMBER=1853048237
 
 # Calculate some things
 PORT_BASE="83"
@@ -136,13 +136,14 @@ echo "QUICKSTATEMENTS_PORT=${PORT_BASE}82" >> ./.env
 sed -i 's/WB_PUBLIC_SCHEME_HOST_AND_PORT=http:\/\/${WIKIBASE_HOST}:${WIKIBASE_PORT}/WB_PUBLIC_SCHEME_HOST_AND_PORT=${WB_PUBLIC_SCHEME_HOST_AND_PORT}/' ./docker-compose.extra.yml
 
 # Create an extra LocalSettings.php file to load
-wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/09a37c1ca9cb0bea9bd5e8b918fcb71a4262ad46/gistfile1.txt
-mv gistfile1.txt ./extra.LocalSettings.php
+wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/e0854a6593ca40afecab69ed1aa437b40cae53ba/extra-localsettings.txt
+mv extra-localsettings.txt ./extra.LocalSettings.php
 sed -i 's/#- .\/LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.override.php/- .\/extra.LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.extra.php/' ./docker-compose.yml
 
 if [[ "$TEST_SYSTEM" == *"fedprop"* ]]; then
   echo "Configuring federated properties"
-  echo "\$wgWBRepoSettings['federatedPropertiesEnabled'] = true;" >> ./extra.LocalSettings.php
+  wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/e0854a6593ca40afecab69ed1aa437b40cae53ba/extra-localsettings-fedprops.txt
+  cat extra-localsettings-fedprops.txt >> ./extra.LocalSettings.php
 fi
 ```
 
