@@ -134,7 +134,7 @@ This is so that we can link to the example, using the tag that we will create in
 
 The version used should be the latest release of the latest currently supported version of the images.
 
-Take a look at the `.env` file in the `example` directory and udpate the image tags.
+Take a look at the `.env` file in the `example` directory and update the image tags.
 
 Example commit: https://github.com/wmde/wikibase-release-pipeline/commit/73f9942ebd92ded5f17fbb7f8537e9f2268e2bc4
 
