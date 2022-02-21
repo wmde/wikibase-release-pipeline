@@ -6,16 +6,31 @@ You can find all code for running test test systems in the `/opt/test-systems` d
 This directory is owned by the `mediawiki` user.
 Each test system is a copy of the `example` docker-compose setup, with customized env vars and settings.
 
-Two test systems are maintained, one for the current "latest" major release, and one for the "previous" major release.
+Four optional test systems are maintained.
+These may or may not be running at any given time, as they are only intended for use during product verification during the release process.
+Engineers can start and stop these
 
-- Latest release (internal ports 83**)
-  - https://wikibase-product-testing.wmcloud.org (8380 internal)
-  - https://wikibase-query-testing.wmcloud.org (8381 internal)
-  - https://wikibase-qs-testing.wmcloud.org (8382 internal)
+**Default Wikibase**
+
 - Previous release (internal ports 82**)
   - https://wikibase-product-testing-previous.wmcloud.org (8280 internal)
   - https://wikibase-query-testing-previous.wmcloud.org (8281 internal)
   - https://wikibase-qs-testing-previous.wmcloud.org (8282 internal)
+- Latest release (internal ports 83**)
+  - https://wikibase-product-testing.wmcloud.org (8380 internal)
+  - https://wikibase-query-testing.wmcloud.org (8381 internal)
+  - https://wikibase-qs-testing.wmcloud.org (8382 internal)
+
+**Federated Properties**
+
+- Previous release with fed props (internal ports 84**)
+  - https://wikibase-product-testing-fedprops-previous.wmcloud.org (8480 internal)
+  - https://wikibase-query-testing-fedprops-previous.wmcloud.org (8481 internal)
+  - https://wikibase-qs-testing-fedprops-previous.wmcloud.org (8482 internal)
+- Latest release with fed props (internal ports 85**)
+  - https://wikibase-product-testing-fedprops.wmcloud.org (8580 internal)
+  - https://wikibase-query-testing-fedprops.wmcloud.org (8581 internal)
+  - https://wikibase-qs-testing-fedprops.wmcloud.org (8582 internal)
 
 These proxies are configured in Horizon https://horizon.wikimedia.org/project/proxy/
 
@@ -55,13 +70,30 @@ BUILD_NUMBER=1824280943
 #EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
 #BUILD_NUMBER=1853048237
 
+TEST_SYSTEM=fedprops-previous
+EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
+BUILD_NUMBER=1853048237
+
 # Calculate some things
 PORT_BASE="83"
+DOMAIN_SUFFIX=-$TEST_SYSTEM
 if [ "$TEST_SYSTEM" == "previous" ];
 then
-    # Only suffix domains of the "previous" system
-    DOMAIN_SUFFIX=-$TEST_SYSTEM
     PORT_BASE="82"
+fi
+if [ "$TEST_SYSTEM" == "latest" ];
+then
+    # Do not suffix domains on the latest system
+    DOMAIN_SUFFIX=""
+    PORT_BASE="83"
+fi
+if [ "$TEST_SYSTEM" == "fedprops-previous" ];
+then
+    PORT_BASE="84"
+fi
+if [ "$TEST_SYSTEM" == "fedprops" ];
+then
+    PORT_BASE="85"
 fi
 
 umask 002
@@ -104,9 +136,14 @@ echo "QUICKSTATEMENTS_PORT=${PORT_BASE}82" >> ./.env
 sed -i 's/WB_PUBLIC_SCHEME_HOST_AND_PORT=http:\/\/${WIKIBASE_HOST}:${WIKIBASE_PORT}/WB_PUBLIC_SCHEME_HOST_AND_PORT=${WB_PUBLIC_SCHEME_HOST_AND_PORT}/' ./docker-compose.extra.yml
 
 # Create an extra LocalSettings.php file to load
-wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/92a464ca0ee6b2432cc1af9c977166f794c78488/gistfile1.txt
+wget https://gist.githubusercontent.com/addshore/760b770427eb81d4d1ee14eb331246ea/raw/09a37c1ca9cb0bea9bd5e8b918fcb71a4262ad46/gistfile1.txt
 mv gistfile1.txt ./extra.LocalSettings.php
 sed -i 's/#- .\/LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.override.php/- .\/extra.LocalSettings.php:\/var\/www\/html\/LocalSettings.d\/LocalSettings.extra.php/' ./docker-compose.yml
+
+if [[ "$TEST_SYSTEM" == *"fedprop"* ]]; then
+  echo "Configuring federated properties"
+  echo "\$wgWBRepoSettings['federatedPropertiesEnabled'] = true;" >> ./extra.LocalSettings.php
+fi
 ```
 
 To start the test system:
