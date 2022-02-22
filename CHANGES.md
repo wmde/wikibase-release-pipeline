@@ -26,7 +26,7 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 - [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.36)
 - [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_36/RELEASE-NOTES-1.36)
 
-The Query service was also updated from `0.3.40` to `0.3.97`, but not additional upgrade process is needed.
+The Query service was also updated from `0.3.40` to `0.3.97`, but no additional upgrade process is needed.
 
 | Suite Version | Compatable MediaWiki | Date availbile | Release board |
 |---------------|----------------------|----------------| --------------|
