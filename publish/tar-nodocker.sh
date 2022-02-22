@@ -16,17 +16,17 @@ echo "Will upload tarballs from $ARTIFACT_PATH to $RELEASE_HOST at $RELEASE_FULL
 
 # move to uploads with release tag
 TMP_UPLOAD_PATH=/tmp/wb-rel-pipe/$WORKFLOW_RUN_NUMBER
-rm -rf $TMP_UPLOAD_PATH
-mkdir -p $TMP_UPLOAD_PATH
-cp $ARTIFACT_PATH/Wikibase.tar.gz $TMP_UPLOAD_PATH/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
-cp $ARTIFACT_PATH/wdqs-frontend.tar.gz $TMP_UPLOAD_PATH/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
+rm -rf "$TMP_UPLOAD_PATH"
+mkdir -p "$TMP_UPLOAD_PATH"
+cp "$ARTIFACT_PATH"/Wikibase.tar.gz "$TMP_UPLOAD_PATH"/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
+cp "$ARTIFACT_PATH"/wdqs-frontend.tar.gz" "$TMP_UPLOAD_PATH"/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
 
 if [ -z "$DRY_RUN" ]; then
     # create dir
     ssh "$RELEASE_HOST" mkdir -p "$RELEASE_FULL_PATH"
 
     # upload
-    scp $TMP_UPLOAD_PATH/* "$RELEASE_HOST":"$RELEASE_FULL_PATH"
+    scp "$TMP_UPLOAD_PATH"/* "$RELEASE_HOST":"$RELEASE_FULL_PATH"
 
     # create dir
     # 22-02-2022 This sis not work for Adam, but also the permissions were fine?
