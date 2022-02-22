@@ -9,7 +9,7 @@ This provides an overview of the releases that have been made using this release
 | Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
 |---------------|----------------------|----------------|------------| --------------|
 | wmde.5 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.5/versions/wmde5.env)) | 1.36    | 10 February 2022 | [1824280943](https://github.com/wmde/wikibase-release-pipeline/actions/runs/1824280943) | [T301359](https://phabricator.wikimedia.org/T301359) |
-| wmde.6 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.6/versions/wmde6.env)) | 1.35    | (Unreleased) | [1853048237](https://github.com/wmde/wikibase-release-pipeline/actions/runs/1853048237) | [T301663](https://phabricator.wikimedia.org/T301663) |
+| wmde.6 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.6/versions/wmde6.env)) | 1.35    | 22 February 2022 | [1853048237](https://github.com/wmde/wikibase-release-pipeline/actions/runs/1853048237) | [T301663](https://phabricator.wikimedia.org/T301663) |
 
 ### Security related changes
 
