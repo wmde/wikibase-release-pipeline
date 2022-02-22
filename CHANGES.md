@@ -38,7 +38,7 @@ Fix for CVE-2021-44228 [Log4Shell](https://en.wikipedia.org/wiki/Log4Shell) issu
 
 Included a MediaWiki update to 1.35.5
 
-| Suite Version | Compatable MediaWiki | Date availbile | Release board |
+| Suite Version | Compatible MediaWiki | Date available | Release board |
 |---------------|----------------------|----------------|--------------|
 | wmde.3 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.3/versions/wmde3.env)) | 1.35    | 16 December 2021 | [Board](https://phabricator.wikimedia.org/project/board/5645/query/all/) |
 
