@@ -64,6 +64,6 @@ Primarily for a MediaWiki update to 1.35.2
 
 An inital suite release using MediaWiki 1.35.0
 
-| Suite Version | Compatable MediaWiki | Date availbile | Release board |
+| Suite Version | Compatible MediaWiki | Date available | Release board |
 |---------------|----------------------|----------------|--------------|
 | wmde.0 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.1/versions/wmde0.env)) | 1.35    | 19 February 2021 | ??? |
