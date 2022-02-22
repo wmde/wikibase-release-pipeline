@@ -47,7 +47,7 @@ Included a MediaWiki update to 1.35.5
 Primarily for a MediaWiki update to 1.35.4
 (other components were also updated)
 
-| Suite Version | Compatable MediaWiki | Date availbile | Release board |
+| Suite Version | Compatible MediaWiki | Date available | Release board |
 |---------------|----------------------|----------------|--------------|
 | wmde.2 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.2/versions/wmde2.env)) | 1.35    | 30 November 2021 | [Board](https://phabricator.wikimedia.org/project/board/5622/query/all/) |
 
