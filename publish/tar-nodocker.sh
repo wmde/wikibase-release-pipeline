@@ -19,7 +19,7 @@ TMP_UPLOAD_PATH=/tmp/wb-rel-pipe/$WORKFLOW_RUN_NUMBER
 rm -rf "$TMP_UPLOAD_PATH"
 mkdir -p "$TMP_UPLOAD_PATH"
 cp "$ARTIFACT_PATH"/Wikibase.tar.gz "$TMP_UPLOAD_PATH"/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
-cp "$ARTIFACT_PATH"/wdqs-frontend.tar.gz" "$TMP_UPLOAD_PATH"/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
+cp "$ARTIFACT_PATH"/wdqs-frontend.tar.gz "$TMP_UPLOAD_PATH"/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
 
 if [ -z "$DRY_RUN" ]; then
     # create dir
