@@ -28,7 +28,7 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 
 The Query service was also updated from `0.3.40` to `0.3.97`, but no additional upgrade process is needed.
 
-| Suite Version | Compatable MediaWiki | Date availbile | Release board |
+| Suite Version | Compatible MediaWiki | Date available | Release board |
 |---------------|----------------------|----------------| --------------|
 | wmde.4 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.4/versions/wmde4.env)) | 1.36    | 5 January 2022 | [Board](https://phabricator.wikimedia.org/project/board/5645/query/all/) |
 
