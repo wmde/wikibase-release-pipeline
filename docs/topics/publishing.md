@@ -8,13 +8,30 @@
 - [ ] Publish to dockerhub
 - [ ] Publish to releases.wikimedia.org
 - [ ] Publish git tags
-- [ ] Announce new release on [wikibaseug](https://lists.wikimedia.org/mailman/listinfo/wikibaseug)
+- [ ] Announce the release
+
+## Prerequisutes
+
+- Add `GITHUB_TOKEN` to your `local.env` file with the `repo` and `workflow` scopes selected.
+- Add `DOCKER_HUB_ID`  to your `local.env` file with your docker hub username.
+- Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key
+- Add `RELEASE_HOST` to your `local.env` file pointing to the releases server for tars, e.g. `releases1002.eqiad.wmnet`
+
+## Steps
+
+Before getting started you need a build that has been made on Github Actions using your versioned wmde .env file.
+
+This can be made automatically by CI if it is configured for your release, or also a manual build using Github Actions.
+
+### Alter your local.env
+
+Some of the prerequisutes can be used between publications, others needs to be set each time we want to publish a new release.
+
+- Set `WORKFLOW_RUN_NUMBER` in your `local.env` file to the run you with to publish as a release (This will come from the summary page `actions/runs/<WORKFLOW_RUN_NUMBER>`)
 
 ### Download release artifacts
 
-After the build and test workflow has successfully completed it is time to download the results and prepare to publish it as a release.
-
-This can be done by setting the `WORKFLOW_RUN_NUMBER` variable in your local.env and execute the following command.
+We will download artifacts that were created by a Github Action run (compressed releases, docker images, meta data) locally ready for publishing.
 
 ```
 $ make download
@@ -23,15 +40,22 @@ Getting artifacts for run 1157808966
 ...
 ```
 
-This will download the build, test and metadata artifacts for the workflow run into `artifacts/WORKFLOW_RUN_NUMBER/`
+You'll be able to find the downloaded artifacts in `artifacts/<WORKFLOW_RUN_NUMBER>/`
 
 ### Verifying the downloaded artifacts
 
 Before we consider a build for publishing some manual inspection of the artifacts should be done.
 
+
 `artifacts/WORKFLOW_RUN_NUMBER/BuildMetadata/`
 
 Contains the commit hashes for most of the components that was included in the build. Each file should contain a commit hash.
+
+You can quickly look at these with the following:
+
+```sh
+tail -n +1 ./artifacts/<WORKFLOW_RUN_NUMBER>/BuildMetadata/*
+```
 
 `artifacts/WORKFLOW_RUN_NUMBER/TestArtifacts/`
 
@@ -40,7 +64,6 @@ Contains the docker log files for each suite and can easily be reviewed for any 
 `artifacts/WORKFLOW_RUN_NUMBER/TestArtifacts/selenium/`
 
 This folder contains screenshots that were taken after each test and can easily be reviewed for anything that looks off.
-
 
 ### Run tests on downloaded artifacts
 
@@ -67,32 +90,47 @@ This is supported by the tarball uploading and the dockerhub publishing scripts.
 
 After a first dry run you can issue the following to command to remove the variable.
 
-```
+```sh
 unset DRY_RUN
 ```
 
-## Publish to dockerhub
-### Make sure to set variables like this before running:
-```
-DOCKER_HUB_REPOSITORY_NAME=toanwmde
-DOCKER_HUB_ID=toanwmde
-DOCKER_HUB_ACCESS_TOKEN=mysecrettokenigotfromdockerhub
-WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
-GITHUB_TOKEN=mygithubtoken
+Or run each command without dry run
+
+```sh
+DRY_RUN="" ./command.sh
 ```
 
-If desired you can keep the tokens and the usernames set in a `local.env` that is git ignored
+## Load release variables into your current shell
 
-Run with:
+This will load the default `variables.env` file with your `local.env` overriding defaults where appropriate.
 
-```
+```sh
 set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
+```
+
+## Publish to dockerhub
+
+```sh
 ./publish/dockerhub.sh
 ```
 
 ## Publishing tarballs
 
-Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats run within a docker-container. It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
+Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
+It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
+
+After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
+
+### On your system
+
+You should be able to SSH to the host specificed in `RELEASE_HOST` with no issues.
+https://wikitech.wikimedia.org/wiki/SRE/Production_access#Setting_up_your_access
+
+```sh
+./publish/tar-nodocker.sh
+```
+
+### In docker
 
 Make sure the `~/.ssh/config` contains a bastion host section where the user is specified.
 
@@ -109,11 +147,8 @@ Host bast
 Make sure you have the follow env variables set in your `local.env` file. Tarballs are to be hosted on releases.wikimedia.org. More information about this can be found [here](https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org).
 
 ```
-WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
-RELEASE_HOST=releases1002.eqiad.wmnet
 RELEASE_USER=username # Name of the user on RELEASE_HOST to use
 RELEASE_SSH_IDENTITY=id_rsa # the production ssh identity filename to use
-
 ```
 
 Run with in the terminal
@@ -123,8 +158,6 @@ Run with in the terminal
 set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
 ./publish/tar.sh
 ```
-
-After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
 
 ## Update the example docker-compose
 
@@ -144,15 +177,15 @@ Example commit: https://github.com/wmde/wikibase-release-pipeline/commit/73f9942
 
 In order to keep a paper-trail of what commit was used to produce a certain release candidate.
 
-This can be done by running the following commands and replacing the necessary placeholders ...
+This can be done by running the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
 
-```
-git tag --force -a "<WMDE_RELEASE_VERSION>" "<COMMIT_HASH_FROM_THIS_REPO>" -m "<WMDE_RELEASE_VERSION>"
+```sh
+git tag --force -a $WMDE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WMDE_RELEASE_VERSION
 ```
 
 And pushing ...
 
-```
+```sh
 git push --tags
 ```
 
@@ -166,14 +199,9 @@ Example: `artifacts/<WORKFLOW_RUN_NUMBER>/BuildMetadata/build_metadata_wikibase.
 
 This file stores the commit hashes for the repositories we want to tag.
 
-Make sure you have the follow env variables set in your `local.env` file. 
-```
-WORKFLOW_RUN_NUMBER=465817659 # workflow to publish from
-```
-
 Run with:
-```
-set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
+
+```sh
 ./publish/git_tag.sh
 ```
 
@@ -192,7 +220,8 @@ git tag --force -a "wmde.0" "e84ab35125557ff073f42ba522a684d35c288b38" -m "Taggi
 ```
 
 Execute the commands in your local checked out repositories and push the tags using:
-```
+
+```sh
 git push --tags
 ```
 
@@ -204,8 +233,4 @@ In particular links to the [example](../../example/README.md) folder.
 
 ## Announce new versions
 
-Announcing new releases should be done to:
-
-- external https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/
-- external https://lists.wikimedia.org/hyperkitty/list/wikidata-tech@lists.wikimedia.org/
-- external Wikibase Telegram channel
+Announcing new releases with the comcom team.
