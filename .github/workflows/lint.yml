@@ -7,7 +7,7 @@ jobs:
   lint_dockerfiles:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: hadolint/hadolint-action@v1.6.0
         with:
           recursive: true
@@ -15,13 +15,13 @@ jobs:
   lint_shell_scripts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: bewuethr/shellcheck-action@v2
 
   lint_selenium_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
@@ -39,7 +39,7 @@ jobs:
   lint_diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env

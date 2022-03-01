@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -96,7 +96,7 @@ jobs:
     needs:
       - build_wikibase
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -171,7 +171,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -225,7 +225,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -280,7 +280,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -326,7 +326,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -394,7 +394,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
@@ -465,7 +465,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -510,7 +510,7 @@ jobs:
       - build_wikibase
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -543,7 +543,7 @@ jobs:
     env:
       TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -566,7 +566,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
