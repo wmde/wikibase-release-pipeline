@@ -11,6 +11,11 @@ r = requests.get(artifactsPath,  headers=headers)
 basepath = os.path.join('/extractedArtifacts', os.getenv('WORKFLOW_RUN_NUMBER'))
 artifactsMetadata =  r.json()
 
+if r.status_code != 200:
+    print('Non 200 response reseived: %s' % r.status_code)
+    print(r.text)
+    exit(1)
+
 if artifactsMetadata['total_count'] == 0:
     raise Exception("This run does not contain any artifacts to publish!") 
 

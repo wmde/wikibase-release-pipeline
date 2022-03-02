@@ -10,7 +10,7 @@ describe( 'WikibaseEdtf', function () {
 
 	it( 'Should allow to create and use the EDTF property', function () {
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseEdtf' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'edtf' ) );

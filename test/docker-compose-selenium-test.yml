@@ -24,8 +24,8 @@ services:
       - PINGBACK_BEACON_SERVER=http://mediawiki.svc
       - WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
       
-      - MW_ADMIN_NAME=WikibaseAdmin
-      - MW_ADMIN_PASS=WikibaseDockerAdminPass
+      - MW_ADMIN_NAME
+      - MW_ADMIN_PASS
       - MW_SCRIPT_PATH=/w
 
       - WMDE_RELEASE_VERSION
@@ -34,10 +34,12 @@ services:
       - SUITE
       - FILTER
       
-      - DOCKER_WIKIBASE_REPO_NAME=test_wikibase_1
+      - DOCKER_WIKIBASE_REPO_NAME
       - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client_1
-      - DOCKER_MYSQL_NAME=test_mysql_1
+      - DOCKER_MYSQL_NAME
 
-      - DB_USER=wikiuser
-      - DB_PASS=sqlpass
-      - DB_NAME=my_wiki
+      - DB_USER
+      - DB_PASS
+      - DB_NAME
+
+      - RUN_QUERYSERVICE_POST_UPGRADE_TEST

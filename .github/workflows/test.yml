@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        databaseImageName: [ 'mariadb:10.3' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [
           repo,
           fedprops,
@@ -33,12 +33,13 @@ jobs:
           base__fedprops,
         ]
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: actions/checkout@v3
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 

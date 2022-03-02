@@ -5,15 +5,15 @@ function clone_if_not_present {
 	REPOSITORY_CACHE_NAME=$1
 	GIT_URL=$2
 	if [ ! -d "git_cache/$1" ]; then
-		git clone --mirror "$GIT_URL" "git_cache/$REPOSITORY_CACHE_NAME"
+		git clone --mirror "$GIT_URL" "git_cache/$REPOSITORY_CACHE_NAME" -q
 	fi
 }
 
 function fetch_all {
 	REPOSITORY_CACHE_NAME=$1
 	cd "git_cache/$REPOSITORY_CACHE_NAME"
-	git fetch --all
-	cd -
+	git fetch --all -q
+	cd - > /dev/null
 }
 
 mkdir -p 'artifacts'

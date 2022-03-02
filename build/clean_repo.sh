@@ -5,4 +5,4 @@ set -ex
 REPO_DIR=$1
 
 # remove git things from release package
-rm "$REPO_DIR"/.git* -rfv
+rm "$REPO_DIR"/.git* -rf

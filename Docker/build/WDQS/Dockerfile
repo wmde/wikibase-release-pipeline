@@ -41,3 +41,5 @@ COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt /wdqs/
 RUN chmod +x /wdqs/runUpdate.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

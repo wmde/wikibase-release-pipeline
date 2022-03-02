@@ -1,9 +1,8 @@
 #!/bin/bash
 # shellcheck disable=SC1090
-set -ex
+set -e
 
 BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
-INSTALLED_EXTENSIONS="Wikibase"
 
 mkdir -p "$BUILT_EXTENSIONS_PATH"
 
@@ -29,7 +28,6 @@ fi
 IFS=',' read -ra EXTENSIONS <<< "$BUNDLE_WMF_EXTENSIONS"
 for EXTENSION in "${EXTENSIONS[@]}"; do
     bash build/build_extension.sh "$EXTENSION" "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
-    INSTALLED_EXTENSIONS="${INSTALLED_EXTENSIONS},${EXTENSION}"
     ## Copy the configuration files to build directory
     cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
 done
@@ -46,7 +44,6 @@ for EXT_EXTENSION in "${EXT_EXTENSIONS[@]}"; do
     
     ## build external extension
     . "build/external_extension/${EXT_EXTENSION}.sh"
-    INSTALLED_EXTENSIONS="${INSTALLED_EXTENSIONS},${EXT_EXTENSION}"
     ## Copy the configuration files to build directory
     cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXT_EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
 done
@@ -55,7 +52,6 @@ docker build --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_NAME="$COMPOSER_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
-    --build-arg INSTALLED_EXTENSIONS="$INSTALLED_EXTENSIONS" \
     Docker/build/WikibaseBundle/ -t "$WIKIBASE_BUNDLE_IMAGE_NAME"
 
 docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE"f > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz

@@ -67,13 +67,20 @@ exports.config = {
 	// See also: http://mochajs.org
 	mochaOpts: {
 		ui: 'bdd',
-		timeout: 90 * 1000
+		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
 	suites: {
+
+		// example-specs
+		example: [
+			'./specs/quickstatements/*.js',
+			'./specs/repo/queryservice.js',
+			'./specs/elasticsearch/*.js'
+		],
 
 		// bundle-specs
 		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
@@ -109,8 +116,17 @@ exports.config = {
 			'./specs/pingback/*.js'
 		],
 
-		upgrade: [
-			'./specs/repo/api.js'
+		pre_upgrade: [
+			'./specs/repo/api.js',
+			'./specs/upgrade/pre-upgrade.js',
+			'./specs/upgrade/queryservice-pre-and-post-upgrade.js'
+		],
+
+		post_upgrade: [
+			'./specs/repo/api.js',
+			'./specs/upgrade/post-upgrade.js',
+			'./specs/upgrade/queryservice-pre-and-post-upgrade.js',
+			'./specs/upgrade/queryservice-post-upgrade.js'
 		]
 
 	},
@@ -124,14 +140,11 @@ exports.config = {
 	 */
 	before: function () {
 		defaultFunctions.init();
-		if ( !browser.config.installed_extensions ) {
-			const extensions = browser.dockerExecute(
-				process.env.DOCKER_WIKIBASE_REPO_NAME,
-				"bash -c 'echo $INSTALLED_EXTENSIONS'"
-			);
 
+		if ( !browser.config.installed_extensions ) {
+			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
 			if ( extensions ) {
-				browser.config.installed_extensions = extensions.replace( /\n/g, '' ).split( ',' );
+				browser.config.installed_extensions = extensions;
 			} else {
 				browser.config.installed_extensions = [];
 			}

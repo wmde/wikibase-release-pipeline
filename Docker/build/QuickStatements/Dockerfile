@@ -42,3 +42,5 @@ RUN install -d -owww-data /var/log/quickstatements
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
+
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

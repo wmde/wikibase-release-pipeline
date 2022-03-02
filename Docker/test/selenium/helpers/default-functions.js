@@ -31,6 +31,10 @@ const defaultFunctions = function () {
 			};
 		}
 
+		if ( !config.user || !config.pass || !config.database ) {
+			throw new Error( 'dbQuery: Configuration error! ' + JSON.stringify( config ) );
+		}
+
 		return browser.dockerExecute(
 			process.env.DOCKER_MYSQL_NAME,
 			'mysql --user "' + config.user + '"' +
@@ -62,9 +66,21 @@ const defaultFunctions = function () {
 	} );
 
 	/**
+	 * Get installed extensions on wiki
+	 */
+	browser.addCommand( 'getInstalledExtensions', function async( server ) {
+		const result = browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
+		return _.map( result.data.query.extensions, 'name' );
+	} );
+
+	/**
 	 * Execute docker command on container and get output
 	 */
 	browser.addCommand( 'dockerExecute', function async( container, command, opts, shouldLog ) {
+
+		if ( !container ) {
+			throw new Error( 'dockerExecute: Container not specified!' );
+		}
 
 		if ( !opts ) {
 			opts = '';
@@ -196,6 +212,23 @@ const defaultFunctions = function () {
 
 	} );
 
+	/**
+	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
+	 */
+	browser.addCommand( 'queryBlazeGraphItem', function async( itemId ) {
+		const sparqlEndpoint = 'http://' + process.env.WDQS_SERVER + '/bigdata/namespace/wdq/sparql';
+		const params = {
+			headers: { Accept: 'application/sparql-results+json' },
+			validateStatus: false
+		};
+
+		// essentially 'SELECT * WHERE { <http://wikibase.svc/entity/Q101> ?p ?o }' but encoded with some special chars
+		const queryString = 'query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F' + itemId + '%3E+%3Fp+%3Fo+%7D';
+
+		const response = browser.makeRequest( sparqlEndpoint, params, queryString );
+		return response.data.results.bindings;
+	} );
+
 };
 
 module.exports = {
@@ -204,7 +237,7 @@ module.exports = {
 		const installedExtensions = browser.config.installed_extensions;
 		if ( !installedExtensions || installedExtensions.length === 0 ) {
 			return;
-		} else if ( installedExtensions && installedExtensions.includes( 'Wikibase' ) && installedExtensions.includes( extension ) ) {
+		} else if ( installedExtensions && installedExtensions.includes( 'WikibaseRepository' ) && installedExtensions.includes( extension ) ) {
 			return;
 		} else {
 			test.skip();

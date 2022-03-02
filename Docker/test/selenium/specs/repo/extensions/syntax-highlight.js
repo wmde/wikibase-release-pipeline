@@ -8,7 +8,7 @@ describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
-		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight_GeSHi' );
+		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
 		browser.editPage(
 			process.env.MW_SERVER,

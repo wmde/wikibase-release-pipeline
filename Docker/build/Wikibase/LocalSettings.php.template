@@ -55,11 +55,12 @@ ${DOLLAR}wgEnableUploads = ${MW_WG_ENABLE_UPLOADS};
 
 ${DOLLAR}wgUploadDirectory = "${MW_WG_UPLOAD_DIRECTORY}";
 
-## Wikibase
-# Load Wikibase repo & client with the example / default settings.
-require_once "${DOLLAR}IP/extensions/Wikibase/repo/Wikibase.php";
+## Wikibase Repository
+wfLoadExtension( 'WikibaseRepository', "${DOLLAR}IP/extensions/Wikibase/extension-repo.json" );
 require_once "${DOLLAR}IP/extensions/Wikibase/repo/ExampleSettings.php";
-require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
+
+## Wikibase Client
+wfLoadExtension( 'WikibaseClient', "${DOLLAR}IP/extensions/Wikibase/extension-client.json" );
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
 #Pingback

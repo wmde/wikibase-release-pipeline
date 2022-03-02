@@ -1,13 +1,24 @@
 # Additional services example
 version: '3.4'
 
+x-common-variables: &wikibase_extra_variables
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+
 services:
+
   wikibase:
     volumes:
+      - quickstatements-data:/quickstatements/data
       - ./extra-install.sh:/extra-install.sh
     environment:
-        MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
-        MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+      <<: *wikibase_extra_variables
+      QS_PUBLIC_SCHEME_HOST_AND_PORT:
+
+  wikibase_jobrunner:
+    environment:
+      <<: *wikibase_extra_variables
+
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
     restart: unless-stopped
@@ -19,7 +30,8 @@ services:
          - elasticsearch.svc
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
     restart: unless-stopped
@@ -30,7 +42,7 @@ services:
     networks:
       default:
         aliases:
-         - wdqs-frontend.svc
+         - ${WDQS_FRONTEND_HOST}
     environment:
       - WIKIBASE_HOST=${WIKIBASE_HOST}
       - WDQS_HOST=wdqs-proxy.svc
@@ -50,6 +62,7 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+
   wdqs-proxy:
     image: "${WDQS_PROXY_IMAGE_NAME}"
     restart: unless-stopped
@@ -61,6 +74,7 @@ services:
       default:
         aliases:
          - wdqs-proxy.svc
+
   wdqs-updater:
     image: "${WDQS_IMAGE_NAME}"
     restart: unless-stopped
@@ -77,6 +91,7 @@ services:
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
+
   quickstatements:
     image: "${QUICKSTATEMENTS_IMAGE_NAME}"
     restart: unless-stopped
@@ -92,8 +107,8 @@ services:
          - ${QUICKSTATEMENTS_HOST}
     environment:
       - QUICKSTATEMENTS_HOST
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}:${QUICKSTATEMENTS_PORT}
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT
+      - WIKIBASE_SCHEME_AND_HOST=http://wikibase-docker.svc
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"

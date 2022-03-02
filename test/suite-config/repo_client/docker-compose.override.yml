@@ -35,7 +35,7 @@ services:
       - ./suite-config/repo_client/client/LocalSettings.php.template:/LocalSettings.php.template
       - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
     ports:
-      - "8383:80"
+      - "80:80"
     networks:
       default:
         aliases:

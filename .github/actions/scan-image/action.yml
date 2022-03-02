@@ -1,0 +1,43 @@
+name: 'scan-docker'
+description: 'Scan image and upload results'
+inputs:
+  image_tag:
+    description: 'tag to give to latest image'
+    required: true
+  image_name:
+    description: 'name of the docker image to work with'
+    required: true
+runs:
+  using: "composite"
+  steps:
+      - uses: anchore/scan-action@v3
+        id: scan
+        with:
+          acs-report-enable: true
+          severity-cutoff: critical
+          fail-build: false
+          image: ${{ inputs.image_name }}:${{ inputs.image_tag }}
+
+      # As this step depends on github.event.pull_request it never ran until https://github.com/wmde/wikibase-release-pipeline/pull/317 was done
+      # So disable it in that PR and fix it in a followup...
+      # uploads it to the ui
+      # - uses: github/codeql-action/upload-sarif@v1
+      #   if: |
+      #     github.actor != 'dependabot[bot]' &&
+      #     (github.event.pull_request.head.repo.full_name == github.repository)
+      #   with:
+      #     sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      # output to terminal and move to non-conflicting name
+      - name: Inspect action SARIF report 
+        shell: bash
+        run: |
+          cat ${{ steps.scan.outputs.sarif }}
+          mv ${{ steps.scan.outputs.sarif }} /tmp/${{ inputs.image_name }}.sarif
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ScanArtifacts
+          if-no-files-found: error
+          path: /tmp/${{ inputs.image_name }}.sarif

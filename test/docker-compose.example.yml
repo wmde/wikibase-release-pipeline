@@ -1,0 +1,13 @@
+# Wikibase For testing
+version: '3'
+
+services:
+  quickstatements:
+    environment:
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+  wikibase:
+    environment:
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+    volumes:
+      # this gets executed in example/
+      - ../test/suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php

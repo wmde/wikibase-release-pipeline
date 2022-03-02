@@ -123,6 +123,10 @@ GZIP_COMPRESSION_RATE=1
 ```
 SELENIUM_LOG_LEVEL=trace
 ```
+#### Timeout for mocha tests
+```
+MOCHA_OPTS_TIMEOUT=90
+```
 
 #### Settings related to tarball publishing
 See [publishing](publishing.md).

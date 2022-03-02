@@ -2,17 +2,21 @@
 # shellcheck disable=SC1091,SC1090
 set -e
 
-TEMP_DIR="/tmp/example_test"
-rm -rf "$TEMP_DIR"
-mkdir -p "$TEMP_DIR"
+export SUITE=$1
 
-cp -r example/* "$TEMP_DIR"
-cd "$TEMP_DIR"
-mkdir -p log
+if [ -z "$SUITE" ]; then
+    echo "SUITE is not set. defaulting to example"
+    export SUITE="example"
+fi
 
-# create env
-cp template.env .env
+cd test
 
-# uncomment extra-install scripts
-docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
-docker-compose -f docker-compose.yml -f docker-compose.extra.yml logs -f --no-color > "log/example.log" &
+set -o allexport; source ../example/template.env; source example.env; set +o allexport
+
+# TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
+export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
+
+## Use in combination with example compose files 
+export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
+
+bash run_selenium.sh "$SUITE"

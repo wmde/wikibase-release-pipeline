@@ -1,4 +1,4 @@
-FROM docker:latest
+FROM docker:20.10.11-alpine3.14
 
 RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3 nodejs npm && \
     ln -sf python3 /usr/bin/python && \

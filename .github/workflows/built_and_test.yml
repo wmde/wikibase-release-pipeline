@@ -8,22 +8,29 @@ on:
         required: true
         default: '.env' # only gets set on a "workflow_dispatch" run
   push:
+    branches:
+      - "main"
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde2.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde6.env' }}
 
 jobs:
 
   build_wikibase:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -82,18 +89,26 @@ jobs:
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
+          image_tag: latest
+
   build_wikibase_bundle:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs:
       - build_wikibase
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -151,16 +166,24 @@ jobs:
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.WIKIBASE_BUNDLE_IMAGE_NAME }}
+          image_tag: latest
+
   build_quickstatements:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -174,6 +197,13 @@ jobs:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/quickstatements.docker.tar.gz
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -190,23 +220,24 @@ jobs:
           image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
-      - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
         with:
-          name: BuildArtifacts
-          if-no-files-found: error
-          path: artifacts/quickstatements.docker.tar.gz
+          image_name: ${{ env.QUICKSTATEMENTS_IMAGE_NAME }}
+          image_tag: latest
 
   build_wdqs:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -244,16 +275,24 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.WDQS_IMAGE_NAME }}
+          image_tag: latest
+
   build_wdqs_proxy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -282,16 +321,24 @@ jobs:
           if-no-files-found: error
           path: artifacts/wdqs-proxy.docker.tar.gz
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.WDQS_PROXY_IMAGE_NAME }}
+          image_tag: latest
+
   build_wdqs_frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -342,16 +389,24 @@ jobs:
           image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.WDQS_FRONTEND_IMAGE_NAME }}
+          image_tag: latest
+
   build_elasticsearch:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
@@ -380,11 +435,18 @@ jobs:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           tag: ${{ github.run_id }}
 
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
+          image_tag: latest
+
   test_wikibase:
     strategy:
       fail-fast: false
       matrix:
-        databaseImageName: [ 'mysql:5.6', 'mariadb:10.3' ]
+        databaseImageName: [ 'mariadb:10.3' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [ 
           repo, 
           fedprops, 
@@ -407,8 +469,9 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -434,7 +497,8 @@ jobs:
           name: TestArtifacts
           path: test/log
 
-  test_upgrade:
+  test_upgrade_base:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -443,15 +507,16 @@ jobs:
           '1.33-base',
           '1.34-base',
           '1.35-base',
-          'latest-base',
-          'lts-base',
-          'wmde.0'
+          'wmde.0',
+          'wmde.1',
+          'wmde.2',
+          'wmde.3'
         ]
     needs:
       - build_wikibase
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v2
         with:
@@ -459,7 +524,7 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
-        run: make test-upgrade VERSION=${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
@@ -468,59 +533,47 @@ jobs:
           name: TestUpgradeArtifacts
           path: test/log
 
-  test_example:
+  test_upgrade_bundle:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [
+          'wmde.1-bundle',
+          'wmde.2-bundle',
+          'wmde.3-bundle',
+        ]
+    needs:
+      - build_wikibase_bundle
     runs-on: ubuntu-latest
     env:
-      NUM_SERVICES: 9
-      LOG_FILE: /tmp/example_test/log/example.log
+      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Test example
-        run: bash test/test_example.sh
-
-      - name: Wait for WDQS to start polling wikibase
-        uses: nick-invision/retry@v2
+      - uses: actions/checkout@v3
+      - name: Get Wikibase docker image artifact
+        uses: actions/download-artifact@v2
         with:
-          timeout_minutes: 5
-          max_attempts: 100
-          retry_wait_seconds: 5
-          warning_on_retry: false
-          command: cat ${{ env.LOG_FILE }} | grep "RecentChangesPoller - Got no real changes" | wc -l | grep 5
+          name: BuildArtifacts
+          path: artifacts/
 
-      - run: docker ps
-      - name: Ensure ${{ env.NUM_SERVICES }} services have been created
-        run: docker ps --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep ${{ env.NUM_SERVICES }}
-      - name: Ensure ${{ env.NUM_SERVICES }} services are up and running
-        run: docker ps --filter "status=running" --format "{{.ID}}_{{.Names}} {{.Status}}" | wc -l | grep ${{ env.NUM_SERVICES }}
-      
-      - name: Ensure some services respond to requests
-        run: |
-          curl -L -s -N "http://localhost/" | grep -q "Main Page"
-          curl -L -s -N "http://localhost:8834/" | grep  -q "Wikidata_Query_Help"
-      
-      - name: Ensure job-runner ran recentChangesUpdate
-        run: cat ${{ env.LOG_FILE }} | grep "recentChangesUpdate Special:RecentChanges type=cacheUpdate" | wc -l | grep 2
+      - name: Test upgrade version - ${{ matrix.version }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
-      - name: Output log to terminal
-        if: always()
-        run: cat ${{ env.LOG_FILE }}
-      
-      - name: Archive test example artifacts
+      - name: Archive docker test artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: TestExampleArtifacts
-          if-no-files-found: error
-          path: ${{ env.LOG_FILE }}
+          name: TestUpgradeArtifactsBundle
+          path: test/log
 
   versions:
     needs:
       - test_wikibase
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: actions/checkout@v3
+      - uses: c-py/action-dotenv-to-setenv@v3
         with:
           env-file: ${{ env.env_file }}
 
