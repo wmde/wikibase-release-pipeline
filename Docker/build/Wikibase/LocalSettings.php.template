@@ -66,6 +66,14 @@ require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 #Pingback
 ${DOLLAR}wgWBRepoSettings['wikibasePingback'] = ${WIKIBASE_PINGBACK};
 
+${DOLLAR}wgFooterIcons['poweredby']['wikibase'] = array(
+	"src" => 'https://upload.wikimedia.org/wikipedia/commons/1/1c/Powered_by_Wikibase.svg',
+	"url" => 'https://wikiba.se/',
+	"alt" => 'Powered by Wikibase',
+	"height" => '31',
+	"width" => '88'
+);
+
 foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 {
     include ${DOLLAR}filename;
