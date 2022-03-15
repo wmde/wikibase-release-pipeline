@@ -40,7 +40,7 @@ ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 COPY ${MEDIAWIKI_SETTINGS_TEMPLATE_FILE} /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
 
-RUN ln -s /var/www/html/ /var/www/html/w \
+RUN ln -s /var/www/html/ /var/www/html/w && \
 	curl https://upload.wikimedia.org/wikipedia/commons/1/1c/Powered_by_Wikibase.svg -o /var/www/html/resources/assets/Powered_by_Wikibase.svg
 
 # Mediawiki configuration
