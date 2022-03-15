@@ -42,6 +42,8 @@ COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
 
+RUN curl https://upload.wikimedia.org/wikipedia/commons/1/1c/Powered_by_Wikibase.svg -o /var/www/html/resources/assets/Powered_by_Wikibase.svg
+
 # Mediawiki configuration
 ARG MW_SITE_NAME
 ARG MW_SITE_LANG
