@@ -35,7 +35,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache composer
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wikibase-composer
         with:
@@ -43,7 +43,7 @@ jobs:
           key: cache-wikibase-composer
 
       - name: Cache git_cache repos
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
@@ -113,7 +113,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache composer
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wikibase-composer
         with:
@@ -121,7 +121,7 @@ jobs:
           key: cache-wikibase-composer
 
       - name: Cache git_cache repos
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
@@ -242,7 +242,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache wdqs service tar
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wdqs-backend-git-repo
         with:
@@ -343,7 +343,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache git_cache repos
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-wdqs-frontend-git-repo
         with:
