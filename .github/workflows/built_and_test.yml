@@ -40,7 +40,7 @@ jobs:
           cache-name: cache-wikibase-composer
         with:
           path: cache
-          key: cache-wikibase-composer
+          key: cachev3-wikibase-composer
 
       - name: Cache git_cache repos
         uses: actions/cache@v3
@@ -48,7 +48,7 @@ jobs:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cachev3-wikibase-git-repo-temp-bump
 
       - name: Build Tarball
         run: bash build.sh wikibase ${{ env.env_file }}
@@ -118,7 +118,7 @@ jobs:
           cache-name: cache-wikibase-composer
         with:
           path: cache
-          key: cache-wikibase-composer
+          key: cachev3-wikibase-composer
 
       - name: Cache git_cache repos
         uses: actions/cache@v3
@@ -126,7 +126,7 @@ jobs:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cachev3-wikibase-git-repo-temp-bump
 
       - name: Get dependency build artifacts
         uses: actions/download-artifact@v2
@@ -247,7 +247,7 @@ jobs:
           cache-name: cache-wdqs-backend-git-repo
         with:
           path: cache
-          key: cache-wdqs-backend-git-repo
+          key: cachev3-wdqs-backend-git-repo
 
       - name: Build WDQS Image 
         id: download_step
@@ -348,7 +348,7 @@ jobs:
           cache-name: cache-wdqs-frontend-git-repo
         with:
           path: git_cache
-          key: cache-wdqs-frontend-git-repo
+          key: cachev3-wdqs-frontend-git-repo
 
       - name: Build WDQS-frontend
         run: bash build.sh wdqs-frontend ${{ env.env_file }}

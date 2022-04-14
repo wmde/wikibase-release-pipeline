@@ -33,7 +33,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: npm-lint-cache
+          key: cachev3-npm-lint
       - name: lint the selenium javascript tests
         run: |
           cd Docker/test/selenium 
@@ -51,7 +51,7 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: npm-lint-cache
+          key: cachev3-npm-lint
       - name: lint the selenium javascript tests
         run: |
           cd diagrams
