@@ -68,7 +68,7 @@ jobs:
           path: artifacts/Wikibase.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -138,7 +138,7 @@ jobs:
         run: bash build.sh wikibase_bundle ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -206,7 +206,7 @@ jobs:
           path: artifacts/quickstatements.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -254,7 +254,7 @@ jobs:
         run: bash build.sh wdqs ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -300,7 +300,7 @@ jobs:
         run: bash build.sh wdqs-proxy ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -375,7 +375,7 @@ jobs:
           path: ./artifacts/wdqs-frontend.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -421,7 +421,7 @@ jobs:
           path: ./artifacts/elasticsearch.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
