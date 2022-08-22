@@ -54,14 +54,14 @@ jobs:
         run: bash build.sh wikibase ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wikibase.env
 
       - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -83,7 +83,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive base docker production artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -153,14 +153,14 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive bundle docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/wikibase-bundle.docker.tar.gz
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
@@ -192,14 +192,14 @@ jobs:
         run: bash build.sh quickstatements ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -269,7 +269,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -315,7 +315,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -354,21 +354,21 @@ jobs:
         run: bash build.sh wdqs-frontend ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wdqs_frontend.env
 
       - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.tar.gz
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -414,7 +414,7 @@ jobs:
         run: bash build.sh elasticsearch ${{ env.env_file }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -491,7 +491,7 @@ jobs:
           SUITE=${{ matrix.suite }} node report.js
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestArtifacts
@@ -527,7 +527,7 @@ jobs:
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifacts
@@ -560,7 +560,7 @@ jobs:
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifactsBundle
@@ -581,7 +581,7 @@ jobs:
         run: bash build.sh requirements ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
