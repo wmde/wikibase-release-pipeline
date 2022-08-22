@@ -12,6 +12,7 @@ function clone_if_not_present {
 function fetch_all {
 	REPOSITORY_CACHE_NAME=$1
 	cd "git_cache/$REPOSITORY_CACHE_NAME"
+	git config --global --add safe.directory "$PWD/$REPOSITORY_CACHE_NAME"
 	git fetch --all -q
 	cd - > /dev/null
 }
