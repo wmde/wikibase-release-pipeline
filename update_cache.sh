@@ -5,6 +5,7 @@ function clone_if_not_present {
 	REPOSITORY_CACHE_NAME=$1
 	GIT_URL=$2
 	if [ ! -d "git_cache/$1" ]; then
+		git config --global --add safe.directory "$PWD/$REPOSITORY_CACHE_NAME"
 		git clone --mirror "$GIT_URL" "git_cache/$REPOSITORY_CACHE_NAME" -q
 	fi
 }
