@@ -129,7 +129,7 @@ jobs:
           key: cache-wikibase-git-repo-temp-bump
 
       - name: Get dependency build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -473,7 +473,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -518,7 +518,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -551,7 +551,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
