@@ -107,10 +107,10 @@ Example output
 
 ```sh
 $ docker inspect -f '{{ .Mounts }}' 916ac3ce384e
-[ {volume example_shared-localsettings /var/lib/docker/volumes/example_shared-localsettings/_data /var/www/html local rw true } ]
+[ {volume example_shared /var/lib/docker/volumes/example_shared/_data /var/www/html local rw true } ]
 ```
 
-The above example returns a single mount used by the container called `example_shared-localsettings`; this is the one that is shared between the jobrunner and the Wikibase web container.
+The above example returns a single mount used by the container called `example_shared`; this is the one that is shared between the jobrunner and the Wikibase web container.
 
 We need to remember this name as we will have to remove it manually after the containers has been shut down and removed.
 
@@ -129,7 +129,7 @@ docker-compose rm wikibase wikibase_jobrunner
 3. Finally, remove the shared container
 
 ```sh
-docker volume rm example_shared-localsettings
+docker volume rm example_shared
 ```
 
 ## Change the image
@@ -146,7 +146,7 @@ services:
 
 At last it's time to run the mediawiki [update.php](https://www.mediawiki.org/wiki/Manual:Update.php) script.
 
-Start the containers again and from outside of docker run:
+You can do this from outside the Docker container by running:
 
 ```
 docker exec <WIKIBASE_CONTAINER_NAME> php /var/www/html/maintenance/update.php

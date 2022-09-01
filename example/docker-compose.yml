@@ -25,9 +25,12 @@ services:
     ports:
       - "${WIKIBASE_PORT}:80"
     volumes:
-      - shared-localsettings:/var/shared-localsettings
-      ## Uncomment this next line to mount your own LocalSettings.php file overrides
+      ## This shares the configuration with jobrunner
+      - shared:/var/www/html/:rw
+
+      ## Uncomment this next line to mount your own LocalSettings.php file
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+
     networks:
       default:
         aliases:
@@ -48,10 +51,8 @@ services:
       - mysql
     restart: always
     volumes:
+      - shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      - shared-localsettings:/var/shared-localsettings
-      ## Uncomment this next line to mount your own LocalSettings.php file overrides
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
@@ -77,5 +78,5 @@ services:
          - mysql.svc
 
 volumes:
-  shared-localsettings:
+  shared:
   mediawiki-mysql-data:
