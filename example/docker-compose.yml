@@ -46,7 +46,8 @@ services:
       - mysql
     depends_on:
       - mysql
-    restart: always
+      - wikibase
+    restart: unless-stopped
     volumes:
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       - shared-localsettings:/var/shared-localsettings

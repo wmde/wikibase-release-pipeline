@@ -118,7 +118,6 @@ services:
       - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
 
 volumes:
-  LocalSettings:
   query-service-data:
   elasticsearch-data:
   quickstatements-data:
