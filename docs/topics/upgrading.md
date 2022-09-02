@@ -97,41 +97,6 @@ In some newer images, the default value of upload images is written inside the c
 
 Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase_jobrunner` containers.
 
-### Review the mounts currently used by the wikibase container
-
-```sh
-docker inspect -f '{{ .Mounts }}' <WIKIBASE_CONTAINER_ID>
-```
-
-Example output
-
-```sh
-$ docker inspect -f '{{ .Mounts }}' 916ac3ce384e
-[ {volume example_shared-localsettings /var/lib/docker/volumes/example_shared-localsettings/_data /var/www/html local rw true } ]
-```
-
-The above example returns a single mount used by the container called `example_shared-localsettings`; this is the one that is shared between the jobrunner and the Wikibase web container.
-
-We need to remember this name as we will have to remove it manually after the containers has been shut down and removed.
-
-1. Stop the containers
-
-```sh
-docker-compose stop wikibase wikibase_jobrunner
-```
-
-2. Remove the containers
-
-```sh
-docker-compose rm wikibase wikibase_jobrunner
-```
-
-3. Finally, remove the shared container
-
-```sh
-docker volume rm example_shared-localsettings
-```
-
 ## Change the image
 
 Update the entry in the `image` section of your `docker-compose.yml` file to the new version. You can also do this by changing the environment variable in your `.env` file, as seen in the Docker example.
