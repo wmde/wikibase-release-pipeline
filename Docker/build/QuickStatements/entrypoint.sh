@@ -9,7 +9,7 @@ for i in "${REQUIRED_VARIABLES[@]}"; do
     fi
 done
 
-if [[ -v "$OAUTH_CONSUMER_KEY" && "$OAUTH_CONSUMER_SECRET" ]]; then
+if [[ -v OAUTH_CONSUMER_KEY && -v OAUTH_CONSUMER_SECRET ]]; then
     envsubst < /templates/oauth.ini > /quickstatements/data/oauth.ini;
 fi
 
