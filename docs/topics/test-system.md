@@ -71,8 +71,8 @@ BUILD_NUMBER=2971822356
 #BUILD_NUMBER=2971057584
 
 #TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
-#BUILD_NUMBER=1853048237
+#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+#BUILD_NUMBER=2971057584
 
 # Calculate some things
 PORT_BASE="83"
@@ -166,15 +166,18 @@ The one thing that needs copying over and mounting in the docker-compose file is
 That would look something like this...
 
 ```sh
-cd /opt/test-systems/previous
-sudo docker cp previous_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-previous-$(date --iso).php
+TEST_SYSTEM=fedprops-previous
+
+cd /opt/test-systems/$TEST_SYSTEM
+sudo docker cp ${TEST_SYSTEM}_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-$(date --iso).php
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
 cd /opt/test-systems
-mv ./previous ./$(date --iso)-previous
+mv ./$TEST_SYSTEM ./$(date --iso)-${TEST_SYSTEM}
 
 # Recreate the system using the script above changing the env vars and copy and pasting it into the terminal
 
-sudo docker volume rm previous_shared
+cd /opt/test-systems/$TEST_SYSTEM
+sudo docker volume rm ${TEST_SYSTEM}_shared
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
@@ -191,8 +194,8 @@ sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
 
 # Within the wdqs-updater shell run the following, with the current date
-/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20220901000000
-# Then exit from the process and the bash shell
+/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20220908000000
+# Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
 
 # Restart the service
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs-updater
