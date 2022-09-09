@@ -3,4 +3,4 @@
 
 cd /wdqs || exit
 
-./runBlazegraph.sh
+./runBlazegraph.sh "$@"
