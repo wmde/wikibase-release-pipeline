@@ -12,7 +12,6 @@ components =	{
   "RELEASE_MAJOR_VERSION": "MediaWiki",
   "ELASTICSEARCH_VERSION": "Elasticsearch",
   "WDQS_VERSION": "WDQS",
-  "PHP_VERSION": "PHP"
 }
 
 databases = []

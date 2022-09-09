@@ -16,7 +16,7 @@ on:
       - 'README.md'
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde6.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde8.env' }}
 
 jobs:
 
@@ -35,7 +35,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache composer
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-composer
         with:
@@ -43,7 +43,7 @@ jobs:
           key: cache-wikibase-composer
 
       - name: Cache git_cache repos
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
@@ -54,21 +54,21 @@ jobs:
         run: bash build.sh wikibase ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wikibase.env
 
       - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -83,7 +83,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive base docker production artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -113,7 +113,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache composer
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-composer
         with:
@@ -121,7 +121,7 @@ jobs:
           key: cache-wikibase-composer
 
       - name: Cache git_cache repos
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-git-repo-temp-bump
         with:
@@ -129,7 +129,7 @@ jobs:
           key: cache-wikibase-git-repo-temp-bump
 
       - name: Get dependency build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -138,7 +138,7 @@ jobs:
         run: bash build.sh wikibase_bundle ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -153,14 +153,14 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive bundle docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/wikibase-bundle.docker.tar.gz
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
@@ -192,21 +192,21 @@ jobs:
         run: bash build.sh quickstatements ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: artifacts/quickstatements.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -242,7 +242,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache wdqs service tar
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wdqs-backend-git-repo
         with:
@@ -254,7 +254,7 @@ jobs:
         run: bash build.sh wdqs ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -269,7 +269,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -300,7 +300,7 @@ jobs:
         run: bash build.sh wdqs-proxy ${{ env.env_file }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -315,7 +315,7 @@ jobs:
           tag: ${{ github.run_id }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
@@ -343,7 +343,7 @@ jobs:
           env-file: ${{ env.env_file }}
 
       - name: Cache git_cache repos
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-wdqs-frontend-git-repo
         with:
@@ -354,28 +354,28 @@ jobs:
         run: bash build.sh wdqs-frontend ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wdqs_frontend.env
 
       - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.tar.gz
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -414,14 +414,14 @@ jobs:
         run: bash build.sh elasticsearch ${{ env.env_file }}
 
       - name: Archive docker production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
@@ -473,7 +473,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -491,7 +491,7 @@ jobs:
           SUITE=${{ matrix.suite }} node report.js
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestArtifacts
@@ -518,7 +518,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -527,7 +527,7 @@ jobs:
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifacts
@@ -551,7 +551,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: BuildArtifacts
           path: artifacts/
@@ -560,7 +560,7 @@ jobs:
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifactsBundle
@@ -581,7 +581,7 @@ jobs:
         run: bash build.sh requirements ${{ env.env_file }}
 
       - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: BuildMetadata
           if-no-files-found: error

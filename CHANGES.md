@@ -4,6 +4,15 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## (WORK IN PROGRESS) September 2022: Security releases
+
+WORK IN PROGRESS by Addshore
+
+| Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.8 spec(TBA) | 1.36    | Date TBA | Run TBA | [T316707](https://phabricator.wikimedia.org/T316707) |
+| wmde.7 spec(TBA) | 1.35    | Date TBA | Run TBA | [T314881](https://phabricator.wikimedia.org/T314881) |
+
 ## February 2022: Security releases
 
 | Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
