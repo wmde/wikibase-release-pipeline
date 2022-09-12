@@ -10,8 +10,8 @@ WORK IN PROGRESS by Addshore
 
 | Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.8 spec(TBA) | 1.36    | Date TBA | Run TBA | [T316707](https://phabricator.wikimedia.org/T316707) |
-| wmde.7 spec(TBA) | 1.35    | Date TBA | Run TBA | [T314881](https://phabricator.wikimedia.org/T314881) |
+| wmde.8 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/1dc12a8b15bc36af59f4c322f86abbacb1f25d99/versions/wmde8.env)) | 1.36    | Date TBA | [2971822356](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971822356) | [T316707](https://phabricator.wikimedia.org/T316707) |
+| wmde.7 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/9b59184b21c813fa5c9157f1615aba7bb3b4139d/versions/wmde7.env)) | 1.35    | Date TBA | [2971057584](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971057584) | [T314881](https://phabricator.wikimedia.org/T314881) |
 
 ## February 2022: Security releases
 
