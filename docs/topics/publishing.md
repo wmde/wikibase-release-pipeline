@@ -177,7 +177,19 @@ Example commit: https://github.com/wmde/wikibase-release-pipeline/commit/73f9942
 
 In order to keep a paper-trail of what commit was used to produce a certain release candidate.
 
-This can be done by running the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
+You can find the `<COMMIT_HASH_FROM_THIS_REPO>` by looking up the `WORKFLOW_RUN_NUMBER` on GitHub in the UI.
+
+https://github.com/wmde/wikibase-release-pipeline/actions/runs/<WORKFLOW_RUN_NUMBER>
+
+![](https://i.imgur.com/UKBwYpS.png)
+
+Or via CLI
+
+```sh
+gh run view <WORKFLOW_RUN_NUMBER> --json headSha
+```
+
+You can then run the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
 
 ```sh
 git tag --force -a $WMDE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WMDE_RELEASE_VERSION
