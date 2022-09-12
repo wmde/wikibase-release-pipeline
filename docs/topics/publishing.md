@@ -28,6 +28,7 @@ This can be made automatically by CI if it is configured for your release, or al
 Some of the prerequisutes can be used between publications, others needs to be set each time we want to publish a new release.
 
 - Set `WORKFLOW_RUN_NUMBER` in your `local.env` file to the run you with to publish as a release (This will come from the summary page `actions/runs/<WORKFLOW_RUN_NUMBER>`)
+- You should also write this run number next to the release in `CHANGES.md`
 
 ### Download release artifacts
 
@@ -155,7 +156,7 @@ Run with in the terminal
 *(Will ask you for the password to the identity file once)*
 
 ```
-set -o allexport; source versions/<RELEASE_ENV>; source variables.env; source local.env; set +o allexport
+set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source local.env; set +o allexport
 ./publish/tar.sh
 ```
 
