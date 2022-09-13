@@ -45,10 +45,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v3
         env:
-          cache-name: cache-wikibase-git-repo-temp-bump
+          cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cache-wikibase-git-repo
 
       - name: Build Tarball
         run: bash build.sh wikibase ${{ env.env_file }}
@@ -123,10 +123,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v3
         env:
-          cache-name: cache-wikibase-git-repo-temp-bump
+          cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cache-wikibase-git-repo
 
       - name: Get dependency build artifacts
         uses: actions/download-artifact@v3
