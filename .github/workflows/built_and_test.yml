@@ -524,6 +524,9 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
+        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+        # Set a specific lower timeout to allow us to retry sooner
+        timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
@@ -557,6 +560,9 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
+        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+        # Set a specific lower timeout to allow us to retry sooner
+        timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
