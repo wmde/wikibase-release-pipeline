@@ -6,5 +6,5 @@ set -e
 for container in $(docker ps --all | awk '{if(NR>1) print $NF}')
 do
   echo "Container: $container"
-  docker logs $container
+  docker logs "$container"
 done
