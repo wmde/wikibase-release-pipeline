@@ -197,7 +197,7 @@ sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml ps
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-updater
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
 
-# Within the wdqs-updater shell run the following, with the current date
+# Within the wdqs-updater shell run the following, with the current date (`20220908000000` in the example line below)
 /wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20220908000000
 # Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
 
