@@ -4,14 +4,14 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## (WORK IN PROGRESS) September 2022: Security releases
+## September 2022: Security releases
 
-WORK IN PROGRESS by Addshore
-
-| Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
+| Suite Version | MediaWiki release | Date availbile | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.8 spec(TBA) | 1.36    | Date TBA | Run TBA | [T316707](https://phabricator.wikimedia.org/T316707) |
-| wmde.7 spec(TBA) | 1.35    | Date TBA | Run TBA | [T314881](https://phabricator.wikimedia.org/T314881) |
+| wmde.8 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.8/versions/wmde8.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/ec8b9e0bb25b9524df5671ad7785a66683598920/versions/wmde8)) | 1.36.4    | September 2022 | [2971822356](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971822356) | [T316707](https://phabricator.wikimedia.org/T316707) |
+| wmde.7 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.7/versions/wmde7.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/ec8b9e0bb25b9524df5671ad7785a66683598920/versions/wmde7)) | 1.35.7    | September 2022 | [2971057584](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971057584) | [T314881](https://phabricator.wikimedia.org/T314881) |
+
+Releases that bring a handfull of small security fixes to MediaWiki & Wikibase, along with small patches to other components.
 
 ## February 2022: Security releases
 

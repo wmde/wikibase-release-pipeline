@@ -26,11 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -45,10 +45,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v3
         env:
-          cache-name: cache-wikibase-git-repo-temp-bump
+          cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cache-wikibase-git-repo
 
       - name: Build Tarball
         run: bash build.sh wikibase ${{ env.env_file }}
@@ -104,11 +104,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -123,10 +123,10 @@ jobs:
       - name: Cache git_cache repos
         uses: actions/cache@v3
         env:
-          cache-name: cache-wikibase-git-repo-temp-bump
+          cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
-          key: cache-wikibase-git-repo-temp-bump
+          key: cache-wikibase-git-repo
 
       - name: Get dependency build artifacts
         uses: actions/download-artifact@v3
@@ -179,11 +179,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -233,11 +233,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -288,11 +288,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -334,11 +334,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -402,11 +402,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
 
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
@@ -524,6 +524,9 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
+        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+        # Set a specific lower timeout to allow us to retry sooner
+        timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
@@ -557,6 +560,9 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
+        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+        # Set a specific lower timeout to allow us to retry sooner
+        timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: Archive docker test artifacts
@@ -573,7 +579,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 
