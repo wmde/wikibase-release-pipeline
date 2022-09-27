@@ -63,16 +63,20 @@ Do the following (with the parameters you require)...
 ```sh
 # Inputs for setup
 TEST_SYSTEM=latest
-EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
-BUILD_NUMBER=1824280943
+EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+BUILD_NUMBER=2971822356
 
-#TEST_SYSTEM=previous
-#EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
-#BUILD_NUMBER=1853048237
+#TEST_SYSTEM=fedprops
+#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+#BUILD_NUMBER=2971822356
 
 #TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=b8aa96cb0cd99054631b558535ef1f3a9b8d41b8
-#BUILD_NUMBER=1853048237
+#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+#BUILD_NUMBER=2971057584
+
+#TEST_SYSTEM=fedprops-previous
+#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+#BUILD_NUMBER=2971057584
 
 # Calculate some things
 PORT_BASE="83"
@@ -161,9 +165,44 @@ So Adam will write these docs once that task is merged and resolved.
 ## Updating
 
 All data is stored in volumes, so the easiest way to update a test system is to turn it off, recreate it using the steps above, just with different intputs, and then run `up` again.
-Writing the docs for this step is also blocked on https://phabricator.wikimedia.org/T298632 so that LocalSetting.php can be taken along for this ride.
-So Adam will write these docs once that task is merged and resolved.
+The one thing that needs copying over and mounting in the docker-compose file is the LocalSetting.php file for MediaWiki which on initial setup is created by the wikibase container and stored in the container only.
 
-Example for workflow run [1157808966](https://github.com/wmde/wikibase-release-pipeline/actions/runs/1157808966).
+That would look something like this...
 
-Remember to run update.php
+```sh
+TEST_SYSTEM=fedprops-previous
+
+cd /opt/test-systems/$TEST_SYSTEM
+sudo docker cp ${TEST_SYSTEM}_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-$(date --iso).php
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
+cd /opt/test-systems
+mv ./$TEST_SYSTEM ./$(date --iso)-${TEST_SYSTEM}
+
+# Recreate the system using the script above changing the env vars and copy and pasting it into the terminal
+
+cd /opt/test-systems/$TEST_SYSTEM
+sudo docker volume rm ${TEST_SYSTEM}_shared
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
+```
+
+You should check that all services are up and running
+
+```sh
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml ps
+```
+
+**If the query service updater is restarting**, it is likely due to updates not having happened in the past month.
+
+```sh
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-updater
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
+
+# Within the wdqs-updater shell run the following, with the current date (`20220908000000` in the example line below)
+/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20220908000000
+# Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
+
+# Restart the service
+sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs-updater
+```
+
+The service should now be up and running!
