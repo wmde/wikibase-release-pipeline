@@ -11,11 +11,11 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 - [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.37)
 - [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_37/RELEASE-NOTES-1.37)
 
-The Query service was also updated from `0.3.97` to TODO, but no additional upgrade process is needed.
+The Query service was also updated from `0.3.97` to `0.3.115`, but no additional upgrade process is needed.
 
-| Suite Version | MediaWiki release | Date availbile | Run number | Release task  |
+| Suite Version | Version Info | Date availbile | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.9 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.9/versions/wmde9.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde9)) | 1.37.TODO    | TODO | [TODO](https://github.com/wmde/wikibase-release-pipeline/actions/runs/TODO) | [T317890](https://phabricator.wikimedia.org/T317890) |
+| wmde.9 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.9/versions/wmde9.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde9)) | MediaWiki (1.37.4, PHP 7.4.30), WDQS (0.3.115)    | TODO | [TODO](https://github.com/wmde/wikibase-release-pipeline/actions/runs/TODO) | [T317890](https://phabricator.wikimedia.org/T317890) |
 
 ## September 2022: Security releases
 
