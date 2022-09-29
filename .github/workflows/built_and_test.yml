@@ -490,13 +490,9 @@ jobs:
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
-      - name: Output docker logs
+      - name: docker logs
         if: always()
         run: test/docker_logs.sh
-
-      - name: Output MediaWiki logs
-        if: always()
-        run: tail -n +1 test/suite-config/${{ matrix.suite }}/mwlog/*.log
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
@@ -533,7 +529,7 @@ jobs:
         timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
-      - name: Output docker logs
+      - name: docker logs
         if: always()
         run: test/docker_logs.sh
 
@@ -574,7 +570,7 @@ jobs:
         timeout-minutes: 10
         run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
-      - name: Output docker logs
+      - name: docker logs
         if: always()
         run: test/docker_logs.sh
 
