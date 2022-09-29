@@ -503,8 +503,6 @@ jobs:
       fail-fast: false
       matrix:
         version: [
-          '1.35-base',
-          '1.36-base',
           # Latest 1.35
           'wmde.7',
           # Latest 1.36
