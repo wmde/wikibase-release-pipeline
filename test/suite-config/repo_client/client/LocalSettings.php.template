@@ -48,6 +48,13 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 
 wfLoadSkin( 'Vector' );
 
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
+${DOLLAR}wgShowExceptionDetails = true;
+${DOLLAR}wgShowSQLErrors = true;
+${DOLLAR}wgDebugDumpSql  = true;
+${DOLLAR}wgShowDBErrorBacktrace = true;
+
 ${DOLLAR}wgEnableWikibaseRepo = false;
 ${DOLLAR}wgEnableWikibaseClient = true;
 
