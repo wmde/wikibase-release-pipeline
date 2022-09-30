@@ -498,7 +498,7 @@ jobs:
 
       - name: Output MediaWiki logs
         if: always()
-        run: tail -n +1 test/suite-config/${{ matrix.suite }}/mwlog/*.log
+        run: tail -n +1 test/suite-config/*/mwlog/*.log
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
