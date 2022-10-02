@@ -36,10 +36,10 @@ describe( 'EntitySchema', function () {
 		const actualId = $( '.entityschema-title-id' ).getText();
 		const actualDescription = $( '.entityschema-description' ).getText();
 
-		assert( actualDescription === testDescription );
-		assert( actualTemplate === shexTemplate );
-		assert( actualLabel === testLabel );
-		assert( actualId === '(E1)' );
+		assert.strictEqual( actualDescription, testDescription );
+		assert.strictEqual( actualTemplate, shexTemplate );
+		assert.strictEqual( actualLabel, testLabel );
+		assert.strictEqual( actualId, '(E1)' );
 
 		const linkUrl = $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
 

@@ -17,7 +17,7 @@ describe( 'UniversalLanguageSelector', function () {
 
 		const firstLang = $( '.imeselector-menu h3' ).getText();
 
-		assert( firstLang === 'English' );
+		assert.strictEqual( firstLang, 'English' );
 
 	} );
 

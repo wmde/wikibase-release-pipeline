@@ -22,7 +22,7 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		assert( result.status === 200 );
+		assert.strictEqual( result.status, 200 );
 
 		LoginPage.loginAdmin();
 
@@ -62,6 +62,6 @@ describe( 'Nuke', function () {
 			}
 		);
 
-		assert( result.status === 404 );
+		assert.strictEqual( result.status, 404 );
 	} );
 } );

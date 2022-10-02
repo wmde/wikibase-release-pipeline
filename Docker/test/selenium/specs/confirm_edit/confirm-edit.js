@@ -13,7 +13,7 @@ describe( 'ConfirmEdit', function () {
 			'paris'
 		);
 
-		assert( executionResult === 'something great' );
+		assert.strictEqual( executionResult, 'something great' );
 
 	} );
 

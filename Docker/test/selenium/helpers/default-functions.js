@@ -150,7 +150,7 @@ const defaultFunctions = function () {
 		const changes = result.data.query.recentchanges;
 		const foundResult = _.find( changes, expectedChange );
 
-		assert( result.status === 200 );
+		assert.strictEqual( result.status, 200 );
 
 		if ( !foundResult ) {
 			console.error( 'Could not find:' );

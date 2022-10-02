@@ -53,11 +53,11 @@ describe( 'Property Prefetching', function () {
 			propertyGuids.push( statement.getAttribute( 'id' ) );
 		} );
 
-		assert( propertyGuids.length === NUM_PROPERTIES );
+		assert.strictEqual( propertyGuids.length, NUM_PROPERTIES );
 
 		propertyGuids.forEach( ( guid ) => {
 			const response = browser.deleteClaim( guid );
-			assert( response.success === 1 );
+			assert.strictEqual( response.success, 1 );
 		} );
 	} );
 

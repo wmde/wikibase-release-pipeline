@@ -21,7 +21,7 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const notFoundText = $( 'h1#firstHeading' ).getText();
-		assert( notFoundText === '(nosuchspecialpage)' );
+		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', function () {
@@ -29,7 +29,7 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const createNewItem = $( 'h1#firstHeading' ).getText();
-		assert( createNewItem === '(special-newitem)' );
+		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
 	it( 'Should create an item on repo', function () {

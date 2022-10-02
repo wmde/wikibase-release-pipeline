@@ -51,7 +51,7 @@ describe( 'Property', function () {
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];
 		const reference = claim.references[ 0 ].snaks[ propertyId ][ 0 ];
 
-		assert( claim.mainsnak.datavalue.value === 'STATEMENT' );
-		assert( reference.datavalue.value === 'REFERENCE' );
+		assert.strictEqual( claim.mainsnak.datavalue.value, 'STATEMENT' );
+		assert.strictEqual( reference.datavalue.value, 'REFERENCE' );
 	} );
 } );
