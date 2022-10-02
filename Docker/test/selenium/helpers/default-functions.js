@@ -133,8 +133,8 @@ const defaultFunctions = function () {
 
 		browser.pause( 2 * 1000 );
 
-		$( '#bodyContent' ).waitForDisplayed();
-		return $( '#bodyContent' ).getText();
+		$( '#mw-content-text' ).waitForDisplayed();
+		return $( '#mw-content-text' ).getText();
 	} );
 
 	/**
