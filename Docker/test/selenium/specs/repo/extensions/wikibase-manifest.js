@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseManifest', function () {

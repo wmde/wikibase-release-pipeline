@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 const Util = require( 'wdio-mediawiki/Util' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 

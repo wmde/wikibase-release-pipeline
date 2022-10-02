@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 
 describe( 'ConfirmEdit', function () {
 
