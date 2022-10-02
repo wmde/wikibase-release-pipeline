@@ -498,10 +498,9 @@ jobs:
 
       - name: mediawiki logs
         if: always()
+        continue-on-error: true
         run: |
-          ls -lahr test/mwlog
-          ls -lahr test/mwlog/*
-          ls -lahr test/mwlog/*/*
+          ls -lahr test/mwlog test/mwlog/*
           tail -n +1 test/mwlog/*/*.log
 
       - name: Archive docker test artifacts
