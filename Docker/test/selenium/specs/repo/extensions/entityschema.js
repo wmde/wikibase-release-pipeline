@@ -31,11 +31,11 @@ describe( 'EntitySchema', function () {
 
 		$( '#entityschema-schema-text' ).waitForDisplayed();
 
-		const actualTemplate = $( '#entityschema-schema-text' ).text().trim();
-		const actualTemplateHtml = $( '#entityschema-schema-text' ).html().trim();
-		const actualLabel = $( '.entityschema-title-label' ).text().trim();
-		const actualId = $( '.entityschema-title-id' ).text().trim();
-		const actualDescription = $( '.entityschema-description' ).text().trim();
+		const actualTemplate = $( '#entityschema-schema-text' ).getText().trim();
+		const actualTemplateHtml = $( '#entityschema-schema-text' ).getHTML().trim();
+		const actualLabel = $( '.entityschema-title-label' ).getText().trim();
+		const actualId = $( '.entityschema-title-id' ).getText().trim();
+		const actualDescription = $( '.entityschema-description' ).getText().trim();
 
 		assert.strictEqual( actualDescription, testDescription );
 		assert.strictEqual( actualTemplate, shexTemplate );
