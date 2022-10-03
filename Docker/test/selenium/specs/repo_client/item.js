@@ -5,7 +5,6 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -102,7 +101,7 @@ describe( 'Item', function () {
 			expectedSiteLinkChange
 		);
 
-		assert( _.isEqual( actualChange, expectedSiteLinkChange ) );
+		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
 	} );
 
 	// This will generate a change that will dispatch
@@ -139,7 +138,7 @@ describe( 'Item', function () {
 			expectedTestDeletionChange
 		);
 
-		assert( _.isEqual( actualChange, expectedTestDeletionChange ) );
+		assert.deepStrictEqual( actualChange, expectedTestDeletionChange );
 
 	} );
 
