@@ -56,18 +56,18 @@ require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
 ${DOLLAR}entitySources = [
-    'myrepo' => [
+    'repo' => [
         'entityNamespaces' => [ 'item' => 120, 'property' => 122 ],
         'repoDatabase' => 'my_wiki',
         'baseUri' => 'http://wikibase.svc/entity/',
-        'interwikiPrefix' => 'testclient',
+        'interwikiPrefix' => 'my_wiki',
         'rdfNodeNamespacePrefix' => 'wd',
         'rdfPredicateNamespacePrefix' => '',
         'type' => 'db'
     ],
 ];
 ${DOLLAR}wgWBClientSettings['entitySources'] = ${DOLLAR}entitySources;
-${DOLLAR}wgWBClientSettings['itemAndPropertySourceName'] = 'myrepo';
+${DOLLAR}wgWBClientSettings['itemAndPropertySourceName'] = 'repo';
 
 ${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase.svc:80';
 ${DOLLAR}wgWBClientSettings['repoScriptPath'] = '/w';
