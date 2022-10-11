@@ -157,6 +157,9 @@ const defaultFunctions = function () {
 			console.log( expectedChange );
 			console.error( 'Response: ' );
 			console.log( changes );
+		} else {
+			console.log( 'Response: ' );
+			console.log( changes );
 		}
 
 		return foundResult;
