@@ -4,7 +4,7 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## WORK IN PROGRESS October 2022: First 1.37 release
+## IN DEVELOPMENT October 2022: First 1.37 release
 
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
