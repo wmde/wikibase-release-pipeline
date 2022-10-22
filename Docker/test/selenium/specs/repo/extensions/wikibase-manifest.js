@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseManifest', function () {
@@ -12,12 +12,12 @@ describe( 'WikibaseManifest', function () {
 		const result = browser.makeRequest( process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest' );
 		const data = result.data;
 
-		assert( data.name === 'wikibase-docker' );
+		assert.strictEqual( data.name, 'wikibase-docker' );
 
-		assert( data.api.action === process.env.MW_SERVER + '/w/api.php' );
-		assert( data.api.rest === process.env.MW_SERVER + '/w/rest.php' );
+		assert.strictEqual( data.api.action, process.env.MW_SERVER + '/w/api.php' );
+		assert.strictEqual( data.api.rest, process.env.MW_SERVER + '/w/rest.php' );
 
-		assert( data.oauth.registration_page === process.env.MW_SERVER + '/wiki/Special:OAuthConsumerRegistration' );
+		assert.strictEqual( data.oauth.registration_page, process.env.MW_SERVER + '/wiki/Special:OAuthConsumerRegistration' );
 
 	} );
 

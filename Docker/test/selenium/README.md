@@ -63,7 +63,7 @@ The behavior of the tests can be modified with several environment variables.
 When working on the browser tests,
 you’ll want to consult the documentation of the following libraries we use:
 
-* [WebdriverIO](http://webdriver.io/api.html) for controlling the browser
+* [WebdriverIO](https://webdriver.io/docs/api) for controlling the browser
   (`browser`, `$`, `waitForVisible`, …)
 * [Mocha](https://mochajs.org/) as the general testing framework
   (`describe`, `it`, `before`, …)

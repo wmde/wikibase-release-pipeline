@@ -5,7 +5,6 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
-const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -21,7 +20,7 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const notFoundText = $( 'h1#firstHeading' ).getText();
-		assert( notFoundText === '(nosuchspecialpage)' );
+		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', function () {
@@ -29,7 +28,7 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const createNewItem = $( 'h1#firstHeading' ).getText();
-		assert( createNewItem === '(special-newitem)' );
+		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
 	it( 'Should create an item on repo', function () {
@@ -102,7 +101,7 @@ describe( 'Item', function () {
 			expectedSiteLinkChange
 		);
 
-		assert( _.isEqual( actualChange, expectedSiteLinkChange ) );
+		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
 	} );
 
 	// This will generate a change that will dispatch
@@ -139,7 +138,7 @@ describe( 'Item', function () {
 			expectedTestDeletionChange
 		);
 
-		assert( _.isEqual( actualChange, expectedTestDeletionChange ) );
+		assert.deepStrictEqual( actualChange, expectedTestDeletionChange );
 
 	} );
 

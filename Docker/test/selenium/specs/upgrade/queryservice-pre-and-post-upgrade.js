@@ -22,10 +22,10 @@ describe( 'Wikibase post upgrade', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert( success === 1 );
-		assert( searchResults.length === 1 );
-		assert( searchResults[ 0 ].match.text === 'UpgradeItem' );
-		assert( searchResults[ 0 ].match.type === 'label' );
+		assert.strictEqual( success, 1 );
+		assert.strictEqual( searchResults.length, 1 );
+		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
+		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
@@ -42,7 +42,7 @@ describe( 'Wikibase post upgrade', function () {
 		const body = response.data;
 		const properties = Object.keys( body.entities[ oldItemID ].claims );
 
-		assert( properties.length === 1 );
+		assert.strictEqual( properties.length, 1 );
 
 		oldPropertyID = properties[ 0 ];
 
@@ -65,7 +65,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert( bindings.length === 9 );
+		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI( process.env.MW_SERVER + '/prop/' + oldPropertyID, bindings );
 		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/' + oldPropertyID, bindings );
@@ -85,8 +85,8 @@ describe( 'Wikibase post upgrade', function () {
 		assert( timestamp !== null );
 		assert( statement !== null );
 
-		assert( property.o.value === 'UpgradeItemStringValue' );
-		assert( itemLabelValue.o.value === 'UpgradeItem' );
+		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
+		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
 
 	} );
 } );

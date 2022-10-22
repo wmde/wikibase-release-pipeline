@@ -30,8 +30,8 @@ describe( 'Wikibase API', function () {
 				() => WikibaseApi.createItem( Util.getTestString( itemLabel ), data )
 			);
 
-			assert( itemId.startsWith( 'Q' ) === true );
-			assert( propertyId.startsWith( 'P' ) === true );
+			assert.strictEqual( itemId.startsWith( 'Q' ), true );
+			assert.strictEqual( propertyId.startsWith( 'P' ), true );
 		}
 
 	} );

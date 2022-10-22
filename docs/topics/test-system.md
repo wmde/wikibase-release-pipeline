@@ -10,6 +10,8 @@ Four optional test systems are maintained.
 These may or may not be running at any given time, as they are only intended for use during product verification during the release process.
 Engineers can start and stop these
 
+NOTE: Federated properties can not be enabled in wmde.9/1.37 releases. So that test system is not currently used / updated.
+
 **Default Wikibase**
 
 - Previous release (internal ports 82**)

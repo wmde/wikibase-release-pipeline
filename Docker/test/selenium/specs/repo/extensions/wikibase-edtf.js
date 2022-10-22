@@ -14,7 +14,7 @@ describe( 'WikibaseEdtf', function () {
 
 		// create the property
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'edtf' ) );
-		assert( propertyId.startsWith( 'P' ) === true );
+		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		const rawValue = '1985-04-12T23:20:30';
 
@@ -38,8 +38,8 @@ describe( 'WikibaseEdtf', function () {
 		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
 		const responseSnak = response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
-		assert( responseSnak.datavalue.value === '1985-04-12T23:20:30' );
-		assert( responseSnak.datatype === 'edtf' );
+		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
+		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );

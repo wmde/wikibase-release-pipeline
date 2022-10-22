@@ -21,6 +21,7 @@ ${DOLLAR}wgDebugLogGroups = array(
 	'resourceloader' => '/var/log/mediawiki/resourceloader.log',
 	'exception' => '/var/log/mediawiki/exception.log',
 	'error' => '/var/log/mediawiki/error.log',
+	'fatal' => '/var/log/mediawiki/fatal.log',
 );
 
 ## Site Settings
@@ -39,30 +40,38 @@ ${DOLLAR}wgArticlePath = "/wiki/${DOLLAR}1";
 #Set Secret
 ${DOLLAR}wgSecretKey = "${MW_WG_SECRET_KEY}";
 
-## RC Age
-# https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge
-# Items in the recentchanges table are periodically purged; entries older than this many seconds will go.
-# The query service (by default) loads data from recent changes
-# Set this to 1 year to avoid any changes being removed from the RC table over a shorter period of time.
-${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
-
 wfLoadSkin( 'Vector' );
+
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
+${DOLLAR}wgShowExceptionDetails = true;
+${DOLLAR}wgShowSQLErrors = true;
+${DOLLAR}wgDebugDumpSql  = true;
+${DOLLAR}wgShowDBErrorBacktrace = true;
 
 ${DOLLAR}wgEnableWikibaseRepo = false;
 ${DOLLAR}wgEnableWikibaseClient = true;
 
 require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
+
+${DOLLAR}entitySources = [
+    'repo' => [
+        'entityNamespaces' => [ 'item' => 120, 'property' => 122 ],
+        'repoDatabase' => 'my_wiki',
+        'baseUri' => 'http://wikibase.svc/entity/',
+        'interwikiPrefix' => 'my_wiki',
+        'rdfNodeNamespacePrefix' => 'wd',
+        'rdfPredicateNamespacePrefix' => '',
+        'type' => 'db'
+    ],
+];
+${DOLLAR}wgWBClientSettings['entitySources'] = ${DOLLAR}entitySources;
+${DOLLAR}wgWBClientSettings['itemAndPropertySourceName'] = 'repo';
+
 ${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase.svc:80';
 ${DOLLAR}wgWBClientSettings['repoScriptPath'] = '/w';
 ${DOLLAR}wgWBClientSettings['repoArticlePath'] = '/wiki/${DOLLAR}1';
-${DOLLAR}wgWBClientSettings['repositories']['']['repoDatabase'] = 'my_wiki';
-${DOLLAR}wgWBClientSettings['repositories']['']['changesDatabase'] = 'my_wiki';
-${DOLLAR}wgWBClientSettings['repositories']['']['baseUri'] = 'http://wikibase.svc/entity/';
-${DOLLAR}wgWBClientSettings['repositories']['']['entityNamespaces'] = [
-			'item' => 120,
-			'property' => 122,
-		];
 ${DOLLAR}wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];
 ${DOLLAR}wgWBClientSettings['siteGlobalID'] = 'client_wiki';
 

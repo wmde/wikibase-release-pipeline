@@ -7,7 +7,6 @@ const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 const fs = require( 'fs' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
-const _ = require( 'lodash' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -104,7 +103,7 @@ describe( 'Scribunto Item', function () {
 			expectedDeletionChange
 		);
 
-		assert( _.isEqual( actualChange, expectedDeletionChange ) );
+		assert.deepStrictEqual( actualChange, expectedDeletionChange );
 
 	} );
 
