@@ -18,8 +18,8 @@ describe( 'Babel', function () {
 			'{{#babel: sv | en }}'
 		);
 
-		assert( executionContent.includes( 'Den här användaren har svenska som modersmål.' ) === true );
-		assert( executionContent.includes( 'This user has a native understanding of English.' ) === true );
+		assert.strictEqual( executionContent.includes( 'Den här användaren har svenska som modersmål.' ), true );
+		assert.strictEqual( executionContent.includes( 'This user has a native understanding of English.' ), true );
 
 	} );
 } );

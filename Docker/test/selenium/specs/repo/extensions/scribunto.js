@@ -32,7 +32,7 @@ describe( 'Scribunto', function () {
 		const cpuTime = browser.getLuaCpuTime( process.env.MW_SERVER, 'LuaTest' );
 
 		assert( cpuTime.value < 0.05 );
-		assert( cpuTime.scale === 'seconds' );
+		assert.strictEqual( cpuTime.scale, 'seconds' );
 
 	} );
 

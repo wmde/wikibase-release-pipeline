@@ -14,10 +14,10 @@ describe( 'Wikibase post upgrade', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert( success === 1 );
-		assert( searchResults.length === 1 );
-		assert( searchResults[ 0 ].match.text === 'UpgradeItem' );
-		assert( searchResults[ 0 ].match.type === 'label' );
+		assert.strictEqual( success, 1 );
+		assert.strictEqual( searchResults.length, 1 );
+		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
+		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 

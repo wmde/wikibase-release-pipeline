@@ -10,6 +10,8 @@ Four optional test systems are maintained.
 These may or may not be running at any given time, as they are only intended for use during product verification during the release process.
 Engineers can start and stop these
 
+NOTE: Federated properties can not be enabled in wmde.9/1.37 releases. So that test system is not currently used / updated.
+
 **Default Wikibase**
 
 - Previous release (internal ports 82**)
@@ -63,20 +65,20 @@ Do the following (with the parameters you require)...
 ```sh
 # Inputs for setup
 TEST_SYSTEM=latest
-EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
-BUILD_NUMBER=2971822356
+EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+BUILD_NUMBER=3303724221
 
 #TEST_SYSTEM=fedprops
-#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
+#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+#BUILD_NUMBER=3303724221
+
+#TEST_SYSTEM=fedprops-previous
+#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
 #BUILD_NUMBER=2971822356
 
 #TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
-#BUILD_NUMBER=2971057584
-
-#TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=1dc12a8b15bc36af59f4c322f86abbacb1f25d99
-#BUILD_NUMBER=2971057584
+#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+#BUILD_NUMBER=2971822356
 
 # Calculate some things
 PORT_BASE="83"
@@ -170,12 +172,13 @@ The one thing that needs copying over and mounting in the docker-compose file is
 That would look something like this...
 
 ```sh
-TEST_SYSTEM=fedprops-previous
+TEST_SYSTEM=latest
 SCRIPT_RUN_DATE=$(date --iso)
 
 cd /opt/test-systems/$TEST_SYSTEM
 sudo docker cp ${TEST_SYSTEM}_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-${SCRIPT_RUN_DATE}.php
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
+
 cd /opt/test-systems
 mv ./$TEST_SYSTEM ./${SCRIPT_RUN_DATE}-${TEST_SYSTEM}
 
@@ -199,7 +202,7 @@ sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
 
 # Within the wdqs-updater shell run the following, with the current date (`20220908000000` in the example line below)
-/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20220908000000
+/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20221022000000
 # Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
 
 # Restart the service

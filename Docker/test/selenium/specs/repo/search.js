@@ -20,7 +20,7 @@ describe( 'Search', function () {
 			itemLabel +
 			'&format=json&errorformat=plaintext&language=en&uselang=en&type=item'
 		);
-		assert( result.data.search[ 0 ].label === itemLabel );
+		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );
 
 	} );
 } );
