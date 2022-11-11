@@ -19,7 +19,7 @@ If all changes are still in [RecentChanges] then simply removing `/wdqs/data` an
 
 If you can not use [RecentChanges] then you will need to reload from an RDF dump:
 
- - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_rdf-binding.html)
+ - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/docs_topics_rdf-binding.html)
  - [Load the RDF dump into the query service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
 
 ### Environment variables
