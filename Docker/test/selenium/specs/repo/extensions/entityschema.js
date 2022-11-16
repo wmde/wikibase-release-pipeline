@@ -31,15 +31,17 @@ describe( 'EntitySchema', function () {
 
 		$( '#entityschema-schema-text' ).waitForDisplayed();
 
-		const actualTemplate = $( '#entityschema-schema-text' ).getText();
-		const actualLabel = $( '.entityschema-title-label' ).getText();
-		const actualId = $( '.entityschema-title-id' ).getText();
-		const actualDescription = $( '.entityschema-description' ).getText();
+		const actualTemplate = $( '#entityschema-schema-text' ).getText().trim();
+		const actualTemplateHtml = $( '#entityschema-schema-text' ).getHTML().trim();
+		const actualLabel = $( '.entityschema-title-label' ).getText().trim();
+		const actualId = $( '.entityschema-title-id' ).getText().trim();
+		const actualDescription = $( '.entityschema-description' ).getText().trim();
 
-		assert( actualDescription === testDescription );
-		assert( actualTemplate === shexTemplate );
-		assert( actualLabel === testLabel );
-		assert( actualId === '(E1)' );
+		assert.strictEqual( actualDescription, testDescription );
+		assert.strictEqual( actualTemplate, shexTemplate );
+		assert.strictEqual( actualLabel, testLabel );
+		assert.strictEqual( actualId, '(E1)' );
+		assert.ok( actualTemplateHtml.includes( 'mw-highlight' ), 'Should contain mw-highlight class in HTML' );
 
 		const linkUrl = $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
 

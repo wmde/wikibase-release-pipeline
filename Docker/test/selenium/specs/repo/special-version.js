@@ -12,7 +12,7 @@ describe( 'Special:Version', function () {
 
 		browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 		const text = $( '#sv-software' ).getText();
-		assert( text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ) === true );
+		assert.strictEqual( text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ), true );
 
 	} );
 

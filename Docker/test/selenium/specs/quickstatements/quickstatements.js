@@ -60,8 +60,8 @@ describe( 'QuickStatements Service', function () {
 		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
 		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
 
-		assert( responseQ1.data.entities.Q1.id === 'Q1' );
-		assert( responseQ2.data.entities.Q2.id === 'Q2' );
+		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
+		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
 	} );
 
 	it( 'Should be able to add an alias to an item', function () {
@@ -111,7 +111,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|' + propertyId + '|"Will it blend?"' );
 
 		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		assert( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type === 'statement' );
+		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
 
 	} );
 
@@ -168,7 +168,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1' );
 
 		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		assert( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type === 'statement' );
+		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
 
 	} );
 
@@ -183,7 +183,7 @@ describe( 'QuickStatements Service', function () {
 		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyIdItem );
 
-		assert( refValue.id === 'Q2' );
+		assert.strictEqual( refValue.id, 'Q2' );
 	} );
 
 	it( 'Should be able to add a property with "url" reference', function () {
@@ -198,7 +198,7 @@ describe( 'QuickStatements Service', function () {
 		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
-		assert( refValue === 'https://www.wikidata.org' );
+		assert.strictEqual( refValue, 'https://www.wikidata.org' );
 	} );
 
 	it( 'Should be able to add a property with "string" reference', function () {
@@ -211,7 +211,7 @@ describe( 'QuickStatements Service', function () {
 		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
-		assert( refValue === 'some string' );
+		assert.strictEqual( refValue, 'some string' );
 	} );
 
 	it( 'Should be able to add and remove a property on an item', function () {
@@ -221,12 +221,12 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
 
 		let response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
-		assert( ( propertyIdItem in response.data.entities[ itemId ].claims ) === true );
+		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), true );
 
 		browser.executeQuickStatement( '-' + itemId + '|' + propertyIdItem + '|Q1' );
 
 		response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
-		assert( ( propertyIdItem in response.data.entities[ itemId ].claims ) === false );
+		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), false );
 
 	} );
 
@@ -237,7 +237,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
 		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
-		assert( responseQ2.data.entities.Q1.id === 'Q1' );
+		assert.strictEqual( responseQ2.data.entities.Q1.id, 'Q1' );
 	} );
 
 } );

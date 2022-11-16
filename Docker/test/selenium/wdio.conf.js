@@ -85,7 +85,6 @@ exports.config = {
 		// bundle-specs
 		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
 		repo_client: [ './specs/repo_client/*.js', './specs/repo_client/extensions/*.js' ],
-		fedprops: [ './specs/fedprops/*.js' ],
 		pingback: [ './specs/pingback/*.js' ],
 
 		quickstatements: [
@@ -108,9 +107,6 @@ exports.config = {
 			'./specs/repo_client/interwiki-links.js',
 			'./specs/repo_client/item.js',
 			'./specs/repo/api.js'
-		],
-		base__fedprops: [
-			'./specs/fedprops/*.js'
 		],
 		base__pingback: [
 			'./specs/pingback/*.js'

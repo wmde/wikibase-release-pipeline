@@ -30,7 +30,7 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '#firstHeading' ).waitForDisplayed();
 		const title = $( '#firstHeading' ).getText();
 
-		assert( title === 'File:Image.png' );
+		assert.strictEqual( title, 'File:Image.png' );
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', function () {
@@ -38,14 +38,14 @@ describe( 'WikibaseLocalMedia', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'localMedia' ) );
-		assert( propertyId.startsWith( 'P' ) === true );
+		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
 
 		$( '#firstHeading' ).waitForDisplayed();
 		const title = $( '#firstHeading' ).getText();
 
-		assert( title.includes( propertyId ) === true );
+		assert.strictEqual( title.includes( propertyId ), true );
 	} );
 
 	it( 'Should allow to use uploaded image on statement', function () {
@@ -72,7 +72,7 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '.wikibase-snakview-value img' ).waitForDisplayed();
 		const imageSource = $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 
-		assert( imageSource.includes( 'Image.png' ) === true );
+		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 
 	} );
 

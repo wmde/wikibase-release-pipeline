@@ -4,14 +4,27 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## (WORK IN PROGRESS) September 2022: Security releases
+## November 2022: First 1.37 release
 
-WORK IN PROGRESS by Addshore
+The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
-| Suite Version | Compatable MediaWiki | Date availbile | Run number | Release task |
+- [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.37)
+- [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_37/RELEASE-NOTES-1.37)
+
+The Query service was also updated from `0.3.97` to `0.3.115`, but no additional upgrade process is needed.
+
+| Suite Version | Version Info | Date availbile | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.8 spec(TBA) | 1.36    | Date TBA | Run TBA | [T316707](https://phabricator.wikimedia.org/T316707) |
-| wmde.7 spec(TBA) | 1.35    | Date TBA | Run TBA | [T314881](https://phabricator.wikimedia.org/T314881) |
+| wmde.9 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.9/versions/wmde9.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde9)) | MediaWiki (1.37.6, PHP 7.4.30), WDQS (0.3.115)    | [1 November 2022](https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/thread/RWS6EV7SHFNOD6KKQ6JA7RUW4TEXSXN5/) | [3303724221](https://github.com/wmde/wikibase-release-pipeline/actions/runs/3303724221) | [T317890](https://phabricator.wikimedia.org/T317890) |
+
+## September 2022: Security releases
+
+| Suite Version | MediaWiki release | Date availbile | Run number | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.8 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.8/versions/wmde8.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/ec8b9e0bb25b9524df5671ad7785a66683598920/versions/wmde8)) | 1.36.4    | September 2022 | [2971822356](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971822356) | [T316707](https://phabricator.wikimedia.org/T316707) |
+| wmde.7 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.7/versions/wmde7.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/ec8b9e0bb25b9524df5671ad7785a66683598920/versions/wmde7)) | 1.35.7    | September 2022 | [2971057584](https://github.com/wmde/wikibase-release-pipeline/actions/runs/2971057584) | [T314881](https://phabricator.wikimedia.org/T314881) |
+
+Releases that bring a handfull of small security fixes to MediaWiki & Wikibase, along with small patches to other components.
 
 ## February 2022: Security releases
 
