@@ -12,12 +12,18 @@ on:
 jobs:
   test_example:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 36
     steps:
       - uses: actions/checkout@v3
 
       - name: Test example
-        run: make test-example SUITE=example
+        uses: nick-fields/retry@v2
+        with:
+          # This step should only take ~10 mins at most to complete, but sometimes locks up
+          timeout_minutes: 12
+          max_attempts: 3
+          retry_on: timeout
+          command: make test-example SUITE=example
       
       - name: Archive test example artifacts
         uses: actions/upload-artifact@v3
