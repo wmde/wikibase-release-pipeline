@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      - shared-localsettings:/var/shared-localsettings
+      - shared-localsettings:/var/shared-localsettings:ro
       ## Uncomment this next line to mount your own LocalSettings.php file overrides
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
