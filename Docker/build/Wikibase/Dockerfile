@@ -35,6 +35,7 @@ RUN apt-get update && \
 COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY artifacts/wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
+COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 
 ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 COPY ${MEDIAWIKI_SETTINGS_TEMPLATE_FILE} /LocalSettings.php.template

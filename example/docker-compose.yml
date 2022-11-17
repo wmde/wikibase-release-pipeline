@@ -17,7 +17,6 @@ x-common-variables: &wikibase_variables
 x-wikibase-volumes: &wikibase_volumes
   - shared-localsettings:/var/shared-localsettings
   - shared-images:/var/www/html/images
-  - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
   ## Uncomment this next line to mount your own LocalSettings.php file overrides
   #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
 
