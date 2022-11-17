@@ -467,7 +467,7 @@ jobs:
       - build_wdqs_proxy
       - build_quickstatements
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
@@ -477,9 +477,15 @@ jobs:
           path: artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
+        uses: nick-fields/retry@v2
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
-        run: make test SUITE=${{ matrix.suite }}
+        with:
+          # This step should only take ~5 mins at most to complete, but sometimes locks up
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_on: timeout
+          command: make test SUITE=${{ matrix.suite }}
 
       - name: Report Selenium
         if: always()
@@ -507,7 +513,7 @@ jobs:
           path: test/log
 
   test_upgrade_base:
-    timeout-minutes: 20
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
@@ -529,10 +535,13 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
-        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
-        # Set a specific lower timeout to allow us to retry sooner
-        timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
+        uses: nick-fields/retry@v2
+        with:
+          # This step should only take ~5 mins at most to complete, but sometimes locks up
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_on: timeout
+          command: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
 
       - name: docker logs
         if: always()
