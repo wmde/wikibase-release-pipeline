@@ -36,8 +36,8 @@ describe( 'Wikibase post upgrade', function () {
 			() => WikibaseApi.createItem( itemLabel, data )
 		);
 
-		assert( newItemId.startsWith( 'Q' ) === true );
-		assert( newPropertyId.startsWith( 'P' ) === true );
+		assert.strictEqual( newItemId.startsWith( 'Q' ), true );
+		assert.strictEqual( newPropertyId.startsWith( 'P' ), true );
 
 	} );
 
@@ -58,7 +58,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert( bindings.length === 9 );
+		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI( process.env.MW_SERVER + '/prop/' + newPropertyId, bindings );
 		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/' + newPropertyId, bindings );
@@ -77,8 +77,8 @@ describe( 'Wikibase post upgrade', function () {
 		assert( timestamp !== null );
 		assert( statement !== null );
 
-		assert( property.o.value === propertyValue );
-		assert( itemLabelValue.o.value === itemLabel );
+		assert.strictEqual( property.o.value, propertyValue );
+		assert.strictEqual( itemLabelValue.o.value, itemLabel );
 
 	} );
 

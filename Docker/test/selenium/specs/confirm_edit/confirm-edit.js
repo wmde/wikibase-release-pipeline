@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 
 describe( 'ConfirmEdit', function () {
 
@@ -13,7 +13,7 @@ describe( 'ConfirmEdit', function () {
 			'paris'
 		);
 
-		assert( executionResult === 'something great' );
+		assert.strictEqual( executionResult, 'something great' );
 
 	} );
 

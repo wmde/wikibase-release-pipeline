@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ./mwlog/${LOCALSETTINGS_VARIANT}+wikibase:/var/log/mediawiki
     ports:
       - "8181:80"
     networks:

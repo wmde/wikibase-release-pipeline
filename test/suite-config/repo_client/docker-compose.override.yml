@@ -34,6 +34,7 @@ services:
     volumes:
       - ./suite-config/repo_client/client/LocalSettings.php.template:/LocalSettings.php.template
       - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
+      - ./mwlog/${LOCALSETTINGS_VARIANT}+client:/var/log/mediawiki
     ports:
       - "80:80"
     networks:

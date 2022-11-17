@@ -11,17 +11,17 @@ describe( 'Pingback', function () {
 		browser.pause( 5 * 1000 );
 
 		const sqlResult = browser.dbQuery( 'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"' );
-		assert( sqlResult.includes( 'WikibasePingback\t' ) === true );
-		assert( sqlResult.includes( 'WikibasePingback-1.' ) === true );
+		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
+		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
 
 		const result = browser.makeRequest( process.env.PINGBACK_BEACON_SERVER );
-		assert( result.data.length === 2 );
+		assert.strictEqual( result.data.length, 2 );
 
 		const requestData = JSON.parse(
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )
 		);
 
-		assert( requestData.schema === 'WikibasePingback' );
+		assert.strictEqual( requestData.schema, 'WikibasePingback' );
 	} );
 
 } );

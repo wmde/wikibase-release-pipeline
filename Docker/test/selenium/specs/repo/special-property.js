@@ -20,7 +20,7 @@ describe( 'Special:NewProperty', function () {
 		$( '.wikibase-propertyview-datatype-value' ).waitForDisplayed();
 		const dataTypeText = $( '.wikibase-propertyview-datatype-value' ).getText();
 
-		assert( dataTypeText === 'String' );
+		assert.strictEqual( dataTypeText, 'String' );
 
 	} );
 } );

@@ -1,6 +1,6 @@
 'use strict';
 
-const { assert } = require( 'console' );
+const assert = require( 'assert' );
 const Util = require( 'wdio-mediawiki/Util' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
@@ -37,7 +37,7 @@ describe( 'ElasticSearch', function () {
 		// alias should be visible on item page
 		$( '.wikibase-aliasesview-list-item' ).waitForDisplayed();
 		const alias = $( '.wikibase-aliasesview-list-item' ).getText();
-		assert( alias === itemAlias );
+		assert.strictEqual( alias, itemAlias );
 	} );
 
 	it( 'should be able to search case-insensitive', async function () {

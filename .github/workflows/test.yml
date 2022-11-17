@@ -17,10 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        databaseImageName: [ 'mariadb:10.3' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
+        databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [
           repo,
-          fedprops,
           repo_client,
           quickstatements,
           pingback,
@@ -30,16 +29,15 @@ jobs:
           base__repo,
           base__repo_client,
           base__pingback,
-          base__fedprops,
         ]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
-      - uses: c-py/action-dotenv-to-setenv@v3
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: ${{ env.env_file }}
 

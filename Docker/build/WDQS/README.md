@@ -6,7 +6,7 @@ Wikibase specific Blazegraph image.
 
 [WDQS](https://gerrit.wikimedia.org/r/admin/repos/wikidata/query/rdf) exposes by default some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. With the example docker configuration we are using the [WDQS-proxy](../WDQS-proxy/README.md) which filters out all long-running or unwanted requests.
 
-When running WDQS in a setup without WDQS-proxy **please consider disabling these endpoints in some other way**. For more information on how this is tested in this pipeline see the test-cases in [queryservice.js](../../test/selenium/specs/repo/queryservice.js) 
+When running WDQS in a setup without WDQS-proxy **please consider disabling these endpoints in some other way**. For more information on how this is tested in this pipeline see the test-cases in [queryservice.js](../../test/selenium/specs/repo/queryservice.js)
 
 ### Upgrading
 
@@ -19,7 +19,7 @@ If all changes are still in [RecentChanges] then simply removing `/wdqs/data` an
 
 If you can not use [RecentChanges] then you will need to reload from an RDF dump:
 
- - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_rdf-binding.html)
+ - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/docs_topics_rdf-binding.html)
  - [Load the RDF dump into the query service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
 
 ### Environment variables
@@ -34,7 +34,9 @@ Variable                 | Default            | Since   | Description
 `WDQS_PORT`              | "9999"             | 0.2.5   | Port of the WDQS host (this service)
 `WDQS_ENTITY_NAMESPACES` | "120,122"          | 0.2.5   | Wikibase Namespaces to load data from
 `WIKIBASE_MAX_DAYS_BACK` | "90"               | 0.3.0   | Max days updater is allowed back from now
+`BLAZEGRAPH_EXTRA_OPTS`  | ""                 | wmde.9  | Extra options to be passed to Blazegraph
 
+Note on `BLAZEGRAPH_EXTRA_OPTS`: These are options that are directly passed to the Blazegraph jar. That means they must be prefixed with `-D`. Example: `-Dhttps.proxyHost=http://my.proxy.com -Dhttps.proxyPort=3128`. See [the Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Configurable_properties) for all available options.
 
 ### Filesystem layout
 

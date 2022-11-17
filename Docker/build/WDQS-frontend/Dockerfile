@@ -17,9 +17,7 @@ RUN apk --no-cache add --virtual build-dependencies ca-certificates git jq make 
 
 # TODO do npm build instead of leaving any dev node modules hanging around
 RUN mv package.json package.json.orig \
-    && jq 'delpaths([["devDependencies","karma-qunit"],["devDependencies","qunitjs"],["devDependencies","sinon"]])' \
-        > package.json < package.json.orig \
-    && jq 'setpath(["devDependencies","less"]; "~2.7.1")' \
+    && jq 'delpaths([["devDependencies","karma-qunit"],["devDependencies","sinon"]])' \
         > package.json < package.json.orig \
     && npm install \
     && npm run build
