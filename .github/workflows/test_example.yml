@@ -12,12 +12,13 @@ on:
 jobs:
   test_example:
     runs-on: ubuntu-latest
-    timeout-minutes: 36
+    timeout-minutes: 39
     steps:
       - uses: actions/checkout@v3
 
       - name: Test example
         uses: nick-fields/retry@v2
+        timeout-minutes: 39 # 3 attempts at 12+1 mins max each
         with:
           # This step should only take ~10 mins at most to complete, but sometimes locks up
           timeout_minutes: 12
