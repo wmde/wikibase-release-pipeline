@@ -90,12 +90,10 @@ services:
 ```
 ### 2. Copy other data written inside container
 
-In some newer images, the default value of upload images is written inside the container at `/var/www/html/images`. Review your configuration and make backups of any logs or other data that you wish to save.
+Some directories such as `/var/www/html/images` are already in shared volumes between the wikibase containers.
+If you have other data written inside your containers you should make backups of any logs or other data that you wish to save.
 
 # Do the upgrade
-## Stop the running containers
-
-Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase_jobrunner` containers.
 
 ## Change the image
 

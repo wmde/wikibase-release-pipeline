@@ -26,6 +26,7 @@ services:
       - "${WIKIBASE_PORT}:80"
     volumes:
       - shared-localsettings:/var/shared-localsettings
+      - shared-images:/var/www/html/images
       ## Uncomment this next line to mount your own LocalSettings.php file overrides
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
@@ -51,6 +52,7 @@ services:
     volumes:
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       - shared-localsettings:/var/shared-localsettings:ro
+      - shared-images:/var/www/html/images
       ## Uncomment this next line to mount your own LocalSettings.php file overrides
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
@@ -79,4 +81,5 @@ services:
 
 volumes:
   shared-localsettings:
+  shared-images:
   mediawiki-mysql-data:
