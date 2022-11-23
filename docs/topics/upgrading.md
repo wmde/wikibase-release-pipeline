@@ -90,47 +90,10 @@ services:
 ```
 ### 2. Copy other data written inside container
 
-In some newer images, the default value of upload images is written inside the container at `/var/www/html/images`. Review your configuration and make backups of any logs or other data that you wish to save.
+Some directories such as `/var/www/html/images` are already in shared volumes between the wikibase containers.
+If you have other data written inside your containers you should make backups of any logs or other data that you wish to save.
 
 # Do the upgrade
-## Stop the running containers
-
-Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase_jobrunner` containers.
-
-### Review the mounts currently used by the wikibase container
-
-```sh
-docker inspect -f '{{ .Mounts }}' <WIKIBASE_CONTAINER_ID>
-```
-
-Example output
-
-```sh
-$ docker inspect -f '{{ .Mounts }}' 916ac3ce384e
-[ {volume example_shared /var/lib/docker/volumes/example_shared/_data /var/www/html local rw true } ]
-```
-
-The above example returns a single mount used by the container called `example_shared`; this is the one that is shared between the jobrunner and the Wikibase web container.
-
-We need to remember this name as we will have to remove it manually after the containers has been shut down and removed.
-
-1. Stop the containers
-
-```sh
-docker-compose stop wikibase wikibase_jobrunner
-```
-
-2. Remove the containers
-
-```sh
-docker-compose rm wikibase wikibase_jobrunner
-```
-
-3. Finally, remove the shared container
-
-```sh
-docker volume rm example_shared
-```
 
 ## Change the image
 
@@ -146,7 +109,7 @@ services:
 
 At last it's time to run the mediawiki [update.php](https://www.mediawiki.org/wiki/Manual:Update.php) script.
 
-You can do this from outside the Docker container by running:
+Start the containers again and from outside of docker run:
 
 ```
 docker exec <WIKIBASE_CONTAINER_NAME> php /var/www/html/maintenance/update.php

@@ -16,8 +16,8 @@ kill_runner() {
 trap kill_runner SIGTERM
 
 while true; do
-	if [ -e /shared/LocalSettings.php ]; then
-		php maintenance/runJobs.php --wait --maxjobs="$MAX_JOBS" --conf /shared/LocalSettings.php &
+	if [ -e /var/shared-localsettings/LocalSettings.php ]; then
+		php maintenance/runJobs.php --wait --maxjobs="$MAX_JOBS" --conf /var/shared-localsettings/LocalSettings.php &
 		PID=$!
 		wait "$PID"
 	else

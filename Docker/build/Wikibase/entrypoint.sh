@@ -45,7 +45,7 @@ fi
 # This is used to share a install generated LocalSettings.php with a job runner on first run for example
 if [[ -d "/var/shared-localsettings" ]] && [[ -e "/var/www/html/LocalSettings.php" ]]
 then
-    echo "/var/shared-localsettings & /var/www/html/LocalSettings.php found, so copying LocalSetting.php into shared directory"
+    echo "/var/shared-localsettings & /var/www/html/LocalSettings.php found, so copying LocalSettings.php into shared directory"
     cp /var/www/html/LocalSettings.php /var/shared-localsettings/LocalSettings.php
 fi
 

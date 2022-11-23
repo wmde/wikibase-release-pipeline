@@ -18,7 +18,11 @@ jobs:
 
       - name: Test example
         run: make test-example SUITE=example
-      
+
+      - name: docker logs
+        if: always()
+        run: test/docker_logs.sh
+
       - name: Archive test example artifacts
         uses: actions/upload-artifact@v3
         if: always()
