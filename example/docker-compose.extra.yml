@@ -121,4 +121,3 @@ volumes:
   query-service-data:
   elasticsearch-data:
   quickstatements-data:
-  mediawiki-mysql-data:
