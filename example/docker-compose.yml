@@ -15,8 +15,8 @@ x-common-variables: &wikibase_variables
   WIKIBASE_HOST: ${WIKIBASE_HOST}
 
 x-wikibase-volumes: &wikibase_volumes
-  - shared-localsettings:/var/shared-localsettings
-  - shared-images:/var/www/html/images
+  - mediawiki-shared-localsettings:/var/shared-localsettings
+  - mediawiki-images:/var/www/html/images
   ## Uncomment this next line to mount your own LocalSettings.php file overrides
   #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
 
@@ -79,6 +79,6 @@ services:
          - mysql.svc
 
 volumes:
-  shared-localsettings:
-  shared-images:
+  mediawiki-shared-localsettings:
+  mediawiki-images:
   mediawiki-mysql-data:
