@@ -64,9 +64,11 @@ Do the following (with the parameters you require)...
 
 ```sh
 # Inputs for setup
+IMAGE_PREFIX=ghcr.io/wmde/
+
 TEST_SYSTEM=latest
 EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
-BUILD_NUMBER=3303724221
+BUILD_NUMBER=latest
 
 #TEST_SYSTEM=fedprops
 #EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
@@ -123,13 +125,13 @@ echo "WIKIBASE_HOST=wikibase-product-testing$DOMAIN_SUFFIX.wmflabs.org" >> ./.en
 echo "WDQS_FRONTEND_HOST=wikibase-query-testing$DOMAIN_SUFFIX.wmflabs.org" >> ./.env
 echo "QUICKSTATEMENTS_HOST=wikibase-qs-testing$DOMAIN_SUFFIX.wmflabs.org" >> ./.env
 # Images to use
-echo "WIKIBASE_IMAGE_NAME=ghcr.io/wmde/wikibase:$BUILD_NUMBER" >> ./.env
-echo "WDQS_IMAGE_NAME=ghcr.io/wmde/wdqs:$BUILD_NUMBER" >> ./.env
-echo "WDQS_FRONTEND_IMAGE_NAME=ghcr.io/wmde/wdqs-frontend:$BUILD_NUMBER" >> ./.env
-echo "ELASTICSEARCH_IMAGE_NAME=ghcr.io/wmde/elasticsearch:$BUILD_NUMBER" >> ./.env
-echo "WIKIBASE_BUNDLE_IMAGE_NAME=ghcr.io/wmde/wikibase-bundle:$BUILD_NUMBER" >> ./.env
-echo "QUICKSTATEMENTS_IMAGE_NAME=ghcr.io/wmde/quickstatements:$BUILD_NUMBER" >> ./.env
-echo "WDQS_PROXY_IMAGE_NAME=ghcr.io/wmde/wdqs-proxy:$BUILD_NUMBER" >> ./.env
+echo "WIKIBASE_IMAGE_NAME=${IMAGE_PREFIX}wikibase:$BUILD_NUMBER" >> ./.env
+echo "WDQS_IMAGE_NAME=${IMAGE_PREFIX}wdqs:$BUILD_NUMBER" >> ./.env
+echo "WDQS_FRONTEND_IMAGE_NAME=${IMAGE_PREFIX}wdqs-frontend:$BUILD_NUMBER" >> ./.env
+echo "ELASTICSEARCH_IMAGE_NAME=${IMAGE_PREFIX}elasticsearch:$BUILD_NUMBER" >> ./.env
+echo "WIKIBASE_BUNDLE_IMAGE_NAME=${IMAGE_PREFIX}wikibase-bundle:$BUILD_NUMBER" >> ./.env
+echo "QUICKSTATEMENTS_IMAGE_NAME=${IMAGE_PREFIX}quickstatements:$BUILD_NUMBER" >> ./.env
+echo "WDQS_PROXY_IMAGE_NAME=${IMAGE_PREFIX}wdqs-proxy:$BUILD_NUMBER" >> ./.env
 # Ports to expose
 echo "WIKIBASE_PORT=${PORT_BASE}80" >> ./.env
 echo "WDQS_FRONTEND_PORT=${PORT_BASE}81" >> ./.env
@@ -156,7 +158,6 @@ fi
 To start the test system:
 
 ```sh
-# Run the thing
 sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
@@ -210,3 +211,28 @@ sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs
 ```
 
 The service should now be up and running!
+
+## Using images from BuildArtifacts
+
+You load images from tar files that are part of `BuildArtifacts` for any Github run.
+
+Firstly, find the run summary that you want to load, such as https://github.com/wmde/wikibase-release-pipeline/actions/runs/3446873839.
+
+When authenticated using the `gh` CLI tool, you can download `BuildArtifacts` of any run using the run ID.
+
+```sh
+gh run download 3446873839 -n BuildArtifacts -R wmde/wikibase-release-pipeline
+```
+
+Once downloaded you can load the compressed images and delete the artifacts from disk in a quick loop.
+
+```sh
+for file in *.docker.tar.gz; do     sudo docker load -i "$file"; rm "$file"; done
+```
+
+You can then follow the "Updating" section of this documentation, using `latest` as the `BUILD_NUMBER` environment variable and setting `IMAGE_PREFIX` to be empty. 
+
+```sh
+BUILD_NUMBER="latest"
+IMAGE_PREFIX=""
+```
