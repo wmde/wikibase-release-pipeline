@@ -1,4 +1,4 @@
-# Wikibase release pipeline
+## Wikibase release pipeline
 
 ## Repository overview
 
