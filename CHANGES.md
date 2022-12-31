@@ -4,7 +4,7 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## IN DEVELOPMENT October 2022: First 1.37 release
+## November 2022: First 1.37 release
 
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
@@ -15,7 +15,7 @@ The Query service was also updated from `0.3.97` to `0.3.115`, but no additional
 
 | Suite Version | Version Info | Date availbile | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.9 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.9/versions/wmde9.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde9)) | MediaWiki (1.37.6, PHP 7.4.30), WDQS (0.3.115)    | TODO | [TODO](https://github.com/wmde/wikibase-release-pipeline/actions/runs/TODO) | [T317890](https://phabricator.wikimedia.org/T317890) |
+| wmde.9 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.9/versions/wmde9.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde9)) | MediaWiki (1.37.6, PHP 7.4.30), WDQS (0.3.115)    | [1 November 2022](https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/thread/RWS6EV7SHFNOD6KKQ6JA7RUW4TEXSXN5/) | [3303724221](https://github.com/wmde/wikibase-release-pipeline/actions/runs/3303724221) | [T317890](https://phabricator.wikimedia.org/T317890) |
 
 ## September 2022: Security releases
 
