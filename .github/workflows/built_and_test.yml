@@ -477,7 +477,7 @@ jobs:
           path: artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
-        uses: trungnt2910/retry@master
+        uses: nick-fields/retry@v2.8.3
         timeout-minutes: 33 # 3 attempts at 10+1 mins max each
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
@@ -536,7 +536,7 @@ jobs:
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
-        uses: trungnt2910/retry@master
+        uses: nick-fields/retry@v2.8.3
         timeout-minutes: 33 # 3 attempts at 10+1 mins max each
         with:
           # This step should only take ~5 mins at most to complete, but sometimes locks up

@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Test example
-        uses: trungnt2910/retry@master
+        uses: nick-fields/retry@v2.8.3
         timeout-minutes: 39 # 3 attempts at 12+1 mins max each
         with:
           # This step should only take ~10 mins at most to complete, but sometimes locks up
