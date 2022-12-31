@@ -1,5 +1,7 @@
 # Wikibase release pipeline
 
+CI TEST
+
 ## Repository overview
 
 The wikibase release pipeline contains scripts used for building, testing and publishing Wikibase docker images and tarballs.
