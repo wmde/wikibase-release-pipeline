@@ -55,6 +55,7 @@ ${DOLLAR}wgShowExceptionDetails = true;
 ${DOLLAR}wgShowSQLErrors = true;
 ${DOLLAR}wgDebugDumpSql  = true;
 ${DOLLAR}wgShowDBErrorBacktrace = true;
+${DOLLAR}wgDebugLogFile = '/var/log/mediawiki/debug.log';
 
 ${DOLLAR}wgEnableWikibaseRepo = true;
 ${DOLLAR}wgEnableWikibaseClient = false;
