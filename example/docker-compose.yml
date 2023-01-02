@@ -27,10 +27,9 @@ services:
     volumes:
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
-
       ## Uncomment this next line to mount your own LocalSettings.php file
+      ## also uncomment the same line in the wikibase_jobrunner service!
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
-
     networks:
       default:
         aliases:
@@ -53,6 +52,9 @@ services:
     volumes:
       - shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      ## Uncomment this next line to mount your own LocalSettings.php file
+      ## also uncomment the same line in the wikibase service
+      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
