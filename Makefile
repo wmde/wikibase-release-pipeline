@@ -36,6 +36,7 @@ example-stop:
 test-all:
 	# bundle tests
 	bash test/test_suite.sh repo
+	bash test/test_suite.sh fedprops
 	bash test/test_suite.sh repo_client
 	bash test/test_suite.sh quickstatements
 	bash test/test_suite.sh pingback
@@ -45,6 +46,7 @@ test-all:
 	# base tests
 	bash test/test_suite.sh base__repo
 	bash test/test_suite.sh base__repo_client
+	bash test/test_suite.sh base__fedprops
 	bash test/test_suite.sh base__pingback
 
 requirements:

@@ -20,6 +20,7 @@ jobs:
         databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [
           repo,
+          fedprops,
           repo_client,
           quickstatements,
           pingback,
@@ -29,6 +30,7 @@ jobs:
           base__repo,
           base__repo_client,
           base__pingback,
+          base__fedprops,
         ]
     runs-on: ubuntu-latest
     timeout-minutes: 30
