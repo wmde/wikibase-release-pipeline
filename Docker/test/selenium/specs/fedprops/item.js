@@ -48,10 +48,10 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', function () {
-		try{
+		try {
 			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl' );
-		} catch (error) {
-			assert( error.message === "Request failed with status code 500" )
+		} catch ( error ) {
+			assert( error.message === 'Request failed with status code 500' );
 		}
 	} );
 
@@ -63,10 +63,10 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'should NOT show up in Special:EntityData with rdf', function () {
-		try{
+		try {
 			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf' );
-		} catch (error) {
-			assert( error.message === "Request failed with status code 500" )
+		} catch ( error ) {
+			assert( error.message === 'Request failed with status code 500' );
 		}
 	} );
 
