@@ -22,7 +22,7 @@ describe( 'Property Prefetching', function () {
 		const claims = [];
 
 		links.forEach( ( link ) => {
-			const prop = link.getAttribute( 'href' ).replace( '/wiki/Property:', '' );
+			const prop = "http://www.wikidata.org/entity/" + link.getAttribute( 'href' ).replace( '/wiki/Property:', '' );
 			properties.push( prop );
 			claims.push(
 				{
