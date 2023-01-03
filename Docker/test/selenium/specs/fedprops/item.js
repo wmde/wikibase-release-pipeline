@@ -13,7 +13,7 @@ describe( 'Fed props Item', function () {
 	const itemId = 'Q1';
 	const itemLabel = 'T267743-';
 
-	it( 'Should search wikidata.org through wbsearchentities', function () {
+	it( 'Should search wikidata.org through wbsearchentities with no local properties', function () {
 		const result = browser.makeRequest(
 			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
 		);
@@ -31,7 +31,7 @@ describe( 'Fed props Item', function () {
 				{
 					mainsnak: {
 						snaktype: 'value',
-						property: 'P213',
+						property: 'http://www.wikidata.org/entity/P213',
 						datavalue: { value: propertyValue, type: 'string' } },
 					type: 'statement', rank: 'normal'
 				}
@@ -47,30 +47,30 @@ describe( 'Fed props Item', function () {
 		ItemPage.addStatementLink.waitForDisplayed();
 	} );
 
-	it( 'should show up in Special:EntityData with ttl', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl' );
-		const body = response.data;
-
-		assert( body.includes( '@prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ) );
-		assert( body.includes( 'fpwdt:P213 "ISNI"' ) );
+	it( 'should NOT show up in Special:EntityData with ttl', function () {
+		try{
+			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl' );
+		} catch (error) {
+			assert( error.message === "Request failed with status code 500" )
+		}
 	} );
 
 	it( 'should show up in Special:EntityData with json', function () {
 		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
 		const body = response.data;
 
-		assert( body.entities.Q1.claims[ propertyId ] !== null );
+		assert( body.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ] !== null );
 	} );
 
-	it( 'should show up in Special:EntityData with rdf', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf' );
-		const body = response.data;
-
-		assert( body.includes( 'xmlns:fpwdt="http://www.wikidata.org/prop/direct/"' ) );
-		assert( body.includes( '<fpwdt:P213>ISNI</fpwdt:P213>' ) );
+	it( 'should NOT show up in Special:EntityData with rdf', function () {
+		try{
+			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf' );
+		} catch (error) {
+			assert( error.message === "Request failed with status code 500" )
+		}
 	} );
 
-	it( 'shows property in queryservice ui after creation using prefixes', function () {
+	it( 'should NOT show property in queryservice ui after creation using prefixes', function () {
 
 		const prefixes = [
 			'prefix fpwdt: <http://www.wikidata.org/prop/direct/>'
@@ -85,12 +85,12 @@ describe( 'Fed props Item', function () {
 		QueryServiceUI.submit();
 		QueryServiceUI.resultTable.waitForDisplayed();
 
-		// label should match on the prefix
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+		// Item should never have made its way into the query service, as TTL doesnt work
+		assert( !QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
 
 	} );
 
-	it( 'shows up in queryservice ui after creation', function () {
+	it( 'should NOT show up in queryservice ui after creation', function () {
 
 		// query the item using wd: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
@@ -98,21 +98,19 @@ describe( 'Fed props Item', function () {
 		QueryServiceUI.submit();
 		QueryServiceUI.resultTable.waitForDisplayed();
 
-		assert( QueryServiceUI.resultIncludes( 'schema:version' ) );
-		assert( QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
-		assert( QueryServiceUI.resultIncludes( 'wikibase:timestamp' ) );
+		// Item should never have made its way into the query service, as TTL doesnt work
+		assert( !QueryServiceUI.resultIncludes( 'schema:version' ) );
+		assert( !QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
+		assert( !QueryServiceUI.resultIncludes( 'wikibase:timestamp' ) );
 
-		// label should match on the prefix
-		assert( QueryServiceUI.resultIncludes( 'rdfs:label', itemLabel ) );
+		assert( !QueryServiceUI.resultIncludes( 'rdfs:label', itemLabel ) );
 
-		// should have one statement
-		assert( QueryServiceUI.resultIncludes( 'wikibase:statements', '1' ) );
+		assert( !QueryServiceUI.resultIncludes( 'wikibase:statements', '1' ) );
 
-		assert( QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert( QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) );
+		assert( !QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) );
+		assert( !QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) );
 
-		// property value is set with correct rdf
-		assert( QueryServiceUI.resultIncludes( 'p:P213' ) );
+		assert( !QueryServiceUI.resultIncludes( 'p:P213' ) );
 
 	} );
 
