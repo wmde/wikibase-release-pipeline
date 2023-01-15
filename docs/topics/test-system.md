@@ -11,6 +11,7 @@ These may or may not be running at any given time, as they are only intended for
 Engineers can start and stop these
 
 NOTE: Federated properties can not be enabled in wmde.9/1.37 releases. So that test system is not currently used / updated.
+It can again be enabled in wmde.10/1.38
 
 **Default Wikibase**
 
@@ -67,19 +68,19 @@ Do the following (with the parameters you require)...
 IMAGE_PREFIX=ghcr.io/wmde/
 
 TEST_SYSTEM=latest
-EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
-BUILD_NUMBER=3303724221
+EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
+BUILD_NUMBER=latest
 
 #TEST_SYSTEM=fedprops
-#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+#EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
 #BUILD_NUMBER=3303724221
 
 #TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+#EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
 #BUILD_NUMBER=2971822356
 
 #TEST_SYSTEM=fedprops-previous
-#EXAMPLE_HASH=e8744b247f96d721b84a899c1d4b401cb34195cb
+#EXAMPLE_HASH=53fd2bfa56085d43b1190371a8ed8c881643f4b8
 #BUILD_NUMBER=2971822356
 
 # Calculate some things
