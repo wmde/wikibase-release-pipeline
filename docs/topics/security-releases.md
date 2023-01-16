@@ -22,4 +22,4 @@ You can see all new commits since the commit being used using a comparison URL (
 
 **No specific security releases**
 
-- `WDQS_VERSION`: WDQS does not currently have "security releases" so to speak. Any needed increments would need to be advised from the WMF team.
+- `WDQS_VERSION`: WDQS does not currently have "security releases" so to speak. Any needed increments would need to be advised from the WMF team. You can see releases at https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/

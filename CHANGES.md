@@ -4,6 +4,17 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## WORK IN PROGRESS: 2023: First 1.39 release
+
+The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
+
+- [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_38/RELEASE-NOTES-1.39)
+
+| Suite Version | Version Info | Date availbile | Run number | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.11 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.11/versions/wmde11.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde11)) | MediaWiki (1.39.1, PHP TODO), WDQS (TODO)    | TODO | [TODO](https://github.com/wmde/wikibase-release-pipeline/actions/runs/TODO) | [TODO](https://phabricator.wikimedia.org/TODO) |
+
 ## January 2023: First 1.38 release
 
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
