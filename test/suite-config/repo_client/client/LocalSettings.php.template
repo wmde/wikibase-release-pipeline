@@ -42,7 +42,7 @@ ${DOLLAR}wgSecretKey = "${MW_WG_SECRET_KEY}";
 
 wfLoadSkin( 'Vector' );
 
-error_reporting( -1 );
+error_reporting(E_ALL ^ E_DEPRECATED);
 ini_set( 'display_errors', 1 );
 ${DOLLAR}wgShowExceptionDetails = true;
 ${DOLLAR}wgShowSQLErrors = true;
