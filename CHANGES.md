@@ -13,7 +13,7 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 
 | Suite Version | Version Info | Date availbile | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.10 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.10/versions/wmde10.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde10)) | MediaWiki (1.38.5, PHP 8.0.26), WDQS (0.3.118)    | TODO | [3925740668](https://github.com/wmde/wikibase-release-pipeline/actions/runs/3925740668) | [T322407](https://phabricator.wikimedia.org/T322407) |
+| wmde.10 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.10/versions/wmde10.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde10)) | MediaWiki (1.38.5, PHP 8.0.26), WDQS (0.3.118)    | [16 January 2023](https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/thread/KFPAI4S3S24IPAXTSF3AKYGSFUOKTM34/) | [3925740668](https://github.com/wmde/wikibase-release-pipeline/actions/runs/3925740668) | [T322407](https://phabricator.wikimedia.org/T322407) |
 
 ## November 2022: First 1.37 release
 
