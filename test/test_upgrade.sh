@@ -69,6 +69,11 @@ set -o allexport; source ../Docker/build/Wikibase/default.env; set +o allexport
 envsubst < "../Docker/build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
 export TMP_LOCALSETTINGS
 
+# Replace LocalSettings.php lines that need to be changed for the upgrade
+# TODO remove this once we are no longer making 1.38 compatible releases...
+sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/client\/WikibaseClient.php";/c\wfLoadExtension( 'WikibaseClient', "${DOLLAR}IP\/extensions\/Wikibase\/extension-client.json" );' $TMP_LOCALSETTINGS
+sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.php";/c\wfLoadExtension( 'WikibaseRepo', "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );' $TMP_LOCALSETTINGS
+
 # docker-compose down to simulate upgrade
 docker-compose $SUITE_CONFIG down
 
