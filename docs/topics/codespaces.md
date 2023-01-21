@@ -38,7 +38,7 @@ And then run the failing tests that you want to debug.
 Be sure to select the correct suite, and filter by test file to speed things up.
 
 ```sh
-make test SUITE=upgrade_base FILTER=repo/api.js
+make test SUITE=repo_client FILTER=repo_client/item.js
 ```
 
 Once the test has run, you can immediately view logs and artifacts rather than needing to download them from Github.
@@ -47,3 +47,7 @@ The test sites also stay running once the tests are done or you cancel the tests
 With the built in port forwarding you can access these sites.
 This allows for easy hands on debugging of the sites exactly as configured during testing.
 You can also `docker exec` into the container to poke around if needed.
+
+```sh
+docker exec -it test_wikibase_1 bash
+```
