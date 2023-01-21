@@ -53,7 +53,7 @@ ${DOLLAR}wgDebugLogFile = '/var/log/mediawiki/debug.log';
 ${DOLLAR}wgEnableWikibaseRepo = false;
 ${DOLLAR}wgEnableWikibaseClient = true;
 
-require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
+wfLoadExtension( 'WikibaseClient', "${DOLLAR}IP/extensions/Wikibase/extension-client.json" );
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
 ${DOLLAR}entitySources = [
