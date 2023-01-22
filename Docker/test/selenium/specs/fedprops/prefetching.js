@@ -65,7 +65,7 @@ describe( 'Property Prefetching', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId + '?action=history' );
 		$( '#pagehistory' ).waitForDisplayed( { timeout: 2000 } );
 
-		assert( $$( '#pagehistory li' ).length >= NUM_PROPERTIES );
+		assert.strictEqual( $$( '#pagehistory li' ).length, NUM_PROPERTIES );
 
 	} );
 
@@ -73,7 +73,7 @@ describe( 'Property Prefetching', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0' );
 		$( 'ul.special' ).waitForDisplayed( { timeout: 2000 } );
 
-		assert( $$( 'ul.special li' ).length >= NUM_PROPERTIES );
+		assert.strictEqual( $$( 'ul.special li' ).length, NUM_PROPERTIES );
 	} );
 
 } );
