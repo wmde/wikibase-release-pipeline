@@ -25,6 +25,13 @@ COMPOSER_VENDOR="$WIKIBASE_DIR/vendor/"
 
 mkdir $COMPOSER_VENDOR
 chmod 777 "$COMPOSER_VENDOR"
+# TODO rmeove the below hack...
+# composer config --no-plugins allow-plugins.composer/installers true
+docker run \
+    --volume "$WIKIBASE_DIR":/tmp/Wikibase \
+    -u $(id -u ${USER}):$(id -g ${USER}) \
+    "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
+    config --no-plugins allow-plugins.composer/installers true
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
     -u $(id -u ${USER}):$(id -g ${USER}) \
