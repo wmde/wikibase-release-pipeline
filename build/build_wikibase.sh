@@ -23,6 +23,7 @@ WIKIBASE_DIR="$TEMP_GIT_DIR/Wikibase/"
 COMPOSER_FILE="$WIKIBASE_DIR/composer.json"
 COMPOSER_VENDOR="$WIKIBASE_DIR/vendor/"
 
+mkdir $COMPOSER_VENDOR
 chmod 777 "$COMPOSER_VENDOR"
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
