@@ -34,6 +34,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -117,6 +118,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -197,6 +199,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -256,6 +259,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -316,6 +320,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -367,6 +372,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -440,6 +446,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
