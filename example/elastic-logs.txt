@@ -1,0 +1,253 @@
+[2023-02-03T13:34:41,860][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] using [1] data paths, mounts [[/usr/share/elasticsearch/data (/dev/vda1)]], net usable_space [37gb], net total_space [62.6gb], types [ext4]
+[2023-02-03T13:34:41,866][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] heap size [512mb], compressed ordinary object pointers [true]
+[2023-02-03T13:34:41,872][INFO ][o.e.n.Node               ] [WS9lrhg] node name derived from node ID [WS9lrhg4QXOivFryCjUXEA]; set [node.name] to override
+[2023-02-03T13:34:41,872][INFO ][o.e.n.Node               ] [WS9lrhg] version[6.8.23], pid[1], build[default/docker/4f67856/2022-01-06T21:30:50.087716Z], OS[Linux/5.10.124-linuxkit/amd64], JVM[AdoptOpenJDK/OpenJDK 64-Bit Server VM/15.0.1/15.0.1+9]
+[2023-02-03T13:34:41,873][INFO ][o.e.n.Node               ] [WS9lrhg] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseG1GC, -XX:G1ReservePercent=25, -XX:InitiatingHeapOccupancyPercent=30, -Des.networkaddress.cache.ttl=60, -Des.networkaddress.cache.negative.ttl=10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Dlog4j2.formatMsgNoLookups=true, -Djava.io.tmpdir=/tmp/elasticsearch-2613689144656791447, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=data, -XX:ErrorFile=logs/hs_err_pid%p.log, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -XX:UseAVX=2, -Dlog4j2.formatMsgNoLookups=true, -Des.cgroups.hierarchy.override=/, -Xms512m, -Xmx512m, -Dlog4j2.formatMsgNoLookups=true, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config, -Des.distribution.flavor=default, -Des.distribution.type=docker]
+[2023-02-03T13:34:45,693][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [aggs-matrix-stats]
+[2023-02-03T13:34:45,694][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [analysis-common]
+[2023-02-03T13:34:45,694][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-common]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-geoip]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-user-agent]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-expression]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-mustache]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-painless]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [mapper-extras]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [parent-join]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [percolator]
+[2023-02-03T13:34:45,695][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [rank-eval]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [reindex]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [repository-url]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [transport-netty4]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [tribe]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ccr]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-core]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-deprecation]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-graph]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ilm]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-logstash]
+[2023-02-03T13:34:45,696][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ml]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-monitoring]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-rollup]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-security]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-sql]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-upgrade]
+[2023-02-03T13:34:45,697][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-watcher]
+[2023-02-03T13:34:45,698][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [experimental-highlighter]
+[2023-02-03T13:34:45,698][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [extra]
+[2023-02-03T13:34:51,418][INFO ][o.e.x.s.a.s.FileRolesStore] [WS9lrhg] parsed [0] roles from file [/usr/share/elasticsearch/config/roles.yml]
+[2023-02-03T13:34:53,387][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [WS9lrhg] [controller/85] [Main.cc@114] controller (64 bit): Version 6.8.23 (Build 31256deab94add) Copyright (c) 2022 Elasticsearch BV
+[2023-02-03T13:34:58,467][INFO ][o.e.d.DiscoveryModule    ] [WS9lrhg] using discovery type [single-node] and host providers [settings]
+[2023-02-03T13:35:03,340][INFO ][o.e.n.Node               ] [WS9lrhg] initialized
+[2023-02-03T13:35:03,347][INFO ][o.e.n.Node               ] [WS9lrhg] starting ...
+[2023-02-03T13:35:04,059][INFO ][o.e.t.TransportService   ] [WS9lrhg] publish_address {172.21.0.4:9300}, bound_addresses {0.0.0.0:9300}
+[2023-02-03T13:35:04,277][INFO ][o.e.h.n.Netty4HttpServerTransport] [WS9lrhg] publish_address {172.21.0.4:9200}, bound_addresses {0.0.0.0:9200}
+[2023-02-03T13:35:04,279][INFO ][o.e.n.Node               ] [WS9lrhg] started
+[2023-02-03T13:35:04,881][WARN ][o.e.x.s.a.s.m.NativeRoleMappingStore] [WS9lrhg] Failed to clear cache for realms [[]]
+[2023-02-03T13:35:05,187][INFO ][o.e.g.GatewayService     ] [WS9lrhg] recovered [0] indices into cluster_state
+[2023-02-03T13:35:06,941][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.watches] for index patterns [.watches*]
+[2023-02-03T13:35:14,229][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.watch-history-9] for index patterns [.watcher-history-9*]
+[2023-02-03T13:35:15,271][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.triggered_watches] for index patterns [.triggered_watches*]
+[2023-02-03T13:35:15,658][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.monitoring-logstash] for index patterns [.monitoring-logstash-6-*]
+[2023-02-03T13:35:15,940][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.monitoring-es] for index patterns [.monitoring-es-6-*]
+[2023-02-03T13:35:16,150][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.monitoring-alerts] for index patterns [.monitoring-alerts-6]
+[2023-02-03T13:35:16,487][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.monitoring-beats] for index patterns [.monitoring-beats-6-*]
+[2023-02-03T13:35:16,728][INFO ][o.e.c.m.MetaDataIndexTemplateService] [WS9lrhg] adding template [.monitoring-kibana] for index patterns [.monitoring-kibana-6-*]
+[2023-02-03T13:35:17,187][INFO ][o.e.l.LicenseService     ] [WS9lrhg] license [2e92e949-97a9-457e-8954-6d751880dc58] mode [basic] - valid
+[2023-02-03T13:35:19,447][WARN ][o.e.d.r.a.a.i.RestPutMappingAction] [WS9lrhg] [types removal] The parameter include_type_name should be explicitly specified in create index requests to prepare for 7.0. In 7.0 include_type_name will default to 'false', and requests are expected to omit the type name in mapping definitions.
+[2023-02-03T13:35:19,505][INFO ][o.e.c.m.MetaDataCreateIndexService] [WS9lrhg] [mw_cirrus_metastore_first] creating index, cause [api], templates [], shards [1]/[1], mappings [mw_cirrus_metastore]
+[2023-02-03T13:35:19,547][INFO ][o.e.c.r.a.AllocationService] [WS9lrhg] updating number_of_replicas to [0] for indices [mw_cirrus_metastore_first]
+[2023-02-03T13:35:20,054][INFO ][o.e.c.r.a.AllocationService] [WS9lrhg] Cluster health status changed from [YELLOW] to [GREEN] (reason: [shards started [[mw_cirrus_metastore_first][0]] ...]).
+[2023-02-03T13:35:22,152][WARN ][o.e.d.r.a.a.i.RestGetIndicesAction] [WS9lrhg] [types removal] The parameter include_type_name should be explicitly specified in get indices requests to prepare for 7.0. In 7.0 include_type_name will default to 'false', which means responses will omit the type name in mapping definitions.
+[2023-02-03T13:35:24,710][INFO ][o.e.m.j.JvmGcMonitorService] [WS9lrhg] [gc][young][15][9] duration [961ms], collections [1]/[1.7s], total [961ms]/[1.5s], memory [277.5mb]->[107.5mb]/[512mb], all_pools {[young] [176mb]->[3mb]/[0b]}{[old] [92.3mb]->[86.3mb]/[512mb]}{[survivor] [9.2mb]->[18.2mb]/[0b]}
+[2023-02-03T13:35:24,721][WARN ][o.e.m.j.JvmGcMonitorService] [WS9lrhg] [gc][15] overhead, spent [961ms] collecting in the last [1.7s]
+[2023-02-03T13:35:28,811][INFO ][o.e.m.j.JvmGcMonitorService] [WS9lrhg] [gc][18] overhead, spent [542ms] collecting in the last [1.5s]
+[2023-02-03T13:35:39,641][WARN ][o.e.m.j.JvmGcMonitorService] [WS9lrhg] [gc][young][21][14] duration [2.2s], collections [1]/[3.4s], total [2.2s]/[4.6s], memory [145mb]->[104.1mb]/[512mb], all_pools {[young] [42mb]->[2mb]/[0b]}{[old] [103.8mb]->[103.8mb]/[512mb]}{[survivor] [237kb]->[315.8kb]/[0b]}
+[2023-02-03T13:35:40,581][WARN ][o.e.m.j.JvmGcMonitorService] [WS9lrhg] [gc][21] overhead, spent [2.2s] collecting in the last [3.4s]
+[2023-02-03T13:35:53,439][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] using [1] data paths, mounts [[/usr/share/elasticsearch/data (/dev/vda1)]], net usable_space [36.3gb], net total_space [62.6gb], types [ext4]
+[2023-02-03T13:35:53,449][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] heap size [512mb], compressed ordinary object pointers [true]
+[2023-02-03T13:35:53,482][INFO ][o.e.n.Node               ] [WS9lrhg] node name derived from node ID [WS9lrhg4QXOivFryCjUXEA]; set [node.name] to override
+[2023-02-03T13:35:53,483][INFO ][o.e.n.Node               ] [WS9lrhg] version[6.8.23], pid[1], build[default/docker/4f67856/2022-01-06T21:30:50.087716Z], OS[Linux/5.10.124-linuxkit/amd64], JVM[AdoptOpenJDK/OpenJDK 64-Bit Server VM/15.0.1/15.0.1+9]
+[2023-02-03T13:35:53,484][INFO ][o.e.n.Node               ] [WS9lrhg] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseG1GC, -XX:G1ReservePercent=25, -XX:InitiatingHeapOccupancyPercent=30, -Des.networkaddress.cache.ttl=60, -Des.networkaddress.cache.negative.ttl=10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Dlog4j2.formatMsgNoLookups=true, -Djava.io.tmpdir=/tmp/elasticsearch-1670235367265354194, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=data, -XX:ErrorFile=logs/hs_err_pid%p.log, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -XX:UseAVX=2, -Dlog4j2.formatMsgNoLookups=true, -Des.cgroups.hierarchy.override=/, -Xms512m, -Xmx512m, -Dlog4j2.formatMsgNoLookups=true, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config, -Des.distribution.flavor=default, -Des.distribution.type=docker]
+[2023-02-03T13:36:01,840][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [aggs-matrix-stats]
+[2023-02-03T13:36:01,840][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [analysis-common]
+[2023-02-03T13:36:01,840][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-common]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-geoip]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-user-agent]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-expression]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-mustache]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-painless]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [mapper-extras]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [parent-join]
+[2023-02-03T13:36:01,841][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [percolator]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [rank-eval]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [reindex]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [repository-url]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [transport-netty4]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [tribe]
+[2023-02-03T13:36:01,842][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ccr]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-core]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-deprecation]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-graph]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ilm]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-logstash]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ml]
+[2023-02-03T13:36:01,843][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-monitoring]
+[2023-02-03T13:36:01,844][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-rollup]
+[2023-02-03T13:36:01,844][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-security]
+[2023-02-03T13:36:01,844][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-sql]
+[2023-02-03T13:36:01,844][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-upgrade]
+[2023-02-03T13:36:01,844][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-watcher]
+[2023-02-03T13:36:01,845][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [experimental-highlighter]
+[2023-02-03T13:36:01,846][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [extra]
+[2023-02-03T13:36:21,596][INFO ][o.e.x.s.a.s.FileRolesStore] [WS9lrhg] parsed [0] roles from file [/usr/share/elasticsearch/config/roles.yml]
+[2023-02-03T13:36:22,516][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [WS9lrhg] [controller/85] [Main.cc@114] controller (64 bit): Version 6.8.23 (Build 31256deab94add) Copyright (c) 2022 Elasticsearch BV
+[2023-02-03T13:36:23,860][INFO ][o.e.d.DiscoveryModule    ] [WS9lrhg] using discovery type [single-node] and host providers [settings]
+[2023-02-03T13:36:27,339][INFO ][o.e.n.Node               ] [WS9lrhg] initialized
+[2023-02-03T13:36:27,346][INFO ][o.e.n.Node               ] [WS9lrhg] starting ...
+[2023-02-03T13:36:28,220][INFO ][o.e.t.TransportService   ] [WS9lrhg] publish_address {172.21.0.4:9300}, bound_addresses {0.0.0.0:9300}
+[2023-02-03T13:36:28,598][INFO ][o.e.h.n.Netty4HttpServerTransport] [WS9lrhg] publish_address {172.21.0.4:9200}, bound_addresses {0.0.0.0:9200}
+[2023-02-03T13:36:28,601][INFO ][o.e.n.Node               ] [WS9lrhg] started
+[2023-02-03T13:36:46,984][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] using [1] data paths, mounts [[/usr/share/elasticsearch/data (/dev/vda1)]], net usable_space [36.1gb], net total_space [62.6gb], types [ext4]
+[2023-02-03T13:36:46,989][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] heap size [512mb], compressed ordinary object pointers [true]
+[2023-02-03T13:36:47,000][INFO ][o.e.n.Node               ] [WS9lrhg] node name derived from node ID [WS9lrhg4QXOivFryCjUXEA]; set [node.name] to override
+[2023-02-03T13:36:47,001][INFO ][o.e.n.Node               ] [WS9lrhg] version[6.8.23], pid[1], build[default/docker/4f67856/2022-01-06T21:30:50.087716Z], OS[Linux/5.10.124-linuxkit/amd64], JVM[AdoptOpenJDK/OpenJDK 64-Bit Server VM/15.0.1/15.0.1+9]
+[2023-02-03T13:36:47,001][INFO ][o.e.n.Node               ] [WS9lrhg] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseG1GC, -XX:G1ReservePercent=25, -XX:InitiatingHeapOccupancyPercent=30, -Des.networkaddress.cache.ttl=60, -Des.networkaddress.cache.negative.ttl=10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Dlog4j2.formatMsgNoLookups=true, -Djava.io.tmpdir=/tmp/elasticsearch-12281997167668870251, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=data, -XX:ErrorFile=logs/hs_err_pid%p.log, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -XX:UseAVX=2, -Dlog4j2.formatMsgNoLookups=true, -Des.cgroups.hierarchy.override=/, -Xms512m, -Xmx512m, -Dlog4j2.formatMsgNoLookups=true, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config, -Des.distribution.flavor=default, -Des.distribution.type=docker]
+[2023-02-03T13:36:50,349][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [aggs-matrix-stats]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [analysis-common]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-common]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-geoip]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-user-agent]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-expression]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-mustache]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-painless]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [mapper-extras]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [parent-join]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [percolator]
+[2023-02-03T13:36:50,350][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [rank-eval]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [reindex]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [repository-url]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [transport-netty4]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [tribe]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ccr]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-core]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-deprecation]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-graph]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ilm]
+[2023-02-03T13:36:50,351][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-logstash]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ml]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-monitoring]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-rollup]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-security]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-sql]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-upgrade]
+[2023-02-03T13:36:50,352][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-watcher]
+[2023-02-03T13:36:50,353][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [experimental-highlighter]
+[2023-02-03T13:36:50,354][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [extra]
+[2023-02-03T13:37:33,441][INFO ][o.e.x.s.a.s.FileRolesStore] [WS9lrhg] parsed [0] roles from file [/usr/share/elasticsearch/config/roles.yml]
+[2023-02-03T13:37:34,346][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [WS9lrhg] [controller/86] [Main.cc@114] controller (64 bit): Version 6.8.23 (Build 31256deab94add) Copyright (c) 2022 Elasticsearch BV
+[2023-02-03T13:37:35,971][INFO ][o.e.d.DiscoveryModule    ] [WS9lrhg] using discovery type [single-node] and host providers [settings]
+[2023-02-03T13:37:40,565][INFO ][o.e.n.Node               ] [WS9lrhg] initialized
+[2023-02-03T13:37:40,574][INFO ][o.e.n.Node               ] [WS9lrhg] starting ...
+[2023-02-03T13:37:45,062][INFO ][o.e.t.TransportService   ] [WS9lrhg] publish_address {172.21.0.4:9300}, bound_addresses {0.0.0.0:9300}
+[2023-02-03T13:37:45,252][INFO ][o.e.h.n.Netty4HttpServerTransport] [WS9lrhg] publish_address {172.21.0.4:9200}, bound_addresses {0.0.0.0:9200}
+[2023-02-03T13:37:45,254][INFO ][o.e.n.Node               ] [WS9lrhg] started
+[2023-02-03T13:37:46,319][WARN ][o.e.x.s.a.s.m.NativeRoleMappingStore] [WS9lrhg] Failed to clear cache for realms [[]]
+[2023-02-03T13:37:46,403][INFO ][o.e.l.LicenseService     ] [WS9lrhg] license [2e92e949-97a9-457e-8954-6d751880dc58] mode [basic] - valid
+[2023-02-03T13:37:46,432][INFO ][o.e.g.GatewayService     ] [WS9lrhg] recovered [1] indices into cluster_state
+[2023-02-03T13:37:47,246][INFO ][o.e.c.r.a.AllocationService] [WS9lrhg] Cluster health status changed from [RED] to [GREEN] (reason: [shards started [[mw_cirrus_metastore_first][0]] ...]).
+[2023-02-03T13:38:04,739][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] using [1] data paths, mounts [[/usr/share/elasticsearch/data (/dev/vda1)]], net usable_space [35.7gb], net total_space [62.6gb], types [ext4]
+[2023-02-03T13:38:04,743][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] heap size [512mb], compressed ordinary object pointers [true]
+[2023-02-03T13:38:04,759][INFO ][o.e.n.Node               ] [WS9lrhg] node name derived from node ID [WS9lrhg4QXOivFryCjUXEA]; set [node.name] to override
+[2023-02-03T13:38:04,760][INFO ][o.e.n.Node               ] [WS9lrhg] version[6.8.23], pid[1], build[default/docker/4f67856/2022-01-06T21:30:50.087716Z], OS[Linux/5.10.124-linuxkit/amd64], JVM[AdoptOpenJDK/OpenJDK 64-Bit Server VM/15.0.1/15.0.1+9]
+[2023-02-03T13:38:04,760][INFO ][o.e.n.Node               ] [WS9lrhg] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseG1GC, -XX:G1ReservePercent=25, -XX:InitiatingHeapOccupancyPercent=30, -Des.networkaddress.cache.ttl=60, -Des.networkaddress.cache.negative.ttl=10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Dlog4j2.formatMsgNoLookups=true, -Djava.io.tmpdir=/tmp/elasticsearch-17853526697808441699, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=data, -XX:ErrorFile=logs/hs_err_pid%p.log, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -XX:UseAVX=2, -Dlog4j2.formatMsgNoLookups=true, -Des.cgroups.hierarchy.override=/, -Xms512m, -Xmx512m, -Dlog4j2.formatMsgNoLookups=true, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config, -Des.distribution.flavor=default, -Des.distribution.type=docker]
+[2023-02-03T13:38:11,575][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [aggs-matrix-stats]
+[2023-02-03T13:38:11,577][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [analysis-common]
+[2023-02-03T13:38:11,578][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-common]
+[2023-02-03T13:38:11,579][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-geoip]
+[2023-02-03T13:38:11,579][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-user-agent]
+[2023-02-03T13:38:11,580][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-expression]
+[2023-02-03T13:38:11,581][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-mustache]
+[2023-02-03T13:38:11,581][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-painless]
+[2023-02-03T13:38:11,582][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [mapper-extras]
+[2023-02-03T13:38:11,582][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [parent-join]
+[2023-02-03T13:38:11,583][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [percolator]
+[2023-02-03T13:38:11,583][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [rank-eval]
+[2023-02-03T13:38:11,585][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [reindex]
+[2023-02-03T13:38:11,588][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [repository-url]
+[2023-02-03T13:38:11,589][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [transport-netty4]
+[2023-02-03T13:38:11,590][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [tribe]
+[2023-02-03T13:38:11,592][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ccr]
+[2023-02-03T13:38:11,593][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-core]
+[2023-02-03T13:38:11,593][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-deprecation]
+[2023-02-03T13:38:11,594][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-graph]
+[2023-02-03T13:38:11,598][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ilm]
+[2023-02-03T13:38:11,600][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-logstash]
+[2023-02-03T13:38:11,601][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ml]
+[2023-02-03T13:38:11,602][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-monitoring]
+[2023-02-03T13:38:11,604][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-rollup]
+[2023-02-03T13:38:11,604][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-security]
+[2023-02-03T13:38:11,604][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-sql]
+[2023-02-03T13:38:11,605][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-upgrade]
+[2023-02-03T13:38:11,606][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-watcher]
+[2023-02-03T13:38:11,608][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [experimental-highlighter]
+[2023-02-03T13:38:11,609][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [extra]
+[2023-02-03T13:38:27,043][INFO ][o.e.x.s.a.s.FileRolesStore] [WS9lrhg] parsed [0] roles from file [/usr/share/elasticsearch/config/roles.yml]
+[2023-02-03T13:38:29,937][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [WS9lrhg] [controller/85] [Main.cc@114] controller (64 bit): Version 6.8.23 (Build 31256deab94add) Copyright (c) 2022 Elasticsearch BV
+[2023-02-03T13:38:50,934][INFO ][o.e.d.DiscoveryModule    ] [WS9lrhg] using discovery type [single-node] and host providers [settings]
+[2023-02-03T13:38:52,900][INFO ][o.e.n.Node               ] [WS9lrhg] initialized
+[2023-02-03T13:38:52,901][INFO ][o.e.n.Node               ] [WS9lrhg] starting ...
+[2023-02-03T13:38:53,154][INFO ][o.e.t.TransportService   ] [WS9lrhg] publish_address {172.21.0.4:9300}, bound_addresses {0.0.0.0:9300}
+[2023-02-03T13:38:53,281][INFO ][o.e.h.n.Netty4HttpServerTransport] [WS9lrhg] publish_address {172.21.0.4:9200}, bound_addresses {0.0.0.0:9200}
+[2023-02-03T13:38:53,282][INFO ][o.e.n.Node               ] [WS9lrhg] started
+[2023-02-03T13:38:54,317][WARN ][o.e.x.s.a.s.m.NativeRoleMappingStore] [WS9lrhg] Failed to clear cache for realms [[]]
+[2023-02-03T13:38:54,373][INFO ][o.e.l.LicenseService     ] [WS9lrhg] license [2e92e949-97a9-457e-8954-6d751880dc58] mode [basic] - valid
+[2023-02-03T13:38:54,397][INFO ][o.e.g.GatewayService     ] [WS9lrhg] recovered [1] indices into cluster_state
+[2023-02-03T13:38:56,287][INFO ][o.e.c.r.a.AllocationService] [WS9lrhg] Cluster health status changed from [RED] to [GREEN] (reason: [shards started [[mw_cirrus_metastore_first][0]] ...]).
+[2023-02-03T13:39:14,164][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] using [1] data paths, mounts [[/usr/share/elasticsearch/data (/dev/vda1)]], net usable_space [35.4gb], net total_space [62.6gb], types [ext4]
+[2023-02-03T13:39:14,170][INFO ][o.e.e.NodeEnvironment    ] [WS9lrhg] heap size [512mb], compressed ordinary object pointers [true]
+[2023-02-03T13:39:14,185][INFO ][o.e.n.Node               ] [WS9lrhg] node name derived from node ID [WS9lrhg4QXOivFryCjUXEA]; set [node.name] to override
+[2023-02-03T13:39:14,185][INFO ][o.e.n.Node               ] [WS9lrhg] version[6.8.23], pid[1], build[default/docker/4f67856/2022-01-06T21:30:50.087716Z], OS[Linux/5.10.124-linuxkit/amd64], JVM[AdoptOpenJDK/OpenJDK 64-Bit Server VM/15.0.1/15.0.1+9]
+[2023-02-03T13:39:14,186][INFO ][o.e.n.Node               ] [WS9lrhg] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseG1GC, -XX:G1ReservePercent=25, -XX:InitiatingHeapOccupancyPercent=30, -Des.networkaddress.cache.ttl=60, -Des.networkaddress.cache.negative.ttl=10, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -XX:+ShowCodeDetailsInExceptionMessages, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Dlog4j2.formatMsgNoLookups=true, -Djava.io.tmpdir=/tmp/elasticsearch-14442577179342664516, -XX:+HeapDumpOnOutOfMemoryError, -XX:HeapDumpPath=data, -XX:ErrorFile=logs/hs_err_pid%p.log, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -XX:UseAVX=2, -Dlog4j2.formatMsgNoLookups=true, -Des.cgroups.hierarchy.override=/, -Xms512m, -Xmx512m, -Dlog4j2.formatMsgNoLookups=true, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config, -Des.distribution.flavor=default, -Des.distribution.type=docker]
+[2023-02-03T13:39:23,957][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [aggs-matrix-stats]
+[2023-02-03T13:39:23,957][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [analysis-common]
+[2023-02-03T13:39:23,957][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-common]
+[2023-02-03T13:39:23,957][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-geoip]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [ingest-user-agent]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-expression]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-mustache]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [lang-painless]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [mapper-extras]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [parent-join]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [percolator]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [rank-eval]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [reindex]
+[2023-02-03T13:39:23,958][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [repository-url]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [transport-netty4]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [tribe]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ccr]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-core]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-deprecation]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-graph]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ilm]
+[2023-02-03T13:39:23,959][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-logstash]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-ml]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-monitoring]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-rollup]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-security]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-sql]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-upgrade]
+[2023-02-03T13:39:23,960][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded module [x-pack-watcher]
+[2023-02-03T13:39:23,961][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [experimental-highlighter]
+[2023-02-03T13:39:23,962][INFO ][o.e.p.PluginsService     ] [WS9lrhg] loaded plugin [extra]
+[2023-02-03T13:39:41,693][INFO ][o.e.x.s.a.s.FileRolesStore] [WS9lrhg] parsed [0] roles from file [/usr/share/elasticsearch/config/roles.yml]
+[2023-02-03T13:39:42,721][INFO ][o.e.x.m.p.l.CppLogMessageHandler] [WS9lrhg] [controller/84] [Main.cc@114] controller (64 bit): Version 6.8.23 (Build 31256deab94add) Copyright (c) 2022 Elasticsearch BV
+[2023-02-03T13:39:45,003][INFO ][o.e.d.DiscoveryModule    ] [WS9lrhg] using discovery type [single-node] and host providers [settings]
+[2023-02-03T13:39:54,475][INFO ][o.e.n.Node               ] [WS9lrhg] initialized
+[2023-02-03T13:39:54,497][INFO ][o.e.n.Node               ] [WS9lrhg] starting ...
+[2023-02-03T13:39:54,921][INFO ][o.e.t.TransportService   ] [WS9lrhg] publish_address {172.21.0.4:9300}, bound_addresses {0.0.0.0:9300}
+[2023-02-03T13:39:55,074][INFO ][o.e.h.n.Netty4HttpServerTransport] [WS9lrhg] publish_address {172.21.0.4:9200}, bound_addresses {0.0.0.0:9200}
+[2023-02-03T13:39:55,075][INFO ][o.e.n.Node               ] [WS9lrhg] started
+[2023-02-03T13:39:56,051][WARN ][o.e.x.s.a.s.m.NativeRoleMappingStore] [WS9lrhg] Failed to clear cache for realms [[]]
+[2023-02-03T13:39:56,104][INFO ][o.e.l.LicenseService     ] [WS9lrhg] license [2e92e949-97a9-457e-8954-6d751880dc58] mode [basic] - valid
+[2023-02-03T13:39:56,120][INFO ][o.e.g.GatewayService     ] [WS9lrhg] recovered [1] indices into cluster_state
+[2023-02-03T13:39:56,888][INFO ][o.e.c.r.a.AllocationService] [WS9lrhg] Cluster health status changed from [RED] to [GREEN] (reason: [shards started [[mw_cirrus_metastore_first][0]] ...]).

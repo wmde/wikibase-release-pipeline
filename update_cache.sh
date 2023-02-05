@@ -64,6 +64,10 @@ for arg in "$@"; do
 		clone_if_not_present WikibaseEdtf.git https://github.com/ProfessionalWiki/WikibaseEdtf.git
 		fetch_all WikibaseEdtf.git
 
+		# AutomatedValues
+		clone_if_not_present AutomatedValues.git https://github.com/ProfessionalWiki/AutomatedValues
+		fetch_all AutomatedValues.git
+
 		for extension in "${extensions[@]}"; do
 			clone_if_not_present "$extension.git" "https://gerrit.wikimedia.org/r/mediawiki/extensions/$extension"
 			fetch_all "$extension.git"

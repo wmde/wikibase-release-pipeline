@@ -42,6 +42,7 @@ test-all:
 	bash test/test_suite.sh pingback
 	bash test/test_suite.sh confirm_edit
 	bash test/test_suite.sh elasticsearch
+	bash test/test_suite.sh automated_values
 
 	# base tests
 	bash test/test_suite.sh base__repo
