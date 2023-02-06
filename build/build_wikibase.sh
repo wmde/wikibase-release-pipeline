@@ -20,21 +20,20 @@ bash "$ROOT"/build/clean_repo.sh "$WIKIBASE_PATH"
 rm "$WIKIBASE_PATH"/.travis.yml -vf
 
 WIKIBASE_DIR="$TEMP_GIT_DIR/Wikibase/"
-COMPOSER_FILE="$WIKIBASE_DIR/composer.json"
 COMPOSER_VENDOR="$WIKIBASE_DIR/vendor/"
 
-mkdir $COMPOSER_VENDOR
+mkdir "$COMPOSER_VENDOR"
 chmod 777 "$COMPOSER_VENDOR"
 # TODO rmeove the below hack...
 # composer config --no-plugins allow-plugins.composer/installers false
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
-    -u $(id -u ${USER}):$(id -g ${USER}) \
+    -u $(id -u "${USER}"):$(id -g "${USER}") \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     config --no-plugins allow-plugins.composer/installers false -d "/tmp/Wikibase"
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
-    -u $(id -u ${USER}):$(id -g ${USER}) \
+    -u $(id -u "${USER}"):$(id -g "${USER}") \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"

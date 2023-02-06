@@ -33,14 +33,11 @@ exports.config = {
 		browserName: 'chrome',
 		maxInstances: 1,
 		'goog:chromeOptions': {
+			binary: '/usr/bin/google-chrome',
 			// If DISPLAY is set, assume developer asked non-headless or CI with Xvfb.
 			// Otherwise, use --headless (added in Chrome 59)
 			// https://chromium.googlesource.com/chromium/src/+/59.0.3030.0/headless/README.md
-			args: [
-				...( process.env.DISPLAY ? [] : [ '--headless' ] ),
-				// Chrome sandbox does not work in Docker
-				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-			]
+			args: ['--headless', '--disable-gpu'],
 		}
 	} ],
 
