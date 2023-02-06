@@ -28,12 +28,12 @@ chmod 777 "$COMPOSER_VENDOR"
 # composer config --no-plugins allow-plugins.composer/installers false
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
-    -u $(id -u "${USER}"):$(id -g "${USER}") \
+    -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     config --no-plugins allow-plugins.composer/installers false -d "/tmp/Wikibase"
 docker run \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
-    -u $(id -u "${USER}"):$(id -g "${USER}") \
+    -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
