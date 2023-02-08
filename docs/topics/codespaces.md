@@ -23,7 +23,7 @@ You can then connect directly using the VSCode plugin that allows you to view yo
 Once connected you can download artifacts of a certain Github actions pipeline run.
 
 ```sh
-WORKFLOW_RUN_NUMBER=3943709618 make download
+WORKFLOW_RUN_NUMBER=4117737654 make download
 ```
 
 You then need to move them into the correct location
