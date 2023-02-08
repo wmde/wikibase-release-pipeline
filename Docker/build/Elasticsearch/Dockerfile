@@ -1,5 +1,5 @@
 ARG ELASTICSEARCH_VERSION
-FROM elasticsearch:${ELASTICSEARCH_VERSION}
+FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
 
 ARG ELASTICSEARCH_PLUGIN_EXTRA_VERSION
 RUN ./bin/elasticsearch-plugin install org.wikimedia.search:extra:${ELASTICSEARCH_PLUGIN_EXTRA_VERSION}
