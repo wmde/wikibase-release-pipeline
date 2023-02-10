@@ -65,7 +65,7 @@ for arg in "$@"; do
 		fetch_all WikibaseEdtf.git
 
 		# AutomatedValues
-		clone_if_not_present AutomatedValues.git https://github.com/ProfessionalWiki/AutomatedValues
+		clone_if_not_present AutomatedValues.git https://github.com/QuentinJanuel/AutomatedValues
 		fetch_all AutomatedValues.git
 
 		for extension in "${extensions[@]}"; do
