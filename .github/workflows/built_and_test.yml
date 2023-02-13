@@ -7,6 +7,10 @@ on:
         description: 'Environment file'
         required: true
         default: '.env' # only gets set on a "workflow_dispatch" run
+      debug_extra_env:
+        description: 'Lines to append to the environment file (for easy mass testing)'
+        required: false
+        default: ''
   push:
     branches:
       - "main"
@@ -25,6 +29,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
+
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -104,6 +114,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
+
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
@@ -179,6 +195,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
+
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
@@ -232,6 +254,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
+
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -288,6 +316,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
+
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
@@ -333,6 +367,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
+
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -401,6 +441,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
+
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
