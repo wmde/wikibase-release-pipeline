@@ -23,14 +23,14 @@ You can then connect directly using the VSCode plugin that allows you to view yo
 Once connected you can download artifacts of a certain Github actions pipeline run.
 
 ```sh
-WORKFLOW_RUN_NUMBER=4117737654 make download
+WORKFLOW_RUN_NUMBER=4128406166 make download
 ```
 
 You then need to move them into the correct location
 
 ```sh
 sudo chown -R codespace:root ./artifacts
-cp artifacts/3943709618/BuildArtifacts/* artifacts/
+cp artifacts/4128406166/BuildArtifacts/* artifacts/
 ```
 
 And then run the failing tests that you want to debug.
