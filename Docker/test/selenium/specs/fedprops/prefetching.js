@@ -56,9 +56,9 @@ describe( 'Property Prefetching', function () {
 	// Refactored to avoid slow down of statement deletion
 	// See https://phabricator.wikimedia.org/T329308
 	// When fixed this should be changed back!
-	for (let i = 0; i < NUM_PROPERTIES; i++) {
-		before( 'should delete statement ' + i + ' and generate an individual change', function () {
-			let guid = propertyGuids[i];
+	for ( let i = 0; i < NUM_PROPERTIES; i++ ) {
+		it( 'should delete statement ' + i + ' and generate an individual change', function () {
+			const guid = propertyGuids[ i ];
 			const response = browser.deleteClaim( guid );
 			assert.strictEqual( response.success, 1 );
 		} );
