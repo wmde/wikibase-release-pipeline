@@ -12,7 +12,7 @@ describe( 'Property Prefetching', function () {
 	const propertyGuids = [];
 	const NUM_PROPERTIES = 25;
 
-	it( 'can add many federated properties and it shows up in the ui', function () {
+	before( 'can add many federated properties and it shows up in the ui', function () {
 
 		browser.url( 'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string' );
 		$( 'ol.special li a' ).waitForDisplayed();
@@ -44,9 +44,6 @@ describe( 'Property Prefetching', function () {
 
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
-	} );
-
-	it( 'should delete all statements and generate individual changes', function () {
 
 		const statements = $$( '.wikibase-statementview' );
 		statements.forEach( ( statement ) => {
@@ -54,12 +51,18 @@ describe( 'Property Prefetching', function () {
 		} );
 
 		assert.strictEqual( propertyGuids.length, NUM_PROPERTIES );
+	} );
 
-		propertyGuids.forEach( ( guid ) => {
+	// Refactored to avoid slow down of statement deletion
+	// See https://phabricator.wikimedia.org/T329308
+	// When fixed this should be changed back!
+	for (let i = 0; i < NUM_PROPERTIES; i++) {
+		before( 'should delete statement ' + i + ' and generate an individual change', function () {
+			let guid = propertyGuids[i];
 			const response = browser.deleteClaim( guid );
 			assert.strictEqual( response.success, 1 );
 		} );
-	} );
+	}
 
 	it( 'Should render history page list within threshold', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId + '?action=history' );
