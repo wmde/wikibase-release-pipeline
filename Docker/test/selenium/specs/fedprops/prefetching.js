@@ -59,6 +59,9 @@ describe( 'Property Prefetching', function () {
 			const response = browser.deleteClaim( guid );
 			assert.strictEqual( response.success, 1 );
 		} );
+
+		// Sleep for 2 seconds to ensure post edit things run
+		browser.pause( 2000 );
 	} );
 
 	it( 'Should render history page list within threshold', function () {
