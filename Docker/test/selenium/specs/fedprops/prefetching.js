@@ -78,8 +78,8 @@ describe( 'Property Prefetching', function () {
 		$( 'ul.special' ).waitForDisplayed( { timeout: 2000 } );
 
 		// +1 for the initial item creation
-		// +1 for the Main Page creation
-		assert.strictEqual( $$( 'ul.special li' ).length, NUM_PROPERTIES + 1 + 1 );
+		// Should there also be +1 for the Main Page creation?
+		assert.strictEqual( $$( 'ul.special li' ).length, NUM_PROPERTIES + 1 );
 	} );
 
 } );
