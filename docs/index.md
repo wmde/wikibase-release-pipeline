@@ -6,7 +6,6 @@
 - [Security Releases](topics/security-releases.md)
 - [Testing](topics/testing.md)
 - [Test-system](topics/test-system.md)
-- [Codespaces](topics/codespaces.md) for debugging CI test failures and artifacts
 - [Publishing](topics/publishing.md)
 - [Caching](topics/caching.md)
 - [Extension documentation](topics/extensions.md)
