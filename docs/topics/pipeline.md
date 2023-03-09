@@ -14,7 +14,7 @@ MEDIAWIKI_BRANCH_NAME=REL1_35
 ## Github Actions Workflows
 
 At it's core this repository is just a set of make targets that gets orchestrated by Github Actions workflows. We currently have the following workflows.
-#### [.github/workflows/built_and_test.yml](.github/workflows/built_and_test.yml)
+#### [.github/workflows/build_and_test.yml](.github/workflows/build_and_test.yml)
 
 This is the main workflow that builds Wikibase and related software, tests it and then produces release candidate artifacts that can be used for further acceptance testing and publishing.
 #### [.github/workflows/lint.yml](.github/workflows/lint.yml)
