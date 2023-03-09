@@ -11,13 +11,15 @@ on:
         description: 'Lines to append to the environment file (for easy mass testing)'
         required: false
         default: ''
-  push:
-    branches:
-      - "main"
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
+  workflow_call:
+    inputs:
+      env_file:
+        required: true
+        type: string
+      debug_extra_env:
+        required: false
+        type: string
+        default: ''
 
 env:
   env_file: ${{ github.event.inputs.env_file || 'versions/wmde10.env' }}
