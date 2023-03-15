@@ -49,7 +49,6 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 
 wfLoadSkin( 'Vector' );
 
-error_reporting(E_ALL ^ E_DEPRECATED);
 ini_set( 'display_errors', 1 );
 ${DOLLAR}wgShowExceptionDetails = true;
 ${DOLLAR}wgShowSQLErrors = true;
