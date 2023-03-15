@@ -11,6 +11,16 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 - [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
 - [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_38/RELEASE-NOTES-1.39)
 
+Users that still have lines in their LocalSettings.php file that look like this:
+ - `require_once "$IP/extensions/Wikibase/client/WikibaseClient.php"`
+ - `require_once "$IP/extensions/Wikibase/repo/WikibaseRepo.php"`
+Will need to switch to using the new `wfLoadExtension` function instead.
+ - `wfLoadExtension( "WikibaseClient", "$IP/extensions/Wikibase/extension-client.json" );`
+ - `wfLoadExtension( "WikibaseRepo", "$IP/extensions/Wikibase/extension-repo.json" );`
+If using a modified template for LocalSettings.php, generation, you'll need lines like this instead:
+  - `wfLoadExtension( "WikibaseClient", "${DOLLAR}IP\/extensions\/Wikibase\/extension-client.json" );`
+  - `wfLoadExtension( "WikibaseRepo", "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );`
+
 Users of tarballs that also use PHP 8+ will need to set `error_reporting = E_ALL ^ E_DEPRECATED` in their `php.ini` file
 OR`error_reporting(E_ALL ^ E_DEPRECATED);` in their LocalSettings.php file.
 
