@@ -25,6 +25,12 @@ RUN composer install --verbose -n --no-dev
 
 FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION}
 
+# Set error_reporting PHP.ini settings
+# This is needed with PHP8+ and MediaWiki 1.39, as Wikibase contains deprecated code
+RUN { \
+		echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
+	} > /usr/local/etc/php/conf.d/error_reporting.ini
+
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base && \
     rm -rf /var/lib/apt/lists/* && \

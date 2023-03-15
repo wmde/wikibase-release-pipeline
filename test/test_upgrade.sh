@@ -77,8 +77,6 @@ export TMP_LOCALSETTINGS
 sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/client\/WikibaseClient.php";/c\wfLoadExtension( "WikibaseClient", "${DOLLAR}IP\/extensions\/Wikibase\/extension-client.json" );' $TMP_LOCALSETTINGS
 # shellcheck disable=SC2016
 sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.php";/c\wfLoadExtension( "WikibaseRepo", "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );' $TMP_LOCALSETTINGS
-# Also append error_reporting(E_ALL ^ E_DEPRECATED); so we don't get deprecation warnings on the upgraded site
-echo "error_reporting(E_ALL ^ E_DEPRECATED);" >> $TMP_LOCALSETTINGS
 
 # docker-compose down to simulate upgrade
 docker-compose $SUITE_CONFIG down
