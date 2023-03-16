@@ -4,7 +4,7 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## WORK IN PROGRESS: 2023: First 1.39 release
+## March: 2023: First 1.39 release
 
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
@@ -26,7 +26,7 @@ OR`error_reporting(E_ALL ^ E_DEPRECATED);` in their LocalSettings.php file.
 
 | Suite Version | Version Info | Date available | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.11 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.11/versions/wmde11.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde11)) | MediaWiki (1.39.1, PHP 8.1.15), WDQS (0.3.121)    | TODO | [TODO](https://github.com/wmde/wikibase-release-pipeline/actions/runs/TODO) | [T329236](https://phabricator.wikimedia.org/T329236) |
+| wmde.11 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.11/versions/wmde11.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde11)) | MediaWiki (1.39.1, PHP 8.1.15), WDQS (0.3.121)    | 16 March 2023 | [4427564194](https://github.com/wmde/wikibase-release-pipeline/actions/runs/4427564194) | [T329236](https://phabricator.wikimedia.org/T329236) |
 
 ## January 2023: First 1.38 release
 
