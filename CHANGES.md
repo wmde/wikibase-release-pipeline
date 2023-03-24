@@ -4,6 +4,14 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## Work In Progress - March: 2023: Security release 1.39
+
+For a MediaWiki update to 1.39.2
+
+| Suite Version | MediaWiki release | Date available | Run number | Release task  |
+|---------------|-------------------|----------------|------------| --------------|
+| wmde.12 ([spec](),[metadata]()) | 1.39.2    | March 2023 | ??? | [T332786](https://phabricator.wikimedia.org/T332786) |
+
 ## March: 2023: First 1.39 release
 
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
