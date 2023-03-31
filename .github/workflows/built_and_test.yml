@@ -603,7 +603,6 @@ jobs:
           'wmde.9-bundle',
           # Latest 1.38
           'wmde.10-bundle',
-          'wmde.11-bundle',
         ]
     needs:
       - build_wikibase_bundle
