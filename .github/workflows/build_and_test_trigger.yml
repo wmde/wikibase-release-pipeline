@@ -12,6 +12,7 @@ on:
 jobs:
   trigger:
     strategy:
+      fail-fast: false
       matrix:
         include:
           # TODO add latest once wmde.11 (and the fixes there) are merged in https://github.com/wmde/wikibase-release-pipeline/pull/398
@@ -19,7 +20,7 @@ jobs:
           # - env_file: 'versions/latest.env'
           #   upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38
           - version: 'wmde.12' # 1.39
-            upgrade_from: [ 'wmde.9', 'wmde.10', 'wmde.11' ] # 1.37, 1.38 and the previous 1.39
+            upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38. Could add the previous 1.39? (wmde.11)
           - version: 'wmde.11' # 1.39
             upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38
           - version: 'wmde.10' # 1.38
