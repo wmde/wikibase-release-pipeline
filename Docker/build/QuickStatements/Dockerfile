@@ -11,7 +11,7 @@ COPY --from=fetcher --chown=nobody:nogroup /quickstatements/composer.json /quick
 WORKDIR /quickstatements
 RUN composer install --no-dev
 
-FROM php:7.3-apache
+FROM php:8.1-apache
 
 # Install envsubst
 RUN apt-get update && \

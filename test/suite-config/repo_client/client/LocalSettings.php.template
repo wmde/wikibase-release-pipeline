@@ -42,7 +42,6 @@ ${DOLLAR}wgSecretKey = "${MW_WG_SECRET_KEY}";
 
 wfLoadSkin( 'Vector' );
 
-error_reporting( -1 );
 ini_set( 'display_errors', 1 );
 ${DOLLAR}wgShowExceptionDetails = true;
 ${DOLLAR}wgShowSQLErrors = true;
@@ -53,7 +52,7 @@ ${DOLLAR}wgDebugLogFile = '/var/log/mediawiki/debug.log';
 ${DOLLAR}wgEnableWikibaseRepo = false;
 ${DOLLAR}wgEnableWikibaseClient = true;
 
-require_once "${DOLLAR}IP/extensions/Wikibase/client/WikibaseClient.php";
+wfLoadExtension( 'WikibaseClient', "${DOLLAR}IP/extensions/Wikibase/extension-client.json" );
 require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
 ${DOLLAR}entitySources = [

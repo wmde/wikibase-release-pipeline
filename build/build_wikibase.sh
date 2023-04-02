@@ -19,18 +19,23 @@ bash "$ROOT"/build/clean_repo.sh "$WIKIBASE_PATH"
 # remove travis build file
 rm "$WIKIBASE_PATH"/.travis.yml -vf
 
-COMPOSER_FILE="$TEMP_GIT_DIR/Wikibase/composer.json"
-COMPOSER_VENDOR="$TEMP_GIT_DIR/Wikibase/vendor/"
+WIKIBASE_DIR="$TEMP_GIT_DIR/Wikibase/"
+COMPOSER_VENDOR="$WIKIBASE_DIR/vendor/"
 
 mkdir "$COMPOSER_VENDOR"
 chmod 777 "$COMPOSER_VENDOR"
-
+# TODO rmeove the below hack...
+# composer config --no-plugins allow-plugins.composer/installers false
 docker run \
-    --volume "$COMPOSER_FILE":/tmp/composer.json \
-    --volume "$COMPOSER_VENDOR":/tmp/vendor/ \
+    --volume "$WIKIBASE_DIR":/tmp/Wikibase \
+    -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
-    install --no-dev --ignore-platform-reqs -vv -d "/tmp/"
-
+    config --no-plugins allow-plugins.composer/installers false -d "/tmp/Wikibase"
+docker run \
+    --volume "$WIKIBASE_DIR":/tmp/Wikibase \
+    -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
+    "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
+    install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
 
 GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase

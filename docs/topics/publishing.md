@@ -138,7 +138,7 @@ Make sure the `~/.ssh/config` contains a bastion host section where the user is 
 # Configure the initial connection to the bastion host, with the one
 # HostName closest to you
 Host bast
-    HostName bast3005.wikimedia.org
+    HostName bast3006.wikimedia.org
     IdentityFile ~/.ssh/id_production
     User <YourUsername>
 ```

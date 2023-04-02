@@ -22,7 +22,7 @@ on:
         default: ''
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde10.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde11.env' }}
 
 jobs:
 
@@ -562,10 +562,10 @@ jobs:
       fail-fast: false
       matrix:
         version: [
-          # Latest 1.36
-          'wmde.8',
           # Latest 1.37
           'wmde.9',
+          # Latest 1.38
+          'wmde.10',
         ]
     needs:
       - build_wikibase
@@ -601,10 +601,10 @@ jobs:
       fail-fast: false
       matrix:
         version: [
-          # Latest 1.36
-          'wmde.8-bundle',
           # Latest 1.37
           'wmde.9-bundle',
+          # Latest 1.38
+          'wmde.10-bundle',
         ]
     needs:
       - build_wikibase_bundle

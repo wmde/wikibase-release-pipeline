@@ -42,7 +42,7 @@ describe( 'QuickStatements Service', function () {
 		$( '#wpLoginAttempt' ).click();
 
 		// oauth dialog
-		$( '#mw-mwoauth-authorize-dialog' ).waitForDisplayed();
+		$( '#mw-mwoauth-authorize-form' ).waitForDisplayed();
 		$( '#mw-mwoauth-accept' ).click();
 
 		// redirect back to app
