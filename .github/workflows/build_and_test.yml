@@ -13,9 +13,15 @@ on:
   workflow_call:
     inputs:
       version:
+        description: 'version to run (see versions/<version>.env)'
+        required: true
+        type: string
+      upgrade_from_list:
+        description: 'JSON list of versions to upgrade from (see versions/<version>.env)'
         required: true
         type: string
       debug_extra_env:
+        description: 'Lines to append to the environment file (for easy mass testing)'
         required: false
         type: string
         default: ''
@@ -560,12 +566,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [
-          # Latest 1.37
-          'wmde.9',
-          # Latest 1.38
-          'wmde.10',
-        ]
+        version: ${{ fromJSON(inputs.upgrade_from_list) }}
     needs:
       - build_wikibase
     runs-on: ubuntu-latest
@@ -599,12 +600,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [
-          # Latest 1.37
-          'wmde.9-bundle',
-          # Latest 1.38
-          'wmde.10-bundle',
-        ]
+        version: ${{ fromJSON(inputs.upgrade_from_list) }}
     needs:
       - build_wikibase_bundle
     runs-on: ubuntu-latest
@@ -618,11 +614,11 @@ jobs:
           name: ${{ inputs.version }}-BuildArtifacts
           path: artifacts/
 
-      - name: Test upgrade version - ${{ matrix.version }}
+      - name: Test upgrade version - ${{ matrix.version }} bundle
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
+        run: make test-upgrade VERSION=${{ matrix.version }} bundle TO_VERSION=${{ env.env_file }}
 
       - name: docker logs
         if: always()
