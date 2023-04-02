@@ -36,4 +36,4 @@ jobs:
           #  upgrade_from: [ 'wmde.8', 'wmde.9' ] # 1.36 and 1.37
     uses: ./.github/workflows/build_and_test.yml
     with:
-      env_file: ${{ matrix.env_file }}
+      version: ${{ matrix.version }}
