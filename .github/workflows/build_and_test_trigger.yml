@@ -24,7 +24,7 @@ jobs:
           - version: 'wmde.11' # 1.39
             upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38
           - version: 'wmde.10' # 1.38
-            upgrade_from: [ 'wmde.8', 'wmde.9' ] # 1.36 and 1.37
+            upgrade_from: [ 'wmde.9' ] # 1.36 and 1.37. Could add 1.36 (wmde.8) if we re added old files
     uses: ./.github/workflows/build_and_test.yml
     with:
       version: ${{ matrix.version }}
