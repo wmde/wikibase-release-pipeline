@@ -1,16 +1,6 @@
 name: Build and test Wikibase and friends
 
 on:
-  workflow_dispatch:
-    inputs:
-      env_file:
-        description: 'Environment file'
-        required: true
-        default: '.env' # only gets set on a "workflow_dispatch" run
-      debug_extra_env:
-        description: 'Lines to append to the environment file (for easy mass testing)'
-        required: false
-        default: ''
   push:
     branches:
       - "main"
