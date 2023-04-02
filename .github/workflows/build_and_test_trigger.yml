@@ -24,8 +24,9 @@ jobs:
     strategy:
       matrix:
         env_file:
-          - 'versions/wmde9.env'
-          - 'versions/wmde10.env'
+          - 'versions/wmde10.env' # 1.38
+          - 'versions/wmde11.env' # 1.39
+          - 'versions/wmde12.env' # 1.39
     uses: ./.github/workflows/build_and_test.yml
     with:
       env_file: ${{ matrix.env_file }}
