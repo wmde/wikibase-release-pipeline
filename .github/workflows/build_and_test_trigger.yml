@@ -19,11 +19,12 @@ jobs:
           # - env_file: 'versions/latest.env'
           #   upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38
           - version: 'wmde.12' # 1.39
-            upgrade_from_list : '[ "wmde.9", "wmde.10", "wmde.11" ]' # 1.37, 1.38 and the previous 1.39
+            upgrade_from: [ 'wmde.9', 'wmde.10', 'wmde.11' ] # 1.37, 1.38 and the previous 1.39
           - version: 'wmde.11' # 1.39
-            upgrade_from_list : '[ "wmde.9", "wmde.10" ]' # 1.37 and 1.38
+            upgrade_from: [ 'wmde.9', 'wmde.10' ] # 1.37 and 1.38
           - version: 'wmde.10' # 1.38
-            upgrade_from_list : '[ "wmde.8", "wmde.9" ]' # 1.36 and 1.37
+            upgrade_from: [ 'wmde.8', 'wmde.9' ] # 1.36 and 1.37
     uses: ./.github/workflows/build_and_test.yml
     with:
       version: ${{ matrix.version }}
+      upgrade_from_json: ${{ toJson(matrix.upgrade_from) }}

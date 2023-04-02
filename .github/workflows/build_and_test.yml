@@ -16,7 +16,7 @@ on:
         description: 'version to run (see versions/<version>.env)'
         required: true
         type: string
-      upgrade_from_list:
+      upgrade_from_json:
         description: 'JSON list of versions to upgrade from (see versions/<version>.env)'
         required: true
         type: string
@@ -566,7 +566,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ${{ fromJSON(inputs.upgrade_from_list) }}
+        version: ${{ fromJSON(inputs.upgrade_from_json) }}
     needs:
       - build_wikibase
     runs-on: ubuntu-latest
@@ -600,7 +600,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ${{ fromJSON(inputs.upgrade_from_list) }}
+        version: ${{ fromJSON(inputs.upgrade_from_json) }}
     needs:
       - build_wikibase_bundle
     runs-on: ubuntu-latest
