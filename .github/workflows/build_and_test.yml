@@ -3,17 +3,16 @@ name: Build and test Wikibase and friends
 on:
   workflow_dispatch:
     inputs:
-      env_file:
-        description: 'Environment file'
+      version:
+        description: 'version to run (see versions/<version>.env)'
         required: true
-        default: '.env' # only gets set on a "workflow_dispatch" run
       debug_extra_env:
         description: 'Lines to append to the environment file (for easy mass testing)'
         required: false
         default: ''
   workflow_call:
     inputs:
-      env_file:
+      version:
         required: true
         type: string
       debug_extra_env:
@@ -22,7 +21,7 @@ on:
         default: ''
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde11.env' }}
+  env_file: 'versions/${{ github.event.inputs.version }}.env'
 
 jobs:
 
@@ -68,14 +67,14 @@ jobs:
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: ${{ github.event.inputs.version }}-BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wikibase.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/Wikibase.tar.gz
 
@@ -97,7 +96,7 @@ jobs:
       - name: Archive base docker production artifact
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/wikibase.docker.tar.gz
 
@@ -149,7 +148,7 @@ jobs:
       - name: Get dependency build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           path: artifacts/
 
       - name: Build Bundle Docker Image
@@ -173,14 +172,14 @@ jobs:
       - name: Archive bundle docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/wikibase-bundle.docker.tar.gz
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: ${{ github.event.inputs.version }}-BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
@@ -218,14 +217,14 @@ jobs:
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: ${{ github.event.inputs.version }}-BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_*.env
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/quickstatements.docker.tar.gz
 
@@ -301,7 +300,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/wdqs.docker.tar.gz
 
@@ -353,7 +352,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: artifacts/wdqs-proxy.docker.tar.gz
 
@@ -398,21 +397,21 @@ jobs:
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: ${{ github.event.inputs.version }}-BuildMetadata
           if-no-files-found: error
           path: artifacts/build_metadata_wdqs_frontend.env
 
       - name: Archive tar production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.tar.gz
 
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/wdqs-frontend.docker.tar.gz
 
@@ -464,7 +463,7 @@ jobs:
       - name: Archive docker production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           if-no-files-found: error
           path: ./artifacts/elasticsearch.docker.tar.gz
 
@@ -523,7 +522,7 @@ jobs:
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           path: artifacts/
 
       - name: Run Tests - ${{ matrix.suite }}
@@ -553,7 +552,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestArtifacts
+          name: ${{ github.event.inputs.version }}-TestArtifacts
           path: test/log
 
   test_upgrade_base:
@@ -575,7 +574,7 @@ jobs:
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
@@ -592,7 +591,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestUpgradeArtifacts
+          name: ${{ github.event.inputs.version }}-TestUpgradeArtifacts
           path: test/log
 
   test_upgrade_bundle:
@@ -616,7 +615,7 @@ jobs:
       - name: Get Wikibase docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: ${{ github.event.inputs.version }}-BuildArtifacts
           path: artifacts/
 
       - name: Test upgrade version - ${{ matrix.version }}
@@ -633,7 +632,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestUpgradeArtifactsBundle
+          name: ${{ github.event.inputs.version }}-TestUpgradeArtifactsBundle
           path: test/log
 
   versions:
@@ -653,6 +652,6 @@ jobs:
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: ${{ github.event.inputs.version }}-BuildMetadata
           if-no-files-found: error
           path: artifacts/built_versions.log
