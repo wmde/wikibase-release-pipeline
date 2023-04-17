@@ -4,23 +4,16 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## Work In Progress - April: 2023: 1.39.3 Security release
+## Work In Progress - April: 2023: Security releases for 1.38.6 and 1.39.3
 
 - [MediaWiki security release announcement](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)
-- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [MediaWiki 1.38 full release notes](https://www.mediawiki.org/wiki/Release_notes/1.38)
+- [MediaWiki 1.39 full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
 
 | Suite Version | MediaWiki release | Date available | Run number | Release task  |
-|---------------|-------------------|----------------|------------| --------------|
-| wmde.13 ([spec](),[metadata]()) | MediaWiki (1.39.3, PHP 8.0, PHP 8.1, PHP 8.2) | April 2023 | ??? | [T332786](https://phabricator.wikimedia.org/T332786) |
-
-## Work In Progress - April: 2023: 1.38.6 Security release
-
-- [MediaWiki security release announcement](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)
-- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.38)
-
-| Suite Version | MediaWiki release | Date available | Run number | Release task  |
-|---------------|-------------------|----------------|------------| --------------|
-| wmde.12 ([spec](),[metadata]()) | MediaWiki (1.38.6, PHP 8.0, PHP 8.1, PHP 8.2) | April 2023 | ??? | [T334778](https://phabricator.wikimedia.org/T334778) |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.12 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.12/versions/wmde12.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde12)) | MediaWiki (1.38.6, PHP 8.0.26), WDQS (0.3.118) | April 2023 | ??? | [T334778](https://phabricator.wikimedia.org/T334778) |
+| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.39.3, PHP 8.1.15), WDQS (0.3.121) | April 2023 | ??? | [T332786](https://phabricator.wikimedia.org/T332786) |
 
 ## March: 2023: First 1.39 release
 
