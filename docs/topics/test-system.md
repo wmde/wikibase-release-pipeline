@@ -4,7 +4,7 @@ The test systems are located on a CloudVPS machine at `wikibase-product-testing-
 
 You can find all code for running test test systems in the `/opt/test-systems` directory.
 This directory is owned by the `mediawiki` user.
-Each test system is a copy of the `example` docker-compose setup, with customized env vars and settings.
+Each test system is a copy of the `example` docker compose setup, with customized env vars and settings.
 
 Four optional test systems are maintained.
 These may or may not be running at any given time, as they are only intended for use during product verification during the release process.
@@ -58,7 +58,7 @@ You can create a test system using the parameterized bash code below.
 The inputs are:
 
  - TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
- - EXAMPLE_HASH: Hash of the release pipeline repository to use the docker-compose example from
+ - EXAMPLE_HASH: Hash of the release pipeline repository to use the docker compose example from
  - BUILD_NUMBER: Build of images, or tag, to use for images of the test system
 
 Do the following (with the parameters you require)...
@@ -159,7 +159,7 @@ fi
 To start the test system:
 
 ```sh
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 TODO in order to keep the LocalSettings.php file between updates of the mediawiki container we want to copy it out, onto disk, and mount it in.
@@ -169,7 +169,7 @@ So Adam will write these docs once that task is merged and resolved.
 ## Updating
 
 All data is stored in volumes, so the easiest way to update a test system is to turn it off, recreate it using the steps above, just with different intputs, and then run `up` again.
-The one thing that needs copying over and mounting in the docker-compose file is the LocalSetting.php file for MediaWiki which on initial setup is created by the wikibase container and stored in the container only.
+The one thing that needs copying over and mounting in the docker compose file is the LocalSetting.php file for MediaWiki which on initial setup is created by the wikibase container and stored in the container only.
 
 That would look something like this...
 
@@ -179,7 +179,7 @@ SCRIPT_RUN_DATE=$(date --iso)
 
 cd /opt/test-systems/$TEST_SYSTEM
 sudo docker cp ${TEST_SYSTEM}_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-${SCRIPT_RUN_DATE}.php
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml down
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml down
 
 cd /opt/test-systems
 mv ./$TEST_SYSTEM ./${SCRIPT_RUN_DATE}-${TEST_SYSTEM}
@@ -188,27 +188,27 @@ mv ./$TEST_SYSTEM ./${SCRIPT_RUN_DATE}-${TEST_SYSTEM}
 
 cd /opt/test-systems/$TEST_SYSTEM
 sudo docker volume rm ${TEST_SYSTEM}_shared
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 You should check that all services are up and running
 
 ```sh
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml ps
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml ps
 ```
 
 **If the query service updater is restarting**, it is likely due to updates not having happened in the past month.
 
 ```sh
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-updater
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-updater
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
 
 # Within the wdqs-updater shell run the following, with the current date (`20220908000000` in the example line below)
 /wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20221022000000
 # Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
 
 # Restart the service
-sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs-updater
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs-updater
 ```
 
 The service should now be up and running!
