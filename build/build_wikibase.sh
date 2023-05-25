@@ -38,7 +38,7 @@ docker run \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
 
-GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
+tar -C "$TEMP_GIT_DIR" -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$TEMP_TAR_DIR"/Wikibase.tar.gz
 
 TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"
 
