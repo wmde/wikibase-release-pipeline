@@ -21,7 +21,14 @@ if [ -n "$COMMIT_HASH" ]; then
     git reset --hard "$COMMIT_HASH"
 
 else
-    echo "COMMIT_HASH not set using HEAD of $BRANCH."
+    echo "COMMIT_HASH not set for $(basename "$GIT_REPO"). Set it in order to create more reproducable builds."
+
+    if [ "$ALLOW_BRANCH_HEADS" != 1 ]; then
+        echo "To build with HEAD of $BRANCH, set ALLOW_BRANCH_HEADS=1 in local.env"
+        exit -1
+    fi
+
+    echo "Using HEAD of $BRANCH."
     COMMIT_HASH="$(git rev-parse HEAD)"
 fi
 
