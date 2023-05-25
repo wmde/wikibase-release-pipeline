@@ -1,4 +1,4 @@
-FROM docker:latest
+FROM docker:24.0.1-cli-alpine3.18
 RUN apk add --no-cache git make bash python3 py3-pip && \
     pip3 install pyyaml
 WORKDIR "/app/"
