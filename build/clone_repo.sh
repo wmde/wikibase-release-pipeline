@@ -25,7 +25,7 @@ else
 
     if [ "$ALLOW_BRANCH_HEADS" != 1 ]; then
         echo "To build with HEAD of $BRANCH, set ALLOW_BRANCH_HEADS=1 in local.env"
-        exit -1
+        exit 1
     fi
 
     echo "Using HEAD of $BRANCH."
