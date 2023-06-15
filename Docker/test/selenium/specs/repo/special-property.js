@@ -11,7 +11,8 @@ describe( 'Special:NewProperty', function () {
 
 		SpecialNewProperty.labelInput.waitForDisplayed();
 
-		SpecialNewProperty.labelInput.setValue( 'Cool label' );
+		const uniqueLabel = 'Cool label ' + Date.now();
+		SpecialNewProperty.labelInput.setValue(uniqueLabel);
 		SpecialNewProperty.descriptionInput.setValue( 'Cool description' );
 		SpecialNewProperty.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 
