@@ -31,6 +31,7 @@ services:
     privileged: true
     environment:
       - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch.docker.tar.gz
+      - ELASTICSEARCH_BITNAMI_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch-bitnami.docker.tar.gz
       - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase-bundle.docker.tar.gz
       - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
       - WDQS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
@@ -45,6 +46,7 @@ services:
       - WIKIBASE_IMAGE_NAME
       - WIKIBASE_BUNDLE_IMAGE_NAME
       - ELASTICSEARCH_IMAGE_NAME
+      - ELASTICSEARCH_BITNAMI_IMAGE_NAME
 
       - WDQS_VERSION
       - RELEASE_VERSION

@@ -33,5 +33,16 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
 
+  elasticsearch-bitnami:
+    image: "${ELASTICSEARCH_BITNAMI_IMAGE_NAME}"
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+         - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
 volumes:
   LocalSettings:

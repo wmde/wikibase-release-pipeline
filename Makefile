@@ -78,6 +78,9 @@ wdqs-frontend:
 elasticsearch:
 	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
 
+elasticsearch-bitnami:
+	bash build/build_elasticsearch_bitnami_docker.sh ${ELASTICSEARCH_BITNAMI_IMAGE_NAME}
+
 clean-cache:
 	rm -rf cache/*
 	rm -rf git_cache/*
@@ -87,4 +90,4 @@ clean:
 	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
-all: wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
+all: wikibase wikibase_bundle elasticsearch elasticsearch-bitnami wdqs wdqs-frontend wdqs-proxy quickstatements

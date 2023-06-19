@@ -15,6 +15,7 @@ if [ -z "$WDQS_DOCKER_PATH" ] || \
 [ -z "$WIKIBASE_IMAGE_NAME" ] || \
 [ -z "$WIKIBASE_BUNDLE_IMAGE_NAME" ] || \
 [ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
+[ -z "$ELASTICSEARCH_BITNAMI_IMAGE_NAME" ] || \
 [ -z "$QUICKSTATEMENTS_IMAGE_NAME" ] || \
 \
 [ -z "$RELEASE_VERSION" ] || \
@@ -82,6 +83,9 @@ tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSI
 
 # Tag Elasticsearch with version
 tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
+
+# Tag Elasticsearch-bitnami with version
+tag_and_push "$ELASTICSEARCH_BITNAMI_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Quickstatements with version
 tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$WMDE_RELEASE_VERSION"

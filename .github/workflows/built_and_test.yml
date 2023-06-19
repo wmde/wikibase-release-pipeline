@@ -488,6 +488,58 @@ jobs:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           image_tag: latest
 
+  build_elasticsearch_bitnami:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add extra DEBUG env vars
+        if: "${{ github.event.inputs.debug_extra_env != '' }}"
+        run: |
+          printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
+          cat ${{ env.env_file }}
+
+      - uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: variables.env
+
+      - uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: ${{ env.env_file }}
+
+      - name: Build Elasticsearch Bitnami
+        run: bash build.sh elasticsearch-bitnami ${{ env.env_file }}
+
+      - name: Archive docker production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: ./artifacts/elasticsearch-bitnami.docker.tar.gz
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ env.ELASTICSEARCH_BITNAMI_IMAGE_NAME }}
+          tag: ${{ github.run_id }}
+
+      - name: Scan image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: ${{ env.ELASTICSEARCH_BITNAMI_IMAGE_NAME }}
+          image_tag: latest
+
   test_wikibase:
     strategy:
       fail-fast: false

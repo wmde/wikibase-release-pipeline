@@ -32,6 +32,19 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
 
+  elasticsearch-bitnami:
+    image: "${ELASTICSEARCH_BITNAMI_IMAGE_NAME}"
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-bitnami-data:/usr/share/elasticsearch/data
+    networks:
+      default:
+        aliases:
+         - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
     restart: unless-stopped
@@ -121,5 +134,6 @@ volumes:
   LocalSettings:
   query-service-data:
   elasticsearch-data:
+  elasticsearch-bitnami-data:
   quickstatements-data:
   mediawiki-mysql-data:
