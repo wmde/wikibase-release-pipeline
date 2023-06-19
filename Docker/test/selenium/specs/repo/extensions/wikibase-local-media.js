@@ -25,12 +25,21 @@ describe( 'WikibaseLocalMedia', function () {
 		const filePath = path.join( __dirname, '../../../data/image.png' );
 		fileUpload.setValue( filePath );
 
+		// generate a unique filename in order to allow re-uploading
+		// using a capital letter word, lower case would become uppercase magically
+		const uniqueFilename = `Image-${Date.now()}.png`;
+
+		$( '#wpDestFile' ).setValue(uniqueFilename);
+		
+		// ignore warnings, otherwise re-uploading would send us to a confirmation page
+		$( '#wpIgnoreWarning' ).click();
+
 		$( 'input.mw-htmlform-submit' ).click();
 
 		$( '#firstHeading' ).waitForDisplayed();
 		const title = $( '#firstHeading' ).getText();
 
-		assert.strictEqual( title, 'File:Image.png' );
+		assert.strictEqual( title, `File:${uniqueFilename}` );
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', function () {
