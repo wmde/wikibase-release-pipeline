@@ -12,7 +12,7 @@ describe( 'Special:NewItem', function () {
 		SpecialNewItem.labelInput.waitForDisplayed();
 
 		const uniqueLabel = 'Cool label ' + Date.now();
-		SpecialNewItem.labelInput.setValue(uniqueLabel);
+		SpecialNewItem.labelInput.setValue( uniqueLabel );
 		SpecialNewItem.descriptionInput.setValue( 'Cool description' );
 		SpecialNewItem.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 

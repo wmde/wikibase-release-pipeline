@@ -29,8 +29,8 @@ describe( 'WikibaseLocalMedia', function () {
 		// using a capital letter word, lower case would become uppercase magically
 		const uniqueFilename = `Image-${Date.now()}.png`;
 
-		$( '#wpDestFile' ).setValue(uniqueFilename);
-		
+		$( '#wpDestFile' ).setValue( uniqueFilename );
+
 		// ignore warnings, otherwise re-uploading would send us to a confirmation page
 		$( '#wpIgnoreWarning' ).click();
 
