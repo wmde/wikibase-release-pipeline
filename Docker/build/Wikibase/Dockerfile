@@ -63,7 +63,8 @@ ENV MW_SITE_NAME=${MW_SITE_NAME}\
     MW_WG_UPLOAD_DIRECTORY=${MW_WG_UPLOAD_DIRECTORY}\
     WIKIBASE_PINGBACK=${WIKIBASE_PINGBACK}
 
-RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
+RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R && \
+    chmod o-w /var/www/html
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
