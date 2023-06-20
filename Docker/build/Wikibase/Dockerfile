@@ -47,6 +47,7 @@ COPY ${MEDIAWIKI_SETTINGS_TEMPLATE_FILE} /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
+RUN chown -h www-data:www-data /var/www/html/w
 
 # Mediawiki configuration
 ARG MW_SITE_NAME
