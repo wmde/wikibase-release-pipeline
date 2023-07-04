@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -ex
 
 php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \

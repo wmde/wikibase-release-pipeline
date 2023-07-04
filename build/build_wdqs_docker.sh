@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 SERVICE_DIST_TAR="$TARBALL_PATH"

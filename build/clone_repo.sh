@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Clones a repository and writes the metadata file
 set -e
 
