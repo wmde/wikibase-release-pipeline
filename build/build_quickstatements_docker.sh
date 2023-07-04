@@ -9,4 +9,4 @@ docker build \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
     --no-cache Docker/build/QuickStatements/ -t "$1"
 
-docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE"f > artifacts/"$1".docker.tar.gz
+docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz

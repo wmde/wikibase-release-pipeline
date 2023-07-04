@@ -15,8 +15,7 @@ UPDATE_SUBMODULE=1 bash "$ROOT"/build/clone_repo.sh \
 bash "$ROOT"/build/clean_repo.sh "$WDQS_FRONTEND_GIT_DIR"
 
 cd "$WDQS_FRONTEND_GIT_DIR"
-GZIP=-9 tar -zcvf "$TARBALL_PATH" -- *
-
+tar -cvf - -- * | gzip -"$GZIP_COMPRESSION_RATE" > "$TARBALL_PATH" 
 cd "$ROOT"
 
 if [ -n "$GITHUB_ENV" ]; then

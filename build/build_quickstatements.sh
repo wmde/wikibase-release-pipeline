@@ -17,7 +17,7 @@ UPDATE_SUBMODULE=0 bash "$ROOT"/build/clone_repo.sh "$MAGNUSTOOLS_COMMIT_HASH" "
 bash "$ROOT"/build/clean_repo.sh "$MAGNUSTOOLS_GIT_DIR"
 
 cd "$TEMP_GIT_DIR"
-GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcvf "$TARBALL_PATH" magnustools quickstatements
+tar -C "$TEMP_GIT_DIR" -cvf - magnustools quickstatements | gzip -"$GZIP_COMPRESSION_RATE" > "$TARBALL_PATH"
 cd -
 
 if [ -n "$GITHUB_ENV" ]; then
