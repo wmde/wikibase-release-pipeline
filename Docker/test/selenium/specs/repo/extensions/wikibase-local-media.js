@@ -8,8 +8,10 @@ const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseLocalMedia', function () {
 
+	// TODO: FIXME tests must not be inter dependent!
 	let itemId = null;
 	let propertyId = null;
+	let imageFilename = null;
 
 	it( 'Should allow to upload an image', function () {
 
@@ -25,12 +27,21 @@ describe( 'WikibaseLocalMedia', function () {
 		const filePath = path.join( __dirname, '../../../data/image.png' );
 		fileUpload.setValue( filePath );
 
+		// generate a unique filename in order to allow re-uploading
+		// using a capital letter word, lower case would become uppercase magically
+		imageFilename = `Image-${Date.now()}.png`;
+
+		$( '#wpDestFile' ).setValue( imageFilename );
+
+		// ignore warnings, otherwise re-uploading would send us to a confirmation page
+		$( '#wpIgnoreWarning' ).click();
+
 		$( 'input.mw-htmlform-submit' ).click();
 
 		$( '#firstHeading' ).waitForDisplayed();
 		const title = $( '#firstHeading' ).getText();
 
-		assert.strictEqual( title, 'File:Image.png' );
+		assert.strictEqual( title, `File:${imageFilename}` );
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', function () {
@@ -58,7 +69,7 @@ describe( 'WikibaseLocalMedia', function () {
 					mainsnak: {
 						snaktype: 'value',
 						property: propertyId,
-						datavalue: { value: 'Image.png', type: 'string' } },
+						datavalue: { value: imageFilename, type: 'string' } },
 					type: 'statement', rank: 'normal'
 				}
 			]
@@ -72,7 +83,7 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '.wikibase-snakview-value img' ).waitForDisplayed();
 		const imageSource = $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 
-		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
+		assert.strictEqual( imageSource.includes( imageFilename ), true );
 
 	} );
 

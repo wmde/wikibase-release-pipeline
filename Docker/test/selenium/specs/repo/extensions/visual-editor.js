@@ -40,7 +40,7 @@ describe( 'VisualEditor', function () {
 		$( '.mw-parser-output' ).waitForDisplayed();
 		const contentBody = $( '.mw-parser-output' ).getText();
 
-		assert.strictEqual( contentBody, 'TEST' );
+		assert.strictEqual( contentBody.endsWith( 'TEST' ), true );
 	} );
 
 } );

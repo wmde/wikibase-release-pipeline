@@ -11,7 +11,8 @@ describe( 'Special:NewItem', function () {
 
 		SpecialNewItem.labelInput.waitForDisplayed();
 
-		SpecialNewItem.labelInput.setValue( 'Cool label' );
+		const uniqueLabel = 'Cool label ' + Date.now();
+		SpecialNewItem.labelInput.setValue( uniqueLabel );
 		SpecialNewItem.descriptionInput.setValue( 'Cool description' );
 		SpecialNewItem.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 

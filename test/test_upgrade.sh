@@ -18,7 +18,10 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
-WIKIBASE_TEST_CONTAINER=test_wikibase_1
+# Why is this neccessary locally, but not in CI?
+set -o allexport; source ../variables.env set +o allexport;
+
+WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
 set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport

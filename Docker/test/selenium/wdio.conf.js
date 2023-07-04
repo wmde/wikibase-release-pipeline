@@ -153,7 +153,7 @@ exports.config = {
 	},
 
 	/**
-	 * Save a screenshot when test fails.
+	 * Save a screenshot after test
 	 *
 	 * @param {Object} test Mocha Test object
 	 */
