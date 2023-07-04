@@ -55,7 +55,7 @@ sudo chmod +775 /opt/test-systems
 ```
 
 You can create a test system using the `prepare-docker-compose-config` script from https://github.com/wmde/wikibase-suite-test-system-tools which generates the necessary docker compose configuration using parametrized input. 
-The input paremeters are:
+The input parameters are:
 
  - IMAGE_PREFIX: Prefix of images to use. Use an empty string to use locally loaded images.
  - TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
@@ -80,7 +80,7 @@ sudo docker-compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 TODO in order to keep the LocalSettings.php file between updates of the mediawiki container we want to copy it out, onto disk, and mount it in.
-However that is a little dificult right now due to https://phabricator.wikimedia.org/T298632
+However, that is a little difficult right now due to https://phabricator.wikimedia.org/T298632
 So Adam will write these docs once that task is merged and resolved.
 
 ## Updating
