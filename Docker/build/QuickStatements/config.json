@@ -4,6 +4,7 @@
 	"logfile" : "/var/log/quickstatements/tool.log" ,
 	"sites" : {
 		"${MW_SITE_NAME}" : {
+			"label" : "${MW_SITE_NAME}",
 			"oauth" : {
 				"language":"${MW_SITE_LANG}" ,
 				"project":"${MW_SITE_NAME}" ,
