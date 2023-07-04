@@ -10,9 +10,9 @@ This provides an overview of the releases that have been made using this release
 - [MediaWiki security and maintenance release announcement: 1.35.11 / 1.38.7 / 1.39.4](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/HVT3U3XYY35PSCIQPHMY4VQNF3Q6MHUO/)
 - [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.38)
 
-| Suite Version | MediaWiki release | Date available | Run number | Release task  |
-|---------------|----------------------|----------------|------------| --------------|
-| wmde.12 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.12/versions/wmde12.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde12)) | MediaWiki (1.38.6, PHP 7.3.19+), WDQS (0.3.118) | July 2023         | ??? | [T334778](https://phabricator.wikimedia.org/T334778) |
+| Suite Version | MediaWiki release                                                       | Date available | Run number     | Release task  |
+|---------------|-------------------------------------------------------------------------|----------------|----------------| --------------|
+| wmde.12 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.12/versions/wmde12.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde12)) | MediaWiki (1.38.6, PHP 8.0.29, debian/apache2 2.4.56-1~deb11u2), WDQS (0.3.118) | July 2023         | [5447147654](https://github.com/wmde/wikibase-release-pipeline/actions/runs/5447147654) | [T334778](https://phabricator.wikimedia.org/T334778) |
 
 ## March 2023: First 1.39 release
 
