@@ -13,7 +13,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   WORKFLOW_RUN_NUMBER: ${{ github.event.inputs.workflow_run_number }}
 jobs:
-  test_wikibase:
+  test-wikibase:
     strategy:
       fail-fast: false
       matrix:
