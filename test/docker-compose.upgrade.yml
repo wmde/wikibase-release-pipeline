@@ -26,6 +26,7 @@ services:
       - DB_NAME=${DB_NAME}
       - WIKIBASE_HOST
       - WIKIBASE_PINGBACK=false
+
   mysql:
     image: "${DEFAULT_DATABASE_IMAGE_NAME}"
     restart: unless-stopped

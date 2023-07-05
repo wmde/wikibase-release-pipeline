@@ -23,7 +23,7 @@ services:
       - WDQS_SERVER=wdqs.svc:9999
       - PINGBACK_BEACON_SERVER=http://mediawiki.svc
       - WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
-      
+
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS
       - MW_SCRIPT_PATH=/w
@@ -33,7 +33,7 @@ services:
       - DATABASE_IMAGE_NAME
       - SUITE
       - FILTER
-      
+
       - DOCKER_WIKIBASE_REPO_NAME
       - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client_1
       - DOCKER_MYSQL_NAME
