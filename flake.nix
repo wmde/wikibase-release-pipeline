@@ -1,0 +1,37 @@
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        devShell = with pkgs; mkShell {
+          buildInputs = [
+            docker-client
+            gnumake
+            envsubst
+          ];
+
+          shellHook = ''
+            ${nixpkgs.legacyPackages.x86_64-linux.figlet}/bin/figlet "wbsrpl dev shell"
+            echo "Wikibase Release Pipeline"
+            echo
+
+            echo "Build Commands:"
+            echo "$ ./build.sh all versions/wmde11.env"
+            echo "$ ./build.sh wikibase_bundle versions/wmde12.env"
+            echo
+            echo "Test Commands:"
+            echo "$ make test-all"
+            echo "$ make test SUITE=repo"
+            echo "$ make test SUITE=repo FILTER=special-item"
+            echo "$ ./test/test_upgrade.sh 'wmde10' 'wmde11.env'"
+          '';
+        };
+      });
+}
