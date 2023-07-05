@@ -18,3 +18,4 @@ diagrams/node_modules/
 artifacts/*
 local.env
 example/log
+.direnv
