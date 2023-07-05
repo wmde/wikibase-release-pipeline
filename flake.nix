@@ -6,10 +6,9 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
+      let pkgs = nixpkgs.legacyPackages.${system};
       in
-      {
+      with pkgs; {
         devShell = with pkgs; mkShell {
           buildInputs = [
             docker-client
@@ -18,7 +17,7 @@
           ];
 
           shellHook = ''
-            ${nixpkgs.legacyPackages.x86_64-linux.figlet}/bin/figlet "wbsrpl dev shell"
+            ${pkgs.figlet}/bin/figlet "wbsrpl dev shell"
             echo "Wikibase Release Pipeline"
             echo
 
@@ -30,7 +29,7 @@
             echo "$ make test-all"
             echo "$ make test SUITE=repo"
             echo "$ make test SUITE=repo FILTER=special-item"
-            echo "$ ./test/test_upgrade.sh 'wmde10' 'wmde11.env'"
+            echo "$ ./test/test_upgrade.sh wmde.9-bundle versions/wmde11.env"
           '';
         };
       });
