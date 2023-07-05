@@ -29,7 +29,7 @@
             echo "$ make test-all"
             echo "$ make test SUITE=repo"
             echo "$ make test SUITE=repo FILTER=special-item"
-            echo "$ ./test/test_upgrade.sh wmde.9-bundle versions/wmde11.env"
+            echo "$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env"
           '';
         };
       });
