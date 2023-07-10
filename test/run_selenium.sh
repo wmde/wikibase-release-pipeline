@@ -37,7 +37,6 @@ docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE
 docker-compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
     wikibase-selenium-test
 
 # run status checks and wait until containers start
