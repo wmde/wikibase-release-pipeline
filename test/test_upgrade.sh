@@ -50,7 +50,6 @@ docker compose \
     $SUITE_CONFIG \
     -f docker-compose-selenium-test.yml \
     build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
     wikibase-selenium-test
 
 # Run pre_upgrade suite
