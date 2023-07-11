@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2086
 set -e
+set -x
 
 export SUITE=$1
 
@@ -52,3 +53,7 @@ docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
     wikibase-selenium-test bash -c "rm -f /usr/src/app/log/selenium/result-$SUITE.json && npm run $NODE_COMMAND"
+
+docker compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    down --volumes --remove-orphans --timeout 1
