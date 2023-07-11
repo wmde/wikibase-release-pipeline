@@ -5,6 +5,7 @@ Wikibase running on Mediawiki bundled with other extensions.
 ### Bundled extensions
 
 - [Babel](https://www.mediawiki.org/wiki/Extension:Babel)
+- [CirrusSearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch)
 - [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR)
 - [ConfirmEdit](https://www.mediawiki.org/wiki/Extension:ConfirmEdit)
 - [Elastica](https://www.mediawiki.org/wiki/Extension:Elastica), [CirrusSearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch), [WikibaseCirrusSearch](https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch)
@@ -15,6 +16,7 @@ Wikibase running on Mediawiki bundled with other extensions.
 - [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight)
 - [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)
 - [VisualEditor](https://www.mediawiki.org/wiki/Extension:VisualEditor)
+- [WikibaseCirrusSearch](https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch)
 - [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)
 - [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)
 - [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)
