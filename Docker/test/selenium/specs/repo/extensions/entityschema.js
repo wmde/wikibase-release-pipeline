@@ -40,7 +40,7 @@ describe( 'EntitySchema', function () {
 		assert.strictEqual( actualDescription, testDescription );
 		assert.strictEqual( actualTemplate, shexTemplate );
 		assert.strictEqual( actualLabel, testLabel );
-		assert.strictEqual( actualId.startsWith( '(E' ), true );
+		assert.strictEqual( actualId, '(E1)' );
 		assert.ok( actualTemplateHtml.includes( 'mw-highlight' ), 'Should contain mw-highlight class in HTML' );
 
 		const linkUrl = $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
