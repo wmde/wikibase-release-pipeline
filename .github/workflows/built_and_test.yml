@@ -488,7 +488,7 @@ jobs:
           image_name: ${{ env.ELASTICSEARCH_IMAGE_NAME }}
           image_tag: latest
 
-  test-wikibase:
+  test_wikibase:
     strategy:
       fail-fast: false
       matrix:
@@ -554,7 +554,7 @@ jobs:
           name: TestArtifacts
           path: test/log
 
-  test-upgrade_base:
+  test_upgrade_base:
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -593,7 +593,7 @@ jobs:
           name: TestUpgradeArtifacts
           path: test/log
 
-  test-upgrade_bundle:
+  test_upgrade_bundle:
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -636,7 +636,7 @@ jobs:
 
   versions:
     needs:
-      - test-wikibase
+      - test_wikibase
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
