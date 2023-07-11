@@ -54,6 +54,7 @@ docker compose \
     run \
     wikibase-selenium-test bash -c "rm -f /usr/src/app/log/selenium/result-$SUITE.json && npm run $NODE_COMMAND"
 
+# shut down the stack, also remove volumes to test data does not interfere with next test runs
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     down --volumes --remove-orphans --timeout 1

@@ -112,3 +112,6 @@ docker compose \
     run \
     -e SUITE=post_upgrade \
     wikibase-selenium-test npm run test:run
+
+# shut down the stack, also remove volumes to test data does not interfere with next test runs
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans
