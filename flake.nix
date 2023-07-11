@@ -30,6 +30,12 @@
             echo "$ make test SUITE=repo"
             echo "$ make test SUITE=repo FILTER=special-item"
             echo "$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env"
+            echo
+            echo "Example Instance Commands:"
+            echo "$ docker compose \\"
+            echo "    -f ./example/docker-compose.yml \\"
+            echo "    -f ./example/docker-compose.extra.yml \\"
+            echo "    --env-file ./example/template.env up"
           '';
         };
       });
