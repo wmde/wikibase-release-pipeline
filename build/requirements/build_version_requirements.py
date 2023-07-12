@@ -19,7 +19,7 @@ databases = []
 # read databases
 with open('config.yml') as f:
   data = yaml.load(f, Loader=yaml.FullLoader)
-  databases = data['jobs']['test-wikibase']['strategy']['matrix']['databaseImageName']
+  databases = data['jobs']['test_wikibase']['strategy']['matrix']['databaseImageName']
 
 f = open("artifacts/built_versions.log", "w+")
 
