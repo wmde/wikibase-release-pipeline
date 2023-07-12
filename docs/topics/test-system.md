@@ -178,7 +178,7 @@ TEST_SYSTEM=latest
 SCRIPT_RUN_DATE=$(date --iso)
 
 cd /opt/test-systems/$TEST_SYSTEM
-sudo docker cp ${TEST_SYSTEM}_wikibase_1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-${SCRIPT_RUN_DATE}.php
+sudo docker cp ${TEST_SYSTEM}-wikibase-1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-${SCRIPT_RUN_DATE}.php
 sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml down
 
 cd /opt/test-systems
