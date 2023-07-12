@@ -35,7 +35,7 @@ services:
       - FILTER
 
       - DOCKER_WIKIBASE_REPO_NAME
-      - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client_1
+      - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client-1
       - DOCKER_MYSQL_NAME
 
       - DB_USER
