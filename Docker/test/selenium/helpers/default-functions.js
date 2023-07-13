@@ -142,6 +142,12 @@ const defaultFunctions = function () {
 		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
 		const result = browser.makeRequest( apiURL );
 		const changes = result.data.query.recentchanges;
+
+		console.log( '======================================' );
+		console.log( 'GET', apiURL );
+		console.log( changes );
+		console.log( '======================================' );
+
 		const foundResult = _.find( changes, expectedChange );
 
 		assert.strictEqual( result.status, 200 );
