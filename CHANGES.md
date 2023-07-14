@@ -4,6 +4,14 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## Work In Progress - July: 2023: Major releases for 1.40.0
+
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
+
+| Suite Version | MediaWiki release | Date available | Run number | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.14 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.14/versions/wmde14.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde14)) | MediaWiki (1.40.0), WDQS (0.3.127) | July 2023 | ??? | [T340939](https://phabricator.wikimedia.org/T340939) |
+
 ## Work In Progress - April: 2023: Security releases for 1.38.6
 
 - [MediaWiki security release announcement](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)

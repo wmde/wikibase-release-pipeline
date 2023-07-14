@@ -20,7 +20,7 @@ on:
       - 'README.md'
 
 env:
-  env_file: ${{ github.event.inputs.env_file || 'versions/wmde12.env' }}
+  env_file: ${{ github.event.inputs.env_file || 'versions/wmde14.env' }}
 
 jobs:
 
