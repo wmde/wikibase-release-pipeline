@@ -1,5 +1,18 @@
 # Wikibase for testing
-version: '3'
+version: '3.4'
+
+x-common-variables: &wikibase_variables
+  DB_SERVER: mysql.svc:3306
+  MW_ADMIN_NAME:  WikibaseAdmin # ${MW_ADMIN_NAME}
+  MW_ADMIN_PASS: WikibaseDockerAdminPass # ${MW_ADMIN_PASS}
+  MW_ADMIN_EMAIL: admin@example.com # ${MW_ADMIN_EMAIL}
+  MW_WG_SECRET_KEY: secretkey # ${MW_SECRET_KEY}
+  # Disable jobs running after requests when wikibase_jobrunner is defined
+  MW_WG_JOB_RUN_RATE: 0
+  DB_USER: wikiuser # ${DB_USER}
+  DB_PASS: sqlpass # ${DB_PASS}
+  DB_NAME: my_wiki # ${DB_NAME}
+  WIKIBASE_HOST: wikibase.svc # ${WIKIBASE_HOST}
 
 services:
   wikibase:
@@ -12,6 +25,8 @@ services:
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./mwlog/${LOCALSETTINGS_VARIANT}+wikibase:/var/log/mediawiki
+      ## This shares the configuration with jobrunner
+      - shared:/var/www/html/:rw
     ports:
       - "8181:80"
     networks:
@@ -20,17 +35,9 @@ services:
          - wikibase.svc
          # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
     environment:
-      - DB_SERVER=mysql.svc:3306
-      # CONFIG - Change the default values below
-      - MW_ADMIN_NAME=WikibaseAdmin
-      - MW_ADMIN_PASS=WikibaseDockerAdminPass
-      - MW_ADMIN_EMAIL=admin@example.com
-      - MW_WG_SECRET_KEY=secretkey
+      <<: *wikibase_variables
       # CONFIG - Change the default values below (should match mysql values in this file)
-      - DB_USER=wikiuser
-      - DB_PASS=sqlpass
-      - DB_NAME=my_wiki
-      - MW_WG_ENABLE_UPLOADS=true
+      MW_WG_ENABLE_UPLOADS: true
   mysql:
     image: ${DATABASE_IMAGE_NAME}
     restart: unless-stopped
@@ -59,8 +66,8 @@ services:
         aliases:
          - wdqs-frontend.svc
     environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs-proxy.svc
+      <<: *wikibase_variables
+      WDQS_HOST: wdqs-proxy.svc
   wdqs:
     image: "${WDQS_IMAGE_NAME}"
     restart: always
@@ -70,9 +77,9 @@ services:
         aliases:
          - wdqs.svc
     environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs.svc
-      - WDQS_PORT=9999
+      <<: *wikibase_variables
+      WDQS_HOST: wdqs.svc
+      WDQS_PORT: 9999
     expose:
       - 9999
   wdqs-proxy:
@@ -100,9 +107,32 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=wikibase.svc
-     - WDQS_HOST=wdqs.svc
-     - WDQS_PORT=9999
+      <<: *wikibase_variables
+      WDQS_HOST: wdqs.svc
+      WDQS_PORT: 9999
+  wikibase_jobrunner:
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    entrypoint: /bin/bash
+    command:  /jobrunner-entrypoint.sh
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    restart: always
+    volumes:
+      - shared:/shared/:ro
+      - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      ## Uncomment this next line to mount your own LocalSettings.php file
+      ## also uncomment the same line in the wikibase service
+      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+    networks:
+      default:
+        aliases:
+          - wikibase-jobrunner.svc
+    environment:
+      <<: *wikibase_variables
+      MAX_JOBS: ${MAX_JOBS}
 
 volumes:
+  shared:
   LocalSettings:
