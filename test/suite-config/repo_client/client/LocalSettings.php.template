@@ -80,6 +80,9 @@ ${DOLLAR}wgCachePages = false;
 ${DOLLAR}wgParserCacheType = CACHE_NONE;
 ${DOLLAR}wgMainCacheType = CACHE_NONE;
 
+# Expecting a running Job Runner
+${DOLLAR}wgJobRunRate = 0;
+
 foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 {
 
