@@ -16,8 +16,7 @@ services:
     entrypoint: /bin/sh
     command:  /entrypoint.sh
     environment: 
-      - MW_ELASTIC_HOST=elasticsearch.svc
-      - MW_ELASTIC_PORT=9200
+      <<: *wikibase_extra_variables
 
   wikibase:
     environment: 

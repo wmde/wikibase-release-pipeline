@@ -2,17 +2,17 @@
 version: '3.4'
 
 x-common-variables: &wikibase_variables
-  DB_SERVER: mysql.svc:3306
-  MW_ADMIN_NAME:  WikibaseAdmin # ${MW_ADMIN_NAME}
-  MW_ADMIN_PASS: WikibaseDockerAdminPass # ${MW_ADMIN_PASS}
-  MW_ADMIN_EMAIL: admin@example.com # ${MW_ADMIN_EMAIL}
-  MW_WG_SECRET_KEY: secretkey # ${MW_SECRET_KEY}
-  # Disable jobs running after requests when wikibase_jobrunner is defined
-  MW_WG_JOB_RUN_RATE: 0
-  DB_USER: wikiuser # ${DB_USER}
-  DB_PASS: sqlpass # ${DB_PASS}
-  DB_NAME: my_wiki # ${DB_NAME}
-  WIKIBASE_HOST: wikibase.svc # ${WIKIBASE_HOST}
+  MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+  MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+  MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+  MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
+  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
+  DB_SERVER: ${DB_SERVER}
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_NAME: ${DB_NAME}
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
 
 services:
   wikibase:
@@ -33,26 +33,24 @@ services:
       default:
         aliases:
          - wikibase.svc
-         # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
     environment:
       <<: *wikibase_variables
-      # CONFIG - Change the default values below (should match mysql values in this file)
-      MW_WG_ENABLE_UPLOADS: true
   mysql:
     image: ${DATABASE_IMAGE_NAME}
     restart: unless-stopped
     environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: 'my_wiki'
-      MYSQL_USER: 'wikiuser'
-      MYSQL_PASSWORD: 'sqlpass'
+      <<: *wikibase_variables
+      # Maria requires these variables names (or there MARIADB_* equivilants)
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: 'toor'
     networks:
       default:
         aliases:
          - mysql.svc
     volumes: 
-    - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+      - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
     restart: unless-stopped
