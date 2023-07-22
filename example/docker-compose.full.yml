@@ -8,6 +8,9 @@ x-common-variables: &wikibase_extra_variables
 services:
 
   wikibase:
+    extends:
+      file: docker-compose.yml
+      service: wikibase
     volumes:
       - quickstatements-data:/quickstatements/data
       - ./extra-install.sh:/extra-install.sh
@@ -16,8 +19,16 @@ services:
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
 
   wikibase_jobrunner:
+    extends:
+      file: docker-compose.yml
+      service: wikibase_jobrunner
     environment:
       <<: *wikibase_extra_variables
+
+  mysql:
+    extends:
+      file: docker-compose.yml
+      service: mysql
 
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
@@ -119,6 +130,7 @@ services:
       - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
 
 volumes:
+  shared:
   LocalSettings:
   query-service-data:
   elasticsearch-data:

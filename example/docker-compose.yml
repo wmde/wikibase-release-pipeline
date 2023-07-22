@@ -5,15 +5,19 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-  MW_SECRET_KEY: ${MW_SECRET_KEY}
+  MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
+  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
   MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
   DB_SERVER: ${DB_SERVER}
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
   WIKIBASE_HOST: ${WIKIBASE_HOST}
+  WIKIBASE_PINGBACK: ${WIKIBASE_PINGBACK}
+  MAX_JOBS: ${MAX_JOBS}
 
 services:
+
   wikibase:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     links:
@@ -36,8 +40,6 @@ services:
          - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
-      WIKIBASE_PINGBACK:
-      MW_WG_ENABLE_UPLOADS:
 
   wikibase_jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
@@ -60,7 +62,6 @@ services:
           - wikibase-jobrunner.svc
     environment:
       <<: *wikibase_variables
-      MAX_JOBS: ${MAX_JOBS}
 
   mysql:
     image: "${DATABASE_IMAGE_NAME}"
@@ -68,7 +69,6 @@ services:
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql
     environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
