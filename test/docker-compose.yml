@@ -39,6 +39,28 @@ services:
     environment:
       <<: *wikibase_variables
 
+  wikibase_jobrunner:
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    entrypoint: /bin/bash
+    command:  /jobrunner-entrypoint.sh
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    restart: always
+    volumes:
+      - shared:/shared/:ro
+      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      ## Uncomment this next line to mount your own LocalSettings.php file
+      ## also uncomment the same line in the wikibase service
+      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+    networks:
+      default:
+        aliases:
+          - wikibase-jobrunner.svc
+    environment:
+      <<: *wikibase_variables
+
   mysql:
     image: ${DATABASE_IMAGE_NAME}
     restart: unless-stopped
@@ -116,28 +138,6 @@ services:
       <<: *wikibase_variables
       WDQS_HOST: wdqs.svc
       WDQS_PORT: 9999
-
-  wikibase_jobrunner:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
-    entrypoint: /bin/bash
-    command:  /jobrunner-entrypoint.sh
-    links:
-      - mysql
-    depends_on:
-      - mysql
-    restart: always
-    volumes:
-      - shared:/shared/:ro
-      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase service
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
-    networks:
-      default:
-        aliases:
-          - wikibase-jobrunner.svc
-    environment:
-      <<: *wikibase_variables
 
 volumes:
   shared:
