@@ -30,6 +30,8 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
+# remove all log and screenshots from previous runs
+rm -Rf log && rm -Rf mwlog
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 docker compose \
