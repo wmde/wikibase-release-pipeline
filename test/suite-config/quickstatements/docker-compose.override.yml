@@ -55,28 +55,5 @@ services:
       - DB_PASS=sqlpass
       - DB_NAME=client_wiki
 
-  quickstatements:
-    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
-    restart: always
-    volumes:
-      - quickstatements-data:/quickstatements/data
-    ports:
-      - "9191:80"
-    depends_on:
-      - wikibase
-    networks:
-      default:
-        aliases:
-         - quickstatements.svc
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
-      - WB_PROPERTY_NAMESPACE=122
-      - "WB_PROPERTY_PREFIX=Property:"
-      - WB_ITEM_NAMESPACE=120
-      - "WB_ITEM_PREFIX=Item:"
-
 volumes:
   LocalSettings:
-  quickstatements-data:
