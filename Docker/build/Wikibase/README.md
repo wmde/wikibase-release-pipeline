@@ -7,8 +7,8 @@ Wikibase running on Mediawiki.
 Variable                 | Default                   | Description
 -------------------------|  -------------------------| ----------
 `DB_SERVER`              | "mysql.svc:3306"          | Hostname and port for the MySQL server to use for Mediawiki & Wikibase
-`DB_USER`                | "wikiuser"                | Username to use for the MySQL server
-`DB_PASS`                | "sqlpass"                 | Password to use for the MySQL server
+`DB_USER`                | "sqluser"                 | Username to use for the MySQL server
+`DB_PASS`                | "change-this-sqlpassword" | Password to use for the MySQL server
 `DB_NAME`                | "my_wiki"                 | Database name to use for the MySQL server
 `MW_SITE_NAME`           | "wikibase-docker"         | $wgSitename to use for MediaWiki
 `MW_SITE_LANG`           | "en"                      | $wgLanguageCode to use for MediaWiki
