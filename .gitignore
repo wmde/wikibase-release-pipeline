@@ -20,3 +20,4 @@ artifacts/*
 local.env
 example/log
 .direnv
+.DS_Store
