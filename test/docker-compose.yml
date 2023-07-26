@@ -50,7 +50,6 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       ## Uncomment this next line to mount your own LocalSettings.php file
       ## also uncomment the same line in the wikibase service
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
