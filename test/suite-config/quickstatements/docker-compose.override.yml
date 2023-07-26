@@ -22,7 +22,6 @@ services:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
-      - quickstatements-data:/quickstatements/data
       - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
       - ./config/client/wikibase/extra-install-repo.sh:/client-extra-install.sh
       - ./suite-config/repo_client/repo/LocalSettings.php.template:/LocalSettings.php.template
