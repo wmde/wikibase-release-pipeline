@@ -9,13 +9,13 @@
 				"project":"${MW_SITE_NAME}" ,
 				"ini_file":"/quickstatements/data/oauth.ini" ,
 				"publicMwOAuthUrl":"${WB_PUBLIC_SCHEME_HOST_AND_PORT}/w/index.php?title=Special:OAuth" ,
-				"mwOAuthUrl":"${WIKIBASE_SCHEME_AND_HOST}/w/index.php?title=Special:OAuth" ,
+				"mwOAuthUrl":"${WIKIBASE_PUBLIC_URL}/w/index.php?title=Special:OAuth" ,
 				"mwOAuthIW":"mw"
 			} ,
 			"server" : "${WB_PUBLIC_SCHEME_HOST_AND_PORT}" ,
 			"api" : "${WB_PUBLIC_SCHEME_HOST_AND_PORT}/w/api.php" ,
 			"pageBase" : "${WB_PUBLIC_SCHEME_HOST_AND_PORT}/wiki/" ,
-			"toolBase" : "${QS_PUBLIC_SCHEME_HOST_AND_PORT}/" ,
+			"toolBase" : "${QUICKSTATEMENTS_PUBLIC_URL}/" ,
 			"types" : {
 				"P" : { "type":"property" , "ns":"${WB_PROPERTY_NAMESPACE}" , "ns_prefix":"${WB_PROPERTY_PREFIX}" } ,
 				"Q" : { "type":"item" , "ns":"${WB_ITEM_NAMESPACE}" , "ns_prefix":"${WB_ITEM_PREFIX}" }

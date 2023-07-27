@@ -10,7 +10,7 @@
 
 ## Database settings
 ## Environment variables will be substituted in here.
-${DOLLAR}wgDBserver = "${DB_SERVER}";
+${DOLLAR}wgDBserver = "${DB_HOST}:${DB_PORT}";
 ${DOLLAR}wgDBname = "${DB_NAME}";
 ${DOLLAR}wgDBuser = "${DB_USER}";
 ${DOLLAR}wgDBpassword = "${DB_PASS}";
@@ -38,7 +38,7 @@ ${DOLLAR}wgScriptPath = "/w";        // this should already have been configured
 ${DOLLAR}wgArticlePath = "/wiki/${DOLLAR}1";
 
 #Set Secret
-${DOLLAR}wgSecretKey = "${MW_WG_SECRET_KEY}";
+${DOLLAR}wgSecretKey = "${MW_SECRET_KEY}";
 
 ## RC Age
 # https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge
@@ -50,11 +50,11 @@ ${DOLLAR}wgRCMaxAge = 365 * 24 * 3600;
 wfLoadSkin( 'Vector' );
 
 // T276905 - default set in Dockerfile
-${DOLLAR}wgJobRunRate = ${MW_WG_JOB_RUN_RATE};
+${DOLLAR}wgJobRunRate = ${MW_JOB_RUN_RATE};
 
-${DOLLAR}wgEnableUploads = ${MW_WG_ENABLE_UPLOADS};
+${DOLLAR}wgEnableUploads = ${MW_ENABLE_UPLOADS};
 
-${DOLLAR}wgUploadDirectory = "${MW_WG_UPLOAD_DIRECTORY}";
+${DOLLAR}wgUploadDirectory = "${MW_UPLOAD_DIRECTORY}";
 
 ## Wikibase
 # Load Wikibase repo & client with the example / default settings.

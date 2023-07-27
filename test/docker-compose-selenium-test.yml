@@ -15,14 +15,13 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
 
-      - WIKIBASE_SERVER=wikibase.svc:80
-      - MW_SERVER=http://wikibase.svc
-      - MW_CLIENT_SERVER=http://wikibase-client.svc
-      - QS_SERVER=http://quickstatements.svc:80
-      - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-      - WDQS_SERVER=wdqs.svc:9999
+      - MW_SERVER=http://${WIKIBASE_HOST}
+      - MW_CLIENT_SERVER=http://${WIKIBASE_CLIENT_HOST}
+      - QUICKSTATEMENTS_SERVER=http://${QUICKSTATEMENTS_HOST}
+      - WDQS_FRONTEND_SERVER=http://${WDQS_FRONTEND_HOST}
+      - WDQS_SERVER=http://${WDQS_HOST}:${WDQS_PORT}
       - PINGBACK_BEACON_SERVER=http://mediawiki.svc
-      - WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
+      - WDQS_PROXY_SERVER=http://${WDQS_PROXY_HOST}:${WDQS_PROXY_PORT}
 
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS

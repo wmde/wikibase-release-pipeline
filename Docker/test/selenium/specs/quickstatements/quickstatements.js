@@ -26,13 +26,13 @@ describe( 'QuickStatements Service', function () {
 	let propertyURL = null;
 
 	it( 'Should be able to load the start page', function () {
-		browser.url( process.env.QS_SERVER );
+		browser.url( process.env.QUICKSTATEMENTS_SERVER );
 		$( 'nav.navbar' ).waitForDisplayed();
 	} );
 
 	it( 'Should be able to log in', function () {
 
-		browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
+		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
 		$( '#wpPassword1' ).waitForDisplayed();
@@ -53,7 +53,7 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to create two items', function () {
 
-		browser.url( process.env.QS_SERVER + '/#/batch' );
+		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/#/batch' );
 
 		browser.executeQuickStatement( 'CREATE\nCREATE' );
 
@@ -232,7 +232,7 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to merge two items', function () {
 
-		browser.url( process.env.QS_SERVER + '/#/batch' );
+		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/#/batch' );
 
 		browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 

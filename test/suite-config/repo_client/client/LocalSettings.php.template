@@ -10,7 +10,7 @@
 
 ## Database settings
 ## Environment variables will be substituted in here.
-${DOLLAR}wgDBserver = "${DB_SERVER}";
+${DOLLAR}wgDBserver = "${DB_HOST}:${DB_PORT}";
 ${DOLLAR}wgDBname = "${DB_NAME}";
 ${DOLLAR}wgDBuser = "${DB_USER}";
 ${DOLLAR}wgDBpassword = "${DB_PASS}";
@@ -38,7 +38,7 @@ ${DOLLAR}wgScriptPath = "/w";        // this should already have been configured
 ${DOLLAR}wgArticlePath = "/wiki/${DOLLAR}1";
 
 #Set Secret
-${DOLLAR}wgSecretKey = "${MW_WG_SECRET_KEY}";
+${DOLLAR}wgSecretKey = "${MW_SECRET_KEY}";
 
 wfLoadSkin( 'Vector' );
 
@@ -59,7 +59,7 @@ ${DOLLAR}entitySources = [
     'repo' => [
         'entityNamespaces' => [ 'item' => 120, 'property' => 122 ],
         'repoDatabase' => 'my_wiki',
-        'baseUri' => 'http://wikibase.svc/entity/',
+        'baseUri' => 'http://${WIKIBASE_HOST}/entity/',
         'interwikiPrefix' => 'my_wiki',
         'rdfNodeNamespacePrefix' => 'wd',
         'rdfPredicateNamespacePrefix' => '',
@@ -69,7 +69,7 @@ ${DOLLAR}entitySources = [
 ${DOLLAR}wgWBClientSettings['entitySources'] = ${DOLLAR}entitySources;
 ${DOLLAR}wgWBClientSettings['itemAndPropertySourceName'] = 'repo';
 
-${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase.svc:80';
+${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://${WIKIBASE_HOST}:${WIKIBASE_PORT}';
 ${DOLLAR}wgWBClientSettings['repoScriptPath'] = '/w';
 ${DOLLAR}wgWBClientSettings['repoArticlePath'] = '/wiki/${DOLLAR}1';
 ${DOLLAR}wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];

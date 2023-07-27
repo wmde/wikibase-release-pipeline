@@ -2,8 +2,8 @@
 version: '3.4'
 
 x-common-variables: &wikibase_extra_variables
-  MW_ELASTIC_HOST: elasticsearch.svc
-  MW_ELASTIC_PORT: 9200
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 
 services:
 
@@ -27,17 +27,6 @@ services:
   wikibase_jobrunner:
     environment:
       <<: *wikibase_extra_variables
-
-  elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}"
-    restart: unless-stopped
-    networks:
-      default:
-        aliases:
-         - elasticsearch.svc
-    environment:
-      discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
 
 volumes:
   LocalSettings:

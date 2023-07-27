@@ -23,9 +23,9 @@ docker build \
     \
     --build-arg MW_SITE_NAME="$MW_SITE_NAME" \
     --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
-    --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \
-    --build-arg MW_WG_ENABLE_UPLOADS="$MW_WG_ENABLE_UPLOADS" \
-    --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
+    --build-arg MW_JOB_RUN_RATE="$MW_JOB_RUN_RATE" \
+    --build-arg MW_ENABLE_UPLOADS="$MW_ENABLE_UPLOADS" \
+    --build-arg MW_UPLOAD_DIRECTORY="$MW_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
     Docker/build/Wikibase/ -t "$1"

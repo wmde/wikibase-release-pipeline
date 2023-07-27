@@ -22,8 +22,8 @@ COPY --from=composer /var/www/html /var/www/html
 COPY extra-install/ /extra-install/
 COPY artifacts/oauth.ini /templates/oauth.ini
 
-# MW_WG_UPLOAD_DIRECTORY set in base image
-RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R
+# MW_UPLOAD_DIRECTORY set in base image
+RUN chown www-data ${MW_UPLOAD_DIRECTORY} -R
 
 # copy extension settings
 COPY LocalSettings.d /var/www/html/LocalSettings.d

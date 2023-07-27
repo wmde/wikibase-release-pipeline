@@ -69,12 +69,11 @@ make upgrade-stop
 
 ##  Variables for testing some other instance
 ```
-WIKIBASE_SERVER=wikibase.svc:80
 MW_SERVER=http://wikibase.svc
 MW_CLIENT_SERVER=http://wikibase-client.svc
-QS_SERVER=http://quickstatements.svc:80
-WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-WDQS_SERVER=wdqs.svc:9999
+QUICKSTATEMENTS_SERVER=http://quickstatements.svc:80
+WDQS_FRONTEND_SERVER=http://wdqs-frontend.svc
+WDQS_SERVER=http://wdqs.svc:9999
 PINGBACK_BEACON_SERVER=http://mediawiki.svc
 WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
 MW_ADMIN_NAME=
@@ -87,7 +86,6 @@ MW_SCRIPT_PATH=/w
 Create a `Docker/test/selenium/wbaas.minikube.repo.env` file with the following contents
 
 ```
-WIKIBASE_SERVER=minikube.wbaas.localhost:80
 MW_SERVER=http://minikube.wbaas.localhost
 
 MW_ADMIN_NAME=Minikube

@@ -5,4 +5,4 @@
 . /test_curl.sh
 
 # Client test
-check_if_up "$WIKIBASE_CLIENT_SERVER" "/"
+check_if_up "$WIKIBASE_CLIENT_HOST" "/"

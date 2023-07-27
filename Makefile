@@ -11,6 +11,7 @@ download:
 
 .PHONY: test
 test: test-stop
+	bash test/scripts/before_all.sh
 	bash test/test_suite.sh ${SUITE}
 
 .PHONY: test-upgrade
@@ -26,6 +27,8 @@ upgrade-stop:
 	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml -f docker-compose.upgrade.wdqs.yml"
 
 test-all:
+	bash test/scripts/before_all.sh
+
 	# bundle tests
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops

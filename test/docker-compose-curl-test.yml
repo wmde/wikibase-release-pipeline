@@ -1,5 +1,5 @@
 # Wikibase For testing
-version: '3'
+version: '3.4'
 
 services:
   wikibase-test:
@@ -7,8 +7,10 @@ services:
       context: ../Docker/test/curl/
       dockerfile: Dockerfile
     environment:
-      - QS_SERVER=quickstatements.svc:80
-      - WIKIBASE_SERVER=wikibase.svc:80
-      - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-      - WDQS_SERVER=wdqs.svc:9999
+      - QUICKSTATEMENTS_HOST
+      - WDQS_FRONTEND_HOST
+      - WDQS_HOST
+      - WDQS_PORT
+      - WIKIBASE_HOST
+      - WIKIBASE_PORT
       - SKIP_WDQS

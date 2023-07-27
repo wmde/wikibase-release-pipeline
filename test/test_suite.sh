@@ -48,10 +48,9 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-# Begin with env vars in `template.env` in the example directory
-# to base our tests runs against our recommended default configuration.
-# Then add local testing `default.env`` which overrides selectively, as a user does
-# in the course of configuring a new Wikibase install.
-export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env --env-file default.env -f docker-compose.yml"
+# Based on the `template.env`` and docker compose files found in the /example directory
+# ``/test/default.env`` is added as well and selectively overrides values appropriate to testing, 
+# and similar to what a user does in the course of configuring a new Wikibase installation.
+export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env --env-file default.env -f docker-compose.root.yml -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.yml -p test "
 
 bash run_selenium.sh "$1"

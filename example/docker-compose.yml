@@ -5,10 +5,11 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-  MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
-  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
-  DB_SERVER: ${DB_SERVER}
+  MW_SECRET_KEY: ${MW_SECRET_KEY}
+  MW_ENABLE_UPLOADS: ${MW_ENABLE_UPLOADS}
+  MW_JOB_RUN_RATE: ${MW_JOB_RUN_RATE}
+  DB_HOST: ${DB_HOST}
+  DB_PORT: ${DB_PORT}
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
@@ -26,7 +27,7 @@ services:
       - mysql
     restart: unless-stopped
     ports:
-      - "${WIKIBASE_PORT}:80"
+      - ${WIKIBASE_PORT}:80
     volumes:
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
@@ -37,7 +38,6 @@ services:
       default:
         aliases:
          - ${WIKIBASE_HOST}
-         - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
 
@@ -75,7 +75,7 @@ services:
     networks:
       default:
         aliases:
-         - mysql.svc
+         - ${DB_HOST}
 
 volumes:
   shared:

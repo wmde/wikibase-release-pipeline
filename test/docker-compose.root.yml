@@ -1,0 +1,2 @@
+# NOTE: Currently used only to set the root path of the suite test docker compose
+version: '3.4'

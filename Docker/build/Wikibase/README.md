@@ -6,7 +6,8 @@ Wikibase running on Mediawiki.
 
 Variable                 | Default                   | Description
 -------------------------|  -------------------------| ----------
-`DB_SERVER`              | "mysql.svc:3306"          | Hostname and port for the MySQL server to use for Mediawiki & Wikibase
+`DB_HOST`                | "mysql.svc"               | Hostname for the MySQL server to use for Mediawiki & Wikibase
+`DB_PORT`                | "3306"                    | Port for the MySQL server to use for Mediawiki & Wikibase
 `DB_USER`                | "sqluser"                 | Username to use for the MySQL server
 `DB_PASS`                | "change-this-sqlpassword" | Password to use for the MySQL server
 `DB_NAME`                | "my_wiki"                 | Database name to use for the MySQL server
@@ -14,10 +15,10 @@ Variable                 | Default                   | Description
 `MW_SITE_LANG`           | "en"                      | $wgLanguageCode to use for MediaWiki
 `MW_ADMIN_NAME`          | "WikibaseAdmin"           | Admin username to create on MediaWiki first install
 `MW_ADMIN_PASS`          | "WikibaseDockerAdminPass" | Admin password to use for admin account on first install
-`MW_WG_SECRET_KEY`       | "secretkey"               | Used as source of entropy for persistent login/Oauth etc..
-`MW_WG_ENABLE_UPLOADS`   | "false"                   | $wgEnableUploads to use for MediaWiki
-`MW_WG_UPLOAD_DIRECTORY` | "/var/www/html/images"    | $wgUploadDirectory to use for MediaWiki
-`MW_WG_JOB_RUN_RATE`     | "2"                       | $wgJobRunRate to use for MediaWiki
+`MW_SECRET_KEY`          | "secretkey"               | Used as source of entropy for persistent login/Oauth etc..
+`MW_ENABLE_UPLOADS`      | "false"                   | $wgEnableUploads to use for MediaWiki
+`MW_UPLOAD_DIRECTORY`    | "/var/www/html/images"    | $wgUploadDirectory to use for MediaWiki
+`MW_JOB_RUN_RATE`        | "2"                       | $wgJobRunRate to use for MediaWiki
 `WIKIBASE_PINGBACK`      | "false"                   | boolean for [WikibasePingback](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_pingback.html)
 
 ### Filesystem layout

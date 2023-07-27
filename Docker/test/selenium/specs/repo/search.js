@@ -12,7 +12,7 @@ describe( 'Search', function () {
 			() => WikibaseApi.createItem( itemLabel, {} )
 		);
 
-		browser.pause( 10 * 1000 );
+		browser.pause( 30 * 1000 );
 
 		const result = browser.makeRequest(
 			process.env.MW_SERVER +

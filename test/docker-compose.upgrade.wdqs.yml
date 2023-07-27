@@ -13,14 +13,14 @@ services:
          - wdqs.svc
     volumes:
       - query-service-data:/wdqs/data
-    environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs.svc
-      - WDQS_PORT=9999
     ports:
-      - 9999:9999
+      - ${WDQS_PORT}:${WDQS_PORT}
     expose:
-      - 9999
+      - ${WDQS_PORT}
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST
+      - WDQS_PORT
 
   wdqs-updater:
     image: "${WDQS_TEST_IMAGE_NAME}"
@@ -32,11 +32,11 @@ services:
     networks:
       default:
         aliases:
-         - wdqs-updater.svc
+         - ${WDQS_UPDATER_HOST}
     environment:
-     - WIKIBASE_HOST=wikibase.svc
-     - WDQS_HOST=wdqs.svc
-     - WDQS_PORT=9999
+     - WIKIBASE_HOST
+     - WDQS_HOST
+     - WDQS_PORT
 
 volumes:
   query-service-data:

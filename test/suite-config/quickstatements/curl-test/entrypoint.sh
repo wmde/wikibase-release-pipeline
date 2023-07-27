@@ -5,7 +5,7 @@
 . /test_curl.sh
 
 # QuickStatements test
-check_if_up "$QS_SERVER"
+check_if_up "$QUICKSTATEMENTS_HOST" "/"
 
 # Client test
-check_if_up "$WIKIBASE_CLIENT_SERVER" "/"
+check_if_up "$WIKIBASE_CLIENT_HOST" "/"
