@@ -14,7 +14,10 @@ RUN rm -rf /var/www/html/vendor && \
     composer install --no-dev -vv -n
 
 FROM ${WIKIBASE_IMAGE_NAME}:latest
-RUN rm -rf /var/www/html/vendor
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends lua5.1 && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/www/html/vendor
 COPY --from=composer /var/www/html /var/www/html
 COPY extra-install/ /extra-install/
 COPY artifacts/oauth.ini /templates/oauth.ini
