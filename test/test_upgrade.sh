@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC1090,SC2086
 set -e
 
@@ -18,7 +18,10 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
-WIKIBASE_TEST_CONTAINER=test_wikibase_1
+# Why is this neccessary locally, but not in CI?
+set -o allexport; source ../variables.env set +o allexport;
+
+WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
 set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
@@ -35,23 +38,22 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 # start the old version & write logs
-docker-compose $SUITE_CONFIG up -d
-docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.pre.upgrade.$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG up -d
+docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.pre.upgrade.$ENV_VERSION.log" &
 
 # wait for it to startup
-docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker-compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 ## build selenium test container
-docker-compose \
+docker compose \
     $SUITE_CONFIG \
     -f docker-compose-selenium-test.yml \
     build \
-    --build-arg SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES="$SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES" \
     wikibase-selenium-test
 
 # Run pre_upgrade suite
-docker-compose \
+docker compose \
     $SUITE_CONFIG \
     -f docker-compose-selenium-test.yml \
     run \
@@ -78,8 +80,8 @@ sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/client\/WikibaseClien
 # shellcheck disable=SC2016
 sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.php";/c\wfLoadExtension( "WikibaseRepo", "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );' $TMP_LOCALSETTINGS
 
-# docker-compose down to simulate upgrade
-docker-compose $SUITE_CONFIG down
+# docker compose down to simulate upgrade
+docker compose $SUITE_CONFIG down
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
@@ -96,17 +98,24 @@ fi
 
 # load new version and start it 
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz"
-docker-compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d
-docker-compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.post.upgrade.$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d
+docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.post.upgrade.$ENV_VERSION.log" &
+
+# run status checks and wait until containers start
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 # run update.php and log to separate file
 UPGRADE_LOG_FILE="log/wikibase.upgrade.$ENV_VERSION.log"
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
 
 # Run post_upgrade suite
-docker-compose \
+docker compose \
     $SUITE_CONFIG \
     -f docker-compose-selenium-test.yml \
     run \
     -e SUITE=post_upgrade \
     wikibase-selenium-test npm run test:run
+
+# shut down the stack, also remove volumes to test data does not interfere with next test runs
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans
