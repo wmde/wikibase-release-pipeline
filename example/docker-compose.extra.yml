@@ -12,7 +12,7 @@ services:
       - MW_ELASTIC_PORT
       - QUICKSTATEMENTS_PUBLIC_URL
 
-  wikibase_jobrunner:
+  wikibase-jobrunner:
     environment:
       - MW_ELASTIC_HOST
       - MW_ELASTIC_PORT
@@ -111,8 +111,8 @@ services:
     environment:
       - QUICKSTATEMENTS_HOST
       - QUICKSTATEMENTS_PUBLIC_URL
-      - WIKIBASE_PUBLIC_URL=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}
+      - WIKIBASE_PUBLIC_URL=http://localhost:${WIKIBASE_PORT}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
