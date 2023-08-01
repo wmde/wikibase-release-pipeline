@@ -117,13 +117,13 @@ We need to remember this name as we will have to remove it manually after the co
 1. Stop the containers
 
 ```sh
-docker-compose stop wikibase wikibase_jobrunner
+docker compose stop wikibase wikibase_jobrunner
 ```
 
 2. Remove the containers
 
 ```sh
-docker-compose rm wikibase wikibase_jobrunner
+docker compose rm wikibase wikibase_jobrunner
 ```
 
 3. Finally, remove the shared container
