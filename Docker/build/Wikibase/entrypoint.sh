@@ -40,6 +40,12 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
         # shellcheck disable=SC1091
         source /extra-install.sh
     fi
+
+    # Run initialization after extra-install (above) for adding data or for use in testing
+    if [ -f /init.sh ]; then
+        # shellcheck disable=SC1091
+        source /init.sh
+    fi
 fi
 
 # Copy LocalSettings.php to a shared directory, if the image is being used with this shared directory existing

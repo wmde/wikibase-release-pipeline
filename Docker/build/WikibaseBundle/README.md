@@ -29,7 +29,8 @@ Directory                             | Description
 `/var/www/html/skins`                 | Mediawiki skins directory
 `/var/www/html/extensions`            | Mediawiki extensions directory
 `/var/www/html/LocalSettings.d`       | Bundle extension configuration directory
-`/extra-install`                      | Extra install scripts for automatic setup
+`/extra-install`                      | Extra install scripts for automatic setup (runs if exists)
+`/init`                               | Initialization script ran after extra-install (runs if exists)
 `/templates/`                         | Directory containing templates
 
 File                                  | Description

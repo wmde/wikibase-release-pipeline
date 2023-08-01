@@ -22,7 +22,7 @@ services:
 
   wikibase:
     volumes:
-      - ./config/client/wikibase/extra-install-repo.sh:/extra-install.sh
+      - ./config/client/wikibase/init-repo.sh:/init.sh
       - ./suite-config/repo_client/repo/LocalSettings.php.template:/LocalSettings.php.template
     environment:
       - WIKIBASE_CLIENT_HOST
@@ -38,7 +38,7 @@ services:
     restart: always
     volumes:
       - ./suite-config/repo_client/client/LocalSettings.php.template:/LocalSettings.php.template
-      - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
+      - ./config/client/wikibase/init-client.sh:/init.sh
       - ./mwlog/${LOCALSETTINGS_VARIANT}+client:/var/log/mediawiki
     ports:
       - "${WIKIBASE_CLIENT_PORT}:80"
