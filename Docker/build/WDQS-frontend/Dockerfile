@@ -12,6 +12,9 @@ COPY --from=fetcher /wikidata-query-gui /tmp/wikidata-query-gui
 
 WORKDIR /tmp/wikidata-query-gui
 
+# don't install chromium, it is not used
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # install dependencies
 RUN apk --no-cache add --virtual build-dependencies ca-certificates git jq make g++
 
