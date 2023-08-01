@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ## Build dynamic overview
 TMP_FILE="$(mktemp -d)/input.mmd"

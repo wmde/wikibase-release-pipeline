@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Install extra things for client-repo relationship
 set -ex
 

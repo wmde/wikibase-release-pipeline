@@ -1,6 +1,6 @@
-# Example docker-compose configuration
+# Example docker compose configuration
 
-The example docker-compose configuration consists of two files:
+The example docker compose configuration consists of two files:
 
 * `docker-compose.yml` contains two services: wikibase and mysql
 * `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements 
@@ -18,7 +18,7 @@ Copy `template.env` to `.env` and replace the passwords and secrets with your ow
 To run a Wikibase instance on port 80 run the following command:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), a Wikibase instance, database and a job runner.
@@ -33,7 +33,7 @@ You can speed it up by increasing the `MAX_JOBS` variable to run more jobs betwe
 Alternatively, you can run several job runners in parallel by using the `--scale` option.
 
 ```sh
-docker-compose up --scale wikibase_jobrunner=8
+docker compose up --scale wikibase_jobrunner=8
 ```
 
 ## Running additional services
@@ -49,7 +49,7 @@ The Wikibase bundle comes with some additional services that can be enabled.
 ### 1. Run with the extra configuration
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.extra.yml up
+docker compose -f docker-compose.yml -f docker-compose.extra.yml up
 ```
 
 In the volumes section of the wikibase service in [docker-compose.extra.yml](docker-compose.extra.yml), there is one additional script inside the container that automatically sets up the extensions needed for the additional services.

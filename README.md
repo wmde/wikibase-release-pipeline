@@ -13,4 +13,3 @@ For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targe
 ## Documentation
 
 The pipeline documentation can be found [here](docs/index.md).
-
