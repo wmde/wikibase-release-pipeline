@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 TARGET=$1
 RELEASE_ENV_FILE=$2
 

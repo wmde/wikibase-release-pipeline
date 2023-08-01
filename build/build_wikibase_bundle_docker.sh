@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC1090
 set -e
 
@@ -54,4 +54,4 @@ docker build --no-cache \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
     Docker/build/WikibaseBundle/ -t "$WIKIBASE_BUNDLE_IMAGE_NAME"
 
-docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE"f > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz
+docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz
