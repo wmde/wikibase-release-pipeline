@@ -107,10 +107,6 @@ For more info on downloading artifacts from github see [publishing](publishing.m
 
 On build a local.env file can be used to override any default settings
 
-#### Use locally installed selenium test dependencies
-```
-SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES=1
-```
 #### Override for branch name of extensions cloned from gerrit
 ```
 GERRIT_EXTENSION_BRANCH_NAME=REL1_35
