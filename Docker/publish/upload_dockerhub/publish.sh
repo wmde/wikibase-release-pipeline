@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 if [ -z "$WDQS_DOCKER_PATH" ] || \

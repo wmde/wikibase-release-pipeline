@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -ex
 
 mkdir -p Docker/build/QuickStatements/artifacts
