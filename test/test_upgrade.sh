@@ -18,6 +18,9 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
+# Why is this neccessary locally, but not in CI?
+set -o allexport; source ../variables.env set +o allexport;
+
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
@@ -98,6 +101,10 @@ docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz"
 docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d
 docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.post.upgrade.$ENV_VERSION.log" &
 
+# run status checks and wait until containers start
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+
 # run update.php and log to separate file
 UPGRADE_LOG_FILE="log/wikibase.upgrade.$ENV_VERSION.log"
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
@@ -109,3 +116,6 @@ docker compose \
     run \
     -e SUITE=post_upgrade \
     wikibase-selenium-test npm run test:run
+
+# shut down the stack, also remove volumes to test data does not interfere with next test runs
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans

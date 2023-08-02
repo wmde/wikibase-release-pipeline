@@ -29,6 +29,12 @@ if [ -f "$SUITE_OVERRIDE" ]; then
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
+
+# shut down the stack if running, remove volumes to start test suite on fresh db
+docker compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    down --volumes --remove-orphans --timeout 1 || true
+
 # start container with settings
 STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
 docker compose $SUITE_CONFIG up -d --force-recreate
