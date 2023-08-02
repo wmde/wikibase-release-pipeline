@@ -1,6 +1,6 @@
 #!/bin/sh
 
-check_if_up() {    
+check_if_up() {
     URL=$1
     PATH=$2
 
