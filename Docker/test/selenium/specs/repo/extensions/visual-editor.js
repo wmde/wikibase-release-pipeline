@@ -9,7 +9,7 @@ describe( 'VisualEditor', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'VisualEditor' );
 
-		browser.url( process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/TestVisualEditor?veaction=edit' );
 
 		// start editing
 		$( '.oo-ui-messageDialog-actions' ).waitForDisplayed();

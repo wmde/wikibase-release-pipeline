@@ -14,7 +14,7 @@ class SpecialNewProperty extends Page {
 	open( dataType ) {
 
 		dataType = dataType ? '?datatype=' + dataType : '';
-		browser.url( process.env.MW_SERVER + '/wiki/Special:NewProperty' + dataType );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:NewProperty' + dataType );
 	}
 
 	submit() {

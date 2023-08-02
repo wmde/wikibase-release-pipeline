@@ -11,13 +11,13 @@ describe( 'Nuke', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
 
 		browser.editPage(
-			process.env.MW_SERVER,
+			process.env.WIKIBASE_PUBLIC_URL,
 			'Vandalism',
 			'Vandals In Motion'
 		);
 
 		const result = browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			process.env.WIKIBASE_PUBLIC_URL + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);
@@ -26,7 +26,7 @@ describe( 'Nuke', function () {
 
 		LoginPage.loginAdmin();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:Nuke' );
 
 		$( 'button.oo-ui-inputWidget-input' ).waitForDisplayed();
 		$( 'button.oo-ui-inputWidget-input' ).click();
@@ -49,7 +49,7 @@ describe( 'Nuke', function () {
 		await browser.waitUntil(
 			async () => {
 				result = await browser.makeRequest(
-					process.env.MW_SERVER + '/wiki/Vandalism',
+					process.env.WIKIBASE_PUBLIC_URL + '/wiki/Vandalism',
 					{ validateStatus: false },
 					{}
 				);

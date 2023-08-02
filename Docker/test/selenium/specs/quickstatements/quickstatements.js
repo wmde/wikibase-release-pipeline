@@ -26,13 +26,13 @@ describe( 'QuickStatements Service', function () {
 	let propertyURL = null;
 
 	it( 'Should be able to load the start page', function () {
-		browser.url( process.env.QUICKSTATEMENTS_SERVER );
+		browser.url( process.env.QUICKSTATEMENTS_PUBLIC_URL );
 		$( 'nav.navbar' ).waitForDisplayed();
 	} );
 
 	it( 'Should be able to log in', function () {
 
-		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/api.php?action=oauth_redirect' );
+		browser.url( process.env.QUICKSTATEMENTS_PUBLIC_URL + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
 		$( '#wpPassword1' ).waitForDisplayed();
@@ -53,12 +53,12 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to create two items', function () {
 
-		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/#/batch' );
+		browser.url( process.env.QUICKSTATEMENTS_PUBLIC_URL + '/#/batch' );
 
 		browser.executeQuickStatement( 'CREATE\nCREATE' );
 
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ2 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q2.json' );
 
 		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
 		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
@@ -69,7 +69,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
 	} );
@@ -79,7 +79,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|LSv|"Some label"' );
 
 		// go look at wikibase
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
 	} );
@@ -89,7 +89,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|DSv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
 	} );
@@ -99,7 +99,7 @@ describe( 'QuickStatements Service', function () {
 		browser.executeQuickStatement( 'Q1|Sclient_wiki|"Main_Page"' );
 
 		// go look at wikibase
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
 	} );
@@ -110,7 +110,7 @@ describe( 'QuickStatements Service', function () {
 
 		browser.executeQuickStatement( 'Q1|' + propertyId + '|"Will it blend?"' );
 
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
 
 	} );
@@ -146,7 +146,7 @@ describe( 'QuickStatements Service', function () {
 						qualifierPropertyId + '|' + exampleSnakValues[ qualifierSnakDataType ]
 						);
 
-						const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+						const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 						assert.strictEqual(
 							getQualifierType(
 								responseQ1,
@@ -167,7 +167,7 @@ describe( 'QuickStatements Service', function () {
 
 		browser.executeQuickStatement( 'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1' );
 
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
 
 	} );
@@ -180,7 +180,7 @@ describe( 'QuickStatements Service', function () {
 		const propertyNumber = propertyIdItem.replace( 'P', '' );
 		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q2|S' + propertyNumber + '|Q2|S' + propertyNumber + '|Q2' );
 
-		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyIdItem );
 
 		assert.strictEqual( refValue.id, 'Q2' );
@@ -195,7 +195,7 @@ describe( 'QuickStatements Service', function () {
 
 		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + url );
 
-		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
 		assert.strictEqual( refValue, 'https://www.wikidata.org' );
@@ -208,7 +208,7 @@ describe( 'QuickStatements Service', function () {
 		const propertyNumber = propertyId.replace( 'P', '' );
 		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + stringValue );
 
-		const response = browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
 		assert.strictEqual( refValue, 'some string' );
@@ -220,23 +220,23 @@ describe( 'QuickStatements Service', function () {
 
 		browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
 
-		let response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
+		let response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/' + itemId + '.json' );
 		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), true );
 
 		browser.executeQuickStatement( '-' + itemId + '|' + propertyIdItem + '|Q1' );
 
-		response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
+		response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/' + itemId + '.json' );
 		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), false );
 
 	} );
 
 	it( 'Should be able to merge two items', function () {
 
-		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/#/batch' );
+		browser.url( process.env.QUICKSTATEMENTS_PUBLIC_URL + '/#/batch' );
 
 		browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
+		const responseQ2 = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q2.json' );
 		assert.strictEqual( responseQ2.data.entities.Q1.id, 'Q1' );
 	} );
 

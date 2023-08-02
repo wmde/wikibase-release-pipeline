@@ -47,7 +47,7 @@ describe( 'Property', function () {
 	} );
 
 	it( 'Should contain statement and reference in EntityData', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + propertyId + '.json' );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/' + propertyId + '.json' );
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];
 		const reference = claim.references[ 0 ].snaks[ propertyId ][ 0 ];

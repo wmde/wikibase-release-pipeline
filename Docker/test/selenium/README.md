@@ -46,9 +46,9 @@ Please see tests/selenium/README.md file in mediawiki repository.
 
 The behavior of the tests can be modified with several environment variables.
 
-* `MW_SERVER`: protocol, host name and port of the MediaWiki installation.
+* `WIKIBASE_PUBLIC_URL`: protocol, host name and port of the MediaWiki installation.
   Defaults to `http://127.0.0.1:8080` (Vagrant).
-* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `MW_SERVER`.
+* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_PUBLIC_URL`.
   Defaults to `/w`.
 * `LOG_DIR`: Directory to leave logs and screenshots in.
   Defaults to a `log/` subdirectory of this directory.

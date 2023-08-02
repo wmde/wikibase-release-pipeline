@@ -180,7 +180,7 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'executeQuickStatement', function async( theQuery ) {
 
-		browser.url( process.env.QUICKSTATEMENTS_SERVER + '/#/batch' );
+		browser.url( process.env.QUICKSTATEMENTS_PUBLIC_URL + '/#/batch' );
 
 		// create a batch
 		$( '.create_batch_box textarea' ).waitForDisplayed();
@@ -216,7 +216,7 @@ const defaultFunctions = function () {
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
 	browser.addCommand( 'queryBlazeGraphItem', function async( itemId ) {
-		const sparqlEndpoint = process.env.WDQS_SERVER + '/bigdata/namespace/wdq/sparql';
+		const sparqlEndpoint = process.env.WDQS_URL + '/bigdata/namespace/wdq/sparql';
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
 			validateStatus: false

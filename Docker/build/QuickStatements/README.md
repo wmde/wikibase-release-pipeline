@@ -6,18 +6,18 @@ Quickstatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 Variable                             | Default                  | Description
 -------------------------------------|--------------------------|------------
-`WIKIBASE_PUBLIC_URL`           | NONE                     | Host and port of Wikibase instance as seen by Quick Statements
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE                     | Host and port of Wikibase as seen by the user's browser
-`QUICKSTATEMENTS_PUBLIC_URL`     | NONE                     | Host and port of Quick Statements as seen by the user's browser
+`WIKIBASE_URL`                       | NONE                     | Host and port of Wikibase instance as seen by Quick Statements
+`WIKIBASE_PUBLIC_URL`                | NONE                     | URL of Wikibase as seen by the user's browser
+`MW_SITE_LANG`                       | "en"                     | Site language
+`MW_SITE_NAME`                       | "wikibase-docker"        | Site name
 `OAUTH_CONSUMER_KEY`                 | NONE                     | OAuth consumer key (obtained from Wikibase)
 `OAUTH_CONSUMER_SECRET`              | NONE                     | OAuth consumer secret (obtained from wikibase)
 `PHP_TIMEZONE`                       | UTC                      | setting of php.ini date.timezone
-`MW_SITE_LANG`                       | "en"                     | Site language
-`MW_SITE_NAME`                       | "wikibase-docker"        | Site name
-`WB_PROPERTY_NAMESPACE`              | NONE                     | Wikibase Property namespace
-`WB_ITEM_NAMESPACE`                  | NONE                     | Wikibase Item namespace
-`WB_PROPERTY_PREFIX`                 | NONE                     | Wikibase Property prefix
-`WB_ITEM_PREFIX`                     | NONE                     | Wikibase Item prefix
+`QUICKSTATEMENTS_PUBLIC_URL`         | NONE                     | Host and port of Quick Statements as seen by the user's browser
+`QUICKSTATEMENTS_PROPERTY_NAMESPACE` | NONE                     | Wikibase Property namespace
+`QUICKSTATEMENTS_ITEM_NAMESPACE`     | NONE                     | Wikibase Item namespace
+`QUICKSTATEMENTS_PROPERTY_PREFIX`    | NONE                     | Wikibase Property prefix
+`QUICKSTATEMENTS_ITEM_PREFIX`        | NONE                     | Wikibase Item prefix
 
 ### Filesystem layout
 
@@ -42,7 +42,7 @@ sees the wikibase container. For example the example docker container alias like
 The user's browser will also be redirected to the Wikibase instance and finally back to quickstatements. The address
 the user sees for the Wikibase may be different from how the running container sees it. For example: it may be running
 on localhost on a specific port. e.g. http://localhost:8181. This should be passed to the quickstatements container as
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`.
+`WIKIBASE_PUBLIC_URL`.
 
 One must also know how this container will be visible to the user as well so it can ask the wikibase to redirect the
 user back here. This should be passed as `QUICKSTATEMENTS_PUBLIC_URL`.

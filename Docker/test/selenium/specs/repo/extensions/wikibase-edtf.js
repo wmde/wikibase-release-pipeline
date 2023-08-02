@@ -35,14 +35,14 @@ describe( 'WikibaseEdtf', function () {
 		);
 
 		// go look at wikibase
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/' + itemId + '.json' );
 		const responseSnak = response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
 		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 	} );
 
 } );

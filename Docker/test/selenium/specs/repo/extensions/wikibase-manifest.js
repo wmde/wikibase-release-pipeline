@@ -9,15 +9,15 @@ describe( 'WikibaseManifest', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseManifest' );
 
-		const result = browser.makeRequest( process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest' );
+		const result = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/rest.php/wikibase-manifest/v0/manifest' );
 		const data = result.data;
 
 		assert.strictEqual( data.name, 'wikibase-docker' );
 
-		assert.strictEqual( data.api.action, process.env.MW_SERVER + '/w/api.php' );
-		assert.strictEqual( data.api.rest, process.env.MW_SERVER + '/w/rest.php' );
+		assert.strictEqual( data.api.action, process.env.WIKIBASE_PUBLIC_URL + '/w/api.php' );
+		assert.strictEqual( data.api.rest, process.env.WIKIBASE_PUBLIC_URL + '/w/rest.php' );
 
-		assert.strictEqual( data.oauth.registration_page, process.env.MW_SERVER + '/wiki/Special:OAuthConsumerRegistration' );
+		assert.strictEqual( data.oauth.registration_page, process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:OAuthConsumerRegistration' );
 
 	} );
 

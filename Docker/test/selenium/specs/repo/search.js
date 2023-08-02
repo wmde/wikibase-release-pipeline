@@ -15,7 +15,7 @@ describe( 'Search', function () {
 		browser.pause( 30 * 1000 );
 
 		const result = browser.makeRequest(
-			process.env.MW_SERVER +
+			process.env.WIKIBASE_PUBLIC_URL +
 			'/w/api.php?action=wbsearchentities&search=' +
 			itemLabel +
 			'&format=json&errorformat=plaintext&language=en&uselang=en&type=item'

@@ -23,7 +23,7 @@ exports.config = {
 	mwPwd: process.env.MW_ADMIN_PASS,
 
 	// Base for browser.url() and Page#openTitle()
-	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
+	baseUrl: process.env.WIKIBASE_PUBLIC_URL + process.env.MW_SCRIPT_PATH,
 
 	// ============
 	// Capabilities
@@ -142,7 +142,7 @@ exports.config = {
 		defaultFunctions.init();
 
 		if ( !browser.config.installed_extensions ) {
-			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
+			const extensions = browser.getInstalledExtensions( process.env.WIKIBASE_PUBLIC_URL );
 			if ( extensions ) {
 				browser.config.installed_extensions = extensions;
 			} else {

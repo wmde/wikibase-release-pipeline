@@ -9,7 +9,7 @@ class Property extends Page {
 	get addReference() { return $( '=add reference' ); }
 
 	open( id ) {
-		browser.url( process.env.MW_SERVER + '/wiki/Property:' + id );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Property:' + id );
 	}
 }
 

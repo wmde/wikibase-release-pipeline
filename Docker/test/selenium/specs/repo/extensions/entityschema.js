@@ -13,7 +13,7 @@ describe( 'EntitySchema', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'EntitySchema' );
 
-		browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		$( '.noarticletext a' ).waitForDisplayed();

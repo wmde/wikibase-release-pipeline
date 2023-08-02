@@ -15,7 +15,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'Should search wikidata.org through wbsearchentities with no local properties', function () {
 		const result = browser.makeRequest(
-			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
+			process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -39,7 +39,7 @@ describe( 'Fed props Item', function () {
 		};
 		browser.call( () => WikibaseApi.createItem( Util.getTestString( itemLabel ), data ) );
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 
 		const actualPropertyValue = $( '.wikibase-statementgroupview-property' ).getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
@@ -49,14 +49,14 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in Special:EntityData with ttl', function () {
 		try {
-			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl' );
+			browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.ttl' );
 		} catch ( error ) {
 			assert( error.message === 'Request failed with status code 500' );
 		}
 	} );
 
 	it( 'should show up in Special:EntityData with json', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const response = browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.json' );
 		const body = response.data;
 
 		assert( body.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ] !== null );
@@ -64,7 +64,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in Special:EntityData with rdf', function () {
 		try {
-			browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf' );
+			browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:EntityData/Q1.rdf' );
 		} catch ( error ) {
 			assert( error.message === 'Request failed with status code 500' );
 		}
@@ -86,7 +86,7 @@ describe( 'Fed props Item', function () {
 		QueryServiceUI.resultTable.waitForDisplayed();
 
 		// Item should never have made its way into the query service, as TTL doesnt work
-		assert( !QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+		assert( !QueryServiceUI.resultIncludes( '<' + process.env.WIKIBASE_PUBLIC_URL + '/entity/' + itemId + '>', propertyValue ) );
 
 	} );
 

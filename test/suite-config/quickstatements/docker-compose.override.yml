@@ -24,7 +24,6 @@ services:
       - ./config/client/wikibase/init-repo.sh:/init.sh
       - ./suite-config/repo_client/repo/LocalSettings.php.template:/LocalSettings.php.template
     environment: 
-      - QUICKSTATEMENTS_PUBLIC_URL=http://localhost:${QUICKSTATEMENTS_PORT}
       - WIKIBASE_CLIENT_HOST
 
   wikibase-client:
@@ -89,5 +88,4 @@ services:
       - MAX_JOBS
 
 volumes:
-  LocalSettings:
   wikibase-client-jobrunner-shared:

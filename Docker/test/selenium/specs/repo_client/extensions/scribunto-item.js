@@ -38,7 +38,7 @@ describe( 'Scribunto Item', function () {
 			() => WikibaseApi.createItem( itemLabel, data )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
@@ -50,13 +50,13 @@ describe( 'Scribunto Item', function () {
 		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
 
 		browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -82,7 +82,7 @@ describe( 'Scribunto Item', function () {
 		$( '.oo-ui-flaggedElement-destructive button' ).waitForDisplayed();
 		$( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', function () {
@@ -99,7 +99,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			expectedDeletionChange
 		);
 

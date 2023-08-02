@@ -6,7 +6,7 @@ describe( 'Pingback', function () {
 
 	it( 'Should ping on first page request', function () {
 
-		browser.url( process.env.MW_SERVER + '/wiki/Main_Page' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Main_Page' );
 
 		browser.pause( 5 * 1000 );
 
@@ -14,7 +14,7 @@ describe( 'Pingback', function () {
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
 
-		const result = browser.makeRequest( process.env.PINGBACK_BEACON_SERVER );
+		const result = browser.makeRequest( process.env.PINGBACK_BEACON_URL );
 		assert.strictEqual( result.data.length, 2 );
 
 		const requestData = JSON.parse(

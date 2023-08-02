@@ -4,7 +4,7 @@ class Page {
 	}
 
 	open( path ) {
-		browser.url( process.env.WDQS_FRONTEND_SERVER + path );
+		browser.url( process.env.WDQS_FRONTEND_URL + path );
 	}
 }
 module.exports = Page;

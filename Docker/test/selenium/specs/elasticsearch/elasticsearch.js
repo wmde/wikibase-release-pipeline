@@ -17,13 +17,13 @@ describe( 'ElasticSearch', function () {
 			() => WikibaseApi.createItem( itemLabel )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
 	it( 'Should be able to set alias', function () {
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:SetAliases/' );
 
 		// input id
 		$( '#wb-modifyentity-id input' ).waitForDisplayed();
@@ -46,7 +46,7 @@ describe( 'ElasticSearch', function () {
 
 		await browser.waitUntil(
 			async () => {
-				const resp = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
+				const resp = await browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
 				searchResult = resp.data.search;
 
 				return searchResult.length === 1 &&
@@ -72,7 +72,7 @@ describe( 'ElasticSearch', function () {
 
 		await browser.waitUntil(
 			async () => {
-				const resp = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
+				const resp = await browser.makeRequest( process.env.WIKIBASE_PUBLIC_URL + '/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item' );
 				searchResult = resp.data.search;
 
 				return searchResult.length === 1 &&

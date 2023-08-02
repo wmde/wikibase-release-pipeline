@@ -11,7 +11,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be able to post to sparql endpoint', function () {
 		const result = browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
+			process.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql',
 			{ validateStatus: false },
 			{}
 		);
@@ -19,13 +19,13 @@ describe( 'QueryService', function () {
 	} );
 
 	it( 'Should be able to get sparql endpoint', function () {
-		const result = browser.makeRequest( process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql' );
+		const result = browser.makeRequest( process.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql' );
 		assert.strictEqual( result.status, 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', function () {
 		const result = browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/ldf',
+			process.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/ldf',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -33,7 +33,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', function () {
 		const result = browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/assets',
+			process.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/assets',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -41,7 +41,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph workbench', function () {
 		const result = browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/#query',
+			process.env.WDQS_PROXY_URL + '/bigdata/#query',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -92,7 +92,7 @@ describe( 'QueryService', function () {
 		assert( QueryServiceUI.resultIncludes( 'wikibase:identifiers', '0' ) );
 
 		// property value is set with correct rdf
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>', propertyValue ) );
+		assert( QueryServiceUI.resultIncludes( '<' + process.env.WIKIBASE_PUBLIC_URL + '/prop/direct/' + propertyId + '>', propertyValue ) );
 
 		// query the property using wdt: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ ?s wdt:' + propertyId + ' ?o }' );
@@ -101,7 +101,7 @@ describe( 'QueryService', function () {
 		QueryServiceUI.resultTable.waitForDisplayed();
 
 		// should be set only to the item
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+		assert( QueryServiceUI.resultIncludes( '<' + process.env.WIKIBASE_PUBLIC_URL + '/entity/' + itemId + '>', propertyValue ) );
 
 	} );
 

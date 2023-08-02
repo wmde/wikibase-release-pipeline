@@ -18,7 +18,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		LoginPage.loginAdmin();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:Upload/' );
 
 		$( '#wpUploadFile' ).waitForDisplayed();
 
@@ -41,7 +41,7 @@ describe( 'WikibaseLocalMedia', function () {
 		propertyId = browser.call( () => WikibaseApi.createProperty( 'localMedia' ) );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Property:' + propertyId );
 
 		$( '#firstHeading' ).waitForDisplayed();
 		const title = $( '#firstHeading' ).getText();
@@ -69,7 +69,7 @@ describe( 'WikibaseLocalMedia', function () {
 			() => WikibaseApi.createItem( 'image-test', data )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 		$( '.wikibase-snakview-value img' ).waitForDisplayed();
 		const imageSource = $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 

@@ -11,12 +11,12 @@ describe( 'SyntaxHighlight', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
 		browser.editPage(
-			process.env.MW_SERVER,
+			process.env.WIKIBASE_PUBLIC_URL,
 			'Module:Olives',
 			fs.readFileSync( 'data/bananas.lua', 'utf8' )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Module:Olives' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
 		$( '.mw-highlight' ).waitForDisplayed();

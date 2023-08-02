@@ -42,7 +42,7 @@ describe( 'Property Prefetching', function () {
 			() => WikibaseApi.createItem( Util.getTestString( itemLabel ), data )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
@@ -65,7 +65,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render history page list within threshold', function () {
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId + '?action=history' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId + '?action=history' );
 		$( '#pagehistory' ).waitForDisplayed( { timeout: 2000 } );
 
 		// +1 for the initial item creation
@@ -74,7 +74,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render recent changes list within threshold', function () {
-		browser.url( process.env.MW_SERVER + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0' );
 		$( 'ul.special' ).waitForDisplayed( { timeout: 2000 } );
 
 		// +1 for the initial item creation

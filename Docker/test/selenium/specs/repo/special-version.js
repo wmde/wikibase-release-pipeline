@@ -10,7 +10,7 @@ describe( 'Special:Version', function () {
 			return this.skip();
 		}
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:Version' );
 		const text = $( '#sv-software' ).getText();
 		assert.strictEqual( text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ), true );
 
@@ -44,7 +44,7 @@ describe( 'Special:Version', function () {
 
 				defaultFunctions.skipIfExtensionNotPresent( this, name );
 
-				browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+				browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:Version' );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = $( '#mw-version-ext-' + extensionPackage + '-' + extension.replace( / /g, '_' ) );

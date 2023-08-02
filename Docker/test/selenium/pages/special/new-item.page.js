@@ -9,7 +9,7 @@ class SpecialNewItem extends Page {
 	get submitBtn() { return $( 'button[type="submit"]' ); }
 
 	open() {
-		browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:NewItem' );
 	}
 
 	submit() {

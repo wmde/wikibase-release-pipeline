@@ -17,7 +17,7 @@ describe( 'Item', function () {
 
 	it( 'Special:NewItem should not be accessible on client', function () {
 
-		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
+		browser.url( process.env.WIKIBASE_CLIENT_URL + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const notFoundText = $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
@@ -25,7 +25,7 @@ describe( 'Item', function () {
 
 	it( 'Special:NewItem should be visible on repo', function () {
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:NewItem?uselang=qqx' );
 		$( 'h1#firstHeading' ).waitForDisplayed();
 		const createNewItem = $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
@@ -50,7 +50,7 @@ describe( 'Item', function () {
 			() => WikibaseApi.createItem( itemLabel, data )
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 		$( '.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add' ).waitForDisplayed();
 	} );
 
@@ -60,7 +60,7 @@ describe( 'Item', function () {
 		browser.pause( 10 * 1000 );
 
 		const bodyText = browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			pageTitle, '{{#statements:' + propertyId + '|from=' + itemId + '}}'
 		);
 		// label should come from repo property
@@ -71,7 +71,7 @@ describe( 'Item', function () {
 	it( 'Should be able to create site-links from item to client', function () {
 
 		// Create a site-link on a the Main_Page
-		browser.url( process.env.MW_SERVER + '/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=' + pageTitle );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=' + pageTitle );
 		$( '#wb-setsitelink-submit button' ).waitForDisplayed();
 		$( '#wb-setsitelink-submit button' ).click();
 
@@ -97,7 +97,7 @@ describe( 'Item', function () {
 		};
 
 		const actualChange = browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			expectedSiteLinkChange
 		);
 
@@ -119,7 +119,7 @@ describe( 'Item', function () {
 		$( '.oo-ui-flaggedElement-destructive button' ).waitForDisplayed();
 		$( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL + '/wiki/Item:' + itemId );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', function () {
@@ -134,7 +134,7 @@ describe( 'Item', function () {
 		};
 
 		const actualChange = browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			process.env.WIKIBASE_CLIENT_URL,
 			expectedTestDeletionChange
 		);
 

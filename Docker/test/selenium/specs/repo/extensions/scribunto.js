@@ -11,13 +11,13 @@ describe( 'Scribunto', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		browser.editPage(
-			process.env.MW_SERVER,
+			process.env.WIKIBASE_PUBLIC_URL,
 			'Module:Bananas',
 			fs.readFileSync( 'data/bananas.lua', 'utf8' )
 		);
 
 		const executionContent = browser.editPage(
-			process.env.MW_SERVER,
+			process.env.WIKIBASE_PUBLIC_URL,
 			'LuaTest',
 			'{{#invoke:Bananas|hello}}'
 		);
@@ -29,7 +29,7 @@ describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module within 0.05 seconds', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const cpuTime = browser.getLuaCpuTime( process.env.MW_SERVER, 'LuaTest' );
+		const cpuTime = browser.getLuaCpuTime( process.env.WIKIBASE_PUBLIC_URL, 'LuaTest' );
 
 		assert( cpuTime.value < 0.05 );
 		assert.strictEqual( cpuTime.scale, 'seconds' );

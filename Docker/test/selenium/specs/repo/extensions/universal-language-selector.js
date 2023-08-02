@@ -9,7 +9,7 @@ describe( 'UniversalLanguageSelector', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
 
-		browser.url( process.env.MW_SERVER );
+		browser.url( process.env.WIKIBASE_PUBLIC_URL );
 		$( '#searchInput' ).waitForDisplayed();
 		$( '#searchInput' ).click();
 		$( '.imeselector' ).waitForDisplayed();

@@ -7,6 +7,5 @@ services:
       - ${TMP_LOCALSETTINGS}:/var/www/html/LocalSettings.php
 
 volumes:
-  LocalSettings:
   mediawiki-mysql-data:
   quickstatements-data:

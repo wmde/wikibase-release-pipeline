@@ -4,23 +4,6 @@ version: '3.4'
 services:
 
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./mwlog/${LOCALSETTINGS_VARIANT}+wikibase:/var/log/mediawiki
-      ## This shares the configuration with jobrunner
-      - shared:/var/www/html/:rw
-
-  # # THIS DOESN'T SEEM TO BE NEEDED?
-  # mysql:
-  #   volumes: 
-  #     - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
-
-  # Probably put WDQS_HOST and WDQS_PORT into env vars
-  # wdqs-proxy:
-  #   ports:
-  #    - "8989:80"
-
-volumes:
-  shared:
-  LocalSettings:

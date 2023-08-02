@@ -60,8 +60,8 @@ describe( 'Wikibase post upgrade', function () {
 
 		assert.strictEqual( bindings.length, 9 );
 
-		const statement = getElementByURI( process.env.MW_SERVER + '/prop/' + newPropertyId, bindings );
-		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/' + newPropertyId, bindings );
+		const statement = getElementByURI( process.env.WIKIBASE_PUBLIC_URL + '/prop/' + newPropertyId, bindings );
+		const property = getElementByURI( process.env.WIKIBASE_PUBLIC_URL + '/prop/direct/' + newPropertyId, bindings );
 
 		const itemLabelValue = getElementByURI( 'http://www.w3.org/2000/01/rdf-schema#label', bindings );
 		const dateModified = getElementByURI( 'http://schema.org/dateModified', bindings );

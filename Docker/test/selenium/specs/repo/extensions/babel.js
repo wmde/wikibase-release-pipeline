@@ -13,7 +13,7 @@ describe( 'Babel', function () {
 		LoginPage.loginAdmin();
 
 		const executionContent = browser.editPage(
-			process.env.MW_SERVER,
+			process.env.WIKIBASE_PUBLIC_URL,
 			'User:' + process.env.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);

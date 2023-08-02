@@ -109,17 +109,17 @@ services:
         aliases:
          - ${QUICKSTATEMENTS_HOST}
     environment:
-      - QUICKSTATEMENTS_HOST
+      - WIKIBASE_URL
+      - WIKIBASE_PUBLIC_URL
       - QUICKSTATEMENTS_PUBLIC_URL
-      - WIKIBASE_PUBLIC_URL=http://localhost:${WIKIBASE_PORT}
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
-      - WB_PROPERTY_NAMESPACE=122
-      - "WB_PROPERTY_PREFIX=Property:"
-      - WB_ITEM_NAMESPACE=120
-      - "WB_ITEM_PREFIX=Item:"
+      - QUICKSTATEMENTS_PROPERTY_NAMESPACE=122
+      - "QUICKSTATEMENTS_PROPERTY_PREFIX=Property:"
+      - QUICKSTATEMENTS_ITEM_NAMESPACE=120
+      - "QUICKSTATEMENTS_ITEM_PREFIX=Item:"
+      - OAUTH_CONSUMER_KEY=${OAUTH_CONSUMER_KEY}
+      - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
 
 volumes:
-  LocalSettings:
   query-service-data:
   elasticsearch-data:
   quickstatements-data:
