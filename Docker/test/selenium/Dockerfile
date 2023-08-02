@@ -1,14 +1,15 @@
-FROM docker:20.10.11-alpine3.14
+FROM node:14.21.3-bullseye
 
-RUN apk add --update bash chromium chromium-chromedriver alpine-sdk python3 nodejs npm && \
-    ln -sf python3 /usr/bin/python && \
-    python3 -m ensurepip && \
+RUN apt-get update && \
+    apt-get -y install docker.io chromium python3-pip && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    rm -rf /var/lib/apt/lists/* && \
     pip3 install --no-cache --upgrade pip setuptools
 
 WORKDIR /usr/src/app/
-COPY . .
 
-# if installed locally these files are copied to make this go a bit quicker
-# set this variable in local.env to something to use it
-ARG SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES
-RUN if [ -z ${SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES} ]; then npm ci ; fi
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci
+
+COPY . .
