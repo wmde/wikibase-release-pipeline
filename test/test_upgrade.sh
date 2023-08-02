@@ -43,7 +43,7 @@ docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.pre.upgrade.$ENV
 
 # wait for it to startup
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test --remove-orphans
 
 ## build selenium test container
 docker compose \
@@ -103,7 +103,7 @@ docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.post.upgrade.$EN
 
 # run status checks and wait until containers start
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test --remove-orphans
 
 # run update.php and log to separate file
 UPGRADE_LOG_FILE="log/wikibase.upgrade.$ENV_VERSION.log"

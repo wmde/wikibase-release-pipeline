@@ -21,6 +21,7 @@ services:
       - WDQS_FRONTEND_URL
       - WDQS_URL
       - WDQS_PROXY_URL
+      - PINGBACK_BEACON_URL
 
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS

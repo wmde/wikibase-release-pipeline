@@ -40,7 +40,7 @@ docker compose \
 
 # run status checks and wait until containers start
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test --remove-orphans
 
 NODE_COMMAND='test:run'
 if [ -n "$FILTER" ]; then
