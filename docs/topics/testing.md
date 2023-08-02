@@ -37,14 +37,6 @@ To test upgrading the wikibase-bundle version the following command can be run b
 make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle TO_VERSION=versions/wmde.N
 ```
 
-## Test the example
-
-Tests the example configuration by running the `example` suite against it.
-
-```
-make test-example SUITE=example
-```
-
 ## Stopping running containers
 
 In order to stop any running containers from testing there are some Makefile targets that can be used to to this.

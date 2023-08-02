@@ -75,13 +75,6 @@ exports.config = {
 
 	suites: {
 
-		// example-specs
-		example: [
-			'./specs/quickstatements/*.js',
-			'./specs/repo/queryservice.js',
-			'./specs/elasticsearch/*.js'
-		],
-
 		// bundle-specs
 		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
 		repo_client: [ './specs/repo_client/*.js', './specs/repo_client/extensions/*.js' ],
