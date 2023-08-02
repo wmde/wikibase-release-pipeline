@@ -43,7 +43,7 @@ docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.pre.upgrade.$ENV
 
 # wait for it to startup
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test --remove-orphans
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 ## build selenium test container
 docker compose \

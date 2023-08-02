@@ -43,6 +43,13 @@ export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 # Based on the `template.env`` and docker compose files found in the /example directory
 # ``/test/default.env`` is added as well and selectively overrides values appropriate to testing, 
 # and similar to what a user does in the course of configuring a new Wikibase installation.
-export DEFAULT_SUITE_CONFIG="--env-file ../example/template.env --env-file default.env -f docker-compose.root.yml -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.yml -p test "
+export DEFAULT_SUITE_CONFIG="\
+--env-file ../example/template.env \
+--env-file default.env \
+-f docker-compose.root.yml \
+-f ../example/docker-compose.yml \
+-f ../example/docker-compose.extra.yml \
+-f docker-compose.yml \
+-p test "
 
 bash run_selenium.sh "$1"
