@@ -4,7 +4,6 @@ ARG WIKIBASE_IMAGE_NAME
 
 FROM ${WIKIBASE_IMAGE_NAME}:latest as base
 FROM ${COMPOSER_IMAGE_NAME}:${COMPOSER_IMAGE_VERSION} as composer
-FROM ${WIKIBASE_IMAGE_NAME}:latest
 
 COPY --from=base --chown=nobody:nogroup /var/www/html /var/www/html
 COPY artifacts/extensions /var/www/html/extensions
@@ -14,6 +13,7 @@ RUN rm -rf /var/www/html/vendor && \
     rm -rf /var/www/html/composer.lock && \
     composer install --no-dev -vv -n
 
+FROM ${WIKIBASE_IMAGE_NAME}:latest
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends lua5.1 && \
     rm -rf /var/lib/apt/lists/* && \
