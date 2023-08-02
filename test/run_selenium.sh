@@ -7,22 +7,15 @@ export SUITE=$1
 
 mkdir -p log
 
-# if prepended with base__ we might still want to use the bundle config
-if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
-    SUITE_CONFIG_NAME=${SUITE//base__/}
-else
-    SUITE_CONFIG_NAME=$SUITE
-fi
-
 # set suite localsettings
-export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME
+export LOCALSETTINGS_VARIANT=$SUITE
 
-if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
-    echo "Suite $SUITE_CONFIG_NAME does not exist"
+if [ ! -d "suite-config/$SUITE" ]; then
+    echo "Suite $SUITE does not exist"
     exit 1
 fi
 
-SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
+SUITE_OVERRIDE="suite-config/$SUITE/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 if [ -f "$SUITE_OVERRIDE" ]; then
