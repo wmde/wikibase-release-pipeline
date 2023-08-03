@@ -34,6 +34,7 @@ describe( 'Property', function () {
 
 		// fill out property id for reference
 		$( '.ui-entityselector-input' ).waitForDisplayed();
+		browser.pause( 1000 * 1 );
 		browser.keys( propertyId.split( '' ) );
 		$( propertyIdSelector ).waitForDisplayed();
 		$( propertyIdSelector ).click();

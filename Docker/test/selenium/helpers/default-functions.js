@@ -107,6 +107,9 @@ const defaultFunctions = function () {
 		const startEditbutton = $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
 		if ( startEditbutton.elementId ) {
 			startEditbutton.click();
+
+			// wait for fade out animation to finish
+			browser.pause( 2 * 1000 );
 		}
 
 		// fill out form
