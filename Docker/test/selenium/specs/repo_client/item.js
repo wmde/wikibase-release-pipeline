@@ -124,7 +124,6 @@ describe( 'Item', function () {
 
 	it( 'Should be able to see delete changes is dispatched to client for test page', async function () {
 
-		// browser.pause( 30 * 1000 );
 		await browser.waitForJobs()
 		await browser.waitForJobs({ serverURL: process.env.MW_CLIENT_SERVER })
 
