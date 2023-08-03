@@ -37,11 +37,11 @@ docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     build \
-    wikibase-selenium-test
+    wikibase-selenium-test --quiet
 
 # run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test --quiet
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test --quiet
 
 NODE_COMMAND='test:run'
 if [ -n "$FILTER" ]; then
