@@ -55,9 +55,10 @@ describe( 'Item', function () {
 	} );
 
 	// creates usage
-	it( 'Should be able to use the item on client with wikitext', function () {
+	it( 'Should be able to use the item on client with wikitext', async function () {
 
-		browser.pause( 10 * 1000 );
+		await browser.waitForJobs()
+		await browser.waitForJobs({ serverURL: process.env.MW_CLIENT_SERVER })
 
 		const bodyText = browser.editPage(
 			process.env.MW_CLIENT_SERVER,
@@ -81,13 +82,12 @@ describe( 'Item', function () {
 
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( pageTitle ) );
-
-		// wait for dispatching
-		browser.pause( 20 * 1000 );
-
 	} );
 
-	it( 'Should be able to see site-link change is dispatched to client', function () {
+	it( 'Should be able to see site-link change is dispatched to client', async function () {
+
+		await browser.waitForJobs()
+		await browser.waitForJobs({ serverURL: process.env.MW_CLIENT_SERVER })
 
 		const expectedSiteLinkChange = {
 			type: 'external',
@@ -122,9 +122,11 @@ describe( 'Item', function () {
 		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 	} );
 
-	it.skip( 'Should be able to see delete changes is dispatched to client for test page', function () {
+	it( 'Should be able to see delete changes is dispatched to client for test page', async function () {
 
-		browser.pause( 30 * 1000 );
+		// browser.pause( 30 * 1000 );
+		await browser.waitForJobs()
+		await browser.waitForJobs({ serverURL: process.env.MW_CLIENT_SERVER })
 
 		const expectedTestDeletionChange = {
 			type: 'external',
