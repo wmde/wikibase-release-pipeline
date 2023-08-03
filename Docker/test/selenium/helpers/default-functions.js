@@ -220,6 +220,29 @@ const defaultFunctions = function () {
 		return response.data.results.bindings;
 	} );
 
+	browser.addCommand( 'waitForJobs', async function ({
+		serverURL = process.env.MW_SERVER,
+		timeout = 30000,
+		timeoutMsg
+	} = {}) {
+		return browser.waitUntil(
+			async () => {
+				const result = await browser.makeRequest(
+					serverURL + '/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json',
+					{ validateStatus: false },
+					{}
+				);
+				const jobsInQueue = result.data.query.statistics.jobs;
+				
+				return jobsInQueue === 0;
+			},
+			{
+				timeout,
+				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited 30 seconds)`
+			}
+		);
+	} );	
+
 };
 
 module.exports = {
