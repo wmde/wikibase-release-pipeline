@@ -7,7 +7,6 @@ check_if_up() {
     FULL_URL="$1$2"
     DISPLAY_URL="http://$FULL_URL"
 
-
     if [ -z "$URL" ]; then
         echo "❌ check_if_up called with an empty URL (with PATH: $2)"
 
@@ -33,5 +32,3 @@ if [ -z "$SKIP_WDQS" ]; then
     check_if_up "$WDQS_FRONTEND_SERVER" "/"
 
 fi
-
-
