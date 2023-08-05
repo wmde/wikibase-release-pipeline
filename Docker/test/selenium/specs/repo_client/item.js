@@ -15,10 +15,10 @@ describe( 'Item', function () {
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
 
-	beforeEach(() => {
-		browser.call(() => browser.waitForJobs())
-		browser.call(() => browser.waitForJobs({ serverURL: process.env.MW_CLIENT_SERVER }))
-	})
+	beforeEach( () => {
+		browser.call( () => browser.waitForJobs() );
+		browser.call( () => browser.waitForJobs( { serverURL: process.env.MW_CLIENT_SERVER } ) );
+	} );
 
 	it( 'Special:NewItem should not be accessible on client', function () {
 
@@ -88,7 +88,7 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', function () {
-		
+
 		const expectedSiteLinkChange = {
 			type: 'external',
 			ns: 0,

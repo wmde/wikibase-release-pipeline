@@ -223,11 +223,11 @@ const defaultFunctions = function () {
 		return response.data.results.bindings;
 	} );
 
-	browser.addCommand( 'waitForJobs', async function ({
+	browser.addCommand( 'waitForJobs', async function ( {
 		serverURL = process.env.MW_SERVER,
 		timeout = process.env.MOCHA_OPTS_TIMEOUT - 1000,
 		timeoutMsg
-	} = {}) {
+	} = {} ) {
 		return browser.waitUntil(
 			async () => {
 				const result = await browser.makeRequest(
@@ -236,15 +236,15 @@ const defaultFunctions = function () {
 					{}
 				);
 				const jobsInQueue = result.data.query.statistics.jobs;
-				
+
 				return jobsInQueue === 0;
 			},
 			{
 				timeout,
-				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited ${timeout/1000} seconds)`
+				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited ${timeout / 1000} seconds)`
 			}
 		);
-	} );	
+	} );
 
 };
 
