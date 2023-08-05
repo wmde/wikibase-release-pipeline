@@ -16,7 +16,7 @@ cat "$RELEASE_ENV_FILE"
 echo
 
 docker build . -t builder && \
- docker run --rm -i \
+ docker run -i \
  -v "$(pwd)/variables.env":/app/variables.env \
  -v "$(pwd)/$RELEASE_ENV_FILE":/app/builder_configuration.env \
  -v "$(pwd)/artifacts":/app/artifacts \
