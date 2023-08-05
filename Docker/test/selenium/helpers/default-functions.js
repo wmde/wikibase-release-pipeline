@@ -241,7 +241,7 @@ const defaultFunctions = function () {
 			},
 			{
 				timeout,
-				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited 30 seconds)`
+				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited ${timeout/1000} seconds)`
 			}
 		);
 	} );	

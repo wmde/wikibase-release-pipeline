@@ -44,7 +44,6 @@ describe( 'Nuke', function () {
 	} );
 
 	it( 'Should delete the page in a job', async function () {
-		await browser.waitForJobs()
 
 		let result;
 

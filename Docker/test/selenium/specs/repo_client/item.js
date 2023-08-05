@@ -108,7 +108,7 @@ describe( 'Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', function () {
 
-		LoginPage.loginAdmin()	
+		LoginPage.loginAdmin();
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
