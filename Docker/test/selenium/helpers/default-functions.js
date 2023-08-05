@@ -225,9 +225,18 @@ const defaultFunctions = function () {
 
 	browser.addCommand( 'waitForJobs', async function ( {
 		serverURL = process.env.MW_SERVER,
-		timeout = process.env.MOCHA_OPTS_TIMEOUT - 1000,
-		timeoutMsg
+		timeout: providedTimeout,
+		timeoutMsg: providedTimeoutMsg
 	} = {} ) {
+		let jobsInQueue;
+		const timeout = providedTimeout || ( 
+			process.env.MOCHA_OPTS_TIMEOUT
+				? process.env.MOCHA_OPTS_TIMEOUT - 1000
+				: 30000
+			);
+		const timeoutMsg = providedTimeoutMsg
+			|| `Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${timeout / 1000} seconds.`
+
 		return browser.waitUntil(
 			async () => {
 				const result = await browser.makeRequest(
@@ -235,13 +244,13 @@ const defaultFunctions = function () {
 					{ validateStatus: false },
 					{}
 				);
-				const jobsInQueue = result.data.query.statistics.jobs;
+				jobsInQueue = result.data.query.statistics.jobs;
 
 				return jobsInQueue === 0;
 			},
 			{
 				timeout,
-				timeoutMsg: timeoutMsg || `Job queue at "${serverURL}" should be empty by now (waited ${timeout / 1000} seconds)`
+				timeoutMsg
 			}
 		);
 	} );
