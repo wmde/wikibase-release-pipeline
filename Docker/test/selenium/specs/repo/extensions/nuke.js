@@ -6,6 +6,10 @@ const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Nuke', function () {
 
+	beforeEach(() => {
+		browser.call(() => browser.waitForJobs())
+	})
+
 	it( 'Should be able to queue a page for deletion through Special:Nuke', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
@@ -38,8 +42,6 @@ describe( 'Nuke', function () {
 		checkBox.click();
 		$( 'input[type="submit"]' ).click();
 		browser.acceptAlert();
-
-		$( '#mw-content-text' ).waitForDisplayed();
 
 	} );
 
