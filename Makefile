@@ -10,8 +10,14 @@ download:
 	bash publish/download.sh
 
 .PHONY: test
-test: test-stop
-	bash test/test_suite.sh ${SUITE}
+test: 
+ifndef ${SUITE}
+	@make test-all
+else
+	@make test-stop
+	@bash test/scripts/before_all.sh
+	@bash test/test_suite.sh ${SUITE}
+endif
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
@@ -34,20 +40,24 @@ example-stop:
 	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
-	# bundle tests
-	bash test/test_suite.sh repo
-	bash test/test_suite.sh fedprops
-	bash test/test_suite.sh repo_client
-	bash test/test_suite.sh quickstatements
-	bash test/test_suite.sh pingback
-	bash test/test_suite.sh confirm_edit
+	@bash test/scripts/before_all.sh
+
+	@echo "⚠️  Running All Test Suites"
+
+	@# bundle tests
+	@bash test/test_suite.sh repo
+	@bash test/test_suite.sh fedprops
+	@bash test/test_suite.sh repo_client
+	@bash test/test_suite.sh quickstatements
+	@bash test/test_suite.sh pingback
+	@bash test/test_suite.sh confirm_edit
 	bash test/test_suite.sh elasticsearch
 
-	# base tests
-	bash test/test_suite.sh base__repo
-	bash test/test_suite.sh base__repo_client
-	bash test/test_suite.sh base__fedprops
-	bash test/test_suite.sh base__pingback
+	@# base tests
+	@bash test/test_suite.sh base__repo
+	@bash test/test_suite.sh base__repo_client
+	@bash test/test_suite.sh base__fedprops
+	@bash test/test_suite.sh base__pingback
 
 requirements:
 	python3 build/requirements/build_version_requirements.py

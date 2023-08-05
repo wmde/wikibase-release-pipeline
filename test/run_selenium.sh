@@ -17,7 +17,7 @@ fi
 export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME
 
 if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
-    echo "Suite $SUITE_CONFIG_NAME does not exist"
+    echo "🚨 Suite $SUITE_CONFIG_NAME does not exist, exiting"
     exit 1
 fi
 
@@ -25,28 +25,31 @@ SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 if [ -f "$SUITE_OVERRIDE" ]; then
-    echo "Using docker compose override file $SUITE_OVERRIDE"
+    echo "ℹ️ Using docker compose override file $SUITE_OVERRIDE"
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
+echo "🔄 Removing existing Docker test services and volumes" 
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
-    down --volumes --remove-orphans --timeout 1 || true
+    down --volumes --remove-orphans --timeout 1 >/dev/null 2>&1 || true
 
-# start container with settings
-STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
-docker compose $SUITE_CONFIG up -d --force-recreate
-docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE_IMAGE_NAME.$1.log" &
+# create stack
+echo "🔄 Creating Docker test services and volumes"
+docker compose $SUITE_CONFIG up -d --force-recreate >/dev/null 2>&1
+
+# start containers with settings
+docker compose $SUITE_CONFIG logs -f --no-color > "log/$1/$1.log" &
 
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     build \
-    wikibase-selenium-test --quiet
+    wikibase-selenium-test >/dev/null 2>&1
 
 # run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test --quiet
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 NODE_COMMAND='test:run'
@@ -54,7 +57,10 @@ if [ -n "$FILTER" ]; then
     NODE_COMMAND='test:run-filter'
 fi
 
+echo ""
+echo "✳️  Running \"$SUITE\" test suite"
+
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run \
-    wikibase-selenium-test bash -c "rm -f /usr/src/app/log/selenium/result-$SUITE.json && npm run $NODE_COMMAND"
+    wikibase-selenium-test bash -c "rm -f /usr/src/app/log/$SUITE/selenium-result.json && npm run $NODE_COMMAND --silent"

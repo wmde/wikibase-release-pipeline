@@ -40,7 +40,7 @@ class JsonReporter extends reporter.default {
 		};
 
 		const suite = process.env.SUITE || 'unknown';
-		const filePath = root + '/result-' + suite + '.json';
+		const filePath = root + '/' + suite + '/result.json';
 
 		if ( fs.existsSync( filePath ) ) {
 

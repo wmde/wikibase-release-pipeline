@@ -544,8 +544,8 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          ls -lahr test/mwlog test/mwlog/*
-          tail -n +1 test/mwlog/*/*.log
+          ls -lahr test/log test/log/*
+          tail -n +1 test/log/*/*.log
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3

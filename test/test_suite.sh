@@ -3,18 +3,14 @@ set -e
 
 cd test
 
-echo "#########################################"
-echo "#########################################"
-echo "####         Start testing! 🤞       ####"
-echo "#########################################"
-echo "#########################################"
-
-docker --version
-
 export SUITE=$1
 
+echo ""
+echo "ℹ️  Setting-up \"$SUITE\" test suite:"
+echo ""
+
 if [ -z "$SUITE" ]; then
-    echo "SUITE is not set"
+    echo "🚨 SUITE is not set"
     exit 1
 fi
 
@@ -29,8 +25,8 @@ else
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_BUNDLE_IMAGE_NAME"
 
     # load additional bundle images
-    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME
@@ -40,6 +36,9 @@ docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
 docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+
+docker --version
+echo ""
 
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"

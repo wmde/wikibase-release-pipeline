@@ -159,8 +159,9 @@ exports.config = {
 	 */
 	afterTest: function ( test ) {
 		const screenshotPath = browser.config.screenshotPath;
-		const folder = ( process.env.DATABASE_IMAGE_NAME + '-' + process.env.SUITE ).replace( /[^a-zA-Z_0-9]/g, '_' );
-		browser.config.screenshotPath = screenshotPath + '/' + folder;
+
+		browser.config.screenshotPath = `${screenshotPath}/${process.env.SUITE}/screenshots`;
+
 		try {
 			saveScreenshot( test.title );
 		} catch ( error ) {
