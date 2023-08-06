@@ -11,22 +11,19 @@ download:
 
 .PHONY: test
 test: 
-ifndef ${SUITE}
-	@make test-all
-else
+ifdef SUITE
 	@make test-stop
-	@bash test/scripts/before_all.sh
 	@bash test/test_suite.sh ${SUITE}
+else
+	@make test-all
 endif
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
-	@bash test/scripts/before_all.sh
 	@bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example: example-stop
-	@bash test/scripts/before_all.sh
 	@bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
@@ -43,8 +40,6 @@ example-stop:
 
 test-all:
 	@echo "⚠️  Running All Test Suites"
-
-	@bash test/scripts/before_all.sh
 
 	@# bundle tests
 	@bash test/test_suite.sh repo

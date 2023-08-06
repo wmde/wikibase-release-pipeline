@@ -11,8 +11,6 @@ else
     SUITE_CONFIG_NAME=$SUITE
 fi
 
-mkdir -p "log/$SUITE"
-
 # set suite localsettings
 export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME
 
@@ -21,14 +19,18 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
+# setup log directory, create "last-ran" file
+rm -Rf "log/$SUITE"
+mkdir -p "log/$SUITE"
+touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
+
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 if [ -f "$SUITE_OVERRIDE" ]; then
-    echo "ℹ️ Using docker compose override file $SUITE_OVERRIDE"
+    echo "ℹ️  Using docker compose override file $SUITE_OVERRIDE"
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
-
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 echo "🔄 Removing existing Docker test services and volumes" 
@@ -59,6 +61,7 @@ fi
 
 echo ""
 echo "✳️  Running \"$SUITE\" test suite"
+echo ""
 
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \

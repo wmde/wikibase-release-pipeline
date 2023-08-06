@@ -22,7 +22,7 @@ check_if_up() {
         fi
     fi
 
-    echo "✅ Successfully loaded $DISPLAY_URL!"
+    echo "ℹ️  Successfully loaded $DISPLAY_URL!"
 }
 
 check_if_up "$WIKIBASE_SERVER" "/wiki/Main_Page"

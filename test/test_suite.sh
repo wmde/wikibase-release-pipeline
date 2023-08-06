@@ -6,15 +6,13 @@ cd test
 export SUITE=$1
 
 echo ""
-echo "ℹ️  Setting-up \"$SUITE\" test suite:"
+echo "▶️  Setting-up \"$SUITE\" test suite"
 echo ""
 
 if [ -z "$SUITE" ]; then
     echo "🚨 SUITE is not set"
     exit 1
 fi
-
-mkdir -p "log/$SUITE"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
@@ -39,8 +37,7 @@ docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 
-docker --version
-echo ""
+echo "ℹ️  $(docker --version)"
 
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"

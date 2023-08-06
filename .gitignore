@@ -13,6 +13,7 @@ Docker/build/WDQS/wait-for-it.sh
 
 #temp 
 Docker/**/*.tar.gz
+test/log
 test/mwlog
 diagrams/node_modules/
 artifacts/*
