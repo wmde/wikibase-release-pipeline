@@ -11,7 +11,7 @@ else
     SUITE_CONFIG_NAME=$SUITE
 fi
 
-mkdir -p log/$SUITE
+mkdir -p "log/$SUITE"
 
 # set suite localsettings
 export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME

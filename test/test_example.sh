@@ -10,6 +10,7 @@ if [ -z "$SUITE" ]; then
 fi
 
 cd test
+mkdir -p "log/$SUITE"
 
 set -o allexport; source ../example/template.env; source example.env; set +o allexport
 

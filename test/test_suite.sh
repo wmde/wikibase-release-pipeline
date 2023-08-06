@@ -14,7 +14,7 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
-mkdir -p log/$SUITE
+mkdir -p "log/$SUITE"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
