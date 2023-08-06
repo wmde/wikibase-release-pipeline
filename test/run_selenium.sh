@@ -4,14 +4,14 @@ set -e
 
 export SUITE=$1
 
-mkdir -p log
-
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
     SUITE_CONFIG_NAME=${SUITE//base__/}
 else
     SUITE_CONFIG_NAME=$SUITE
 fi
+
+mkdir -p log/$SUITE
 
 # set suite localsettings
 export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME
@@ -41,7 +41,7 @@ echo "🔄 Creating Docker test services and volumes"
 docker compose $SUITE_CONFIG up -d --force-recreate >/dev/null 2>&1
 
 # start containers with settings
-docker compose $SUITE_CONFIG logs -f --no-color > "log/$1/$1.log" &
+docker compose $SUITE_CONFIG logs -f --no-color > "log/$SUITE/$SUITE.log" &
 
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \

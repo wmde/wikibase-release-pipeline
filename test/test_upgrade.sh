@@ -3,7 +3,6 @@
 set -e
 
 cd test
-mkdir -p log
 
 ENV_VERSION=$1
 TO_VERSION=$2
@@ -38,11 +37,12 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 # start the old version & write logs
-docker compose $SUITE_CONFIG up -d
-docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.pre.upgrade.$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG up -d >/dev/null 2>&1
+mkdir -p log/pre_upgrade
+docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/pre_upgrade.$ENV_VERSION.log" &
 
 # wait for it to startup
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 ## build selenium test container
@@ -50,7 +50,7 @@ docker compose \
     $SUITE_CONFIG \
     -f docker-compose-selenium-test.yml \
     build \
-    wikibase-selenium-test
+    wikibase-selenium-test >/dev/null 2>&1
 
 # Run pre_upgrade suite
 docker compose \
@@ -81,7 +81,7 @@ sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/client\/WikibaseClien
 sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.php";/c\wfLoadExtension( "WikibaseRepo", "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );' $TMP_LOCALSETTINGS
 
 # docker compose down to simulate upgrade
-docker compose $SUITE_CONFIG down
+docker compose $SUITE_CONFIG down >/dev/null 2>&1
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
@@ -97,16 +97,16 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 # load new version and start it 
-docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz"
-docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d
-docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.post.upgrade.$ENV_VERSION.log" &
+docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d >/dev/null 2>&1
+docker compose $SUITE_CONFIG logs -f --no-color > "log/upgrade/post.upgrade.$ENV_VERSION.log" &
 
 # run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 # run update.php and log to separate file
-UPGRADE_LOG_FILE="log/wikibase.upgrade.$ENV_VERSION.log"
+UPGRADE_LOG_FILE="log/upgrade/upgrade.$ENV_VERSION.log"
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
 
 # Run post_upgrade suite
@@ -118,4 +118,4 @@ docker compose \
     wikibase-selenium-test npm run test:run
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
-docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans
+docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans >/dev/null 2>&1

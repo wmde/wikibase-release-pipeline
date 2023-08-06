@@ -14,6 +14,8 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
+mkdir -p log/$SUITE
+
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
 fi
@@ -32,10 +34,10 @@ fi
 export WIKIBASE_TEST_IMAGE_NAME
 
 # load default images
-docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
-docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 
 docker --version
 echo ""
