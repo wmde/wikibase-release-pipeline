@@ -17,6 +17,10 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
+mkdir -p log/pre_upgrade
+mkdir -p log/upgrade
+mkdir -p log/post_upgrade
+
 # Why is this neccessary locally, but not in CI?
 set -o allexport; source ../variables.env set +o allexport;
 
@@ -38,8 +42,7 @@ fi
 
 # start the old version & write logs
 docker compose $SUITE_CONFIG up -d >/dev/null 2>&1
-mkdir -p log/pre_upgrade
-docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/pre_upgrade.$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/$ENV_VERSION.log" &
 
 # wait for it to startup
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
@@ -99,14 +102,14 @@ fi
 # load new version and start it 
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
 docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d >/dev/null 2>&1
-docker compose $SUITE_CONFIG logs -f --no-color > "log/upgrade/post.upgrade.$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG logs -f --no-color > "log/post_upgrade/$ENV_VERSION.log" &
 
 # run status checks and wait until containers start
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 # run update.php and log to separate file
-UPGRADE_LOG_FILE="log/upgrade/upgrade.$ENV_VERSION.log"
+UPGRADE_LOG_FILE="log/upgrade/$ENV_VERSION.log"
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
 
 # Run post_upgrade suite
