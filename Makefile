@@ -21,11 +21,13 @@ endif
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
-	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
+	@bash test/scripts/before_all.sh
+	@bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example: example-stop
-	bash test/test_example.sh ${SUITE}
+	@bash test/scripts/before_all.sh
+	@bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
 test-stop:
@@ -40,9 +42,9 @@ example-stop:
 	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
-	@bash test/scripts/before_all.sh
-
 	@echo "⚠️  Running All Test Suites"
+
+	@bash test/scripts/before_all.sh
 
 	@# bundle tests
 	@bash test/test_suite.sh repo
