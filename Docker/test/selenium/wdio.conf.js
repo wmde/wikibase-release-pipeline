@@ -164,12 +164,18 @@ exports.config = {
 
 		browser.config.screenshotPath = `${screenshotPath}/${process.env.SUITE}/screenshots`;
 
+		const testFile = encodeURIComponent(
+			test.file.match(/.+\/(.+)\.js$/)[1].replace( /\s+/g, '-' )
+		);
+		const screenshotFilename = `${testFile}__${test.title}`
+
 		try {
-			saveScreenshot( test.title );
+			saveScreenshot( screenshotFilename );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
 		}
+
 		browser.config.screenshotPath = screenshotPath;
 	}
 };
