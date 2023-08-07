@@ -10,6 +10,7 @@ const fs = require( 'fs' ),
 
 const JsonReporter = require( './json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
+const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
 exports.config = {
 
@@ -140,6 +141,7 @@ exports.config = {
 	 */
 	before: function () {
 		defaultFunctions.init();
+		browser.call( () => WikibaseApi.initialize() );
 
 		if ( !browser.config.installed_extensions ) {
 			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
