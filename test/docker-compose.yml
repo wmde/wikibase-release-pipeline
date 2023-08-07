@@ -3,12 +3,10 @@ version: '3'
 
 x-common-variables: &wikibase_variables
     DB_SERVER: mysql.svc:3306
-    # CONFIG - Change the default values below
     MW_ADMIN_NAME: WikibaseAdmin
     MW_ADMIN_PASS: WikibaseDockerAdminPass
     MW_ADMIN_EMAIL: admin@example.com
     MW_WG_SECRET_KEY: secretkey
-    # CONFIG - Change the default values below (should match mysql values in this file)
     DB_USER: wikiuser
     DB_PASS: sqlpass
     DB_NAME: my_wiki
@@ -32,7 +30,6 @@ services:
       default:
         aliases:
          - wikibase.svc
-         # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
     environment:
       <<: *wikibase_variables
   wikibase_jobrunner:
@@ -47,9 +44,6 @@ services:
     volumes:
       - shared:/shared/:ro
       - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase service
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
