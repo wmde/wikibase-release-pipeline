@@ -8,7 +8,7 @@ check_if_up() {
     DISPLAY_URL="http://$FULL_URL"
 
     if [ -z "$URL" ]; then
-        echo "❌ check_if_up called with an empty URL (with PATH: $2)"
+        echo "❌ check_if_up called with an empty URL (with PATH: $PATH)"
 
         return
     fi
@@ -22,7 +22,7 @@ check_if_up() {
         fi
     fi
 
-    echo "ℹ️  Successfully loaded $DISPLAY_URL!"
+    echo "✅ Successfully loaded $DISPLAY_URL"
 }
 
 check_if_up "$WIKIBASE_SERVER" "/wiki/Main_Page"
