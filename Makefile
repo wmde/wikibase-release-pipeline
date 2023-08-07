@@ -12,7 +12,6 @@ download:
 .PHONY: test
 test: 
 ifdef SUITE
-	@make test-stop
 	@bash test/test_suite.sh ${SUITE}
 else
 	@make test-all
