@@ -9,7 +9,7 @@ services:
     depends_on:
       - wikibase
     volumes:
-      - ./log:/usr/src/app/log
+      - ../test/log:/usr/src/app/log
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
