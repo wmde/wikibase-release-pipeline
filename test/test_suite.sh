@@ -31,17 +31,21 @@ else
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_BUNDLE_IMAGE_NAME"
 
     # load additional bundle images
-    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
-    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+    {
+        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+    } >> "$SETUP_LOG" 2>&1
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME
 
 # load default images
-docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
-docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
-docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
-docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+{
+    docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+} >> "$SETUP_LOG" 2>&1
 
 echo "ℹ️  $(docker --version)"
 
