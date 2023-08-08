@@ -14,6 +14,12 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
+# setup log directory, create "last-ran" file and setup log
+rm -Rf "log/$SUITE"
+mkdir -p "log/$SUITE"
+touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
+export SETUP_LOG="log/$SUITE/setup.log"
+
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
 fi
@@ -25,17 +31,17 @@ else
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_BUNDLE_IMAGE_NAME"
 
     # load additional bundle images
-    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
-    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+    docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+    docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME
 
 # load default images
-docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
-docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
-docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
-docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz" >/dev/null 2>&1
+docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
 
 echo "ℹ️  $(docker --version)"
 

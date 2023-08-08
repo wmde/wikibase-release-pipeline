@@ -19,4 +19,10 @@ export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 ## Use in combination with example compose files 
 export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
 
+# setup log directory, create "last-ran" file and setup log
+rm -Rf "log/$SUITE"
+mkdir -p "log/$SUITE"
+touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
+export SETUP_LOG="log/$SUITE/setup.log"
+
 bash run_selenium.sh "$SUITE"

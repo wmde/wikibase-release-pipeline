@@ -16,14 +16,14 @@ done
 
 set +e
 
-CONTAINERS=$(docker compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml ps -q) >/dev/null 2>&1
+CONTAINERS=$(docker compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml ps -q)
 
 echo $CONTAINERS
 
 # stop any suite things
 if [ -n "$CONTAINERS" ]; then
     docker kill $CONTAINERS > /dev/null
-    docker compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down --volumes >/dev/null 2>&1
+    docker compose $DEFAULT_SUITE_CONFIG $ALL_SUITES -f docker-compose-selenium-test.yml down --volumes
 fi
 
 set -e

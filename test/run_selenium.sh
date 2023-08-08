@@ -19,11 +19,6 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
-# setup log directory, create "last-ran" file
-rm -Rf "log/$SUITE"
-mkdir -p "log/$SUITE"
-touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
-
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
@@ -36,11 +31,11 @@ fi
 echo "🔄 Removing existing Docker test services and volumes" 
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
-    down --volumes --remove-orphans --timeout 1 >/dev/null 2>&1 || true
+    down --volumes --remove-orphans --timeout 1 >> "$SETUP_LOG" 2>&1 || true
 
 # create stack
 echo "🔄 Creating Docker test services and volumes"
-docker compose $SUITE_CONFIG up -d --force-recreate >/dev/null 2>&1
+docker compose $SUITE_CONFIG up -d --force-recreate >> "$SETUP_LOG" 2>&1
 
 # start containers with settings
 docker compose $SUITE_CONFIG logs -f --no-color > "log/$SUITE/$SUITE.log" &
@@ -48,10 +43,10 @@ docker compose $SUITE_CONFIG logs -f --no-color > "log/$SUITE/$SUITE.log" &
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     build \
-    wikibase-selenium-test >/dev/null 2>&1
+    wikibase-selenium-test >> "$SETUP_LOG" 2>&1
 
 # run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >/dev/null 2>&1
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >> "$SETUP_LOG" 2>&1
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
 
 NODE_COMMAND='test:run'
