@@ -65,7 +65,7 @@ exports.config = {
 			// Removes "[Chrome Headless 115.0.5790.98 linux #0-1]" preface from spec reports
 			// Has no effect until we upgrade to WDIO Spec 8
 			showPreface: false
-		}],
+		} ],
 		[ JsonReporter, {} ]
 	],
 
@@ -169,9 +169,9 @@ exports.config = {
 		browser.config.screenshotPath = `${screenshotPath}/${process.env.SUITE}/screenshots`;
 
 		const testFile = encodeURIComponent(
-			test.file.match(/.+\/(.+)\.js$/)[1].replace( /\s+/g, '-' )
+			test.file.match( /.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-' )
 		);
-		const screenshotFilename = `${testFile}__${test.title}`
+		const screenshotFilename = `${testFile}__${test.title}`;
 
 		try {
 			saveScreenshot( screenshotFilename );
