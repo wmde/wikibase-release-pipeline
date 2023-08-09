@@ -12,7 +12,7 @@ This provides an overview of the releases that have been made using this release
 
 | Suite Version                                                                                                                                                                                | MediaWiki release                                 | Date available | Run number | Release task  |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------------|------------| --------------|
-| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.38.6, PHP 8.1.20, debian/apache2 2.4.57-2), WDQS (0.3.118) | July 2023      | [5346426041](https://github.com/wmde/wikibase-release-pipeline/actions/runs/5346426041)      | [T334778](https://phabricator.wikimedia.org/T334778) |
+| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.38.6, PHP 8.1.20, debian/apache2 2.4.57-2), WDQS (0.3.118) | July 2023      | [5457015059](https://github.com/wmde/wikibase-release-pipeline/actions/runs/5457015059)      | [T334778](https://phabricator.wikimedia.org/T334778) |
 
 ## March: 2023: First 1.39 release
 
