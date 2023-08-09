@@ -63,7 +63,6 @@ exports.config = {
 	reporters: [
 		[ 'spec', {
 			// Removes "[Chrome Headless 115.0.5790.98 linux #0-1]" preface from spec reports
-			// Has no effect until we upgrade to WDIO Spec 8
 			showPreface: false
 		} ],
 		[ JsonReporter, {} ]
