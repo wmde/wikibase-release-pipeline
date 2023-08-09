@@ -4,7 +4,7 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
-## Work In Progress - August 2023: Security releases for 1.38.7
+## August 2023: Security releases for 1.38.7
 
 - [MediaWiki security and maintenance release announcement: 1.35.10 / 1.38.6 / 1.39.3](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)
 - [MediaWiki security and maintenance release announcement: 1.35.11 / 1.38.7 / 1.39.4](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/HVT3U3XYY35PSCIQPHMY4VQNF3Q6MHUO/)
