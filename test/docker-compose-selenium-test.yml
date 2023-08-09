@@ -14,6 +14,7 @@ services:
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
+      - MOCHA_OPTS_TIMEOUT
 
       - WIKIBASE_SERVER=wikibase.svc:80
       - MW_SERVER=http://wikibase.svc

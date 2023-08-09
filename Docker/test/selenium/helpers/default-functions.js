@@ -223,6 +223,33 @@ const defaultFunctions = function () {
 		return response.data.results.bindings;
 	} );
 
+	browser.addCommand( 'waitForJobs', async function ( {
+		serverURL = process.env.MW_SERVER,
+		// default timeout is 1 second less than default Mocha test timeout
+		timeout = browser.config.mochaOpts.timeout - 1000,
+		timeoutMsg
+	} = {} ) {
+		let jobsInQueue;
+
+		return browser.waitUntil(
+			async () => {
+				const result = await browser.makeRequest(
+					serverURL + '/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json',
+					{ validateStatus: false },
+					{}
+				);
+				jobsInQueue = result.data.query.statistics.jobs;
+
+				return jobsInQueue === 0;
+			},
+			{
+				timeout,
+				timeoutMsg: timeoutMsg ||
+					`Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${timeout / 1000} seconds.`
+			}
+		);
+	} );
+
 };
 
 module.exports = {

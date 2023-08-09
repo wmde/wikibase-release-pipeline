@@ -15,6 +15,11 @@ describe( 'Item', function () {
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
 
+	beforeEach( () => {
+		browser.call( () => browser.waitForJobs() );
+		browser.call( () => browser.waitForJobs( { serverURL: process.env.MW_CLIENT_SERVER } ) );
+	} );
+
 	it( 'Special:NewItem should not be accessible on client', function () {
 
 		browser.url( process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx' );
@@ -57,8 +62,6 @@ describe( 'Item', function () {
 	// creates usage
 	it( 'Should be able to use the item on client with wikitext', function () {
 
-		browser.pause( 10 * 1000 );
-
 		const bodyText = browser.editPage(
 			process.env.MW_CLIENT_SERVER,
 			pageTitle, '{{#statements:' + propertyId + '|from=' + itemId + '}}'
@@ -82,9 +85,6 @@ describe( 'Item', function () {
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) && siteLinkValue.includes( pageTitle ) );
 
-		// wait for dispatching
-		browser.pause( 20 * 1000 );
-
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', function () {
@@ -102,6 +102,7 @@ describe( 'Item', function () {
 		);
 
 		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
+
 	} );
 
 	// This will generate a change that will dispatch
