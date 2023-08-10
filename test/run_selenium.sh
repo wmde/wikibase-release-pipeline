@@ -61,4 +61,4 @@ echo ""
 docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run --user "$(id -u)" \
-    wikibase-selenium-test bash -c "rm -f /usr/src/app/log/$SUITE/selenium-result.json && npm run $NODE_COMMAND --silent"
+    wikibase-selenium-test bash -c "npm run $NODE_COMMAND --silent"
