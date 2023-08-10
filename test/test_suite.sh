@@ -16,7 +16,7 @@ fi
 
 # setup log directory, create "last-ran" file and setup log
 rm -Rf "log/$SUITE"
-mkdir -p "log/$SUITE"
+mkdir -p "log/$SUITE/wikibase"
 touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
 export SETUP_LOG="log/$SUITE/setup.log"
 
