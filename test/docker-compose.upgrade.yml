@@ -17,15 +17,15 @@ services:
          - ${WIKIBASE_HOST}
     environment:
       - DB_SERVER=mysql.svc:3306
+      - MW_WG_SECRET_KEY=${MW_SECRET_KEY}
+      - WIKIBASE_PINGBACK=false
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS
       - MW_ADMIN_EMAIL
-      - MW_WG_SECRET_KEY
       - DB_USER
       - DB_PASS
       - DB_NAME
       - WIKIBASE_HOST
-      - WIKIBASE_PINGBACK=false
   mysql:
     image: "${DEFAULT_DATABASE_IMAGE_NAME}"
     restart: unless-stopped
