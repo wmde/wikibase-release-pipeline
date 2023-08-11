@@ -44,7 +44,7 @@ services:
         aliases:
          - ${WDQS_FRONTEND_HOST}
     environment:
-      - WIKIBASE_HOST=${WIKIBASE_HOST}
+      - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
   wdqs:
     image: "${WDQS_IMAGE_NAME}"
@@ -57,7 +57,7 @@ services:
         aliases:
          - wdqs.svc
     environment:
-      - WIKIBASE_HOST=${WIKIBASE_HOST}
+      - WIKIBASE_HOST
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
     expose:
@@ -87,7 +87,7 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=${WIKIBASE_HOST}
+     - WIKIBASE_HOST
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
@@ -114,8 +114,8 @@ services:
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
-      - OAUTH_CONSUMER_KEY=${OAUTH_CONSUMER_KEY}
-      - OAUTH_CONSUMER_SECRET=${OAUTH_CONSUMER_SECRET}
+      - OAUTH_CONSUMER_KEY
+      - OAUTH_CONSUMER_SECRET
 
 volumes:
   LocalSettings:

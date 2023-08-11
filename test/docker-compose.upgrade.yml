@@ -17,13 +17,13 @@ services:
          - ${WIKIBASE_HOST}
     environment:
       - DB_SERVER=mysql.svc:3306
-      - MW_ADMIN_NAME=${MW_ADMIN_NAME}
-      - MW_ADMIN_PASS=${MW_ADMIN_PASS}
-      - MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL}
-      - MW_WG_SECRET_KEY=${MW_SECRET_KEY}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
+      - MW_ADMIN_NAME
+      - MW_ADMIN_PASS
+      - MW_ADMIN_EMAIL
+      - MW_WG_SECRET_KEY
+      - DB_USER
+      - DB_PASS
+      - DB_NAME
       - WIKIBASE_HOST
       - WIKIBASE_PINGBACK=false
   mysql:
