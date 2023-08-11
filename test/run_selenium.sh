@@ -62,3 +62,8 @@ docker compose \
     $SUITE_CONFIG -f docker-compose-selenium-test.yml \
     run --user "$(id -u)" \
     wikibase-selenium-test bash -c "npm run $NODE_COMMAND --silent"
+
+echo "🔄 Removing running Docker test services and volumes" 
+docker compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    down --volumes --remove-orphans --timeout 1 >> "$SETUP_LOG" 2>&1 || true
