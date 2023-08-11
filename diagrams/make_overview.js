@@ -23,7 +23,7 @@ const pDash = function ( from, to, path ) {
 };
 try {
 	const uploadAction = 'actions/upload-artifact@v2';
-	const filename = '../.github/workflows/built_and_test.yml';
+	const filename = '../.github/workflows/build_and_test.yml';
 	const fileContents = fs.readFileSync( filename, 'utf8' );
 	const data = yaml.load( fileContents );
 
