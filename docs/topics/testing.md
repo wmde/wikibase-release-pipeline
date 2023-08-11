@@ -45,28 +45,6 @@ Tests the example configuration by running the `example` suite against it.
 make test-example SUITE=example
 ```
 
-## Stopping running containers
-
-In order to stop any running containers from testing there are some Makefile targets that can be used to to this.
-
-Stop and remove the example containers
-
-```sh
-make example-stop
-```
-
-Stop and remove the test containers
-
-```sh
-make test-stop
-```
-
-Stop and remove the upgrade containers
-
-```sh
-make upgrade-stop
-```
-
 ##  Variables for testing some other instance
 ```
 WIKIBASE_SERVER=wikibase.svc:80

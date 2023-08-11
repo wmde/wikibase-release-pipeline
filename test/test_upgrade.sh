@@ -23,7 +23,7 @@ rm -Rf "log/upgrade"
 mkdir -p log/upgrade
 rm -Rf "log/post_upgrade"
 mkdir -p log/post_upgrade
-export SETUP_LOG="log/$SUITE/setup.log"
+export SETUP_LOG="log/upgrade/setup.log"
 
 # Why is this neccessary locally, but not in CI?
 set -o allexport; source ../variables.env set +o allexport;
@@ -31,6 +31,8 @@ set -o allexport; source ../variables.env set +o allexport;
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
+# It surprises me that we load both the old version's and new version's ENV VARS here,
+# I'd expect we'd load only the default.env + {old-version}.env at this stage.
 set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
 
 # old wikibase version
@@ -44,28 +46,34 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export RUN_QUERYSERVICE_POST_UPGRADE_TEST="true"
 fi
 
+# shut down the stack if running, remove volumes to start test suite on fresh db
+echo "🔄 Removing existing Docker test services and volumes" 
+docker compose \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    down --volumes --remove-orphans --timeout 1 >> "$SETUP_LOG" 2>&1 || true
+
 # start the old version & write logs
+echo "🔄 Creating Docker test services and volumes on ${ENV_VERSION}"
 docker compose $SUITE_CONFIG up -d >> "$SETUP_LOG" 2>&1
-docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/pre_upgrade.log" &
 
 # wait for it to startup
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >> "$SETUP_LOG" 2>&1
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
-
-## build selenium test container
-docker compose \
-    $SUITE_CONFIG \
-    -f docker-compose-selenium-test.yml \
-    build \
-    wikibase-selenium-test >> "$SETUP_LOG" 2>&1
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run --rm wikibase-test
 
 # Run pre_upgrade suite
+echo ""
+echo "✳️  Upgrade test: Running test suites on ${ENV_VERSION} (pre-upgrade)"
+echo ""
 docker compose \
-    $SUITE_CONFIG \
-    -f docker-compose-selenium-test.yml \
-    run \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    run --user "$(id -u)" \
     -e SUITE=pre_upgrade \
-    wikibase-selenium-test npm run test:run
+    wikibase-selenium-test bash -c "npm run test:run --silent"
+
+echo ""
+echo "✳️  Upgrade test: Performing upgrade steps for \"${TO_VERSION}\" (upgrade)"
+echo ""
 
 # the entrypoint logic is always depending on LocalSettings.php to be there
 # since it's now mounted per default it gets removed when the container changes.
@@ -87,7 +95,8 @@ sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/client\/WikibaseClien
 # shellcheck disable=SC2016
 sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.php";/c\wfLoadExtension( "WikibaseRepo", "${DOLLAR}IP\/extensions\/Wikibase\/extension-repo.json" );' $TMP_LOCALSETTINGS
 
-# docker compose down to simulate upgrade
+# docker compose down (keeping volumes) to simulate upgrade
+echo "🔄 Removing Docker test services for ${ENV_VERSION}, but keeping volumes" 
 docker compose $SUITE_CONFIG down >> $SETUP_LOG 2>&1
 
 # allow overriding target
@@ -96,7 +105,7 @@ if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
-echo "Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
+echo "ℹ️  Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
 
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
@@ -104,25 +113,29 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 # load new version and start it 
+echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\""
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $SETUP_LOG 2>&1
 docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d >> $SETUP_LOG 2>&1
-docker compose $SUITE_CONFIG logs -f --no-color > "log/post_upgrade/$ENV_VERSION.log" &
+docker compose $SUITE_CONFIG logs -f --no-color > "log/post_upgrade/post_upgrade.log" &
 
 # run status checks and wait until containers start
 docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >> $SETUP_LOG 2>&1
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run --rm wikibase-test
 
 # run update.php and log to separate file
-UPGRADE_LOG_FILE="log/upgrade/$ENV_VERSION.log"
+UPGRADE_LOG_FILE="log/upgrade/upgrade.log"
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
 
 # Run post_upgrade suite
+echo ""
+echo "✳️  Upgrade test: Running test suites using \"${TO_VERSION}\" (post-upgrade)"
+echo ""
 docker compose \
-    $SUITE_CONFIG \
-    -f docker-compose-selenium-test.yml \
-    run \
+    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
+    run --user "$(id -u)" \
     -e SUITE=post_upgrade \
-    wikibase-selenium-test npm run test:run
+    wikibase-selenium-test bash -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
+echo "🔄 Removing running Docker test services and volumes" 
 docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml down --volumes --remove-orphans >> $SETUP_LOG 2>&1
