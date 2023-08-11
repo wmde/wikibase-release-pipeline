@@ -9,16 +9,23 @@ export
 download:
 	bash publish/download.sh
 
+.PHONY: lint
+lint:
+	@bash lint.sh
+
 .PHONY: test
 test: test-stop
+	@make lint
 	bash test/test_suite.sh ${SUITE}
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
+	@make lint
 	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example: example-stop
+	@make lint
 	bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
@@ -34,6 +41,8 @@ example-stop:
 	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
+	@make lint
+
 	# bundle tests
 	bash test/test_suite.sh repo
 	bash test/test_suite.sh fedprops
