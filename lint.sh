@@ -9,13 +9,13 @@ docker run --rm -v "$(pwd)":/code -v ./.hadolint.yml:/.hadolint.yml hadolint/had
 # Bash Script linting with Spellcheck (bash)
 # https://github.com/koalaman/shellcheck#from-your-terminal
 echo "✳️  Linting Shell Scripts (*.sh)"
-find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run -v "$(pwd)":/code dcycle/shell-lint:2
+find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
 
 # Javascript linting Selenium tests
 echo "✳️  Linting Javascript in Selenium specs (Docker/test/selenium/specs/**/.js)"
 {
   cd Docker/test/selenium
-  npm install
+  npm install --loglevel=error
 } > /dev/null || exit
 npm run lint --silent
 cd ../../..  > /dev/null || exit
@@ -24,7 +24,7 @@ cd ../../..  > /dev/null || exit
 echo "✳️  Linting Javascript in Diagrams code (diagrams/**/.js)"
 {
   cd diagrams
-  npm install  > /dev/null || exit
+  npm install  --loglevel=error > /dev/null || exit
 } > /dev/null || exit
 npm run lint --silent
 cd ..  > /dev/null || exit
