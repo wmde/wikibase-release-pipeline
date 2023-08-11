@@ -33,8 +33,8 @@ else
 
     # load additional bundle images
     {
-        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
-        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz" >> "$SETUP_LOG" 2>&1
+        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
+        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
     } >> "$SETUP_LOG" 2>&1
 fi
 

@@ -17,8 +17,11 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
+rm -Rf "log/pre_upgrade"
 mkdir -p log/pre_upgrade
+rm -Rf "log/upgrade"
 mkdir -p log/upgrade
+rm -Rf "log/post_upgrade"
 mkdir -p log/post_upgrade
 export SETUP_LOG="log/$SUITE/setup.log"
 
