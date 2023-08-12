@@ -2,10 +2,12 @@
 version: '3'
 
 services:
-  wikibase-test:
+  test-setup:
     build:
       context: ../Docker/test/curl/
       dockerfile: Dockerfile
+    volumes:
+      - .:/test
     environment:
       - QS_SERVER=quickstatements.svc:80
       - WIKIBASE_SERVER=wikibase.svc:80

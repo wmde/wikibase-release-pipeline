@@ -58,8 +58,8 @@ docker compose $SUITE_CONFIG up -d >> "$SETUP_LOG" 2>&1
 docker compose $SUITE_CONFIG logs -f --no-color > "log/pre_upgrade/pre_upgrade.log" &
 
 # wait for it to startup
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >> "$SETUP_LOG" 2>&1
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run --rm wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose.test-setup.yml build test-setup >> "$SETUP_LOG" 2>&1
+docker compose $SUITE_CONFIG -f docker-compose.test-setup.yml run --rm test-setup
 
 # Run pre_upgrade suite
 echo ""
@@ -119,8 +119,8 @@ docker compose $SUITE_CONFIG -f upgrade/docker-compose.override.yml up -d >> $SE
 docker compose $SUITE_CONFIG logs -f --no-color > "log/post_upgrade/post_upgrade.log" &
 
 # run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test >> $SETUP_LOG 2>&1
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run --rm wikibase-test
+docker compose $SUITE_CONFIG -f docker-compose.test-setup.yml build test-setup >> $SETUP_LOG 2>&1
+docker compose $SUITE_CONFIG -f docker-compose.test-setup.yml run --rm test-setup
 
 # run update.php and log to separate file
 UPGRADE_LOG_FILE="log/upgrade/upgrade.log"

@@ -2,7 +2,7 @@
 version: '3'
 
 services:
-  wikibase-test:
+  test-setup:
     build:
       context: ../Docker/test/curl/
       dockerfile: Dockerfile
