@@ -23,9 +23,11 @@ set -o allexport; source ../variables.env set +o allexport;
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
-mkdir -p log/upgrade
+LOG_DIR="log/upgrade"
+SETUP_LOG="$LOG_DIR/setup.log"
 
-export SETUP_LOG="log/upgrade/setup.log"
+mkdir -p "$LOG_DIR"
+rm -f "$SETUP_LOG" || true
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
@@ -64,7 +66,11 @@ echo ""
 echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"
 echo ""
 
-mkdir -p log/"$SUITE"
+LOG_DIR="log/$SUITE"
+TEST_LOG="$LOG_DIR/$SUITE.log"
+
+mkdir -p "$LOG_DIR"
+rm -f "$TEST_LOG" || true
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 echo "🔄 Removing existing Docker test services and volumes" 
@@ -73,7 +79,7 @@ remove_services_and_volumes
 # start the old version & write logs
 echo "🔄 Creating Docker test services and volumes on ${ENV_VERSION}"
 $SUITE_COMPOSE up -d >> "$SETUP_LOG" 2>&1
-$SUITE_COMPOSE logs -f --no-color > "log/${SUITE}/{$SUITE}.log" &
+$SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
 
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
@@ -137,13 +143,17 @@ echo ""
 echo "▶️  Setting-up \"$SUITE\" test suite"
 echo ""
 
-mkdir -p log/"$SUITE"
+LOG_DIR="log/$SUITE"
+TEST_LOG="$LOG_DIR/$SUITE.log"
+
+mkdir -p "$LOG_DIR"
+rm -f "$TEST_LOG" || true
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\""
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $SETUP_LOG 2>&1
 $SUITE_COMPOSE -f upgrade/docker-compose.override.yml up -d >> $SETUP_LOG 2>&1
-$SUITE_COMPOSE logs -f --no-color > "log/$SUITE/$SUITE.log" &
+$SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
 
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
@@ -151,8 +161,7 @@ $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""
 
-UPGRADE_LOG_FILE="log/upgrade/upgrade.log"
-docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$UPGRADE_LOG_FILE"
+docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$TEST_LOG"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")"
 

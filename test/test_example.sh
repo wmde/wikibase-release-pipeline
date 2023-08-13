@@ -11,9 +11,15 @@ fi
 
 cd test
 set -o allexport; source ../example/template.env; source example.env; set +o allexport
-mkdir -p "log/$SUITE"
 
-export SETUP_LOG="log/$SUITE/setup.log"
+export LOG_DIR="log/$SUITE"
+export SETUP_LOG="$LOG_DIR/setup.log"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
+
+mkdir -p "$LOG_DIR"
+rm -f "$SETUP_LOG" || true
+rm -f "$TEST_LOG" || true
+
 # TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 ## Use in combination with example compose files 
