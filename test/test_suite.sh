@@ -14,12 +14,10 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
-# setup log directory, create "last-ran" file and setup log
-rm -Rf "log/$SUITE"
-mkdir -p "log/$SUITE/wikibase"
-mkdir -p "log/$SUITE/client"
-touch "log/$SUITE/last-ran-$(date +%Y-%d-%m_%H-%M%Z)"
-export SETUP_LOG="log/$SUITE/setup.log"
+mkdir -p "log/$SUITE"
+
+export LOG_DIR="log/$SUITE"
+export SETUP_LOG="$LOG_DIR/setup.log"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
@@ -50,6 +48,7 @@ export WIKIBASE_TEST_IMAGE_NAME
 
 echo "ℹ️  $(docker --version)"
 
+# Does it do anything to be adding the ":latest" tag to these?
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_TEST_IMAGE_NAME:latest"
 export QUERYSERVICE_IMAGE_NAME="$QUERYSERVICE_IMAGE_NAME:latest"
 export QUERYSERVICE_UI_IMAGE_NAME="$QUERYSERVICE_UI_IMAGE_NAME:latest"
