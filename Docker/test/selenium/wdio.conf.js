@@ -6,7 +6,7 @@
 'use strict';
 
 const fs = require( 'fs' );
-const	saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
+const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( './json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
@@ -59,7 +59,7 @@ exports.config = {
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
 	logLevel: process.env.SELENIUM_LOG_LEVEL || 'error',
 
-	// Setting this enables automatic screenshots for when a browser command fails	assertions.
+	// Setting this enables automatic screenshots for when a browser command fails assertions.
 	screenshotPath,
 
 	// Default timeout for each waitFor* command.
@@ -68,8 +68,9 @@ exports.config = {
 	// See also: http://webdriver.io/guide/testrunner/reporters.html
 	reporters: [
 		[
-			'spec', {
-				showPreface: false,
+			'spec',
+			{
+				showPreface: false
 				// Only available after we're on the v8 version of this plugin.
 				// Once we're there this may do something we don't want, but
 				// keeping here to remind us to consider the possibility of silencing
@@ -78,7 +79,8 @@ exports.config = {
 			}
 		],
 		[
-			JsonReporter, {
+			JsonReporter,
+			{
 				resultFilePath
 			}
 		]
@@ -158,10 +160,10 @@ exports.config = {
 	/**
 	 * Remove screenshots and result.json from previous runs before any tests start running
 	 */
-	onPrepare: function () {		
-		fs.mkdir(logPath, { recursive: true }, () => {});
-		fs.rmdir(screenshotPath, { recursive: true, force: true }, () => {});
-		fs.rm(resultFilePath, { force: true }, () => {});
+	onPrepare: function () {
+		fs.mkdir( logPath, { recursive: true }, () => {} );
+		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
+		fs.rm( resultFilePath, { force: true }, () => {} );
 	},
 
 	/**

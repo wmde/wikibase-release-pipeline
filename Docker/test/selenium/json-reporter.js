@@ -9,8 +9,8 @@ class JsonReporter extends reporter.default {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
 		super( options );
-	
-		this.resultFilePath = options.resultFilePath
+
+		this.resultFilePath = options.resultFilePath;
 		this.failures = [];
 		this.success = [];
 		this.skipped = [];
