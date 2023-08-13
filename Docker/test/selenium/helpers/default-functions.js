@@ -190,7 +190,6 @@ const defaultFunctions = function () {
 		// click run
 		$( "button[tt='run']" ).waitForDisplayed();
 		$( "button[tt='run']" ).click();
-		console.log( 'executing quickstatements query: ' + theQuery );
 
 		const commands = $$( '.command_status' );
 
