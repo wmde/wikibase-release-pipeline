@@ -19,13 +19,13 @@ jobs:
       - name: Test example
         run: make test-example SUITE=example
       
-      - name: Archive test example artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: TestExampleArtifacts
-          if-no-files-found: error
-          path: |
-            example/log
-            test/log
+      # - name: Archive test example artifacts
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: TestExampleArtifacts
+      #     if-no-files-found: error
+      #     path: |
+      #       example/log
+      #       test/log
           
