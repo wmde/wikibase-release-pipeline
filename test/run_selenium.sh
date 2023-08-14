@@ -50,7 +50,7 @@ $SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
 
-echo -e "\n✳️  Running \"$SUITE\" test suite\n"
+echo -e "\n✳️  Running \"$SUITE\" test suite"
 
 WDIO_COMMAND='npm run test:run --silent'
 if [ -n "$FILTER" ]; then
