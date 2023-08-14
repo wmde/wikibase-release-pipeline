@@ -14,13 +14,17 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
+# log directory setup
 export LOG_DIR="log/$SUITE"
 export SETUP_LOG="$LOG_DIR/setup.log"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
-mkdir -p "$LOG_DIR"
 rm -f "$SETUP_LOG" || true
 rm -f "$TEST_LOG" || true
+rm -rf "$LOG_DIR/wikibase"
+rm -rf "$LOG_DIR/client"
+mkdir -p "$LOG_DIR/wikibase"
+mkdir -p "$LOG_DIR/client"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"

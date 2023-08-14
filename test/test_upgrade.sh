@@ -23,11 +23,17 @@ set -o allexport; source ../variables.env set +o allexport;
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
-LOG_DIR="log/upgrade"
-SETUP_LOG="$LOG_DIR/setup.log"
+# log directory setup
+export LOG_DIR="log/$SUITE"
+export SETUP_LOG="$LOG_DIR/setup.log"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
 
-mkdir -p "$LOG_DIR"
 rm -f "$SETUP_LOG" || true
+rm -f "$TEST_LOG" || true
+rm -rf "$LOG_DIR/wikibase"
+rm -rf "$LOG_DIR/client"
+mkdir -p "$LOG_DIR/wikibase"
+mkdir -p "$LOG_DIR/client"
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
@@ -65,12 +71,6 @@ SUITE=pre_upgrade
 echo ""
 echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"
 echo ""
-
-LOG_DIR="log/$SUITE"
-TEST_LOG="$LOG_DIR/$SUITE.log"
-
-mkdir -p "$LOG_DIR"
-rm -f "$TEST_LOG" || true
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 echo "🔄 Removing existing Docker test services and volumes" 
