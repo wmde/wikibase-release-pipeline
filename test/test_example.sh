@@ -17,6 +17,8 @@ export SETUP_LOG="$LOG_DIR/setup.log"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 mkdir -p "$LOG_DIR"
+mkdir -p "log/$SUITE/wikibase"
+mkdir -p "log/$SUITE/client"
 rm -f "$SETUP_LOG" || true
 rm -f "$TEST_LOG" || true
 
