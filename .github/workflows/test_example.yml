@@ -25,7 +25,7 @@ jobs:
         with:
           name: TestExampleArtifacts
           if-no-files-found: error
-          path: |
-            example/log
-            test/log
+          # path: |
+          #   example/log
+          #   test/log
           
