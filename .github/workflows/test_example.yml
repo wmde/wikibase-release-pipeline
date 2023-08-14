@@ -11,7 +11,7 @@ on:
 
 jobs:
   test_example:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3

@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint_dockerfiles:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - uses: hadolint/hadolint-action@v3.1.0
@@ -16,13 +16,13 @@ jobs:
           recursive: true
 
   lint_shell_scripts:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - uses: bewuethr/shellcheck-action@v2
 
   lint_selenium_tests:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - uses: c-py/action-dotenv-to-setenv@v4
@@ -40,7 +40,7 @@ jobs:
           npm install
           npm run lint
   lint_diagrams:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - uses: c-py/action-dotenv-to-setenv@v4

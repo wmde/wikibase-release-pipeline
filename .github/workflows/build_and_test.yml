@@ -25,7 +25,7 @@ env:
 jobs:
 
   build_wikibase:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -107,7 +107,7 @@ jobs:
           image_tag: latest
 
   build_wikibase_bundle:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     needs:
       - build_wikibase
@@ -190,7 +190,7 @@ jobs:
           image_tag: latest
 
   build_quickstatements:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -250,7 +250,7 @@ jobs:
           image_tag: latest
 
   build_wdqs:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -311,7 +311,7 @@ jobs:
           image_tag: latest
 
   build_wdqs_proxy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -363,7 +363,7 @@ jobs:
           image_tag: latest
 
   build_wdqs_frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -437,7 +437,7 @@ jobs:
           image_tag: latest
 
   build_elasticsearch:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -514,7 +514,7 @@ jobs:
       - build_wdqs_frontend
       - build_wdqs_proxy
       - build_quickstatements
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -567,7 +567,7 @@ jobs:
         ]
     needs:
       - build_wikibase
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - name: Get Wikibase docker image artifact
@@ -606,7 +606,7 @@ jobs:
         ]
     needs:
       - build_wikibase_bundle
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
     steps:
@@ -637,7 +637,7 @@ jobs:
   versions:
     needs:
       - test_wikibase
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
