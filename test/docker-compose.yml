@@ -11,6 +11,7 @@ x-common-variables: &wikibase_variables
     DB_PASS: sqlpass
     DB_NAME: my_wiki
     MW_WG_ENABLE_UPLOADS: true
+    MW_WG_JOB_RUN_RATE: 0
 
 services:
   wikibase:
