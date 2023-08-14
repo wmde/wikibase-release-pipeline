@@ -201,8 +201,6 @@ const defaultFunctions = function () {
 			}
 		);
 
-		console.log( 'quickstatements query complete: ' + theQuery );
-
 	} );
 
 	/**
