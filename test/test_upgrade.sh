@@ -168,5 +168,5 @@ echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")"
 $SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
-echo "🔄 Removing running Docker test services and volumes" 
+echo -e "🔄 Removing running Docker test services and volumes\n" 
 remove_services_and_volumes

@@ -59,5 +59,5 @@ fi
 
 $SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "$WDIO_COMMAND"
 
-echo "🔄 Removing running Docker test services and volumes" 
+echo -e "🔄 Removing running Docker test services and volumes\n"
 remove_services_and_volumes
