@@ -61,4 +61,3 @@ jobs:
         run: |
           cd diagrams
           node make_overview.js
-          
