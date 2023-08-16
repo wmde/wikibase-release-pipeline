@@ -14,10 +14,8 @@ set -o allexport; source ../example/template.env; source example.env; set +o all
 
 # log directory setup
 export LOG_DIR="log/$SUITE"
-export SETUP_LOG="$LOG_DIR/setup.log"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
-rm -f "$SETUP_LOG" || true
 rm -f "$TEST_LOG" || true
 rm -rf "$LOG_DIR/wikibase"
 mkdir -p "$LOG_DIR/wikibase"
