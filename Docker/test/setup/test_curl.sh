@@ -16,7 +16,7 @@ check_if_up() {
     if ! (/usr/bin/curl --fail --output /dev/null --silent "$FULL_URL";) then
         echo "🔄 Waiting for $DISPLAY_URL"
 
-        if ! (/usr/bin/curl --fail --retry 120 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 120 --output /dev/null --silent "$FULL_URL";) then
+        if ! (/usr/bin/curl --fail --retry 240 --retry-all-errors --retry-delay 1 --max-time 10 --retry-max-time 240 --output /dev/null --silent "$FULL_URL";) then
             echo "❌ Could not load $DISPLAY_URL"
             exit 1
         fi

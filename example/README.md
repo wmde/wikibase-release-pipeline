@@ -33,7 +33,7 @@ You can speed it up by increasing the `MAX_JOBS` variable to run more jobs betwe
 Alternatively, you can run several job runners in parallel by using the `--scale` option.
 
 ```sh
-docker compose up --scale wikibase_jobrunner=8
+docker compose up --scale wikibase-jobrunner=8
 ```
 
 ## Running additional services
