@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const Property = require( '../../pages/entity/property.page' );
+const Property = require( '../../helpers/pages/entity/property.page' );
 
 describe( 'Property', function () {
 

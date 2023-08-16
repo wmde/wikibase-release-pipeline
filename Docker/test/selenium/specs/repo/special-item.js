@@ -1,6 +1,6 @@
 'use strict';
 
-const SpecialNewItem = require( '../../pages/special/new-item.page' );
+const SpecialNewItem = require( '../../helpers/pages/special/new-item.page' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 
 describe( 'Special:NewItem', function () {

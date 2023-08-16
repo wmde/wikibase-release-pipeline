@@ -13,7 +13,7 @@ describe( 'Scribunto', function () {
 		browser.editPage(
 			process.env.MW_SERVER,
 			'Module:Bananas',
-			fs.readFileSync( 'data/bananas.lua', 'utf8' )
+			fs.readFileSync( __dirname + '/bananas.lua', 'utf8' )
 		);
 
 		const executionContent = browser.editPage(

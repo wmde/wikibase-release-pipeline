@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require( 'assert' );
-const SpecialNewProperty = require( '../../pages/special/new-property.page' );
+const SpecialNewProperty = require( '../../helpers/pages/special/new-property.page' );
 
 describe( 'Special:NewProperty', function () {
 

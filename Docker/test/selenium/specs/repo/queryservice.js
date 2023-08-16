@@ -3,7 +3,7 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const QueryServiceUI = require( '../../pages/queryservice-ui/queryservice-ui.page' );
+const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 

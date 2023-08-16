@@ -22,7 +22,7 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '#wpUploadFile' ).waitForDisplayed();
 
 		const fileUpload = $( '#wpUploadFile' );
-		const filePath = path.join( __dirname, '../../../data/image.png' );
+		const filePath = path.join( __dirname, '/image.png' );
 		fileUpload.setValue( filePath );
 
 		$( 'input.mw-htmlform-submit' ).click();

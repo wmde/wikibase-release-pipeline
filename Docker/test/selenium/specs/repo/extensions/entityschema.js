@@ -24,7 +24,7 @@ describe( 'EntitySchema', function () {
 		$( 'input[name ="description"]' ).setValue( testDescription );
 
 		// set template
-		const shexTemplate = fs.readFileSync( 'data/entityschema.sx', 'utf8' );
+		const shexTemplate = fs.readFileSync( __dirname + '/entityschema.sx', 'utf8' );
 		$( 'textarea[name ="schema-text"]' ).setValue( shexTemplate );
 
 		$( 'button[name ="submit"]' ).click();
