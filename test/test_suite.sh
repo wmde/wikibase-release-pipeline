@@ -20,9 +20,9 @@ mkdir -p "$LOG_DIR/wikibase"
 rm -rf "$LOG_DIR/client"
 mkdir -p "$LOG_DIR/client"
 
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
     export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"

@@ -66,9 +66,9 @@ $SUITE_AND_TEST_RUNNER_COMPOSE build wikibase-selenium-test >> "$TEST_LOG" 2>&1
 
 SUITE=pre_upgrade
 
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 echo "🔄 Removing existing Docker test services and volumes" 
@@ -77,7 +77,7 @@ remove_services_and_volumes
 # start the old version & write logs
 echo "🔄 Creating Docker test services and volumes on ${ENV_VERSION}" 2>&1 | tee -a "$TEST_LOG"
 $SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
-$SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
+$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
@@ -90,9 +90,9 @@ $SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "npm run 
 # ================================= upgrade ===================================
 # ============================================================================= 
 
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "✳️  Performing upgrade steps for \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 
 # the entrypoint logic is always depending on LocalSettings.php to be there
 # since it's now mounted per default it gets removed when the container changes.
@@ -143,15 +143,15 @@ TEST_LOG="$LOG_DIR/$SUITE.log"
 mkdir -p "$LOG_DIR"
 rm -f "$TEST_LOG" || true
 
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
-echo ""
+echo "" 2>&1 | tee -a "$TEST_LOG"
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
 $SUITE_COMPOSE -f upgrade/docker-compose.override.yml up -d >> $TEST_LOG 2>&1
-$SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
+$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup

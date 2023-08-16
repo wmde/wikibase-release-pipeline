@@ -46,7 +46,7 @@ remove_services_and_volumes
 # create stack
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 $SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
-$SUITE_COMPOSE logs -f --no-color > "$TEST_LOG" &
+$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 # wait until containers start
 $SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
 
