@@ -15,17 +15,23 @@ lint:
 
 .PHONY: test
 test: test-stop
+ifndef GITHUB_ACTIONS
 	@make lint
+endif
 	bash test/test_suite.sh ${SUITE}
 
 .PHONY: test-upgrade
 test-upgrade: upgrade-stop
+ifndef GITHUB_ACTIONS
 	@make lint
+endif
 	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example: example-stop
+ifndef GITHUB_ACTIONS
 	@make lint
+endif
 	bash test/test_example.sh ${SUITE}
 
 .PHONY: test-stop
@@ -41,7 +47,9 @@ example-stop:
 	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 test-all:
+ifndef GITHUB_ACTIONS
 	@make lint
+endif
 
 	# bundle tests
 	bash test/test_suite.sh repo
