@@ -4,6 +4,6 @@ git_cache/*
 Docker/**/*.tar.gz
 test/log
 test/mwlog
-diagrams/node_modules/
+docs/diagrams/node_modules/
 artifacts/*
 docs/*

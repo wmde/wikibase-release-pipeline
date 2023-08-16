@@ -15,7 +15,7 @@ Docker/build/WDQS/wait-for-it.sh
 Docker/**/*.tar.gz
 test/log
 test/mwlog
-diagrams/node_modules/
+docs/diagrams/node_modules/
 artifacts/*
 local.env
 example/log

@@ -47,7 +47,7 @@ To manually run the pipeline go to to actions, click the workflow and run the wo
 
 After triggering the pipeline a set of jobs will start running, which after a successful run will result in a number of artifacts as described in the diagram below.
 
-![Queuing the pipeline](../../diagrams/output/overview.svg "Queuing the pipeline")
+![Queuing the pipeline](../diagrams/output/overview.svg "Queuing the pipeline")
 
 `BuildArtifacts` - contains the release candidate artifact for each component that was built.
 
