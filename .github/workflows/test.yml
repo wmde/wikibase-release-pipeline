@@ -56,7 +56,7 @@ jobs:
       - name: Report
         if: always()
         run: |
-          cd test/reporter
+          cd test/config/reporter
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
