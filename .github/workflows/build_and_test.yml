@@ -505,7 +505,7 @@ jobs:
           base__repo_client,
           base__pingback,
           base__fedprops,
-        ],
+        ]
         databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
     needs:
       - build_wikibase_bundle
