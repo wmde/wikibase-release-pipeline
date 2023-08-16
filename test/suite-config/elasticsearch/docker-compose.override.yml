@@ -22,6 +22,13 @@ services:
     volumes:
       - ./suite-config/elasticsearch/wikibase/extra-install.sh:/extra-install.sh
 
+  wikibase-jobrunner:
+    environment: 
+      - MW_ELASTIC_HOST=elasticsearch.svc
+      - MW_ELASTIC_PORT=9200
+    volumes:
+      - ./suite-config/elasticsearch/wikibase/extra-install.sh:/extra-install.sh
+
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
     restart: unless-stopped

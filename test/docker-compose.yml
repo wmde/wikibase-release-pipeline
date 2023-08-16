@@ -33,7 +33,7 @@ services:
          - wikibase.svc
     environment:
       <<: *wikibase_variables
-  wikibase_jobrunner:
+  wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh

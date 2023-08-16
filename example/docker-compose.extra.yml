@@ -15,7 +15,7 @@ services:
       <<: *wikibase_extra_variables
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
 
-  wikibase_jobrunner:
+  wikibase-jobrunner:
     environment:
       <<: *wikibase_extra_variables
 
