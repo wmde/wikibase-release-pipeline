@@ -25,4 +25,4 @@ export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 ## Use in combination with example compose files 
 export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
 
-bash run_selenium.sh "$SUITE"
+bash scripts/run_selenium.sh "$SUITE"

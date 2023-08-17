@@ -63,4 +63,4 @@ export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
 export DEFAULT_SUITE_CONFIG="--env-file default.env -f docker-compose.yml"
 
-bash run_selenium.sh "$1"
+bash scripts/run_selenium.sh "$1"
