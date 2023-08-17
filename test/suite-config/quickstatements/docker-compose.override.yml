@@ -16,7 +16,7 @@ services:
 
   mysql:
     volumes:  
-      - ./suite-config/create-client-db.sql:/docker-entrypoint-initdb.d/02-create-client-db.sql
+      - ./suite-config/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     environment: 
@@ -24,7 +24,7 @@ services:
     volumes:
       - quickstatements-data:/quickstatements/data
       - ./suite-config/quickstatements/wikibase-extra-install.sh:/extra-install.sh
-      - ./suite-config/extra-install-repo.sh:/client-extra-install.sh
+      - ./suite-config/repo-extra-install.sh:/client-extra-install.sh
       - ./suite-config/repo_client/repo-LocalSettings.php.template:/LocalSettings.php.template
 
   wikibase-client:
@@ -38,7 +38,7 @@ services:
     restart: always
     volumes:
       - ./suite-config/repo_client/client-LocalSettings.php.template:/LocalSettings.php.template
-      - ./suite-config/extra-install-client.sh:/extra-install.sh
+      - ./suite-config/client-extra-install.sh:/extra-install.sh
     ports:
       - "8383:80"
     networks:
