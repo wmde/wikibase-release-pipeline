@@ -9,12 +9,12 @@ services:
 
   test-setup:
     build:
-      context: ./setup/
       dockerfile: Dockerfile
+      context: ../test
     volumes:
-      - ./suite-config/elasticsearch/curl-test/entrypoint.sh:/entrypoint.sh
+      - ./suite-config/elasticsearch/setup.sh:/setup.sh
     entrypoint: /bin/sh
-    command:  /entrypoint.sh
+    command:  /setup.sh
     environment: 
       <<: *wikibase_extra_variables
 
@@ -22,7 +22,7 @@ services:
     environment: 
       <<: *wikibase_extra_variables
     volumes:
-      - ./suite-config/elasticsearch/wikibase/extra-install.sh:/extra-install.sh
+      - ./suite-config/elasticsearch/wikibase-extra-install.sh:/extra-install.sh
 
   wikibase-jobrunner:
     environment:
