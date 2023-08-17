@@ -5,7 +5,7 @@ services:
 
   test-setup:
     build:
-      context: ../Docker/test/setup/
+      context: ./setup/
       dockerfile: Dockerfile
     volumes:
       - ./suite-config/quickstatements/curl-test/entrypoint.sh:/entrypoint.sh

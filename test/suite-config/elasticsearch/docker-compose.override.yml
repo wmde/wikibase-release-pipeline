@@ -9,7 +9,7 @@ services:
 
   test-setup:
     build:
-      context: ../Docker/test/setup/
+      context: ./setup/
       dockerfile: Dockerfile
     volumes:
       - ./suite-config/elasticsearch/curl-test/entrypoint.sh:/entrypoint.sh
@@ -37,6 +37,10 @@ services:
          - elasticsearch.svc
     environment:
       discovery.type: single-node
+      # This setting may need to be set to false to avoid: https://github.com/elastic/elasticsearch/issues/22899
+      # Added to support running in emulation on an arm64 (Apple M1) machine on Elasticsearch 6.8.3,
+      # Can be removed once we are no longer doing builds requiring 6.8.3
+      bootstrap.system_call_filter: ${ELASTICSEARCH_CALL_FILTER:-true}
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
 
 volumes:
