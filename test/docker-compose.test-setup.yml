@@ -4,8 +4,8 @@ version: '3'
 services:
   test-setup:
     build:
-      context: ./setup
       dockerfile: Dockerfile
+      context: ../test
     volumes:
       - .:/test
     environment:
