@@ -105,18 +105,30 @@ exports.config = {
 		],
 
 		// bundle-specs
-		repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ],
-		repo_client: [ './specs/repo_client/*.js', './specs/repo_client/extensions/*.js' ],
-		fedprops: [ './specs/fedprops/*.js' ],
-		pingback: [ './specs/pingback/*.js' ],
-
+		repo: [
+			'./specs/repo/*.js',
+			'./specs/repo/extensions/*.js'
+		],
+		repo_client: [
+			'./specs/repo_client/*.js',
+			'./specs/repo_client/extensions/*.js'
+		],
+		fedprops: [
+			'./specs/fedprops/*.js'
+		],
+		pingback: [
+			'./specs/pingback/*.js'
+		],
 		quickstatements: [
 			'./specs/repo_client/interwiki-links.js',
 			'./specs/quickstatements/*.js'
 		],
-
-		elasticsearch: [ './specs/elasticsearch/*.js' ],
-		confirm_edit: [ './specs/confirm_edit/*.js' ],
+		elasticsearch: [
+			'./specs/elasticsearch/*.js'
+		],
+		confirm_edit: [
+			'./specs/confirm_edit/*.js'
+		],
 
 		// base-specs
 		base__repo: [
