@@ -11,7 +11,7 @@ const JsonReporter = require( './json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
-const logPath = process.env.LOG_DIR || `${__dirname}/log/${process.env.SUITE}`;
+const logPath = process.env.LOG_DIR || `${__dirname}/suite-config/${process.env.SUITE}/logs`;
 const screenshotPath = `${logPath}/screenshots`;
 const resultFilePath = `${logPath}/result.json`;
 

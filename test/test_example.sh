@@ -13,7 +13,7 @@ cd test
 set -o allexport; source ../example/template.env; source example.env; set +o allexport
 
 # log directory setup
-export LOG_DIR="log/$SUITE"
+export LOG_DIR="suite-config/$SUITE/logs"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 rm -f "$TEST_LOG" || true

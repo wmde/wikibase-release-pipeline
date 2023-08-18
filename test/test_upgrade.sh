@@ -26,7 +26,7 @@ DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 SUITE=upgrade
 
 # log directory setup
-export LOG_DIR="log/$SUITE"
+export LOG_DIR="suite-config/$SUITE/logs"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 rm -f "$TEST_LOG" || true
@@ -135,7 +135,7 @@ fi
 
 SUITE=post_upgrade
 
-LOG_DIR="log/$SUITE"
+LOG_DIR="suite-config/$SUITE/logs"
 TEST_LOG="$LOG_DIR/$SUITE.log"
 
 mkdir -p "$LOG_DIR"
