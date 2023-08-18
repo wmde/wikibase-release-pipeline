@@ -1,33 +1,34 @@
 # Wikibase For testing
-version: '3'
+version: '3.4'
 
 services:
   wikibase-selenium-test:
     build:
-      context: ../Docker/test/selenium/
+      context: ../test
       dockerfile: Dockerfile
+    entrypoint: /bin/sh
     volumes:
-      # This is a bit of a functional hack for the case of test-example,
-      # but still works in all other test suites.
+      - ../test/suite-config:/usr/src/app/suite-config
+      - ../test/specs:/usr/src/app/specs
       - ../test/log:/usr/src/app/log
+      - ../test/default.env:/usr/src/app/default.env
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
 
-      - WIKIBASE_SERVER=wikibase.svc:80
-      - MW_SERVER=http://wikibase.svc
-      - MW_CLIENT_SERVER=http://wikibase-client.svc
-      - QS_SERVER=http://quickstatements.svc:80
-      - WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-      - WDQS_SERVER=wdqs.svc:9999
-      - PINGBACK_BEACON_SERVER=http://mediawiki.svc
-      - WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
+      - MW_SERVER
+      - MW_CLIENT_SERVER
+      - QS_SERVER
+      - WDQS_FRONTEND_SERVER
+      - WDQS_SERVER
+      - PINGBACK_BEACON_SERVER
+      - WDQS_PROXY_SERVER
       
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS
-      - MW_SCRIPT_PATH=/w
+      - MW_SCRIPT_PATH
 
       - WMDE_RELEASE_VERSION
       - MEDIAWIKI_VERSION
@@ -36,7 +37,7 @@ services:
       - FILTER
       
       - DOCKER_WIKIBASE_REPO_NAME
-      - DOCKER_WIKIBASE_CLIENT_NAME=wikibase-client-1
+      - DOCKER_WIKIBASE_CLIENT_NAME
       - DOCKER_MYSQL_NAME
 
       - DB_USER

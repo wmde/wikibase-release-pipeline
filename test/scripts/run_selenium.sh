@@ -19,24 +19,22 @@ if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
     exit 1
 fi
 
+SUITE_COMPOSE="docker compose $DEFAULT_SUITE_CONFIG"
+SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_COMPOSE -f docker-compose-selenium-test.yml"
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
-SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 if [ -f "$SUITE_OVERRIDE" ]; then
     echo "ℹ️  Using docker compose override file $SUITE_OVERRIDE" 2>&1 | tee -a "$TEST_LOG"
-    SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
-fi
 
-SUITE_COMPOSE="docker compose $SUITE_CONFIG"
-SUITE_AND_TEST_SETUP_COMPOSE="$SUITE_COMPOSE -f docker-compose.test-setup.yml"
-SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_COMPOSE -f docker-compose-selenium-test.yml"
+    SUITE_COMPOSE="$SUITE_COMPOSE -f $SUITE_OVERRIDE"
+    SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_AND_TEST_RUNNER_COMPOSE -f $SUITE_OVERRIDE"
+fi
 
 function remove_services_and_volumes {
     $SUITE_AND_TEST_RUNNER_COMPOSE down --volumes --remove-orphans --timeout 1 >> "$TEST_LOG" 2>&1 || true
 }
 
 # build test-setup and wikibase-selenium-test just in case something has changed
-$SUITE_AND_TEST_SETUP_COMPOSE build test-setup >> $TEST_LOG 2>&1
 $SUITE_AND_TEST_RUNNER_COMPOSE build wikibase-selenium-test >> "$TEST_LOG" 2>&1
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
@@ -48,7 +46,8 @@ echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 $SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
 $SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 # wait until containers start
-$SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "./scripts/check_if_up.sh wikibase.svc:80 /wiki/Main_Page"
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "./setup.sh"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
@@ -57,7 +56,7 @@ if [ -n "$FILTER" ]; then
     WDIO_COMMAND='npm run test:run-filter --silent'
 fi
 
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "$WDIO_COMMAND"
+$SUITE_AND_TEST_RUNNER_COMPOSE run wikibase-selenium-test -c "$WDIO_COMMAND"
 
 echo -e "🔄 Removing running Docker test services and volumes\n" 2>&1 | tee -a "$TEST_LOG"
 remove_services_and_volumes

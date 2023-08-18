@@ -16,7 +16,7 @@ services:
         aliases:
          - ${WIKIBASE_HOST}
     environment:
-      - DB_SERVER=mysql.svc:3306
+      - DB_SERVER
       - MW_WG_SECRET_KEY=${MW_SECRET_KEY}
       - WIKIBASE_PINGBACK=false
       - MW_ADMIN_NAME

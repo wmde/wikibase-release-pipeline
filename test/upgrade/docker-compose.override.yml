@@ -2,6 +2,13 @@
 version: '3'
 
 services:
+  wikibase-selenium-test:
+    build:
+      context: ../test
+      dockerfile: Dockerfile
+    volumes:
+      - ./upgrade/setup.sh:/usr/src/app/setup.sh
+
   wikibase:
     volumes:
       - ${TMP_LOCALSETTINGS}:/var/www/html/LocalSettings.php

@@ -3,6 +3,9 @@ version: '3'
 
 services:
   wikibase:
+    build:
+      context: ../test
+      dockerfile: Dockerfile
     environment: 
       - WIKIBASE_PINGBACK=true
 

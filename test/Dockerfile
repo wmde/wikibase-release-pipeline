@@ -1,7 +1,15 @@
-FROM curlimages/curl:7.71.0
+FROM node:14.21.3-bullseye
 
-ADD ./scripts scripts
+RUN apt-get update && \
+    apt-get -y install docker.io chromium python3-pip && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip3 install --no-cache --upgrade pip setuptools
 
-WORKDIR /scripts
+WORKDIR /usr/src/app/
 
-ENTRYPOINT sh check_if_up.sh
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci
+
+COPY . .

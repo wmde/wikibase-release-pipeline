@@ -2,16 +2,12 @@
 version: '3'
 
 services:
-  test-setup:
+  wikibase-selenium-test:
     build:
-      dockerfile: Dockerfile
       context: ../test
+      dockerfile: Dockerfile
     volumes:
-      - ./suite-config/repo_client/setup.sh:/setup.sh
-    entrypoint: /bin/sh
-    command:  /setup.sh
-    environment:
-      - WIKIBASE_CLIENT_SERVER=wikibase-client.svc:80
+      - ./suite-config/repo_client/setup.sh:/usr/src/app/setup.sh
 
   mysql:
     volumes:  
@@ -42,7 +38,7 @@ services:
         aliases:
          - wikibase-client.svc
     environment:
-      - DB_SERVER=mysql.svc:3306
+      - DB_SERVER
       - MW_ADMIN_NAME=WikibaseAdmin
       - MW_ADMIN_PASS=WikibaseDockerAdminPass
       - MW_ADMIN_EMAIL=admin@example.com

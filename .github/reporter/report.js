@@ -20,7 +20,7 @@ if (fs.existsSync(filePath)) {
             const error = extractModuleLineAndColumn(test.error.stack);
             let filePath = '';
             if( error.file ) {
-                filePath = error.file.replace('/usr/src/app/', 'Docker/test/selenium/');
+                filePath = error.file.replace('/usr/src/app/', 'test/');
             }
             const message = test.fullTitle + ": " + test.error.message;
             

@@ -2,7 +2,7 @@
 version: '3'
 
 x-common-variables: &wikibase_variables
-    DB_SERVER: mysql.svc:3306
+    DB_SERVER: ${DB_SERVER}
     MW_ADMIN_NAME: WikibaseAdmin
     MW_ADMIN_PASS: WikibaseDockerAdminPass
     MW_ADMIN_EMAIL: admin@example.com

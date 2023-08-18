@@ -7,14 +7,12 @@ x-common-variables: &wikibase_extra_variables
 
 services:
 
-  test-setup:
+  wikibase-selenium-test:
     build:
-      dockerfile: Dockerfile
       context: ../test
+      dockerfile: Dockerfile
     volumes:
-      - ./suite-config/elasticsearch/setup.sh:/setup.sh
-    entrypoint: /bin/sh
-    command:  /setup.sh
+      - ./suite-config/elasticsearch/setup.sh:/usr/src/app/setup.sh
     environment: 
       <<: *wikibase_extra_variables
 

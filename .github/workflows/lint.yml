@@ -36,7 +36,7 @@ jobs:
           key: npm-lint-cache
       - name: lint the selenium javascript tests
         run: |
-          cd Docker/test/selenium 
+          cd test
           npm install
           npm run lint
   lint_diagrams:

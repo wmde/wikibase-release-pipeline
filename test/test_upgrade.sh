@@ -49,7 +49,6 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 SUITE_COMPOSE="docker compose $SUITE_CONFIG"
-SUITE_AND_TEST_SETUP_COMPOSE="$SUITE_COMPOSE -f docker-compose.test-setup.yml"
 SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_COMPOSE -f docker-compose-selenium-test.yml"
 
 function remove_services_and_volumes {
@@ -57,7 +56,6 @@ function remove_services_and_volumes {
 }
 
 # build test-setup and wikibase-selenium-test just in case anything has changed
-$SUITE_AND_TEST_SETUP_COMPOSE build test-setup >> $TEST_LOG 2>&1
 $SUITE_AND_TEST_RUNNER_COMPOSE build wikibase-selenium-test >> "$TEST_LOG" 2>&1
 
 # =============================================================================
@@ -80,11 +78,11 @@ $SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
 $SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
-$SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm test-setup
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "npm run test:run --silent"
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
 
 # =============================================================================
 # ================================= upgrade ===================================
@@ -154,7 +152,7 @@ $SUITE_COMPOSE -f upgrade/docker-compose.override.yml up -d >> $TEST_LOG 2>&1
 $SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
-$SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm test-setup
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
@@ -163,7 +161,7 @@ docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php 
 
 echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")" 2>&1 | tee -a "$TEST_LOG"
 
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "npm run test:run --silent"
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
 echo -e "🔄 Removing running Docker test services and volumes\n"  2>&1 | tee -a "$TEST_LOG"
