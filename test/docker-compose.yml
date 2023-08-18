@@ -1,5 +1,5 @@
-# Wikibase for testing
-version: '3'
+# Wikibase Suite for testing
+version: '3.4'
 
 x-common-variables: &wikibase_variables
     DB_SERVER: ${DB_SERVER}

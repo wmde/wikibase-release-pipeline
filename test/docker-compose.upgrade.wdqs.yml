@@ -1,5 +1,5 @@
 # WDQS and WDQS-updater for testing when upgrading
-version: '3'
+version: '3.4'
 
 services:
 

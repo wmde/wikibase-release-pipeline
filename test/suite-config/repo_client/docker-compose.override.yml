@@ -3,9 +3,6 @@ version: '3'
 
 services:
   wikibase-selenium-test:
-    build:
-      context: ../test
-      dockerfile: Dockerfile
     volumes:
       - ./suite-config/repo_client/setup.sh:/usr/src/app/setup.sh
 
@@ -16,7 +13,7 @@ services:
   wikibase:
     volumes:
       - ./suite-config/repo-extra-install.sh:/extra-install.sh
-      - ./suite-config/repo_client/repo-LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/repo-LocalSettings.php.template:/LocalSettings.php.template
 
   wikibase-client:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
@@ -28,7 +25,7 @@ services:
       - wikibase
     restart: always
     volumes:
-      - ./suite-config/repo_client/client-LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/client-LocalSettings.php.template:/LocalSettings.php.template
       - ./suite-config/client-extra-install.sh:/extra-install.sh
       - ./log/${LOCALSETTINGS_VARIANT}/client:/var/log/mediawiki
     ports:

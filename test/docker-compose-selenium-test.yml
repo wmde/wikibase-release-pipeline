@@ -1,4 +1,4 @@
-# Wikibase For testing
+# Test runner
 version: '3.4'
 
 services:
@@ -6,7 +6,7 @@ services:
     build:
       context: ../test
       dockerfile: Dockerfile
-    entrypoint: /bin/sh
+    entrypoint: /bin/bash
     volumes:
       - ../test/suite-config:/usr/src/app/suite-config
       - ../test/specs:/usr/src/app/specs

@@ -1,5 +1,5 @@
-# Wikibase For testing
-version: '3'
+# Wikibase Suite from Example directory overrides
+version: '3.4'
 
 services:
   quickstatements:

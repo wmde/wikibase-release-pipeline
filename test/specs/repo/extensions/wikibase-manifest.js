@@ -12,12 +12,12 @@ describe( 'WikibaseManifest', function () {
 		const result = browser.makeRequest( process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest' );
 		const data = result.data;
 
-		assert.strictEqual( data.name, 'wikibase-docker' );
+		assert.strictEqual( 'wikibase-docker', data.name );
 
-		assert.strictEqual( data.api.action, process.env.MW_SERVER + '/w/api.php' );
-		assert.strictEqual( data.api.rest, process.env.MW_SERVER + '/w/rest.php' );
+		assert.strictEqual( process.env.MW_SERVER + '/w/api.php', data.api.action );
+		assert.strictEqual( process.env.MW_SERVER + '/w/rest.php', data.api.rest );
 
-		assert.strictEqual( data.oauth.registration_page, process.env.MW_SERVER + '/wiki/Special:OAuthConsumerRegistration' );
+		assert.strictEqual( process.env.MW_SERVER + '/wiki/Special:OAuthConsumerRegistration', data.oauth.registration_page );
 
 	} );
 

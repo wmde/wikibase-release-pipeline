@@ -23,6 +23,8 @@ set -o allexport; source ../variables.env set +o allexport;
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
 DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
 
+SUITE=upgrade
+
 # log directory setup
 export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
@@ -48,15 +50,11 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export RUN_QUERYSERVICE_POST_UPGRADE_TEST="true"
 fi
 
-SUITE_COMPOSE="docker compose $SUITE_CONFIG"
-SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_COMPOSE -f docker-compose-selenium-test.yml"
+TEST_COMPOSE="docker compose -f docker-compose-selenium-test.yml $SUITE_CONFIG"
 
 function remove_services_and_volumes {
-    $SUITE_AND_TEST_RUNNER_COMPOSE down --volumes --remove-orphans --timeout 1 >> "$TEST_LOG" 2>&1 || true
+    $TEST_COMPOSE down --volumes --remove-orphans --timeout 1 >> "$TEST_LOG" 2>&1 || true
 }
-
-# build test-setup and wikibase-selenium-test just in case anything has changed
-$SUITE_AND_TEST_RUNNER_COMPOSE build wikibase-selenium-test >> "$TEST_LOG" 2>&1
 
 # =============================================================================
 # =============================== pre_upgrade =================================
@@ -69,20 +67,22 @@ echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$
 echo "" 2>&1 | tee -a "$TEST_LOG"
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
-echo "🔄 Removing existing Docker test services and volumes" 
+echo "🔄 Removing existing Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 remove_services_and_volumes
 
 # start the old version & write logs
 echo "🔄 Creating Docker test services and volumes on ${ENV_VERSION}" 2>&1 | tee -a "$TEST_LOG"
-$SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
-$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
+$TEST_COMPOSE up -d --build --scale wikibase-selenium-test=0 >> "$TEST_LOG" 2>&1
+$TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm test-setup
+# shellcheck disable=SC2016
+$TEST_COMPOSE run --rm wikibase-selenium-test -c './scripts/check_if_up.sh $MW_SERVER /wiki/Main_Page'
+$TEST_COMPOSE run --rm wikibase-selenium-test -c "[[ -f ./setup.sh ]] && ./setup.sh"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
+$TEST_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
 
 # =============================================================================
 # ================================= upgrade ===================================
@@ -114,7 +114,7 @@ sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.ph
 
 # docker compose down (keeping volumes) to simulate upgrade
 echo "🔄 Removing Docker services for ${ENV_VERSION}, but keeping volumes"  2>&1 | tee -a "$TEST_LOG"
-$SUITE_COMPOSE down >> $TEST_LOG 2>&1
+$TEST_COMPOSE down >> $TEST_LOG 2>&1
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
@@ -148,11 +148,13 @@ echo "" 2>&1 | tee -a "$TEST_LOG"
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
-$SUITE_COMPOSE -f upgrade/docker-compose.override.yml up -d >> $TEST_LOG 2>&1
-$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
+$TEST_COMPOSE -f upgrade/docker-compose.override.yml up -d --scale wikibase-selenium-test=0 >> $TEST_LOG 2>&1
+$TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm test-setup
+# shellcheck disable=SC2016
+$TEST_COMPOSE run --rm wikibase-selenium-test -c './scripts/check_if_up.sh $MW_SERVER /wiki/Main_Page'
+$TEST_COMPOSE run --rm wikibase-selenium-test -c "[[ -f ./setup.sh ]] && ./setup.sh"
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
@@ -161,7 +163,7 @@ docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php 
 
 echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")" 2>&1 | tee -a "$TEST_LOG"
 
-$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
+$TEST_COMPOSE run --rm wikibase-selenium-test -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
 echo -e "🔄 Removing running Docker test services and volumes\n"  2>&1 | tee -a "$TEST_LOG"
