@@ -77,8 +77,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm wikibase-selenium-test -c './scripts/check_if_up.sh $MW_SERVER /wiki/Main_Page'
-$TEST_COMPOSE run --rm wikibase-selenium-test -c "[[ -f ./setup.sh ]] && ./setup.sh"
+$TEST_COMPOSE run --rm wikibase-selenium-test -c upgrade/setup.sh
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
@@ -153,8 +152,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm wikibase-selenium-test -c './scripts/check_if_up.sh $MW_SERVER /wiki/Main_Page'
-$TEST_COMPOSE run --rm wikibase-selenium-test -c "[[ -f ./setup.sh ]] && ./setup.sh"
+$TEST_COMPOSE run --rm wikibase-selenium-test -c upgrade/setup.sh
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"

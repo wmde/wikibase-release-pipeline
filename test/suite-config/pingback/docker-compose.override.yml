@@ -1,8 +1,10 @@
 # Wikibase override for testing client-repo setups
-version: '3'
+version: '3.4'
 
 services:
   wikibase:
+    volumes:
+      - ./suite-config/${SUITE}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE}.php
     environment: 
       - WIKIBASE_PINGBACK=true
 
