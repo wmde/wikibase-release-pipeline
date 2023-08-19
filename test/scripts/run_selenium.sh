@@ -3,15 +3,22 @@ set -e
 
 export SUITE=$1
 
-if [ ! -d "suite-config/$SUITE" ]; then
-    echo "🚨 Suite $SUITE does not exist, exiting"  2>&1 | tee -a "$TEST_LOG"
+# if prepended with base__ we might still want to use the bundle config
+if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
+    export SUITE_CONFIG_NAME=${SUITE//base__/}
+else
+    export SUITE_CONFIG_NAME=$SUITE
+fi
+
+if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
+    echo "🚨 \"$SUITE\" does not exist, exiting"  2>&1 | tee -a "$TEST_LOG"
     exit 1
 fi
 
 TEST_COMPOSE="docker compose -f docker-compose-selenium-test.yml $DEFAULT_SUITE_CONFIG"
 
 # adding Docker compose override file for this suite if there is one
-SUITE_OVERRIDE="suite-config/$SUITE/docker-compose.override.yml"
+SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 if [ -f "$SUITE_OVERRIDE" ]; then
     echo "ℹ️  Using docker compose override file $SUITE_OVERRIDE" 2>&1 | tee -a "$TEST_LOG"
 
