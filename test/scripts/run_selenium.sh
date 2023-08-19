@@ -24,7 +24,6 @@ function remove_services_and_volumes {
 
 echo "🔄 Removing existing Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 remove_services_and_volumes
-$TEST_COMPOSE config > docker-compose.temp.yml
 
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 $TEST_COMPOSE up -d --build --scale wikibase-selenium-test=0 >> "$TEST_LOG" 2>&1
