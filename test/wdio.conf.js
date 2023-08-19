@@ -7,7 +7,7 @@
 
 const fs = require( 'fs' );
 const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
-const JsonReporter = require( './json-reporter.js' );
+const JsonReporter = require( './helpers/json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 

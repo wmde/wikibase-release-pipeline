@@ -2,6 +2,28 @@ version: '3.4'
 
 services:
 
+  wikibase-selenium-test:
+    environment:
+      - MW_SERVER
+      - QS_SERVER
+      - WDQS_FRONTEND_SERVER
+      - WDQS_SERVER
+      - WDQS_PROXY_SERVER
+      - MW_SCRIPT_PATH
+
   wikibase:
     volumes:
       - ./suite-config/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./log/${SUITE_CONFIG_NAME}/wikibase:/var/log/mediawiki
+      - ../example/extra-install.sh:/extra-install.sh
+    environment:
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+
+  wikibase-jobrunner:
+    volumes:
+      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+
+  quickstatements:
+    environment:
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+

@@ -69,7 +69,7 @@ services:
         aliases:
          - mysql.svc
     volumes: 
-    - ./create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+    - ./suite-config/wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
 
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"

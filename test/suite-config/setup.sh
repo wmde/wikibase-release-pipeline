@@ -8,5 +8,5 @@ scripts/check_if_up.sh "$WDQS_FRONTEND_SERVER" "/"
 SUITE_SETUP_FILE="suite-config/$SUITE/setup.sh"
 
 if [ -f "$SUITE_SETUP_FILE" ]; then
-    suite-config/"$SUITE"/setup.sh
+    $SUITE_SETUP_FILE
 fi

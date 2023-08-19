@@ -2,6 +2,8 @@
 # shellcheck disable=SC1091,SC1090
 set -e
 
+cd test
+
 export SUITE=$1
 
 if [ -z "$SUITE" ]; then
@@ -9,8 +11,7 @@ if [ -z "$SUITE" ]; then
     export SUITE="example"
 fi
 
-cd test
-set -o allexport; source ../example/template.env; source example.env; set +o allexport
+set -o allexport; source ../example/template.env; source suite-config/example/example.env; set +o allexport
 
 # log directory setup
 export LOG_DIR="log/$SUITE"
@@ -23,6 +24,6 @@ mkdir -p "$LOG_DIR/wikibase"
 # TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 ## Use in combination with example compose files 
-export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
+export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
 
 bash scripts/run_selenium.sh "$SUITE"

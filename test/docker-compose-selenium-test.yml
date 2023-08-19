@@ -37,8 +37,6 @@ services:
       - SUITE
       - FILTER
       
-      - DOCKER_WIKIBASE_REPO_NAME
-      - DOCKER_WIKIBASE_CLIENT_NAME
       - DOCKER_MYSQL_NAME
 
       - DB_USER
