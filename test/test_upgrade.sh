@@ -21,7 +21,7 @@ fi
 set -o allexport; source ../variables.env set +o allexport;
 
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
-DEFAULT_SUITE_CONFIG="-f docker-compose.upgrade.yml"
+DEFAULT_SUITE_CONFIG="-f suite-config/upgrade/docker-compose.upgrade.yml"
 
 SUITE=upgrade
 
@@ -37,7 +37,7 @@ mkdir -p "$LOG_DIR/client"
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
-set -o allexport; source upgrade/default_variables.env; source "upgrade/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
+set -o allexport; source "suite-config/$SUITE/default_variables.env"; source "suite-config/$SUITE/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
 
 # old wikibase version
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"
@@ -46,7 +46,7 @@ export SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 # If WDQS is specified append that yml file to SUITE_CONFIG
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export WDQS_TEST_IMAGE_NAME="$WDQS_SOURCE_IMAGE_NAME"
-    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f docker-compose.upgrade.wdqs.yml"
+    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f suite-config/$SUITE/docker-compose.upgrade.wdqs.yml"
     export RUN_QUERYSERVICE_POST_UPGRADE_TEST="true"
 fi
 
@@ -77,7 +77,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm wikibase-selenium-test -c upgrade/setup.sh
+$TEST_COMPOSE run --rm wikibase-selenium-test -c suite-config/upgrade/setup.sh
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
@@ -147,12 +147,12 @@ echo "" 2>&1 | tee -a "$TEST_LOG"
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
-$TEST_COMPOSE -f upgrade/docker-compose.override.yml up -d --scale wikibase-selenium-test=0 >> $TEST_LOG 2>&1
+$TEST_COMPOSE -f suite-config/upgrade/docker-compose.override.yml up -d --scale wikibase-selenium-test=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm wikibase-selenium-test -c upgrade/setup.sh
+$TEST_COMPOSE run --rm wikibase-selenium-test -c suite-config/upgrade/setup.sh
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
