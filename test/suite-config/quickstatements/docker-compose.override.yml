@@ -1,4 +1,3 @@
-# Wikibase override for testing client-repo setups
 version: '3.4'
 
 services:

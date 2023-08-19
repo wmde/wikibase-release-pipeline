@@ -2,6 +2,7 @@
 version: '3.4'
 
 services:
+
   wikibase:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
     links:
@@ -26,6 +27,7 @@ services:
       - DB_PASS
       - DB_NAME
       - WIKIBASE_HOST
+
   mysql:
     image: "${DEFAULT_DATABASE_IMAGE_NAME}"
     restart: unless-stopped

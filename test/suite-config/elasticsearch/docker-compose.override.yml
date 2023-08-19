@@ -1,4 +1,3 @@
-# Wikibase override for testing client-repo setups
 version: '3.4'
 
 x-common-variables: &elastic_search
@@ -6,6 +5,7 @@ x-common-variables: &elastic_search
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 
 services:
+
   wikibase-selenium-test:
     environment: 
       <<: *elastic_search

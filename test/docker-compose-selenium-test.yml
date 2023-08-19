@@ -2,16 +2,17 @@
 version: '3.4'
 
 services:
+
   wikibase-selenium-test:
     build:
       context: ../test
       dockerfile: Dockerfile
     entrypoint: /bin/bash
     volumes:
-      - ../test/suite-config:/usr/src/app/suite-config
-      - ../test/specs:/usr/src/app/specs
-      - ../test/log:/usr/src/app/log
-      - ../test/default.env:/usr/src/app/default.env
+      - ./suite-config:/usr/src/app/suite-config
+      - ./specs:/usr/src/app/specs
+      - ./log:/usr/src/app/log
+      - ./default.env:/usr/src/app/default.env
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser

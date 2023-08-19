@@ -2,9 +2,11 @@
 version: '3.4'
 
 services:
+
   quickstatements:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+
   wikibase:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
@@ -13,6 +15,7 @@ services:
       - ./suite-config/${SUITE}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./log/${SUITE}/wikibase:/var/log/mediawiki
       - ../example/extra-install.sh:/extra-install.sh
+
   wikibase-jobrunner:
     volumes:
       - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh

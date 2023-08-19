@@ -1,7 +1,7 @@
-# Wikibase override for testing client-repo setups
 version: '3.4'
 
 services:
+
   mysql:
     volumes:  
       - ./suite-config/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
