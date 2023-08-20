@@ -15,10 +15,6 @@ export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 rm -f "$TEST_LOG" || true
-rm -rf "$LOG_DIR/wikibase"
-mkdir -p "$LOG_DIR/wikibase"
-rm -rf "$LOG_DIR/client"
-mkdir -p "$LOG_DIR/client"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
