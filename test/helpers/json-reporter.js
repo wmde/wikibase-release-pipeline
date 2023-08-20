@@ -39,7 +39,7 @@ class JsonReporter extends reporter.default {
 	onSuiteEnd( suiteStats ) {
 		const suite = process.env.SUITE;
 		const result = {
-			[suite]: {
+			[ suite ]: {
 				fail: this.failures,
 				pass: this.success,
 				skip: this.skipped
@@ -53,9 +53,9 @@ class JsonReporter extends reporter.default {
 
 			if ( existing ) {
 				result.start = existing.start ? existing.start : result.start;
-				result[suite].pass = result[suite].pass.concat( existing[suite].pass );
-				result[suite].fail = result[suite].fail.concat( existing[suite].fail );
-				result[suite].skip = result[suite].skip.concat( existing[suite].skip );
+				result[ suite ].pass = result[ suite ].pass.concat( existing[ suite ].pass );
+				result[ suite ].fail = result[ suite ].fail.concat( existing[ suite ].fail );
+				result[ suite ].skip = result[ suite ].skip.concat( existing[ suite ].skip );
 			}
 		}
 
