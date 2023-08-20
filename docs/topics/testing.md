@@ -7,7 +7,7 @@ You can run the tests in the docker container locally. Testing locally requires 
 
 ## To run all
 ```
-make test-all
+make test
 ```
 
 ## To only run a single suite
@@ -25,7 +25,7 @@ make test SUITE=repo FILTER=babel*
 
 ## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/suite-config/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
 make test-upgrade VERSION=wmde.0 TO_VERSION=versions/wmdeN.env
