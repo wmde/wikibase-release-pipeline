@@ -56,10 +56,6 @@ class JsonReporter extends reporter.default {
 				result[suite].pass = result[suite].pass.concat( existing[suite].pass );
 				result[suite].fail = result[suite].fail.concat( existing[suite].fail );
 				result[suite].skip = result[suite].skip.concat( existing[suite].skip );
-			} else {
-			// 	// Capture the start time of the entire suite, not just the test file
-				console.log('!!! no existing file')
-			// 	result[suite].start = suiteStats.start;
 			}
 		}
 
