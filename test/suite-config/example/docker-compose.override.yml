@@ -14,7 +14,7 @@ services:
   wikibase:
     volumes:
       - ./suite-config/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
-      - ./log/${SUITE_CONFIG_NAME}/wikibase:/var/log/mediawiki
+      - ./log/${SUITE}:/var/log/mediawiki
       - ../example/extra-install.sh:/extra-install.sh
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80

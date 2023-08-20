@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./suite-config/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./log/${SUITE_CONFIG_NAME}/wikibase:/var/log/mediawiki
+      - ./log/${SUITE}:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
       - "8181:80"

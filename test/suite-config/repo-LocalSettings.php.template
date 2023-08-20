@@ -18,10 +18,10 @@ ${DOLLAR}wgDBpassword = "${DB_PASS}";
 ## Logs
 ## Save these logs inside the container
 ${DOLLAR}wgDebugLogGroups = array(
-	'resourceloader' => '/var/log/mediawiki/resourceloader.log',
-	'exception' => '/var/log/mediawiki/exception.log',
-	'error' => '/var/log/mediawiki/error.log',
-	'fatal' => '/var/log/mediawiki/fatal.log',
+	'resourceloader' => '/var/log/mediawiki/mw.repo.resourceloader.log',
+	'exception' => '/var/log/mediawiki/mw.repo.exception.log',
+	'error' => '/var/log/mediawiki/mw.repo.error.log',
+	'fatal' => '/var/log/mediawiki/mw.repo.fatal.log',
 );
 
 ## Site Settings
@@ -52,9 +52,9 @@ wfLoadSkin( 'Vector' );
 ini_set( 'display_errors', 1 );
 ${DOLLAR}wgShowExceptionDetails = true;
 ${DOLLAR}wgShowSQLErrors = true;
-${DOLLAR}wgDebugDumpSql  = true;
-${DOLLAR}wgShowDBErrorBacktrace = true;
-${DOLLAR}wgDebugLogFile = '/var/log/mediawiki/debug.log';
+${DOLLAR}wgDebugDumpSql  = false;
+${DOLLAR}wgShowDBErrorBacktrace = false;
+${DOLLAR}wgDebugLogFile = '/var/log/mediawiki/mw.repo.debug.log';
 
 ${DOLLAR}wgEnableWikibaseRepo = true;
 ${DOLLAR}wgEnableWikibaseClient = false;
