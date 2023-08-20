@@ -10,6 +10,7 @@ services:
     entrypoint: /bin/bash
     volumes:
       - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
@@ -41,3 +42,6 @@ services:
       - DB_NAME
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
+
+volumes:
+  node_modules:
