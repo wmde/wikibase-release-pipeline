@@ -6,7 +6,7 @@ x-common-variables: &elastic_search
 
 services:
 
-  wikibase-selenium-test:
+  test-runner:
     environment: 
       <<: *elastic_search
 

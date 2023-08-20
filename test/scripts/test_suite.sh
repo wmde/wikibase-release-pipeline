@@ -61,6 +61,6 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-export DEFAULT_SUITE_CONFIG="--env-file default.env -f docker-compose.yml"
+export DEFAULT_SUITE_CONFIG="--env-file default.env -f suite-config/docker-compose.yml"
 
 bash scripts/run_selenium.sh "$SUITE"

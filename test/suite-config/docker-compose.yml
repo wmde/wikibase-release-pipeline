@@ -1,0 +1,136 @@
+# Wikibase Suite for testing
+version: '3.4'
+
+x-common-variables: &wikibase_variables
+    DB_SERVER: ${DB_SERVER}
+    MW_ADMIN_NAME: WikibaseAdmin
+    MW_ADMIN_PASS: WikibaseDockerAdminPass
+    MW_ADMIN_EMAIL: admin@example.com
+    MW_WG_SECRET_KEY: secretkey
+    DB_USER: wikiuser
+    DB_PASS: sqlpass
+    DB_NAME: my_wiki
+    MW_WG_ENABLE_UPLOADS: true
+    MW_WG_JOB_RUN_RATE: 0
+
+services:
+
+  wikibase:
+    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    volumes:
+      - ./suite-config/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ./log/${SUITE_CONFIG_NAME}/wikibase:/var/log/mediawiki
+      - shared:/var/www/html/:rw
+    ports:
+      - "8181:80"
+    networks:
+      default:
+        aliases:
+         - wikibase.svc
+    environment:
+      <<: *wikibase_variables
+
+  wikibase-jobrunner:
+    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    entrypoint: /bin/bash
+    command:  /jobrunner-entrypoint.sh
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    restart: always
+    volumes:
+      - shared:/shared/:ro
+      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+    networks:
+      default:
+        aliases:
+          - wikibase-jobrunner.svc
+    environment:
+      <<: *wikibase_variables
+      MAX_JOBS: ${MAX_JOBS}
+
+  mysql:
+    image: ${DATABASE_IMAGE_NAME}
+    restart: unless-stopped
+    environment:
+      # CONFIG - Change the default values below (should match values passed to wikibase)
+      MYSQL_DATABASE: 'my_wiki'
+      MYSQL_USER: 'wikiuser'
+      MYSQL_PASSWORD: 'sqlpass'
+      MYSQL_ROOT_PASSWORD: 'toor'
+    networks:
+      default:
+        aliases:
+         - mysql.svc
+    volumes: 
+    - ./suite-config/wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+
+  wdqs-frontend:
+    image: "${WDQS_FRONTEND_IMAGE_NAME}"
+    restart: unless-stopped
+    ports:
+    # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
+     - "8282:80"
+    depends_on:
+    - wdqs-proxy
+    networks:
+      default:
+        aliases:
+         - wdqs-frontend.svc
+    environment:
+      - WIKIBASE_HOST=wikibase.svc
+      - WDQS_HOST=wdqs-proxy.svc
+
+  wdqs:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: always
+    command: /runBlazegraph.sh
+    networks:
+      default:
+        aliases:
+         - wdqs.svc
+    environment:
+      - WIKIBASE_HOST=wikibase.svc
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
+    expose:
+      - 9999
+
+  wdqs-proxy:
+    image: "${WDQS_PROXY_IMAGE_NAME}"
+    restart: unless-stopped
+    environment:
+      - PROXY_PASS_HOST=wdqs.svc:9999
+    depends_on:
+    - wdqs
+    ports:
+     - "8989:80"
+    networks:
+      default:
+        aliases:
+         - wdqs-proxy.svc
+
+  wdqs-updater:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runUpdate.sh
+    depends_on:
+    - wdqs
+    - wikibase
+    networks:
+      default:
+        aliases:
+         - wdqs-updater.svc
+    environment:
+     - WIKIBASE_HOST=wikibase.svc
+     - WDQS_HOST=wdqs.svc
+     - WDQS_PORT=9999
+
+volumes:
+  shared:

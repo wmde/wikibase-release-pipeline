@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
 
-  wikibase-selenium-test:
+  test-runner:
     environment:
       - MW_SERVER
       - QS_SERVER

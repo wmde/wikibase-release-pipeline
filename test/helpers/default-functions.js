@@ -249,6 +249,8 @@ const defaultFunctions = function () {
 
 };
 
+
+
 module.exports = {
 	init: defaultFunctions,
 	skipIfExtensionNotPresent: function ( test, extension ) {
