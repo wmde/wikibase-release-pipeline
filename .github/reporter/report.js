@@ -12,7 +12,7 @@ const filePath = `../../test/log/${process.env.SUITE}/result.json`;
 var resultObject = {};
 
 if (fs.existsSync(filePath)) {
-    resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'))[process.env.SUITE];
 
     if (resultObject.fail.length != 0) {
 
