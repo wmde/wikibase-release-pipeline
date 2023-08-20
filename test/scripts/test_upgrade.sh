@@ -30,6 +30,7 @@ export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 rm -f "$TEST_LOG" || true
+mkdir -p "$LOG_DIR"
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.

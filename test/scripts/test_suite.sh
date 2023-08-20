@@ -15,6 +15,7 @@ export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 
 rm -f "$TEST_LOG" || true
+mkdir -p "$LOG_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
