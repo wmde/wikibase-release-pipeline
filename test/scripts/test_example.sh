@@ -21,7 +21,7 @@ export TEST_LOG="$LOG_DIR/$SUITE.log"
 # which avoids permissions issues
 rm -f "$TEST_LOG" || true
 docker compose --env-file  default.env run --rm test-runner \
-    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
+    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\" && touch \"$TEST_LOG\""> /dev/null
 
 # TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
