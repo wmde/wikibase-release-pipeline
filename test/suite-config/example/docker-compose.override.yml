@@ -13,6 +13,7 @@ services:
 
   wikibase:
     volumes:
+      - ./suite-config/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./suite-config/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
       - ./log/${SUITE}:/var/log/mediawiki
       - ../example/extra-install.sh:/extra-install.sh
