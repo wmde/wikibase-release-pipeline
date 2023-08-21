@@ -24,7 +24,7 @@ cd ../../..  > /dev/null || exit
 echo "ℹ️  Linting Javascript in Diagrams code (diagrams/**/.js)"
 {
   cd diagrams
-  npm install  --loglevel=error > /dev/null || exit
+  npm install  --loglevel=error
 } > /dev/null || exit
 npm run lint --silent
 cd ..  > /dev/null || exit
