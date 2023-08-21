@@ -9,8 +9,15 @@ export
 download:
 	bash publish/download.sh
 
+.PHONY: lint
+lint:
+	@bash lint.sh
+
 .PHONY: test
-test: 
+test:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
 ifdef SUITE
 	@bash test/test_suite.sh ${SUITE}
 else
@@ -19,13 +26,22 @@ endif
 
 .PHONY: test-upgrade
 test-upgrade:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
 	@bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
 	@bash test/test_example.sh ${SUITE}
 
 test-all:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
 	@echo "⚠️  Running All Test Suites"
 
 	@# bundle tests
@@ -35,7 +51,7 @@ test-all:
 	@bash test/test_suite.sh quickstatements
 	@bash test/test_suite.sh pingback
 	@bash test/test_suite.sh confirm_edit
-	bash test/test_suite.sh elasticsearch
+	@bash test/test_suite.sh elasticsearch
 
 	@# base tests
 	@bash test/test_suite.sh base__repo
