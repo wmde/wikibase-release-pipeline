@@ -20,33 +20,17 @@ fi
 # Why is this neccessary locally, but not in CI?
 set -o allexport; source ../variables.env set +o allexport;
 
+SUITE_CONFIG_NAME=upgrade
+
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
-DEFAULT_SUITE_CONFIG="-f suite-config/upgrade/docker-compose.upgrade.yml"
+DEFAULT_SUITE_CONFIG="-f suite-config/$SUITE_CONFIG_NAME/docker-compose.yml"
 
-SUITE=upgrade
-
-# log directory setup
-export LOG_DIR="log/$SUITE"
-export TEST_LOG="$LOG_DIR/$SUITE.log"
-# remove log file created outside of Docker with local user before
-# removing entire directory from Docker
-# which avoids permissions issues
-rm -f "$TEST_LOG" || true
-docker compose --env-file  default.env run --rm test-runner \
-    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
-
-# It surprises me that we load both the old version's and new version's ENV VARS here,
-# I'd expect we'd load only the default.env + {old-version}.env at this stage.
-set -o allexport; source "suite-config/$SUITE/default_variables.env"; source "suite-config/$SUITE/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
-
-# old wikibase version
-export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"
 export SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 # If WDQS is specified append that yml file to SUITE_CONFIG
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export WDQS_TEST_IMAGE_NAME="$WDQS_SOURCE_IMAGE_NAME"
-    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f suite-config/$SUITE/docker-compose.upgrade.wdqs.yml"
+    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f suite-config/$SUITE_CONFIG_NAME/docker-compose.wdqs.yml"
     export RUN_QUERYSERVICE_POST_UPGRADE_TEST="true"
 fi
 
@@ -62,9 +46,26 @@ function remove_services_and_volumes {
 
 SUITE=pre_upgrade
 
+# log directory setup
+export LOG_DIR="log/$SUITE"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
+# remove log file created outside of Docker with local user before
+# removing entire directory from Docker
+# which avoids permissions issues
+rm -f "$TEST_LOG" || true
+docker compose --env-file  default.env run --rm test-runner \
+    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
+
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 echo "" 2>&1 | tee -a "$TEST_LOG"
+
+# It surprises me that we load both the old version's and new version's ENV VARS here,
+# I'd expect we'd load only the default.env + {old-version}.env at this stage.
+set -o allexport; source "suite-config/$SUITE_CONFIG_NAME/default_variables.env"; source "suite-config/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
+
+# old wikibase version
+export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
 echo "🔄 Removing existing Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
@@ -77,7 +78,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suite-config/upgrade/setup.sh
+$TEST_COMPOSE run --rm test-runner -c suite-config/$SUITE_CONFIG_NAME/setup.sh
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
@@ -86,6 +87,18 @@ $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 # =============================================================================
 # ================================= upgrade ===================================
 # ============================================================================= 
+
+SUITE=upgrade
+
+# log directory setup
+export LOG_DIR="log/$SUITE"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
+# remove log file created outside of Docker with local user before
+# removing entire directory from Docker
+# which avoids permissions issues
+rm -f "$TEST_LOG" || true
+docker compose --env-file  default.env run --rm test-runner \
+    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "✳️  Performing upgrade steps for \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
@@ -115,19 +128,6 @@ sed -i '/require_once "\${DOLLAR}IP\/extensions\/Wikibase\/repo\/WikibaseRepo.ph
 echo "🔄 Removing Docker services for ${ENV_VERSION}, but keeping volumes"  2>&1 | tee -a "$TEST_LOG"
 $TEST_COMPOSE down >> $TEST_LOG 2>&1
 
-# allow overriding target
-if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
-    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
-fi
-
-export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
-# echo "ℹ️  Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
-
-if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
-    export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-fi
-
 # =============================================================================
 # =============================== post_upgrade ================================
 # =============================================================================
@@ -144,26 +144,37 @@ rm -f "$TEST_LOG" || true
 docker compose --env-file  default.env run --rm test-runner \
     -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
 
-
-
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 echo "" 2>&1 | tee -a "$TEST_LOG"
 
+# allow overriding target
+if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
+    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
+fi
+
+export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
+# echo "ℹ️  Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
+
+if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
+    export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
+    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+fi
+
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
-$TEST_COMPOSE -f suite-config/upgrade/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
+$TEST_COMPOSE -f suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suite-config/upgrade/setup.sh
+$TEST_COMPOSE run --rm test-runner -c suite-config/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
 
-docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick > "$TEST_LOG"
+docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick 2>&1 | tee -a "$TEST_LOG"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")" 2>&1 | tee -a "$TEST_LOG"
 
