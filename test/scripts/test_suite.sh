@@ -13,9 +13,8 @@ fi
 # log directory setup
 export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
-
-rm -f "$TEST_LOG" || true
-mkdir -p "$LOG_DIR"
+docker compose --env-file  default.env run --rm test-runner \
+    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"

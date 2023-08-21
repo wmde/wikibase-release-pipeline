@@ -173,6 +173,9 @@ exports.config = {
 	 * Remove screenshots and result.json from previous runs before any tests start running
 	 */
 	onPrepare: function () {
+		// NOTE: This log/result directory setup is already handled in the shellscript before
+		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
+		// the future. These operations are harmless as-is.
 		fs.mkdir( logPath, { recursive: true }, () => {} );
 		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
 		fs.rm( resultFilePath, { force: true }, () => {} );
