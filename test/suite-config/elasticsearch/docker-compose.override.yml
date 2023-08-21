@@ -4,6 +4,10 @@ x-common-variables: &elastic_search
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 
+x-common-variables: &wikibase_extra_variables
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+
 services:
 
   test-runner:
@@ -19,6 +23,10 @@ services:
   wikibase-jobrunner:
     environment:
       <<: *elastic_search
+
+  wikibase-jobrunner:
+    environment:
+      <<: *wikibase_extra_variables
 
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
