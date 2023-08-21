@@ -5,11 +5,19 @@
 
 'use strict';
 
-const fs = require( 'fs' ),
-	saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
-
+const fs = require( 'fs' );
+const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( './json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
+const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+
+const logPath = process.env.LOG_DIR || `${__dirname}/log/${process.env.SUITE}`;
+const screenshotPath = `${logPath}/screenshots`;
+const resultFilePath = `${logPath}/result.json`;
+
+exports.logPath = logPath;
+exports.screenshotPath = screenshotPath;
+exports.resultFilePath = resultFilePath;
 
 exports.config = {
 
@@ -49,19 +57,33 @@ exports.config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: process.env.SELENIUM_LOG_LEVEL || 'warn',
+	logLevel: process.env.SELENIUM_LOG_LEVEL || 'error',
 
-	// Setting this enables automatic screenshots for when a browser command fails
-	// It is also used by afterTest for capturig failed assertions.
-	screenshotPath: process.env.LOG_DIR || __dirname + '/log',
+	// Setting this enables automatic screenshots for when a browser command fails assertions.
+	screenshotPath,
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
 
 	// See also: http://webdriver.io/guide/testrunner/reporters.html
 	reporters: [
-		'spec',
-		[ JsonReporter, {} ]
+		[
+			'spec',
+			{
+				showPreface: false
+				// Only available after we're on the v8 version of this plugin.
+				// Once we're there this may do something we don't want, but
+				// keeping here to remind us to consider the possibility of silencing
+				// the "[0-0] RUNNING in chrome..." logging and just relying spec reporter.
+				// realtimeReporting: true
+			}
+		],
+		[
+			JsonReporter,
+			{
+				resultFilePath
+			}
+		]
 	],
 
 	// See also: http://mochajs.org
@@ -134,11 +156,22 @@ exports.config = {
 	// =====
 	// Hooks
 	// =====
+
+	/**
+	 * Remove screenshots and result.json from previous runs before any tests start running
+	 */
+	onPrepare: function () {
+		fs.mkdir( logPath, { recursive: true }, () => {} );
+		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
+		fs.rm( resultFilePath, { force: true }, () => {} );
+	},
+
 	/**
 	 * Initializes the default functions for every test and
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: function () {
+		browser.call( () => WikibaseApi.initialize() );
 		defaultFunctions.init();
 
 		if ( !browser.config.installed_extensions ) {
@@ -148,7 +181,6 @@ exports.config = {
 			} else {
 				browser.config.installed_extensions = [];
 			}
-
 		}
 	},
 
@@ -158,15 +190,16 @@ exports.config = {
 	 * @param {Object} test Mocha Test object
 	 */
 	afterTest: function ( test ) {
-		const screenshotPath = browser.config.screenshotPath;
-		const folder = ( process.env.DATABASE_IMAGE_NAME + '-' + process.env.SUITE ).replace( /[^a-zA-Z_0-9]/g, '_' );
-		browser.config.screenshotPath = screenshotPath + '/' + folder;
+		const testFile = encodeURIComponent(
+			test.file.match( /.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-' )
+		);
+		const screenshotFilename = `${testFile}__${test.title}`;
+
 		try {
-			saveScreenshot( test.title );
+			saveScreenshot( screenshotFilename );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
 		}
-		browser.config.screenshotPath = screenshotPath;
 	}
 };

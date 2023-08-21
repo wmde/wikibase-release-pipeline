@@ -10,12 +10,18 @@ if [ -z "$SUITE" ]; then
 fi
 
 cd test
-
 set -o allexport; source ../example/template.env; source example.env; set +o allexport
+
+# log directory setup
+export LOG_DIR="log/$SUITE"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
+
+rm -f "$TEST_LOG" || true
+rm -rf "$LOG_DIR/wikibase"
+mkdir -p "$LOG_DIR/wikibase"
 
 # TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
-
 ## Use in combination with example compose files 
 export DEFAULT_SUITE_CONFIG="-f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml -f docker-compose.example.yml"
 

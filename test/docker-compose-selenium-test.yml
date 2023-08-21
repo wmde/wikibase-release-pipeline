@@ -6,10 +6,10 @@ services:
     build:
       context: ../Docker/test/selenium/
       dockerfile: Dockerfile
-    depends_on:
-      - wikibase
     volumes:
-      - ./log/selenium/:/usr/src/app/log/
+      # This is a bit of a functional hack for the case of test-example,
+      # but still works in all other test suites.
+      - ../test/log:/usr/src/app/log
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser

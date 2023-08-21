@@ -7,7 +7,7 @@ if( !process.env.SUITE ) {
     return;
 }
 
-const filePath = '../log/selenium/result-'+ process.env.SUITE + '.json';
+const filePath = `../log/${process.env.SUITE}/result.json`;
 
 var resultObject = {};
 

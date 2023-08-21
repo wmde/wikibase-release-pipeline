@@ -11,6 +11,7 @@ x-common-variables: &wikibase_variables
     DB_PASS: sqlpass
     DB_NAME: my_wiki
     MW_WG_ENABLE_UPLOADS: true
+    MW_WG_JOB_RUN_RATE: 0
 
 services:
   wikibase:
@@ -22,7 +23,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./mwlog/${LOCALSETTINGS_VARIANT}+wikibase:/var/log/mediawiki
+      - ./log/${LOCALSETTINGS_VARIANT}/wikibase:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
       - "8181:80"
@@ -32,7 +33,7 @@ services:
          - wikibase.svc
     environment:
       <<: *wikibase_variables
-  wikibase_jobrunner:
+  wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh

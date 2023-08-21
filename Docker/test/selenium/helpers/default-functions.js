@@ -190,7 +190,6 @@ const defaultFunctions = function () {
 		// click run
 		$( "button[tt='run']" ).waitForDisplayed();
 		$( "button[tt='run']" ).click();
-		console.log( 'executing quickstatements query: ' + theQuery );
 
 		const commands = $$( '.command_status' );
 
@@ -201,8 +200,6 @@ const defaultFunctions = function () {
 				timeoutMsg: 'Expected to be done after 10 seconds'
 			}
 		);
-
-		console.log( 'quickstatements query complete: ' + theQuery );
 
 	} );
 

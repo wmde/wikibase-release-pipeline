@@ -10,6 +10,7 @@ class JsonReporter extends reporter.default {
 		options = Object.assign( options, { stdout: true } );
 		super( options );
 
+		this.resultFilePath = options.resultFilePath;
 		this.failures = [];
 		this.success = [];
 		this.skipped = [];
@@ -31,20 +32,14 @@ class JsonReporter extends reporter.default {
 		} );
 	}
 	onRunnerEnd() {
-		const root = process.env.LOG_DIR || __dirname + '/log';
-
 		const result = {
 			fail: this.failures,
 			pass: this.success,
 			skip: this.skipped
 		};
 
-		const suite = process.env.SUITE || 'unknown';
-		const filePath = root + '/result-' + suite + '.json';
-
-		if ( fs.existsSync( filePath ) ) {
-
-			const existing = JSON.parse( fs.readFileSync( filePath, 'utf8' ) );
+		if ( fs.existsSync( this.resultFilePath ) ) {
+			const existing = JSON.parse( fs.readFileSync( this.resultFilePath, 'utf8' ) );
 
 			if ( existing ) {
 				result.pass = result.pass.concat( existing.pass );
@@ -53,7 +48,7 @@ class JsonReporter extends reporter.default {
 			}
 		}
 
-		fs.writeFileSync( filePath, JSON.stringify( result, null, 2 ), 'utf-8' );
+		fs.writeFileSync( this.resultFilePath, JSON.stringify( result, null, 2 ), 'utf-8' );
 	}
 }
 

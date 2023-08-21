@@ -14,57 +14,50 @@ lint:
 	@bash lint.sh
 
 .PHONY: test
-test: test-stop
+test:
+ifdef SUITE
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
-	bash test/test_suite.sh ${SUITE}
+	@bash test/test_suite.sh ${SUITE}
+else
+	@make test-all
+endif
 
 .PHONY: test-upgrade
-test-upgrade: upgrade-stop
+test-upgrade:
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
-	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
+	@bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
-test-example: example-stop
+test-example:
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
-	bash test/test_example.sh ${SUITE}
-
-.PHONY: test-stop
-test-stop:
-	cd test && bash test_stop.sh "$(ARGS_CONFIG)"
-
-.PHONY: upgrade-stop
-upgrade-stop:
-	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml -f docker-compose.upgrade.wdqs.yml"
-
-.PHONY: example-stop
-example-stop:
-	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
+	@bash test/test_example.sh ${SUITE}
 
 test-all:
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
+	@echo "⚠️  Running All Test Suites"
 
-	# bundle tests
-	bash test/test_suite.sh repo
-	bash test/test_suite.sh fedprops
-	bash test/test_suite.sh repo_client
-	bash test/test_suite.sh quickstatements
-	bash test/test_suite.sh pingback
-	bash test/test_suite.sh confirm_edit
-	bash test/test_suite.sh elasticsearch
+	@# bundle tests
+	@bash test/test_suite.sh repo
+	@bash test/test_suite.sh fedprops
+	@bash test/test_suite.sh repo_client
+	@bash test/test_suite.sh quickstatements
+	@bash test/test_suite.sh pingback
+	@bash test/test_suite.sh confirm_edit
+	@bash test/test_suite.sh elasticsearch
 
-	# base tests
-	bash test/test_suite.sh base__repo
-	bash test/test_suite.sh base__repo_client
-	bash test/test_suite.sh base__fedprops
-	bash test/test_suite.sh base__pingback
+	@# base tests
+	@bash test/test_suite.sh base__repo
+	@bash test/test_suite.sh base__repo_client
+	@bash test/test_suite.sh base__fedprops
+	@bash test/test_suite.sh base__pingback
 
 requirements:
 	python3 build/requirements/build_version_requirements.py

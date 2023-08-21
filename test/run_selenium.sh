@@ -4,8 +4,6 @@ set -e
 
 export SUITE=$1
 
-mkdir -p log
-
 # if prepended with base__ we might still want to use the bundle config
 if [[ $SUITE == base__* ]] && [ ! -d "suite-config/$SUITE" ] ; then
     SUITE_CONFIG_NAME=${SUITE//base__/}
@@ -17,7 +15,7 @@ fi
 export LOCALSETTINGS_VARIANT=$SUITE_CONFIG_NAME
 
 if [ ! -d "suite-config/$SUITE_CONFIG_NAME" ]; then
-    echo "Suite $SUITE_CONFIG_NAME does not exist"
+    echo "🚨 Suite $SUITE_CONFIG_NAME does not exist, exiting"  2>&1 | tee -a "$TEST_LOG"
     exit 1
 fi
 
@@ -25,36 +23,41 @@ SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 if [ -f "$SUITE_OVERRIDE" ]; then
-    echo "Using docker compose override file $SUITE_OVERRIDE"
+    echo "ℹ️  Using docker compose override file $SUITE_OVERRIDE" 2>&1 | tee -a "$TEST_LOG"
     SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f $SUITE_OVERRIDE"
 fi
 
+SUITE_COMPOSE="docker compose $SUITE_CONFIG"
+SUITE_AND_TEST_SETUP_COMPOSE="$SUITE_COMPOSE -f docker-compose.test-setup.yml"
+SUITE_AND_TEST_RUNNER_COMPOSE="$SUITE_COMPOSE -f docker-compose-selenium-test.yml"
+
+function remove_services_and_volumes {
+    $SUITE_AND_TEST_RUNNER_COMPOSE down --volumes --remove-orphans --timeout 1 >> "$TEST_LOG" 2>&1 || true
+}
+
+# build test-setup and wikibase-selenium-test just in case something has changed
+$SUITE_AND_TEST_SETUP_COMPOSE build test-setup >> $TEST_LOG 2>&1
+$SUITE_AND_TEST_RUNNER_COMPOSE build wikibase-selenium-test >> "$TEST_LOG" 2>&1
 
 # shut down the stack if running, remove volumes to start test suite on fresh db
-docker compose \
-    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
-    down --volumes --remove-orphans --timeout 1 || true
+echo "🔄 Removing existing Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
+remove_services_and_volumes
 
-# start container with settings
-STRING_DATABASE_IMAGE_NAME=${DATABASE_IMAGE_NAME//[^a-zA-Z_0-9]/_}
-docker compose $SUITE_CONFIG up -d --force-recreate
-docker compose $SUITE_CONFIG logs -f --no-color > "log/wikibase.$STRING_DATABASE_IMAGE_NAME.$1.log" &
+# create stack
+echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
+$SUITE_COMPOSE up -d >> "$TEST_LOG" 2>&1
+$SUITE_COMPOSE logs -f --no-color >> "$TEST_LOG" &
+# wait until containers start
+$SUITE_AND_TEST_SETUP_COMPOSE run --rm test-setup
 
-docker compose \
-    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
-    build \
-    wikibase-selenium-test --quiet
+echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
-# run status checks and wait until containers start
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml build wikibase-test --quiet
-docker compose $SUITE_CONFIG -f docker-compose-curl-test.yml run wikibase-test
-
-NODE_COMMAND='test:run'
+WDIO_COMMAND='npm run test:run --silent'
 if [ -n "$FILTER" ]; then
-    NODE_COMMAND='test:run-filter'
+    WDIO_COMMAND='npm run test:run-filter --silent'
 fi
 
-docker compose \
-    $SUITE_CONFIG -f docker-compose-selenium-test.yml \
-    run \
-    wikibase-selenium-test bash -c "rm -f /usr/src/app/log/selenium/result-$SUITE.json && npm run $NODE_COMMAND"
+$SUITE_AND_TEST_RUNNER_COMPOSE run --rm wikibase-selenium-test bash -c "$WDIO_COMMAND"
+
+echo -e "🔄 Removing running Docker test services and volumes\n" 2>&1 | tee -a "$TEST_LOG"
+remove_services_and_volumes
