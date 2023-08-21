@@ -49,12 +49,8 @@ SUITE=pre_upgrade
 # log directory setup
 export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
-# remove log file created outside of Docker with local user before
-# removing entire directory from Docker
-# which avoids permissions issues
-rm -f "$TEST_LOG" || true
-docker compose --env-file  default.env run --rm test-runner \
-    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
+docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
+mkdir -p "$LOG_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
@@ -93,12 +89,8 @@ SUITE=upgrade
 # log directory setup
 export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
-# remove log file created outside of Docker with local user before
-# removing entire directory from Docker
-# which avoids permissions issues
-rm -f "$TEST_LOG" || true
-docker compose --env-file  default.env run --rm test-runner \
-    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
+docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
+mkdir -p "$LOG_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "✳️  Performing upgrade steps for \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
@@ -135,14 +127,10 @@ $TEST_COMPOSE down >> $TEST_LOG 2>&1
 SUITE=post_upgrade
 
 # log directory setup
-LOG_DIR="log/$SUITE"
-TEST_LOG="$LOG_DIR/$SUITE.log"
-# remove log file created outside of Docker with local user before
-# removing entire directory from Docker
-# which avoids permissions issues
-rm -f "$TEST_LOG" || true
-docker compose --env-file  default.env run --rm test-runner \
-    -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
+export LOG_DIR="log/$SUITE"
+export TEST_LOG="$LOG_DIR/$SUITE.log"
+docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
+mkdir -p "$LOG_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
