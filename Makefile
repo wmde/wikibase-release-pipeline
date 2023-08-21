@@ -15,10 +15,10 @@ lint:
 
 .PHONY: test
 test:
+ifdef SUITE
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
-ifdef SUITE
 	@bash test/test_suite.sh ${SUITE}
 else
 	@make test-all
