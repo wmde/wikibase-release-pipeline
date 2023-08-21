@@ -13,6 +13,10 @@ fi
 # log directory setup
 export LOG_DIR="log/$SUITE"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
+# remove log file created outside of Docker with local user before
+# removing entire directory from Docker
+# which avoids permissions issues
+rm -f "$TEST_LOG" || true
 docker compose --env-file  default.env run --rm test-runner \
     -c "rm -rf \"$LOG_DIR\" && mkdir -p \"$LOG_DIR\"" > /dev/null
 
