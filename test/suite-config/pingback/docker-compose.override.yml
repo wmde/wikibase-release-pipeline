@@ -14,7 +14,7 @@ services:
     working_dir: /home/node/app
     restart: always
     volumes:
-      - ./suite-config/pingback/beacon.js:/home/node/app/beacon.js
+      - ./suite-config/${SUITE_CONFIG_NAME}/beacon.js:/home/node/app/beacon.js
     command: "node beacon.js"
     ports:
       - "7171:80"
