@@ -7,7 +7,7 @@ cd test
 export SUITE=$1
 
 if [ -z "$SUITE" ]; then
-    echo "SUITE is not set. defaulting to example"
+    echo "ℹ️  SUITE is not set. defaulting to example"
     export SUITE="example"
 fi
 

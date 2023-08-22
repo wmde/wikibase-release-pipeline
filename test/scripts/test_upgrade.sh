@@ -162,7 +162,7 @@ $TEST_COMPOSE run --rm test-runner -c suite-config/$SUITE_CONFIG_NAME/setup.sh
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
 
-docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick 2>&1 | tee -a "$TEST_LOG"
+docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick >> "$TEST_LOG" 2>&1
 
 echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")" 2>&1 | tee -a "$TEST_LOG"
 
