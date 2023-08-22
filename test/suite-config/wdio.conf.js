@@ -6,6 +6,8 @@
 'use strict';
 
 const fs = require( 'fs' );
+const path = require( 'path' );
+const { isArray } = require( 'lodash' );
 const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
@@ -95,75 +97,29 @@ exports.config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: {
-
-		// example-specs
-		example: [
-			'./specs/quickstatements/*.js',
-			'./specs/repo/queryservice.js',
-			'./specs/elasticsearch/*.js'
-		],
-
-		// bundle-specs
-		repo: [
-			'./specs/repo/*.js',
-			'./specs/repo/extensions/*.js'
-		],
-		repo_client: [
-			'./specs/repo_client/*.js',
-			'./specs/repo_client/extensions/*.js'
-		],
-		fedprops: [
-			'./specs/fedprops/*.js'
-		],
-		pingback: [
-			'./specs/pingback/*.js'
-		],
-		quickstatements: [
-			'./specs/repo_client/interwiki-links.js',
-			'./specs/quickstatements/*.js'
-		],
-		elasticsearch: [
-			'./specs/elasticsearch/*.js'
-		],
-		confirm_edit: [
-			'./specs/confirm_edit/*.js'
-		],
-
-		// base-specs
-		base__repo: [
-			'./specs/repo/api.js',
-			'./specs/repo/property.js',
-			'./specs/repo/special-item.js',
-			'./specs/repo/special-property.js',
-			'./specs/repo/queryservice.js'
-		],
-		base__repo_client: [
-			'./specs/repo_client/interwiki-links.js',
-			'./specs/repo_client/item.js',
-			'./specs/repo/api.js'
-		],
-		base__fedprops: [
-			'./specs/fedprops/*.js'
-		],
-		base__pingback: [
-			'./specs/pingback/*.js'
-		],
-
-		pre_upgrade: [
-			'./specs/repo/api.js',
-			'./specs/upgrade/pre-upgrade.js',
-			'./specs/upgrade/queryservice-pre-and-post-upgrade.js'
-		],
-
-		post_upgrade: [
-			'./specs/repo/api.js',
-			'./specs/upgrade/post-upgrade.js',
-			'./specs/upgrade/queryservice-pre-and-post-upgrade.js',
-			'./specs/upgrade/queryservice-post-upgrade.js'
-		]
-
-	},
+	suites: Object.fromEntries(
+		fs
+			.readdirSync( __dirname )
+			.flatMap( ( directory ) => {
+				if ( fs.lstatSync( path.join( __dirname, directory ) ).isDirectory() ) {
+					const suiteConfigFile = path.join(
+						__dirname,
+						directory,
+						`${directory}.conf.js`
+					);
+					const suiteConfig = require( suiteConfigFile );
+					const suiteConfigSuite = suiteConfig.config.suite;
+					if ( isArray( suiteConfigSuite ) ) {
+						return [ [ directory, suiteConfigSuite ] ];
+					} else {
+						return Object.entries( suiteConfigSuite );
+					}
+				} else {
+					return undefined;
+				}
+			} )
+			.filter( ( value ) => value !== undefined )
+	),
 
 	// =====
 	// Hooks
