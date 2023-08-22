@@ -11,7 +11,7 @@ if [ -z "$SUITE" ]; then
 fi
 
 # log directory setup
-export LOG_DIR="log/$SUITE"
+export LOG_DIR="suite-config/$SUITE/results"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
 mkdir -p "$LOG_DIR"

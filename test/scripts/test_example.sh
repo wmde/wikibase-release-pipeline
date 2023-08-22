@@ -14,7 +14,7 @@ fi
 set -o allexport; source ../example/template.env; source suite-config/example/example.env; set +o allexport
 
 # log directory setup
-export LOG_DIR="log/$SUITE"
+export LOG_DIR="suite-config/$SUITE/results"
 export TEST_LOG="$LOG_DIR/$SUITE.log"
 # remove log file created outside of Docker with local user before
 # removing entire directory from Docker
