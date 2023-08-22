@@ -26,5 +26,5 @@ jobs:
           name: TestExampleArtifacts
           if-no-files-found: error
           path: |
-            test/suite-config/example/results
+            test/suites/example/results
           

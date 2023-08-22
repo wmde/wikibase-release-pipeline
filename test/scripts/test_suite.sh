@@ -11,7 +11,7 @@ if [ -z "$SUITE" ]; then
 fi
 
 # log directory setup
-export RESULTS_DIR="suite-config/$SUITE/results"
+export RESULTS_DIR="suites/$SUITE/results"
 export TEST_LOG="$RESULTS_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
 mkdir -p "$RESULTS_DIR"
@@ -55,6 +55,6 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-export DEFAULT_SUITE_CONFIG="--env-file default.env -f suite-config/docker-compose.yml"
+export DEFAULT_SUITE_CONFIG="--env-file default.env -f suites/docker-compose.yml"
 
 bash scripts/run_selenium.sh "$SUITE"

@@ -7,7 +7,7 @@ if( !process.env.SUITE ) {
     return;
 }
 
-const filePath = `../../test/suite-config/${process.env.SUITE}/results/result.json`;
+const filePath = `../../test/suites/${process.env.SUITE}/results/result.json`;
 
 var resultObject = {};
 
