@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 exports.config = {
-  suite: [
-    "./specs/quickstatements/*.js",
-    "./specs/repo/queryservice.js",
-    "./specs/elasticsearch/*.js",
-  ],
+	suite: [
+		'./specs/quickstatements/*.js',
+		'./specs/repo/queryservice.js',
+		'./specs/elasticsearch/*.js'
+	]
 };

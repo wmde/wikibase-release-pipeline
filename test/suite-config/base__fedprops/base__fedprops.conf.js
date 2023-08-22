@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 
-exports.config = { suite: ["./specs/fedprops/*.js"] };
+exports.config = { suite: [ './specs/fedprops/*.js' ] };
