@@ -544,15 +544,15 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          ls -lahr test/log test/log/*
-          tail -n +1 test/log/*/*.log
+          ls -lahr test/suite-config/${{ matrix.suite }}/results test/suite-config/${{ matrix.suite }}/results/*
+          tail -n +1 test/suite-config/${{ matrix.suite }}/results/*.log
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestArtifacts
-          path: test/log
+          path: test/suite-config/${{ matrix.suite }}/results
 
   test_upgrade_base:
     timeout-minutes: 20
@@ -591,7 +591,7 @@ jobs:
         if: always()
         with:
           name: TestUpgradeArtifacts
-          path: test/log
+          path: test/suite-config/example/results
 
   test_upgrade_bundle:
     timeout-minutes: 20
@@ -632,7 +632,7 @@ jobs:
         if: always()
         with:
           name: TestUpgradeArtifactsBundle
-          path: test/log
+          path: test/suite-config/example/results
 
   versions:
     needs:
