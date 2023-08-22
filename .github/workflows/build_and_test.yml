@@ -591,7 +591,8 @@ jobs:
         if: always()
         with:
           name: TestUpgradeArtifacts
-          path: test/suite-config/example/results
+          path: test/suite-config/**/results
+
 
   test_upgrade_bundle:
     timeout-minutes: 20
@@ -632,7 +633,7 @@ jobs:
         if: always()
         with:
           name: TestUpgradeArtifactsBundle
-          path: test/suite-config/example/results
+          path: test/suite-config/**/results
 
   versions:
     needs:
