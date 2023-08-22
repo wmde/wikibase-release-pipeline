@@ -7,7 +7,6 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { isArray } = require( 'lodash' );
 const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
@@ -100,23 +99,19 @@ exports.config = {
 	suites: Object.fromEntries(
 		fs
 			.readdirSync( __dirname )
-			.flatMap( ( directory ) => {
+			.map( ( directory ) => {
 				if ( fs.lstatSync( path.join( __dirname, directory ) ).isDirectory() ) {
 					const suiteConfigFile = path.join(
 						__dirname,
 						directory,
 						`${directory}.conf.js`
 					);
-					const suiteConfig = require( suiteConfigFile );
-					const suiteConfigSuite = suiteConfig.config.suite;
-					if ( isArray( suiteConfigSuite ) ) {
-						return [ [ directory, suiteConfigSuite ] ];
-					} else {
-						return Object.entries( suiteConfigSuite );
-					}
-				} else {
-					return undefined;
+					try {
+						const suiteConfig = require( suiteConfigFile );
+						return [ directory, suiteConfig.config.suite ];
+					} catch {}
 				}
+				return undefined;
 			} )
 			.filter( ( value ) => value !== undefined )
 	),
