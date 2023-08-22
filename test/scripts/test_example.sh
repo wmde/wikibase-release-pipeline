@@ -7,21 +7,19 @@ cd test
 export SUITE=$1
 
 if [ -z "$SUITE" ]; then
-    echo "ℹ️  SUITE is not set. defaulting to example"
+    echo "ℹ️  SUITE is not set. defaulting to \"example\""
     export SUITE="example"
 fi
 
-set -o allexport; source ../example/template.env; source suite-config/example/example.env; set +o allexport
-
 # log directory setup
-export LOG_DIR="suite-config/$SUITE/results"
-export TEST_LOG="$LOG_DIR/$SUITE.log"
-# remove log file created outside of Docker with local user before
-# removing entire directory from Docker
-# which avoids permissions issues
-docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
-mkdir -p "$LOG_DIR"
+export RESULTS_DIR="suite-config/$SUITE/results"
+export TEST_LOG="$RESULTS_DIR/$SUITE.log"
+docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
+mkdir -p "$RESULTS_DIR"
 
+echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
+
+set -o allexport; source ../example/template.env; source suite-config/example/example.env; set +o allexport
 # TODO These names should probably not differ MYSQL_IMAGE_NAME comes from example
 export DATABASE_IMAGE_NAME="$MYSQL_IMAGE_NAME"
 ## Use in combination with example compose files 

@@ -47,14 +47,12 @@ function remove_services_and_volumes {
 SUITE=pre_upgrade
 
 # log directory setup
-export LOG_DIR="suite-config/$SUITE/results"
-export TEST_LOG="$LOG_DIR/$SUITE.log"
-docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
-mkdir -p "$LOG_DIR"
+export RESULTS_DIR="suite-config/$SUITE/results"
+export TEST_LOG="$RESULTS_DIR/$SUITE.log"
+docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
+mkdir -p "$RESULTS_DIR"
 
-echo "" 2>&1 | tee -a "$TEST_LOG"
-echo "▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
-echo "" 2>&1 | tee -a "$TEST_LOG"
+echo -e "\n▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
@@ -87,10 +85,10 @@ $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 SUITE=upgrade
 
 # log directory setup
-export LOG_DIR="suite-config/$SUITE/results"
-export TEST_LOG="$LOG_DIR/$SUITE.log"
-docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
-mkdir -p "$LOG_DIR"
+export RESULTS_DIR="suite-config/$SUITE/results"
+export TEST_LOG="$RESULTS_DIR/$SUITE.log"
+docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
+mkdir -p "$RESULTS_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
 echo "✳️  Performing upgrade steps for \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
@@ -127,14 +125,12 @@ $TEST_COMPOSE down >> $TEST_LOG 2>&1
 SUITE=post_upgrade
 
 # log directory setup
-export LOG_DIR="log/$SUITE"
-export TEST_LOG="$LOG_DIR/$SUITE.log"
-docker compose run --rm test-runner -c "rm -rf \"$LOG_DIR\"" > /dev/null
-mkdir -p "$LOG_DIR"
+export RESULTS_DIR="log/$SUITE"
+export TEST_LOG="$RESULTS_DIR/$SUITE.log"
+docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
+mkdir -p "$RESULTS_DIR"
 
-echo "" 2>&1 | tee -a "$TEST_LOG"
-echo "▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
-echo "" 2>&1 | tee -a "$TEST_LOG"
+echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then

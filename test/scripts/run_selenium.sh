@@ -13,7 +13,7 @@ TEST_COMPOSE="docker compose -f docker-compose.yml $DEFAULT_SUITE_CONFIG"
 # adding Docker compose override file for this suite if there is one
 SUITE_OVERRIDE="suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml"
 if [ -f "$SUITE_OVERRIDE" ]; then
-    echo "ℹ️  Using $SUITE_OVERRIDE" 2>&1 | tee -a "$TEST_LOG"
+    echo "ℹ️  Using \"$SUITE_OVERRIDE\"" 2>&1 | tee -a "$TEST_LOG"
     TEST_COMPOSE="$TEST_COMPOSE -f $SUITE_OVERRIDE"
 fi
 
@@ -29,7 +29,7 @@ $TEST_COMPOSE up -d --build --scale test-runner=0 >> "$TEST_LOG" 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # run the global suite setup.sh (waits for containers to come up, etc)
-echo "🔄 Running suite-config/setup.sh" 2>&1 | tee -a "$TEST_LOG"
+echo "🔄 Running \"suite-config/setup.sh\"" 2>&1 | tee -a "$TEST_LOG"
 $TEST_COMPOSE run --rm test-runner -c suite-config/setup.sh 2>&1 | tee -a "$TEST_LOG"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"

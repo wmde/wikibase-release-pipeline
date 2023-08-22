@@ -8,5 +8,6 @@ scripts/check_if_up.sh "$WDQS_FRONTEND_SERVER" "/"
 SUITE_SETUP_FILE="suite-config/$SUITE/setup.sh"
 
 if [ -f "$SUITE_SETUP_FILE" ]; then
+    echo "🔄 Running \"$SUITE_SETUP_FILE\"" 2>&1 | tee -a "$TEST_LOG"
     $SUITE_SETUP_FILE
 fi

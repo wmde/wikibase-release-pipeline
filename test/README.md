@@ -50,8 +50,8 @@ The behavior of the tests can be modified with several environment variables.
   Defaults to `http://127.0.0.1:8080` (Vagrant).
 * `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `MW_SERVER`.
   Defaults to `/w`.
-* `LOG_DIR`: Directory to leave logs and screenshots in.
-  Defaults to a `log/` subdirectory of this directory.
+* `RESULTS_DIR`: Directory to leave logs and screenshots in.
+  Defaults to `suite-config/SUITE/results` within this directory.
 * `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.:
   Property ID of a property with datatype `string`, `url`, etc. –
   if not set, a new property of this type will be created each time the tests are run.

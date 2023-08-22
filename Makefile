@@ -42,7 +42,7 @@ test-all:
 ifndef GITHUB_ACTIONS
 	@make lint
 endif
-	@echo "⚠️  Running All Test Suites"
+	@echo "\n⚠️  Running All Test Suites"
 
 	@# bundle tests
 	@bash test/scripts/test_suite.sh repo
