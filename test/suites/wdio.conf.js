@@ -20,6 +20,17 @@ exports.logPath = resultsDir;
 exports.screenshotPath = screenshotPath;
 exports.resultFilePath = resultFilePath;
 
+const fetchSuite = ( suiteName ) => {
+	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
+		const suiteConfigFile = path.join( __dirname, suiteName, `${suiteName}.conf.js` );
+		try {
+			const suiteConfig = require( suiteConfigFile );
+			return suiteConfig.config.suite;
+		} catch {}
+	}
+	return undefined;
+};
+
 exports.config = {
 
 	// ======
@@ -96,25 +107,7 @@ exports.config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: Object.fromEntries(
-		fs
-			.readdirSync( __dirname )
-			.map( ( directory ) => {
-				if ( fs.lstatSync( path.join( __dirname, directory ) ).isDirectory() ) {
-					const suiteConfigFile = path.join(
-						__dirname,
-						directory,
-						`${directory}.conf.js`
-					);
-					try {
-						const suiteConfig = require( suiteConfigFile );
-						return [ directory, suiteConfig.config.suite ];
-					} catch {}
-				}
-				return undefined;
-			} )
-			.filter( ( value ) => value !== undefined )
-	),
+	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
 
 	// =====
 	// Hooks
