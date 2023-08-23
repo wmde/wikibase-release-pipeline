@@ -12,11 +12,11 @@ const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
-const logPath = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.env.SUITE}/results`;
-const screenshotPath = `${logPath}/screenshots`;
-const resultFilePath = `${logPath}/result.json`;
+const resultsDir = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.env.SUITE}/results`;
+const screenshotPath = `${resultsDir}/screenshots`;
+const resultFilePath = `${resultsDir}/result.json`;
 
-exports.logPath = logPath;
+exports.logPath = resultsDir;
 exports.screenshotPath = screenshotPath;
 exports.resultFilePath = resultFilePath;
 
@@ -127,7 +127,7 @@ exports.config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		fs.mkdir( logPath, { recursive: true }, () => {} );
+		fs.mkdir( resultsDir, { recursive: true }, () => {} );
 		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
 		fs.rm( resultFilePath, { force: true }, () => {} );
 	},
