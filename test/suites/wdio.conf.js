@@ -16,7 +16,6 @@ const resultsDir = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
-exports.logPath = resultsDir;
 exports.screenshotPath = screenshotPath;
 exports.resultFilePath = resultFilePath;
 
