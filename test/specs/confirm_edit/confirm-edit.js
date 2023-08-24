@@ -25,7 +25,7 @@ describe( 'ConfirmEdit', function () {
 
 
 
-		
+
 		const executionResult = browser.editPage(
 			process.env.MW_SERVER,
 			'ConfirmEditTest',
