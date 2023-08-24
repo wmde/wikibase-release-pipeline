@@ -30,14 +30,13 @@ ENV MEMORY=""\
     WDQS_ENTITY_NAMESPACES="120,122"\
     WIKIBASE_SCHEME="http"\
     WIKIBASE_MAX_DAYS_BACK="90"\
-    BLAZEGRAPH_EXTRA_OPTS=""\
-    LOG_CONFIG="/wdqs/logback.xml"
+    BLAZEGRAPH_EXTRA_OPTS=""
 
 WORKDIR /wdqs
 
 COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
-COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt logback.xml /wdqs/
+COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt /wdqs/
 
 # TODO this shouldn't be needed, but CI currently doesnt check for the +x bit, which is why this line is here
 RUN chmod +x /wdqs/runUpdate.sh

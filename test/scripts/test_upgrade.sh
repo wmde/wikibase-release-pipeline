@@ -125,7 +125,7 @@ $TEST_COMPOSE down >> $TEST_LOG 2>&1
 SUITE=post_upgrade
 
 # log directory setup
-export RESULTS_DIR="log/$SUITE"
+export RESULTS_DIR="suites/$SUITE/results"
 export TEST_LOG="$RESULTS_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
 mkdir -p "$RESULTS_DIR"
