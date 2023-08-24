@@ -14,7 +14,7 @@ for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
         replacing = False
         with open(file_path, mode='r+') as current_file:
             contents = current_file.read()
-            while found := re.search(trailing_whitespace, contents):
+            while re.search(trailing_whitespace, contents):
                 contents = re.sub(trailing_whitespace, r"\2", contents)
                 replacing = True
             if not contents.endswith('\n'):
