@@ -6,6 +6,26 @@ describe( 'ConfirmEdit', function () {
 
 	it( 'Should allow to edit with captcha', function () {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 		const executionResult = browser.editPage(
 			process.env.MW_SERVER,
 			'ConfirmEditTest',
