@@ -149,7 +149,7 @@ exports.config = {
 	 */
 	afterTest: function ( test ) {
 		const testFile = encodeURIComponent(
-			test.file.match( /.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-' )
+			test.file.match(/.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-')
 		);
 		const screenshotFilename = `${testFile}__${test.title}`;
 
