@@ -3,9 +3,9 @@ import glob
 import os
 
 trailing_whitespace = re.compile(r"([ \t\r]+)(\n)")
-
 root_dir = os.path.join(os.getcwd(), "..", "..")
 
+print("Fixing Whitespace")
 
 for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
     if "node_modules" not in file:
