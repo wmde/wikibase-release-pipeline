@@ -5,8 +5,6 @@ import os
 trailing_whitespace = re.compile(r"([ \t\r]+)(\n)")
 root_dir = os.path.join(os.getcwd(), "..", "..")
 
-print("Fixing Whitespace")
-
 for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
     if "node_modules" not in file:
         file_path = os.path.join(root_dir, file)
@@ -30,4 +28,3 @@ for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
             os.remove(file_path)
             os.rename(temp_file_path, file_path)
             os.removedirs(temp_file_dir)
-            print(f"Replaced {file}")
