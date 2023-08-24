@@ -21,7 +21,8 @@
 		"wdio-mediawiki": "^1.1.1",
 		"wdio-wikibase": "^5.2.0",
 		"axios": "^0.21.0",
-		"lodash": "^4.17.20"
+		"lodash": "^4.17.20",
+		"husky": "^8.0.0"
 	},
 	"browserslist": [
 		"ie 11"
@@ -30,7 +31,8 @@
 		"test:run": "wdio suites/wdio.conf.js --suite $SUITE",
 		"test:run-filter": "wdio suites/wdio.conf.js --spec $FILTER",
 		"lint": "npx eslint .",
-		"fix": "npx eslint . --fix"
+		"fix": "npx eslint . --fix",
+		"prepare": "cd .. && husky install test/.husky"
 	},
 	"dependencies": {}
 }
