@@ -66,4 +66,4 @@ jobs:
         with:
           name: TestArtifacts
           path: |
-            test/suite-config/${{ matrix.suite }}/results
+            test/suites/${{ matrix.suite }}/results

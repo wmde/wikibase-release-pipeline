@@ -23,14 +23,14 @@ set -o allexport; source ../variables.env set +o allexport;
 SUITE_CONFIG_NAME=upgrade
 
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
-DEFAULT_SUITE_CONFIG="-f suite-config/$SUITE_CONFIG_NAME/docker-compose.yml"
+DEFAULT_SUITE_CONFIG="-f suites/$SUITE_CONFIG_NAME/docker-compose.yml"
 
 export SUITE_CONFIG="$DEFAULT_SUITE_CONFIG"
 
 # If WDQS is specified append that yml file to SUITE_CONFIG
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export WDQS_TEST_IMAGE_NAME="$WDQS_SOURCE_IMAGE_NAME"
-    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f suite-config/$SUITE_CONFIG_NAME/docker-compose.wdqs.yml"
+    export SUITE_CONFIG="${DEFAULT_SUITE_CONFIG} -f suites/$SUITE_CONFIG_NAME/docker-compose.wdqs.yml"
     export RUN_QUERYSERVICE_POST_UPGRADE_TEST="true"
 fi
 
@@ -47,7 +47,7 @@ function remove_services_and_volumes {
 SUITE=pre_upgrade
 
 # log directory setup
-export RESULTS_DIR="suite-config/$SUITE/results"
+export RESULTS_DIR="suites/$SUITE/results"
 export TEST_LOG="$RESULTS_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
 mkdir -p "$RESULTS_DIR"
@@ -56,7 +56,7 @@ echo -e "\n▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee 
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
-set -o allexport; source "suite-config/$SUITE_CONFIG_NAME/default_variables.env"; source "suite-config/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
+set -o allexport; source "suites/$SUITE_CONFIG_NAME/default_variables.env"; source "suites/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
 
 # old wikibase version
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"
@@ -72,7 +72,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suite-config/$SUITE_CONFIG_NAME/setup.sh
+$TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
@@ -85,7 +85,7 @@ $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 SUITE=upgrade
 
 # log directory setup
-export RESULTS_DIR="suite-config/$SUITE/results"
+export RESULTS_DIR="suites/$SUITE/results"
 export TEST_LOG="$RESULTS_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
 mkdir -p "$RESULTS_DIR"
@@ -148,12 +148,12 @@ fi
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
-$TEST_COMPOSE -f suite-config/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
+$TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
 # shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suite-config/$SUITE_CONFIG_NAME/setup.sh
+$TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"

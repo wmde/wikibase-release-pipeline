@@ -25,7 +25,7 @@ make test SUITE=repo FILTER=babel*
 
 ## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/suite-config/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/suites/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
 make test-upgrade VERSION=wmde.0 TO_VERSION=versions/wmdeN.env

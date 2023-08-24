@@ -4,7 +4,7 @@ services:
 
   wikibase:
     volumes:
-      - ./suite-config/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
     environment: 
       - WIKIBASE_PINGBACK=true
 
@@ -14,7 +14,7 @@ services:
     working_dir: /home/node/app
     restart: always
     volumes:
-      - ./suite-config/${SUITE_CONFIG_NAME}/beacon.js:/home/node/app/beacon.js
+      - ./suites/${SUITE_CONFIG_NAME}/beacon.js:/home/node/app/beacon.js
     command: "node beacon.js"
     ports:
       - "7171:80"

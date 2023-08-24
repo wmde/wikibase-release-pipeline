@@ -6,18 +6,29 @@
 'use strict';
 
 const fs = require( 'fs' );
+const path = require( 'path' );
 const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
-const logPath = process.env.RESULTS_DIR || `${__dirname}/../suite-config/${process.env.SUITE}/results`;
-const screenshotPath = `${logPath}/screenshots`;
-const resultFilePath = `${logPath}/result.json`;
+const resultsDir = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.env.SUITE}/results`;
+const screenshotPath = `${resultsDir}/screenshots`;
+const resultFilePath = `${resultsDir}/result.json`;
 
-exports.logPath = logPath;
 exports.screenshotPath = screenshotPath;
 exports.resultFilePath = resultFilePath;
+
+const fetchSuite = ( suiteName ) => {
+	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
+		const suiteConfigFile = path.join( __dirname, suiteName, `${suiteName}.conf.js` );
+		try {
+			const suiteConfig = require( suiteConfigFile );
+			return suiteConfig.config.suite;
+		} catch {}
+	}
+	return undefined;
+};
 
 exports.config = {
 
@@ -95,75 +106,7 @@ exports.config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: {
-
-		// example-specs
-		example: [
-			'./specs/quickstatements/*.js',
-			'./specs/repo/queryservice.js',
-			'./specs/elasticsearch/*.js'
-		],
-
-		// bundle-specs
-		repo: [
-			'./specs/repo/*.js',
-			'./specs/repo/extensions/*.js'
-		],
-		repo_client: [
-			'./specs/repo_client/*.js',
-			'./specs/repo_client/extensions/*.js'
-		],
-		fedprops: [
-			'./specs/fedprops/*.js'
-		],
-		pingback: [
-			'./specs/pingback/*.js'
-		],
-		quickstatements: [
-			'./specs/repo_client/interwiki-links.js',
-			'./specs/quickstatements/*.js'
-		],
-		elasticsearch: [
-			'./specs/elasticsearch/*.js'
-		],
-		confirm_edit: [
-			'./specs/confirm_edit/*.js'
-		],
-
-		// base-specs
-		base__repo: [
-			'./specs/repo/api.js',
-			'./specs/repo/property.js',
-			'./specs/repo/special-item.js',
-			'./specs/repo/special-property.js',
-			'./specs/repo/queryservice.js'
-		],
-		base__repo_client: [
-			'./specs/repo_client/interwiki-links.js',
-			'./specs/repo_client/item.js',
-			'./specs/repo/api.js'
-		],
-		base__fedprops: [
-			'./specs/fedprops/*.js'
-		],
-		base__pingback: [
-			'./specs/pingback/*.js'
-		],
-
-		pre_upgrade: [
-			'./specs/repo/api.js',
-			'./specs/upgrade/pre-upgrade.js',
-			'./specs/upgrade/queryservice-pre-and-post-upgrade.js'
-		],
-
-		post_upgrade: [
-			'./specs/repo/api.js',
-			'./specs/upgrade/post-upgrade.js',
-			'./specs/upgrade/queryservice-pre-and-post-upgrade.js',
-			'./specs/upgrade/queryservice-post-upgrade.js'
-		]
-
-	},
+	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
 
 	// =====
 	// Hooks
@@ -176,7 +119,7 @@ exports.config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		fs.mkdir( logPath, { recursive: true }, () => {} );
+		fs.mkdir( resultsDir, { recursive: true }, () => {} );
 		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
 		fs.rm( resultFilePath, { force: true }, () => {} );
 	},
