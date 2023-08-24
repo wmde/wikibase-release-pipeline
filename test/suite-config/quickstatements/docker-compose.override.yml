@@ -1,31 +1,20 @@
-# Wikibase override for testing client-repo setups
-version: '3'
+version: '3.4'
 
 services:
 
-  test-setup:
-    build:
-      context: ../Docker/test/setup/
-      dockerfile: Dockerfile
-    volumes:
-      - ./suite-config/quickstatements/curl-test/entrypoint.sh:/entrypoint.sh
-    entrypoint: /bin/sh
-    command:  /entrypoint.sh
-    environment: 
-      - WIKIBASE_CLIENT_SERVER=wikibase-client.svc:80
-
   mysql:
     volumes:  
-      - ./config/client/mysql/create-client-db.sql:/docker-entrypoint-initdb.d/02-create-client-db.sql
+      - ./suite-config/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
       - quickstatements-data:/quickstatements/data
-      - ./suite-config/quickstatements/wikibase/extra-install.sh:/extra-install.sh
-      - ./config/client/wikibase/extra-install-repo.sh:/client-extra-install.sh
-      - ./suite-config/repo_client/repo/LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./suite-config/repo-LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/quickstatements/wikibase-extra-install.sh:/extra-install.sh
+      - ./suite-config/repo-extra-install.sh:/client-extra-install.sh
 
   wikibase-client:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
@@ -37,8 +26,8 @@ services:
       - wikibase
     restart: always
     volumes:
-      - ./suite-config/repo_client/client/LocalSettings.php.template:/LocalSettings.php.template
-      - ./config/client/wikibase/extra-install-client.sh:/extra-install.sh
+      - ./suite-config/client-LocalSettings.php.template:/LocalSettings.php.template
+      - ./suite-config/client-extra-install.sh:/extra-install.sh
     ports:
       - "8383:80"
     networks:
@@ -46,7 +35,7 @@ services:
         aliases:
          - wikibase-client.svc
     environment:
-      - DB_SERVER=mysql.svc:3306
+      - DB_SERVER
       - MW_ADMIN_NAME=WikibaseAdmin
       - MW_ADMIN_PASS=WikibaseDockerAdminPass
       - MW_ADMIN_EMAIL=admin@example.com
@@ -78,5 +67,4 @@ services:
       - "WB_ITEM_PREFIX=Item:"
 
 volumes:
-  LocalSettings:
   quickstatements-data:

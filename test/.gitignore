@@ -1,0 +1,4 @@
+node_modules
+log
+suite-config/**/log
+suite-config/**/results

@@ -7,7 +7,7 @@ You can run the tests in the docker container locally. Testing locally requires 
 
 ## To run all
 ```
-make test-all
+make test
 ```
 
 ## To only run a single suite
@@ -25,7 +25,7 @@ make test SUITE=repo FILTER=babel*
 
 ## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/suite-config/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
 make test-upgrade VERSION=wmde.0 TO_VERSION=versions/wmdeN.env
@@ -47,7 +47,6 @@ make test-example SUITE=example
 
 ##  Variables for testing some other instance
 ```
-WIKIBASE_SERVER=wikibase.svc:80
 MW_SERVER=http://wikibase.svc
 MW_CLIENT_SERVER=http://wikibase-client.svc
 QS_SERVER=http://quickstatements.svc:80
@@ -62,10 +61,9 @@ MW_SCRIPT_PATH=/w
 
 ## Variables for running the a specific test file against a wikibase.cloud/localhost instance
 
-Create a `Docker/test/selenium/wbaas.minikube.repo.env` file with the following contents
+Create a `test/wbaas.minikube.repo.env` file with the following contents
 
 ```
-WIKIBASE_SERVER=minikube.wbaas.localhost:80
 MW_SERVER=http://minikube.wbaas.localhost
 
 MW_ADMIN_NAME=Minikube
@@ -77,10 +75,10 @@ FILTER=api.js
 MOCHA_OPTS_TIMEOUT=3600000000
 ```
 
-Source the file on each run and execute the `test:run-filter` target on the selenium package in `Docker/test/selenium/`.
+Source the file on each run and execute the `test:run-filter` target on the selenium package in `test`.
 
 ```bash
 set -o allexport; source wbaas.minikube.repo.env; set +o allexport && npm run test:run-filter
 ```
 
-For more information on selenium testing see the [README](../../Docker/test/selenium/README.md) file in the selenium folder.
+For more information on selenium testing see the [README](../../test/selenium/README.md) file in the selenium folder.
