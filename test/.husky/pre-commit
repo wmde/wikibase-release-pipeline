@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd test/.husky/python
+cd test
+npm run lint
+
+cd .husky/python
 python3 whitespace.py

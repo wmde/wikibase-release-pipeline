@@ -5,7 +5,7 @@ import os
 trailing_whitespace = re.compile(r"([ \t\r]+)(\n)")
 root_dir = os.path.join(os.getcwd(), "..", "..")
 
-for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
+for file in glob.glob("**/*.(js|json|jsx|ts|tsx|py)", root_dir= root_dir, recursive=True):
     if "node_modules" not in file:
         file_path = os.path.join(root_dir, file)
         temp_file_path = os.path.join(root_dir, "temp", file)
@@ -14,9 +14,9 @@ for file in glob.glob("**/*.js", root_dir= root_dir, recursive=True):
         replacing = False
         with open(file_path, mode='r+') as current_file:
             contents = current_file.read()
-            while re.search(trailing_whitespace, contents):
-                contents = re.sub(trailing_whitespace, r"\2", contents)
-                replacing = True
+            # while re.search(trailing_whitespace, contents):
+            #     contents = re.sub(trailing_whitespace, r"\2", contents)
+            #     replacing = True
             if not contents.endswith('\n'):
                 contents += "\n"
                 replacing = True
