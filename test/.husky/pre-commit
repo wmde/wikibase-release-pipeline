@@ -2,7 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd test
-npm run lint
-
-cd .husky/python
-python3 whitespace.py
+npm run lint:commit

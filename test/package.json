@@ -32,6 +32,7 @@
 		"test:run-filter": "wdio suites/wdio.conf.js --spec $FILTER",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix",
+		"lint:commit": "npx eslint . --rule 'eol-last: 2' --fix",
 		"prepare": "cd .. && husky install test/.husky"
 	},
 	"dependencies": {}
