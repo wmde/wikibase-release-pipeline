@@ -1,9 +1,4 @@
-import glob
 import os
-
-root_dir = os.path.join(os.getcwd(), "..", "..")
-
-print(root_dir)
 
 
 def add_newline(file: str, root_dir: str):
@@ -32,10 +27,14 @@ def add_newline(file: str, root_dir: str):
             os.removedirs(temp_file_dir)
 
 
-extensions = ["js", "jsx", "ts", "tsx", "sh", "json"]
+if __name__ == "__main__":
+    extensions = ["js", "jsx", "ts", "tsx", "sh", "json"]
 
+    root_dir = os.path.join(os.getcwd(), "..", "..", "..")
 
-for ext in extensions:
-    for file in  glob.glob(f"**/*.{ext}", root_dir=root_dir, recursive=True) :
-        if "node_modules" not in file:
+    file_list_stream = os.popen("git diff --staged --name-only")
+    for file in file_list_stream.read().split():
+        _, ext = os.path.splitext(file)
+        if ext.replace(".", "") in extensions:
             add_newline(file, root_dir)
+            os.system(f"git add {os.path.join(root_dir, file)}")
