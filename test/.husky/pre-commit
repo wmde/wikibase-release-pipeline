@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
-
-# shellcheck src=/dev/null
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd test/.husky/python || exit

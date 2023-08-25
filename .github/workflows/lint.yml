@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: bewuethr/shellcheck-action@v2
+      - name: install husky
+        run: |
+          cd test
+          npm run prepare
 
   lint_selenium_tests:
     runs-on: ubuntu-latest
