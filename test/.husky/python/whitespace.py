@@ -20,11 +20,11 @@ def add_newline(file: str, root_dir: str) -> bool:
         try:
             os.remove(file_path)
             os.rename(temp_file_path, file_path)
+            os.removedirs(temp_file_dir)
             print(file)
             return True
         except PermissionError:
             os.remove(temp_file_path)
-        finally:
             os.removedirs(temp_file_dir)
     return False
 
