@@ -15,15 +15,19 @@ jobs:
         with:
           recursive: true
 
-  lint_shell_scripts:
+  prepare_husky:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: bewuethr/shellcheck-action@v2
-      - name: install husky
+      - name: Install Husky
         run: |
           cd test
           npm run prepare
+
+  lint_shell_scripts:
+    runs-on: ubuntu-latest
+    needs: prepare_husky
+      - uses: actions/checkout@v3
+      - uses: bewuethr/shellcheck-action@v2
 
   lint_selenium_tests:
     runs-on: ubuntu-latest
