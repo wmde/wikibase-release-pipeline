@@ -112,6 +112,9 @@ exports.config = {
 	// Hooks
 	// =====
 
+
+
+	
 	/**
 	 * Remove screenshots and result.json from previous runs before any tests start running
 	 */

@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd test
-npm run lint:commit
+cd test/.husky/python
+python3 whitespace.py
