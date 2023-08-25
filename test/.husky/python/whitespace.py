@@ -1,7 +1,7 @@
 import os
 
 
-def add_newline(file: str, root_dir: str):
+def add_newline(file: str, root_dir: str) -> bool:
     file_path = os.path.join(root_dir, file)
     temp_file_path = os.path.join(root_dir, "temp", file)
     temp_file_dir = os.path.dirname(temp_file_path)
@@ -21,11 +21,12 @@ def add_newline(file: str, root_dir: str):
             os.remove(file_path)
             os.rename(temp_file_path, file_path)
             print(file)
+            return True
         except PermissionError:
             os.remove(temp_file_path)
         finally:
             os.removedirs(temp_file_dir)
-
+    return False
 
 if __name__ == "__main__":
     extensions = ["js", "jsx", "ts", "tsx", "sh", "json"]
@@ -36,5 +37,5 @@ if __name__ == "__main__":
     for file in file_list_stream.read().split():
         _, ext = os.path.splitext(file)
         if ext.replace(".", "") in extensions:
-            add_newline(file, root_dir)
-            os.system(f"git add {os.path.join(root_dir, file)}")
+            if add_newline(file, root_dir):
+                os.system(f"git add {os.path.join(root_dir, file)}")
