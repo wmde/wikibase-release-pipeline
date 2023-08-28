@@ -22,6 +22,7 @@ jobs:
       - name: Install Husky
         run: |
           cd test
+          npm install
           npm run prepare
       - uses: bewuethr/shellcheck-action@v2
 
