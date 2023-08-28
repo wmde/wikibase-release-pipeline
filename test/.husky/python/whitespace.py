@@ -37,5 +37,6 @@ if __name__ == "__main__":
     for file in file_list_stream.read().split():
         _, ext = os.path.splitext(file)
         if ext.replace(".", "") in extensions:
+            print(file)
             if add_newline(file, root_dir):
                 os.system(f"git add {os.path.join(root_dir, file)}")
