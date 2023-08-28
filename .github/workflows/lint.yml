@@ -19,11 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install Husky
-        run: |
-          cd test
-          npm install
-          npm run prepare
       - uses: bewuethr/shellcheck-action@v2
 
   lint_selenium_tests:
