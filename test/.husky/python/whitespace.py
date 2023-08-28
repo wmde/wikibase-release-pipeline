@@ -38,4 +38,5 @@ if __name__ == "__main__":
         _, ext = os.path.splitext(file)
         if ext.replace(".", "") in extensions:
             if add_newline(file, root_dir):
-                os.system(f"git add {os.path.join(root_dir, file)}")
+                # os.system(f"git add {os.path.join(root_dir, file)}")
+                print(f"Added newline to {file}")
