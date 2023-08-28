@@ -11,7 +11,7 @@ download:
 
 .PHONY: lint
 lint:
-	@bash lint.sh
+	@bash test/scripts/lint.sh
 
 .PHONY: test
 test:

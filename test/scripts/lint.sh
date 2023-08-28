@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+set -e
 
-cd test || exit
+cd test
 
 # echo "ℹ️  Linting Dockerfiles (**/Dockerfile)"
 # https://github.com/hadolint/hadolint
@@ -18,4 +19,4 @@ docker compose run --rm --volume "${PWD}/../docs/diagrams:/tmp/diagrams" test-ru
   npm run lint --silent
 "
 
-cd ..  > /dev/null || exit
+cd ..  > /dev/null
