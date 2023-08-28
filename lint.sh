@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd test
+cd test || exit
 
 # echo "ℹ️  Linting Dockerfiles (**/Dockerfile)"
 # https://github.com/hadolint/hadolint
