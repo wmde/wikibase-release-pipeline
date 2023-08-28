@@ -1,0 +1,3 @@
+<?php
+
+$wgWBRepoSettings['federatedPropertiesEnabled'] = true;

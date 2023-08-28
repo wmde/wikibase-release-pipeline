@@ -56,7 +56,7 @@ jobs:
       - name: Report
         if: always()
         run: |
-          cd test/reporter
+          cd .github/reporter
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
@@ -66,4 +66,4 @@ jobs:
         with:
           name: TestArtifacts
           path: |
-            test/log
+            test/suites/${{ matrix.suite }}/results

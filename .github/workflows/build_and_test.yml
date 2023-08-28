@@ -532,27 +532,27 @@ jobs:
       - name: Report Selenium
         if: always()
         run: |
-          cd test/reporter
+          cd .github/reporter
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
       - name: docker logs
         if: always()
-        run: test/docker_logs.sh
+        run: test/scripts/docker_logs.sh
 
       - name: mediawiki logs
         if: always()
         continue-on-error: true
         run: |
-          ls -lahr test/log test/log/*
-          tail -n +1 test/log/*/*.log
+          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestArtifacts
-          path: test/log
+          path: test/suites/${{ matrix.suite }}/results
 
   test_upgrade_base:
     timeout-minutes: 20
@@ -584,14 +584,15 @@ jobs:
 
       - name: docker logs
         if: always()
-        run: test/docker_logs.sh
+        run: test/scripts/docker_logs.sh
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifacts
-          path: test/log
+          path: test/suites/**/results
+
 
   test_upgrade_bundle:
     timeout-minutes: 20
@@ -625,14 +626,14 @@ jobs:
 
       - name: docker logs
         if: always()
-        run: test/docker_logs.sh
+        run: test/scripts/docker_logs.sh
 
       - name: Archive docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: TestUpgradeArtifactsBundle
-          path: test/log
+          path: test/suites/**/results
 
   versions:
     needs:

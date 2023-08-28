@@ -47,7 +47,7 @@ To manually run the pipeline go to to actions, click the workflow and run the wo
 
 After triggering the pipeline a set of jobs will start running, which after a successful run will result in a number of artifacts as described in the diagram below.
 
-![Queuing the pipeline](../../diagrams/output/overview.svg "Queuing the pipeline")
+![Queuing the pipeline](../diagrams/output/overview.svg "Queuing the pipeline")
 
 `BuildArtifacts` - contains the release candidate artifact for each component that was built.
 
@@ -115,7 +115,7 @@ GERRIT_EXTENSION_BRANCH_NAME=REL1_35
 ```
 GZIP_COMPRESSION_RATE=1
 ```
-#### Log level for selenium tests see wdio.conf.js for options
+#### Log level for selenium tests see suites/wdio.conf.js for options
 ```
 SELENIUM_LOG_LEVEL=trace
 ```

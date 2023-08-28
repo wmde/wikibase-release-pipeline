@@ -1,0 +1,10 @@
+{
+	"root": true,
+	"extends": [
+		"wikimedia/selenium",
+		"wikimedia/language/es2019"
+	],
+	"rules": {
+		"mocha/no-setup-in-describe": "warn"
+	}
+}
