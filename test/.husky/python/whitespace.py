@@ -21,7 +21,7 @@ def add_newline(file: str, root_dir: str) -> bool:
             os.remove(file_path)
             os.rename(temp_file_path, file_path)
             os.removedirs(temp_file_dir)
-            print(file)
+            print(f"Added newline to {file}")
             return True
         except PermissionError:
             os.remove(temp_file_path)
@@ -37,6 +37,5 @@ if __name__ == "__main__":
     for file in file_list_stream.read().split():
         _, ext = os.path.splitext(file)
         if ext.replace(".", "") in extensions:
-            if add_newline(file, root_dir):
-                # os.system(f"git add {os.path.join(root_dir, file)}")
-                print(f"Added newline to {file}")
+            add_newline(file, root_dir)
+            # os.system(f"git add {os.path.join(root_dir, file)}")
