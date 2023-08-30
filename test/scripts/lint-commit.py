@@ -30,7 +30,6 @@ def add_newline(file: str, root_dir: str) -> bool:
 
 
 if __name__ == "__main__":
-    print(os.getcwd())
     extensions = ["js", "jsx", "ts", "tsx", "sh", "json", "py"]
 
     root_dir = os.path.join(os.getcwd(), "..", "..")
