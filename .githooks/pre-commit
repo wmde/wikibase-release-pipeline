@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+cd test/scripts || exit
+python3 lint-commit.py
