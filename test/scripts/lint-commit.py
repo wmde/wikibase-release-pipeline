@@ -28,10 +28,12 @@ def add_newline(file: str, root_dir: str) -> bool:
             os.removedirs(temp_file_dir)
     return False
 
+
 if __name__ == "__main__":
+    print(os.getcwd())
     extensions = ["js", "jsx", "ts", "tsx", "sh", "json", "py"]
 
-    root_dir = os.path.join(os.getcwd(), "..", "..", "..")
+    root_dir = os.path.join(os.getcwd(), "..", "..")
 
     file_list_stream = os.popen("git diff --staged --name-only")
     for file in file_list_stream.read().split():
