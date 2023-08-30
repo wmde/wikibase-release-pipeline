@@ -8,8 +8,8 @@ RUN apt-get update && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/* && \
     pip3 install --no-cache-dir --upgrade \
-        pip==23.2.1 \
-        setuptools==68.1.2
+        pip \
+        setuptools
 
 WORKDIR /usr/src/app/
 
