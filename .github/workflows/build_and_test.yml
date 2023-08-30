@@ -552,7 +552,7 @@ jobs:
         if: always()
         with:
           name: TestArtifacts
-          path: test/suites/${{ matrix.suite }}/results
+          path: test/suites/**/results
 
   test_upgrade_base:
     timeout-minutes: 20
