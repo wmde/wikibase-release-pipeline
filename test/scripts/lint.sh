@@ -5,7 +5,7 @@ cd test
 
 # ℹ️  Linting Dockerfiles (**/Dockerfile)
 # https://github.com/hadolint/hadolint
-docker run --rm -v "$(pwd)":/code -v "$(pwd)/../.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find /code -type f -name 'Dockerfile' | xargs hadolint"
+docker run --rm -v "$(pwd)/..":/code -v "$(pwd)/../.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find /code -type f -name 'Dockerfile' | xargs hadolint"
 
 # ℹ️  Linting Shell Scripts (**/*.sh)
 # https://github.com/koalaman/shellcheck#from-your-terminal
