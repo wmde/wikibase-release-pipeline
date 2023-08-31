@@ -20,14 +20,6 @@ FILE_PATTERNS = [
     ".+\.template",
     "Dockerfile",
 ]
-EXCLUDE_DIRS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
-
-
-def is_excluded(path: str) -> bool:
-    for exclusion in EXCLUDE_DIRS:
-        if exclusion in os.path.normpath(path).split(os.sep):
-            return True
-    return False
 
 
 def file_should_be_run(file: str) -> bool:
@@ -52,8 +44,7 @@ def add_newline(file: str, root_dir: str) -> bool:
 
 
 if __name__ == "__main__":
-    for root, _, files in os.walk(sys.argv[1]):
-        if not is_excluded(root):
-            for file in files:
-                if file_should_be_run(file):
-                    add_newline(file, root)
+    root = sys.argv[1]
+    for file in sys.argv[2].split("\n"):
+        if file_should_be_run(file):
+            add_newline(file, root)
