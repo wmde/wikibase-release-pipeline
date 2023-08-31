@@ -17,7 +17,7 @@ docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp
   npm run lint --silent
 "
 
-# ℹ️ Linting newlines across the repo, and formatting Python scripts
+# ℹ️ Linting newlines across the repo
 docker compose -f test/docker-compose.yml run --rm -v "$(pwd):/tmp" test-runner -c "
   python3 ./scripts/add_newline.py
 "
