@@ -20,11 +20,11 @@ FILE_PATTERNS = [
     ".+\.template",
     "Dockerfile",
 ]
-EXCLUDE_PATHS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
+EXCLUDE_DIRS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
 
 
 def is_excluded(path: str) -> bool:
-    for exclusion in EXCLUDE_PATHS:
+    for exclusion in EXCLUDE_DIRS:
         if exclusion in os.path.normpath(path).split(os.sep):
             return True
     return False
@@ -45,7 +45,7 @@ def add_newline(file: str, root_dir: str) -> bool:
         current_file.seek(current_file.tell() - 1, os.SEEK_SET)
 
         contents = current_file.read(1)
-        if not contents.endswith("\n"):
+        if not contents == "\n":
             current_file.write("\n")
             return True
     return False
