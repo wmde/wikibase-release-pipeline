@@ -4,6 +4,7 @@ import os
 EXTENSIONS = ["js", "jsx", "ts", "tsx", "sh", "json", "py"]
 EXCLUSIONS = ["node_modules"]
 
+
 def is_excluded(path: str) -> bool:
     for exclusion in EXCLUSIONS:
         if exclusion in path:
