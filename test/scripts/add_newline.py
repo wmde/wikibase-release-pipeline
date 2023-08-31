@@ -1,23 +1,24 @@
-import os
+import os, re
 
 
 EXTENSIONS = [
-    "js",
-    "jsx",
-    "ts",
-    "tsx",
-    "sh",
-    "json",
-    "py",
-    "yml",
-    "env",
-    "lua",
-    "sql",
-    "sx",
-    "php",
-    "xml",
-    "md",
-    "template",
+    ".+\.js",
+    ".+\.jsx",
+    ".+\.ts",
+    ".+\.tsx",
+    ".+\.sh",
+    ".+\.json",
+    ".+\.py",
+    ".+\.yml",
+    ".+\.env",
+    ".+\.lua",
+    ".+\.sql",
+    ".+\.sx",
+    ".+\.php",
+    ".+\.xml",
+    ".+\.md",
+    ".+\.template",
+    "Dockerfile",
 ]
 EXCLUSIONS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
 
@@ -30,12 +31,9 @@ def is_excluded(path: str) -> bool:
 
 
 def file_should_be_run(file: str) -> bool:
-    if file == "Dockerfile":
-        return True
-
-    _, ext = os.path.splitext(file)
-    if ext.replace(".", "") in EXTENSIONS:
-        return True
+    for extension in EXTENSIONS:
+        if re.match(extension, file):
+            return True
     return False
 
 
