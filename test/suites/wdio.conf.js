@@ -100,7 +100,8 @@ exports.config = {
 			video,
 			{
 				saveAllVideos: true, // If true, also saves videos for successful test cases
-				videoSlowdownMultiplier: 80 // Higher to get slower videos, lower for faster videos [Value 1-100]
+				videoSlowdownMultiplier: 80, // Higher to get slower videos, lower for faster videos [Value 1-100]
+				outputDir: screenshotPath
 			}
 		]
 	],
