@@ -19,7 +19,7 @@ EXTENSIONS = [
     "md",
     "template",
 ]
-EXCLUSIONS = ["node_modules"]
+EXCLUSIONS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
 
 
 def is_excluded(path: str) -> bool:
