@@ -3,32 +3,12 @@ import os
 
 def add_newline(file: str, root_dir: str) -> bool:
     file_path = os.path.join(root_dir, file)
-    temp_file_path = os.path.join(root_dir, "temp", file)
-    temp_file_dir = os.path.dirname(temp_file_path)
 
-    replacing = False
-    with open(file_path, mode='r') as current_file:
+    with open(file_path, mode='r+') as current_file:
         contents = current_file.read()
         if not contents.endswith('\n'):
-            contents += "\n"
-            replacing = True
-        if replacing:
-            os.makedirs(temp_file_dir)
-            with open(temp_file_path, mode='w+') as new_file:
-                new_file.write(contents)
-    if replacing:
-        try:
-            with open(file_path, mode='w') as current_file:
-                with open(temp_file_path, mode='r') as replacement_file:
-                    current_file.write(replacement_file.read())
-            os.remove(temp_file_path)
-            os.removedirs(temp_file_dir)
-            print(f"Added newline to {file}")
+            current_file.write("\n")
             return True
-        except PermissionError:
-            print(f"Could not add newline to {file}")
-            os.remove(temp_file_path)
-            os.removedirs(temp_file_dir)
     return False
 
 
