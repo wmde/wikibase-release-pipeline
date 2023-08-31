@@ -27,7 +27,7 @@ def add_newline(file: str, root_dir: str) -> bool:
 
 
 if __name__ == "__main__":
-    for root, _, files in os.walk(os.getcwd()):
+    for root, _, files in os.walk("/tmp"):
         if not is_excluded(root):
             for file in files:
                 _, ext = os.path.splitext(file)
