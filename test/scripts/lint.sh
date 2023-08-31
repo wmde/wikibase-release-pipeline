@@ -11,6 +11,7 @@ find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs 
 
 # ℹ️ Linting Javascript (test/**/*.js and docs/diagrams/**/*.js)
 docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+  python3 ./scripts/add_newline.py &&
   npm run lint --silent &&
   cd /tmp/diagrams &&
   npm install --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
