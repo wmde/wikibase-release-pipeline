@@ -1,6 +1,16 @@
 import os
 
 
+EXTENSIONS = ["js", "jsx", "ts", "tsx", "sh", "json", "py"]
+EXCLUSIONS = ["node_modules"]
+
+def is_excluded(path: str) -> bool:
+    for exclusion in EXCLUSIONS:
+        if exclusion in path:
+            return True
+    return False
+
+
 def add_newline(file: str, root_dir: str) -> bool:
     file_path = os.path.join(root_dir, file)
 
@@ -16,12 +26,9 @@ def add_newline(file: str, root_dir: str) -> bool:
 
 
 if __name__ == "__main__":
-    extensions = ["js", "jsx", "ts", "tsx", "sh", "json", "py"]
-    exclusions = ["node_modules"]
-
     for root, _, files in os.walk(os.getcwd()):
-        if "node_modules" not in root:
+        if not is_excluded(root):
             for file in files:
                 _, ext = os.path.splitext(file)
-                if ext.replace(".", "") in extensions:
+                if ext.replace(".", "") in EXTENSIONS:
                     add_newline(file, root)
