@@ -39,7 +39,7 @@ $ docker compose \
 
 ## Development Setup
 
-To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory for git hooks.
+To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory.
 
 ```
 $ git config core.hooksPath .githooks
