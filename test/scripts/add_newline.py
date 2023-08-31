@@ -1,7 +1,7 @@
 import os, re
 
 
-EXTENSIONS = [
+FILE_PATTERNS = [
     ".+\.js",
     ".+\.jsx",
     ".+\.ts",
@@ -20,18 +20,18 @@ EXTENSIONS = [
     ".+\.template",
     "Dockerfile",
 ]
-EXCLUSIONS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
+EXCLUDE_PATHS = ["node_modules", ".git", "git_cache", "cache", "artifacts"]
 
 
 def is_excluded(path: str) -> bool:
-    for exclusion in EXCLUSIONS:
-        if exclusion in path:
+    for exclusion in EXCLUDE_PATHS:
+        if exclusion in os.path.normpath(path).split(os.sep):
             return True
     return False
 
 
 def file_should_be_run(file: str) -> bool:
-    for extension in EXTENSIONS:
+    for extension in FILE_PATTERNS:
         if re.match(extension, file):
             return True
     return False
