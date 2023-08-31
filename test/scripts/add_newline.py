@@ -18,12 +18,15 @@ def add_newline(file: str, root_dir: str) -> bool:
                 new_file.write(contents)
     if replacing:
         try:
-            os.remove(file_path)
-            os.rename(temp_file_path, file_path)
+            with open(file_path, mode='w') as current_file:
+                with open(temp_file_path, mode='r') as replacement_file:
+                    current_file.write(replacement_file.read())
+            os.remove(temp_file_path)
             os.removedirs(temp_file_dir)
             print(f"Added newline to {file}")
             return True
         except PermissionError:
+            print(f"Could not add newline to {file}")
             os.remove(temp_file_path)
             os.removedirs(temp_file_dir)
     return False
