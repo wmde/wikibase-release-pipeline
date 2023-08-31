@@ -1,4 +1,4 @@
-import os, re
+import os, re, sys
 
 
 FILE_PATTERNS = [
@@ -52,7 +52,7 @@ def add_newline(file: str, root_dir: str) -> bool:
 
 
 if __name__ == "__main__":
-    for root, _, files in os.walk("/tmp"):
+    for root, _, files in os.walk(sys.argv[1]):
         if not is_excluded(root):
             for file in files:
                 if file_should_be_run(file):
