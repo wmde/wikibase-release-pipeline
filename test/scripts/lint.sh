@@ -19,7 +19,5 @@ docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp
 
 # ℹ️ Linting newlines across the repo, and formatting Python scripts
 docker compose -f test/docker-compose.yml run --rm -v "$(pwd):/tmp" test-runner -c "
-  pip3 install black &&
-  python3 -m black /tmp/ &&
   python3 ./scripts/add_newline.py
 "
