@@ -11,6 +11,7 @@ const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const video = require( 'wdio-video-reporter' );
 
 const resultsDir = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.env.SUITE}/results`;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -93,6 +94,13 @@ exports.config = {
 			JsonReporter,
 			{
 				resultFilePath
+			}
+		],
+		[
+			video,
+			{
+				saveAllVideos: true, // If true, also saves videos for successful test cases
+				videoSlowdownMultiplier: 80 // Higher to get slower videos, lower for faster videos [Value 1-100]
 			}
 		]
 	],
