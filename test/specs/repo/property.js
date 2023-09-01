@@ -21,14 +21,14 @@ describe( 'Property', function () {
 
 		// fill out property id for statement
 		await browser.keys( propertyId.split( '' ) );
-		const propertyIdEl = await $( propertyIdSelector )
+		const propertyIdEl = await $( propertyIdSelector );
 		await propertyIdEl.waitForDisplayed();
 		await propertyIdEl.click();
 		await browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
 
 		// wait for save button to re-enable
 		await browser.pause( 1000 * 1 );
-		const saveEl = await Property.save
+		const saveEl = await Property.save;
 		await saveEl.click();
 		await browser.pause( 1000 * 2 );
 
@@ -37,7 +37,7 @@ describe( 'Property', function () {
 		await referenceEl.click();
 
 		// fill out property id for reference
-		const entitySelectorEl = await $( '.ui-entityselector-input' )
+		const entitySelectorEl = await $( '.ui-entityselector-input' );
 		await entitySelectorEl.waitForDisplayed();
 		await browser.pause( 1000 * 1 );
 		await browser.keys( propertyId.split( '' ) );

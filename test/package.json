@@ -8,7 +8,6 @@
 		"@wdio/mocha-framework": "^7.3.0",
 		"@wdio/spec-reporter": "^7.31.1",
 		"@wdio/reporter": "^7.3.0",
-		"@wdio/sync": "^7.3.0",
 		"api-testing": "^1.2.0",
 		"apollo-boost": "^0.4.9",
 		"cross-fetch": "^3.0.6",

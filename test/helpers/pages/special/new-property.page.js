@@ -11,14 +11,15 @@ class SpecialNewProperty extends Page {
 
 	get submitBtn() { return $( 'button[type="submit"]' ); }
 
-	open( dataType ) {
+	async open( dataType ) {
 
 		dataType = dataType ? '?datatype=' + dataType : '';
-		browser.url( process.env.MW_SERVER + '/wiki/Special:NewProperty' + dataType );
+		await browser.url( process.env.MW_SERVER + '/wiki/Special:NewProperty' + dataType );
 	}
 
-	submit() {
-		this.submitBtn.click();
+	async submit() {
+		const submitBtn = await this.submitBtn;
+		await submitBtn.click();
 	}
 
 }

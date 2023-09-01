@@ -5,20 +5,24 @@ const SpecialNewProperty = require( '../../helpers/pages/special/new-property.pa
 
 describe( 'Special:NewProperty', function () {
 
-	it( 'Should be able to create a new property', function () {
+	it( 'Should be able to create a new property', async function () {
 
-		SpecialNewProperty.open( 'string' );
+		await SpecialNewProperty.open( 'string' );
 
-		SpecialNewProperty.labelInput.waitForDisplayed();
+		const labelInput = await SpecialNewProperty.labelInput;
+		await labelInput.waitForDisplayed();
 
-		SpecialNewProperty.labelInput.setValue( 'Cool label' );
-		SpecialNewProperty.descriptionInput.setValue( 'Cool description' );
-		SpecialNewProperty.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
+		await labelInput.setValue( 'Cool label' );
+		const descriptionInput = await SpecialNewProperty.descriptionInput;
+		await descriptionInput.setValue( 'Cool description' );
+		const aliasesInput = await SpecialNewProperty.aliasesInput;
+		await aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 
-		SpecialNewProperty.submit();
+		await SpecialNewProperty.submit();
 
-		$( '.wikibase-propertyview-datatype-value' ).waitForDisplayed();
-		const dataTypeText = $( '.wikibase-propertyview-datatype-value' ).getText();
+		const propertyviewDatatypeValueEl = await $( '.wikibase-propertyview-datatype-value' );
+		await propertyviewDatatypeValueEl.waitForDisplayed();
+		const dataTypeText = await propertyviewDatatypeValueEl.getText();
 
 		assert.strictEqual( dataTypeText, 'String' );
 
