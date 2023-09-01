@@ -37,6 +37,14 @@ $ docker compose \
     --env-file ./example/template.env up
 ```
 
+## Development Setup
+
+To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory.
+
+```
+$ git config core.hooksPath .githooks
+```
+
 ## Documentation
 
 The pipeline documentation can be found [here](docs/index.md).
