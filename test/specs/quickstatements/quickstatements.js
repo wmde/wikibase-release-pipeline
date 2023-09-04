@@ -74,12 +74,12 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
 	} );
 
-	it( 'Should be able to add an alias to an item', function () {
+	it( 'Should be able to add an alias to an item', async function () {
 
-		browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
+		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
 	} );
