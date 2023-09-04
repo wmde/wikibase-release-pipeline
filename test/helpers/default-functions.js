@@ -11,11 +11,11 @@ const defaultFunctions = function () {
 	/**
 	 * Make a get request to get full request response
 	 */
-	browser.addCommand( 'makeRequest', async ( url, params, postData ) => {
+	browser.addCommand( 'makeRequest', ( url, params, postData ) => {
 		if ( postData ) {
-			return await axios.post( url, postData, params );
+			return axios.post( url, postData, params );
 		} else {
-			return await axios.get( url, params );
+			return axios.get( url, params );
 		}
 	} );
 
@@ -197,7 +197,11 @@ const defaultFunctions = function () {
 		const commands = await $$( '.command_status' );
 
 		await browser.waitUntil(
-			() => lodash.every( commands, async ( command ) => { return ( await command.getText() ) === 'done'; } ),
+			async () => {
+				const commandTextArray = await Promise.all( commands.map( async ( command ) => command.getText() ) );
+				return commandTextArray.every( ( commandText ) => commandText === 'done' );
+			}
+			,
 			{
 				timeout: 10000,
 				timeoutMsg: 'Expected to be done after 10 seconds'
