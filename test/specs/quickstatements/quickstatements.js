@@ -25,40 +25,50 @@ describe( 'QuickStatements Service', function () {
 	let propertyIdItem = null;
 	let propertyURL = null;
 
-	it( 'Should be able to load the start page', function () {
-		browser.url( process.env.QS_SERVER );
-		$( 'nav.navbar' ).waitForDisplayed();
+	it( 'Should be able to load the start page', async () => {
+		await browser.url( process.env.QS_SERVER );
+		const navbar = await $( 'nav.navbar' );
+		await navbar.waitForDisplayed();
 	} );
 
-	it( 'Should be able to log in', function () {
+	it( 'Should be able to log in', async () => {
 
-		browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
+		await browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
-		$( '#wpPassword1' ).waitForDisplayed();
+		const wpNameEl = await $( '#wpName1' );
+		await wpNameEl.waitForDisplayed();
+		const wpPasswordEl = await $( '#wpPassword1' );
+		await wpPasswordEl.waitForDisplayed();
+		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
+		await wpLoginButtonEl.waitForDisplayed();
 
-		$( '#wpName1' ).setValue( process.env.MW_ADMIN_NAME );
-		$( '#wpPassword1' ).setValue( process.env.MW_ADMIN_PASS );
-		$( '#wpLoginAttempt' ).click();
+		await wpNameEl.setValue( process.env.MW_ADMIN_NAME );
+		await wpPasswordEl.setValue( process.env.MW_ADMIN_PASS );
+		await wpLoginButtonEl.click();
 
 		// oauth dialog
-		$( '#mw-mwoauth-authorize-form' ).waitForDisplayed();
-		$( '#mw-mwoauth-accept' ).click();
+		const authFormEl = await $( '#mw-mwoauth-authorize-form' );
+		await authFormEl.waitForDisplayed();
+		const authFormAcceptEl = await $( '#mw-mwoauth-accept' );
+		await authFormAcceptEl.click();
 
 		// redirect back to app
-		$( 'nav.navbar' ).waitForDisplayed();
-		const navbar = $( 'nav.navbar' ).getText();
-		assert( navbar.includes( 'QuickStatements' ) );
+		const navbarEl = await $( 'nav.navbar' );
+		await navbarEl.waitForDisplayed();
+		const navbarText = await navbarEl.getText();
+		// assert.equal( navbarText, 'QuickStatements' );
+		assert( navbarText.includes( 'QuickStatements' ) );
 	} );
 
-	it( 'Should be able to create two items', function () {
+	it( 'Should be able to create two items', async () => {
 
-		browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( process.env.QS_SERVER + '/#/batch' );
 
-		browser.executeQuickStatement( 'CREATE\nCREATE' );
+		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
-		const responseQ1 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		const responseQ2 = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
+		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ2 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
 
 		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
 		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );

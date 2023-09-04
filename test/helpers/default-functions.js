@@ -3,7 +3,7 @@
 const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
-const _ = require( 'lodash' );
+const lodash = require( 'lodash' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
 const defaultFunctions = function () {
@@ -11,11 +11,11 @@ const defaultFunctions = function () {
 	/**
 	 * Make a get request to get full request response
 	 */
-	browser.addCommand( 'makeRequest', function async( url, params, postData ) {
+	browser.addCommand( 'makeRequest', async ( url, params, postData ) => {
 		if ( postData ) {
-			return axios.post( url, postData, params );
+			return await axios.post( url, postData, params );
 		} else {
-			return axios.get( url, params );
+			return await axios.get( url, params );
 		}
 	} );
 
@@ -61,7 +61,7 @@ const defaultFunctions = function () {
 	 */
 	browser.addCommand( 'getInstalledExtensions', function async( server ) {
 		const result = browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
-		return _.map( result.data.query.extensions, 'name' );
+		return lodash.map( result.data.query.extensions, 'name' );
 	} );
 
 	/**
@@ -142,7 +142,7 @@ const defaultFunctions = function () {
 		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
 		const result = browser.makeRequest( apiURL );
 		const changes = result.data.query.recentchanges;
-		const foundResult = _.find( changes, expectedChange );
+		const foundResult = lodash.find( changes, expectedChange );
 
 		assert.strictEqual( result.status, 200 );
 
@@ -172,29 +172,32 @@ const defaultFunctions = function () {
 	/**
 	 * Execute quickstatements query
 	 */
-	browser.addCommand( 'executeQuickStatement', function async( theQuery ) {
+	browser.addCommand( 'executeQuickStatement', async ( theQuery ) => {
 
-		browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( process.env.QS_SERVER + '/#/batch' );
 
 		// create a batch
-		$( '.create_batch_box textarea' ).waitForDisplayed();
-		$( '.create_batch_box textarea' ).setValue( theQuery );
+		const createBatchBoxTextareaEl = await $( '.create_batch_box textarea' );
+		await createBatchBoxTextareaEl.waitForDisplayed();
+		await createBatchBoxTextareaEl.setValue( theQuery );
 
-		browser.pause( 1000 );
+		await browser.pause( 1000 );
 
 		// click import
-		$( "button[tt='dialog_import_v1']" ).click();
+		const importButtonEl = await $( "button[tt='dialog_import_v1']" );
+		await importButtonEl.click();
 
-		browser.pause( 1000 );
+		await browser.pause( 1000 );
 
 		// click run
-		$( "button[tt='run']" ).waitForDisplayed();
-		$( "button[tt='run']" ).click();
+		const runButtonEl = await $( "button[tt='run']" );
+		await runButtonEl.waitForDisplayed();
+		await runButtonEl.click();
 
-		const commands = $$( '.command_status' );
+		const commands = await $$( '.command_status' );
 
-		browser.waitUntil(
-			() => _.every( commands, function ( command ) { return command.getText() === 'done'; } ),
+		await browser.waitUntil(
+			() => lodash.every( commands, async ( command ) => { return ( await command.getText() ) === 'done'; } ),
 			{
 				timeout: 10000,
 				timeoutMsg: 'Expected to be done after 10 seconds'
