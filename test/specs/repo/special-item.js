@@ -5,19 +5,24 @@ const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 
 describe( 'Special:NewItem', function () {
 
-	it( 'Should be able to create a new item', function () {
+	it( 'Should be able to create a new item', async () => {
 
-		SpecialNewItem.open();
+		await SpecialNewItem.open();
 
-		SpecialNewItem.labelInput.waitForDisplayed();
+		const labelInput = await SpecialNewItem.labelInput;
+		await labelInput.waitForDisplayed();
+		await labelInput.setValue( 'Cool label' );
 
-		SpecialNewItem.labelInput.setValue( 'Cool label' );
-		SpecialNewItem.descriptionInput.setValue( 'Cool description' );
-		SpecialNewItem.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
+		const descriptionInput = await SpecialNewItem.descriptionInput;
+		await descriptionInput.setValue( 'Cool description' );
 
-		SpecialNewItem.submit();
+		const aliasesInput = await SpecialNewItem.aliasesInput;
+		await aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 
-		ItemPage.addStatementLink.waitForDisplayed();
+		await SpecialNewItem.submit();
+
+		const addStatementLink = await ItemPage.addStatementLink;
+		await addStatementLink.waitForDisplayed();
 
 	} );
 } );

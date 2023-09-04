@@ -8,12 +8,13 @@ class SpecialNewItem extends Page {
 	get aliasesInput() { return $( 'input[name="aliases"]' ); }
 	get submitBtn() { return $( 'button[type="submit"]' ); }
 
-	open() {
-		browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem' );
+	async open() {
+		await browser.url( process.env.MW_SERVER + '/wiki/Special:NewItem' );
 	}
 
-	submit() {
-		this.submitBtn.click();
+	async submit() {
+		const button = await this.submitBtn;
+		await button.click();
 	}
 
 }
