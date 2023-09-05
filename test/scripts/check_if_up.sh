@@ -3,7 +3,7 @@
 HOSTNAME_OR_BASE_URL=$1
 PATH=$2
 
-HOSTNAME=$(echo "$HOSTNAME_OR_BASE_URL" | /bin/sed -E 's/^\s*.*:\/\///g')
+HOSTNAME=$(echo "$HOSTNAME_OR_BASE_URL" | /opt/homebrew/bin/gsed -E 's/^\s*.*:\/\///g')
 HOSTNAME_AND_PATH="$HOSTNAME$PATH"
 DISPLAY_URL="http://$HOSTNAME_AND_PATH"
 

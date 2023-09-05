@@ -43,12 +43,14 @@ if [ -z "$LOCAL_TEST_RUN" ]; then
     $TEST_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
 else
     echo -e "ℹ️  Using local test runner\n" | tee -a "$TEST_LOG"
-    $SETUP_COMMAND 2>&1 | tee -a "$TEST_LOG"
     set -o allexport
+    # shellcheck source=/dev/null
     source default.env
+    # shellcheck source=/dev/null
     source .env
     set +o allexport
     npm install
+    $SETUP_COMMAND 2>&1 | tee -a "$TEST_LOG"
     $WDIO_COMMAND
 fi
 
