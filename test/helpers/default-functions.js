@@ -22,7 +22,7 @@ const defaultFunctions = function () {
 	/**
 	 * Execute query on database
 	 */
-	browser.addCommand( 'dbQuery', function async( query, config ) {
+	browser.addCommand( 'dbQuery', async ( query, config ) => {
 		if ( !config ) {
 			config = {
 				user: process.env.DB_USER,
@@ -35,7 +35,7 @@ const defaultFunctions = function () {
 			throw new Error( 'dbQuery: Configuration error! ' + JSON.stringify( config ) );
 		}
 
-		return browser.dockerExecute(
+		return await browser.dockerExecute(
 			process.env.DOCKER_MYSQL_NAME,
 			'mysql --user "' + config.user + '"' +
 			' --password="' + config.pass + '" "' + config.database + '"' +
@@ -59,15 +59,15 @@ const defaultFunctions = function () {
 	/**
 	 * Get installed extensions on wiki
 	 */
-	browser.addCommand( 'getInstalledExtensions', function async( server ) {
-		const result = browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
+	browser.addCommand( 'getInstalledExtensions', async ( server ) => {
+		const result = await browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
 		return lodash.map( result.data.query.extensions, 'name' );
 	} );
 
 	/**
 	 * Execute docker command on container and get output
 	 */
-	browser.addCommand( 'dockerExecute', function async( container, command, opts, shouldLog ) {
+	browser.addCommand( 'dockerExecute', ( container, command, opts, shouldLog ) => {
 
 		if ( !container ) {
 			throw new Error( 'dockerExecute: Container not specified!' );
@@ -134,13 +134,13 @@ const defaultFunctions = function () {
 	/**
 	 * Moves browser to recent changes then asserts that a change is in the api result
 	 */
-	browser.addCommand( 'getDispatchedExternalChange', function async( host, expectedChange ) {
+	browser.addCommand( 'getDispatchedExternalChange', async ( host, expectedChange ) => {
 		// to get a screenshot
-		browser.url( host + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
+		await browser.url( host + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
 
 		// get all external changes
 		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
-		const result = browser.makeRequest( apiURL );
+		const result = await browser.makeRequest( apiURL );
 		const changes = result.data.query.recentchanges;
 		const foundResult = lodash.find( changes, expectedChange );
 
@@ -260,7 +260,7 @@ const defaultFunctions = function () {
 
 module.exports = {
 	init: defaultFunctions,
-	skipIfExtensionNotPresent: function ( test, extension ) {
+	skipIfExtensionNotPresent: ( test, extension ) => {
 		const installedExtensions = browser.config.installed_extensions;
 		if ( !installedExtensions || installedExtensions.length === 0 ) {
 			return;
