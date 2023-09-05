@@ -120,7 +120,7 @@ exports.config = {
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
 		fs.mkdir( resultsDir, { recursive: true }, () => {} );
-		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
+		fs.rm( screenshotPath, { recursive: true, force: true }, () => {} );
 		fs.rm( resultFilePath, { force: true }, () => {} );
 	},
 
