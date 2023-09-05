@@ -128,12 +128,12 @@ exports.config = {
 	 * Initializes the default functions for every test and
 	 * polls the wikibase docker container for installed extensions
 	 */
-	before: function () {
+	before: async () => {
 		browser.call( () => WikibaseApi.initialize() );
 		defaultFunctions.init();
 
 		if ( !browser.config.installed_extensions ) {
-			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
+			const extensions = await browser.getInstalledExtensions( process.env.MW_SERVER );
 			if ( extensions ) {
 				browser.config.installed_extensions = extensions;
 			} else {
