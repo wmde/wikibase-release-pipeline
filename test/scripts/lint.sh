@@ -16,3 +16,9 @@ docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp
   npm install --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
   npm run lint --silent
 "
+
+# ℹ️ Linting newlines across the repo
+MY_FILES="$(git ls-files)"
+docker compose -f test/docker-compose.yml run --rm -v "$(pwd):/tmp" test-runner -c "
+  python3 ./scripts/add_newline.py /tmp '$MY_FILES'
+"
