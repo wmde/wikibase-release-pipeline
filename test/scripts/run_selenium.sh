@@ -30,14 +30,27 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # run the global suite setup.sh (waits for containers to come up, etc)
 echo "🔄 Running \"suites/setup.sh\"" 2>&1 | tee -a "$TEST_LOG"
-$TEST_COMPOSE run --rm test-runner -c suites/setup.sh 2>&1 | tee -a "$TEST_LOG"
+SETUP_COMMAND="./suites/setup.sh"
 
 echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 WDIO_COMMAND='npm run test:run --silent'
 if [ -n "$FILTER" ]; then
     WDIO_COMMAND='npm run test:run-filter --silent'
 fi
-$TEST_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
+
+if [ -z "$LOCAL_TEST_RUN" ]; then
+    $TEST_COMPOSE run --rm test-runner -c "$SETUP_COMMAND" 2>&1 | tee -a "$TEST_LOG"
+    $TEST_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
+else
+    echo -e "ℹ️  Using local test runner\n" | tee -a "$TEST_LOG"
+    $SETUP_COMMAND 2>&1 | tee -a "$TEST_LOG"
+    set -o allexport
+    source default.env
+    source .env
+    set +o allexport
+    npm install
+    $WDIO_COMMAND
+fi
 
 echo -e "🔄 \"$SUITE\" test suite run complete. Removing running Docker test services and volumes\n" 2>&1 | tee -a "$TEST_LOG"
 remove_services_and_volumes

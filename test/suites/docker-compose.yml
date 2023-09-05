@@ -91,6 +91,8 @@ services:
     image: "${WDQS_IMAGE_NAME}"
     restart: always
     command: /runBlazegraph.sh
+    ports:
+      - 9999:9999
     networks:
       default:
         aliases:
