@@ -21,7 +21,11 @@ exports.resultFilePath = resultFilePath;
 
 const fetchSuite = ( suiteName ) => {
 	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
-		const suiteConfigFile = path.join( __dirname, suiteName, `${suiteName}.conf.js` );
+		const suiteConfigFile = path.join(
+			__dirname,
+			suiteName,
+			`${suiteName}.conf.js`
+		);
 		try {
 			const suiteConfig = require( suiteConfigFile );
 			return suiteConfig.config.suite;
@@ -31,7 +35,6 @@ const fetchSuite = ( suiteName ) => {
 };
 
 exports.config = {
-
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -47,21 +50,23 @@ exports.config = {
 	// ============
 	// Capabilities
 	// ============
-	capabilities: [ {
-		// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-		browserName: 'chrome',
-		maxInstances: 1,
-		'goog:chromeOptions': {
-			// If DISPLAY is set, assume developer asked non-headless or CI with Xvfb.
-			// Otherwise, use --headless (added in Chrome 59)
-			// https://chromium.googlesource.com/chromium/src/+/59.0.3030.0/headless/README.md
-			args: [
-				...( process.env.DISPLAY ? [] : [ '--headless' ] ),
-				// Chrome sandbox does not work in Docker
-				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-			]
+	capabilities: [
+		{
+			// https://sites.google.com/a/chromium.org/chromedriver/capabilities
+			browserName: 'chrome',
+			maxInstances: 1,
+			'goog:chromeOptions': {
+				// If DISPLAY is set, assume developer asked non-headless or CI with Xvfb.
+				// Otherwise, use --headless (added in Chrome 59)
+				// https://chromium.googlesource.com/chromium/src/+/59.0.3030.0/headless/README.md
+				args: [
+					...( process.env.DISPLAY ? [] : [ '--headless' ] ),
+					// Chrome sandbox does not work in Docker
+					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+				]
+			}
 		}
-	} ],
+	],
 
 	// ===================
 	// Test Configurations
