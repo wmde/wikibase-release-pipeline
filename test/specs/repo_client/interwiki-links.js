@@ -15,7 +15,9 @@ describe( 'Interwiki links', function () {
 			.replace( /<WIKI_ID>/g, 'client_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
 		await browser.dbQuery( repoLink );
-		const clientWikiQueryResults = await browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"' );
+		const clientWikiQueryResults = await browser.dbQuery(
+			'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"'
+		);
 		assert( clientWikiQueryResults.indexOf( process.env.MW_CLIENT_SERVER ) > -1 );
 
 		const config = {
@@ -28,7 +30,10 @@ describe( 'Interwiki links', function () {
 			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
 
 		await browser.dbQuery( clientLink, config );
-		const myWikiQueryResults = await browser.dbQuery( 'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"', config );
+		const myWikiQueryResults = await browser.dbQuery(
+			'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"',
+			config
+		);
 		assert( myWikiQueryResults.indexOf( process.env.MW_SERVER ) > -1 );
 	} );
 } );
