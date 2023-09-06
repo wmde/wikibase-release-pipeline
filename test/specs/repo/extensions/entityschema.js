@@ -1,52 +1,66 @@
 'use strict';
 
 const assert = require( 'assert' );
-const fs = require( 'fs' );
+const fsPromises = require( 'fs/promises' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
+const readFileEncoding = require( '../../../helpers/readFileEncoding' );
 
 describe( 'EntitySchema', function () {
-
 	const testLabel = 'A label';
 	const testDescription = 'A description';
 
-	it( 'Should be able to create an EntitySchema', function () {
-
+	it( 'Should be able to create an EntitySchema', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'EntitySchema' );
 
-		browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
+		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
-		$( '.noarticletext a' ).waitForDisplayed();
-		$( '.noarticletext a' ).click();
+		const noarticletextEl = await $( '.noarticletext a' );
+		await noarticletextEl.waitForDisplayed();
+		await noarticletextEl.click();
 
 		// set label and description
-		$( 'input[name ="label"]' ).setValue( testLabel );
-		$( 'input[name ="description"]' ).setValue( testDescription );
+		const labelInputEl = await $( 'input[name ="label"]' );
+		await labelInputEl.setValue( testLabel );
+		const descriptionInputEl = await $( 'input[name ="description"]' );
+		await descriptionInputEl.setValue( testDescription );
 
 		// set template
-		const shexTemplate = fs.readFileSync( __dirname + '/entityschema.sx', 'utf8' );
-		$( 'textarea[name ="schema-text"]' ).setValue( shexTemplate );
+		const shexTemplate = await fsPromises.readFile(
+			__dirname + '/entityschema.sx',
+			readFileEncoding.utf8
+		);
+		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
+		await schemaTextInputEl.setValue( shexTemplate );
 
-		$( 'button[name ="submit"]' ).click();
+		const submitButtonEl = await $( 'button[name ="submit"]' );
+		await submitButtonEl.click();
 
-		$( '#entityschema-schema-text' ).waitForDisplayed();
+		const schemaTextEl = await $( '#entityschema-schema-text' );
+		await schemaTextEl.waitForDisplayed();
 
-		const actualTemplate = $( '#entityschema-schema-text' ).getText().trim();
-		const actualTemplateHtml = $( '#entityschema-schema-text' ).getHTML().trim();
-		const actualLabel = $( '.entityschema-title-label' ).getText().trim();
-		const actualId = $( '.entityschema-title-id' ).getText().trim();
-		const actualDescription = $( '.entityschema-description' ).getText().trim();
+		const entitySchemaEl = await $( '#entityschema-schema-text' );
+		const actualTemplate = ( await entitySchemaEl.getText() ).trim();
+		const actualTemplateHtml = ( await entitySchemaEl.getHTML() ).trim();
+		const actualLabelEl = await $( '.entityschema-title-label' );
+		const actualLabel = ( await actualLabelEl.getText() ).trim();
+		const actualIdEl = await $( '.entityschema-title-id' );
+		const actualId = ( await actualIdEl.getText() ).trim();
+		const actualDescriptionEl = await $( '.entityschema-description' );
+		const actualDescription = ( await actualDescriptionEl.getText() ).trim();
 
 		assert.strictEqual( actualDescription, testDescription );
 		assert.strictEqual( actualTemplate, shexTemplate );
 		assert.strictEqual( actualLabel, testLabel );
 		assert.strictEqual( actualId, '(E1)' );
-		assert.ok( actualTemplateHtml.includes( 'mw-highlight' ), 'Should contain mw-highlight class in HTML' );
+		assert.ok(
+			actualTemplateHtml.includes( 'mw-highlight' ),
+			'Should contain mw-highlight class in HTML'
+		);
 
-		const linkUrl = $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
+		const linkUrlEl = await $( '.external.entityschema-check-schema' );
+		const linkUrl = await linkUrlEl.getAttribute( 'href' );
 
 		assert( linkUrl.includes( 'http://validator.svc' ) );
-
 	} );
-
 } );
