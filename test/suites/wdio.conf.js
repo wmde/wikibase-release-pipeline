@@ -129,7 +129,7 @@ exports.config = {
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: async () => {
-		browser.call( () => WikibaseApi.initialize() );
+		await WikibaseApi.initialize();
 		defaultFunctions.init();
 
 		if ( !browser.config.installed_extensions ) {
