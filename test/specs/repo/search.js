@@ -4,25 +4,18 @@ const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
 describe( 'Search', function () {
-
-	it( 'Should be able to create an item and search for it', function () {
-
+	it( 'Should be able to create an item and search for it', async () => {
 		const itemLabel = 'something';
-		browser.call(
-			() => WikibaseApi.createItem( itemLabel, {} )
-		);
+		await WikibaseApi.createItem( itemLabel, {} );
 
-		browser.call(
-			() => browser.waitForJobs()
-		);
+		await browser.waitForJobs();
 
-		const result = browser.makeRequest(
+		const result = await browser.makeRequest(
 			process.env.MW_SERVER +
 			'/w/api.php?action=wbsearchentities&search=' +
 			itemLabel +
 			'&format=json&errorformat=plaintext&language=en&uselang=en&type=item'
 		);
 		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );
-
 	} );
 } );
