@@ -11,44 +11,47 @@ describe( 'WikibaseLocalMedia', function () {
 	let itemId = null;
 	let propertyId = null;
 
-	it( 'Should allow to upload an image', function () {
+	it( 'Should allow to upload an image', async () => {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
-		LoginPage.loginAdmin();
+		await LoginPage.loginAdmin();
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
+		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 
-		$( '#wpUploadFile' ).waitForDisplayed();
+		const fileUpload = await $( '#wpUploadFile' );
+		await fileUpload.waitForDisplayed();
 
-		const fileUpload = $( '#wpUploadFile' );
 		const filePath = path.join( __dirname, '/image.png' );
-		fileUpload.setValue( filePath );
+		await fileUpload.setValue( filePath );
 
-		$( 'input.mw-htmlform-submit' ).click();
+		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
+		await submitButtonEl.click();
 
-		$( '#firstHeading' ).waitForDisplayed();
-		const title = $( '#firstHeading' ).getText();
+		const firstHeadingEl = await $( '#firstHeading' );
+		await firstHeadingEl.waitForDisplayed();
+		const title = await firstHeadingEl.getText();
 
 		assert.strictEqual( title, 'File:Image.png' );
 	} );
 
-	it( 'Should allow to create a property with localMedia datatype', function () {
+	it( 'Should allow to create a property with localMedia datatype', async () => {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
-		propertyId = browser.call( () => WikibaseApi.createProperty( 'localMedia' ) );
+		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
+		await browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
 
-		$( '#firstHeading' ).waitForDisplayed();
-		const title = $( '#firstHeading' ).getText();
+		const firstHeadingEl = await $( '#firstHeading' );
+		await firstHeadingEl.waitForDisplayed();
+		const title = await firstHeadingEl.getText();
 
 		assert.strictEqual( title.includes( propertyId ), true );
 	} );
 
-	it( 'Should allow to use uploaded image on statement', function () {
+	it( 'Should allow to use uploaded image on statement', async () => {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
@@ -64,13 +67,13 @@ describe( 'WikibaseLocalMedia', function () {
 			]
 		};
 
-		itemId = browser.call(
-			() => WikibaseApi.createItem( 'image-test', data )
-		);
+		itemId = await WikibaseApi.createItem( 'image-test', data );
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-		$( '.wikibase-snakview-value img' ).waitForDisplayed();
-		const imageSource = $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
+		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		const snakviewEl = await $( '.wikibase-snakview-value img' );
+		await snakviewEl.waitForDisplayed();
+		const imageSourceEl = await $( '.wikibase-snakview-value img' );
+		const imageSource = await imageSourceEl.getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 
