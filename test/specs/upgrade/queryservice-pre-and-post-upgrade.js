@@ -4,20 +4,19 @@ const assert = require( 'assert' );
 const { getElementByURI } = require( '../../helpers/blazegraph' );
 
 describe( 'Wikibase post upgrade', function () {
-
 	let oldItemID;
 	let oldPropertyID;
 
-	before( function () {
+	beforeEach( function () {
 		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
 			this.skip();
 		}
 	} );
 
-	it( 'Should be able find the item after upgrade', function () {
-
-		const result = browser.makeRequest(
-			process.env.MW_SERVER + '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
+	it( 'Should be able find the item after upgrade', async () => {
+		const result = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -29,13 +28,11 @@ describe( 'Wikibase post upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		browser.url( process.env.MW_SERVER + '/wiki/Item:' + oldItemID );
-
+		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + oldItemID );
 	} );
 
-	it( 'Should show up in Special:EntityData with json', function () {
-
-		const response = browser.makeRequest(
+	it( 'Should show up in Special:EntityData with json', async () => {
+		const response = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Special:EntityData/' + oldItemID + '.json'
 		);
 
@@ -45,17 +42,14 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( properties.length, 1 );
 
 		oldPropertyID = properties[ 0 ];
-
 	} );
 
-	it( 'Should show up in the Queryservice', async function () {
-
+	it( 'Should show up in the Queryservice', async () => {
 		let bindings;
 
 		await browser.waitUntil(
 			async () => {
-
-				bindings = browser.queryBlazeGraphItem( oldItemID );
+				bindings = await browser.queryBlazeGraphItem( oldItemID );
 
 				return bindings.length === 9;
 			},
@@ -67,16 +61,40 @@ describe( 'Wikibase post upgrade', function () {
 
 		assert.strictEqual( bindings.length, 9 );
 
-		const statement = getElementByURI( process.env.MW_SERVER + '/prop/' + oldPropertyID, bindings );
-		const property = getElementByURI( process.env.MW_SERVER + '/prop/direct/' + oldPropertyID, bindings );
+		const statement = getElementByURI(
+			process.env.MW_SERVER + '/prop/' + oldPropertyID,
+			bindings
+		);
+		const property = getElementByURI(
+			process.env.MW_SERVER + '/prop/direct/' + oldPropertyID,
+			bindings
+		);
 
-		const itemLabelValue = getElementByURI( 'http://www.w3.org/2000/01/rdf-schema#label', bindings );
+		const itemLabelValue = getElementByURI(
+			'http://www.w3.org/2000/01/rdf-schema#label',
+			bindings
+		);
 
-		const dateModified = getElementByURI( 'http://schema.org/dateModified', bindings );
-		const schemaVersion = getElementByURI( 'http://schema.org/version', bindings );
-		const siteLinks = getElementByURI( 'http://wikiba.se/ontology#sitelinks', bindings );
-		const identifiers = getElementByURI( 'http://wikiba.se/ontology#identifiers', bindings );
-		const timestamp = getElementByURI( 'http://wikiba.se/ontology#timestamp', bindings );
+		const dateModified = getElementByURI(
+			'http://schema.org/dateModified',
+			bindings
+		);
+		const schemaVersion = getElementByURI(
+			'http://schema.org/version',
+			bindings
+		);
+		const siteLinks = getElementByURI(
+			'http://wikiba.se/ontology#sitelinks',
+			bindings
+		);
+		const identifiers = getElementByURI(
+			'http://wikiba.se/ontology#identifiers',
+			bindings
+		);
+		const timestamp = getElementByURI(
+			'http://wikiba.se/ontology#timestamp',
+			bindings
+		);
 
 		assert( dateModified !== null );
 		assert( schemaVersion !== null );
@@ -87,6 +105,5 @@ describe( 'Wikibase post upgrade', function () {
 
 		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
 		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
-
 	} );
 } );
