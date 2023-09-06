@@ -17,7 +17,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
         suite: [
           repo,
           fedprops,
@@ -32,6 +31,7 @@ jobs:
           base__pingback,
           base__fedprops,
         ]
+        databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -56,7 +56,7 @@ jobs:
       - name: Report
         if: always()
         run: |
-          cd test/reporter
+          cd .github/reporter
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
@@ -66,4 +66,4 @@ jobs:
         with:
           name: TestArtifacts
           path: |
-            test/log
+            test/suites/${{ matrix.suite }}/results

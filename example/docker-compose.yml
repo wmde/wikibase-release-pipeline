@@ -1,4 +1,4 @@
-# Example Wikibase docker-compose setup
+# Example Wikibase docker compose setup
 version: '3.4'
 
 x-common-variables: &wikibase_variables
@@ -7,7 +7,7 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  # Disable jobs running after requests when wikibase_jobrunner is defined
+  # Disable jobs running after requests when wikibase-jobrunner is defined
   MW_WG_JOB_RUN_RATE: 0
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
@@ -28,7 +28,7 @@ services:
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
       ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase_jobrunner service!
+      ## also uncomment the same line in the wikibase-jobrunner service!
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
@@ -40,7 +40,7 @@ services:
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
 
-  wikibase_jobrunner:
+  wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh

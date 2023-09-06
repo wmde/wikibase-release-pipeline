@@ -9,45 +9,55 @@ export
 download:
 	bash publish/download.sh
 
+.PHONY: lint
+lint:
+	@bash test/scripts/lint.sh
+
 .PHONY: test
-test: test-stop
-	bash test/test_suite.sh ${SUITE}
+test:
+ifdef SUITE
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
+	@bash test/scripts/test_suite.sh ${SUITE}
+else
+	@make test-all
+endif
 
 .PHONY: test-upgrade
-test-upgrade: upgrade-stop
-	bash test/test_upgrade.sh ${VERSION} ${TO_VERSION}
+test-upgrade:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
+	@bash test/scripts/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
-test-example: example-stop
-	bash test/test_example.sh ${SUITE}
-
-.PHONY: test-stop
-test-stop:
-	cd test && bash test_stop.sh "$(ARGS_CONFIG)"
-
-.PHONY: upgrade-stop
-upgrade-stop:
-	make test-stop ARGS_CONFIG="--env-file upgrade/default_variables.env -f docker-compose.upgrade.yml -f docker-compose.upgrade.wdqs.yml"
-
-.PHONY: example-stop
-example-stop:
-	make test-stop ARGS_CONFIG="--env-file ../example/template.env -f ../example/docker-compose.yml -f ../example/docker-compose.extra.yml"
+test-example:
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
+	@bash test/scripts/test_example.sh ${SUITE}
 
 test-all:
-	# bundle tests
-	bash test/test_suite.sh repo
-	bash test/test_suite.sh fedprops
-	bash test/test_suite.sh repo_client
-	bash test/test_suite.sh quickstatements
-	bash test/test_suite.sh pingback
-	bash test/test_suite.sh confirm_edit
-	bash test/test_suite.sh elasticsearch
+ifndef GITHUB_ACTIONS
+	@make lint
+endif
+	@echo "\n⚠️  Running All Test Suites"
 
-	# base tests
-	bash test/test_suite.sh base__repo
-	bash test/test_suite.sh base__repo_client
-	bash test/test_suite.sh base__fedprops
-	bash test/test_suite.sh base__pingback
+	@# bundle tests
+	@bash test/scripts/test_suite.sh repo
+	@bash test/scripts/test_suite.sh fedprops
+	@bash test/scripts/test_suite.sh repo_client
+	@bash test/scripts/test_suite.sh quickstatements
+	@bash test/scripts/test_suite.sh pingback
+	@bash test/scripts/test_suite.sh confirm_edit
+	@bash test/scripts/test_suite.sh elasticsearch
+
+	@# base tests
+	@bash test/scripts/test_suite.sh base__repo
+	@bash test/scripts/test_suite.sh base__repo_client
+	@bash test/scripts/test_suite.sh base__fedprops
+	@bash test/scripts/test_suite.sh base__pingback
 
 requirements:
 	python3 build/requirements/build_version_requirements.py

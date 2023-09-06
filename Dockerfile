@@ -5,7 +5,7 @@ WORKDIR "/app/"
 ENV XDG_CACHE_HOME=/app/cache
 ADD Docker/build/ Docker/build/
 ADD build/ build
-ADD .github/workflows/built_and_test.yml config.yml
+ADD .github/workflows/build_and_test.yml config.yml
 ADD variables.env variables.env
 ADD local.env local.env
 ADD Makefile Makefile

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 TARGET=$1
 RELEASE_ENV_FILE=$2
 
@@ -16,7 +16,7 @@ cat "$RELEASE_ENV_FILE"
 echo
 
 docker build . -t builder && \
- docker run -i \
+ docker run --rm -i \
  -v "$(pwd)/variables.env":/app/variables.env \
  -v "$(pwd)/$RELEASE_ENV_FILE":/app/builder_configuration.env \
  -v "$(pwd)/artifacts":/app/artifacts \

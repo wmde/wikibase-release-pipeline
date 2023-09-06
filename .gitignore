@@ -13,8 +13,12 @@ Docker/build/WDQS/wait-for-it.sh
 
 #temp 
 Docker/**/*.tar.gz
+test/suites/**/results/
 test/log
-diagrams/node_modules/
+test/mwlog
+docs/diagrams/node_modules/
 artifacts/*
 local.env
 example/log
+.DS_Store
+.direnv

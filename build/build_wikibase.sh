@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -ex
 
 ROOT="$(pwd)"
@@ -24,21 +24,22 @@ COMPOSER_VENDOR="$WIKIBASE_DIR/vendor/"
 
 mkdir "$COMPOSER_VENDOR"
 chmod 777 "$COMPOSER_VENDOR"
-# TODO rmeove the below hack...
+
+# TODO remove the below hack:
 # composer config --no-plugins allow-plugins.composer/installers false
-docker run \
+docker run --rm \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
     -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     config --no-plugins allow-plugins.composer/installers false -d "/tmp/Wikibase"
-docker run \
+docker run --rm \
     --volume "$WIKIBASE_DIR":/tmp/Wikibase \
     -u "$(id -u "${USER}")":"$(id -g "${USER}")" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
 
-GZIP=-9 tar -C "$TEMP_GIT_DIR" -zcf "$TEMP_TAR_DIR"/Wikibase.tar.gz Wikibase
+tar -C "$TEMP_GIT_DIR" -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$TEMP_TAR_DIR"/Wikibase.tar.gz
 
 TARBALL_PATH="$TEMP_TAR_DIR/Wikibase.tar.gz"
 

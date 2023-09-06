@@ -161,7 +161,7 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 
 ## Update the example docker-compose
 
-Once the release images are pushed to docker hub, and BEFORE tagging this repository the docker-compose example should be updated to point to the new release on docker hub.
+Once the release images are pushed to docker hub, and BEFORE tagging this repository the docker compose example should be updated to point to the new release on docker hub.
 
 This is so that we can link to the example, using the tag that we will create in the next step.
 

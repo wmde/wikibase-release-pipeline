@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This file is provided by the wikibase/wikibase docker image.
 
 # Test if required environment variables have been set
@@ -41,7 +41,7 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
 fi
 
 # Copy LocalSettings.php to a shared directory, if the image is being used with this shared directory existing
-# This is generally only done for the docker-compose example which currently works out of the box
+# This is generally only done for the docker compose example which currently works out of the box
 # This is used to share a install generated LocalSettings.php with a job runner on first run for example
 if [[ -d "/var/shared-localsettings" ]] && [[ -e "/var/www/html/LocalSettings.php" ]]
 then

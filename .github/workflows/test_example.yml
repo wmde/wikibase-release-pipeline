@@ -26,6 +26,5 @@ jobs:
           name: TestExampleArtifacts
           if-no-files-found: error
           path: |
-            example/log
-            test/log
+            test/suites/example/results
           
