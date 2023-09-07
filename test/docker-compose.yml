@@ -46,7 +46,8 @@ services:
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
 
   browser:
-    image: selenium/standalone-chrome:4
+    # use a fixed selenium chrome version for stability in our testing environment
+    image: selenium/standalone-chrome:116.0.5845.140-chromedriver-116.0.5845.96-grid-4.12.1-20230904
     ports:
       - "4444:4444"
       - "7900:7900"
