@@ -25,7 +25,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		// Trimmed to account for trailing newline in .sx files added in T344696
-		const shexTemplate = fs.readFileSync( __dirname + '/entityschema.sx', 'utf8' ).trim();
+		const shexTemplate = fs.readFileSync( '/fixtures/entityschema.sx', 'utf8' ).trim();
 		$( 'textarea[name ="schema-text"]' ).setValue( shexTemplate );
 
 		$( 'button[name ="submit"]' ).click();

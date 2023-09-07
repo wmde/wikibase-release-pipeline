@@ -50,8 +50,8 @@ exports.config = {
 	// ============
 	// Capabilities
 	// ============
+	// https://sites.google.com/a/chromium.org/chromedriver/capabilities
 	capabilities: [ {
-		// https://sites.google.com/a/chromium.org/chromedriver/capabilities
 		browserName: 'chrome',
 		maxInstances: 1,
 		'goog:chromeOptions': {

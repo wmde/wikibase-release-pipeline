@@ -10,6 +10,7 @@ services:
     entrypoint: /bin/bash
     volumes:
       - .:/usr/src/app
+      - ./fixtures:/fixtures
       - node_modules:/usr/src/app/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -43,13 +44,15 @@ services:
       - DB_NAME
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
-  
+
   browser:
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:4
     ports:
       - "4444:4444"
       - "7900:7900"
-    shm_size: "2g"
+    volumes:
+      - ./fixtures:/fixtures
+    shm_size: '2g'
 
 volumes:
   node_modules:

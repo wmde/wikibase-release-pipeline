@@ -13,7 +13,7 @@ describe( 'SyntaxHighlight', function () {
 		browser.editPage(
 			process.env.MW_SERVER,
 			'Module:Olives',
-			fs.readFileSync( __dirname + '/bananas.lua', 'utf8' )
+			fs.readFileSync( '/fixtures/bananas.lua', 'utf8' )
 		);
 
 		browser.url( process.env.MW_SERVER + '/wiki/Module:Olives' );
