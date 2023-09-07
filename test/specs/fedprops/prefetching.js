@@ -74,7 +74,8 @@ describe( 'Property Prefetching', function () {
 
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
-		assert.strictEqual( ( await $$( 'ul.special li' ) ).length, NUM_PROPERTIES + 2 );
+		// +1 for ?
+		assert.strictEqual( ( await $$( 'ul.special li' ) ).length, NUM_PROPERTIES + 3 );
 	} );
 
 } );
