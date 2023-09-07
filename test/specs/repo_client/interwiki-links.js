@@ -10,7 +10,6 @@ describe( 'Interwiki links', function () {
 			__dirname + '/interwiki-link.sql',
 			readFileEncoding.utf8
 		);
-		console.log( 'Read File', repoLinkFile );
 		const repoLink = repoLinkFile
 			.replace( /<WIKI_ID>/g, 'client_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
