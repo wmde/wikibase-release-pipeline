@@ -1,25 +1,29 @@
 'use strict';
 
-const fs = require( 'fs' );
+const fsPromises = require( 'fs/promises' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
+const readFileEncoding = require( '../../../helpers/readFileEncoding' );
 
 describe( 'SyntaxHighlight', function () {
-
-	it( 'Should highlight lua script', function () {
-
+	it( 'Should highlight lua script', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
-		browser.editPage(
-			process.env.MW_SERVER,
-			'Module:Olives',
-			fs.readFileSync( __dirname + '/bananas.lua', 'utf8' )
+		const fileContents = await fsPromises.readFile(
+			__dirname + '/bananas.lua',
+			readFileEncoding.utf8
 		);
 
-		browser.url( process.env.MW_SERVER + '/wiki/Module:Olives' );
+		await browser.editPage(
+			process.env.MW_SERVER,
+			'Module:Olives',
+			fileContents
+		);
+
+		await browser.url( process.env.MW_SERVER + '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
-		$( '.mw-highlight' ).waitForDisplayed();
+		const highlightEl = await $( '.mw-highlight' );
+		await highlightEl.waitForDisplayed();
 	} );
-
 } );
