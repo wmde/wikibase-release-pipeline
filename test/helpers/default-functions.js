@@ -95,38 +95,42 @@ const defaultFunctions = function () {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', ( host, title, content, captcha ) => {
-		browser.url( host + '/wiki/' + title + '?action=edit' );
+	browser.addCommand( 'editPage', async ( host, title, content, captcha ) => {
+		await browser.url( host + '/wiki/' + title + '?action=edit' );
 
 		// wait for javascript to settle
-		browser.pause( 5 * 1000 );
+		await browser.pause( 5 * 1000 );
 
 		// this shows up one time for anonymous users (VisualEditor)
-		const startEditbutton = $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
+		const startEditbutton = await $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
 		if ( startEditbutton.elementId ) {
-			startEditbutton.click();
+			await startEditbutton.click();
 
 			// wait for fade out animation to finish
-			browser.pause( 2 * 1000 );
+			await browser.pause( 2 * 1000 );
 		}
 
 		// fill out form
-		$( '#wpTextbox1' ).waitForDisplayed();
-		$( '#wpTextbox1' ).setValue( content );
+		const textBoxEl = await $( '#wpTextbox1' );
+		await textBoxEl.waitForDisplayed();
+		await textBoxEl.setValue( content );
 
 		if ( captcha ) {
-			$( '#wpCaptchaWord' ).setValue( captcha );
+			const captchaEl = await $( '#wpCaptchaWord' );
+			await captchaEl.setValue( captcha );
 		}
 
 		// save page
-		browser.execute( function () {
-			$( '#editform.mw-editform' ).submit();
+		await browser.execute( async () => {
+			const editFormEl = await $( '#editform.mw-editform' );
+			await editFormEl.submit();
 		}, this );
 
-		browser.pause( 2 * 1000 );
+		await browser.pause( 2 * 1000 );
 
-		$( '#mw-content-text' ).waitForDisplayed();
-		return $( '#mw-content-text' ).getText();
+		const contentTextEl = await $( '#mw-content-text' );
+		await contentTextEl.waitForDisplayed();
+		return await contentTextEl.getText();
 	} );
 
 	/**
