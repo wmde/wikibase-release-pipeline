@@ -4,9 +4,7 @@ const assert = require( 'assert' );
 const SpecialNewProperty = require( '../../helpers/pages/special/new-property.page' );
 
 describe( 'Special:NewProperty', function () {
-
 	it( 'Should be able to create a new property', async function () {
-
 		await SpecialNewProperty.open( 'string' );
 
 		const labelInput = await SpecialNewProperty.labelInput;
@@ -20,11 +18,12 @@ describe( 'Special:NewProperty', function () {
 
 		await SpecialNewProperty.submit();
 
-		const propertyviewDatatypeValueEl = await $( '.wikibase-propertyview-datatype-value' );
+		const propertyviewDatatypeValueEl = await $(
+			'.wikibase-propertyview-datatype-value'
+		);
 		await propertyviewDatatypeValueEl.waitForDisplayed();
 		const dataTypeText = await propertyviewDatatypeValueEl.getText();
 
 		assert.strictEqual( dataTypeText, 'String' );
-
 	} );
 } );

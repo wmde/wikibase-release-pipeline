@@ -5,11 +5,9 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Property = require( '../../helpers/pages/entity/property.page' );
 
 describe( 'Property', function () {
-
 	let propertyId = null;
 
 	it( 'Should be able to add statement and reference to property', async function () {
-
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
 		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
@@ -54,7 +52,12 @@ describe( 'Property', function () {
 	} );
 
 	it( 'Should contain statement and reference in EntityData', async function () {
-		const response = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + propertyId + '.json' );
+		const response = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/wiki/Special:EntityData/' +
+			propertyId +
+			'.json'
+		);
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];
 		const reference = claim.references[ 0 ].snaks[ propertyId ][ 0 ];

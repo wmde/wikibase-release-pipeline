@@ -7,12 +7,10 @@ const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseLocalMedia', function () {
-
 	let itemId = null;
 	let propertyId = null;
 
 	it( 'Should allow to upload an image', async () => {
-
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		await LoginPage.loginAdmin();
@@ -36,7 +34,6 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', async () => {
-
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
@@ -52,7 +49,6 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		const data = {
@@ -61,8 +57,10 @@ describe( 'WikibaseLocalMedia', function () {
 					mainsnak: {
 						snaktype: 'value',
 						property: propertyId,
-						datavalue: { value: 'Image.png', type: 'string' } },
-					type: 'statement', rank: 'normal'
+						datavalue: { value: 'Image.png', type: 'string' }
+					},
+					type: 'statement',
+					rank: 'normal'
 				}
 			]
 		};
@@ -76,7 +74,5 @@ describe( 'WikibaseLocalMedia', function () {
 		const imageSource = await imageSourceEl.getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
-
 	} );
-
 } );

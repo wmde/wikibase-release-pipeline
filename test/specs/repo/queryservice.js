@@ -8,7 +8,6 @@ const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const querystring = require( 'querystring' );
 
 describe( 'QueryService', () => {
-
 	it( 'Should not be able to post to sparql endpoint', async () => {
 		const result = await browser.makeRequest(
 			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
@@ -19,7 +18,9 @@ describe( 'QueryService', () => {
 	} );
 
 	it( 'Should be able to get sparql endpoint', async () => {
-		const result = await browser.makeRequest( process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql' );
+		const result = await browser.makeRequest(
+			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql'
+		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
@@ -48,7 +49,6 @@ describe( 'QueryService', () => {
 	} );
 
 	it( 'Should show up with property in queryservice ui after creation', async () => {
-
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
 
@@ -59,13 +59,18 @@ describe( 'QueryService', () => {
 					mainsnak: {
 						snaktype: 'value',
 						property: propertyId,
-						datavalue: { value: propertyValue, type: 'string' } },
-					type: 'statement', rank: 'normal'
+						datavalue: { value: propertyValue, type: 'string' }
+					},
+					type: 'statement',
+					rank: 'normal'
 				}
 			]
 		};
 
-		const itemId = await WikibaseApi.createItem( Util.getTestString( itemLabel ), data );
+		const itemId = await WikibaseApi.createItem(
+			Util.getTestString( itemLabel ),
+			data
+		);
 
 		// query the item using wd: prefix
 		await QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
@@ -90,7 +95,12 @@ describe( 'QueryService', () => {
 		assert( await QueryServiceUI.resultIncludes( 'wikibase:identifiers', '0' ) );
 
 		// property value is set with correct rdf
-		assert( await QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>', propertyValue ) );
+		assert(
+			await QueryServiceUI.resultIncludes(
+				'<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>',
+				propertyValue
+			)
+		);
 
 		// query the property using wdt: prefix
 		await QueryServiceUI.open( 'SELECT * WHERE{ ?s wdt:' + propertyId + ' ?o }' );
@@ -99,12 +109,15 @@ describe( 'QueryService', () => {
 		await ( await QueryServiceUI.resultTable ).waitForDisplayed();
 
 		// should be set only to the item
-		assert( await QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
-
+		assert(
+			await QueryServiceUI.resultIncludes(
+				'<' + process.env.MW_SERVER + '/entity/' + itemId + '>',
+				propertyValue
+			)
+		);
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async () => {
-
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( Util.getTestString( 'T267743-' ) );
 
@@ -113,10 +126,11 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.config.baseUrl + '/index.php?' +
-			querystring.stringify( query )
+			browser.config.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
-		const destructiveButtonEl = await $( '.oo-ui-flaggedElement-destructive button' );
+		const destructiveButtonEl = await $(
+			'.oo-ui-flaggedElement-destructive button'
+		);
 		await destructiveButtonEl.waitForDisplayed();
 		await destructiveButtonEl.click();
 
@@ -140,6 +154,5 @@ describe( 'QueryService', () => {
 
 		// timestamp always shows
 		assert( resultText.includes( 'wikibase:timestamp' ) );
-
 	} );
 } );

@@ -26,10 +26,12 @@ describe( 'EntitySchema', function () {
 		await descriptionInputEl.setValue( testDescription );
 
 		// set template
-		const shexTemplate = ( await fsPromises.readFile(
-			__dirname + '/entityschema.sx',
-			readFileEncoding.utf8
-		) ).trim();
+		const shexTemplate = (
+			await fsPromises.readFile(
+				__dirname + '/entityschema.sx',
+				readFileEncoding.utf8
+			)
+		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
 		await schemaTextInputEl.setValue( shexTemplate );
 

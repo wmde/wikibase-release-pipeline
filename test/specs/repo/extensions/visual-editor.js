@@ -4,12 +4,12 @@ const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'VisualEditor', function () {
-
 	it( 'Should be able to edit a page using the editor', async () => {
-
 		defaultFunctions.skipIfExtensionNotPresent( this, 'VisualEditor' );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit' );
+		await browser.url(
+			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
+		);
 
 		// start editing
 		const messageDialogEl = await $( '.oo-ui-messageDialog-actions' );
@@ -49,5 +49,4 @@ describe( 'VisualEditor', function () {
 
 		assert.strictEqual( contentBody, 'TEST' );
 	} );
-
 } );

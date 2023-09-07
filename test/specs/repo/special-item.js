@@ -4,9 +4,7 @@ const SpecialNewItem = require( '../../helpers/pages/special/new-item.page' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
 
 describe( 'Special:NewItem', function () {
-
 	it( 'Should be able to create a new item', async () => {
-
 		await SpecialNewItem.open();
 
 		const labelInput = await SpecialNewItem.labelInput;
@@ -23,6 +21,5 @@ describe( 'Special:NewItem', function () {
 
 		const addStatementLink = await ItemPage.addStatementLink;
 		await addStatementLink.waitForDisplayed();
-
 	} );
 } );
