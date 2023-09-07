@@ -9,7 +9,7 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const defaultFunctions = function () {
 	/**
 	 * Make a get request to get full request response
-	 * MUST BE AWAITED
+	 * Returns a Promise
 	 */
 	browser.addCommand( 'makeRequest', ( url, params, postData ) => {
 		if ( postData ) {
@@ -66,6 +66,7 @@ const defaultFunctions = function () {
 
 	/**
 	 * Execute docker command on container and get output
+	 * Returns a Promise
 	 */
 	browser.addCommand( 'dockerExecute', ( container, command, opts, shouldLog ) => {
 		if ( !container ) {
