@@ -16,6 +16,7 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
+      - HEADED_TESTS
 
       - MW_SERVER
       - MW_CLIENT_SERVER
@@ -42,6 +43,13 @@ services:
       - DB_NAME
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
+  
+  browser:
+    image: selenium/standalone-chrome:latest
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: "2g"
 
 volumes:
   node_modules:

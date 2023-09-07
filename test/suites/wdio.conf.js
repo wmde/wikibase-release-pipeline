@@ -44,6 +44,9 @@ exports.config = {
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
 
+	hostname: 'browser',
+	port: 4444,
+	path: '/wd/hub',
 	// ============
 	// Capabilities
 	// ============
@@ -52,11 +55,8 @@ exports.config = {
 		browserName: 'chrome',
 		maxInstances: 1,
 		'goog:chromeOptions': {
-			// If DISPLAY is set, assume developer asked non-headless or CI with Xvfb.
-			// Otherwise, use --headless (added in Chrome 59)
-			// https://chromium.googlesource.com/chromium/src/+/59.0.3030.0/headless/README.md
 			args: [
-				...( process.env.DISPLAY ? [] : [ '--headless' ] ),
+				...( process.env.HEADED_TESTS ? [ '--disable-gpu' ] : [ '--headless' ] ),
 				// Chrome sandbox does not work in Docker
 				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 			]
