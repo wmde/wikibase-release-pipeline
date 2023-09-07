@@ -7,7 +7,7 @@ const Property = require( '../../helpers/pages/entity/property.page' );
 describe( 'Property', function () {
 	let propertyId = null;
 
-	it( 'Should be able to add statement and reference to property', async function () {
+	it( 'Should be able to add statement and reference to property', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
 		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
@@ -51,7 +51,7 @@ describe( 'Property', function () {
 		await Property.open( propertyId );
 	} );
 
-	it( 'Should contain statement and reference in EntityData', async function () {
+	it( 'Should contain statement and reference in EntityData', async () => {
 		const response = await browser.makeRequest(
 			process.env.MW_SERVER +
 			'/wiki/Special:EntityData/' +
