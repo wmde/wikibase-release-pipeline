@@ -20,7 +20,6 @@ const getQualifierType = function ( response, propertyId, qualPropertyId ) {
 };
 
 describe( 'QuickStatements Service', function () {
-
 	let propertyId = null;
 	let propertyIdItem = null;
 	let propertyURL = null;
@@ -32,7 +31,6 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to log in', async () => {
-
 		await browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
@@ -62,73 +60,96 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create two items', async () => {
-
 		await browser.url( process.env.QS_SERVER + '/#/batch' );
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		const responseQ2 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
+		const responseQ2 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
+		);
 
 		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
 		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
 	} );
 
 	it( 'Should be able to add an alias to an item', async () => {
-
 		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
 	} );
 
 	it( 'Should be able to add a label to an item', async () => {
-
 		await browser.executeQuickStatement( 'Q1|LSv|"Some label"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
 	} );
 
 	it( 'Should be able to add a description to an item', async () => {
-
 		await browser.executeQuickStatement( 'Q1|DSv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
 	} );
 
 	it.skip( 'Should be able to add a sitelink to an item', async () => {
-
 		await browser.executeQuickStatement( 'Q1|Sclient_wiki|"Main_Page"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
 
 		assert( _.isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
 	} );
 
 	it( 'Should be able to add a statement to an item', async () => {
-
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
-		await browser.executeQuickStatement( 'Q1|' + propertyId + '|"Will it blend?"' );
+		await browser.executeQuickStatement(
+			'Q1|' + propertyId + '|"Will it blend?"'
+		);
 
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
-
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
+		assert.strictEqual(
+			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
+			'statement'
+		);
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', () => {
-
-		const mainSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ];
-		const qualifierSnakDataTypes = [ 'string', 'wikibase-item', 'url', 'quantity', 'time' ];
+		const mainSnakDataTypes = [
+			'string',
+			'wikibase-item',
+			'url',
+			'quantity',
+			'time'
+		];
+		const qualifierSnakDataTypes = [
+			'string',
+			'wikibase-item',
+			'url',
+			'quantity',
+			'time'
+		];
 		const exampleSnakValues = {
 			string: '"cat"',
 			'wikibase-item': 'Q1',
@@ -141,25 +162,38 @@ describe( 'QuickStatements Service', function () {
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
 			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
 				it(
-					'Should be able to add a ' + mainSnakDataType + ' statement with a ' + qualifierSnakDataType + ' qualifier.',
+					'Should be able to add a ' +
+					mainSnakDataType +
+					' statement with a ' +
+					qualifierSnakDataType +
+					' qualifier.',
 					async () => {
 						const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
 
-						const mainPropertyId = await WikibaseApi.getProperty( mainSnakDataType );
-						const qualifierPropertyId =
-							await WikibaseApi.getProperty( qualifierSnakDataType );
+						const mainPropertyId =
+							await WikibaseApi.getProperty( mainSnakDataType );
+						const qualifierPropertyId = await WikibaseApi.getProperty(
+							qualifierSnakDataType
+						);
 						await browser.executeQuickStatement(
-							itemId + '|' + mainPropertyId + '|' + exampleSnakValues[ mainSnakDataType ] + '|' +
-						qualifierPropertyId + '|' + exampleSnakValues[ qualifierSnakDataType ]
+							itemId +
+							'|' +
+							mainPropertyId +
+							'|' +
+							exampleSnakValues[ mainSnakDataType ] +
+							'|' +
+							qualifierPropertyId +
+							'|' +
+							exampleSnakValues[ qualifierSnakDataType ]
 						);
 
-						const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+						const responseQ1 = await browser.makeRequest(
+							process.env.MW_SERVER +
+							'/w/api.php?action=wbgetclaims&format=json&entity=' +
+							itemId
+						);
 						assert.strictEqual(
-							getQualifierType(
-								responseQ1,
-								mainPropertyId,
-								qualifierPropertyId
-							),
+							getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
 							qualifierSnakDataType
 						);
 					}
@@ -169,82 +203,129 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add statement with qualifiers', async () => {
-
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
 
-		await browser.executeQuickStatement( 'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1' );
+		await browser.executeQuickStatement(
+			'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1'
+		);
 
-		const responseQ1 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json' );
-		assert.strictEqual( responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type, 'statement' );
-
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
+		assert.strictEqual(
+			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
+			'statement'
+		);
 	} );
 
 	it( 'Should be able to add a property with "wikibase-item" reference', async () => {
-
 		const itemId = await WikibaseApi.createItem( 'reference-item', {} );
 
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
 		const propertyNumber = propertyIdItem.replace( 'P', '' );
-		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q2|S' + propertyNumber + '|Q2|S' + propertyNumber + '|Q2' );
+		await browser.executeQuickStatement(
+			itemId +
+			'|' +
+			propertyIdItem +
+			'|Q2|S' +
+			propertyNumber +
+			'|Q2|S' +
+			propertyNumber +
+			'|Q2'
+		);
 
-		const response = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
-		const refValue = getReferenceValue( response, propertyIdItem, propertyIdItem );
+		const response = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/w/api.php?action=wbgetclaims&format=json&entity=' +
+			itemId
+		);
+		const refValue = getReferenceValue(
+			response,
+			propertyIdItem,
+			propertyIdItem
+		);
 
 		assert.strictEqual( refValue.id, 'Q2' );
 	} );
 
 	it( 'Should be able to add a property with "url" reference', async () => {
-
 		const itemId = await WikibaseApi.createItem( 'reference-url', {} );
 		propertyURL = await WikibaseApi.getProperty( 'url' );
 		const url = '"https://www.wikidata.org"';
 		const propertyNumber = propertyURL.replace( 'P', '' );
 
-		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + url );
+		await browser.executeQuickStatement(
+			itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + url
+		);
 
-		const response = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const response = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/w/api.php?action=wbgetclaims&format=json&entity=' +
+			itemId
+		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
 		assert.strictEqual( refValue, 'https://www.wikidata.org' );
 	} );
 
 	it( 'Should be able to add a property with "string" reference', async () => {
-
 		const itemId = await WikibaseApi.createItem( 'reference-string', {} );
 		const stringValue = '"some string"';
 		const propertyNumber = propertyId.replace( 'P', '' );
-		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + stringValue );
+		await browser.executeQuickStatement(
+			itemId +
+			'|' +
+			propertyIdItem +
+			'|Q1|S' +
+			propertyNumber +
+			'|' +
+			stringValue
+		);
 
-		const response = await browser.makeRequest( process.env.MW_SERVER + '/w/api.php?action=wbgetclaims&format=json&entity=' + itemId );
+		const response = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/w/api.php?action=wbgetclaims&format=json&entity=' +
+			itemId
+		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
 		assert.strictEqual( refValue, 'some string' );
 	} );
 
 	it( 'Should be able to add and remove a property on an item', async () => {
-
 		const itemId = await WikibaseApi.createItem( 'add-remove', {} );
 
 		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
 
-		let response = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
-		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), true );
+		let response = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json'
+		);
+		assert.strictEqual(
+			propertyIdItem in response.data.entities[ itemId ].claims,
+			true
+		);
 
-		await browser.executeQuickStatement( '-' + itemId + '|' + propertyIdItem + '|Q1' );
+		await browser.executeQuickStatement(
+			'-' + itemId + '|' + propertyIdItem + '|Q1'
+		);
 
-		response = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json' );
-		assert.strictEqual( ( propertyIdItem in response.data.entities[ itemId ].claims ), false );
-
+		response = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json'
+		);
+		assert.strictEqual(
+			propertyIdItem in response.data.entities[ itemId ].claims,
+			false
+		);
 	} );
 
 	it( 'Should be able to merge two items', async () => {
-
 		await browser.url( process.env.QS_SERVER + '/#/batch' );
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
-		const responseQ2 = await browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json' );
+		const responseQ2 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
+		);
 		assert.strictEqual( responseQ2.data.entities.Q1.id, 'Q1' );
 	} );
-
 } );
