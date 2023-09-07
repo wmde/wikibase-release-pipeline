@@ -19,7 +19,7 @@
 		"stylelint-config-wikimedia": "0.10.1",
 		"wdio-mediawiki": "^2.2.0",
 		"wdio-wikibase": "^6.0.0",
-		"axios": "^1.5.0",
+		"axios": "^0.21.0",
 		"lodash": "^4.17.20"
 	},
 	"browserslist": [
