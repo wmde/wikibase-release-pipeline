@@ -3,10 +3,8 @@
 const assert = require( 'assert' );
 
 describe( 'ConfirmEdit', function () {
-
-	it( 'Should allow to edit with captcha', function () {
-
-		const executionResult = browser.editPage(
+	it( 'Should allow to edit with captcha', async () => {
+		const executionResult = await browser.editPage(
 			process.env.MW_SERVER,
 			'ConfirmEditTest',
 			'something great',
@@ -14,7 +12,5 @@ describe( 'ConfirmEdit', function () {
 		);
 
 		assert.strictEqual( executionResult, 'something great' );
-
 	} );
-
 } );
