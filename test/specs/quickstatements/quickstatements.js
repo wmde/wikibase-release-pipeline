@@ -33,7 +33,7 @@ describe( 'QuickStatements Service', function () {
 	it( 'Should be able to log in', function () {
 
 		browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
-
+browser.debug();
 		// login after redirect
 		$( '#wpPassword1' ).waitForDisplayed();
 

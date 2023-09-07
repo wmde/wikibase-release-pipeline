@@ -25,7 +25,7 @@ services:
       - ./suites/client-extra-install.sh:/extra-install.sh
       - ./suites/${SUITE}/results:/var/log/mediawiki
     ports:
-      - "80:80"
+      - "8383:80"
     networks:
       default:
         aliases:

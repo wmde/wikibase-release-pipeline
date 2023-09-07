@@ -8,7 +8,7 @@ services:
 
   wikibase:
     environment: 
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT
     volumes:
       - quickstatements-data:/quickstatements/data
       - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
@@ -58,9 +58,9 @@ services:
         aliases:
          - quickstatements.svc
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT
+      - WIKIBASE_SCHEME_AND_HOST
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120

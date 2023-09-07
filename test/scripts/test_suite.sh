@@ -55,6 +55,19 @@ export WDQS_PROXY_IMAGE_NAME="$WDQS_PROXY_IMAGE_NAME:latest"
 export QUICKSTATEMENTS_IMAGE_NAME="$QUICKSTATEMENTS_IMAGE_NAME:latest"
 export ELASTICSEARCH_IMAGE_NAME="$ELASTICSEARCH_IMAGE_NAME:latest"
 
-export DEFAULT_SUITE_CONFIG="--env-file default.env -f suites/docker-compose.yml"
+DEFAULT_SUITE_CONFIG="--env-file default.env"
+
+if [ -n "$LOCAL_TEST_RUNNER" ]; then
+    DEFAULT_SUITE_CONFIG="$DEFAULT_SUITE_CONFIG --env-file local_test_runner.env"
+    echo -e "ℹ️  Using local test runner\n" | tee -a "$TEST_LOG"
+    set -o allexport
+    # shellcheck source=/dev/null
+    source default.env
+    # shellcheck source=/dev/null
+    source local_test_runner.env
+    set +o allexport
+fi
+
+export DEFAULT_SUITE_CONFIG="$DEFAULT_SUITE_CONFIG -f suites/docker-compose.yml"
 
 bash scripts/run_selenium.sh "$SUITE"

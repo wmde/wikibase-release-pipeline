@@ -92,7 +92,7 @@ describe( 'QueryService', function () {
 		assert( QueryServiceUI.resultIncludes( 'wikibase:identifiers', '0' ) );
 
 		// property value is set with correct rdf
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>', propertyValue ) );
+		assert( QueryServiceUI.resultIncludes( '/prop/direct/' + propertyId + '>', propertyValue ) );
 
 		// query the property using wdt: prefix
 		QueryServiceUI.open( 'SELECT * WHERE{ ?s wdt:' + propertyId + ' ?o }' );
@@ -101,7 +101,7 @@ describe( 'QueryService', function () {
 		QueryServiceUI.resultTable.waitForDisplayed();
 
 		// should be set only to the item
-		assert( QueryServiceUI.resultIncludes( '<' + process.env.MW_SERVER + '/entity/' + itemId + '>', propertyValue ) );
+		assert( QueryServiceUI.resultIncludes( '/entity/' + itemId + '>', propertyValue ) );
 
 	} );
 

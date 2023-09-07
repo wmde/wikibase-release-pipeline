@@ -38,20 +38,13 @@ if [ -n "$FILTER" ]; then
     WDIO_COMMAND='npm run test:run-filter --silent'
 fi
 
-if [ -z "$LOCAL_TEST_RUN" ]; then
-    $TEST_COMPOSE run --rm test-runner -c "$SETUP_COMMAND" 2>&1 | tee -a "$TEST_LOG"
-    $TEST_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
-else
-    echo -e "ℹ️  Using local test runner\n" | tee -a "$TEST_LOG"
-    set -o allexport
-    # shellcheck source=/dev/null
-    source default.env
-    # shellcheck source=/dev/null
-    source .env
-    set +o allexport
-    npm install
+if [ -n "$LOCAL_TEST_RUNNER" ]; then
+    npm ci --loglevel=error --progress=false --no-audit --no-fund > /dev/null
     $SETUP_COMMAND 2>&1 | tee -a "$TEST_LOG"
     $WDIO_COMMAND
+else
+    $TEST_COMPOSE run --rm test-runner -c "$SETUP_COMMAND" 2>&1 | tee -a "$TEST_LOG"
+    $TEST_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
 fi
 
 echo -e "🔄 \"$SUITE\" test suite run complete. Removing running Docker test services and volumes\n" 2>&1 | tee -a "$TEST_LOG"
