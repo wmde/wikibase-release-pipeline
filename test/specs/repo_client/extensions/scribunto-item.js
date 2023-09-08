@@ -3,7 +3,7 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
 const fsPromises = require( 'fs/promises' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
@@ -74,7 +74,7 @@ describe( 'Scribunto Item', function () {
 	it( 'Should be able to delete the item on repo', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		await LoginPage.login( browser.config.mwUser, browser.config.mwPwd );
+		await SuiteLoginPage.loginAdmin();
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

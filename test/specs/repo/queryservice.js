@@ -4,7 +4,7 @@ const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
 
 describe( 'QueryService', () => {
@@ -121,7 +121,7 @@ describe( 'QueryService', () => {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( Util.getTestString( 'T267743-' ) );
 
-		await LoginPage.loginAdmin();
+		await SuiteLoginPage.loginAdmin();
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

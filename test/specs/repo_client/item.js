@@ -3,7 +3,7 @@
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
 
 const itemLabel = Util.getTestString( 'The Item' );
@@ -117,10 +117,7 @@ describe( 'Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		// await LoginPage.loginAdmin();
-
-		await LoginPage.login( browser.config.mwUser, browser.config.mwPwd );
-
+		await SuiteLoginPage.loginAdmin();
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(

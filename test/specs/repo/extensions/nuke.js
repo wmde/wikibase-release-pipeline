@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require( 'assert' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Nuke', function () {
@@ -26,8 +26,7 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( result.status, 200 );
 
-		await LoginPage.loginAdmin();
-
+		await SuiteLoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
 		const buttonEl = await $( 'button.oo-ui-inputWidget-input' );

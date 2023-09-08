@@ -1,14 +1,14 @@
 'use strict';
 
 const assert = require( 'assert' );
+const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 
 describe( 'Babel', function () {
 	it( 'Should be able to update the user page with language skills', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Babel' );
 
-		await LoginPage.loginAdmin();
+		await SuiteLoginPage.loginAdmin();
 
 		const executionContent = await browser.editPage(
 			process.env.MW_SERVER,

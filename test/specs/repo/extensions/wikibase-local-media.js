@@ -3,7 +3,7 @@
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const path = require( 'path' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'WikibaseLocalMedia', function () {
@@ -13,7 +13,7 @@ describe( 'WikibaseLocalMedia', function () {
 	it( 'Should allow to upload an image', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
-		await LoginPage.loginAdmin();
+		await SuiteLoginPage.loginAdmin();
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 
