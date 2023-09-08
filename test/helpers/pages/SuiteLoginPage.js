@@ -3,8 +3,8 @@
 const Page = require( 'wdio-mediawiki/Page' );
 
 // This is a replacement for `wdio-mediawiki/LoginPage`
-// which as of version 2.2.0 does not properly await WDIO element selection
-// and causes failures or otherwise unpredictable results when ran in tests.
+// which as of version 2.2.0 does not properly await WDIO elements
+// causing failures and otherwise unpredictable results.
 // TODO: Fix upstream code in `wdio-mediawiki/LoginPage`
 class SuiteLoginPage extends Page {
 	get username() { return $( '#wpName1' ); }
@@ -20,12 +20,15 @@ class SuiteLoginPage extends Page {
 		await this.open();
 
 		const usernameEl = await this.username;
+		await usernameEl.waitForDisplayed()
 		await usernameEl.setValue( username );
 
 		const passwordEl = await this.password;
+		await passwordEl.waitForDisplayed()
 		await passwordEl.setValue( password );
 
 		const loginButtonEl = await this.loginButton;
+		await loginButtonEl.waitForDisplayed()
 		await loginButtonEl.click();
 	}
 
