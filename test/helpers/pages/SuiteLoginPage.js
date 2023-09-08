@@ -13,7 +13,7 @@ class SuiteLoginPage extends Page {
 	get userPage() { return $( '#pt-userpage' ); }
 
 	open() {
-		super.openTitle( 'Special:UserLogin' );
+		return super.openTitle( 'Special:UserLogin' );
 	}
 
 	async login( username, password ) {
