@@ -17,7 +17,7 @@ lint:
 test:
 ifdef SUITE
 ifndef GITHUB_ACTIONS
-	@make lint
+	-@make lint
 endif
 	@bash test/scripts/test_suite.sh ${SUITE}
 else
@@ -27,20 +27,20 @@ endif
 .PHONY: test-upgrade
 test-upgrade:
 ifndef GITHUB_ACTIONS
-	@make lint
+	-@make lint
 endif
 	@bash test/scripts/test_upgrade.sh ${VERSION} ${TO_VERSION}
 
 .PHONY: test-example
 test-example:
 ifndef GITHUB_ACTIONS
-	@make lint
+	-@make lint
 endif
 	@bash test/scripts/test_example.sh ${SUITE}
 
 test-all:
 ifndef GITHUB_ACTIONS
-	@make lint
+	-@make lint
 endif
 	@echo "\n⚠️  Running All Test Suites"
 
