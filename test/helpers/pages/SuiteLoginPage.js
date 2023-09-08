@@ -20,15 +20,15 @@ class SuiteLoginPage extends Page {
 		await this.open();
 
 		const usernameEl = await this.username;
-		await usernameEl.waitForDisplayed()
+		await usernameEl.waitForDisplayed();
 		await usernameEl.setValue( username );
 
 		const passwordEl = await this.password;
-		await passwordEl.waitForDisplayed()
+		await passwordEl.waitForDisplayed();
 		await passwordEl.setValue( password );
 
 		const loginButtonEl = await this.loginButton;
-		await loginButtonEl.waitForDisplayed()
+		await loginButtonEl.waitForDisplayed();
 		await loginButtonEl.click();
 	}
 
