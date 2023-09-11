@@ -2,6 +2,7 @@
 
 const assert = require( 'assert' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const path = require( 'path' );
 const LoginPage = require( 'wdio-mediawiki/LoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
@@ -21,7 +22,8 @@ describe( 'WikibaseLocalMedia', function () {
 		$( '#wpUploadFile' ).waitForDisplayed();
 
 		const fileUpload = $( '#wpUploadFile' );
-		fileUpload.setValue( '/fixtures/image.png' );
+		const filePath = path.join( __dirname, '/image.png' );
+		fileUpload.setValue( filePath );
 
 		$( 'input.mw-htmlform-submit' ).click();
 

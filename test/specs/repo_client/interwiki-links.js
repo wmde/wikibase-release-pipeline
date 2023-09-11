@@ -6,7 +6,7 @@ const assert = require( 'assert' );
 describe( 'Interwiki links', function () {
 
 	it( 'Should be able to insert interwiki links', function () {
-		const repoLink = fs.readFileSync( '/fixtures/interwiki-link.sql', 'utf8' )
+		const repoLink = fs.readFileSync( __dirname + '/interwiki-link.sql', 'utf8' )
 			.replace( /<WIKI_ID>/g, 'client_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
 		browser.dbQuery( repoLink );
@@ -20,7 +20,7 @@ describe( 'Interwiki links', function () {
 			pass: process.env.DB_PASS,
 			database: 'client_wiki'
 		};
-		const clientLink = fs.readFileSync( '/fixtures/interwiki-link.sql', 'utf8' )
+		const clientLink = fs.readFileSync( __dirname + '/interwiki-link.sql', 'utf8' )
 			.replace( /<WIKI_ID>/g, 'my_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
 

@@ -46,7 +46,7 @@ describe( 'Scribunto Item', function () {
 
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const template = fs.readFileSync( '/fixtures/repo-client.lua', 'utf8' );
+		const template = fs.readFileSync( __dirname + '/repo-client.lua', 'utf8' );
 		const luaScript = template.replace( '<ITEM_ID>', itemId ).replace( '<LANG>', 'en' );
 
 		browser.editPage(

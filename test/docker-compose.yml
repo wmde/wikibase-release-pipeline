@@ -10,7 +10,6 @@ services:
     entrypoint: /bin/bash
     volumes:
       - .:/usr/src/app
-      - ./fixtures:/fixtures
       - node_modules:/usr/src/app/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -52,7 +51,7 @@ services:
       - "4444:4444"
       - "7900:7900"
     volumes:
-      - ./fixtures:/fixtures
+      - .:/usr/src/app
     shm_size: '2g'
 
 volumes:
