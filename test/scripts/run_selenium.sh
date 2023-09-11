@@ -30,7 +30,7 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # run the global suite setup.sh (waits for containers to come up, etc)
 echo "🔄 Running \"suites/setup.sh\"" 2>&1 | tee -a "$TEST_LOG"
-$TEST_COMPOSE run --rm test-runner -c suites/setup.sh 2>&1 | tee -a "$TEST_LOG"
+$TEST_COMPOSE run --rm test-runner -c suites/setup.sh
 
 echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 WDIO_COMMAND='npm run test:run --silent'

@@ -16,6 +16,8 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
+      - RESULTS_DIR
+      - TEST_LOG
 
       - MW_SERVER
       - MW_CLIENT_SERVER
