@@ -17,6 +17,8 @@ services:
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
       - HEADED_TESTS
+      - RESULTS_DIR
+      - TEST_LOG
 
       - MW_SERVER
       - MW_CLIENT_SERVER

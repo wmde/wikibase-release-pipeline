@@ -12,7 +12,7 @@ const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
 const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 
-const resultsDir = process.env.RESULTS_DIR || `${__dirname}/../suites/${process.env.SUITE}/results`;
+const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
