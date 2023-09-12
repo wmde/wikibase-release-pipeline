@@ -47,6 +47,7 @@ describe( 'QuickStatements Service', function () {
 
 		// redirect back to app
 		$( 'nav.navbar' ).waitForDisplayed();
+		browser.pause( 5 * 1000 );
 		const navbar = $( 'nav.navbar' ).getText();
 		assert( navbar.includes( 'QuickStatements' ) );
 	} );

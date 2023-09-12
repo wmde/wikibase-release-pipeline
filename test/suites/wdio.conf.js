@@ -56,7 +56,6 @@ exports.config = {
 		maxInstances: 1,
 		'goog:chromeOptions': {
 			args: [
-				// ...( process.env.HEADED_TESTS ? [ '--disable-gpu' ] : [ '--headless' ] ),
 				...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 				// Chrome sandbox does not work in Docker
 				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
