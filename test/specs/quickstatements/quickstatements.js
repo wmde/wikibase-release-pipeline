@@ -49,6 +49,7 @@ describe( 'QuickStatements Service', function () {
 		const authFormEl = await $( '#mw-mwoauth-authorize-form' );
 		await authFormEl.waitForDisplayed();
 		const authFormAcceptEl = await $( '#mw-mwoauth-accept' );
+		await authFormAcceptEl.waitForDisplayed();
 		await authFormAcceptEl.click();
 
 		// redirect back to app
