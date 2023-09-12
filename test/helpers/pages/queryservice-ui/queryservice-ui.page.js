@@ -18,7 +18,7 @@ class QueryServiceUI extends Page {
 
 	async submit() {
 		const button = await this.submitBtn;
-		await button.waitForDisplayed();		
+		await button.waitForDisplayed();
 		await button.click();
 	}
 
