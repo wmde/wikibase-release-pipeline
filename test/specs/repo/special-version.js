@@ -11,6 +11,7 @@ describe( 'Special:Version', function () {
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 		const softwareEl = await $( '#sv-software' );
+		await softwareEl.waitForDisplayed();
 		const text = await softwareEl.getText();
 		assert.strictEqual(
 			text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ),
