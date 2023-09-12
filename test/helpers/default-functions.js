@@ -126,7 +126,6 @@ const defaultFunctions = function () {
 		// save page
 		await browser.execute( async () => {
 			const editFormEl = await $( '#editform.mw-editform' );
-			await editFormEl.waitForDisplayed();
 			await editFormEl.submit();
 		}, this );
 
