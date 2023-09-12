@@ -37,10 +37,13 @@ describe( 'Nuke', function () {
 		await formEl.waitForDisplayed();
 
 		const checkboxEl = await $( '.mw-checkbox-none' );
+		await checkboxEl.waitForDisplayed();
 		await checkboxEl.click();
 		const vandalismCheckEl = await $( 'input[value="Vandalism"]' );
+		await vandalismCheckEl.waitForDisplayed();
 		await vandalismCheckEl.click();
 		const submitButtonEl = await $( 'input[type="submit"]' );
+		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 		await browser.acceptAlert();
 	} );
