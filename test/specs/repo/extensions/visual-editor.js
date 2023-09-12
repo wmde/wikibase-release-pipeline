@@ -16,6 +16,7 @@ describe( 'VisualEditor', function () {
 		await messageDialogEl.waitForDisplayed();
 		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
 		const startEditbutton = messageDialogAEl[ 1 ];
+		await startEditbutton.waitForDisplayed();
 		await startEditbutton.click();
 
 		await browser.pause( 5 * 1000 );
