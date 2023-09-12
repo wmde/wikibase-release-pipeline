@@ -26,6 +26,7 @@ describe( 'VisualEditor', function () {
 		await toolLinkEl.click();
 
 		const surfaceEl = await $( '.ve-ce-surface' );
+		await surfaceEl.waitForDisplayed();
 		await surfaceEl.click();
 
 		await browser.keys( [ 'T', 'E', 'S', 'T' ] );
