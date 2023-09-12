@@ -24,6 +24,7 @@ describe( 'WikibaseLocalMedia', function () {
 		await fileUpload.setValue( filePath );
 
 		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
+		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 
 		const firstHeadingEl = await $( '#firstHeading' );
