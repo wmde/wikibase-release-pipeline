@@ -71,6 +71,7 @@ describe( 'WikibaseLocalMedia', function () {
 		const snakviewEl = await $( '.wikibase-snakview-value img' );
 		await snakviewEl.waitForDisplayed();
 		const imageSourceEl = await $( '.wikibase-snakview-value img' );
+		await imageSourceEl.waitForDisplayed();
 		const imageSource = await imageSourceEl.getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
