@@ -41,6 +41,7 @@ describe( 'VisualEditor', function () {
 		await browser.keys( 'X' );
 
 		const primaryAEl = await $( '.oo-ui-processDialog-actions-primary a' );
+		await primaryAEl.waitForDisplayed();
 		await primaryAEl.click();
 
 		const outputEl = await $( '.mw-parser-output' );
