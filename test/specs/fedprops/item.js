@@ -43,6 +43,7 @@ describe( 'Fed props Item', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 
 		const actualPropertyEl = await $( '.wikibase-statementgroupview-property' );
+		await actualPropertyEl.waitForDisplayed();
 		const actualPropertyValue = await actualPropertyEl.getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
