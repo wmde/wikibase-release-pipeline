@@ -105,6 +105,7 @@ const defaultFunctions = function () {
 		// this shows up one time for anonymous users (VisualEditor)
 		const startEditbutton = await $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
 		if ( startEditbutton.elementId ) {
+			await startEditbutton.waitForDisplayed();
 			await startEditbutton.click();
 
 			// wait for fade out animation to finish
