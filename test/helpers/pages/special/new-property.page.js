@@ -19,6 +19,7 @@ class SpecialNewProperty extends Page {
 
 	async submit() {
 		const submitBtn = await this.submitBtn;
+		await submitBtn.waitForDisplayed();
 		await submitBtn.click();
 	}
 
