@@ -14,6 +14,7 @@ class SpecialNewItem extends Page {
 
 	async submit() {
 		const button = await this.submitBtn;
+		await this.submitBtn.waitForDisplayed();
 		await button.click();
 	}
 

@@ -21,8 +21,10 @@ describe( 'EntitySchema', function () {
 
 		// set label and description
 		const labelInputEl = await $( 'input[name ="label"]' );
+		await labelInputEl.waitForDisplayed();
 		await labelInputEl.setValue( testLabel );
 		const descriptionInputEl = await $( 'input[name ="description"]' );
+		await labelInputEl.waitForDisplayed();
 		await descriptionInputEl.setValue( testDescription );
 
 		// set template
@@ -33,9 +35,11 @@ describe( 'EntitySchema', function () {
 			)
 		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
+		await schemaTextInputEl.waitForDisplayed();
 		await schemaTextInputEl.setValue( shexTemplate );
 
 		const submitButtonEl = await $( 'button[name ="submit"]' );
+		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 
 		const schemaTextEl = await $( '#entityschema-schema-text' );

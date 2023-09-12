@@ -118,6 +118,7 @@ const defaultFunctions = function () {
 
 		if ( captcha ) {
 			const captchaEl = await $( '#wpCaptchaWord' );
+			await captchaEl.waitForDisplayed();
 			await captchaEl.setValue( captcha );
 		}
 

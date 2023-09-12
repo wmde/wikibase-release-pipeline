@@ -12,9 +12,11 @@ describe( 'Special:NewItem', function () {
 		await labelInput.setValue( 'Cool label' );
 
 		const descriptionInput = await SpecialNewItem.descriptionInput;
+		await SpecialNewItem.descriptionInput.waitForDisplayed();
 		await descriptionInput.setValue( 'Cool description' );
 
 		const aliasesInput = await SpecialNewItem.aliasesInput;
+		await aliasesInput.waitForDisplayed();
 		await aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 
 		await SpecialNewItem.submit();
