@@ -188,6 +188,7 @@ const defaultFunctions = function () {
 
 		// click import
 		const importButtonEl = await $( "button[tt='dialog_import_v1']" );
+		await importButtonEl.waitForDisplayed();
 		await importButtonEl.click();
 
 		await browser.pause( 1000 );
