@@ -20,6 +20,7 @@ describe( 'UniversalLanguageSelector', function () {
 		await selectorEl.click();
 
 		const firstLangEl = await $( '.imeselector-menu h3' );
+		await firstLangEl.waitForDisplayed();
 		const firstLang = await firstLangEl.getText();
 
 		assert.strictEqual( firstLang, 'English' );
