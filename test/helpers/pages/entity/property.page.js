@@ -8,8 +8,8 @@ class Property extends Page {
 	get addStatement() { return $( '=add statement' ); }
 	get addReference() { return $( '=add reference' ); }
 
-	open( id ) {
-		browser.url( process.env.MW_SERVER + '/wiki/Property:' + id );
+	async open( id ) {
+		await browser.url( process.env.MW_SERVER + '/wiki/Property:' + id );
 	}
 }
 

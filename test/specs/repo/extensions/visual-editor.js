@@ -4,43 +4,52 @@ const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'VisualEditor', function () {
-
-	it( 'Should be able to edit a page using the editor', function () {
-
+	it( 'Should be able to edit a page using the editor', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'VisualEditor' );
 
-		browser.url( process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit' );
+		await browser.url(
+			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
+		);
 
 		// start editing
-		$( '.oo-ui-messageDialog-actions' ).waitForDisplayed();
-		const startEditbutton = $$( '.oo-ui-messageDialog-actions a' )[ 1 ];
-		startEditbutton.click();
+		const messageDialogEl = await $( '.oo-ui-messageDialog-actions' );
+		await messageDialogEl.waitForDisplayed();
+		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
+		const startEditbutton = messageDialogAEl[ 1 ];
+		await startEditbutton.waitForDisplayed();
+		await startEditbutton.click();
 
-		browser.pause( 5 * 1000 );
+		await browser.pause( 5 * 1000 );
 
 		// disable notice popup and focus on editor
-		$( '.oo-ui-tool-name-notices .oo-ui-tool-link' ).waitForDisplayed();
-		$( '.oo-ui-tool-name-notices .oo-ui-tool-link' ).click();
-		$( '.ve-ce-surface' ).click();
+		const toolLinkEl = await $( '.oo-ui-tool-name-notices .oo-ui-tool-link' );
+		await toolLinkEl.waitForDisplayed();
+		await toolLinkEl.click();
 
-		browser.keys( 'T' );
-		browser.keys( 'E' );
-		browser.keys( 'S' );
-		browser.keys( 'T' );
+		const surfaceEl = await $( '.ve-ce-surface' );
+		await surfaceEl.waitForDisplayed();
+		await surfaceEl.click();
+
+		await browser.keys( [ 'T', 'E', 'S', 'T' ] );
 
 		// save changes
-		$( 'a.ve-ui-toolbar-saveButton' ).waitForDisplayed();
-		$( 'a.ve-ui-toolbar-saveButton' ).click();
+		const saveButtonEl = await $( 'a.ve-ui-toolbar-saveButton' );
+		await saveButtonEl.waitForDisplayed();
+		await saveButtonEl.click();
 
 		// fill-out for summary popup and submit
-		$( '.oo-ui-inputWidget-input' ).waitForDisplayed();
-		browser.keys( 'X' );
-		$( '.oo-ui-processDialog-actions-primary a' ).click();
+		const inputEl = await $( '.oo-ui-inputWidget-input' );
+		await inputEl.waitForDisplayed();
+		await browser.keys( 'X' );
 
-		$( '.mw-parser-output' ).waitForDisplayed();
-		const contentBody = $( '.mw-parser-output' ).getText();
+		const primaryAEl = await $( '.oo-ui-processDialog-actions-primary a' );
+		await primaryAEl.waitForDisplayed();
+		await primaryAEl.click();
+
+		const outputEl = await $( '.mw-parser-output' );
+		await outputEl.waitForDisplayed();
+		const contentBody = await outputEl.getText();
 
 		assert.strictEqual( contentBody, 'TEST' );
 	} );
-
 } );

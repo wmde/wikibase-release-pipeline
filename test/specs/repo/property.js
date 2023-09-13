@@ -5,49 +5,59 @@ const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Property = require( '../../helpers/pages/entity/property.page' );
 
 describe( 'Property', function () {
-
 	let propertyId = null;
 
-	it( 'Should be able to add statement and reference to property', function () {
-
-		propertyId = browser.call( () => WikibaseApi.getProperty( 'string' ) );
+	it( 'Should be able to add statement and reference to property', async () => {
+		propertyId = await WikibaseApi.getProperty( 'string' );
 
 		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
 
-		Property.open( propertyId );
-		Property.addStatement.waitForDisplayed();
-		Property.addStatement.click();
+		await Property.open( propertyId );
+		const addStatementEl = await Property.addStatement;
+		await addStatementEl.waitForDisplayed();
+		await addStatementEl.click();
 
 		// fill out property id for statement
-		browser.keys( propertyId.split( '' ) );
-		$( propertyIdSelector ).waitForDisplayed();
-		$( propertyIdSelector ).click();
-		browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
+		await browser.keys( propertyId.split( '' ) );
+		const propertyIdEl = await $( propertyIdSelector );
+		await propertyIdEl.waitForDisplayed();
+		await propertyIdEl.click();
+		await browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
 
 		// wait for save button to re-enable
-		browser.pause( 1000 * 1 );
-		Property.save.click();
-		browser.pause( 1000 * 2 );
+		await browser.pause( 1000 * 1 );
+		const saveEl = await Property.save;
+		await saveEl.click();
+		await browser.pause( 1000 * 2 );
 
-		Property.addReference.waitForDisplayed();
-		Property.addReference.click();
+		const referenceEl = await Property.addReference;
+		await referenceEl.waitForDisplayed();
+		await referenceEl.click();
 
 		// fill out property id for reference
-		$( '.ui-entityselector-input' ).waitForDisplayed();
-		browser.pause( 1000 * 1 );
-		browser.keys( propertyId.split( '' ) );
-		$( propertyIdSelector ).waitForDisplayed();
-		$( propertyIdSelector ).click();
-		browser.keys( [ 'R', 'E', 'F', 'E', 'R', 'E', 'N', 'C', 'E' ] );
+		const entitySelectorEl = await $( '.ui-entityselector-input' );
+		await entitySelectorEl.waitForDisplayed();
+		await browser.pause( 1000 * 1 );
+		await browser.keys( propertyId.split( '' ) );
+		// await $( propertyIdSelector ).waitForDisplayed();
+		// await $( propertyIdSelector ).click();
+		await propertyIdEl.waitForDisplayed();
+		await propertyIdEl.click();
+		await browser.keys( [ 'R', 'E', 'F', 'E', 'R', 'E', 'N', 'C', 'E' ] );
 
-		browser.pause( 1000 * 1 );
-		Property.save.click();
+		await browser.pause( 1000 * 1 );
+		await saveEl.click();
 
-		Property.open( propertyId );
+		await Property.open( propertyId );
 	} );
 
-	it( 'Should contain statement and reference in EntityData', function () {
-		const response = browser.makeRequest( process.env.MW_SERVER + '/wiki/Special:EntityData/' + propertyId + '.json' );
+	it( 'Should contain statement and reference in EntityData', async () => {
+		const response = await browser.makeRequest(
+			process.env.MW_SERVER +
+			'/wiki/Special:EntityData/' +
+			propertyId +
+			'.json'
+		);
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];
 		const reference = claim.references[ 0 ].snaks[ propertyId ][ 0 ];

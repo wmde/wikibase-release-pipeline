@@ -13,7 +13,7 @@ find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs 
 docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
   npm run lint --silent &&
   cd /tmp/diagrams &&
-  npm install --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
+  npm ci --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
   npm run lint --silent
 "
 

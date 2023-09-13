@@ -4,21 +4,25 @@ const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'UniversalLanguageSelector', function () {
+	it( 'Should be able to see the language selector menu', async () => {
+		defaultFunctions.skipIfExtensionNotPresent(
+			this,
+			'UniversalLanguageSelector'
+		);
 
-	it( 'Should be able to see the language selector menu', function () {
+		await browser.url( process.env.MW_SERVER );
+		const searchInputEl = await $( '#searchInput' );
+		await searchInputEl.waitForDisplayed();
+		await searchInputEl.click();
 
-		defaultFunctions.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
+		const selectorEl = await $( '.imeselector' );
+		await selectorEl.waitForDisplayed();
+		await selectorEl.click();
 
-		browser.url( process.env.MW_SERVER );
-		$( '#searchInput' ).waitForDisplayed();
-		$( '#searchInput' ).click();
-		$( '.imeselector' ).waitForDisplayed();
-		$( '.imeselector' ).click();
-
-		const firstLang = $( '.imeselector-menu h3' ).getText();
+		const firstLangEl = await $( '.imeselector-menu h3' );
+		await firstLangEl.waitForDisplayed();
+		const firstLang = await firstLangEl.getText();
 
 		assert.strictEqual( firstLang, 'English' );
-
 	} );
-
 } );

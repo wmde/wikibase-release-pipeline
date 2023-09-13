@@ -1,26 +1,24 @@
 'use strict';
 
 const assert = require( 'assert' );
-const LoginPage = require( 'wdio-mediawiki/LoginPage' );
+const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 
 describe( 'Nuke', function () {
-
-	beforeEach( () => {
-		browser.call( () => browser.waitForJobs() );
+	beforeEach( async () => {
+		await browser.waitForJobs();
 	} );
 
-	it( 'Should be able to queue a page for deletion through Special:Nuke', function () {
-
+	it( 'Should be able to queue a page for deletion through Special:Nuke', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
 
-		browser.editPage(
+		await browser.editPage(
 			process.env.MW_SERVER,
 			'Vandalism',
 			'Vandals In Motion'
 		);
 
-		const result = browser.makeRequest(
+		const result = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
@@ -28,25 +26,29 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( result.status, 200 );
 
-		LoginPage.loginAdmin();
+		await SuiteLoginPage.loginAdmin();
+		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
-		browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
+		const buttonEl = await $( 'button.oo-ui-inputWidget-input' );
+		await buttonEl.waitForDisplayed();
+		await buttonEl.click();
 
-		$( 'button.oo-ui-inputWidget-input' ).waitForDisplayed();
-		$( 'button.oo-ui-inputWidget-input' ).click();
+		const formEl = await $( 'form li' );
+		await formEl.waitForDisplayed();
 
-		$( 'form li' ).waitForDisplayed();
-
-		$( '.mw-checkbox-none' ).click();
-		const checkBox = $( 'input[value="Vandalism"]' );
-		checkBox.click();
-		$( 'input[type="submit"]' ).click();
-		browser.acceptAlert();
-
+		const checkboxEl = await $( '.mw-checkbox-none' );
+		await checkboxEl.waitForDisplayed();
+		await checkboxEl.click();
+		const vandalismCheckEl = await $( 'input[value="Vandalism"]' );
+		await vandalismCheckEl.waitForDisplayed();
+		await vandalismCheckEl.click();
+		const submitButtonEl = await $( 'input[type="submit"]' );
+		await submitButtonEl.waitForDisplayed();
+		await submitButtonEl.click();
+		await browser.acceptAlert();
 	} );
 
-	it( 'Should delete the page in a job', async function () {
-
+	it( 'Should delete the page in a job', async () => {
 		let result;
 
 		await browser.waitUntil(

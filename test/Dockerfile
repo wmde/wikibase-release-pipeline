@@ -1,4 +1,4 @@
-FROM node:14.21.3-bullseye
+FROM node:18.17.1-bullseye
 
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \

@@ -16,12 +16,15 @@ class QueryServiceUI extends Page {
 		super.open( '/#' + encodeURI( query ) );
 	}
 
-	submit() {
-		this.submitBtn.click();
+	async submit() {
+		const button = await this.submitBtn;
+		await button.waitForDisplayed();
+		await button.click();
 	}
 
-	resultIncludes( prop, value ) {
-		const text = this.resultTable.getText();
+	async resultIncludes( prop, value ) {
+		const resultTable = await this.resultTable;
+		const text = await resultTable.getText();
 		if ( !value ) {
 			return text.includes( prop );
 		}

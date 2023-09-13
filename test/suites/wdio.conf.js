@@ -21,7 +21,11 @@ exports.resultFilePath = resultFilePath;
 
 const fetchSuite = ( suiteName ) => {
 	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
-		const suiteConfigFile = path.join( __dirname, suiteName, `${suiteName}.conf.js` );
+		const suiteConfigFile = path.join(
+			__dirname,
+			suiteName,
+			`${suiteName}.conf.js`
+		);
 		try {
 			const suiteConfig = require( suiteConfigFile );
 			return suiteConfig.config.suite;
@@ -31,7 +35,6 @@ const fetchSuite = ( suiteName ) => {
 };
 
 exports.config = {
-
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -51,22 +54,24 @@ exports.config = {
 	// Capabilities
 	// ============
 	// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-	capabilities: [ {
-		browserName: 'chrome',
-		maxInstances: 1,
-		'goog:chromeOptions': {
-			args: [
-				// The window size is relevant for responsive pages rendering differently on
-				// different screen sizes. Bootstrap considers widths between 1200 and 1400
-				// as XL, let's use that.
-				// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-				...( [ '--window-size=1280,800' ] ),
-				...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
-				// Chrome sandbox does not work in Docker
-				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-			]
+	capabilities: [
+		{
+			browserName: 'chrome',
+			maxInstances: 1,
+			'goog:chromeOptions': {
+				args: [
+					// The window size is relevant for responsive pages rendering differently on
+					// different screen sizes. Bootstrap considers widths between 1200 and 1400
+					// as XL, let's use that.
+					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
+					...( [ '--window-size=1280,800' ] ),
+					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
+					// Chrome sandbox does not work in Docker
+					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+				]
+			}
 		}
-	} ],
+	],
 
 	// ===================
 	// Test Configurations
@@ -125,7 +130,7 @@ exports.config = {
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
 		fs.mkdir( resultsDir, { recursive: true }, () => {} );
-		fs.rmdir( screenshotPath, { recursive: true, force: true }, () => {} );
+		fs.rm( screenshotPath, { recursive: true, force: true }, () => {} );
 		fs.rm( resultFilePath, { force: true }, () => {} );
 	},
 
@@ -133,12 +138,14 @@ exports.config = {
 	 * Initializes the default functions for every test and
 	 * polls the wikibase docker container for installed extensions
 	 */
-	before: function () {
-		browser.call( () => WikibaseApi.initialize() );
+	before: async () => {
+		await WikibaseApi.initialize();
 		defaultFunctions.init();
 
 		if ( !browser.config.installed_extensions ) {
-			const extensions = browser.getInstalledExtensions( process.env.MW_SERVER );
+			const extensions = await browser.getInstalledExtensions(
+				process.env.MW_SERVER
+			);
 			if ( extensions ) {
 				browser.config.installed_extensions = extensions;
 			} else {
