@@ -1,7 +1,7 @@
-const fs = require( 'fs' )
-const { extractModuleLineAndColumn } = require('mocha-json-streamier-reporter/lib/parse-stack-trace')
-var core = require('@actions/core');
-var { issueCommand } = require('@actions/core/lib/command');
+import { existsSync, readFileSync } from 'fs';
+import { extractModuleLineAndColumn } from 'mocha-json-streamier-reporter/lib/parse-stack-trace';
+import { info, warning, error as _error } from '@actions/core';
+import { issueCommand } from '@actions/core/lib/command';
 
 if( !process.env.SUITE ) {
     return;
@@ -11,8 +11,8 @@ const filePath = `../../test/suites/${process.env.SUITE}/results/result.json`;
 
 var resultObject = {};
 
-if (fs.existsSync(filePath)) {
-    resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'))[process.env.SUITE];
+if (existsSync(filePath)) {
+    resultObject = JSON.parse(readFileSync(filePath, 'utf8'))[process.env.SUITE];
 
     if (resultObject.fail.length != 0) {
 
@@ -33,15 +33,15 @@ if (fs.existsSync(filePath)) {
 
     } else {
         resultObject.pass.forEach(test => {
-            core.info( 'OK: ' + test.fullTitle );
+            info( 'OK: ' + test.fullTitle );
         });
 
         resultObject.skip.forEach(test => {
-            core.warning( 'SKIP: ' + test.fullTitle );
+            warning( 'SKIP: ' + test.fullTitle );
         });
 
-        core.info('\u001b[1mAll good 👍')
+        info('\u001b[1mAll good 👍')
     }
 } else {
-    core.error('No tests executed!');
+    _error('No tests executed!');
 }
