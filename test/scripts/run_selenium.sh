@@ -28,6 +28,10 @@ echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 $TEST_COMPOSE up -d --build --scale test-runner=0 >> "$TEST_LOG" 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
+if [[ -n "${HEADED_TESTS}" ]]; then
+    echo "💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests." 2>&1 | tee -a "$TEST_LOG"
+fi
+
 # run the global suite setup.sh (waits for containers to come up, etc)
 echo "🔄 Running \"suites/setup.sh\"" 2>&1 | tee -a "$TEST_LOG"
 $TEST_COMPOSE run --rm test-runner -c suites/setup.sh

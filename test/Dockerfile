@@ -3,7 +3,6 @@ FROM node:14.21.3-bullseye
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         docker.io \
-        chromium \
         python3-pip && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/* && \
