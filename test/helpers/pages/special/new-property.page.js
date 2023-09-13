@@ -1,6 +1,4 @@
-'use strict';
-
-const Page = require( '../page' );
+import Page from '../page';
 
 class SpecialNewProperty extends Page {
 
@@ -25,4 +23,4 @@ class SpecialNewProperty extends Page {
 
 }
 
-module.exports = new SpecialNewProperty();
+export default new SpecialNewProperty();

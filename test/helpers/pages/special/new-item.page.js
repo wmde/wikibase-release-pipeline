@@ -1,6 +1,5 @@
-'use strict';
+import Page from '../page';
 
-const Page = require( '../page' );
 class SpecialNewItem extends Page {
 
 	get labelInput() { return $( 'input[name="label"]' ); }
@@ -20,4 +19,4 @@ class SpecialNewItem extends Page {
 
 }
 
-module.exports = new SpecialNewItem();
+export default new SpecialNewItem();
