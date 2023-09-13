@@ -1,7 +1,5 @@
-'use strict';
-
-const SpecialNewItem = require( '../../helpers/pages/special/new-item.page' );
-const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
+import SpecialNewItem from '../../helpers/pages/special/new-item.page';
+import ItemPage from 'wdio-wikibase/pageobjects/item.page';
 
 describe( 'Special:NewItem', function () {
 	it( 'Should be able to create a new item', async () => {
@@ -12,7 +10,7 @@ describe( 'Special:NewItem', function () {
 		await labelInput.setValue( 'Cool label' );
 
 		const descriptionInput = await SpecialNewItem.descriptionInput;
-		await SpecialNewItem.descriptionInput.waitForDisplayed();
+		await descriptionInput.waitForDisplayed();
 		await descriptionInput.setValue( 'Cool description' );
 
 		const aliasesInput = await SpecialNewItem.aliasesInput;
