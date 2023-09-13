@@ -4,5 +4,4 @@ export default {
 		'./specs/upgrade/pre-upgrade.js',
 		'./specs/upgrade/queryservice-pre-and-post-upgrade.js'
 	]
-
 };
