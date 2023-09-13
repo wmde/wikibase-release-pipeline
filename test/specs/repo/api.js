@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const Util = require( 'wdio-mediawiki/Util' );
+import assert from 'assert';
+import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import Util from 'wdio-mediawiki/Util';
 
 describe( 'Wikibase API', function () {
 	it( 'Should be able to create many properties and items', async () => {

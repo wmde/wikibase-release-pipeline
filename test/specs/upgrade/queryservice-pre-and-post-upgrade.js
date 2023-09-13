@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const { getElementByURI } = require( '../../helpers/blazegraph' );
+import assert from 'assert';
+import { getElementByURI } from '../../helpers/blazegraph';
 
 describe( 'Wikibase post upgrade', function () {
 	let oldItemID;

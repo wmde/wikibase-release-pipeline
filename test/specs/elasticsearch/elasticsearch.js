@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const Util = require( 'wdio-mediawiki/Util' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+import assert from 'assert';
+import Util from 'wdio-mediawiki/Util';
+import WikibaseApi from 'wdio-wikibase/wikibase.api';
 
 const itemAlias = Util.getTestString( 'alias' );
 const itemLabel = Util.getTestString( 'testItem' );

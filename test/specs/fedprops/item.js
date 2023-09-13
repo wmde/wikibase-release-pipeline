@@ -1,10 +1,8 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
-const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
+import Util from 'wdio-mediawiki/Util';
+import assert from 'assert';
+import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page';
+import ItemPage from 'wdio-wikibase/pageobjects/item.page';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';

@@ -1,10 +1,8 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
-const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
-const querystring = require( 'querystring' );
+import Util from 'wdio-mediawiki/Util';
+import assert from 'assert';
+import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage';
+import querystring from 'querystring';
 
 const itemLabel = Util.getTestString( 'The Item' );
 
