@@ -1,3 +1,1 @@
-'use strict';
-
-exports.config = { suite: [ './specs/confirm_edit/*.js' ] };
+export default { suite: [ './specs/confirm_edit/*.js' ] };

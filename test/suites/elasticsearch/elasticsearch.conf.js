@@ -1,3 +1,1 @@
-'use strict';
-
-exports.config = { suite: [ './specs/elasticsearch/*.js' ] };
+export default { suite: [ './specs/elasticsearch/*.js' ] };

@@ -1,6 +1,4 @@
-'use strict';
-
-exports.config = {
+export default {
 	suite: [
 		'./specs/quickstatements/*.js',
 		'./specs/repo/queryservice.js',

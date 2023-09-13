@@ -1,3 +1,1 @@
-'use strict';
-
-exports.config = { suite: [ './specs/pingback/*.js' ] };
+export default { suite: [ './specs/pingback/*.js' ] };

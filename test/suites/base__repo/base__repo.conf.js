@@ -1,6 +1,4 @@
-'use strict';
-
-exports.config = {
+export default {
 	suite: [
 		'./specs/repo/api.js',
 		'./specs/repo/property.js',

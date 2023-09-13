@@ -1,6 +1,4 @@
-'use strict';
-
-exports.config = {
+export default {
 	suite: [
 		'./specs/repo_client/interwiki-links.js',
 		'./specs/repo_client/item.js',
