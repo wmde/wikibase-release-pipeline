@@ -57,6 +57,8 @@ The behavior of the tests can be modified with several environment variables.
   if not set, a new property of this type will be created each time the tests are run.
   (This will fail unless anonymous users are allowed to create properties on the wiki,
   so setting `WIKIBASE_PROPERTY_STRING` correctly is recommended.)
+* `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test
+  execution on http://localhost:7900/?autoconnect=1&resize=scale&password=secret
 
 ## Write more tests
 

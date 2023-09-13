@@ -47,24 +47,27 @@ exports.config = {
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
 
+	hostname: 'browser',
+	port: 4444,
+	path: '/wd/hub',
 	// ============
 	// Capabilities
 	// ============
-	capabilities: [
-		{
-			// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-			browserName: 'chrome',
-			maxInstances: 1,
-			'goog:chromeOptions': {
-				// If DISPLAY is set, assume developer asked non-headless or CI with Xvfb.
-				// Otherwise, use --headless (added in Chrome 59)
-				// https://chromium.googlesource.com/chromium/src/+/59.0.3030.0/headless/README.md
-				args: [
-					...( process.env.DISPLAY ? [] : [ '--headless' ] ),
-					// Chrome sandbox does not work in Docker
-					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-				]
-			}
+	// https://sites.google.com/a/chromium.org/chromedriver/capabilities
+	capabilities: [ {
+		browserName: 'chrome',
+		maxInstances: 1,
+		'goog:chromeOptions': {
+			args: [
+				// The window size is relevant for responsive pages rendering differently on
+				// different screen sizes. Bootstrap considers widths between 1200 and 1400
+				// as XL, let's use that.
+				// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
+				...( [ '--window-size=1280,800' ] ),
+				...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
+				// Chrome sandbox does not work in Docker
+				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+			]
 		}
 	],
 

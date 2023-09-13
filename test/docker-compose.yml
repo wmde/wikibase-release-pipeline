@@ -16,6 +16,7 @@ services:
       - CHROME_PATH=/usr/bin/chromium-browser
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
+      - HEADED_TESTS
       - RESULTS_DIR
       - TEST_LOG
 
@@ -44,6 +45,16 @@ services:
       - DB_NAME
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
+
+  browser:
+    # use a fixed selenium chrome version for stability in our testing environment
+    image: selenium/standalone-chrome:116.0.5845.140-chromedriver-116.0.5845.96-grid-4.12.1-20230904
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    volumes:
+      - .:/usr/src/app
+    shm_size: '2g'
 
 volumes:
   node_modules:
