@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 import { extractModuleLineAndColumn } from 'mocha-json-streamier-reporter/lib/parse-stack-trace';
-import { info, warning, error as _error } from '@actions/core';
+import core from '@actions/core';
 import { issueCommand } from '@actions/core/lib/command';
 
 if( !process.env.SUITE ) {
@@ -33,15 +33,15 @@ if (existsSync(filePath)) {
 
     } else {
         resultObject.pass.forEach(test => {
-            info( 'OK: ' + test.fullTitle );
+            core.info( 'OK: ' + test.fullTitle );
         });
 
         resultObject.skip.forEach(test => {
-            warning( 'SKIP: ' + test.fullTitle );
+            core.warning( 'SKIP: ' + test.fullTitle );
         });
 
-        info('\u001b[1mAll good 👍')
+        core.info('\u001b[1mAll good 👍')
     }
 } else {
-    _error('No tests executed!');
+    core.error('No tests executed!');
 }
