@@ -54,24 +54,22 @@ exports.config = {
 	// Capabilities
 	// ============
 	// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-	capabilities: [
-		{
-			browserName: 'chrome',
-			maxInstances: 1,
-			'goog:chromeOptions': {
-				args: [
-					// The window size is relevant for responsive pages rendering differently on
-					// different screen sizes. Bootstrap considers widths between 1200 and 1400
-					// as XL, let's use that.
-					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...[ '--window-size=1280,800' ],
-					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
-					// Chrome sandbox does not work in Docker
-					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-				]
-			}
+	capabilities: [ {
+		browserName: 'chrome',
+		maxInstances: 1,
+		'goog:chromeOptions': {
+			args: [
+				// The window size is relevant for responsive pages rendering differently on
+				// different screen sizes. Bootstrap considers widths between 1200 and 1400
+				// as XL, let's use that.
+				// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
+				...( [ '--window-size=1280,800' ] ),
+				...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
+				// Chrome sandbox does not work in Docker
+				...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+			]
 		}
-	],
+  }	],
 
 	// ===================
 	// Test Configurations
