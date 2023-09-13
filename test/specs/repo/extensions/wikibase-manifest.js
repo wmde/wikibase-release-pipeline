@@ -1,11 +1,9 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
 
 describe( 'WikibaseManifest', function () {
 	it( 'Should have rest endpoint and data', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'WikibaseManifest' );
+		skipIfExtensionNotPresent( this, 'WikibaseManifest' );
 
 		const result = await browser.makeRequest(
 			process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest'

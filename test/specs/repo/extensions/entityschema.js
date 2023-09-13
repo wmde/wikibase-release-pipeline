@@ -1,16 +1,14 @@
-'use strict';
-
-const assert = require( 'assert' );
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
+import assert from 'assert';
+import { readFile } from 'fs/promises';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
+import { utf8 } from '../../../helpers/readFileEncoding';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
 	const testDescription = 'A description';
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'EntitySchema' );
+		skipIfExtensionNotPresent( this, 'EntitySchema' );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
@@ -29,10 +27,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		const shexTemplate = (
-			await fsPromises.readFile(
-				__dirname + '/entityschema.sx',
-				readFileEncoding.utf8
-			)
+			await readFile( __dirname + '/entityschema.sx', utf8 )
 		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
 		await schemaTextInputEl.waitForDisplayed();

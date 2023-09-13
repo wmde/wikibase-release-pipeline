@@ -1,11 +1,9 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
 
 describe( 'VisualEditor', function () {
 	it( 'Should be able to edit a page using the editor', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'VisualEditor' );
+		skipIfExtensionNotPresent( this, 'VisualEditor' );
 
 		await browser.url(
 			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'

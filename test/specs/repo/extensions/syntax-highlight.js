@@ -1,18 +1,13 @@
-'use strict';
-
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
+import { readFile } from 'fs/promises';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
+import { utf8 } from '../../../helpers/readFileEncoding';
 
 describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
-		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
+		skipIfExtensionNotPresent( this, 'Scribunto' );
+		skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
-		const fileContents = await fsPromises.readFile(
-			__dirname + '/bananas.lua',
-			readFileEncoding.utf8
-		);
+		const fileContents = await readFile( __dirname + '/bananas.lua', utf8 );
 
 		await browser.editPage(
 			process.env.MW_SERVER,
