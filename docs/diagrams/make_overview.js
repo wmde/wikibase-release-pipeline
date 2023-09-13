@@ -1,8 +1,8 @@
 'use strict';
 
-const fs = require( 'fs' );
-const yaml = require( 'js-yaml' );
-const _ = require( 'lodash' );
+import { readFileSync } from 'fs';
+import yaml from 'js-yaml';
+import lodash from 'lodash';
 
 const p = function ( from, to ) {
 
@@ -24,15 +24,15 @@ const pDash = function ( from, to, path ) {
 try {
 	const uploadAction = 'actions/upload-artifact@v2';
 	const filename = '../../.github/workflows/build_and_test.yml';
-	const fileContents = fs.readFileSync( filename, 'utf8' );
+	const fileContents = readFileSync( filename, 'utf8' );
 	const data = yaml.load( fileContents );
 
 	const artifacts = [];
 	const startNodes = {};
 
-	_.forEach( data.jobs, function ( job, name ) {
+	lodash.forEach( data.jobs, function ( job, name ) {
 
-		_.forEach( job.steps, ( step ) => {
+		lodash.forEach( job.steps, ( step ) => {
 			if ( step.uses === uploadAction ) {
 				if ( step.with.path ) {
 
@@ -49,7 +49,7 @@ try {
 		} );
 
 		if ( job.needs ) {
-			_.forEach( job.needs, ( need ) => {
+			lodash.forEach( job.needs, ( need ) => {
 				p( need, name );
 			} );
 		} else {
@@ -57,7 +57,7 @@ try {
 		}
 	} );
 
-	_.forEach( startNodes, function ( startNode, startName ) {
+	lodash.forEach( startNodes, function ( startNode, startName ) {
 		p( 'PipelineTriggered(' + data.name + ')', startName );
 	} );
 
