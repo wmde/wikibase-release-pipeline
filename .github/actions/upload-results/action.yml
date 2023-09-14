@@ -1,0 +1,57 @@
+name: 'checkout-and-prepare'
+description: 'Upload builds as artifacts and to GHCR'
+
+inputs:
+  name:
+    description: 'the name of the built artifact'
+    required: true
+  filename:
+    description: 'the filename of the built artifact'
+    required: true
+  imagename:
+    description: 'the docker image name of the built artifact'
+    required: true
+  tarname:
+    description: 'the tar file name of the built artifact'
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildMetadata
+          if-no-files-found: error
+          path: artifacts/build_metadata_${{ inputs.name }}.env
+
+      - name: Archive tar production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/${{ inputs.filename }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store release version docker image on GHCR
+        if: github.ref == 'refs/heads/main'
+        uses: wmde/tag-push-ghcr-action@v3
+        with:
+          image_name: ${{ inputs.imagename }}
+          tag: ${{ github.run_id }}
+
+      - name: Archive base docker production artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/${{ inputs.tarname }}
+

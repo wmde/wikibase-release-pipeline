@@ -17,13 +17,12 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - 'README.md'
+      - '.md'
 
 env:
   env_file: ${{ github.event.inputs.env_file || 'versions/wmde12.env' }}
 
 jobs:
-
   build_wikibase:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -47,41 +46,13 @@ jobs:
       - name: Build Tarball
         run: bash build.sh wikibase ${{ matrix.env_file }}
 
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v3
+      - name: Upload built results
+        uses: ./.github/actions/upload-results
         with:
-          name: BuildMetadata
-          if-no-files-found: error
-          path: artifacts/build_metadata_wikibase.env
-
-      - name: Archive tar production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildArtifacts
-          if-no-files-found: error
-          path: artifacts/Wikibase.tar.gz
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        if: github.ref == 'refs/heads/main'
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Store release version docker image on GHCR
-        if: github.ref == 'refs/heads/main'
-        uses: wmde/tag-push-ghcr-action@v3
-        with:
-          image_name: ${{ env.WIKIBASE_IMAGE_NAME }}
-          tag: ${{ github.run_id }}
-
-      - name: Archive base docker production artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildArtifacts
-          if-no-files-found: error
-          path: artifacts/wikibase.docker.tar.gz
+          name: "wikibase"
+          filename: "Wikibase.tar.gz"
+          imagename: ${{ env.WIKIBASE_IMAGE_NAME }}
+          tarname: "wikibase.docker.tar.gz"
 
       - name: Scan image
         uses: ./.github/actions/scan-image
