@@ -14,6 +14,9 @@ inputs:
   tarname:
     description: 'the tar file name of the built artifact'
     required: true
+  github_token:
+    description: 'secret token to upload to github container registry'
+    required: true
 
 
 runs:
@@ -39,7 +42,7 @@ runs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ inputs.github_token }}
 
       - name: Store release version docker image on GHCR
         if: github.ref == 'refs/heads/main'

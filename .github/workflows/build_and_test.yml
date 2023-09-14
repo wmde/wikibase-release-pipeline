@@ -53,6 +53,7 @@ jobs:
           filename: "Wikibase.tar.gz"
           imagename: ${{ env.WIKIBASE_IMAGE_NAME }}
           tarname: "wikibase.docker.tar.gz"
+          github_token: secrets.GITHUB_TOKEN
 
       - name: Scan image
         uses: ./.github/actions/scan-image
