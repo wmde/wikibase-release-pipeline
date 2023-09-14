@@ -1,0 +1,47 @@
+name: 'checkout-and-prepare'
+description: 'Prepare our github actions environment'
+
+inputs:
+  env_file:
+    description: 'the env file used for defining the environment'
+    required: true
+
+runs:
+  steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Print the env from variables.env
+        run: |
+          cat variables.env
+
+      - name: Set the env from variables.env
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: variables.env
+
+      - name: Print the current env
+        run: |
+          cat ${{ inputs.env_file }}
+
+      - name: Set the env from ${{ inputs.env_file }}
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: ${{ inputs.env_file }}
+
+      - name: Cache composer files
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-wikibase-composer
+        with:
+          path: cache
+          key: cache-wikibase-composer
+
+      - name: Cache files in git_cache
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-wikibase-git-repo
+        with:
+          path: git_cache
+          key: cache-wikibase-git-repo
+
