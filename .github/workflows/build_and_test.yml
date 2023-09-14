@@ -22,11 +22,21 @@ on:
 env:
   env_file: ${{ github.event.inputs.env_file || 'versions/wmde12.env' }}
 
+env_files:
+  - channels/lts.env
+  - channels/stable.env
+
 jobs:
 
   build_wikibase:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
+    strategy:
+      matrix:
+        env_file: *env_files
+
+
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +44,7 @@ jobs:
         if: "${{ github.event.inputs.debug_extra_env != '' }}"
         run: |
           printf "${{ github.event.inputs.debug_extra_env }}" >> ${{ env.env_file }}
-          cat ${{ env.env_file }}
+          cat ${{ matrix.env_file }}
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
@@ -42,7 +52,7 @@ jobs:
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
-          env-file: ${{ env.env_file }}
+          env-file: ${{ matrix.env_file }}
 
       - name: Cache composer
         uses: actions/cache@v3
@@ -61,7 +71,7 @@ jobs:
           key: cache-wikibase-git-repo
 
       - name: Build Tarball
-        run: bash build.sh wikibase ${{ env.env_file }}
+        run: bash build.sh wikibase ${{ matrix.env_file }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
