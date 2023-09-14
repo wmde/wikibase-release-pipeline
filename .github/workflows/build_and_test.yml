@@ -36,8 +36,11 @@ jobs:
         ]
 
     steps:
-      - name: Checkout and prepare
-        uses: ./.github/actions/checkout-and-prepare
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Prepare environment and caches
+        uses: ./.github/actions/prep-env-and-cache
         with:
           env_file: ${{ matrix.env_file }}
 

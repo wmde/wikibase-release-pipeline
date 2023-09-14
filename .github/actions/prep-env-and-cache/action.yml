@@ -8,9 +8,6 @@ inputs:
 
 runs:
   steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-
       - name: Print the env from variables.env
         run: |
           cat variables.env
