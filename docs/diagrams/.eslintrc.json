@@ -4,7 +4,7 @@
 		"wikimedia/selenium"
 	],
 	"parserOptions": {
-        "sourceType": "module",
+        "sourceType": "module"
     },
 	"rules": {
 		"mocha/no-setup-in-describe": "warn"

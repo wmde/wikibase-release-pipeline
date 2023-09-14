@@ -1,5 +1,3 @@
-'use strict';
-
 import { readFileSync } from 'fs';
 import yaml from 'js-yaml';
 import lodash from 'lodash';

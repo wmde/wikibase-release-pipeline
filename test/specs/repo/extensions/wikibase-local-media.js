@@ -18,7 +18,7 @@ describe( 'WikibaseLocalMedia', function () {
 		const fileUpload = await $( '#wpUploadFile' );
 		await fileUpload.waitForDisplayed();
 
-		const filePath = path.join( __dirname, '/image.png' );
+		const filePath = path.join( process.cwd(), '/image.png' );
 		await fileUpload.setValue( filePath );
 
 		const submitButtonEl = await $( 'input.mw-htmlform-submit' );

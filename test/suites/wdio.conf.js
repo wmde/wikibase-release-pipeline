@@ -14,10 +14,10 @@ const resultsDir = process.env.RESULTS_DIR;
 export const screenshotPath = `${resultsDir}/screenshots`;
 export const resultFilePath = `${resultsDir}/result.json`;
 
-const fetchSuite = async ( suiteName ) => {
-	if ( lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
+const fetchSuite = ( suiteName ) => {
+	if ( lstatSync( path.join( process.cwd(), suiteName ) ).isDirectory() ) {
 		const suiteConfigFile = path.join(
-			__dirname,
+			process.cwd(),
 			suiteName,
 			`${suiteName}.conf.js`
 		);
@@ -111,7 +111,7 @@ export const config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: { [ process.env.SUITE ]: await fetchSuite( process.env.SUITE ) },
+	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
 
 	// =====
 	// Hooks

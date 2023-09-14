@@ -7,7 +7,7 @@ describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module', async () => {
 		skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const fileContents = await readFile( __dirname + '/bananas.lua', utf8 );
+		const fileContents = await readFile( process.cwd() + '/bananas.lua', utf8 );
 		await browser.editPage(
 			process.env.MW_SERVER,
 			'Module:Bananas',

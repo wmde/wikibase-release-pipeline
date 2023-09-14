@@ -27,7 +27,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		const shexTemplate = (
-			await readFile( __dirname + '/entityschema.sx', utf8 )
+			await readFile( process.cwd() + '/entityschema.sx', utf8 )
 		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
 		await schemaTextInputEl.waitForDisplayed();

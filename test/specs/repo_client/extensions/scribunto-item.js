@@ -44,7 +44,7 @@ describe( 'Scribunto Item', function () {
 	it( 'Should be able to reference an item on client using Lua', async () => {
 		skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const template = await readFile( __dirname + '/repo-client.lua', utf8 );
+		const template = await readFile( process.cwd() + '/repo-client.lua', utf8 );
 		const luaScript = template
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );
