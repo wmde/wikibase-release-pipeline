@@ -9,8 +9,8 @@ inputs:
 runs:
   steps:
       - name: Print the env from variables.env
-        run: |
-          cat variables.env
+        run: cat variables.env
+        shell: bash
 
       - name: Set the env from variables.env
         uses: c-py/action-dotenv-to-setenv@v4
@@ -18,8 +18,8 @@ runs:
           env-file: variables.env
 
       - name: Print the current env
-        run: |
-          cat ${{ inputs.env_file }}
+        run: cat ${{ inputs.env_file }}
+        shell: bash
 
       - name: Set the env from ${{ inputs.env_file }}
         uses: c-py/action-dotenv-to-setenv@v4
