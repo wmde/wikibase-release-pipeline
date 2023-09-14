@@ -3,24 +3,19 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-'use strict';
-
-const fs = require( 'fs' );
-const path = require( 'path' );
-const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
-const JsonReporter = require( '../helpers/json-reporter.js' );
-const defaultFunctions = require( '../helpers/default-functions.js' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+import { lstatSync, existsSync, mkdir, rm } from 'fs';
+import path from 'path';
+import { saveScreenshot } from 'wdio-mediawiki';
+import JsonReporter from '../helpers/json-reporter.js';
+import defaultFunctions from '../helpers/default-functions.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api';
 
 const resultsDir = process.env.RESULTS_DIR;
-const screenshotPath = `${resultsDir}/screenshots`;
-const resultFilePath = `${resultsDir}/result.json`;
+export const screenshotPath = `${resultsDir}/screenshots`;
+export const resultFilePath = `${resultsDir}/result.json`;
 
-exports.screenshotPath = screenshotPath;
-exports.resultFilePath = resultFilePath;
-
-const fetchSuite = ( suiteName ) => {
-	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
+const fetchSuite = async ( suiteName ) => {
+	if ( lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
 		const suiteConfigFile = path.join(
 			__dirname,
 			suiteName,
@@ -34,7 +29,7 @@ const fetchSuite = ( suiteName ) => {
 	return undefined;
 };
 
-exports.config = {
+export const config = {
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -64,10 +59,10 @@ exports.config = {
 					// different screen sizes. Bootstrap considers widths between 1200 and 1400
 					// as XL, let's use that.
 					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...( [ '--window-size=1280,800' ] ),
+					'--window-size=1280,800',
 					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 					// Chrome sandbox does not work in Docker
-					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+					...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 				]
 			}
 		}
@@ -116,7 +111,7 @@ exports.config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
+	suites: { [ process.env.SUITE ]: await fetchSuite( process.env.SUITE ) },
 
 	// =====
 	// Hooks
@@ -129,9 +124,9 @@ exports.config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		fs.mkdir( resultsDir, { recursive: true }, () => {} );
-		fs.rm( screenshotPath, { recursive: true, force: true }, () => {} );
-		fs.rm( resultFilePath, { force: true }, () => {} );
+		mkdir( resultsDir, { recursive: true }, () => {} );
+		rm( screenshotPath, { recursive: true, force: true }, () => {} );
+		rm( resultFilePath, { force: true }, () => {} );
 	},
 
 	/**
