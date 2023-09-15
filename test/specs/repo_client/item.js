@@ -1,6 +1,6 @@
 import Util from 'wdio-mediawiki/Util';
 import assert from 'assert';
-import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage';
 import querystring from 'querystring';
 

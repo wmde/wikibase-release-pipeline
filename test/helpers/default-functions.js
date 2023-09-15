@@ -2,7 +2,7 @@ import axios from 'axios';
 import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
-import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 const defaultFunctions = function () {
 	/**

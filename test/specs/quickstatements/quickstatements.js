@@ -1,5 +1,5 @@
 import assert from 'assert';
-import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import lodash from 'lodash';
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {

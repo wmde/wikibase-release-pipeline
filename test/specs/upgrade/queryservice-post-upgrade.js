@@ -1,4 +1,4 @@
-import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph';
 
