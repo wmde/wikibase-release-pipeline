@@ -3,19 +3,19 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-import { lstatSync, existsSync, mkdir, rm } from 'fs';
-import path from 'path';
+import { existsSync, mkdir, rm } from 'fs';
 import { saveScreenshot } from 'wdio-mediawiki';
 import JsonReporter from '../helpers/json-reporter.js';
-import defaultFunctions from '../helpers/default-functions.js';
-import WikibaseApi from 'wdio-wikibase/wikibase.api';
+import { init as initDefaultFunctions } from '../helpers/default-functions.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 const resultsDir = process.env.RESULTS_DIR;
 export const screenshotPath = `${resultsDir}/screenshots`;
 export const resultFilePath = `${resultsDir}/result.json`;
 
+/*
 const fetchSuite = ( suiteName ) => {
-	if ( lstatSync( path.join( process.cwd(), suiteName ) ).isDirectory() ) {
+	if ( lstatSync( path.join( process.cwd(), 'suites', suiteName ) ).isDirectory() ) {
 		const suiteConfigFile = path.join(
 			process.cwd(),
 			suiteName,
@@ -25,9 +25,11 @@ const fetchSuite = ( suiteName ) => {
 			const suiteConfig = require( suiteConfigFile );
 			return suiteConfig.config.suite;
 		} catch {}
+		return [ './specs/repo/*.js', './specs/repo/extensions/*.js' ];
 	}
 	return undefined;
 };
+*/
 
 export const config = {
 	// ======
@@ -111,7 +113,8 @@ export const config = {
 	// define all tests
 	specs: [ './specs/**/*.js' ],
 
-	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
+	// suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
+	suites: { repo: [ './specs/repo/*.js', './specs/repo/extensions/*.js' ] },
 
 	// =====
 	// Hooks
@@ -135,7 +138,7 @@ export const config = {
 	 */
 	before: async () => {
 		await WikibaseApi.initialize();
-		defaultFunctions.init();
+		initDefaultFunctions();
 
 		if ( !browser.config.installed_extensions ) {
 			const extensions = await browser.getInstalledExtensions(
