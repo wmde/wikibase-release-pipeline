@@ -13,6 +13,10 @@ download:
 lint:
 	@bash test/scripts/lint.sh
 
+.PHONY: lint-fix
+lint-fix:
+	@bash test/scripts/lint_fix.sh
+
 .PHONY: test
 test:
 ifdef SUITE
