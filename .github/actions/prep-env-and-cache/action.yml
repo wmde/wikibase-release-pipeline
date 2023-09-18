@@ -36,7 +36,8 @@ runs:
           path: cache
           key: cache-wikibase-composer
 
-      - run: |
+      - shell: bash
+        run: |
           echo "Composer Cache Hit: ${{ steps.cache-composer.outputs.cache-hit }}"
 
       - name: Cache files in git_cache
@@ -48,6 +49,7 @@ runs:
           path: git_cache
           key: cache-wikibase-git-repo
 
-      - run: |
+      - shell: bash
+        run: |
           echo "Git Cache Hit: ${{ steps.cache-git.outputs.cache-hit }}"
 
