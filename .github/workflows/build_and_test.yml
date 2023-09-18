@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         component: [
-          'wikibase',
+          'wikibase', # TODO: can we build wikibase_bundle in this very same component and have upload results use if to handle two build outputs (bundle and non-bundle)?
           'elasticsearch'
         ]
         channel: [
@@ -91,7 +91,7 @@ jobs:
       - name: Get dependency build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifactsDocker-{{ matrix.channel }}
+          name: BuildArtifactsDocker-${{ matrix.channel }}
           path: artifacts/
 
       - name: Build Bundle Docker Image
