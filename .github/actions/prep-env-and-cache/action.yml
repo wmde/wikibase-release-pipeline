@@ -28,6 +28,7 @@ runs:
           env-file: ${{ inputs.env_file }}
 
       - name: Cache composer files
+        id: cache-composer
         uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-composer
@@ -35,11 +36,18 @@ runs:
           path: cache
           key: cache-wikibase-composer
 
+      - run: |
+          echo "Composer Cache Hit: ${{ steps.cache-composer.outputs.cache-hit }}"
+
       - name: Cache files in git_cache
+        id: cache-git
         uses: actions/cache@v3
         env:
           cache-name: cache-wikibase-git-repo
         with:
           path: git_cache
           key: cache-wikibase-git-repo
+
+      - run: |
+          echo "Git Cache Hit: ${{ steps.cache-git.outputs.cache-hit }}"
 
