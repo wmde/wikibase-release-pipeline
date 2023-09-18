@@ -54,6 +54,7 @@ jobs:
         uses: ./.github/actions/upload-results
         with:
           name: ${{ matrix.component }}
+          channel: ${{ matrix.channel }}
           github_token: secrets.GITHUB_TOKEN
 
       - name: Scan Image
