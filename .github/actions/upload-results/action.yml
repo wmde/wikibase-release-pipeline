@@ -29,13 +29,20 @@ runs:
       #     if-no-files-found: error
       #     path: artifacts/build_metadata_${{ inputs.name }}.env
 
-      # - name: Archive tar production artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: BuildArtifacts
-      #     if-no-files-found: error
-      #     path: artifacts/${{ inputs.filename }}
-      #
+      - name: Archive tar Artifacts (if any)
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifacts
+          if-no-files-found: warn
+          path: artifacts/${{ inputs.name }}.tar.gz
+
+      - name: Archive Docker Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifacts
+          if-no-files-found: error
+          path: artifacts/${{ inputs.name }}.docker.tar.gz
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         if: github.ref == 'refs/heads/main'
@@ -51,10 +58,3 @@ runs:
           image_name: "wikibase/${{ inputs.name }}"
           tag: ${{ github.run_id }}
 
-      # - name: Archive base docker production artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: BuildArtifacts
-      #     if-no-files-found: error
-      #     path: artifacts/${{ inputs.tarname }}
-      #
