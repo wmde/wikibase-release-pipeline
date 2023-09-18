@@ -35,14 +35,14 @@ runs:
       - name: Archive tar Artifacts (if any)
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifactsTar ${{ inputs.channel }}
+          name: BuildArtifactsTar-${{ inputs.channel }}
           if-no-files-found: warn
           path: artifacts/${{ inputs.name }}.tar.gz
 
       - name: Archive Docker Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifactsDocker ${{ inputs.channel }}
+          name: BuildArtifactsDocker-${{ inputs.channel }}
           if-no-files-found: error
           path: artifacts/${{ inputs.name }}.docker.tar.gz
 
