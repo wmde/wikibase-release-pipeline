@@ -65,6 +65,52 @@ jobs:
           image_tag: latest
 
 
+  # this needs to be an extra step as it depends on wikibase from the build action above
+  build_wikibase_bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        channel: [
+          'lts',
+          'stable'
+        ]
+
+    needs:
+      - build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare environment and caches
+        uses: ./.github/actions/prep-env-and-cache
+        with:
+          env_file: "channels/${{ matrix.channel }}.env"
+
+      - name: Get dependency build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: BuildArtifactsDocker-{{ matrix.channel }}
+          path: artifacts/
+
+      - name: Build Bundle Docker Image
+        run: bash build.sh wikibase_bundle "channels/${{ matrix.channel }}.env"
+
+      - name: Upload Results
+        uses: ./.github/actions/upload-results
+        with:
+          name: wikibase_bundle
+          channel: ${{ matrix.channel }}
+          github_token: secrets.GITHUB_TOKEN
+
+      - name: Scan Image
+        uses: ./.github/actions/scan-image
+        continue-on-error: true
+        with:
+          image_name: "wikibase/${{ matrix.component }}"
+          image_tag: latest
+
 
 
   # build_wikibase:
