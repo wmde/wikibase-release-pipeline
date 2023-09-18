@@ -33,9 +33,9 @@ jobs:
           'wikibase',
           'elasticsearch'
         ]
-        version_env: [
-          'lts.env',
-          'stable.env'
+        version: [
+          'lts',
+          'stable'
         ]
 
     steps:
@@ -45,10 +45,10 @@ jobs:
       - name: Prepare environment and caches
         uses: ./.github/actions/prep-env-and-cache
         with:
-          env_file: "channels/${{ matrix.version_env }}"
+          env_file: "channels/${{ matrix.version }}.env"
 
       - name: Build Artifact
-        run: bash build.sh ${{ matrix.component }} "channels/${{ matrix.version_env }}"
+        run: bash build.sh ${{ matrix.component }} "channels/${{ matrix.version }}.env"
 
       - name: Upload Results
         uses: ./.github/actions/upload-results
