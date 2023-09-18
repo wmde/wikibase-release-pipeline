@@ -64,7 +64,7 @@ requirements:
 	cat artifacts/built_versions.log
 
 wikibase:
-	bash update_cache.sh base
+	bash update_cache.sh bundle
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME};bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
 
 quickstatements:
