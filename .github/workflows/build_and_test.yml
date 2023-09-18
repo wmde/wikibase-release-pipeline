@@ -95,12 +95,12 @@ jobs:
           path: artifacts/
 
       - name: Build Bundle Docker Image
-        run: bash build.sh wikibase_bundle "channels/${{ matrix.channel }}.env"
+        run: bash build.sh wikibase-bundle "channels/${{ matrix.channel }}.env"
 
       - name: Upload Results
         uses: ./.github/actions/upload-results
         with:
-          name: wikibase_bundle
+          name: wikibase-bundle
           channel: ${{ matrix.channel }}
           github_token: secrets.GITHUB_TOKEN
 
@@ -108,7 +108,7 @@ jobs:
         uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
-          image_name: "wikibase/${{ matrix.component }}"
+          image_name: "wikibase/wikibase-bundle"
           image_tag: latest
 
 

@@ -67,7 +67,7 @@ wikibase:
 	bash update_cache.sh base
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
 
-wikibase_bundle:
+wikibase-bundle:
 	bash update_cache.sh bundle
 	bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}
 
@@ -97,4 +97,4 @@ clean:
 	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
-all: wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
+all: wikibase wikibase-bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
