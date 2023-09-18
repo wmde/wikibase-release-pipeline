@@ -32,6 +32,10 @@ jobs:
         component: [
           'wikibase',
           'elasticsearch',
+          'wdqs',
+          'wdqs-frontend',
+          'wdqs-proxy',
+          'quickstatements'
         ]
         channel: [
           'lts',
