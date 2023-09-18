@@ -42,17 +42,19 @@ def add_newline(file: str, root_dir: str, should_fix: bool) -> bool:
                 current_file.write("\n")
             else:
                 print(f"{file} lacks ending newline")
-                sys.exit(2)
             return True
     return False
 
 
 if __name__ == "__main__":
     root = sys.argv[1]
-    fix = False
+    should_fix = False
     if len(sys.argv) > 3:
         if sys.argv[3] == '--fix':
-            fix = True
+            should_fix = True
+    found_errors = False
     for file in sys.argv[2].split("\n"):
         if file_should_be_run(file):
-            add_newline(file, root, fix)
+            found_errors |= add_newline(file, root, should_fix)
+    if found_errors and not should_fix:
+        sys.exit(2)
