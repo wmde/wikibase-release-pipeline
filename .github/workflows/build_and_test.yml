@@ -70,9 +70,6 @@ jobs:
           image_name: "wikibase/${{ matrix.component }}-bundle"
           image_tag: latest
 
-
-
-
   # build_wikibase:
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 20
@@ -215,7 +212,7 @@ jobs:
   #       with:
   #         env-file: ${{ env.env_file }}
   #
-  #     - name: Build QuickStatements Image 
+  #     - name: Build QuickStatements Image
   #       id: download_step
   #       run: bash build.sh quickstatements ${{ env.env_file }}
   #
@@ -283,7 +280,7 @@ jobs:
   #         path: cache
   #         key: cache-wdqs-backend-git-repo
   #
-  #     - name: Build WDQS Image 
+  #     - name: Build WDQS Image
   #       id: download_step
   #       run: bash build.sh wdqs ${{ env.env_file }}
   #
@@ -336,7 +333,7 @@ jobs:
   #       with:
   #         env-file: ${{ env.env_file }}
   #
-  #     - name: Build WDQS-proxy image 
+  #     - name: Build WDQS-proxy image
   #       run: bash build.sh wdqs-proxy ${{ env.env_file }}
   #
   #     - name: Login to GitHub Container Registry
@@ -498,34 +495,45 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [ 
-          repo, 
-          fedprops,
-          repo_client, 
-          quickstatements, 
-          pingback, 
-          confirm_edit,
-          elasticsearch,
+        suite:
+          [
+            repo,
+            fedprops,
+            repo_client,
+            quickstatements,
+            pingback,
+            confirm_edit,
+            elasticsearch,
 
-          base__repo,
-          base__repo_client,
-          base__pingback,
-          base__fedprops,
-        ]
-        databaseImageName: [ 'mariadb:10.9' ] # 'mysql:5.6' disabled https://phabricator.wikimedia.org/T296066
+            base__repo,
+            base__repo_client,
+            base__pingback,
+            base__fedprops,
+          ]
+
+        channel: ["lts", "stable"]
+
+        databaseImageName: [
+            # 'mysql:5.6', disabled https://phabricator.wikimedia.org/T296066
+            "mariadb:10.9",
+          ]
+
     needs:
       - build
+
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
     steps:
       - uses: actions/checkout@v4
-      - name: Get Wikibase docker image artifact
+
+      - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: BuildArtifactsDocker-${{ matrix.channel }}
           path: artifacts/
 
-      - name: Run Tests - ${{ matrix.suite }}
+      - name: Test ${{ matrix.suite }}
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
         run: make test SUITE=${{ matrix.suite }}
@@ -537,110 +545,131 @@ jobs:
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
-      - name: docker logs
+      # TODO: covered by the below already since latest log refactor?
+      - name: Show Docker Logs
         if: always()
         run: test/scripts/docker_logs.sh
 
-      - name: mediawiki logs
+      - name: Show Mediawiki Logs
         if: always()
         continue-on-error: true
         run: |
           ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
           tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
 
-      - name: Archive docker test artifacts
+      - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestArtifacts
+          name: TestArtifacts-${{ matrix.channel }}
           path: test/suites/**/results
 
   test_upgrade_base:
+    runs-on: ubuntu-latest
     timeout-minutes: 20
+
     strategy:
       fail-fast: false
       matrix:
+        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
-          # Latest 1.37
-          'wmde.9',
-          # Latest 1.38
-          'wmde.10',
-        ]
+            # Latest 1.37
+            "wmde.9",
+            # Latest 1.38
+            "wmde.10",
+          ]
+
+        channel: ["lts", "stable"]
+
     needs:
       - build
-    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Get Wikibase docker image artifact
+
+      - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: BuildArtifactsDocker-${{ matrix.channel }}
           path: artifacts/
 
-      - name: Test upgrade version - ${{ matrix.version }}
+      - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=channels/${{ matrix.channel }}.env
 
-      - name: docker logs
+      - name: Show Docker Logs
         if: always()
         run: test/scripts/docker_logs.sh
 
-      - name: Archive docker test artifacts
+      # TODO: DRY
+      - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestUpgradeArtifacts
+          name: TestArtifacts-${{ matrix.channel }}
           path: test/suites/**/results
 
 
   test_upgrade_bundle:
+    runs-on: ubuntu-latest
     timeout-minutes: 20
+
+    needs:
+      - build
+
     strategy:
       fail-fast: false
       matrix:
+
+        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
-          # Latest 1.37
-          'wmde.9-bundle',
-          # Latest 1.38
-          'wmde.10-bundle',
-        ]
-    needs:
-      - build
-    runs-on: ubuntu-latest
+            # Latest 1.37
+            "wmde.9-bundle",
+            # Latest 1.38
+            "wmde.10-bundle",
+          ]
+
+        channel: ["lts", "stable"]
+
     env:
       TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
+
     steps:
       - uses: actions/checkout@v4
-      - name: Get Wikibase docker image artifact
+
+      - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifacts
+          name: BuildArtifactsDocker-${{ matrix.channel }}
           path: artifacts/
 
-      - name: Test upgrade version - ${{ matrix.version }}
+      - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=${{ env.env_file }}
+        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=channels/${{ matrix.channel }}.env
 
-      - name: docker logs
+      - name: Show Docker Logs
         if: always()
         run: test/scripts/docker_logs.sh
 
-      - name: Archive docker test artifacts
+      # TODO: DRY
+      - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestUpgradeArtifactsBundle
+          name: TestArtifacts-${{ matrix.channel }}
           path: test/suites/**/results
 
   versions:
-    needs:
-      - test_wikibase
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
+    needs:
+      - test_wikibase
+
     steps:
       - uses: actions/checkout@v4
       - uses: c-py/action-dotenv-to-setenv@v4
