@@ -114,7 +114,7 @@ exports.config = {
 	},
 
 	// define all tests
-	specs: [ './specs/**/*.js' ],
+	specs: [ '../specs/**/*.js' ],
 
 	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
 
