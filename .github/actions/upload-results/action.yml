@@ -36,7 +36,7 @@ runs:
         uses: actions/upload-artifact@v3
         with:
           name: BuildArtifactsTar-${{ inputs.channel }}
-          if-no-files-found: warn
+          if-no-files-found: ignore
           path: artifacts/${{ inputs.name }}.tar.gz
 
       - name: Archive Docker Artifact
