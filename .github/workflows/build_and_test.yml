@@ -675,25 +675,30 @@ jobs:
           name: TestArtifacts-${{ matrix.channel }}
           path: test/suites/**/results
 
-  versions:
+  metadata:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     needs:
       - test_wikibase
 
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: ["lts", "stable"]
+
     steps:
       - uses: actions/checkout@v4
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
-          env-file: ${{ env.env_file }}
+          env-file: "channels/${{ matrix.channel }}.env"
 
       - name: Build version requirements
-        run: bash build.sh requirements ${{ env.env_file }}
+        run: bash build.sh requirements "channels/${{ matrix.channel }}.env"
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
+          name: BuildMetadata-${{ matrix.channel }}
           if-no-files-found: error
           path: artifacts/built_versions.log
