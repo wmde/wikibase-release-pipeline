@@ -15,19 +15,18 @@ jobs:
     timeout-minutes: 30
 
     strategy:
+      fail-fast: false
       matrix:
-        component: [
-          'wikibase',
-          'elasticsearch',
-          'wdqs',
-          'wdqs-frontend',
-          'wdqs-proxy',
-          'quickstatements'
-        ]
-        channel: [
-          'lts',
-          'stable'
-        ]
+        component:
+          [
+            "wikibase",
+            "elasticsearch",
+            "wdqs",
+            "wdqs-frontend",
+            "wdqs-proxy",
+            "quickstatements",
+          ]
+        channel: ["lts", "stable"]
 
     steps:
       - name: Checkout the repo
