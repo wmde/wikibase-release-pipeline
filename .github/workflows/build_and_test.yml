@@ -255,7 +255,7 @@ jobs:
     timeout-minutes: 20
 
     needs:
-      - test_wikibase
+      - test
 
     strategy:
       fail-fast: false
