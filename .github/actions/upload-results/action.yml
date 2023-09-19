@@ -8,15 +8,6 @@ inputs:
   channel:
     description: 'the channel this artifact was built for'
     required: true
-  # filename:
-  #   description: 'the filename of the built artifact'
-  #   required: true
-  # imagename:
-  #   description: 'the docker image name of the built artifact'
-  #   required: true
-  # tarname:
-  #   description: 'the tar file name of the built artifact'
-  #   required: true
   github_token:
     description: 'secret token to upload to github container registry'
     required: true
