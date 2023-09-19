@@ -25,12 +25,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-      # - name: Archive metadata artifacts
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: BuildMetadata
-      #     if-no-files-found: error
-      #     path: artifacts/build_metadata_${{ inputs.name }}.env
+      - name: Archive metadata artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildMetadata-${{ inputs.channel }}
+          if-no-files-found: ignore
+          path: artifacts/build_metadata_${{ inputs.name }}.env
 
       - name: Archive tar Artifacts (if any)
         uses: actions/upload-artifact@v3
