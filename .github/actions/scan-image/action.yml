@@ -33,6 +33,7 @@ runs:
         shell: bash
         run: |
           cat ${{ steps.scan.outputs.sarif }}
+          mkdir -p /tmp/${{ inputs.image_name }}.sarif
           mv ${{ steps.scan.outputs.sarif }} /tmp/${{ inputs.image_name }}.sarif
 
       - name: Archive docker production artifacts
