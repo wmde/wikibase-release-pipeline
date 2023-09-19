@@ -14,8 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    jobs:
+    steps:
       - uses: actions/checkout@v4
+
       - name: Lint
         run: make lint
 
