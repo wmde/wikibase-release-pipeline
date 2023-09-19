@@ -39,7 +39,8 @@ jobs:
             "wdqs-proxy",
             "quickstatements",
           ]
-        channel: ["lts", "stable"]
+
+        channel: ["lts", "stable", "next"]
 
     steps:
       - name: Checkout the repo
