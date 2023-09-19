@@ -136,12 +136,7 @@ jobs:
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
-      # TODO: covered by the below already since latest log refactor?
-      - name: Show Docker Logs
-        if: always()
-        run: test/scripts/docker_logs.sh
-
-      - name: Show Mediawiki Logs
+      - name: Show Logs
         if: always()
         continue-on-error: true
         run: |
