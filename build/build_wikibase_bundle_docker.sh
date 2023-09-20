@@ -2,8 +2,6 @@
 # shellcheck disable=SC1090
 set -e
 
-image_name="$1"
-
 BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
 
 mkdir -p "$BUILT_EXTENSIONS_PATH"
@@ -49,6 +47,8 @@ for EXT_EXTENSION in "${EXT_EXTENSIONS[@]}"; do
     ## Copy the configuration files to build directory
     cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXT_EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
 done
+
+image_name="wikibase-bundle"
 
 docker build \
     --no-cache \
