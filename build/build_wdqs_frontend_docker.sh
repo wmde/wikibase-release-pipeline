@@ -9,11 +9,6 @@ docker build \
     -t wdqs-frontend \
     Docker/build/WDQS-frontend/
 
-build/docker_tag.sh \
-    wdqs-frontend \
-    "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION"
+build/docker_tag.sh wdqs-frontend
 
 docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE"f > "$(pwd)"/artifacts/"$1".docker.tar.gz

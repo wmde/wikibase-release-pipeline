@@ -20,5 +20,7 @@ docker build . -t builder && \
  -v "$(pwd)/cache":/app/cache \
  -v "/tmp":/tmp \
  -v /var/run/docker.sock:/var/run/docker.sock \
+ -e BUILD_TIMESTAMP="$(date +%Y%m%d%H%M%S)" \
  -e GIT_REVISION_HASH="$(git rev-parse --short HEAD)" \
+ -e GIT_REVISION_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
  builder:latest make "$TARGET"

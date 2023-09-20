@@ -8,11 +8,6 @@ docker build \
     -t elasticsearch \
     Docker/build/Elasticsearch/
 
-build/docker_tag.sh \
-    elasticsearch \
-    "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION"
+build/docker_tag.sh elasticsearch
 
 docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > "$(pwd)"/artifacts/elasticsearch.docker.tar.gz

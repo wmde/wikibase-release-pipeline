@@ -56,11 +56,6 @@ docker build \
     -t wikibase-bundle \
     Docker/build/WikibaseBundle/
 
-build/docker_tag.sh \
-    wikibase-bundle \
-    "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION"
+build/docker_tag.sh wikibase-bundle 
 
 docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz

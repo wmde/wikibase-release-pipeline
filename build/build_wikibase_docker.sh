@@ -32,11 +32,6 @@ docker build \
     \
     Docker/build/Wikibase/
 
-build/docker_tag.sh \
-    wikibase \
-    "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" \
-    "$WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION"
+build/docker_tag.sh wikibase 
 
 docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
