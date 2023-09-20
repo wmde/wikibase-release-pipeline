@@ -52,7 +52,8 @@ jobs:
           env_file: "channels/${{ matrix.channel }}.env"
 
       - name: Build Artifact
-        run: bash build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
+        run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
+        shell: bash
 
       - name: Upload Results
         uses: ./.github/actions/upload-results
@@ -270,7 +271,8 @@ jobs:
           env-file: "channels/${{ matrix.channel }}.env"
 
       - name: Build version requirements
-        run: bash build.sh requirements "channels/${{ matrix.channel }}.env"
+        run: ./build.sh requirements "channels/${{ matrix.channel }}.env"
+        shell: bash
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
