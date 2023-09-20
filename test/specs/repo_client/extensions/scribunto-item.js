@@ -79,7 +79,7 @@ describe( 'Scribunto Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.config.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
 
 		const destructiveButtonEl = await $(

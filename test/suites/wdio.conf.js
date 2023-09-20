@@ -142,14 +142,14 @@ exports.config = {
 		await WikibaseApi.initialize();
 		defaultFunctions.init();
 
-		if ( !browser.config.installed_extensions ) {
+		if ( !browser.options.installed_extensions ) {
 			const extensions = await browser.getInstalledExtensions(
 				process.env.MW_SERVER
 			);
 			if ( extensions ) {
-				browser.config.installed_extensions = extensions;
+				browser.options.installed_extensions = extensions;
 			} else {
-				browser.config.installed_extensions = [];
+				browser.options.installed_extensions = [];
 			}
 		}
 	},

@@ -34,7 +34,7 @@ class SuiteLoginPage extends Page {
 	}
 
 	async loginAdmin() {
-		await this.login( browser.config.mwUser, browser.config.mwPwd );
+		await this.login( browser.options.mwUser, browser.options.mwPwd );
 	}
 }
 
