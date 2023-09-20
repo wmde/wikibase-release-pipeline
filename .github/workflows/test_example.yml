@@ -1,0 +1,24 @@
+name: Test Example Distribution
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_example:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test example
+        run: make test-example SUITE=example
+      
+      - name: Archive test example artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: TestExampleArtifacts
+          if-no-files-found: error
+          path: |
+            test/suites/example/results
+          
