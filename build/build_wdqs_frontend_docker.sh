@@ -9,7 +9,7 @@ docker build \
     -t wdqs-frontend \
     Docker/build/WDQS-frontend/
 
-d/docker_tag.sh \
+build/docker_tag.sh \
     wdqs-frontend \
     "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" \
     "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" \
