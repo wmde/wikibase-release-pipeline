@@ -15,7 +15,6 @@ runs:
     - uses: anchore/scan-action@v3
       id: scan
       with:
-        acs-report-enable: true
         severity-cutoff: critical
         fail-build: false
         image: ${{ inputs.image_name }}:${{ inputs.image_tag }}
