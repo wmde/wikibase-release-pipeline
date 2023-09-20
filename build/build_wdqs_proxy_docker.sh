@@ -14,4 +14,4 @@ docker save \
     "${DOCKER_REPOSITORY_NAME}/${image_name}" \
     "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}" \
     | gzip -"$GZIP_COMPRESSION_RATE" \
-    > "$(pwd)"/artifacts/${image_name}.docker.tar.gz
+    > "$(pwd)/artifacts/${image_name}.docker.tar.gz"
