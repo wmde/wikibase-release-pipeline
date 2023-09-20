@@ -27,6 +27,7 @@ runs:
         with:
           env-file: ${{ inputs.env_file }}
 
+      # https://phabricator.wikimedia.org/T346882
       - name: Cache composer files
         id: cache-composer
         uses: actions/cache@v3
