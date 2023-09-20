@@ -2,6 +2,8 @@
 # shellcheck disable=SC1090
 set -e
 
+image_name="$1"
+
 BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
 
 mkdir -p "$BUILT_EXTENSIONS_PATH"
@@ -53,9 +55,14 @@ docker build \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_NAME="$COMPOSER_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
-    -t wikibase-bundle \
+    -t "$image_name" \
     Docker/build/WikibaseBundle/
 
-build/docker_tag.sh wikibase-bundle 
+build/docker_tag.sh "$image_name"
 
-docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz
+docker save \
+    "$image_name" \
+    "${DOCKER_REPOSITORY_NAME}/${image_name}" \
+    "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}" \
+    | gzip -"$GZIP_COMPRESSION_RATE" \
+    > "$(pwd)"/artifacts/${image_name}.docker.tar.gz

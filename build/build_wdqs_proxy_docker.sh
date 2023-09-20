@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -ex
 
+image_name="$1"
+
 docker build \
-    -t wdqs-proxy \
+    -t "$image_name" \
     Docker/build/WDQS-proxy/
 
-build/docker_tag.sh wdqs-proxy
+build/docker_tag.sh "$image_name"
 
-docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
+docker save \
+    "$image_name" \
+    "${DOCKER_REPOSITORY_NAME}/${image_name}" \
+    "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}" \
+    | gzip -"$GZIP_COMPRESSION_RATE" \
+    > "$(pwd)"/artifacts/${image_name}.docker.tar.gz

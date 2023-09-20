@@ -2,6 +2,8 @@
 # shellcheck disable=SC1091
 set -e
 
+image_name="$1"
+
 mkdir -p Docker/build/Wikibase/artifacts
 mkdir -p Docker/build/Wikibase/artifacts/extensions
 
@@ -28,10 +30,15 @@ docker build \
     --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    -t wikibase \
+    -t "$image_name" \
     \
     Docker/build/Wikibase/
 
-build/docker_tag.sh wikibase 
+build/docker_tag.sh "$image_name"
 
-docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
+docker save \
+    "$image_name" \
+    "${DOCKER_REPOSITORY_NAME}/${image_name}" \
+    "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}" \
+    | gzip -"$GZIP_COMPRESSION_RATE" \
+    > "$(pwd)"/artifacts/${image_name}.docker.tar.gz
