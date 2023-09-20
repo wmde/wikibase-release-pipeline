@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const _ = require( 'lodash' );
+const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {
 	const references = response.data.claims[ propertyId ][ 0 ].references;
@@ -121,7 +121,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add a statement to an item', async () => {
-		propertyId = await WikibaseApi.getProperty( 'string' );
+		propertyId = await WikibaseApiPatch.getProperty( 'string' );
 
 		await browser.executeQuickStatement(
 			'Q1|' + propertyId + '|"Will it blend?"'
@@ -169,11 +169,11 @@ describe( 'QuickStatements Service', function () {
 					qualifierSnakDataType +
 					' qualifier.',
 					async () => {
-						const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
+						const itemId = await WikibaseApiPatch.createItem( 'qualifier-item', {} );
 
 						const mainPropertyId =
-							await WikibaseApi.getProperty( mainSnakDataType );
-						const qualifierPropertyId = await WikibaseApi.getProperty(
+							await WikibaseApiPatch.getProperty( mainSnakDataType );
+						const qualifierPropertyId = await WikibaseApiPatch.getProperty(
 							qualifierSnakDataType
 						);
 						await browser.executeQuickStatement(
@@ -204,7 +204,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add statement with qualifiers', async () => {
-		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
+		propertyIdItem = await WikibaseApiPatch.getProperty( 'wikibase-item' );
 
 		await browser.executeQuickStatement(
 			'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1'
@@ -220,9 +220,9 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add a property with "wikibase-item" reference', async () => {
-		const itemId = await WikibaseApi.createItem( 'reference-item', {} );
+		const itemId = await WikibaseApiPatch.createItem( 'reference-item', {} );
 
-		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
+		propertyIdItem = await WikibaseApiPatch.getProperty( 'wikibase-item' );
 		const propertyNumber = propertyIdItem.replace( 'P', '' );
 		await browser.executeQuickStatement(
 			itemId +
@@ -250,8 +250,8 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add a property with "url" reference', async () => {
-		const itemId = await WikibaseApi.createItem( 'reference-url', {} );
-		propertyURL = await WikibaseApi.getProperty( 'url' );
+		const itemId = await WikibaseApiPatch.createItem( 'reference-url', {} );
+		propertyURL = await WikibaseApiPatch.getProperty( 'url' );
 		const url = '"https://www.wikidata.org"';
 		const propertyNumber = propertyURL.replace( 'P', '' );
 
@@ -270,7 +270,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add a property with "string" reference', async () => {
-		const itemId = await WikibaseApi.createItem( 'reference-string', {} );
+		const itemId = await WikibaseApiPatch.createItem( 'reference-string', {} );
 		const stringValue = '"some string"';
 		const propertyNumber = propertyId.replace( 'P', '' );
 		await browser.executeQuickStatement(
@@ -294,7 +294,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to add and remove a property on an item', async () => {
-		const itemId = await WikibaseApi.createItem( 'add-remove', {} );
+		const itemId = await WikibaseApiPatch.createItem( 'add-remove', {} );
 
 		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
 

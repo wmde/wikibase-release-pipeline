@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
+const WikibaseApiPatch = require( '../../../helpers/WikibaseApiPatch' );
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;
@@ -11,7 +11,7 @@ describe( 'WikibaseEdtf', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
-		propertyId = await WikibaseApi.createProperty( 'edtf' );
+		propertyId = await WikibaseApiPatch.createProperty( 'edtf' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		const rawValue = '1985-04-12T23:20:30';
@@ -30,7 +30,7 @@ describe( 'WikibaseEdtf', function () {
 			]
 		};
 
-		itemId = await WikibaseApi.createItem( 'edtf-test', data );
+		itemId = await WikibaseApiPatch.createItem( 'edtf-test', data );
 
 		// go look at wikibase
 		const response = await browser.makeRequest(

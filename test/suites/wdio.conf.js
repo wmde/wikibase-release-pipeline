@@ -10,7 +10,7 @@ const path = require( 'path' );
 const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const WikibaseApiPatch = require( '../helpers/WikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -139,7 +139,7 @@ exports.config = {
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: async () => {
-		await WikibaseApi.initialize();
+		await WikibaseApiPatch.initialize();
 		defaultFunctions.init();
 
 		if ( !browser.options.installed_extensions ) {

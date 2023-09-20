@@ -2,9 +2,9 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
+const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -40,7 +40,7 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Should create an item on repo', async () => {
-		propertyId = await WikibaseApi.createProperty( 'string' );
+		propertyId = await WikibaseApiPatch.createProperty( 'string' );
 		const data = {
 			claims: [
 				{
@@ -55,7 +55,7 @@ describe( 'Item', function () {
 			]
 		};
 
-		itemId = await WikibaseApi.createItem( itemLabel, data );
+		itemId = await WikibaseApiPatch.createItem( itemLabel, data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const button = await $(

@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const Util = require( 'wdio-mediawiki/Util' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
 
 const itemAlias = Util.getTestString( 'alias' );
 const itemLabel = Util.getTestString( 'testItem' );
@@ -11,7 +11,7 @@ describe( 'ElasticSearch', function () {
 	let itemId;
 
 	it( 'Should create an item', async () => {
-		itemId = await WikibaseApi.createItem( itemLabel );
+		itemId = await WikibaseApiPatch.createItem( itemLabel );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const addButtonEl = await $(

@@ -1,14 +1,14 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Property = require( '../../helpers/pages/entity/property.page' );
+const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Property', function () {
 	let propertyId = null;
 
 	it( 'Should be able to add statement and reference to property', async () => {
-		propertyId = await WikibaseApi.getProperty( 'string' );
+		propertyId = await WikibaseApiPatch.getProperty( 'string' );
 
 		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
 

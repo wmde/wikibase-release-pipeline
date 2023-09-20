@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Util = require( 'wdio-mediawiki/Util' );
+const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Wikibase API', function () {
 	it( 'Should be able to create many properties and items', async () => {
@@ -10,7 +10,7 @@ describe( 'Wikibase API', function () {
 		for ( let i = 0; i < numEntities; i++ ) {
 			const itemLabel = 'T267743-';
 			const propertyValue = 'PropertyExampleStringValue';
-			const propertyId = await WikibaseApi.createProperty( 'string' );
+			const propertyId = await WikibaseApiPatch.createProperty( 'string' );
 			const data = {
 				claims: [
 					{
@@ -25,7 +25,7 @@ describe( 'Wikibase API', function () {
 				]
 			};
 
-			const itemId = await WikibaseApi.createItem(
+			const itemId = await WikibaseApiPatch.createItem(
 				Util.getTestString( itemLabel ),
 				data
 			);
