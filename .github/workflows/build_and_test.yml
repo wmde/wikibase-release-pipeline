@@ -74,8 +74,8 @@ jobs:
         uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
-          image_name: "wikibase/${{ matrix.component }}"
-          image_tag: latest
+          image_name: ${{ matrix.component }}
+          channel: ${{ matrix.channel }}
 
       - name: Scan additional bundle Image for wikibase builds
         if: matrix.component == 'wikibase'
