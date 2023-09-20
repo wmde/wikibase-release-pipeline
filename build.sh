@@ -11,10 +11,6 @@ if [ ! -f "local.env" ]; then
     touch local.env
 fi
 
-echo
-cat "$RELEASE_ENV_FILE"
-echo
-
 docker build . -t builder && \
  docker run --rm -i \
  -v "$(pwd)/variables.env":/app/variables.env \
@@ -24,4 +20,5 @@ docker build . -t builder && \
  -v "$(pwd)/cache":/app/cache \
  -v "/tmp":/tmp \
  -v /var/run/docker.sock:/var/run/docker.sock \
+ -e GIT_REVISION_HASH="$(git rev-parse --short HEAD)" \
  builder:latest make "$TARGET"

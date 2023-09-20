@@ -48,10 +48,19 @@ for EXT_EXTENSION in "${EXT_EXTENSIONS[@]}"; do
     cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXT_EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
 done
 
-docker build --no-cache \
+docker build \
+    --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_NAME="$COMPOSER_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
-    Docker/build/WikibaseBundle/ -t "$WIKIBASE_BUNDLE_IMAGE_NAME"
+    -t wikibase-bundle \
+    Docker/build/WikibaseBundle/
+
+build/docker_tag.sh \
+    wikibase-bundle \
+    $WIKIBASE_SUITE_RELEASE_MAJOR_VERSION \
+    $WIKIBASE_SUITE_RELEASE_MINOR_VERSION \
+    $WIKIBASE_SUITE_RELEASE_PATCH_VERSION \
+    $WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION
 
 docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz

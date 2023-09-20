@@ -5,7 +5,7 @@ const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		if ( process.env.WMDE_RELEASE_VERSION === 'wmdeprerelease' ) {
+		if ( process.env.WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION.match( /-pre\./ ) ) {
 			this.skip();
 		}
 

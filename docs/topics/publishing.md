@@ -192,7 +192,8 @@ gh run view <WORKFLOW_RUN_NUMBER> --json headSha
 You can then run the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
 
 ```sh
-git tag --force -a $WMDE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WMDE_RELEASE_VERSION
+TODO: review this!!!!!
+git tag --force -a $WIKIBASE_SUITE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WIKIBASE_SUITE_RELEASE_VERSION
 ```
 
 And pushing ...

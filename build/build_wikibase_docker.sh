@@ -28,6 +28,15 @@ docker build \
     --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    Docker/build/Wikibase/ -t "$1"
+    -t wikibase \
+    \
+    Docker/build/Wikibase/
+
+build/docker_tag.sh \
+    wikibase \
+    $WIKIBASE_SUITE_RELEASE_MAJOR_VERSION \
+    $WIKIBASE_SUITE_RELEASE_MINOR_VERSION \
+    $WIKIBASE_SUITE_RELEASE_PATCH_VERSION \
+    $WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION
 
 docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
