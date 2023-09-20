@@ -48,6 +48,11 @@ else
     # prereleases to be pulled as an update to non prerelease versions
 
     docker tag "${image_name}" \
+        "${DOCKER_REPOSITORY_NAME}/${image_name}:v${semver_major}.${semver_minor}.${semver_patch}-${semver_prerelease}"
+    docker tag "${image_name}" \
+        "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}:v${semver_major}.${semver_minor}.${semver_patch}-${semver_prerelease}"
+
+    docker tag "${image_name}" \
         "${DOCKER_REPOSITORY_NAME}/${image_name}:v${semver_major}.${semver_minor}.${semver_patch}-${semver_prerelease}_${build}"
     docker tag "${image_name}" \
         "${DOCKER_REPOSITORY_NAME_WIP}/${image_name}:v${semver_major}.${semver_minor}.${semver_patch}-${semver_prerelease}_${build}"
