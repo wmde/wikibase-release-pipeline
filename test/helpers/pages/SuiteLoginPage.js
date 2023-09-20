@@ -1,13 +1,13 @@
 'use strict';
 
-const Page = require( 'wdio-mediawiki/Page' );
+const PagePatch = require( './pagePatch' );
 
 // This is a replacement for `wdio-mediawiki/LoginPage`
 // which as of version 2.2.0 does not properly await WDIO elements
 // causing failures and otherwise unpredictable results.
 // TODO: Fix upstream code in `wdio-mediawiki/LoginPage`
 // See https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/LoginPage.js
-class SuiteLoginPage extends Page {
+class SuiteLoginPage extends PagePatch {
 	get username() { return $( '#wpName1' ); }
 	get password() { return $( '#wpPassword1' ); }
 	get loginButton() { return $( '#wpLoginAttempt' ); }
