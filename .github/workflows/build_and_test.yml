@@ -55,12 +55,26 @@ jobs:
         run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
         shell: bash
 
-      - name: Upload Results
-        uses: ./.github/actions/upload-results
+      - name: Archive build_metadata Artifacts (if any)
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.component }}
-          channel: ${{ matrix.channel }}
-          github_token: secrets.GITHUB_TOKEN
+          name: Metadata-${{ matrix.channel }}
+          path: artifacts/build_metadata_${{ matrix.component }}.env
+          if-no-files-found: ignore
+
+      - name: Archive tar artifacts (if any)
+        uses: actions/upload-artifact@v3
+        with:
+          name: TarBalls-${{ matrix.channel }}
+          path: artifacts/${{ matrix.component }}.tar.gz
+          if-no-files-found: ignore
+
+      - name: Archive Docker artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: DockerImages-${{ matrix.channel }}
+          path: artifacts/${{ matrix.component }}.docker.tar.gz
+          if-no-files-found: error
 
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Upload additional bundle results for wikibase build
