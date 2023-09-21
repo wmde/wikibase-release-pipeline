@@ -1,13 +1,7 @@
-name: Test Example
+name: Test Example Distribution
 
 on:
-  push:
-    branches:
-      - "main"
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
+  workflow_dispatch:
 
 jobs:
   test_example:

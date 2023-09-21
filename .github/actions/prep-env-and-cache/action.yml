@@ -1,0 +1,56 @@
+name: 'checkout-and-prepare'
+description: 'Prepare our github actions environment'
+
+inputs:
+  env_file:
+    description: 'the env file used for defining the environment'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+      - name: Print the env from variables.env
+        run: cat variables.env
+        shell: bash
+
+      - name: Set the env from variables.env
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: variables.env
+
+      - name: Print the current env
+        run: cat ${{ inputs.env_file }}
+        shell: bash
+
+      - name: Set the env from ${{ inputs.env_file }}
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: ${{ inputs.env_file }}
+
+      # https://phabricator.wikimedia.org/T346882
+      - name: Cache composer files
+        id: cache-composer
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-wikibase-composer
+        with:
+          path: cache
+          key: cache-wikibase-composer
+
+      - shell: bash
+        run: |
+          echo "Composer Cache Hit: ${{ steps.cache-composer.outputs.cache-hit }}"
+
+      - name: Cache files in git_cache
+        id: cache-git
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-wikibase-git-repo
+        with:
+          path: git_cache
+          key: cache-wikibase-git-repo
+
+      - shell: bash
+        run: |
+          echo "Git Cache Hit: ${{ steps.cache-git.outputs.cache-hit }}"
+

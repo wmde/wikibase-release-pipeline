@@ -8,8 +8,8 @@ FROM ubuntu:xenial as unpacker
 
 RUN mkdir artifacts
 
-COPY artifacts/Wikibase.tar.gz artifacts
-RUN tar xzf artifacts/Wikibase.tar.gz
+COPY artifacts/wikibase.tar.gz artifacts
+RUN tar xzf artifacts/wikibase.tar.gz
 
 FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION} as collector
 
