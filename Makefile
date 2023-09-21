@@ -15,7 +15,7 @@ lint:
 
 .PHONY: lint-fix
 lint-fix:
-	@bash test/scripts/lint_fix.sh
+	@bash test/scripts/lint.sh -f
 
 .PHONY: test
 test:
