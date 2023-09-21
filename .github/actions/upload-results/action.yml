@@ -1,56 +1,55 @@
-name: 'checkout-and-prepare'
-description: 'Upload builds as artifacts and to GHCR'
+name: "checkout-and-prepare"
+description: "Upload builds as artifacts and to GHCR"
 
 inputs:
   name:
-    description: 'the name of the built artifact'
+    description: "the name of the built artifact"
     required: true
   channel:
-    description: 'the channel this artifact was built for'
+    description: "the channel this artifact was built for"
     required: true
   github_token:
-    description: 'secret token to upload to github container registry'
+    description: "secret token to upload to github container registry"
     required: true
-
 
 runs:
   using: "composite"
   steps:
-      - name: Rename build_metadata artifact to contain channel name (if any)
-        shell: bash
-        run: >
-          cp artifacts/build_metadata_${{ inputs.name }}.env \
-            artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env || true
+    - name: Rename build_metadata artifact to contain channel name (if any)
+      shell: bash
+      run: >
+        cp artifacts/build_metadata_${{ inputs.name }}.env \
+          artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env || true
 
-      - name: Archive build_metadata Artifacts (if any)
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildMetadata
-          path: artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env
-          if-no-files-found: ignore
+    - name: Archive build_metadata Artifacts (if any)
+      uses: actions/upload-artifact@v3
+      with:
+        name: BuildMetadata
+        path: artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env
+        if-no-files-found: ignore
 
-      - name: Rename tar artifact to contain channel name (if any)
-        shell: bash
-        run: >
-          cp artifacts/${{ inputs.name }}.tar.gz \
-            artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz || true
+    - name: Rename tar artifact to contain channel name (if any)
+      shell: bash
+      run: >
+        cp artifacts/${{ inputs.name }}.tar.gz \
+          artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz || true
 
-      - name: Archive tar artifacts (if any)
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildArtifactsTar
-          path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz
-          if-no-files-found: ignore
+    - name: Archive tar artifacts (if any)
+      uses: actions/upload-artifact@v3
+      with:
+        name: BuildArtifactsTar
+        path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz
+        if-no-files-found: ignore
 
-      - name: Rename Docker artifact to contain channel name
-        shell: bash
-        run: >
-          cp artifacts/${{ inputs.name }}.docker.tar.gz \
-            artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz || true
+    - name: Rename Docker artifact to contain channel name
+      shell: bash
+      run: >
+        cp artifacts/${{ inputs.name }}.docker.tar.gz \
+          artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz || true
 
-      - name: Archive Docker artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildArtifactsDocker
-          path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz
-          if-no-files-found: error
+    - name: Archive Docker artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: BuildArtifactsDocker
+        path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz
+        if-no-files-found: error
