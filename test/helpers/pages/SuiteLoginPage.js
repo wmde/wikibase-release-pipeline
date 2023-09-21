@@ -34,7 +34,7 @@ class SuiteLoginPage extends PagePatch {
 	}
 
 	async loginAdmin() {
-		await this.login( browser.options.mwUser, browser.options.mwPwd );
+		await this.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 	}
 }
 
