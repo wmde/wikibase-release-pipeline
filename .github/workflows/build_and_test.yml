@@ -76,15 +76,6 @@ jobs:
           path: artifacts/${{ matrix.component }}.docker.tar.gz
           if-no-files-found: error
 
-      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      - name: Upload additional bundle results for wikibase build
-        if: matrix.component == 'wikibase'
-        uses: ./.github/actions/upload-results
-        with:
-          name: ${{ matrix.component }}-bundle
-          channel: ${{ matrix.channel }}
-          github_token: secrets.GITHUB_TOKEN
-
       - name: Scan Image
         uses: ./.github/actions/scan-image
         continue-on-error: true
