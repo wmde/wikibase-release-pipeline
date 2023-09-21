@@ -107,7 +107,7 @@ jobs:
             base__fedprops,
           ]
 
-        channel: ["lts", "stable"]
+        channel: ["lts", "stable", "next"]
 
         databaseImageName: [
             # 'mysql:5.6', disabled https://phabricator.wikimedia.org/T296066
@@ -170,7 +170,7 @@ jobs:
             "wmde.10",
           ]
 
-        channel: ["lts", "stable"]
+        channel: ["lts", "stable", "next"]
 
     needs:
       - build
@@ -220,7 +220,7 @@ jobs:
             "wmde.10-bundle",
           ]
 
-        channel: ["lts", "stable"]
+        channel: ["lts", "stable", "next"]
 
     env:
       TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
@@ -262,10 +262,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        channel: ["lts", "stable"]
+        channel: ["lts", "stable", "next"]
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: "channels/${{ matrix.channel }}.env"
