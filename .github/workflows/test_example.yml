@@ -7,8 +7,8 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - '**.md'
-      - '**.txt'
+      - '*.md'
+      - '*.txt'
 
 jobs:
   test_example:
