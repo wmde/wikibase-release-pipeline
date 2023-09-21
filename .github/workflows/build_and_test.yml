@@ -275,7 +275,7 @@ jobs:
         shell: bash
         run: |
           ./build.sh requirements "channels/${{ matrix.channel }}.env"
-          mv artifacts/built_versions.log artifacts/built_versions-${{ matrix.channel }}.log
+          cp artifacts/built_versions.log artifacts/built_versions-${{ matrix.channel }}.log
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
