@@ -19,7 +19,7 @@ runs:
       - name: Rename build_metadata artifact to contain channel name (if any)
         shell: bash
         run: >
-          mv artifacts/build_metadata_${{ inputs.name }}.env 
+          mv artifacts/build_metadata_${{ inputs.name }}.env \
             artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env || true
 
       - name: Archive build_metadata Artifacts (if any)
@@ -32,7 +32,7 @@ runs:
       - name: Rename tar artifact to contain channel name (if any)
         shell: bash
         run: >
-          mv artifacts/${{ inputs.name }}.tar.gz
+          mv artifacts/${{ inputs.name }}.tar.gz \
             artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz || true
 
       - name: Archive tar artifacts (if any)
@@ -45,7 +45,7 @@ runs:
       - name: Rename Docker artifact to contain channel name
         shell: bash
         run: >
-          mv artifacts/${{ inputs.name }}.docker.tar.gz
+          mv artifacts/${{ inputs.name }}.docker.tar.gz \
             artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz || true
 
       - name: Archive Docker artifact
