@@ -7,17 +7,14 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
-const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
+const saveScreenshot = require( '../helpers/save-screenshot.js' );
 const WikibaseApiPatch = require( '../helpers/WikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
-
-exports.screenshotPath = screenshotPath;
-exports.resultFilePath = resultFilePath;
 
 const fetchSuite = ( suiteName ) => {
 	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
@@ -166,7 +163,7 @@ exports.config = {
 		const screenshotFilename = `${testFile}__${test.title}`;
 
 		try {
-			saveScreenshot( screenshotFilename );
+			saveScreenshot( screenshotPath, screenshotFilename );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
