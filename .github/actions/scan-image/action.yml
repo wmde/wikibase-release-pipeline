@@ -17,9 +17,10 @@ runs:
       with:
         severity-cutoff: critical
         fail-build: false
-        image: ${{ inputs.image_name }}:${{ inputs.image_tag }}
+        image: ${{ inputs.image_name }}
 
-    # As this step depends on github.event.pull_request it never ran until https://github.com/wmde/wikibase-release-pipeline/pull/317 was done
+    # As this step depends on github.event.pull_request it never 
+    # ran until https://github.com/wmde/wikibase-release-pipeline/pull/317 was done
     # So disable it in that PR and fix it in a followup...
     # uploads it to the ui
     # - uses: github/codeql-action/upload-sarif@v1
@@ -29,7 +30,6 @@ runs:
     #   with:
     #     sarif_file: ${{ steps.scan.outputs.sarif }}
 
-    # output to terminal and move to non-conflicting name
     - name: Inspect action SARIF report
       shell: bash
       run: |
