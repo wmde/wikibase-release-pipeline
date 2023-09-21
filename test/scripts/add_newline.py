@@ -36,14 +36,14 @@ def add_newline(file: str, root_dir: str, should_fix: bool) -> bool:
         current_file.seek(0, os.SEEK_END)
         current_file.seek(current_file.tell() - 1, os.SEEK_SET)
 
-        contents = current_file.read(1)
-        if not contents == "\n":
+        last_character = current_file.read(1)
+        if last_character != "\n":
             if should_fix:
                 current_file.write("\n")
             else:
                 print(f"{file} lacks ending newline")
-            return True
-    return False
+                return False
+    return True
 
 
 if __name__ == "__main__":
@@ -55,6 +55,6 @@ if __name__ == "__main__":
     found_errors = False
     for file in sys.argv[2].split("\n"):
         if file_should_be_run(file):
-            found_errors |= add_newline(file, root, should_fix)
-    if found_errors and not should_fix:
+            found_errors |= not add_newline(file, root, should_fix)
+    if found_errors:
         sys.exit(2)
