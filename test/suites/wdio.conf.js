@@ -38,8 +38,9 @@ exports.config = {
 	// Use in a test as `browser.options.<key>`.
 
 	// Wiki admin
-	mwUser: process.env.MW_ADMIN_NAME,
-	mwPwd: process.env.MW_ADMIN_PASS,
+	// Custom values no longer allowed, apparently
+	// mwUser: process.env.MW_ADMIN_NAME,
+	// mwPwd: process.env.MW_ADMIN_PASS,
 
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
@@ -78,7 +79,8 @@ exports.config = {
 	logLevel: process.env.SELENIUM_LOG_LEVEL || 'error',
 
 	// Setting this enables automatic screenshots for when a browser command fails assertions.
-	screenshotPath,
+	// Custom values no longer allowed, apparently
+	// screenshotPath,
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
@@ -105,6 +107,7 @@ exports.config = {
 	],
 
 	// See also: http://mochajs.org
+	// mochaOpts not populating to browser.options
 	mochaOpts: {
 		ui: 'bdd',
 		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
