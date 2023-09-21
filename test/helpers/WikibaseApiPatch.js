@@ -4,7 +4,6 @@ const MWBot = require( 'mwbot' );
 const request = require( 'request' );
 
 class WikibaseApiPatch {
-
 	/**
 	 * Initialize the API
 	 *
@@ -13,24 +12,22 @@ class WikibaseApiPatch {
 	 * @return {Promise<MWBot>} resolving with MWBot
 	 */
 	async initialize( cpPosIndex ) {
-		const config = browser.config || browser.options;
+		const config = browser.options;
+
 		const jar = request.jar();
 		if ( cpPosIndex ) {
 			const cookie = request.cookie( `cpPosIndex=${cpPosIndex}` );
 			jar.setCookie( cookie, config.baseUrl );
 		}
 		const bot = new MWBot(
-			{
-				apiUrl: `${config.baseUrl}/api.php`
-			},
-			{
-				jar: jar
-			}
+			{ apiUrl: `${config.baseUrl}/api.php` },
+			{ jar: jar }
 		);
-		await bot.loginGetEditToken( {
-			username: config.mwUser,
-			password: config.mwPwd
-		} );
+		const loginCredentials = {
+			username: process.env.MW_ADMIN_NAME,
+			password: process.env.MW_ADMIN_PASS
+		};
+		await bot.loginGetEditToken( loginCredentials );
 		this.bot = bot;
 
 		return bot;
@@ -158,7 +155,6 @@ class WikibaseApiPatch {
 			return propertyId;
 		}
 	}
-
 }
 
 module.exports = new WikibaseApiPatch();
