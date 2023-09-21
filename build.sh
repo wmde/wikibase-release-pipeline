@@ -14,19 +14,19 @@ usage() {
     echo "USAGE: $0 <TARGET> <RELEASE_ENV_FILE>" >&2
 }
 
-if [ ! -n "$TARGET" ]; then
-    echo "ERROR: TARGET is not set!" &>2
+if [[ -z "$TARGET" ]]; then
+    echo "ERROR: TARGET is not set!" >&2
     usage
     exit 1
 fi
 
-if [ ! -f "$RELEASE_ENV_FILE" ]; then
+if [[ ! -f "$RELEASE_ENV_FILE" ]]; then
     echo "ERROR: RELEASE_ENV_FILE is not set!" >&2
     usage
     exit 1
 fi
 
-if [ ! -f "local.env" ]; then
+if [[ ! -f "local.env" ]]; then
     touch local.env
 fi
 
@@ -67,6 +67,6 @@ docker run \
     -e GIT_REVISION_HASH="$(git rev-parse --short HEAD)" \
     -e GIT_REVISION_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
     \
-    builder:latest make "$TARGET" -j$(nproc)
+    builder:latest make "$TARGET" -j"$(nproc)"
 
 

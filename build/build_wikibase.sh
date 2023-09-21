@@ -30,7 +30,7 @@ chmod 777 "$COMPOSER_VENDOR"
 # are currently already in the context of a container, we cannot just use
 # the current path from the current context
 docker run --rm \
-    --volume $WIKIBASE_PATH_HOST:/tmp/Wikibase \
+    --volume "$WIKIBASE_PATH_HOST":/tmp/Wikibase \
     -u "$(id -u)":"$(id -g)" \
     "$COMPOSER_IMAGE_NAME:$COMPOSER_IMAGE_VERSION" \
     config --no-plugins allow-plugins.composer/installers false -d "/tmp/Wikibase"
@@ -41,7 +41,7 @@ docker run --rm \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
 
-tar -C $(dirname "$WIKIBASE_PATH") -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$ARTIFACT_PATH"/wikibase.tar.gz
+tar -C "$(dirname "$WIKIBASE_PATH")" -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$ARTIFACT_PATH"/wikibase.tar.gz
 
 TARBALL_PATH="$ARTIFACT_PATH/wikibase.tar.gz"
 
