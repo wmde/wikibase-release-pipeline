@@ -4,16 +4,20 @@ set -e
 
 image_name="$1"
 
-mkdir -p Docker/build/Wikibase/artifacts
-mkdir -p Docker/build/Wikibase/artifacts/extensions
+BUILD_TMP="/tmp/build-wikibase-docker"
+
+mkdir -p "${BUILD_TMP}"
+cp -r Docker/build/Wikibase/* "${BUILD_TMP}"
+
+mkdir -p "${BUILD_TMP}/artifacts/extensions"
 
 MEDIAWIKI_IMAGE_VERSION="$MEDIAWIKI_VERSION"
 
 if [ -f "$TARBALL_PATH" ]; then
-    cp "$TARBALL_PATH" Docker/build/Wikibase/artifacts/
+    cp "$TARBALL_PATH" "${BUILD_TMP}/artifacts/"
 fi
 
-cp Docker/build/wait-for-it.sh Docker/build/Wikibase/artifacts/
+cp Docker/build/wait-for-it.sh "${BUILD_TMP}/artifacts/"
 set -o allexport; source Docker/build/Wikibase/default.env; set +o allexport
 
 docker build \
@@ -32,7 +36,7 @@ docker build \
     \
     -t "$image_name" \
     \
-    Docker/build/Wikibase/
+    ${BUILD_TMP}
 
 build/docker_tag.sh "$image_name"
 

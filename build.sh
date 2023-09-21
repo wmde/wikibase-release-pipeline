@@ -20,13 +20,13 @@ if [[ -z "$TARGET" ]]; then
     exit 1
 fi
 
-if [[ ! -f "$RELEASE_ENV_FILE" ]]; then
+if ! [[ -f "$RELEASE_ENV_FILE" ]]; then
     echo "ERROR: RELEASE_ENV_FILE is not set!" >&2
     usage
     exit 1
 fi
 
-if [[ ! -f "local.env" ]]; then
+if ! [[ -f "local.env" ]]; then
     touch local.env
 fi
 
@@ -68,5 +68,3 @@ docker run \
     -e GIT_REVISION_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
     \
     builder:latest make "$TARGET" -j"$(nproc)"
-
-
