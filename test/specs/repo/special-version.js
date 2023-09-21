@@ -4,7 +4,8 @@ const assert = require( 'assert' );
 const defaultFunctions = require( '../../helpers/default-functions' );
 
 describe( 'Special:Version', function () {
-	it( 'Should contain the correct MediaWiki version', async function () {
+	/* TODO: where should this variable come from? should the test have the env? */
+	it.skip( 'Should contain the correct MediaWiki version', async function () {
 		if ( process.env.WMDE_RELEASE_VERSION === 'wmdeprerelease' ) {
 			this.skip();
 		}
