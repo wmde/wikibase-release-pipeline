@@ -62,6 +62,7 @@ jobs:
           channel: ${{ matrix.channel }}
           github_token: secrets.GITHUB_TOKEN
 
+      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Upload additional bundle results for wikibase build
         if: matrix.component == 'wikibase'
         uses: ./.github/actions/upload-results
@@ -77,13 +78,14 @@ jobs:
           image_name: ${{ matrix.component }}
           channel: ${{ matrix.channel }}
 
+      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Scan additional bundle Image for wikibase builds
         if: matrix.component == 'wikibase'
         uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
-          image_name: "wikibase/${{ matrix.component }}-bundle"
-          image_tag: latest
+          image_name: "${{ matrix.component }}-bundle"
+          channel: ${{ matrix.channel }}
 
   test:
     strategy:
@@ -200,7 +202,6 @@ jobs:
           name: TestArtifacts-${{ matrix.channel }}
           path: test/suites/**/results
 
-
   test_upgrade_bundle:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -211,7 +212,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
             # Latest 1.37
@@ -271,12 +271,15 @@ jobs:
           env-file: "channels/${{ matrix.channel }}.env"
 
       - name: Build version requirements
-        run: ./build.sh requirements "channels/${{ matrix.channel }}.env"
         shell: bash
+        run: |
+          ./build.sh requirements "channels/${{ matrix.channel }}.env"
+          mv artifacts/built_versions.log artifacts/built_versions-${{ matrix.channel }}.log
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata-${{ matrix.channel }}
+          name: BuildMetadata
+          path: artifacts/built_versions-${{ matrix.channel }}.log
           if-no-files-found: error
-          path: artifacts/built_versions.log
+

@@ -16,26 +16,44 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: BuildMetadata-${{ inputs.channel }}
-          if-no-files-found: ignore
-          path: artifacts/build_metadata_${{ inputs.name }}.env
+      - name: Rename build_metadata artifact to contain channel name (if any)
+        shell: bash
+        run: >
+          mv artifacts/build_metadata_${{ inputs.name }}.env 
+            artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env || true
 
-      - name: Archive tar Artifacts (if any)
+      - name: Archive build_metadata Artifacts (if any)
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifactsTar-${{ inputs.channel }}
+          name: BuildMetadata
+          path: artifacts/build_metadata_${{ inputs.name }}-${{ inputs.channel }}.env
           if-no-files-found: ignore
-          path: artifacts/${{ inputs.name }}.tar.gz
 
-      - name: Archive Docker Artifact
+      - name: Rename tar artifact to contain channel name (if any)
+        shell: bash
+        run: >
+          mv artifacts/${{ inputs.name }}.tar.gz
+            artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz || true
+
+      - name: Archive tar artifacts (if any)
         uses: actions/upload-artifact@v3
         with:
-          name: BuildArtifactsDocker-${{ inputs.channel }}
+          name: BuildArtifactsTar
+          path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.tar.gz
+          if-no-files-found: ignore
+
+      - name: Rename Docker artifact to contain channel name
+        shell: bash
+        run: >
+          mv artifacts/${{ inputs.name }}.docker.tar.gz
+            artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz || true
+
+      - name: Archive Docker artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildArtifactsDocker
+          path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz
           if-no-files-found: error
-          path: artifacts/${{ inputs.name }}.docker.tar.gz
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
