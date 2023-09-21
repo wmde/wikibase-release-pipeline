@@ -55,14 +55,14 @@ jobs:
         run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
         shell: bash
 
-      - name: Archive build_metadata Artifacts (if any)
+      - name: Archive build_metadata artifact (if any)
         uses: actions/upload-artifact@v3
         with:
           name: Metadata-${{ matrix.channel }}
           path: artifacts/build_metadata_${{ matrix.component }}.env
           if-no-files-found: ignore
 
-      - name: Archive tar artifacts (if any)
+      - name: Archive tar artifact (if any)
         uses: actions/upload-artifact@v3
         with:
           name: TarBalls-${{ matrix.channel }}
