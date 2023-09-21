@@ -59,6 +59,7 @@ endif
 	@bash test/scripts/test_suite.sh base__fedprops
 	@bash test/scripts/test_suite.sh base__pingback
 
+# TODO: https://phabricator.wikimedia.org/T347084
 requirements:
 	python3 build/requirements/build_version_requirements.py
 	cat artifacts/built_versions.log

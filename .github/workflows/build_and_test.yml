@@ -257,6 +257,7 @@ jobs:
           name: TestResults-{{ matrix.channel }}
           path: test/suites/**/results
 
+  # TODO: https://phabricator.wikimedia.org/T347084
   metadata:
     runs-on: ubuntu-latest
     timeout-minutes: 20
