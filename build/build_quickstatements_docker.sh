@@ -15,6 +15,7 @@ docker build \
 
 build/docker_tag.sh "$image_name"
 
+# TODO: this saves all the images from the local registry, all builds, not just the latest build
 docker save \
     "$image_name" \
     "${DOCKER_REPOSITORY_NAME}/${image_name}" \
