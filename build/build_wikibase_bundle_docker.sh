@@ -4,11 +4,13 @@ set -e
 
 BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
 
+# TODO: https://phabricator.wikimedia.org/T347053
 mkdir -p "$BUILT_EXTENSIONS_PATH"
 
 docker load -i "artifacts/wikibase.docker.tar.gz"
 
 ## copy oauth template to build artifacts 
+# TODO: https://phabricator.wikimedia.org/T347053
 cp Docker/build/QuickStatements/oauth.ini Docker/build/WikibaseBundle/artifacts/
 
 ## Create LocalSettings dir in build folder
