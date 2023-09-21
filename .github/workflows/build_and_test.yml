@@ -198,7 +198,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestResults-{{ matrix.channel }}
+          name: TestResults-${{ matrix.channel }}
           path: test/suites/**/results
 
   test_upgrade_bundle:
@@ -248,7 +248,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestResults-{{ matrix.channel }}
+          name: TestResults-${{ matrix.channel }}
           path: test/suites/**/results
 
   # TODO: https://phabricator.wikimedia.org/T347084
