@@ -51,30 +51,24 @@ jobs:
         with:
           env_file: "channels/${{ matrix.channel }}.env"
 
-      - name: Build Artifact
+      - name: Build
         run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
         shell: bash
 
-      - name: Archive build_metadata artifact (if any)
-        uses: actions/upload-artifact@v3
+      - name: Upload results
+        uses: ./.github/actions/upload-results
         with:
-          name: Metadata-${{ matrix.channel }}
-          path: artifacts/build_metadata_${{ matrix.component }}.env
-          if-no-files-found: ignore
+          name: ${{ matrix.component }}
+          channel: ${{ matrix.channel }}
 
-      - name: Archive tar artifact (if any)
-        uses: actions/upload-artifact@v3
+      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+      - name: Upload additional bundle results for wikibase build
+        if: matrix.component == 'wikibase'
+        uses: ./.github/actions/upload-results
         with:
-          name: TarBalls-${{ matrix.channel }}
-          path: artifacts/${{ matrix.component }}.tar.gz
-          if-no-files-found: ignore
-
-      - name: Archive Docker artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: DockerImages-${{ matrix.channel }}
-          path: artifacts/${{ matrix.component }}.docker.tar.gz
-          if-no-files-found: error
+          name: ${{ matrix.component }}-bundle
+          channel: ${{ matrix.channel }}
+          github_token: secrets.GITHUB_TOKEN
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
