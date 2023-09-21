@@ -35,11 +35,11 @@ runs:
       run: |
         cat ${{ steps.scan.outputs.sarif }}
         mkdir -p /tmp/sarif-reports
-        cp ${{ steps.scan.outputs.sarif }} /tmp/sarif-reports/${{ inputs.image_name }}-${{ inputs.channel }}.sarif
+        cp ${{ steps.scan.outputs.sarif }} /tmp/sarif-reports/${{ inputs.image_name }}.sarif
 
     - name: Archive scan artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ScanArtifacts
+        name: ScanResults-${{ inputs.channel }}
         if-no-files-found: error
-        path: /tmp/sarif-reports/${{ inputs.image_name }}-${{ inputs.channel }}.sarif
+        path: /tmp/sarif-reports/${{ inputs.image_name }}.sarif
