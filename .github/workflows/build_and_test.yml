@@ -17,8 +17,8 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - '*.md'
-      - '*.txt'
+      - '**.md'
+      - '**.txt'
 
 env:
   env_file: ${{ github.event.inputs.env_file || 'versions/wmde12.env' }}
