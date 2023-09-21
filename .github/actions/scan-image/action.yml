@@ -38,7 +38,7 @@ runs:
         cp ${{ steps.scan.outputs.sarif }} /tmp/sarif-reports/${{ inputs.image_name }}-${{ inputs.channel }}.sarif
 
     - name: Archive scan artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ScanArtifacts
         if-no-files-found: error
