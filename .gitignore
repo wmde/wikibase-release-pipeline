@@ -8,8 +8,6 @@ Wikibase.tar.gz
 *.docker.tar.gz
 
 Docker/build/Wikibase/artifacts
-Docker/build/WikibaseBundle/artifacts
-Docker/build/WikibaseBundle/LocalSettings.d
 
 Docker/build/WDQS/wait-for-it.sh
 
