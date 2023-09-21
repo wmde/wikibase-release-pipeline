@@ -126,7 +126,7 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifactsDocker-${{ matrix.channel }}
+          name: DockerImages-${{ matrix.channel }}
           path: artifacts/
 
       - name: Test ${{ matrix.suite }}
@@ -152,7 +152,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestArtifacts-${{ matrix.channel }}
+          name: TestResults-${{ matrix.channel }}
           path: test/suites/**/results
 
   test_upgrade_base:
@@ -181,7 +181,7 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifactsDocker-${{ matrix.channel }}
+          name: DockerImages-${{ matrix.channel }}
           path: artifacts/
 
       - name: Test upgrade from ${{ matrix.version }}
@@ -199,7 +199,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestArtifacts-${{ matrix.channel }}
+          name: TestResults-{{ matrix.channel }}
           path: test/suites/**/results
 
   test_upgrade_bundle:
@@ -231,7 +231,7 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: BuildArtifactsDocker-${{ matrix.channel }}
+          name: DockerImages-${{ matrix.channel }}
           path: artifacts/
 
       - name: Test upgrade from ${{ matrix.version }}
@@ -249,7 +249,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestArtifacts-${{ matrix.channel }}
+          name: TestResults-{{ matrix.channel }}
           path: test/suites/**/results
 
   metadata:
@@ -271,17 +271,11 @@ jobs:
         with:
           env-file: "channels/${{ matrix.channel }}.env"
 
-      - name: Build version requirements
-        shell: bash
-        run: |
-          ./build.sh requirements "channels/${{ matrix.channel }}.env"
-          mv artifacts/built_versions.log artifacts/built_versions-${{ matrix.channel }}.log
-
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: BuildMetadata
-          path: artifacts/built_versions-${{ matrix.channel }}.log
+          name: Metadata-${{ matrix.channel }}
+          path: artifacts/built_versions.log
           if-no-files-found: error
 
   upload_ghcr:
