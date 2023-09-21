@@ -54,19 +54,3 @@ runs:
           name: BuildArtifactsDocker
           path: artifacts/${{ inputs.name }}-${{ inputs.channel }}.docker.tar.gz
           if-no-files-found: error
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        if: github.ref == 'refs/heads/main'
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ inputs.github_token }}
-
-      - name: Store release version docker image on GHCR
-        if: github.ref == 'refs/heads/main'
-        uses: wmde/tag-push-ghcr-action@v3
-        with:
-          image_name: "wikibase/${{ inputs.name }}"
-          tag: ${{ github.run_id }}
-
