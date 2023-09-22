@@ -3,6 +3,10 @@
 const MWBot = require( 'mwbot' );
 const request = require( 'request' );
 
+/**
+ * Patches the use of `browser.config` in
+ * https://github.com/wmde/wdio-wikibase/blob/master/wikibase.api.js
+ */
 class WikibaseApiPatch {
 	/**
 	 * Initialize the API

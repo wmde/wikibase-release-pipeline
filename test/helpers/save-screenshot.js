@@ -1,6 +1,9 @@
 'use strict';
 
-// Adapted from wdio-mediawiki/index.js
+/**
+ * Patches the use of `browser.config` in the screenshot-related code in
+ * https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/index.js
+ */
 
 const fs = require( 'fs' );
 const { makeFilenameDate } = require( 'wdio-mediawiki' );

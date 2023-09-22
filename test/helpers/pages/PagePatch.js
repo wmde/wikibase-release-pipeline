@@ -4,7 +4,8 @@ const querystring = require( 'querystring' );
 const Page = require( 'wdio-mediawiki/Page' );
 
 /**
- * Based on http://webdriver.io/guide/testrunner/pageobjects.html
+ * Patches the use of `browser.config` in
+ * https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/Page.js
  */
 class PagePatch extends Page {
 
