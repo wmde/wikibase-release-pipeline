@@ -1,13 +1,13 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Wikibase pre upgrade', function () {
 	it( 'Should be able to create a specific item', async () => {
 		const itemLabel = 'UpgradeItem';
 		const propertyValue = 'UpgradeItemStringValue';
-		const propertyId = await WikibaseApiPatch.createProperty( 'string' );
+		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
 				{
@@ -22,7 +22,7 @@ describe( 'Wikibase pre upgrade', function () {
 			]
 		};
 
-		const itemId = await WikibaseApiPatch.createItem( itemLabel, data );
+		const itemId = await WikibaseApi.createItem( itemLabel, data );
 
 		assert.strictEqual( itemId.startsWith( 'Q' ), true );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );

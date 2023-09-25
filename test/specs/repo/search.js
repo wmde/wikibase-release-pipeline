@@ -1,12 +1,12 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Search', function () {
 	it( 'Should be able to create an item and search for it', async () => {
 		const itemLabel = 'something';
-		await WikibaseApiPatch.createItem( itemLabel, {} );
+		await WikibaseApi.createItem( itemLabel, {} );
 
 		await browser.waitForJobs();
 

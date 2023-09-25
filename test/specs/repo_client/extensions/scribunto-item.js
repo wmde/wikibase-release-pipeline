@@ -7,7 +7,7 @@ const querystring = require( 'querystring' );
 const fsPromises = require( 'fs/promises' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 const readFileEncoding = require( '../../../helpers/readFileEncoding' );
-const WikibaseApiPatch = require( '../../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../../helpers/WikibaseApiPatch' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -19,7 +19,7 @@ describe( 'Scribunto Item', function () {
 	it( 'Should create an item on repo', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const propertyId = await WikibaseApiPatch.createProperty( 'string' );
+		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
 				{
@@ -34,7 +34,7 @@ describe( 'Scribunto Item', function () {
 			]
 		};
 
-		itemId = await WikibaseApiPatch.createItem( itemLabel, data );
+		itemId = await WikibaseApi.createItem( itemLabel, data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const addButtonEl = await $(

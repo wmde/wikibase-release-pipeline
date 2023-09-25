@@ -4,7 +4,7 @@ const assert = require( 'assert' );
 const path = require( 'path' );
 const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApiPatch = require( '../../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../../helpers/WikibaseApiPatch' );
 
 describe( 'WikibaseLocalMedia', function () {
 	let itemId = null;
@@ -37,7 +37,7 @@ describe( 'WikibaseLocalMedia', function () {
 	it( 'Should allow to create a property with localMedia datatype', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
-		propertyId = await WikibaseApiPatch.createProperty( 'localMedia' );
+		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
@@ -66,7 +66,7 @@ describe( 'WikibaseLocalMedia', function () {
 			]
 		};
 
-		itemId = await WikibaseApiPatch.createItem( 'image-test', data );
+		itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const snakviewEl = await $( '.wikibase-snakview-value img' );

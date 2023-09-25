@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApiPatch = require( '../../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../../helpers/WikibaseApiPatch' );
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;
@@ -11,7 +11,7 @@ describe( 'WikibaseEdtf', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
-		propertyId = await WikibaseApiPatch.createProperty( 'edtf' );
+		propertyId = await WikibaseApi.createProperty( 'edtf' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		const rawValue = '1985-04-12T23:20:30';
@@ -30,7 +30,7 @@ describe( 'WikibaseEdtf', function () {
 			]
 		};
 
-		itemId = await WikibaseApiPatch.createItem( 'edtf-test', data );
+		itemId = await WikibaseApi.createItem( 'edtf-test', data );
 
 		// go look at wikibase
 		const response = await browser.makeRequest(

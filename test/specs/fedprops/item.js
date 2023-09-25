@@ -4,7 +4,7 @@ const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -38,7 +38,7 @@ describe( 'Fed props Item', function () {
 				}
 			]
 		};
-		await WikibaseApiPatch.createItem( Util.getTestString( itemLabel ), data );
+		await WikibaseApi.createItem( Util.getTestString( itemLabel ), data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 

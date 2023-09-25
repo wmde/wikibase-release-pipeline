@@ -4,7 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const lodash = require( 'lodash' );
-const WikibaseApiPatch = require( './WikibaseApiPatch' );
+const WikibaseApi = require( './WikibaseApiPatch' );
 
 const defaultFunctions = function () {
 	/**
@@ -47,7 +47,7 @@ const defaultFunctions = function () {
 	 * Delete a claim by guid or pipe-separated list of guids
 	 */
 	browser.addCommand( 'deleteClaim', async ( claimGuid ) => {
-		const bot = await WikibaseApiPatch.getBot();
+		const bot = await WikibaseApi.getBot();
 
 		return bot.request( {
 			action: 'wbremoveclaims',

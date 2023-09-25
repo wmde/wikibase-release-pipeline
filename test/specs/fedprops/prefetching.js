@@ -2,7 +2,7 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Property Prefetching', function () {
 	let itemId;
@@ -38,7 +38,7 @@ describe( 'Property Prefetching', function () {
 		assert.strictEqual( claims.length, NUM_PROPERTIES );
 
 		const data = { claims: claims };
-		itemId = await WikibaseApiPatch.createItem( Util.getTestString( itemLabel ), data );
+		itemId = await WikibaseApi.createItem( Util.getTestString( itemLabel ), data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const toolbarButtonEl = await $(

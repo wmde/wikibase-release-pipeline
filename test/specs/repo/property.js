@@ -2,13 +2,13 @@
 
 const assert = require( 'assert' );
 const Property = require( '../../helpers/pages/entity/property.page' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Property', function () {
 	let propertyId = null;
 
 	it( 'Should be able to add statement and reference to property', async () => {
-		propertyId = await WikibaseApiPatch.getProperty( 'string' );
+		propertyId = await WikibaseApi.getProperty( 'string' );
 
 		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
 
