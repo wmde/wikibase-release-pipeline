@@ -7,22 +7,19 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
-const JsonReporter = require( '../helpers/json-reporter.js' );
-const defaultFunctions = require( '../helpers/default-functions.js' );
-const saveScreenshot = require( '../helpers/WDIOMediawikiScreenshotPatch.js' );
-const WikibaseApi = require( '../helpers/WDIOWikibaseApiPatch.js' );
+const JsonReporter = require( './helpers/json-reporter.js' );
+const defaultFunctions = require( './helpers/default-functions.js' );
+const saveScreenshot = require( './helpers/WDIOMediawikiScreenshotPatch.js' );
+const WikibaseApi = require( './helpers/WDIOWikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
 const fetchSuite = ( suiteName ) => {
-	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
-		const suiteConfigFile = path.join(
-			__dirname,
-			suiteName,
-			`${suiteName}.conf.js`
-		);
+	const suitePath = path.join( __dirname, 'suites', suiteName );
+	if ( fs.lstatSync( suitePath ).isDirectory() ) {
+		const suiteConfigFile = path.join( suitePath, `${suiteName}.conf.js` );
 		try {
 			const suiteConfig = require( suiteConfigFile );
 			return suiteConfig.config.suite;
@@ -57,7 +54,7 @@ exports.config = {
 					// different screen sizes. Bootstrap considers widths between 1200 and 1400
 					// as XL, let's use that.
 					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...( [ '--window-size=1280,800' ] ),
+					...[ '--window-size=1280,800' ],
 					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 					// Chrome sandbox does not work in Docker
 					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )

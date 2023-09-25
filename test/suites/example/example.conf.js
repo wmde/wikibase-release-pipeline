@@ -2,8 +2,8 @@
 
 exports.config = {
 	suite: [
-		'../specs/quickstatements/*.js',
-		'../specs/repo/queryservice.js',
-		'../specs/elasticsearch/*.js'
+		'./specs/quickstatements/*.js',
+		'./specs/repo/queryservice.js',
+		'./specs/elasticsearch/*.js'
 	]
 };
