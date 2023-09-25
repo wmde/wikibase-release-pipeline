@@ -68,7 +68,6 @@ jobs:
         with:
           name: ${{ matrix.component }}-bundle
           channel: ${{ matrix.channel }}
-          github_token: secrets.GITHUB_TOKEN
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
