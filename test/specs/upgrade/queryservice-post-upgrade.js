@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const { getElementByURI } = require( '../../helpers/blazegraph' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
@@ -17,7 +17,7 @@ describe( 'Wikibase post upgrade', function () {
 	} );
 
 	it( 'Should be able to create a new specific item', async () => {
-		newPropertyId = await WikibaseApiPatch.createProperty( 'string' );
+		newPropertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
 				{
@@ -32,7 +32,7 @@ describe( 'Wikibase post upgrade', function () {
 			]
 		};
 
-		newItemId = await WikibaseApiPatch.createItem( itemLabel, data );
+		newItemId = await WikibaseApi.createItem( itemLabel, data );
 
 		assert.strictEqual( newItemId.startsWith( 'Q' ), true );
 		assert.strictEqual( newPropertyId.startsWith( 'P' ), true );

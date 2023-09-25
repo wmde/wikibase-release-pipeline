@@ -5,7 +5,7 @@ const assert = require( 'assert' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
-const WikibaseApiPatch = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -52,7 +52,7 @@ describe( 'QueryService', () => {
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
 
-		const propertyId = await WikibaseApiPatch.createProperty( 'string' );
+		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
 				{
@@ -67,7 +67,7 @@ describe( 'QueryService', () => {
 			]
 		};
 
-		const itemId = await WikibaseApiPatch.createItem(
+		const itemId = await WikibaseApi.createItem(
 			Util.getTestString( itemLabel ),
 			data
 		);
@@ -119,7 +119,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not show up in queryservice ui after deletion', async () => {
 		// TODO make an item using the UI
-		const itemId = await WikibaseApiPatch.createItem( Util.getTestString( 'T267743-' ) );
+		const itemId = await WikibaseApi.createItem( Util.getTestString( 'T267743-' ) );
 
 		await SuiteLoginPage.loginAdmin();
 
