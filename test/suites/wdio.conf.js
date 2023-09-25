@@ -129,6 +129,8 @@ exports.config = {
 		await WikibaseApi.initialize();
 		defaultFunctions.init();
 
+		// TODO: Refactor this
+		// passing installed_extensions to browser.options shouldn't presently work
 		if ( !browser.options.installed_extensions ) {
 			const extensions = await browser.getInstalledExtensions(
 				process.env.MW_SERVER
