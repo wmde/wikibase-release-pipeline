@@ -88,7 +88,7 @@ exports.config = {
 		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
-	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
+	suites: { [ process.env.SUITE ]: fetchSuite( __dirname, process.env.SUITE ) },
 
 	// =====
 	// Hooks

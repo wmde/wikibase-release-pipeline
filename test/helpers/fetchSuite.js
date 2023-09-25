@@ -3,8 +3,8 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 
-const fetchSuite = ( suiteName ) => {
-	const suitePath = path.join( __dirname, 'suites', suiteName );
+const fetchSuite = ( dirname, suiteName ) => {
+	const suitePath = path.join( dirname, 'suites', suiteName );
 	if ( fs.lstatSync( suitePath ).isDirectory() ) {
 		const suiteConfigFile = path.join( suitePath, `${suiteName}.conf.js` );
 		try {
