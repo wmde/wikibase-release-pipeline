@@ -16,9 +16,8 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: Metadata-${{ inputs.channel }}
-        path: artifacts/build_metadata_${{ inputs.name }}.env
+        path: artifacts/build_metadata_*.env
         if-no-files-found: ignore
-
 
     - name: Archive tar artifacts (if any)
       uses: actions/upload-artifact@v3
