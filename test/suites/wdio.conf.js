@@ -9,7 +9,7 @@ const fs = require( 'fs' );
 const path = require( 'path' );
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
-const saveScreenshot = require( '../helpers/save-screenshot.js' );
+const saveScreenshot = require( '../helpers/MediawikiScreenshotPatch.js' );
 const WikibaseApiPatch = require( '../helpers/WikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
