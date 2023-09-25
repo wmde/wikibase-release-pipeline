@@ -6,6 +6,8 @@ const Page = require( 'wdio-mediawiki/Page' );
 /**
  * Patches the use of `browser.config` in
  * https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/Page.js
+ * TODO: Update wdio-mediawiki, remove this file.
+ * See https://phabricator.wikimedia.org/T347137
  */
 class PagePatch extends Page {
 

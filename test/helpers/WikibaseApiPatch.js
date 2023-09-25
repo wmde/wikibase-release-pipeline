@@ -6,6 +6,8 @@ const request = require( 'request' );
 /**
  * Patches the use of `browser.config` in
  * https://github.com/wmde/wdio-wikibase/blob/master/wikibase.api.js
+ * TODO: Update wdio-wikibase, remove this file.
+ * See https://phabricator.wikimedia.org/T346623
  */
 class WikibaseApiPatch {
 	/**
