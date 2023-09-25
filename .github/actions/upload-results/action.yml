@@ -2,7 +2,7 @@ name: "checkout-and-prepare"
 description: "Upload builds as artifacts and to GHCR"
 
 inputs:
-  name:
+  component:
     description: "the name of the built artifact"
     required: true
   channel:
@@ -24,12 +24,12 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: TarBalls-${{ inputs.channel }}
-        path: artifacts/${{ inputs.name }}.tar.gz
+        path: artifacts/${{ inputs.component }}.tar.gz
         if-no-files-found: ignore
 
     - name: Archive Docker artifact
       uses: actions/upload-artifact@v3
       with:
         name: DockerImages-${{ inputs.channel }}
-        path: artifacts/${{ inputs.name }}.docker.tar.gz
+        path: artifacts/${{ inputs.component }}.docker.tar.gz
         if-no-files-found: error

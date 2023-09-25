@@ -58,7 +58,7 @@ jobs:
       - name: Upload results
         uses: ./.github/actions/upload-results
         with:
-          name: ${{ matrix.component }}
+          component: ${{ matrix.component }}
           channel: ${{ matrix.channel }}
 
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
@@ -66,7 +66,7 @@ jobs:
         if: matrix.component == 'wikibase'
         uses: ./.github/actions/upload-results
         with:
-          name: ${{ matrix.component }}-bundle
+          component: ${{ matrix.component }}-bundle
           channel: ${{ matrix.channel }}
 
       - name: Scan Image
