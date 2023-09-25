@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const Property = require( '../../helpers/pages/entity/property.page' );
-const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'Property', function () {
 	let propertyId = null;

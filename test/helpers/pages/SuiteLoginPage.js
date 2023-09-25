@@ -1,6 +1,6 @@
 'use strict';
 
-const Page = require( './PagePatch' );
+const Page = require( './WDIOMediawikiPagePatch' );
 
 // This is a replacement for `wdio-mediawiki/LoginPage`
 // which as of version 2.2.0 does not properly await WDIO elements

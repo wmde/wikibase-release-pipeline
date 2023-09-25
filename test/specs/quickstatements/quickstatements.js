@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const lodash = require( 'lodash' );
-const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {
 	const references = response.data.claims[ propertyId ][ 0 ].references;

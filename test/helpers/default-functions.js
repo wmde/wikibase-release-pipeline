@@ -4,7 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const lodash = require( 'lodash' );
-const WikibaseApi = require( './WikibaseApiPatch' );
+const WikibaseApi = require( './WDIOWikibaseApiPatch' );
 
 const defaultFunctions = function () {
 	/**

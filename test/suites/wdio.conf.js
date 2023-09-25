@@ -9,8 +9,8 @@ const fs = require( 'fs' );
 const path = require( 'path' );
 const JsonReporter = require( '../helpers/json-reporter.js' );
 const defaultFunctions = require( '../helpers/default-functions.js' );
-const saveScreenshot = require( '../helpers/MediawikiScreenshotPatch.js' );
-const WikibaseApi = require( '../helpers/WikibaseApiPatch.js' );
+const saveScreenshot = require( '../helpers/WDIOMediawikiScreenshotPatch.js' );
+const WikibaseApi = require( '../helpers/WDIOWikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;

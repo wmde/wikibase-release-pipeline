@@ -4,7 +4,7 @@ const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
-const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 

@@ -7,7 +7,7 @@ const querystring = require( 'querystring' );
 const fsPromises = require( 'fs/promises' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
 const readFileEncoding = require( '../../../helpers/readFileEncoding' );
-const WikibaseApi = require( '../../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 

@@ -2,7 +2,7 @@
 
 const assert = require( 'assert' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApi = require( '../../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;

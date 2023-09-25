@@ -5,7 +5,7 @@ const assert = require( 'assert' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
-const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {

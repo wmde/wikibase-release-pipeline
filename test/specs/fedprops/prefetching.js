@@ -2,7 +2,7 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApi = require( '../../helpers/WikibaseApiPatch' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'Property Prefetching', function () {
 	let itemId;
