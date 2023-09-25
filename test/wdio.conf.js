@@ -6,27 +6,15 @@
 'use strict';
 
 const fs = require( 'fs' );
-const path = require( 'path' );
 const JsonReporter = require( './helpers/json-reporter.js' );
 const defaultFunctions = require( './helpers/default-functions.js' );
+const fetchSuite = require( './helpers/fetchSuite.js' );
 const saveScreenshot = require( './helpers/WDIOMediawikiScreenshotPatch.js' );
 const WikibaseApi = require( './helpers/WDIOWikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
-
-const fetchSuite = ( suiteName ) => {
-	const suitePath = path.join( __dirname, 'suites', suiteName );
-	if ( fs.lstatSync( suitePath ).isDirectory() ) {
-		const suiteConfigFile = path.join( suitePath, `${suiteName}.conf.js` );
-		try {
-			const suiteConfig = require( suiteConfigFile );
-			return suiteConfig.config.suite;
-		} catch {}
-	}
-	return undefined;
-};
 
 exports.config = {
 	// ======
