@@ -1,10 +1,10 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const path = require( 'path' );
 const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
+const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'WikibaseLocalMedia', function () {
 	let itemId = null;

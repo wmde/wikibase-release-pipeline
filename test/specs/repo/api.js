@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const Util = require( 'wdio-mediawiki/Util' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'Wikibase API', function () {
 	it( 'Should be able to create many properties and items', async () => {

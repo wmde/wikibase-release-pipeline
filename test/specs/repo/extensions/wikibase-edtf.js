@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const defaultFunctions = require( '../../../helpers/default-functions' );
+const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;

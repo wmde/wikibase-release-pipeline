@@ -2,9 +2,9 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const ItemPage = require( 'wdio-wikibase/pageobjects/item.page' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';

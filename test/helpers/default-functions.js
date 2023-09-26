@@ -4,7 +4,7 @@ const axios = require( 'axios' );
 const assert = require( 'assert' );
 const exec = require( 'child_process' ).exec;
 const lodash = require( 'lodash' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const WikibaseApi = require( './WDIOWikibaseApiPatch' );
 
 const defaultFunctions = function () {
 	/**
@@ -235,7 +235,7 @@ const defaultFunctions = function () {
 	browser.addCommand( 'waitForJobs', async ( {
 		serverURL = process.env.MW_SERVER,
 		// default timeout is 1 second less than default Mocha test timeout
-		timeout = browser.config.mochaOpts.timeout - 1000,
+		timeout = ( process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000 ) - 1000,
 		timeoutMsg
 	} = {} ) => {
 		let jobsInQueue;
@@ -263,7 +263,7 @@ const defaultFunctions = function () {
 module.exports = {
 	init: defaultFunctions,
 	skipIfExtensionNotPresent: ( test, extension ) => {
-		const installedExtensions = browser.config.installed_extensions;
+		const installedExtensions = browser.options.installed_extensions;
 		if ( !installedExtensions || installedExtensions.length === 0 ) {
 			return;
 		} else if ( installedExtensions && installedExtensions.includes( 'WikibaseRepository' ) && installedExtensions.includes( extension ) ) {

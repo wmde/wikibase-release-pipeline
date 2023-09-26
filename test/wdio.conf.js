@@ -6,43 +6,21 @@
 'use strict';
 
 const fs = require( 'fs' );
-const path = require( 'path' );
-const saveScreenshot = require( 'wdio-mediawiki' ).saveScreenshot;
-const JsonReporter = require( '../helpers/json-reporter.js' );
-const defaultFunctions = require( '../helpers/default-functions.js' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
+const JsonReporter = require( './helpers/json-reporter.js' );
+const defaultFunctions = require( './helpers/default-functions.js' );
+const fetchSuite = require( './helpers/fetchSuite.js' );
+const saveScreenshot = require( './helpers/WDIOMediawikiScreenshotPatch.js' );
+const WikibaseApi = require( './helpers/WDIOWikibaseApiPatch.js' );
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
-
-exports.screenshotPath = screenshotPath;
-exports.resultFilePath = resultFilePath;
-
-const fetchSuite = ( suiteName ) => {
-	if ( fs.lstatSync( path.join( __dirname, suiteName ) ).isDirectory() ) {
-		const suiteConfigFile = path.join(
-			__dirname,
-			suiteName,
-			`${suiteName}.conf.js`
-		);
-		try {
-			const suiteConfig = require( suiteConfigFile );
-			return suiteConfig.config.suite;
-		} catch {}
-	}
-	return undefined;
-};
 
 exports.config = {
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
 	// Use in a test as `browser.options.<key>`.
-
-	// Wiki admin
-	mwUser: process.env.MW_ADMIN_NAME,
-	mwPwd: process.env.MW_ADMIN_PASS,
 
 	// Base for browser.url() and Page#openTitle()
 	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
@@ -64,7 +42,7 @@ exports.config = {
 					// different screen sizes. Bootstrap considers widths between 1200 and 1400
 					// as XL, let's use that.
 					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...( [ '--window-size=1280,800' ] ),
+					...[ '--window-size=1280,800' ],
 					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 					// Chrome sandbox does not work in Docker
 					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
@@ -79,9 +57,6 @@ exports.config = {
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
 	logLevel: process.env.SELENIUM_LOG_LEVEL || 'error',
-
-	// Setting this enables automatic screenshots for when a browser command fails assertions.
-	screenshotPath,
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
@@ -113,10 +88,7 @@ exports.config = {
 		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
-	// define all tests
-	specs: [ './specs/**/*.js' ],
-
-	suites: { [ process.env.SUITE ]: fetchSuite( process.env.SUITE ) },
+	suites: { [ process.env.SUITE ]: fetchSuite( __dirname, process.env.SUITE ) },
 
 	// =====
 	// Hooks
@@ -142,14 +114,16 @@ exports.config = {
 		await WikibaseApi.initialize();
 		defaultFunctions.init();
 
-		if ( !browser.config.installed_extensions ) {
+		// TODO: Refactor this
+		// passing installed_extensions to browser.options shouldn't presently work
+		if ( !browser.options.installed_extensions ) {
 			const extensions = await browser.getInstalledExtensions(
 				process.env.MW_SERVER
 			);
 			if ( extensions ) {
-				browser.config.installed_extensions = extensions;
+				browser.options.installed_extensions = extensions;
 			} else {
-				browser.config.installed_extensions = [];
+				browser.options.installed_extensions = [];
 			}
 		}
 	},
@@ -166,7 +140,7 @@ exports.config = {
 		const screenshotFilename = `${testFile}__${test.title}`;
 
 		try {
-			saveScreenshot( screenshotFilename );
+			saveScreenshot( screenshotPath, screenshotFilename );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
