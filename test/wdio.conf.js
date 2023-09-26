@@ -3,20 +3,17 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-'use strict';
-
-const fs = require( 'fs' );
-const JsonReporter = require( './helpers/json-reporter.js' );
-const defaultFunctions = require( './helpers/default-functions.js' );
-const fetchSuite = require( './helpers/fetchSuite.js' );
-const saveScreenshot = require( './helpers/WDIOMediawikiScreenshotPatch.js' );
-const WikibaseApi = require( './helpers/WDIOWikibaseApiPatch.js' );
+import { existsSync, mkdir, rm } from 'fs';
+import JsonReporter from './helpers/json-reporter.js';
+import { init as defaultFunctionsInit } from './helpers/default-functions.js';
+import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
+import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
-exports.config = {
+export const config = {
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -45,7 +42,7 @@ exports.config = {
 					...[ '--window-size=1280,800' ],
 					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 					// Chrome sandbox does not work in Docker
-					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+					...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 				]
 			}
 		}
@@ -88,8 +85,6 @@ exports.config = {
 		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
-	suites: { [ process.env.SUITE ]: fetchSuite( __dirname, process.env.SUITE ) },
-
 	// =====
 	// Hooks
 	// =====
@@ -101,9 +96,9 @@ exports.config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		fs.mkdir( resultsDir, { recursive: true }, () => {} );
-		fs.rm( screenshotPath, { recursive: true, force: true }, () => {} );
-		fs.rm( resultFilePath, { force: true }, () => {} );
+		mkdir( resultsDir, { recursive: true }, () => {} );
+		rm( screenshotPath, { recursive: true, force: true }, () => {} );
+		rm( resultFilePath, { force: true }, () => {} );
 	},
 
 	/**
@@ -112,7 +107,7 @@ exports.config = {
 	 */
 	before: async () => {
 		await WikibaseApi.initialize();
-		defaultFunctions.init();
+		defaultFunctionsInit();
 
 		// TODO: Refactor this
 		// passing installed_extensions to browser.options shouldn't presently work
