@@ -1,7 +1,5 @@
-'use strict';
-
-const querystring = require( 'querystring' );
-const Page = require( 'wdio-mediawiki/Page' );
+import querystring from 'querystring';
+import Page from 'wdio-mediawiki/Page';
 
 /**
  * Patches the use of `browser.config` in
@@ -31,4 +29,4 @@ class PagePatch extends Page {
 	}
 }
 
-module.exports = PagePatch;
+export default PagePatch;

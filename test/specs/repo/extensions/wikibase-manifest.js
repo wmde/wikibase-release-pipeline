@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import defaultFunctions from '../../../helpers/default-functions';
 
 describe( 'WikibaseManifest', function () {
 	it( 'Should have rest endpoint and data', async () => {

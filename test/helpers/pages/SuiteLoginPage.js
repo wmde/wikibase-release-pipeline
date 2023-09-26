@@ -1,6 +1,4 @@
-'use strict';
-
-const Page = require( './WDIOMediawikiPagePatch' );
+import Page from './WDIOMediawikiPagePatch';
 
 // This is a replacement for `wdio-mediawiki/LoginPage`
 // which as of version 2.2.0 does not properly await WDIO elements
@@ -38,4 +36,4 @@ class SuiteLoginPage extends Page {
 	}
 }
 
-module.exports = new SuiteLoginPage();
+export default new SuiteLoginPage();

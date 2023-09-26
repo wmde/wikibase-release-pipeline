@@ -1,13 +1,11 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const querystring = require( 'querystring' );
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import Util from 'wdio-mediawiki/Util';
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
+import querystring from 'querystring';
+import fsPromises from 'fs/promises';
+import defaultFunctions from '../../../helpers/default-functions';
+import readFileEncoding from '../../../helpers/readFileEncoding';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch';
 
 const itemLabel = Util.getTestString( 'The Item' );
 

@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import defaultFunctions from '../../../helpers/default-functions';
 
 describe( 'UniversalLanguageSelector', function () {
 	it( 'Should be able to see the language selector menu', async () => {

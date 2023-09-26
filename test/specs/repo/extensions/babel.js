@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
+import defaultFunctions from '../../../helpers/default-functions';
 
 describe( 'Babel', function () {
 	it( 'Should be able to update the user page with language skills', async () => {

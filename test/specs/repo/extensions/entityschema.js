@@ -1,9 +1,7 @@
-'use strict';
-
-const assert = require( 'assert' );
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
+import assert from 'assert';
+import fsPromises from 'fs/promises';
+import defaultFunctions from '../../../helpers/default-functions';
+import readFileEncoding from '../../../helpers/readFileEncoding';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';

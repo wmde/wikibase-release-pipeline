@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import defaultFunctions from '../../../helpers/default-functions';
 
 describe( 'VisualEditor', function () {
 	it( 'Should be able to edit a page using the editor', async () => {

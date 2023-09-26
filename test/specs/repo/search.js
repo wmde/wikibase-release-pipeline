@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
 
 describe( 'Search', function () {
 	it( 'Should be able to create an item and search for it', async () => {

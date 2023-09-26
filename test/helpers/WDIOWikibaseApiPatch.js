@@ -1,7 +1,5 @@
-'use strict';
-
-const MWBot = require( 'mwbot' );
-const request = require( 'request' );
+import MWBot from 'mwbot';
+import request from 'request';
 
 /**
  * Patches the use of `browser.config` in
@@ -163,4 +161,4 @@ class WikibaseApiPatch {
 	}
 }
 
-module.exports = new WikibaseApiPatch();
+export default new WikibaseApiPatch();

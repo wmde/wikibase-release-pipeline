@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+import assert from 'assert';
+import defaultFunctions from '../../helpers/default-functions';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {

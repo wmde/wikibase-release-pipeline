@@ -1,8 +1,6 @@
-'use strict';
-
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
+import fsPromises from 'fs/promises';
+import defaultFunctions from '../../../helpers/default-functions';
+import readFileEncoding from '../../../helpers/readFileEncoding';
 
 describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', async () => {

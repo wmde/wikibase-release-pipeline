@@ -1,4 +1,3 @@
-'use strict';
 class Page {
 	constructor() {
 	}
@@ -7,4 +6,5 @@ class Page {
 		await browser.url( 'http://' + process.env.WDQS_FRONTEND_SERVER + path );
 	}
 }
-module.exports = Page;
+
+export default Page;

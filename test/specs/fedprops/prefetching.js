@@ -1,8 +1,6 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import Util from 'wdio-mediawiki/Util';
+import assert from 'assert';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
 
 describe( 'Property Prefetching', function () {
 	let itemId;

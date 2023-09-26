@@ -1,9 +1,7 @@
-'use strict';
+import fs from 'fs';
+import reporter from '@wdio/reporter';
 
-const fs = require( 'fs' );
-const reporter = require( '@wdio/reporter' );
-
-class JsonReporter extends reporter.default {
+class JsonReporter extends reporter {
 
 	constructor( options ) {
 		// make reporter to write to the output stream by default
@@ -64,4 +62,4 @@ class JsonReporter extends reporter.default {
 
 }
 
-module.exports = JsonReporter;
+export default JsonReporter;

@@ -1,8 +1,6 @@
-'use strict';
-
-const fsPromises = require( 'fs/promises' );
-const assert = require( 'assert' );
-const readFileEncoding = require( '../../helpers/readFileEncoding' );
+import fsPromises from 'fs/promises';
+import assert from 'assert';
+import readFileEncoding from '../../helpers/readFileEncoding';
 
 describe( 'Interwiki links', function () {
 	it( 'Should be able to insert interwiki links', async () => {

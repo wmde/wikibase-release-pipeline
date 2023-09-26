@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import defaultFunctions from '../../../helpers/default-functions';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch';
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;

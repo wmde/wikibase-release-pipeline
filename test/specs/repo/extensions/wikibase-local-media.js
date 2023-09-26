@@ -1,10 +1,8 @@
-'use strict';
-
-const assert = require( 'assert' );
-const path = require( 'path' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import path from 'path';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
+import defaultFunctions from '../../../helpers/default-functions';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch';
 
 describe( 'WikibaseLocalMedia', function () {
 	let itemId = null;
