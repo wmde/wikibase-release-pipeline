@@ -5,7 +5,7 @@
 
 import { existsSync, mkdir, rm } from 'fs';
 import JsonReporter from './helpers/json-reporter.js';
-import { init as defaultFunctionsInit } from './helpers/default-functions.js';
+import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
 
