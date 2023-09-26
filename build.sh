@@ -67,4 +67,4 @@ docker run \
     -e GIT_REVISION_HASH="$(git rev-parse --short HEAD)" \
     -e GIT_REVISION_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
     \
-    builder:latest make "$TARGET" -j"$(nproc)"
+    builder:latest make "$TARGET"
