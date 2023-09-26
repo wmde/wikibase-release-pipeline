@@ -2,10 +2,10 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -126,7 +126,7 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.config.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
 		const destructiveButtonEl = await $(
 			'.oo-ui-flaggedElement-destructive button'

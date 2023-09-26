@@ -2,9 +2,9 @@
 
 const Util = require( 'wdio-mediawiki/Util' );
 const assert = require( 'assert' );
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
 const querystring = require( 'querystring' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -121,7 +121,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.config.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
 
 		const destructiveButtonEl = await $(

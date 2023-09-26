@@ -2,7 +2,7 @@
 
 const fs = require( 'fs' );
 const yaml = require( 'js-yaml' );
-const _ = require( 'lodash' );
+const lodash = require( 'lodash' );
 
 const p = function ( from, to ) {
 
@@ -30,9 +30,9 @@ try {
 	const artifacts = [];
 	const startNodes = {};
 
-	_.forEach( data.jobs, function ( job, name ) {
+	lodash.forEach( data.jobs, function ( job, name ) {
 
-		_.forEach( job.steps, ( step ) => {
+		lodash.forEach( job.steps, ( step ) => {
 			if ( step.uses === uploadAction ) {
 				if ( step.with.path ) {
 
@@ -49,7 +49,7 @@ try {
 		} );
 
 		if ( job.needs ) {
-			_.forEach( job.needs, ( need ) => {
+			lodash.forEach( job.needs, ( need ) => {
 				p( need, name );
 			} );
 		} else {
@@ -57,7 +57,7 @@ try {
 		}
 	} );
 
-	_.forEach( startNodes, function ( startNode, startName ) {
+	lodash.forEach( startNodes, function ( startNode, startName ) {
 		p( 'PipelineTriggered(' + data.name + ')', startName );
 	} );
 

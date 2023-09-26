@@ -1,8 +1,8 @@
 'use strict';
 
-const WikibaseApi = require( 'wdio-wikibase/wikibase.api' );
 const assert = require( 'assert' );
 const { getElementByURI } = require( '../../helpers/blazegraph' );
+const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';

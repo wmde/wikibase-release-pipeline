@@ -1,6 +1,6 @@
 'use strict';
 
-const Page = require( 'wdio-mediawiki/Page' );
+const Page = require( './WDIOMediawikiPagePatch' );
 
 // This is a replacement for `wdio-mediawiki/LoginPage`
 // which as of version 2.2.0 does not properly await WDIO elements
@@ -34,7 +34,7 @@ class SuiteLoginPage extends Page {
 	}
 
 	async loginAdmin() {
-		await this.login( browser.config.mwUser, browser.config.mwPwd );
+		await this.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 	}
 }
 
