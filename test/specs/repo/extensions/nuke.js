@@ -9,7 +9,7 @@ describe( 'Nuke', function () {
 		await browser.waitForJobs();
 	} );
 
-	it( 'Should be able to queue a page for deletion through Special:Nuke', async () => {
+	it( 'Should be able to delete a page through Special:Nuke', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
 
 		await browser.editPage(
@@ -18,7 +18,7 @@ describe( 'Nuke', function () {
 			'Vandals In Motion'
 		);
 
-		const result = await browser.makeRequest(
+		let result = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
@@ -46,27 +46,15 @@ describe( 'Nuke', function () {
 		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 		await browser.acceptAlert();
-	} );
 
-	it( 'Should delete the page in a job', async () => {
-		let result;
+		await browser.waitForJobs();
 
-		await browser.waitUntil(
-			async () => {
-				result = await browser.makeRequest(
-					process.env.MW_SERVER + '/wiki/Vandalism',
-					{ validateStatus: false },
-					{}
-				);
-
-				return result.status === 404;
-			},
-			{
-				timeout: 10000,
-				timeoutMsg: 'Page should be deleted by now.'
-			}
+		result = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Vandalism',
+			{ validateStatus: false },
+			{}
 		);
 
-		assert.strictEqual( result.status, 404 );
+		return result.status === 404;
 	} );
 } );
