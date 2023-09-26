@@ -31,8 +31,8 @@ if ! [[ -f "local.env" ]]; then
 fi
 
 HOST_TMP="$(mktemp -d)"
+
 remove_builder_tmp() {
-    echo "🧹 Cleanup temp files from ${HOST_TMP}"
     rm -rf "${HOST_TMP}"
 }
 trap remove_builder_tmp EXIT
