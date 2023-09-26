@@ -8,14 +8,11 @@ set -x
 
 image_name="$1"
 
-SERVICE_DIST_TAR="$TARBALL_PATH"
-
 # TODO: https://phabricator.wikimedia.org/T347053
-cp "$SERVICE_DIST_TAR" Docker/build/WDQS/
-cp Docker/build/wait-for-it.sh Docker/build/WDQS/
+cp -r "$TARBALL_PATH" Docker/build/WDQS-frontend
 
 docker build \
     --pull \
-    --build-arg tarball="$(basename "$SERVICE_DIST_TAR")" \
+    --build-arg tarball="$(basename "$TARBALL_PATH")" \
     -t "$image_name" \
-    Docker/build/WDQS/ 
+    Docker/build/WDQS-frontend/

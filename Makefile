@@ -70,24 +70,24 @@ requirements:
 
 wikibase:
 	bash update_cache.sh bundle
-	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME};bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
+	eval ". ./build/build_wikibase.sh; bash build/build_docker_component.sh ${WIKIBASE_IMAGE_NAME};bash build/build_docker_component.sh ${WIKIBASE_BUNDLE_IMAGE_NAME}"
 
 quickstatements:
 	bash update_cache.sh services
-	eval ". ./build/build_quickstatements.sh; bash build/build_quickstatements_docker.sh ${QUICKSTATEMENTS_IMAGE_NAME}"
+	eval ". ./build/build_quickstatements.sh; bash build/build_docker_component.sh ${QUICKSTATEMENTS_IMAGE_NAME}"
 
 wdqs:
-	eval ". ./build/build_wdqs.sh; bash build/build_wdqs_docker.sh ${WDQS_IMAGE_NAME}"
+	eval ". ./build/build_wdqs.sh; bash build/build_docker_component.sh ${WDQS_IMAGE_NAME}"
 
 wdqs-proxy:
-	bash build/build_wdqs_proxy_docker.sh ${WDQS_PROXY_IMAGE_NAME}
+	bash build/build_docker_component.sh ${WDQS_PROXY_IMAGE_NAME}
 
 wdqs-frontend:
 	bash update_cache.sh services
-	eval ". ./build/build_wdqs_frontend.sh; bash build/build_wdqs_frontend_docker.sh ${WDQS_FRONTEND_IMAGE_NAME}"
+	eval ". ./build/build_wdqs_frontend.sh; bash build/build_docker_component.sh ${WDQS_FRONTEND_IMAGE_NAME}"
 
 elasticsearch:
-	bash build/build_elasticsearch_docker.sh ${ELASTICSEARCH_IMAGE_NAME}
+	build/build_docker_component.sh ${ELASTICSEARCH_IMAGE_NAME}
 
 clean-cache:
 	rm -rf cache/*

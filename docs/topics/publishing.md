@@ -117,7 +117,7 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 ## Publishing tarballs
 
 Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
-It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
+It creates a folder named after the release major.minor version and uploads the tarballs created by the build.
 
 After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
 
@@ -192,7 +192,8 @@ gh run view <WORKFLOW_RUN_NUMBER> --json headSha
 You can then run the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
 
 ```sh
-git tag --force -a $WMDE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WMDE_RELEASE_VERSION
+TODO: review this!!!!!
+git tag --force -a $WIKIBASE_SUITE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WIKIBASE_SUITE_RELEASE_VERSION
 ```
 
 And pushing ...

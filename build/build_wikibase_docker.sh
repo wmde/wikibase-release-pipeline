@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091
-set -e
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
 
+# debug every invocation
+set -x
+
+image_name="$1"
+
+# TODO: https://phabricator.wikimedia.org/T347053
 mkdir -p Docker/build/Wikibase/artifacts
+# TODO: https://phabricator.wikimedia.org/T347053
 mkdir -p Docker/build/Wikibase/artifacts/extensions
 
 MEDIAWIKI_IMAGE_VERSION="$MEDIAWIKI_VERSION"
 
 if [ -f "$TARBALL_PATH" ]; then
+    # TODO: https://phabricator.wikimedia.org/T347053
     cp "$TARBALL_PATH" Docker/build/Wikibase/artifacts/
 fi
 
+# TODO: https://phabricator.wikimedia.org/T347053
 cp Docker/build/wait-for-it.sh Docker/build/Wikibase/artifacts/
 set -o allexport; source Docker/build/Wikibase/default.env; set +o allexport
 
@@ -28,6 +38,5 @@ docker build \
     --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    Docker/build/Wikibase/ -t "$1"
-
-docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
+    -t "$image_name" \
+    Docker/build/Wikibase/

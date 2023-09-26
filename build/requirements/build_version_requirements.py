@@ -10,7 +10,7 @@ def getVar( varName ):
         return 'undefined'
 
 components =	{
-  "RELEASE_MAJOR_VERSION": "MediaWiki",
+  "MEDIAWIKI_VERSION": "MediaWiki",
   "ELASTICSEARCH_VERSION": "Elasticsearch",
   "WDQS_VERSION": "WDQS",
 }

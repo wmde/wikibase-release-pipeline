@@ -4,6 +4,7 @@ You can find the latest base components that may need updating from these locati
 
 **With releases**
 
+- TODO: update documentation
 - `MEDIAWIKI_VERSION` & `RELEASE_VERSION`: https://www.mediawiki.org/wiki/Release_notes by looking at the most recent release versions in the top banner, and choosing the latest security release for the major MediaWiki version being used.
 - `ELASTICSEARCH_VERSION`: https://hub.docker.com/_/elasticsearch by looking for the latest tag of the major version currently being used.
 - `ELASTICSEARCH_PLUGIN_EXTRA_VERSION`: https://mvnrepository.com/artifact/org.wikimedia.search/extra by looking for the latest wmf release of the major version currently being used.

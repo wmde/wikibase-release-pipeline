@@ -11,8 +11,9 @@ for file in  /extractedArtifacts/BuildMetadata/build_metadata_*.env ; do
 done
 
 if [ -z "$WIKIBASE_BRANCH_NAME" ] || \
-[ -z "$RELEASE_VERSION" ] || \
-[ -z "$WMDE_RELEASE_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" ] || \
 [ -z "$METADATA_WDQS_FRONTEND_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASE_COMMIT_HASH" ] || \
 [ -z "$METADATA_WIKIBASEMANIFEST_COMMIT_HASH" ] || \
@@ -26,9 +27,11 @@ function echo_tag {
     REPO_NAME=$2
     echo
     echo "Use the following tag on $REPO_NAME"
-    echo "git tag --force -a \"$WMDE_RELEASE_VERSION\" \"$COMMIT_HASH\" -m \"Tagging: $WMDE_RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER\""
+    echo "git tag --force -a \"$WIKIBASE_SUITE_RELEASE_VERSION\" \"$COMMIT_HASH\" -m \"Tagging: $WIKIBASE_SUITE_RELEASE_VERSION Build: $WORKFLOW_RUN_NUMBER\""
     echo
 }
+
+# TODO: review this
 
 # tag and push Wikibase
 echo_tag "$METADATA_WIKIBASE_COMMIT_HASH" "Wikibase"

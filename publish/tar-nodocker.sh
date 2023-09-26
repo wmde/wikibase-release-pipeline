@@ -2,15 +2,17 @@
 set -e
 
 if [ -z "$RELEASE_HOST" ] || \
-[ -z "$RELEASE_VERSION" ] || \
-[ -z "$RELEASE_MAJOR_VERSION" ] || \
-[ -z "$WMDE_RELEASE_VERSION" ] ; then
+[ -z "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
 fi
 
+SEMVER_STRING="${WIKIBASE_SUITE_RELEASE_MAJOR_VERSION}.${WIKIBASE_SUITE_RELEASE_MINOR_VERSION}.${WIKIBASE_SUITE_RELEASE_PATCH_VERSION}${WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION}"
+
 ARTIFACT_PATH=./artifacts/$WORKFLOW_RUN_NUMBER/BuildArtifacts
-RELEASE_FULL_PATH=$RELEASE_DIR/$RELEASE_MAJOR_VERSION
+RELEASE_FULL_PATH="${RELEASE_DIR}/${SEMVER_STRING}"
 
 echo "Will upload tarballs from $ARTIFACT_PATH to $RELEASE_HOST at $RELEASE_FULL_PATH"
 
@@ -18,8 +20,8 @@ echo "Will upload tarballs from $ARTIFACT_PATH to $RELEASE_HOST at $RELEASE_FULL
 TMP_UPLOAD_PATH=/tmp/wb-rel-pipe/$WORKFLOW_RUN_NUMBER
 rm -rf "$TMP_UPLOAD_PATH"
 mkdir -p "$TMP_UPLOAD_PATH"
-cp "$ARTIFACT_PATH"/wikibase.tar.gz "$TMP_UPLOAD_PATH"/wikibase."$RELEASE_VERSION"-"$WMDE_RELEASE_VERSION".tar.gz
-cp "$ARTIFACT_PATH"/wdqs-frontend.tar.gz "$TMP_UPLOAD_PATH"/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
+cp "$ARTIFACT_PATH"/wikibase.tar.gz "$TMP_UPLOAD_PATH"/wikibase-"$SEMVER_STRING".tar.gz
+cp "$ARTIFACT_PATH"/wdqs-frontend.tar.gz "$TMP_UPLOAD_PATH"/wdqs-frontend."$SEMVER_STRING".tar.gz
 
 if [ -z "$DRY_RUN" ]; then
     # create dir

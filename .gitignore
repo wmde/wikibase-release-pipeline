@@ -4,7 +4,7 @@ cache
 git_cache
 container_id
 *.swp
-Wikibase.tar.gz
+wikibase.tar.gz
 *.docker.tar.gz
 
 Docker/build/Wikibase/artifacts

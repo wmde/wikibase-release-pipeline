@@ -17,25 +17,25 @@ if [ -z "$WDQS_DOCKER_PATH" ] || \
 [ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
 [ -z "$QUICKSTATEMENTS_IMAGE_NAME" ] || \
 \
-[ -z "$RELEASE_VERSION" ] || \
-[ -z "$WMDE_RELEASE_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_MAJOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_MINOR_VERSION" ] || \
+[ -z "$WIKIBASE_SUITE_RELEASE_PATCH_VERSION" ] || \
 [ -z "$WDQS_VERSION" ] || \
 [ -z "$ELASTICSEARCH_VERSION" ] || \
 \
 [ -z "$DOCKER_HUB_ID" ] || \
-[ -z "$DOCKER_HUB_REPOSITORY_NAME" ] || \
+[ -z "$DOCKER_REPOSITORY_NAME" ] || \
 [ -z "$DOCKER_HUB_ACCESS_TOKEN" ] ; then
     echo "A variable is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
     exit 1;
 fi
 
-function tag_and_push {
+function git_push {
     IMAGE_NAME=$1
     IMAGE_VERSION=$2
 
     # example: wikibase/wikibase:1.35
-    IMAGE_TAG="$DOCKER_HUB_REPOSITORY_NAME/$IMAGE_NAME:$IMAGE_VERSION"
-    docker tag "$IMAGE_NAME:latest" "$IMAGE_TAG"
+    IMAGE_TAG="$DOCKER_REPOSITORY_NAME/$IMAGE_NAME:$IMAGE_VERSION"
 
     if [ -z "$DRY_RUN" ]; then
         docker push "$IMAGE_TAG"
@@ -66,25 +66,27 @@ docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 docker load -i "$WDQS_PROXY_DOCKER_PATH"
 
 # Tag Queryservice Proxy with version
-tag_and_push "$WDQS_PROXY_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+#
+# TODO: this is completely broken, this is not git, this is docker, also, we need to use our new tags
+git_push "$WDQS_PROXY_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag WDQS-frontend with version
-tag_and_push "$WDQS_FRONTEND_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+git_push "$WDQS_FRONTEND_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag WDQS with version
-tag_and_push "$WDQS_IMAGE_NAME" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
+git_push "$WDQS_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag Wikibase with version
-tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+git_push "$WIKIBASE_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag Wikibase-bundle with version
-tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+git_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag Elasticsearch with version
-tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
+git_push "$ELASTICSEARCH_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # Tag Quickstatements with version
-tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+git_push "$QUICKSTATEMENTS_IMAGE_NAME" "$WIKIBASE_SUITE_RELEASE_VERSION"
 
 # logout and remove credentials 
 docker logout
