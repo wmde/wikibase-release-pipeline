@@ -7,5 +7,4 @@ exports.config = {
 		'./specs/upgrade/queryservice-pre-and-post-upgrade.js',
 		'./specs/upgrade/queryservice-post-upgrade.js'
 	]
-
 };
