@@ -5,9 +5,9 @@ export const config = deepmerge(
 	wdioConf,
 	{
 		specs: [
-			'./specs/quickstatements/*.js',
-			'./specs/repo/queryservice.js',
-			'./specs/elasticsearch/*.js'
+			'../../specs/quickstatements/*.js',
+			'../../specs/repo/queryservice.js',
+			'../../specs/elasticsearch/*.js'
 		]
 	},
 	{ clone: false }

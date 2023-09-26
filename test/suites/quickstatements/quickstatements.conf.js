@@ -5,8 +5,8 @@ export const config = deepmerge(
 	wdioConf,
 	{
 		specs: [
-			'./specs/repo_client/interwiki-links.js',
-			'./specs/quickstatements/*.js'
+			'../../specs/repo_client/interwiki-links.js',
+			'../../specs/quickstatements/*.js'
 		]
 	},
 	{ clone: false }
