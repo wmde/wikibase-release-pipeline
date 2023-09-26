@@ -1,6 +1,6 @@
 import axios from 'axios';
 import assert from 'assert';
-import exec from 'child_process';
+import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
 
