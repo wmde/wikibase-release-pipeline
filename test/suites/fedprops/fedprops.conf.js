@@ -1,4 +1,8 @@
 import { deepmerge } from 'deepmerge-ts';
-import wdioConf from '../../wdio.conf.js';
+import { config as wdioConf } from '../../wdio.conf.js';
 
-export const config = deepmerge( wdioConf.config, { specs: [ './specs/fedprops/*.js' ] }, { clone: false } );
+export const config = deepmerge(
+	wdioConf,
+	{ specs: [ './specs/fedprops/*.js' ] },
+	{ clone: false }
+);
