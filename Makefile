@@ -23,7 +23,7 @@ ifdef SUITE
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_suite.sh ${SUITE}
+	@bash test/scripts/test_suite.sh ${SUITE} ${CHANNEL}
 else
 	@make test-all
 endif

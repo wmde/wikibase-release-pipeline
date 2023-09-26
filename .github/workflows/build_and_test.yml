@@ -130,7 +130,7 @@ jobs:
       - name: Test ${{ matrix.suite }}
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
-        run: make test SUITE=${{ matrix.suite }}
+        run: make test SUITE=${{ matrix.suite }} CHANNEL=${{ matrix.channel }}
 
       - name: Report Selenium
         if: always()
