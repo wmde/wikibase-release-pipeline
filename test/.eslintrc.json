@@ -4,6 +4,7 @@
 		"wikimedia/selenium",
 		"wikimedia/language/es2019"
 	],
+	"parserOptions": { "sourceType": "module" },
 	"rules": {
 		"mocha/no-setup-in-describe": "warn"
 	}
