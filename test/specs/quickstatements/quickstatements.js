@@ -1,6 +1,6 @@
 import assert from 'assert';
 import lodash from 'lodash';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {
 	const references = response.data.claims[ propertyId ][ 0 ].references;

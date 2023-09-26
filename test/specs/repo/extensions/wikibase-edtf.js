@@ -1,6 +1,6 @@
 import assert from 'assert';
 import defaultFunctions from '../../../helpers/default-functions';
-import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;

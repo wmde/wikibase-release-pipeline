@@ -2,7 +2,7 @@ import Util from 'wdio-mediawiki/Util';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';

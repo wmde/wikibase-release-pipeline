@@ -1,6 +1,6 @@
 import Util from 'wdio-mediawiki/Util';
 import assert from 'assert';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId;

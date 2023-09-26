@@ -3,7 +3,7 @@ import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage';
 import querystring from 'querystring';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {

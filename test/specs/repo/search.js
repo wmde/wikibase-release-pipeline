@@ -1,5 +1,5 @@
 import assert from 'assert';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Search', function () {
 	it( 'Should be able to create an item and search for it', async () => {

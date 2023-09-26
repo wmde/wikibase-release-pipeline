@@ -5,7 +5,7 @@ import querystring from 'querystring';
 import fsPromises from 'fs/promises';
 import defaultFunctions from '../../../helpers/default-functions';
 import readFileEncoding from '../../../helpers/readFileEncoding';
-import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = Util.getTestString( 'The Item' );
 

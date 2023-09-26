@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Util from 'wdio-mediawiki/Util';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemAlias = Util.getTestString( 'alias' );
 const itemLabel = Util.getTestString( 'testItem' );

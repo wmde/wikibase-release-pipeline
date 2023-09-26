@@ -2,7 +2,7 @@ import Util from 'wdio-mediawiki/Util';
 import assert from 'assert';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage';
 import querystring from 'querystring';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = Util.getTestString( 'The Item' );
 
