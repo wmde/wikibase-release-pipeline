@@ -26,6 +26,7 @@ $ make test-all
 $ make test SUITE=repo
 $ make test SUITE=repo FILTER=special-item
 $ make test SUITE=repo CHANNEL=lts
+$ make test-all CHANNEL=next
 $ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env
 ```
 
