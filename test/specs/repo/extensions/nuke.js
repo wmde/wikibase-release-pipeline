@@ -18,13 +18,13 @@ describe( 'Nuke', function () {
 			'Vandals In Motion'
 		);
 
-		let result = await browser.makeRequest(
+		const pageExistsResult = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);
 
-		assert.strictEqual( result.status, 200 );
+		assert.strictEqual( pageExistsResult.status, 200 );
 
 		await SuiteLoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
@@ -49,7 +49,7 @@ describe( 'Nuke', function () {
 
 		await browser.waitForJobs();
 
-		result = await browser.makeRequest(
+		const pageIsGoneResult = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
