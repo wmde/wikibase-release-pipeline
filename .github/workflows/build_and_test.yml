@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Prepare environment and caches
-        uses: ./.github/actions/prep-env-and-cache.yml
+        uses: ./.github/actions/prep-env-and-cache
         with:
           env_file: "channels/${{ matrix.channel }}.env"
 
@@ -58,7 +58,7 @@ jobs:
         shell: bash
 
       - name: Upload results
-        uses: ./.github/actions/upload-results.yml
+        uses: ./.github/actions/upload-results
         with:
           component: ${{ matrix.component }}
           channel: ${{ matrix.channel }}
@@ -66,13 +66,13 @@ jobs:
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Upload additional bundle results for wikibase build
         if: matrix.component == 'wikibase'
-        uses: ./.github/actions/upload-results.yml
+        uses: ./.github/actions/upload-results
         with:
           component: ${{ matrix.component }}-bundle
           channel: ${{ matrix.channel }}
 
       - name: Scan Image
-        uses: ./.github/actions/scan-image.yml
+        uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
           image_name: ${{ matrix.component }}
@@ -81,7 +81,7 @@ jobs:
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Scan additional bundle Image for wikibase builds
         if: matrix.component == 'wikibase'
-        uses: ./.github/actions/scan-image.yml
+        uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
           image_name: "${{ matrix.component }}-bundle"
