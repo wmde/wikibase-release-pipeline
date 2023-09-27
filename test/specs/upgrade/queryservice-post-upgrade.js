@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { getElementByURI } from '../../helpers/blazegraph';
+import { getElementByURI } from '../../helpers/blazegraph.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase post upgrade', function () {
