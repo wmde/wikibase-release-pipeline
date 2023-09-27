@@ -27,6 +27,9 @@
 	"browserslist": [
 		"ie 11"
 	],
+	"engines": {
+		"node": ">=10"
+	  },
 	"scripts": {
 		"test:run": "wdio ./suites/$SUITE/$SUITE.conf.js",
 		"test:run-filter": "wdio ./wdio.conf.js --spec $FILTER",

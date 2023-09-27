@@ -1,5 +1,4 @@
 import assert from 'assert';
-import path from 'path';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
 import defaultFunctions from '../../../helpers/default-functions';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
@@ -18,8 +17,8 @@ describe( 'WikibaseLocalMedia', function () {
 		const fileUpload = await $( '#wpUploadFile' );
 		await fileUpload.waitForDisplayed();
 
-		const filePath = path.join( __dirname, '/image.png' );
-		await fileUpload.setValue( filePath );
+		const filePath = new URL( 'image.png', import.meta.url );
+		await fileUpload.setValue( filePath.toString() );
 
 		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
 		await submitButtonEl.waitForDisplayed();

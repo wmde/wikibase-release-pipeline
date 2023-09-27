@@ -5,7 +5,7 @@ import readFileEncoding from '../../helpers/readFileEncoding';
 describe( 'Interwiki links', function () {
 	it( 'Should be able to insert interwiki links', async () => {
 		const repoLinkFile = await fsPromises.readFile(
-			__dirname + '/interwiki-link.sql',
+			new URL( 'interwiki-link.sql', import.meta.url ),
 			readFileEncoding.utf8
 		);
 		const repoLink = repoLinkFile

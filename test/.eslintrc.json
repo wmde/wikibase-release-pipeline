@@ -4,7 +4,11 @@
 		"wikimedia/selenium",
 		"wikimedia/language/es2019"
 	],
-	"parserOptions": { "sourceType": "module" },
+	"parserOptions": {
+		"sourceType": "module",
+		"allowImportExportEverywhere": true,
+		"ecmaVersion": "latest"
+	},
 	"rules": {
 		"mocha/no-setup-in-describe": "warn"
 	}

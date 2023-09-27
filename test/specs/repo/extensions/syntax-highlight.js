@@ -8,7 +8,7 @@ describe( 'SyntaxHighlight', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
 		const fileContents = await fsPromises.readFile(
-			__dirname + '/bananas.lua',
+			new URL( 'bananas.lua', import.meta.url ),
 			readFileEncoding.utf8
 		);
 

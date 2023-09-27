@@ -45,7 +45,7 @@ describe( 'Scribunto Item', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const template = await fsPromises.readFile(
-			__dirname + '/repo-client.lua',
+			new URL( 'repo-client.lua', import.meta.url ),
 			readFileEncoding.utf8
 		);
 		const luaScript = template

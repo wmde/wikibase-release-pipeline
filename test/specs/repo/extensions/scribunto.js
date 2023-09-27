@@ -8,7 +8,7 @@ describe( 'Scribunto', function () {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const fileContents = await fsPromises.readFile(
-			__dirname + '/bananas.lua',
+			new URL( 'bananas.lua', import.meta.url ),
 			readFileEncoding.utf8
 		);
 		await browser.editPage(

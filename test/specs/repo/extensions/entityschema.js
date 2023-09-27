@@ -28,7 +28,7 @@ describe( 'EntitySchema', function () {
 		// set template
 		const shexTemplate = (
 			await fsPromises.readFile(
-				__dirname + '/entityschema.sx',
+				new URL( 'entityschema.sx', import.meta.url ),
 				readFileEncoding.utf8
 			)
 		).trim();
