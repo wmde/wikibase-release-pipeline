@@ -55,6 +55,6 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		return result.status === 404;
+		assert.strictEqual( pageIsGoneResult.status, 404 );
 	} );
 } );
