@@ -1,4 +1,4 @@
-import Util from 'wdio-mediawiki/Util';
+import Util from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page';
