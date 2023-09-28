@@ -14,8 +14,8 @@ services:
     working_dir: /home/node/app
     restart: always
     volumes:
-      - ./suites/${SUITE_CONFIG_NAME}/beacon.cjs:/home/node/app/beacon.cjs
-    command: "node beacon.cjs"
+      - ./suites/${SUITE_CONFIG_NAME}/beacon.mjs:/home/node/app/beacon.mjs
+    command: "node beacon.mjs"
     ports:
       - "7171:80"
     depends_on:
