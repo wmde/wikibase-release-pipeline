@@ -1,6 +1,6 @@
 import fsPromises from 'fs/promises';
 import assert from 'assert';
-import readFileEncoding from '../../helpers/readFileEncoding';
+import readFileEncoding from '../../helpers/readFileEncoding.js';
 
 describe( 'Interwiki links', function () {
 	it( 'Should be able to insert interwiki links', async () => {

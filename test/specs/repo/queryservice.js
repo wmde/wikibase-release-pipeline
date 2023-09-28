@@ -1,7 +1,7 @@
-import Util from 'wdio-mediawiki/Util';
+import Util from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page';
-import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import querystring from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 

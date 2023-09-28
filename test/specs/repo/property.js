@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Property from '../../helpers/pages/entity/property.page';
+import Property from '../../helpers/pages/entity/property.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property', function () {

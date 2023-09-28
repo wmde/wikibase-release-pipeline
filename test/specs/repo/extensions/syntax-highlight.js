@@ -1,6 +1,6 @@
 import fsPromises from 'fs/promises';
 import defaultFunctions from '../../../helpers/default-functions';
-import readFileEncoding from '../../../helpers/readFileEncoding';
+import readFileEncoding from '../../../helpers/readFileEncoding.js';
 
 describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', async () => {

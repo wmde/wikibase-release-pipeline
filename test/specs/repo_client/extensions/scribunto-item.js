@@ -1,10 +1,10 @@
-import Util from 'wdio-mediawiki/Util';
+import Util from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import querystring from 'querystring';
 import fsPromises from 'fs/promises';
-import defaultFunctions from '../../../helpers/default-functions';
-import readFileEncoding from '../../../helpers/readFileEncoding';
+import defaultFunctions from '../../../helpers/default-functions.js';
+import readFileEncoding from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = Util.getTestString( 'The Item' );
