@@ -1,6 +1,6 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage';
-import defaultFunctions from '../../../helpers/default-functions';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import defaultFunctions from '../../../helpers/default-functions.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseLocalMedia', function () {

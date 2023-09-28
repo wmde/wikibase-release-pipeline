@@ -1,7 +1,7 @@
 import Util from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import ItemPage from 'wdio-wikibase/pageobjects/item.page';
+import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Fed props Item', function () {
