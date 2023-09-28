@@ -26,11 +26,11 @@
             echo "$ ./build.sh wikibase_bundle versions/wmde12.env"
             echo
             echo "Test Commands:"
-            echo "$ make test-all"
+            echo "$ make test"
+            echo "$ make test CHANNEL=next"
             echo "$ make test SUITE=repo"
             echo "$ make test SUITE=repo CHANNEL=lts"
             echo "$ make test SUITE=repo FILTER=special-item"
-            echo "$ make test-all CHANNEL=next"
             echo "$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env"
             echo
             echo "Example Instance Commands:"

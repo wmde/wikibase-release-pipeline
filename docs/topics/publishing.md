@@ -203,6 +203,8 @@ git push --tags
 
 ### Tag WMDE maintained repositories
 
+# TODO: https://phabricator.wikimedia.org/T346878
+
 Together with the other publishing steps we also need to tag what commit in the gerrit repository with the version number we built and published. This is done by executing the commands given by the [tag_git](../../Docker/tag_git/tag_git.sh) bash script that is run within a docker container.
 
 The script relies on the build metadata artifacts found within the folder of the downloaded workflow run.

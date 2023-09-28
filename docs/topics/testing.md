@@ -10,6 +10,11 @@ You can run the tests in the docker container locally. Testing locally requires 
 make test
 ```
 
+## To run for a specific version channel
+```
+make test CHANNEL=lts
+```
+
 ## To only run a single suite
 ```
 make test SUITE=repo
@@ -28,7 +33,7 @@ make test SUITE=repo FILTER=babel*
 Tests upgrading between a previous release defined in `test/suites/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
 
 ```
-make test-upgrade VERSION=wmde.0 TO_VERSION=versions/wmdeN.env
+make test-upgrade VERSION=wmde.0 TO_VERSION=channels/stable.env
 ```
 
 To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE_NAME` variable.

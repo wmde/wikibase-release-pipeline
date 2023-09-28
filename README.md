@@ -22,11 +22,11 @@ $ ./build.sh wikibase_bundle versions/wmde12.env
 ### Test Commands
 
 ```
-$ make test-all
+$ make test
+$ make test CHANNEL=next
 $ make test SUITE=repo
 $ make test SUITE=repo FILTER=special-item
 $ make test SUITE=repo CHANNEL=lts
-$ make test-all CHANNEL=next
 $ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env
 ```
 
