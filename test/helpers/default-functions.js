@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
 
-export const defaultFunctions = function () {
+export function defaultFunctions() {
 	/**
 	 * Make a get request to get full request response
 	 * Returns a Promise
@@ -256,7 +256,7 @@ export const defaultFunctions = function () {
 			}
 		);
 	} );
-};
+}
 
 export function skipIfExtensionNotPresent( test, extension ) {
 	const installedExtensions = browser.options.installed_extensions;
