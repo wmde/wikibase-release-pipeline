@@ -18,7 +18,7 @@ describe( 'WikibaseLocalMedia', function () {
 		await fileUpload.waitForDisplayed();
 
 		const filePath = new URL( 'image.png', import.meta.url );
-		await fileUpload.setValue( filePath.toString() );
+		await fileUpload.setValue( filePath.pathname );
 
 		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
 		await submitButtonEl.waitForDisplayed();
