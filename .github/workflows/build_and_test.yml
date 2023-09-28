@@ -54,7 +54,7 @@ jobs:
           env_file: "channels/${{ matrix.channel }}.env"
 
       - name: Build
-        run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
+        run: ./build.sh ${{ matrix.component }} ${{ matrix.channel }}
         shell: bash
 
       - name: Upload results
@@ -127,7 +127,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: DockerImages-${{ matrix.channel }}
-          path: artifacts/
+          path: artifacts/${{ matrix.channel }}
 
       - name: Test ${{ matrix.suite }}
         env:
@@ -141,12 +141,9 @@ jobs:
           npm install
           SUITE=${{ matrix.suite }} node report.js
 
-      - name: Show Logs
+      - name: Show Test Logs
         if: always()
-        continue-on-error: true
-        run: |
-          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+        run: test/scripts/test_logs.sh
 
       - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
@@ -182,7 +179,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: DockerImages-${{ matrix.channel }}
-          path: artifacts/
+          path: artifacts/${{ matrix.channel }}
 
       - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
@@ -193,6 +190,10 @@ jobs:
       - name: Show Docker Logs
         if: always()
         run: test/scripts/docker_logs.sh
+
+      - name: Show Test Logs
+        if: always()
+        run: test/scripts/test_logs.sh
 
       # TODO: DRY
       - name: Archive Docker test artifacts
@@ -232,7 +233,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: DockerImages-${{ matrix.channel }}
-          path: artifacts/
+          path: artifacts/${{ matrix.channel }}
 
       - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
@@ -243,6 +244,10 @@ jobs:
       - name: Show Docker Logs
         if: always()
         run: test/scripts/docker_logs.sh
+
+      - name: Show Test Logs
+        if: always()
+        run: test/scripts/test_logs.sh
 
       # TODO: DRY
       - name: Archive Docker test artifacts
@@ -275,13 +280,13 @@ jobs:
       - name: Build version requirements
         shell: bash
         run: |
-          ./build.sh requirements "channels/${{ matrix.channel }}.env"
+          ./build.sh requirements ${{ matrix.channel }}
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Metadata-${{ matrix.channel }}
-          path: artifacts/built_versions.log
+          path: artifacts/${{ matrix.channel }}/built_versions.log
           if-no-files-found: error
 
   upload_ghcr:

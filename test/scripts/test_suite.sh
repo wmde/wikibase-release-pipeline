@@ -14,9 +14,9 @@ fi
 if [ -z "$CHANNEL" ]; then
     echo "⚠️  CHANNEL is not set! Using 'stable' as fallback"
     CHANNEL="stable"
-else
-    echo "▶️  Testing '${CHANNEL}'"
 fi
+
+echo "ℹ️  Testing '${CHANNEL}' channel"
 
 set -o allexport; 
 # shellcheck disable=SC1090 # cannot follow dynamic import
@@ -43,8 +43,8 @@ else
 
     # load additional bundle images
     {
-        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
-        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
+        docker load -i "../artifacts/${CHANNEL}/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
+        docker load -i "../artifacts/${CHANNEL}/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
     } >> "$TEST_LOG" 2>&1
 fi
 
@@ -52,10 +52,10 @@ export WIKIBASE_TEST_IMAGE_NAME
 
 # load default images
 {
-    docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/${CHANNEL}/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/${CHANNEL}/$WDQS_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/${CHANNEL}/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/${CHANNEL}/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
 } >> "$TEST_LOG" 2>&1
 
 echo "ℹ️  $(docker --version)" 2>&1 | tee -a "$TEST_LOG"

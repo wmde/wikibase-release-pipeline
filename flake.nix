@@ -22,8 +22,8 @@
             echo
 
             echo "Build Commands:"
-            echo "$ ./build.sh all versions/wmde11.env"
-            echo "$ ./build.sh wikibase_bundle versions/wmde12.env"
+            echo "$ ./build.sh all stable"
+            echo "$ ./build.sh wikibase_bundle lts"
             echo
             echo "Test Commands:"
             echo "$ make test"

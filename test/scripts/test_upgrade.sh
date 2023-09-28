@@ -17,8 +17,10 @@ if [ ! -f "../$TO_VERSION" ]; then
     exit 1
 fi
 
-# Why is this neccessary locally, but not in CI?
-set -o allexport; source ../variables.env set +o allexport;
+set -o allexport 
+source "../variables.env"
+source "../${TO_VERSION}"
+set +o allexport
 
 SUITE_CONFIG_NAME=upgrade
 
@@ -44,7 +46,7 @@ function remove_services_and_volumes {
 # =============================== pre_upgrade =================================
 # =============================================================================
 
-SUITE=pre_upgrade
+export SUITE=pre_upgrade
 
 # log directory setup
 export RESULTS_DIR="suites/$SUITE/results"
@@ -142,12 +144,12 @@ export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
 
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
     export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+    docker load -i "../artifacts/${CHANNEL}/$WDQS_IMAGE_NAME.docker.tar.gz"
 fi
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
-docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
+docker load -i "../artifacts/${CHANNEL}/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
 $TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 

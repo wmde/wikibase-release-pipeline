@@ -16,19 +16,19 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: Metadata-${{ inputs.channel }}
-        path: artifacts/build_metadata_*.env
+        path: artifacts/${{ inputs.channel }}/build_metadata_*.env
         if-no-files-found: ignore
 
     - name: Archive tar artifacts (if any)
       uses: actions/upload-artifact@v3
       with:
         name: TarBalls-${{ inputs.channel }}
-        path: artifacts/${{ inputs.component }}.tar.gz
+        path: artifacts/${{ inputs.channel }}/${{ inputs.component }}.tar.gz
         if-no-files-found: ignore
 
     - name: Archive Docker artifact
       uses: actions/upload-artifact@v3
       with:
         name: DockerImages-${{ inputs.channel }}
-        path: artifacts/${{ inputs.component }}.docker.tar.gz
+        path: artifacts/${{ inputs.channel }}/${{ inputs.component }}.docker.tar.gz
         if-no-files-found: error
