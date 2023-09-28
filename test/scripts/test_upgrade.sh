@@ -124,7 +124,7 @@ $TEST_COMPOSE down >> $TEST_LOG 2>&1
 # =============================== post_upgrade ================================
 # =============================================================================
 
-SUITE=post_upgrade
+export SUITE=post_upgrade
 
 # log directory setup
 export RESULTS_DIR="suites/$SUITE/results"
