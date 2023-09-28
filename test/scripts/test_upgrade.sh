@@ -22,6 +22,9 @@ source "../variables.env"
 source "../${TO_VERSION}"
 set +o allexport
 
+CHANNEL=$(basename "$TO_VERSION" | sed 's/\..*$//')
+export CHANNEL
+
 SUITE_CONFIG_NAME=upgrade
 
 WIKIBASE_TEST_CONTAINER=test-wikibase-1
