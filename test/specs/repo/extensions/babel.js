@@ -4,7 +4,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 
 describe( 'Babel', function () {
 	it( 'Should be able to update the user page with language skills', async () => {
-		skipIfExtensionNotPresent( this, 'Babel' );
+		await skipIfExtensionNotPresent( this, 'Babel' );
 
 		await SuiteLoginPage.loginAdmin();
 

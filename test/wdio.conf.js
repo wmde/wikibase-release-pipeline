@@ -108,19 +108,6 @@ export const config = {
 	before: async () => {
 		await WikibaseApi.initialize();
 		defaultFunctionsInit();
-
-		// TODO: Refactor this
-		// passing installed_extensions to browser.options shouldn't presently work
-		if ( !browser.options.installed_extensions ) {
-			const extensions = await browser.getInstalledExtensions(
-				process.env.MW_SERVER
-			);
-			if ( extensions ) {
-				browser.options.installed_extensions = extensions;
-			} else {
-				browser.options.installed_extensions = [];
-			}
-		}
 	},
 
 	/**

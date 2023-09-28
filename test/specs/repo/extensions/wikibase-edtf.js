@@ -6,7 +6,7 @@ describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;
 
 	it( 'Should allow to create and use the EDTF property', async () => {
-		skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
 		propertyId = await WikibaseApi.createProperty( 'edtf' );

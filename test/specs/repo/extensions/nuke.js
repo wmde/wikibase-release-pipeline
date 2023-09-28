@@ -8,7 +8,7 @@ describe( 'Nuke', function () {
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async () => {
-		skipIfExtensionNotPresent( this, 'Nuke' );
+		await skipIfExtensionNotPresent( this, 'Nuke' );
 
 		await browser.editPage(
 			process.env.MW_SERVER,

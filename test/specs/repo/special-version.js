@@ -48,7 +48,7 @@ describe( 'Special:Version', function () {
 			const name = extension;
 
 			it( 'Should contain ' + name + ' extensions', async function () {
-				skipIfExtensionNotPresent( this, name );
+				await skipIfExtensionNotPresent( this, name );
 
 				await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 

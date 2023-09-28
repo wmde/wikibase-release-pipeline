@@ -3,7 +3,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 
 describe( 'WikibaseManifest', function () {
 	it( 'Should have rest endpoint and data', async () => {
-		skipIfExtensionNotPresent( this, 'WikibaseManifest' );
+		await skipIfExtensionNotPresent( this, 'WikibaseManifest' );
 
 		const result = await browser.makeRequest(
 			process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest'

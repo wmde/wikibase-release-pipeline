@@ -258,11 +258,17 @@ export function defaultFunctions() {
 	} );
 }
 
-export function skipIfExtensionNotPresent( test, extension ) {
-	const installedExtensions = browser.options.installed_extensions;
+export async function skipIfExtensionNotPresent( test, extension ) {
+	const installedExtensions = await browser.getInstalledExtensions(
+		process.env.MW_SERVER
+	);
 	if ( !installedExtensions || installedExtensions.length === 0 ) {
 		return;
-	} else if ( installedExtensions && installedExtensions.includes( 'WikibaseRepository' ) && installedExtensions.includes( extension ) ) {
+	} else if (
+		installedExtensions &&
+		installedExtensions.includes( 'WikibaseRepository' ) &&
+		installedExtensions.includes( extension )
+	) {
 		return;
 	} else {
 		test.skip();

@@ -8,7 +8,7 @@ describe( 'EntitySchema', function () {
 	const testDescription = 'A description';
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		skipIfExtensionNotPresent( this, 'EntitySchema' );
+		await skipIfExtensionNotPresent( this, 'EntitySchema' );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 

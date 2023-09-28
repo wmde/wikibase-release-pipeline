@@ -4,8 +4,8 @@ import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', async () => {
-		skipIfExtensionNotPresent( this, 'Scribunto' );
-		skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
 		const fileContents = await fsPromises.readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 

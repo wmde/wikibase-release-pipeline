@@ -5,7 +5,7 @@ import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module', async () => {
-		skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const fileContents = await fsPromises.readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 		await browser.editPage(
@@ -25,7 +25,7 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
-		skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const cpuTime = await browser.getLuaCpuTime(
 			process.env.MW_SERVER,
