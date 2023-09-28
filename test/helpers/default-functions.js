@@ -242,11 +242,13 @@ const defaultFunctions = function () {
 
 		return browser.waitUntil(
 			async () => {
+				console.log( 'checking api' );
 				const result = await browser.makeRequest(
 					serverURL + '/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json',
 					{ validateStatus: false },
 					{}
 				);
+				console.log( '\n*****\n', result.data.query );
 				jobsInQueue = result.data.query.statistics.jobs;
 
 				return jobsInQueue === 0;

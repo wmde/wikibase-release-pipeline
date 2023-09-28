@@ -26,6 +26,7 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
+		console.log( 'login admin' );
 		await SuiteLoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
@@ -46,6 +47,7 @@ describe( 'Nuke', function () {
 		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 		await browser.acceptAlert();
+		console.log( 'done, waiting now' );
 
 		await browser.waitForJobs();
 
