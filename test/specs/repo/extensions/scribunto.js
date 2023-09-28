@@ -1,11 +1,11 @@
 import assert from 'assert';
 import fsPromises from 'fs/promises';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const fileContents = await fsPromises.readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 		await browser.editPage(
@@ -25,7 +25,7 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const cpuTime = await browser.getLuaCpuTime(
 			process.env.MW_SERVER,

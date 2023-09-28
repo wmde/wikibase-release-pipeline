@@ -1,10 +1,10 @@
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Babel', function () {
 	it( 'Should be able to update the user page with language skills', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Babel' );
+		skipIfExtensionNotPresent( this, 'Babel' );
 
 		await SuiteLoginPage.loginAdmin();
 

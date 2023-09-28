@@ -1,11 +1,11 @@
 import fsPromises from 'fs/promises';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'SyntaxHighlight', function () {
 	it( 'Should highlight lua script', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
-		defaultFunctions.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
+		skipIfExtensionNotPresent( this, 'Scribunto' );
+		skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
 		const fileContents = await fsPromises.readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 

@@ -1,12 +1,12 @@
 import assert from 'assert';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;
 
 	it( 'Should allow to create and use the EDTF property', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+		skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
 		propertyId = await WikibaseApi.createProperty( 'edtf' );

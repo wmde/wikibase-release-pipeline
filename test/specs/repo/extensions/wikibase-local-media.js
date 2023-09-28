@@ -1,6 +1,6 @@
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseLocalMedia', function () {
@@ -8,7 +8,7 @@ describe( 'WikibaseLocalMedia', function () {
 	let propertyId = null;
 
 	it( 'Should allow to upload an image', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		await SuiteLoginPage.loginAdmin();
 
@@ -32,7 +32,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
@@ -47,7 +47,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		const data = {
 			claims: [

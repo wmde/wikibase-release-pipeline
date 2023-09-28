@@ -1,6 +1,6 @@
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async () => {
@@ -8,7 +8,7 @@ describe( 'Nuke', function () {
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
+		skipIfExtensionNotPresent( this, 'Nuke' );
 
 		await browser.editPage(
 			process.env.MW_SERVER,

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
@@ -48,7 +48,7 @@ describe( 'Special:Version', function () {
 			const name = extension;
 
 			it( 'Should contain ' + name + ' extensions', async function () {
-				defaultFunctions.skipIfExtensionNotPresent( this, name );
+				skipIfExtensionNotPresent( this, name );
 
 				await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 

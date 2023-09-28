@@ -1,6 +1,6 @@
 import assert from 'assert';
 import fsPromises from 'fs/promises';
-import defaultFunctions from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'EntitySchema', function () {
@@ -8,7 +8,7 @@ describe( 'EntitySchema', function () {
 	const testDescription = 'A description';
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'EntitySchema' );
+		skipIfExtensionNotPresent( this, 'EntitySchema' );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
