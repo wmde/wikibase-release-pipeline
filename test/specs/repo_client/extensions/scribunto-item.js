@@ -4,7 +4,7 @@ import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import querystring from 'querystring';
 import fsPromises from 'fs/promises';
 import defaultFunctions from '../../../helpers/default-functions.js';
-import readFileEncoding from '../../../helpers/readFileEncoding.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = Util.getTestString( 'The Item' );
@@ -44,10 +44,7 @@ describe( 'Scribunto Item', function () {
 	it( 'Should be able to reference an item on client using Lua', async () => {
 		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const template = await fsPromises.readFile(
-			new URL( 'repo-client.lua', import.meta.url ),
-			readFileEncoding.utf8
-		);
+		const template = await fsPromises.readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
 		const luaScript = template
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );

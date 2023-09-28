@@ -1,7 +1,7 @@
 import assert from 'assert';
 import fsPromises from 'fs/promises';
 import defaultFunctions from '../../../helpers/default-functions';
-import readFileEncoding from '../../../helpers/readFileEncoding.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -27,10 +27,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		const shexTemplate = (
-			await fsPromises.readFile(
-				new URL( 'entityschema.sx', import.meta.url ),
-				readFileEncoding.utf8
-			)
+			await fsPromises.readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
 		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
 		await schemaTextInputEl.waitForDisplayed();
