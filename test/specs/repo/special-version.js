@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../helpers/default-functions';
+import defaultFunctions from '../../helpers/default-functions.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {

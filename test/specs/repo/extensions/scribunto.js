@@ -1,6 +1,6 @@
 import assert from 'assert';
 import fsPromises from 'fs/promises';
-import defaultFunctions from '../../../helpers/default-functions';
+import defaultFunctions from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {

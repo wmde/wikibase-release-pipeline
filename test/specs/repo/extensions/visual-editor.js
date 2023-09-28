@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../../helpers/default-functions';
+import defaultFunctions from '../../../helpers/default-functions.js';
 
 describe( 'VisualEditor', function () {
 	it( 'Should be able to edit a page using the editor', async () => {

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../../helpers/default-functions';
+import defaultFunctions from '../../../helpers/default-functions.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {

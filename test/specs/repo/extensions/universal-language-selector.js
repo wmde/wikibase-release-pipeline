@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../../helpers/default-functions';
+import defaultFunctions from '../../../helpers/default-functions.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	it( 'Should be able to see the language selector menu', async () => {

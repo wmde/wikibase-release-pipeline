@@ -1,5 +1,5 @@
 import assert from 'assert';
-import defaultFunctions from '../../../helpers/default-functions';
+import defaultFunctions from '../../../helpers/default-functions.js';
 
 describe( 'WikibaseManifest', function () {
 	it( 'Should have rest endpoint and data', async () => {
