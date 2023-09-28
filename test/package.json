@@ -29,7 +29,7 @@
 	],
 	"engines": {
 		"node": ">=10"
-	  },
+	},
 	"scripts": {
 		"test:run": "wdio ./suites/$SUITE/$SUITE.conf.js",
 		"test:run-filter": "wdio ./suites/$SUITE/$SUITE.conf.js --spec $FILTER",

@@ -8,7 +8,6 @@ import Page from 'wdio-mediawiki/Page.js';
  * See https://phabricator.wikimedia.org/T347137
  */
 class PagePatch extends Page {
-
 	/**
 	 * Navigate the browser to a given page.
 	 *
@@ -22,9 +21,10 @@ class PagePatch extends Page {
 	async openTitle( title, query = {}, fragment = '' ) {
 		query.title = title;
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' +
+			browser.options.baseUrl +
+			'/index.php?' +
 			querystring.stringify( query ) +
-			( fragment ? ( '#' + fragment ) : '' )
+			( fragment ? '#' + fragment : '' )
 		);
 	}
 }

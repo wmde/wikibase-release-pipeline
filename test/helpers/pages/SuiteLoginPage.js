@@ -6,10 +6,18 @@ import Page from './WDIOMediawikiPagePatch.js';
 // TODO: Fix upstream code in `wdio-mediawiki/LoginPage`
 // See https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/LoginPage.js
 class SuiteLoginPage extends Page {
-	get username() { return $( '#wpName1' ); }
-	get password() { return $( '#wpPassword1' ); }
-	get loginButton() { return $( '#wpLoginAttempt' ); }
-	get userPage() { return $( '#pt-userpage' ); }
+	get username() {
+		return $( '#wpName1' );
+	}
+	get password() {
+		return $( '#wpPassword1' );
+	}
+	get loginButton() {
+		return $( '#wpLoginAttempt' );
+	}
+	get userPage() {
+		return $( '#pt-userpage' );
+	}
 
 	open() {
 		return super.openTitle( 'Special:UserLogin' );

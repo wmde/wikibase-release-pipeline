@@ -2,7 +2,6 @@ import fs from 'fs';
 import reporter from '@wdio/reporter';
 
 class JsonReporter extends reporter {
-
 	constructor( options ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
@@ -57,9 +56,12 @@ class JsonReporter extends reporter {
 			}
 		}
 
-		fs.writeFileSync( this.resultFilePath, JSON.stringify( result, null, 2 ), 'utf-8' );
+		fs.writeFileSync(
+			this.resultFilePath,
+			JSON.stringify( result, null, 2 ),
+			'utf-8'
+		);
 	}
-
 }
 
 export default JsonReporter;
