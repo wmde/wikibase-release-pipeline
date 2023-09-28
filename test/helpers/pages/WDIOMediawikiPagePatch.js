@@ -1,5 +1,5 @@
 import querystring from 'querystring';
-import Page from 'wdio-mediawiki/Page';
+import Page from 'wdio-mediawiki/Page.js';
 
 /**
  * Patches the use of `browser.config` in
