@@ -1,7 +1,7 @@
 /* eslint-disable node/no-deprecated-api */
 
-import http from 'http';
-import url from 'url';
+const http = require( 'http' );
+const url = require( 'url' );
 
 console.log( 'beacon started!' );
 
