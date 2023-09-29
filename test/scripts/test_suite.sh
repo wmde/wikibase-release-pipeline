@@ -16,6 +16,19 @@ export TEST_LOG="$RESULTS_DIR/$SUITE.log"
 docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&1
 mkdir -p "$RESULTS_DIR"
 
+# Load image if it's not already loaded
+load_image() { 
+    local image="$1"
+    
+    # Check if the image exists
+    if docker images -q "$image" 2>/dev/null | grep -q .; then
+        echo "ℹ️  Image $image already loaded." 2>&1 | tee -a "$TEST_LOG"
+    else
+        echo "🔄 Loading image: $image" 2>&1 | tee -a "$TEST_LOG"
+        docker load -i "../artifacts/$image.docker.tar.gz" >> "$TEST_LOG" 2>&1
+    fi
+}
+
 echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
@@ -27,23 +40,31 @@ if [[ $SUITE == base__* ]]; then
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
 else
     WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_BUNDLE_IMAGE_NAME"
-
-    # load additional bundle images
-    {
-        docker load -i "../artifacts/$ELASTICSEARCH_IMAGE_NAME.docker.tar.gz"
-        docker load -i "../artifacts/$QUICKSTATEMENTS_IMAGE_NAME.docker.tar.gz"
-    } >> "$TEST_LOG" 2>&1
 fi
-
 export WIKIBASE_TEST_IMAGE_NAME
 
-# load default images
-{
-    docker load -i "../artifacts/$WIKIBASE_TEST_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_FRONTEND_IMAGE_NAME.docker.tar.gz"
-    docker load -i "../artifacts/$WDQS_PROXY_IMAGE_NAME.docker.tar.gz"
-} >> "$TEST_LOG" 2>&1
+default_images=(
+    "$WIKIBASE_TEST_IMAGE_NAME"
+    "$WDQS_IMAGE_NAME"
+    "$WDQS_FRONTEND_IMAGE_NAME"
+    "$WDQS_PROXY_IMAGE_NAME"
+)
+
+bundle_images=(
+    "$ELASTICSEARCH_IMAGE_NAME"
+    "$QUICKSTATEMENTS_IMAGE_NAME"
+)
+
+for image in "${default_images[@]}"; do
+    load_image "$image"
+done
+
+# load additional bundle images if needed
+if [[ ! $SUITE == base__* ]]; then
+    for image in "${bundle_images[@]}"; do
+        load_image "$image"
+    done
+fi
 
 echo "ℹ️  $(docker --version)" 2>&1 | tee -a "$TEST_LOG"
 
