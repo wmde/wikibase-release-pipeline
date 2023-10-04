@@ -1,5 +1,5 @@
 import { deepmerge } from 'deepmerge-ts';
-import { config as wdioConf } from '../../wdio.conf.js';
+import { config as wdioConf } from '../../wdio.conf.ts';
 
 export const config = deepmerge(
 	wdioConf,
