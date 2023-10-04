@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"],
+    "outDir": "./built",
+    "allowJs": true,
+    "target": "es5",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+  },
+  "include": ["./**/*"]
+}
