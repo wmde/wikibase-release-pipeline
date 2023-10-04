@@ -9,18 +9,18 @@ export function defaultFunctions() {
 	 * Make a get request to get full request response
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'makeRequest', ( url, params, postData ) => {
+	browser.addCommand( 'makeRequest', ( url: string, params: axios.AxiosRequestConfig, postData: any ) => {
 		if ( postData ) {
-			return axios.post( url, postData, params );
+			return axios.default.post( url, postData, params );
 		} else {
-			return axios.get( url, params );
+			return axios.default.get( url, params );
 		}
 	} );
 
 	/**
 	 * Execute query on database
 	 */
-	browser.addCommand( 'dbQuery', async ( query, config ) => {
+	browser.addCommand( 'dbQuery', async ( query: string, config: { user: any; pass: any; database: any; } ) => {
 		if ( !config ) {
 			config = {
 				user: process.env.DB_USER,
@@ -44,7 +44,7 @@ export function defaultFunctions() {
 	/**
 	 * Delete a claim by guid or pipe-separated list of guids
 	 */
-	browser.addCommand( 'deleteClaim', async ( claimGuid ) => {
+	browser.addCommand( 'deleteClaim', async ( claimGuid: any ) => {
 		const bot = await WikibaseApi.getBot();
 
 		return bot.request( {
@@ -57,7 +57,7 @@ export function defaultFunctions() {
 	/**
 	 * Get installed extensions on wiki
 	 */
-	browser.addCommand( 'getInstalledExtensions', async ( server ) => {
+	browser.addCommand( 'getInstalledExtensions', async ( server: string ) => {
 		const result = await browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
 		return lodash.map( result.data.query.extensions, 'name' );
 	} );
@@ -66,7 +66,7 @@ export function defaultFunctions() {
 	 * Execute docker command on container and get output
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'dockerExecute', ( container, command, opts, shouldLog ) => {
+	browser.addCommand( 'dockerExecute', ( container: string, command: string, opts: string, shouldLog: boolean ) => {
 		if ( !container ) {
 			throw new Error( 'dockerExecute: Container not specified!' );
 		}
@@ -94,7 +94,7 @@ export function defaultFunctions() {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', async ( host, title, content, captcha ) => {
+	browser.addCommand( 'editPage', async ( host: string, title: string, content: any, captcha: any ) => {
 		await browser.url( host + '/wiki/' + title + '?action=edit' );
 
 		// wait for javascript to settle
@@ -137,7 +137,7 @@ export function defaultFunctions() {
 	/**
 	 * Moves browser to recent changes then asserts that a change is in the api result
 	 */
-	browser.addCommand( 'getDispatchedExternalChange', async ( host, expectedChange ) => {
+	browser.addCommand( 'getDispatchedExternalChange', async ( host: string, expectedChange: any ) => {
 		// to get a screenshot
 		await browser.url( host + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
 
@@ -162,7 +162,7 @@ export function defaultFunctions() {
 	/**
 	 * Makes a request to a page and returns the lua cpu profiling data
 	 */
-	browser.addCommand( 'getLuaCpuTime', async ( host, page ) => {
+	browser.addCommand( 'getLuaCpuTime', async ( host: string, page: string ) => {
 		const response = await browser.makeRequest( host + '/wiki/' + page );
 
 		const cpuMatches = response.data.match( /(CPU time usage:) ([-.0-9]+) (\w+)/ );
@@ -175,7 +175,7 @@ export function defaultFunctions() {
 	/**
 	 * Execute quickstatements query
 	 */
-	browser.addCommand( 'executeQuickStatement', async ( theQuery ) => {
+	browser.addCommand( 'executeQuickStatement', async ( theQuery: string ) => {
 		await browser.url( process.env.QS_SERVER + '/#/batch' );
 
 		// create a batch
@@ -202,9 +202,9 @@ export function defaultFunctions() {
 		await browser.waitUntil(
 			async () => {
 				const commandTextArray = await Promise.all(
-					commands.map( async ( command ) => command.getText() )
+					commands.map( async ( command: { getText: () => any; } ) => command.getText() )
 				);
-				return commandTextArray.every( ( commandText ) => commandText === 'done' );
+				return commandTextArray.every( ( commandText: string ) => commandText === 'done' );
 			},
 			{
 				timeout: 10000,
@@ -216,7 +216,7 @@ export function defaultFunctions() {
 	/**
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
-	browser.addCommand( 'queryBlazeGraphItem', async ( itemId ) => {
+	browser.addCommand( 'queryBlazeGraphItem', async ( itemId: string ) => {
 		const sparqlEndpoint = 'http://' + process.env.WDQS_SERVER + '/bigdata/namespace/wdq/sparql';
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
@@ -236,7 +236,7 @@ export function defaultFunctions() {
 		timeout = ( process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000 ) - 1000,
 		timeoutMsg
 	} = {} ) => {
-		let jobsInQueue;
+		let jobsInQueue: number;
 
 		return browser.waitUntil(
 			async () => {
@@ -258,7 +258,7 @@ export function defaultFunctions() {
 	} );
 }
 
-export async function skipIfExtensionNotPresent( test, extension ) {
+export async function skipIfExtensionNotPresent( test: { skip: () => void; }, extension: any ) {
 	const installedExtensions = await browser.getInstalledExtensions(
 		process.env.MW_SERVER
 	);
