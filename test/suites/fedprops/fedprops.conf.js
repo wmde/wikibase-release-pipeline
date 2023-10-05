@@ -1,3 +1,8 @@
-'use strict';
+import { deepmerge } from 'deepmerge-ts';
+import { config as wdioConf } from '../../wdio.conf.js';
 
-exports.config = { suite: [ './specs/fedprops/*.js' ] };
+export const config = deepmerge(
+	wdioConf,
+	{ specs: [ '../../specs/fedprops/*.js' ] },
+	{ clone: false }
+);

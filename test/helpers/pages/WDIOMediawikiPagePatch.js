@@ -1,7 +1,5 @@
-'use strict';
-
-const querystring = require( 'querystring' );
-const Page = require( 'wdio-mediawiki/Page' );
+import querystring from 'querystring';
+import Page from 'wdio-mediawiki/Page.js';
 
 /**
  * Patches the use of `browser.config` in
@@ -10,7 +8,6 @@ const Page = require( 'wdio-mediawiki/Page' );
  * See https://phabricator.wikimedia.org/T347137
  */
 class PagePatch extends Page {
-
 	/**
 	 * Navigate the browser to a given page.
 	 *
@@ -24,11 +21,12 @@ class PagePatch extends Page {
 	async openTitle( title, query = {}, fragment = '' ) {
 		query.title = title;
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' +
+			browser.options.baseUrl +
+			'/index.php?' +
 			querystring.stringify( query ) +
-			( fragment ? ( '#' + fragment ) : '' )
+			( fragment ? '#' + fragment : '' )
 		);
 	}
 }
 
-module.exports = PagePatch;
+export default PagePatch;

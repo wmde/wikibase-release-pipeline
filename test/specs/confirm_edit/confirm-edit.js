@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require( 'assert' );
+import assert from 'assert';
 
 describe( 'ConfirmEdit', function () {
 	it( 'Should allow to edit with captcha', async () => {

@@ -1,6 +1,4 @@
-'use strict';
-
-const Page = require( '../page' );
+import Page from '../page.js';
 
 class QueryServiceUI extends Page {
 
@@ -36,4 +34,4 @@ class QueryServiceUI extends Page {
 
 }
 
-module.exports = new QueryServiceUI();
+export default new QueryServiceUI();

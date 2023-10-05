@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async () => {
@@ -10,7 +8,7 @@ describe( 'Nuke', function () {
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Nuke' );
+		await skipIfExtensionNotPresent( this, 'Nuke' );
 
 		await browser.editPage(
 			process.env.MW_SERVER,
