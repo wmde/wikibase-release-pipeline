@@ -5,7 +5,7 @@
  * See https://phabricator.wikimedia.org/T347137
  */
 
-import { mkdirSync, statSync } from 'fs';
+import fs from 'fs';
 import { makeFilenameDate } from 'wdio-mediawiki';
 
 /**
@@ -41,9 +41,9 @@ function saveScreenshot( screenshotPath, title ) {
 	const path = filePath( title, 'png' );
 	// Ensure directory exists, based on WebDriverIO#saveScreenshotSync()
 	try {
-		statSync( screenshotPath );
+		fs.statSync( screenshotPath );
 	} catch ( err ) {
-		mkdirSync( screenshotPath );
+		fs.mkdirSync( screenshotPath );
 	}
 	// Create and save screenshot
 	browser.saveScreenshot( path );

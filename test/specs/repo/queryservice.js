@@ -2,7 +2,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
-import { stringify } from 'querystring';
+import querystring from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'QueryService', () => {
@@ -121,7 +121,7 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
 		const destructiveButtonEl = await $(
 			'.oo-ui-flaggedElement-destructive button'

@@ -1,7 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
-import { stringify } from 'querystring';
+import querystring from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = getTestString( 'The Item' );
@@ -119,7 +119,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
 		);
 
 		const destructiveButtonEl = await $(

@@ -1,10 +1,10 @@
-import { readFile } from 'fs/promises';
+import fsPromises from 'fs/promises';
 import assert from 'assert';
 import { utf8 } from '../../helpers/readFileEncoding.js';
 
 describe( 'Interwiki links', function () {
 	it( 'Should be able to insert interwiki links', async () => {
-		const repoLinkFile = await readFile(
+		const repoLinkFile = await fsPromises.readFile(
 			new URL( 'interwiki-link.sql', import.meta.url ),
 			utf8
 		);

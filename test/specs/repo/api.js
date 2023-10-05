@@ -23,10 +23,7 @@ describe( 'Wikibase API', function () {
 				]
 			};
 
-			const itemId = await WikibaseApi.createItem(
-				getTestString( itemLabel ),
-				data
-			);
+			const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 			assert.strictEqual( itemId.startsWith( 'Q' ), true );
 			assert.strictEqual( propertyId.startsWith( 'P' ), true );

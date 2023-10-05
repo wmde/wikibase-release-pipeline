@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { readFile } from 'fs/promises';
+import fsPromises from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
@@ -27,7 +27,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		const shexTemplate = (
-			await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
+			await fsPromises.readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
 		).trim();
 		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
 		await schemaTextInputEl.waitForDisplayed();
