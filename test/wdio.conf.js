@@ -3,11 +3,12 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-import fs from 'fs';
+import { existsSync } from 'fs';
 import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
+import { mkdir, rm } from 'fs/promises';
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -39,10 +40,10 @@ export const config = {
 					// different screen sizes. Bootstrap considers widths between 1200 and 1400
 					// as XL, let's use that.
 					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...[ '--window-size=1280,800' ],
+					'--window-size=1280,800',
 					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
 					// Chrome sandbox does not work in Docker
-					...( fs.existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+					...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 				]
 			}
 		}
@@ -92,13 +93,13 @@ export const config = {
 	/**
 	 * Remove screenshots and result.json from previous runs before any tests start running
 	 */
-	onPrepare: function () {
+	onPrepare: async function () {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		fs.mkdir( resultsDir, { recursive: true }, () => {} );
-		fs.rm( screenshotPath, { recursive: true, force: true }, () => {} );
-		fs.rm( resultFilePath, { force: true }, () => {} );
+		await mkdir( resultsDir, { recursive: true }, () => {} );
+		await rm( screenshotPath, { recursive: true, force: true }, () => {} );
+		await rm( resultFilePath, { force: true }, () => {} );
 	},
 
 	/**

@@ -1,4 +1,4 @@
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
@@ -36,7 +36,7 @@ describe( 'Fed props Item', function () {
 				}
 			]
 		};
-		await WikibaseApi.createItem( Util.getTestString( itemLabel ), data );
+		await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 

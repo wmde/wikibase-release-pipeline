@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import reporter from '@wdio/reporter';
 
 class JsonReporter extends reporter {
@@ -43,8 +43,8 @@ class JsonReporter extends reporter {
 			}
 		};
 
-		if ( fs.existsSync( this.resultFilePath ) ) {
-			const existing = JSON.parse( fs.readFileSync( this.resultFilePath, 'utf8' ) );
+		if ( existsSync( this.resultFilePath ) ) {
+			const existing = JSON.parse( readFileSync( this.resultFilePath, 'utf8' ) );
 
 			result.start = suiteStats.start;
 
@@ -56,7 +56,7 @@ class JsonReporter extends reporter {
 			}
 		}
 
-		fs.writeFileSync(
+		writeFileSync(
 			this.resultFilePath,
 			JSON.stringify( result, null, 2 ),
 			'utf-8'

@@ -1,4 +1,4 @@
-import fsPromises from 'fs/promises';
+import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
@@ -7,7 +7,10 @@ describe( 'SyntaxHighlight', function () {
 		await skipIfExtensionNotPresent( this, 'Scribunto' );
 		await skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 
-		const fileContents = await fsPromises.readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
+		const fileContents = await readFile(
+			new URL( 'bananas.lua', import.meta.url ),
+			utf8
+		);
 
 		await browser.editPage(
 			process.env.MW_SERVER,

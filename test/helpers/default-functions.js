@@ -1,7 +1,7 @@
 import axios from 'axios';
 import assert from 'assert';
 import { exec } from 'child_process';
-import lodash from 'lodash';
+import { find, map } from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
 
 export function defaultFunctions() {
@@ -59,7 +59,7 @@ export function defaultFunctions() {
 	 */
 	browser.addCommand( 'getInstalledExtensions', async ( server ) => {
 		const result = await browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
-		return lodash.map( result.data.query.extensions, 'name' );
+		return map( result.data.query.extensions, 'name' );
 	} );
 
 	/**
@@ -145,7 +145,7 @@ export function defaultFunctions() {
 		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
 		const result = await browser.makeRequest( apiURL );
 		const changes = result.data.query.recentchanges;
-		const foundResult = lodash.find( changes, expectedChange );
+		const foundResult = find( changes, expectedChange );
 
 		assert.strictEqual( result.status, 200 );
 

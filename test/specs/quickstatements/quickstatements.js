@@ -1,5 +1,5 @@
 import assert from 'assert';
-import lodash from 'lodash';
+import { isEmpty } from 'lodash';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 const getReferenceValue = function ( response, propertyId, refPropertyId ) {
@@ -82,7 +82,7 @@ describe( 'QuickStatements Service', function () {
 			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
+		assert( isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
 	} );
 
 	it( 'Should be able to add a label to an item', async () => {
@@ -93,7 +93,7 @@ describe( 'QuickStatements Service', function () {
 			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
+		assert( isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
 	} );
 
 	it( 'Should be able to add a description to an item', async () => {
@@ -104,7 +104,7 @@ describe( 'QuickStatements Service', function () {
 			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
+		assert( isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
 	} );
 
 	it.skip( 'Should be able to add a sitelink to an item', async () => {
@@ -115,7 +115,7 @@ describe( 'QuickStatements Service', function () {
 			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
+		assert( isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
 	} );
 
 	it( 'Should be able to add a statement to an item', async () => {

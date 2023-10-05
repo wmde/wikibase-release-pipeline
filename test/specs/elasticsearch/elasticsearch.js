@@ -1,9 +1,9 @@
 import assert from 'assert';
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
-const itemAlias = Util.getTestString( 'alias' );
-const itemLabel = Util.getTestString( 'testItem' );
+const itemAlias = getTestString( 'alias' );
+const itemLabel = getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
 	let itemId;
