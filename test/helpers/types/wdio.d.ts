@@ -16,10 +16,10 @@ export type WaitForJobsParams = {
 };
 
 declare namespace WebdriverIO {
-	interface Element {
-		dbQuery: ( query: string, config?: DBQueryConfig ) => Promise<any>;
+	interface Browser {
+		dbQuery: ( query: string, config?: DBQueryConfig ) => Promise<string>;
 		deleteClaim: ( claimGuid: any ) => Promise<any>;
-		dockerExecute: ( container: string, command: string, opts: string, shouldLog: boolean ) => Promise<any>;
+		dockerExecute: ( container: string, command: string, opts: string, shouldLog: boolean ) => Promise<string>;
 		editPage: ( host: string, title: string, content: any, captcha: any ) => Promise<string>;
 		executeQuickStatement: ( theQuery: string ) => Promise<boolean | undefined>;
 		getDispatchedExternalChange<T>( host: string, expectedChange: T ): Promise<T | undefined>; 
