@@ -1,7 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import querystring from 'querystring';
+import { stringify } from 'querystring';
 import fsPromises from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
@@ -74,7 +74,7 @@ describe( 'Scribunto Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
 		const destructiveButtonEl = await $(
