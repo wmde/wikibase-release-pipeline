@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"],
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework", "./wdio"],
     "outDir": "./built",
     "allowJs": true,
     "target": "ES6",
@@ -8,7 +8,7 @@
     "moduleResolution": "Node16",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "typeRoots": ["./helpers/types", "./node_modules"]
+    "typeRoots": ["./node_modules/@types", "./node_modules", "./helpers/types"]
   },
   "include": ["./**/*"]
 }
