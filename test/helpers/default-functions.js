@@ -30,14 +30,14 @@ export function defaultFunctions() {
 		}
 
 		if ( !config.user || !config.pass || !config.database ) {
-			throw new Error( 'dbQuery: Configuration error! ' + JSON.stringify( config ) );
+			throw new Error(
+				`dbQuery: Configuration error! ${JSON.stringify( config )}`
+			);
 		}
 
 		return await browser.dockerExecute(
 			process.env.DOCKER_MYSQL_NAME,
-			'mysql --user "' + config.user + '"' +
-			' --password="' + config.pass + '" "' + config.database + '"' +
-			" -e '" + query + "'"
+			`mysql --user "${config.user}" --password="${config.pass}" "${config.database}" -e '${query}'`
 		);
 	} );
 
@@ -58,7 +58,9 @@ export function defaultFunctions() {
 	 * Get installed extensions on wiki
 	 */
 	browser.addCommand( 'getInstalledExtensions', async ( server ) => {
-		const result = await browser.makeRequest( server + '/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json' );
+		const result = await browser.makeRequest(
+			`${server}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
+		);
 		return lodash.map( result.data.query.extensions, 'name' );
 	} );
 
@@ -75,9 +77,9 @@ export function defaultFunctions() {
 			opts = '';
 		}
 
-		const fullCommand = 'docker exec ' + opts + ' ' + container + ' ' + command;
+		const fullCommand = `docker exec ${opts} ${container} ${command}`;
 		if ( shouldLog ) {
-			console.log( 'executing: ' + fullCommand );
+			console.log( `executing: ${fullCommand}` );
 		}
 
 		return new Promise( ( resolve ) => {
@@ -95,13 +97,15 @@ export function defaultFunctions() {
 	 * Creates or edits a page with content
 	 */
 	browser.addCommand( 'editPage', async ( host, title, content, captcha ) => {
-		await browser.url( host + '/wiki/' + title + '?action=edit' );
+		await browser.url( `${host}/wiki/${title}?action=edit` );
 
 		// wait for javascript to settle
 		await browser.pause( 5 * 1000 );
 
 		// this shows up one time for anonymous users (VisualEditor)
-		const startEditbutton = await $( '.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive' );
+		const startEditbutton = await $(
+			'.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive'
+		);
 		if ( startEditbutton.elementId ) {
 			await startEditbutton.waitForDisplayed();
 			await startEditbutton.click();
@@ -137,35 +141,42 @@ export function defaultFunctions() {
 	/**
 	 * Moves browser to recent changes then asserts that a change is in the api result
 	 */
-	browser.addCommand( 'getDispatchedExternalChange', async ( host, expectedChange ) => {
-		// to get a screenshot
-		await browser.url( host + '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2' );
+	browser.addCommand(
+		'getDispatchedExternalChange',
+		async ( host, expectedChange ) => {
+			// to get a screenshot
+			await browser.url(
+				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
+			);
 
-		// get all external changes
-		const apiURL = host + '/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title';
-		const result = await browser.makeRequest( apiURL );
-		const changes = result.data.query.recentchanges;
-		const foundResult = lodash.find( changes, expectedChange );
+			// get all external changes
+			const apiURL = `${host}/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
+			const result = await browser.makeRequest( apiURL );
+			const changes = result.data.query.recentchanges;
+			const foundResult = lodash.find( changes, expectedChange );
 
-		assert.strictEqual( result.status, 200 );
+			assert.strictEqual( result.status, 200 );
 
-		if ( !foundResult ) {
-			console.error( 'Could not find:' );
-			console.log( expectedChange );
-			console.error( 'Response: ' );
-			console.log( changes );
+			if ( !foundResult ) {
+				console.error( 'Could not find:' );
+				console.log( expectedChange );
+				console.error( 'Response: ' );
+				console.log( changes );
+			}
+
+			return foundResult;
 		}
-
-		return foundResult;
-	} );
+	);
 
 	/**
 	 * Makes a request to a page and returns the lua cpu profiling data
 	 */
 	browser.addCommand( 'getLuaCpuTime', async ( host, page ) => {
-		const response = await browser.makeRequest( host + '/wiki/' + page );
+		const response = await browser.makeRequest( `${host}/wiki/${page}` );
 
-		const cpuMatches = response.data.match( /(CPU time usage:) ([-.0-9]+) (\w+)/ );
+		const cpuMatches = response.data.match(
+			/(CPU time usage:) ([-.0-9]+) (\w+)/
+		);
 		const cpuTime = parseFloat( cpuMatches[ 2 ] );
 		const cpuTimeScale = cpuMatches[ 3 ];
 
@@ -176,7 +187,7 @@ export function defaultFunctions() {
 	 * Execute quickstatements query
 	 */
 	browser.addCommand( 'executeQuickStatement', async ( theQuery ) => {
-		await browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 		// create a batch
 		const createBatchBoxTextareaEl = await $( '.create_batch_box textarea' );
@@ -217,45 +228,59 @@ export function defaultFunctions() {
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
 	browser.addCommand( 'queryBlazeGraphItem', async ( itemId ) => {
-		const sparqlEndpoint = 'http://' + process.env.WDQS_SERVER + '/bigdata/namespace/wdq/sparql';
+		const sparqlEndpoint = `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
 			validateStatus: false
 		};
 
 		// essentially 'SELECT * WHERE { <http://wikibase.svc/entity/Q101> ?p ?o }' but encoded with some special chars
-		const queryString = 'query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F' + itemId + '%3E+%3Fp+%3Fo+%7D';
+		const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F${itemId}%3E+%3Fp+%3Fo+%7D`;
 
-		const response = await browser.makeRequest( sparqlEndpoint, params, queryString );
+		const response = await browser.makeRequest(
+			sparqlEndpoint,
+			params,
+			queryString
+		);
 		return response.data.results.bindings;
 	} );
 
-	browser.addCommand( 'waitForJobs', async ( {
-		serverURL = process.env.MW_SERVER,
-		// default timeout is 1 second less than default Mocha test timeout
-		timeout = ( process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000 ) - 1000,
-		timeoutMsg
-	} = {} ) => {
-		let jobsInQueue;
+	browser.addCommand(
+		'waitForJobs',
+		async ( {
+			serverURL = process.env.MW_SERVER,
+			// default timeout is 1 second less than default Mocha test timeout
+			timeout = ( process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000 ) - 1000,
+			timeoutMsg
+		} = {} ) => {
+			let jobsInQueue;
 
-		return browser.waitUntil(
-			async () => {
-				const result = await browser.makeRequest(
-					serverURL + '/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json',
-					{ validateStatus: false },
-					{}
-				);
-				jobsInQueue = result.data.query.statistics.jobs;
+			return browser.waitUntil(
+				async () => {
+					const result = await browser.makeRequest(
+						`${serverURL}/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`,
+						{ validateStatus: false },
+						{}
+					);
+					jobsInQueue = result.data.query.statistics.jobs;
 
-				return jobsInQueue === 0;
-			},
-			{
-				timeout,
-				timeoutMsg: timeoutMsg ||
-					`Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${timeout / 1000} seconds.`
-			}
-		);
-	} );
+					return jobsInQueue === 0;
+				},
+				{
+					timeout,
+					timeoutMsg:
+						timeoutMsg ||
+						`Timeout: Job queue on "${
+							serverURL
+						}" still contains ${
+							jobsInQueue
+						} jobs after waiting ${
+							timeout / 1000
+						} seconds.`
+				}
+			);
+		}
+	);
 }
 
 export async function skipIfExtensionNotPresent( test, extension ) {
