@@ -247,12 +247,12 @@ export function defaultFunctions() {
 
 	browser.addCommand(
 		'waitForJobs',
-		async ( {
+		async (
 			serverURL = process.env.MW_SERVER,
 			// default timeout is 1 second less than default Mocha test timeout
 			timeout = ( process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000 ) - 1000,
-			timeoutMsg
-		} = {} ) => {
+			timeoutMsg = undefined
+		) => {
 			let jobsInQueue;
 
 			return browser.waitUntil(

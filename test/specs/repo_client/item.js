@@ -14,7 +14,7 @@ describe( 'Item', function () {
 
 	beforeEach( async () => {
 		await browser.waitForJobs();
-		await browser.waitForJobs( { serverURL: process.env.MW_CLIENT_SERVER } );
+		await browser.waitForJobs( process.env.MW_CLIENT_SERVER );
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
