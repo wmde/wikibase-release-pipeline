@@ -1,22 +1,10 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { DBQueryConfig, LuaCPUTimeReturn, WaitForJobsParams } from "./param-types.ts";
 
 
-export type DBQueryConfig = {
-	user: string,
-	pass: string,
-	database: 'client_wiki'
-};
-export type LuaCPUTimeReturn= {
-	value: number, scale: string 
-};
-export type WaitForJobsParams = {
-	serverURL? : string,
-	timeout? : number,
-	timeoutMsg? : string
-};
 
 declare namespace WebdriverIO {
-	interface Browser {
+	export interface Browser {
 		dbQuery: ( query: string, config?: DBQueryConfig ) => Promise<string>;
 		deleteClaim: ( claimGuid: any ) => Promise<any>;
 		dockerExecute: ( container: string, command: string, opts: string, shouldLog: boolean ) => Promise<string>;
