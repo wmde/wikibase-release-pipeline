@@ -1,13 +1,14 @@
 import assert from 'assert';
 import lodash from 'lodash';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import { AxiosResponse } from 'axios';
 
-const getReferenceValue = function ( response, propertyId, refPropertyId ) {
+function getReferenceValue( response: AxiosResponse, propertyId: string | number, refPropertyId: string | number ) {
 	const references = response.data.claims[ propertyId ][ 0 ].references;
 	return references[ 0 ].snaks[ refPropertyId ][ 0 ].datavalue.value;
 };
 
-const getQualifierType = function ( response, propertyId, qualPropertyId ) {
+function getQualifierType( response: AxiosResponse, propertyId: string, qualPropertyId: string ) {
 	for ( const statements of response.data.claims[ propertyId ] ) {
 		if ( 'qualifiers' in statements ) {
 			if ( qualPropertyId in statements.qualifiers ) {
