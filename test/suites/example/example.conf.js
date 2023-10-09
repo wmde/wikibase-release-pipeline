@@ -1,9 +1,14 @@
-'use strict';
+import { deepmerge } from 'deepmerge-ts';
+import { config as wdioConf } from '../../wdio.conf.js';
 
-exports.config = {
-	suite: [
-		'./specs/quickstatements/*.js',
-		'./specs/repo/queryservice.js',
-		'./specs/elasticsearch/*.js'
-	]
-};
+export const config = deepmerge(
+	wdioConf,
+	{
+		specs: [
+			'../../specs/quickstatements/*.js',
+			'../../specs/repo/queryservice.js',
+			'../../specs/elasticsearch/*.js'
+		]
+	},
+	{ clone: false }
+);

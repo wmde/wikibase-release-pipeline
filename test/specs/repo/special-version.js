@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../helpers/default-functions' );
+import assert from 'assert';
+import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
@@ -51,7 +49,7 @@ describe( 'Special:Version', function () {
 			const name = extension;
 
 			it( 'Should contain ' + name + ' extensions', async function () {
-				defaultFunctions.skipIfExtensionNotPresent( this, name );
+				await skipIfExtensionNotPresent( this, name );
 
 				await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
 

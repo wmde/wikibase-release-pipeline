@@ -34,12 +34,14 @@ load_image() {
     local image="$1"
     
     # Check if the image exists
-    if docker images -q "$image" 2>/dev/null | grep -q .; then
-        echo "ℹ️  Image $image already loaded." 2>&1 | tee -a "$TEST_LOG"
-    else
-        echo "🔄 Loading image: $image" 2>&1 | tee -a "$TEST_LOG"
-        docker load -i "../artifacts/$image.docker.tar.gz" >> "$TEST_LOG" 2>&1
-    fi
+    {
+        if docker images -q "$image" 2>/dev/null | grep -q .; then
+            echo "ℹ️  Image $image already loaded."
+        else
+            echo "🔄 Loading image: $image"
+            docker load -i "../artifacts/$image.docker.tar.gz"
+        fi
+    } >> "$TEST_LOG" 2>&1
 }
 
 echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"

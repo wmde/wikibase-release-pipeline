@@ -1,14 +1,9 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	it( 'Should be able to see the language selector menu', async () => {
-		defaultFunctions.skipIfExtensionNotPresent(
-			this,
-			'UniversalLanguageSelector'
-		);
+		await skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
 
 		await browser.url( process.env.MW_SERVER );
 		const searchInputEl = await $( '#searchInput' );

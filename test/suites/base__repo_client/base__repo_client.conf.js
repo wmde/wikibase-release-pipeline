@@ -1,9 +1,14 @@
-'use strict';
+import { deepmerge } from 'deepmerge-ts';
+import { config as wdioConf } from '../../wdio.conf.js';
 
-exports.config = {
-	suite: [
-		'./specs/repo_client/interwiki-links.js',
-		'./specs/repo_client/item.js',
-		'./specs/repo/api.js'
-	]
-};
+export const config = deepmerge(
+	wdioConf,
+	{
+		specs: [
+			'../../specs/repo_client/interwiki-links.js',
+			'../../specs/repo_client/item.js',
+			'../../specs/repo/api.js'
+		]
+	},
+	{ clone: false }
+);

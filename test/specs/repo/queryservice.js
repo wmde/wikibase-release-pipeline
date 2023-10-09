@@ -1,11 +1,9 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
-const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
-const querystring = require( 'querystring' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import Util from 'wdio-mediawiki/Util.js';
+import assert from 'assert';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
+import querystring from 'querystring';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {

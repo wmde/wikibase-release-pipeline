@@ -1,13 +1,11 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const querystring = require( 'querystring' );
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import Util from 'wdio-mediawiki/Util.js';
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import querystring from 'querystring';
+import fsPromises from 'fs/promises';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 const itemLabel = Util.getTestString( 'The Item' );
 
@@ -17,7 +15,7 @@ describe( 'Scribunto Item', function () {
 	const luaPageTitle = 'RepoClientLuaTest';
 
 	it( 'Should create an item on repo', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
@@ -44,12 +42,9 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const template = await fsPromises.readFile(
-			__dirname + '/repo-client.lua',
-			readFileEncoding.utf8
-		);
+		const template = await fsPromises.readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
 		const luaScript = template
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );
@@ -72,7 +67,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		await SuiteLoginPage.loginAdmin();
 
@@ -92,7 +87,7 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		await browser.pause( 30 * 1000 );
 

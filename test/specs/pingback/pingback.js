@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require( 'assert' );
+import assert from 'assert';
 
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async () => {

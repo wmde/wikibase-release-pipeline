@@ -3,20 +3,17 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-'use strict';
-
-const fs = require( 'fs' );
-const JsonReporter = require( './helpers/json-reporter.js' );
-const defaultFunctions = require( './helpers/default-functions.js' );
-const fetchSuite = require( './helpers/fetchSuite.js' );
-const saveScreenshot = require( './helpers/WDIOMediawikiScreenshotPatch.js' );
-const WikibaseApi = require( './helpers/WDIOWikibaseApiPatch.js' );
+import fs from 'fs';
+import JsonReporter from './helpers/json-reporter.js';
+import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
+import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
+import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
-exports.config = {
+export const config = {
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -88,8 +85,6 @@ exports.config = {
 		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
 	},
 
-	suites: { [ process.env.SUITE ]: fetchSuite( __dirname, process.env.SUITE ) },
-
 	// =====
 	// Hooks
 	// =====
@@ -112,20 +107,7 @@ exports.config = {
 	 */
 	before: async () => {
 		await WikibaseApi.initialize();
-		defaultFunctions.init();
-
-		// TODO: Refactor this
-		// passing installed_extensions to browser.options shouldn't presently work
-		if ( !browser.options.installed_extensions ) {
-			const extensions = await browser.getInstalledExtensions(
-				process.env.MW_SERVER
-			);
-			if ( extensions ) {
-				browser.options.installed_extensions = extensions;
-			} else {
-				browser.options.installed_extensions = [];
-			}
-		}
+		defaultFunctionsInit();
 	},
 
 	/**

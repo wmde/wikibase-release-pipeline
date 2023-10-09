@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const { getElementByURI } = require( '../../helpers/blazegraph' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import { getElementByURI } from '../../helpers/blazegraph.js';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
