@@ -1,7 +1,13 @@
-import fs from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import reporter from '@wdio/reporter';
 
 class JsonReporter extends reporter {
+	resultFilePath: any;
+	suite: {};
+	success: any[];
+	skipped: any[];
+	failingTests: any[];
+
 	constructor( options ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
@@ -9,7 +15,7 @@ class JsonReporter extends reporter {
 
 		this.resultFilePath = options.resultFilePath;
 		this.suite = {};
-		this.failures = [];
+		this.failingTests = [];
 		this.success = [];
 		this.skipped = [];
 	}
@@ -27,7 +33,7 @@ class JsonReporter extends reporter {
 	}
 
 	onTestFail( test ) {
-		this.failures.push( {
+		this.failingTests.push( {
 			fullTitle: test.fullTitle,
 			error: test.error
 		} );
@@ -37,14 +43,14 @@ class JsonReporter extends reporter {
 		const suite = process.env.SUITE;
 		const result = {
 			[ suite ]: {
-				fail: this.failures,
+				fail: this.failingTests,
 				pass: this.success,
 				skip: this.skipped
 			}
 		};
 
-		if ( fs.existsSync( this.resultFilePath ) ) {
-			const existing = JSON.parse( fs.readFileSync( this.resultFilePath, 'utf8' ) );
+		if ( existsSync( this.resultFilePath ) ) {
+			const existing = JSON.parse( readFileSync( this.resultFilePath, 'utf8' ) );
 
 			result.start = suiteStats.start;
 
@@ -56,7 +62,7 @@ class JsonReporter extends reporter {
 			}
 		}
 
-		fs.writeFileSync(
+		writeFileSync(
 			this.resultFilePath,
 			JSON.stringify( result, null, 2 ),
 			'utf-8'
