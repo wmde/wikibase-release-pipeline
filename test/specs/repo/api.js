@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase API', function () {
@@ -24,7 +24,7 @@ describe( 'Wikibase API', function () {
 			};
 
 			const itemId = await WikibaseApi.createItem(
-				Util.getTestString( itemLabel ),
+				getTestString( itemLabel ),
 				data
 			);
 
