@@ -1,17 +1,14 @@
-'use strict';
-
-const assert = require( 'assert' );
-const path = require( 'path' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let itemId = null;
 	let propertyId = null;
 
 	it( 'Should allow to upload an image', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		await SuiteLoginPage.loginAdmin();
 
@@ -20,8 +17,8 @@ describe( 'WikibaseLocalMedia', function () {
 		const fileUpload = await $( '#wpUploadFile' );
 		await fileUpload.waitForDisplayed();
 
-		const filePath = path.join( __dirname, '/image.png' );
-		await fileUpload.setValue( filePath );
+		const filePath = new URL( 'image.png', import.meta.url );
+		await fileUpload.setValue( filePath.pathname );
 
 		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
 		await submitButtonEl.waitForDisplayed();
@@ -35,7 +32,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
@@ -50,7 +47,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 
 		const data = {
 			claims: [

@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const SpecialNewProperty = require( '../../helpers/pages/special/new-property.page' );
+import assert from 'assert';
+import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {

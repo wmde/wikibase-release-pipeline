@@ -1,12 +1,10 @@
-'use strict';
-
-const assert = require( 'assert' );
-const SuiteLoginPage = require( '../../../helpers/pages/SuiteLoginPage' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
+import assert from 'assert';
+import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Babel', function () {
 	it( 'Should be able to update the user page with language skills', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Babel' );
+		await skipIfExtensionNotPresent( this, 'Babel' );
 
 		await SuiteLoginPage.loginAdmin();
 

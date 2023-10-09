@@ -1,12 +1,10 @@
-'use strict';
+import axios from 'axios';
+import assert from 'assert';
+import { exec } from 'child_process';
+import lodash from 'lodash';
+import WikibaseApi from './WDIOWikibaseApiPatch.js';
 
-const axios = require( 'axios' );
-const assert = require( 'assert' );
-const exec = require( 'child_process' ).exec;
-const lodash = require( 'lodash' );
-const WikibaseApi = require( './WDIOWikibaseApiPatch' );
-
-const defaultFunctions = function () {
+export function defaultFunctions() {
 	/**
 	 * Make a get request to get full request response
 	 * Returns a Promise
@@ -258,18 +256,21 @@ const defaultFunctions = function () {
 			}
 		);
 	} );
-};
+}
 
-module.exports = {
-	init: defaultFunctions,
-	skipIfExtensionNotPresent: ( test, extension ) => {
-		const installedExtensions = browser.options.installed_extensions;
-		if ( !installedExtensions || installedExtensions.length === 0 ) {
-			return;
-		} else if ( installedExtensions && installedExtensions.includes( 'WikibaseRepository' ) && installedExtensions.includes( extension ) ) {
-			return;
-		} else {
-			test.skip();
-		}
+export async function skipIfExtensionNotPresent( test, extension ) {
+	const installedExtensions = await browser.getInstalledExtensions(
+		process.env.MW_SERVER
+	);
+	if ( !installedExtensions || installedExtensions.length === 0 ) {
+		return;
+	} else if (
+		installedExtensions &&
+		installedExtensions.includes( 'WikibaseRepository' ) &&
+		installedExtensions.includes( extension )
+	) {
+		return;
+	} else {
+		test.skip();
 	}
-};
+}

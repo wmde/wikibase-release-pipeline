@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require( 'assert' );
-const Property = require( '../../helpers/pages/entity/property.page' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import Property from '../../helpers/pages/entity/property.page.js';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property', function () {
 	let propertyId = null;

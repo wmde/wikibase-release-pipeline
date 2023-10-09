@@ -1,10 +1,7 @@
-'use strict';
+import fs from 'fs';
+import reporter from '@wdio/reporter';
 
-const fs = require( 'fs' );
-const reporter = require( '@wdio/reporter' );
-
-class JsonReporter extends reporter.default {
-
+class JsonReporter extends reporter {
 	constructor( options ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
@@ -59,9 +56,12 @@ class JsonReporter extends reporter.default {
 			}
 		}
 
-		fs.writeFileSync( this.resultFilePath, JSON.stringify( result, null, 2 ), 'utf-8' );
+		fs.writeFileSync(
+			this.resultFilePath,
+			JSON.stringify( result, null, 2 ),
+			'utf-8'
+		);
 	}
-
 }
 
-module.exports = JsonReporter;
+export default JsonReporter;
