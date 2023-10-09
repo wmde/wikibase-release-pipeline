@@ -7,7 +7,7 @@ class QueryServiceUI extends Page {
 	get resultTable() { return $( '#query-result table.table.table-hover' ); }
 	get resultTableRows() { return $( '#query-result table.table.table-hover tr' ); }
 
-	open( query: string, prefixes: string[] | undefined ) {
+	open( query: string, prefixes: string[] = undefined ) {
 		if ( prefixes ) {
 			query = prefixes.join( '\n' ) + '\n' + query;
 		}
@@ -20,7 +20,7 @@ class QueryServiceUI extends Page {
 		await button.click();
 	}
 
-	async resultIncludes( prop: string, value: string ) {
+	async resultIncludes( prop: string, value: string = undefined ) {
 		const resultTable = await this.resultTable;
 		const text = await resultTable.getText();
 		if ( !value ) {
