@@ -1,11 +1,11 @@
 import assert from 'assert';
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
-const itemAlias = Util.getTestString( 'alias' );
-const itemLabel = Util.getTestString( 'testItem' );
+const itemAlias = getTestString( 'alias' );
+const itemLabel = getTestString( 'testItem' );
 
-describe( 'ElasticSearch', function () {
+describe( 'ElasticSearch', () => {
 	let itemId;
 
 	it( 'Should create an item', async () => {
@@ -72,7 +72,7 @@ describe( 'ElasticSearch', function () {
 		);
 	} );
 
-	it( 'should be able to search via alias', async function () {
+	it( 'should be able to search via alias', async () => {
 		let searchResult;
 
 		await browser.waitUntil(
