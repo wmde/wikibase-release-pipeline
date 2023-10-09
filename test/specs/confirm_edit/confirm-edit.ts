@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-describe( 'ConfirmEdit', function () {
+describe( 'ConfirmEdit', () => {
 	it( 'Should allow to edit with captcha', async () => {
 		const executionResult = await browser.editPage(
 			process.env.MW_SERVER,
