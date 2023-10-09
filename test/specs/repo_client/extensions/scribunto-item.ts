@@ -1,8 +1,8 @@
 import Util from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import querystring from 'querystring';
-import fsPromises from 'fs/promises';
+import { stringify } from 'querystring';
+import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
@@ -44,7 +44,7 @@ describe( 'Scribunto Item', function () {
 	it( 'Should be able to reference an item on client using Lua', async () => {
 		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const template = await fsPromises.readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
+		const template = await readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
 		const luaScript = template
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );
@@ -74,7 +74,7 @@ describe( 'Scribunto Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
 		const destructiveButtonEl = await $(
