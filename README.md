@@ -15,8 +15,8 @@ For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targe
 ### Build Commands
 
 ```
-$ ./build.sh all versions/wmde11.env
-$ ./build.sh wikibase_bundle versions/wmde12.env
+$ ./build.sh all channels/stable.env
+$ ./build.sh wikibase channels/stable.env
 ```
 
 ### Test Commands
