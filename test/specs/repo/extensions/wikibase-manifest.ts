@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
 
 describe( 'WikibaseManifest', function () {
 	it( 'Should have rest endpoint and data', async () => {

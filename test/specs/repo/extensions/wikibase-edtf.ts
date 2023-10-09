@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {
