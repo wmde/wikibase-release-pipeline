@@ -1,19 +1,20 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
+import { Context, Suite } from 'mocha';
 
 export function defaultFunctions() {
 	/**
 	 * Make a get request to get full request response
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'makeRequest', ( url: string, params: axios.AxiosRequestConfig, postData: any ) => {
+	browser.addCommand( 'makeRequest', ( url: string, params: AxiosRequestConfig, postData: any ) => {
 		if ( postData ) {
-			return axios.default.post( url, postData, params );
+			return axios.post( url, postData, params );
 		} else {
-			return axios.default.get( url, params );
+			return axios.get( url, params );
 		}
 	} );
 
@@ -216,7 +217,7 @@ export function defaultFunctions() {
 	/**
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
-	browser.addCommand( 'queryBlazeGraphItem', async ( itemId: string ) => {
+	browser.addCommand( 'queryBlazeGraphItem', async ( itemId: string ): Promise<[]> => {
 		const sparqlEndpoint = 'http://' + process.env.WDQS_SERVER + '/bigdata/namespace/wdq/sparql';
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
@@ -258,7 +259,7 @@ export function defaultFunctions() {
 	} );
 }
 
-export async function skipIfExtensionNotPresent( test: { skip: () => void; }, extension: any ) {
+export async function skipIfExtensionNotPresent( test: Context | Suite, extension: any ) {
 	const installedExtensions = await browser.getInstalledExtensions(
 		process.env.MW_SERVER
 	);
