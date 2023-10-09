@@ -2,16 +2,20 @@
 # shellcheck disable=SC1091
 set -e
 
-mkdir -p Docker/build/Wikibase/artifacts
-mkdir -p Docker/build/Wikibase/artifacts/extensions
+BUILD_TMP="/tmp/build-wikibase-docker"
+
+mkdir -p "${BUILD_TMP}"
+cp -r Docker/build/Wikibase/* "${BUILD_TMP}"
+
+mkdir -p "${BUILD_TMP}/artifacts/extensions"
 
 MEDIAWIKI_IMAGE_VERSION="$MEDIAWIKI_VERSION"
 
 if [ -f "$TARBALL_PATH" ]; then
-    cp "$TARBALL_PATH" Docker/build/Wikibase/artifacts/
+    cp "$TARBALL_PATH" "${BUILD_TMP}/artifacts/"
 fi
 
-cp Docker/build/wait-for-it.sh Docker/build/Wikibase/artifacts/
+cp Docker/build/wait-for-it.sh "${BUILD_TMP}/artifacts/"
 set -o allexport; source Docker/build/Wikibase/default.env; set +o allexport
 
 docker build \
@@ -28,6 +32,6 @@ docker build \
     --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    Docker/build/Wikibase/ -t "$1"
+    "${BUILD_TMP}" -t "$1"
 
 docker save "$1" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$1".docker.tar.gz
