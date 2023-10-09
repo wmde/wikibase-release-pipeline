@@ -1,4 +1,4 @@
-import Page from '../page.js';
+import Page from '../page';
 
 class QueryServiceUI extends Page {
 
@@ -7,7 +7,7 @@ class QueryServiceUI extends Page {
 	get resultTable() { return $( '#query-result table.table.table-hover' ); }
 	get resultTableRows() { return $( '#query-result table.table.table-hover tr' ); }
 
-	open( query, prefixes ) {
+	open( query: string, prefixes: string[] | undefined ) {
 		if ( prefixes ) {
 			query = prefixes.join( '\n' ) + '\n' + query;
 		}
@@ -20,7 +20,7 @@ class QueryServiceUI extends Page {
 		await button.click();
 	}
 
-	async resultIncludes( prop, value ) {
+	async resultIncludes( prop: string, value: string ) {
 		const resultTable = await this.resultTable;
 		const text = await resultTable.getText();
 		if ( !value ) {

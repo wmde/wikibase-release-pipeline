@@ -1,4 +1,4 @@
-import Page from '../page.js';
+import Page from '../page';
 
 class SpecialNewProperty extends Page {
 
@@ -9,7 +9,7 @@ class SpecialNewProperty extends Page {
 
 	get submitBtn() { return $( 'button[type="submit"]' ); }
 
-	async open( dataType ) {
+	async open( dataType: string ) {
 
 		dataType = dataType ? '?datatype=' + dataType : '';
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:NewProperty' + dataType );
