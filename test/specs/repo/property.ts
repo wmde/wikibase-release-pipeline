@@ -1,9 +1,9 @@
 import assert from 'assert';
-import Property from '../../helpers/pages/entity/property.page.js';
+import Property from '../../helpers/pages/entity/property.page';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property', function () {
-	let propertyId = null;
+	let propertyId: string = null;
 
 	it( 'Should be able to add statement and reference to property', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );

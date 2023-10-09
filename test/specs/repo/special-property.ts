@@ -1,5 +1,5 @@
 import assert from 'assert';
-import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
+import SpecialNewProperty from '../../helpers/pages/special/new-property.page';
 
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {

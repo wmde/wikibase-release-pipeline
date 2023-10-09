@@ -1,4 +1,4 @@
-import SpecialNewItem from '../../helpers/pages/special/new-item.page.js';
+import SpecialNewItem from '../../helpers/pages/special/new-item.page';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 
 describe( 'Special:NewItem', function () {
