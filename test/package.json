@@ -38,8 +38,5 @@
 		"test:run-filter": "wdio ./suites/$SUITE/$SUITE.conf.js --spec $FILTER",
 		"lint": "npx eslint .",
 		"fix": "npx eslint . --fix"
-	},
-	"dependencies": {
-		"@wdio/globals": "^8.16.20"
 	}
 }
