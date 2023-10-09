@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "es5",
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
+  },
+  "ts-node": {
+    "files": true
+  },
+  "include": [
+    "./**/*.ts",
+  ]
+}

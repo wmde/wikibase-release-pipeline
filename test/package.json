@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"devDependencies": {
+		"@types/mocha": "^10.0.2",
 		"@wdio/cli": "^8.16.16",
 		"@wdio/local-runner": "^8.16.16",
 		"@wdio/mocha-framework": "^8.16.15",

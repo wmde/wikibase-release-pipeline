@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
@@ -9,7 +9,7 @@ export function defaultFunctions() {
 	 * Make a get request to get full request response
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'makeRequest', ( url, params, postData ) => {
+	browser.addCommand( 'makeRequest', ( url: string, params: Object, postData: any ) : Promise<AxiosResponse> => {
 		if ( postData ) {
 			return axios.post( url, postData, params );
 		} else {
@@ -96,7 +96,7 @@ export function defaultFunctions() {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', async ( host, title, content, captcha ) => {
+	browser.addCommand( 'editPage', async ( host: string, title: string, content: string, captcha: string = null ) => {
 		await browser.url( `${host}/wiki/${title}?action=edit` );
 
 		// wait for javascript to settle
