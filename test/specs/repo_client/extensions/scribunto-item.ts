@@ -1,4 +1,4 @@
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
@@ -7,7 +7,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
-const itemLabel = Util.getTestString( 'The Item' );
+const itemLabel = getTestString( 'The Item' );
 
 describe( 'Scribunto Item', function () {
 	let itemId = null;

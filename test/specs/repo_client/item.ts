@@ -1,10 +1,10 @@
-import Util from 'wdio-mediawiki/Util.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
-import querystring from 'querystring';
+import { stringify } from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
-const itemLabel = Util.getTestString( 'The Item' );
+const itemLabel = getTestString( 'The Item' );
 
 describe( 'Item', function () {
 	let itemId = null;
@@ -14,7 +14,7 @@ describe( 'Item', function () {
 
 	beforeEach( async () => {
 		await browser.waitForJobs();
-		await browser.waitForJobs( { serverURL: process.env.MW_CLIENT_SERVER } );
+		await browser.waitForJobs( process.env.MW_CLIENT_SERVER );
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
@@ -119,7 +119,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
 		const destructiveButtonEl = await $(
