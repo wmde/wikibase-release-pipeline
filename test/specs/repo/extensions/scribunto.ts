@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions';
-import { utf8 } from '../../../helpers/readFileEncoding';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module', async () => {
