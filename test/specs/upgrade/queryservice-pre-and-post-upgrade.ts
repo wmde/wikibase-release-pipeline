@@ -101,7 +101,10 @@ describe( 'Wikibase post upgrade', function () {
 		assert( timestamp !== null );
 		assert( statement !== null );
 
+		assert(property !== null);
 		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
+
+		assert(itemLabelValue !== null);
 		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
 	} );
 } );
