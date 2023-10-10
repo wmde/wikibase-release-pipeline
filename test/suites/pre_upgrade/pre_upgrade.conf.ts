@@ -3,6 +3,12 @@ import { config as wdioConf } from '../../wdio.conf.js';
 
 export const config = deepmerge(
 	wdioConf,
-	{ specs: [ '../../specs/fedprops/*.js' ] },
+	{
+		specs: [
+			'../../specs/repo/api.ts',
+			'../../specs/upgrade/pre-upgrade.ts',
+			'../../specs/upgrade/queryservice-pre-and-post-upgrade.ts'
+		]
+	},
 	{ clone: false }
 );

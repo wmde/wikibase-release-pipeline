@@ -3,6 +3,12 @@ import { config as wdioConf } from '../../wdio.conf.js';
 
 export const config = deepmerge(
 	wdioConf,
-	{ specs: [ '../../specs/confirm_edit/*.js' ] },
+	{
+		specs: [
+			'../../specs/quickstatements/*.ts',
+			'../../specs/repo/queryservice.ts',
+			'../../specs/elasticsearch/*.ts'
+		]
+	},
 	{ clone: false }
 );

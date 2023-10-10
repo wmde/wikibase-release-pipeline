@@ -3,6 +3,6 @@ import { config as wdioConf } from '../../wdio.conf.js';
 
 export const config = deepmerge(
 	wdioConf,
-	{ specs: [ '../../specs/fedprops/*.js' ] },
+	{ specs: [ '../../specs/pingback/*.ts' ] },
 	{ clone: false }
 );

@@ -3,12 +3,6 @@ import { config as wdioConf } from '../../wdio.conf.js';
 
 export const config = deepmerge(
 	wdioConf,
-	{
-		specs: [
-			'../../specs/repo_client/interwiki-links.js',
-			'../../specs/repo_client/item.js',
-			'../../specs/repo/api.js'
-		]
-	},
+	{ specs: [ '../../specs/elasticsearch/*.ts' ] },
 	{ clone: false }
 );

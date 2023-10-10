@@ -8,12 +8,13 @@ import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
+import {Options} from "@wdio/types"
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
 const resultFilePath = `${resultsDir}/result.json`;
 
-export const config = {
+export const config: WebdriverIO.Config = {
 	// ======
 	// Custom WDIO config specific to MediaWiki
 	// ======
@@ -53,7 +54,7 @@ export const config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: process.env.SELENIUM_LOG_LEVEL || 'error',
+	logLevel: process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes || 'error',
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
