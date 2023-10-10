@@ -1,11 +1,9 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const QueryServiceUI = require( '../../helpers/pages/queryservice-ui/queryservice-ui.page' );
-const SuiteLoginPage = require( '../../helpers/pages/SuiteLoginPage' );
-const querystring = require( 'querystring' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import { getTestString } from 'wdio-mediawiki/Util.js';
+import assert from 'assert';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
+import { stringify } from 'querystring';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -67,10 +65,7 @@ describe( 'QueryService', () => {
 			]
 		};
 
-		const itemId = await WikibaseApi.createItem(
-			Util.getTestString( itemLabel ),
-			data
-		);
+		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
 		await QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
@@ -119,14 +114,14 @@ describe( 'QueryService', () => {
 
 	it( 'Should not show up in queryservice ui after deletion', async () => {
 		// TODO make an item using the UI
-		const itemId = await WikibaseApi.createItem( Util.getTestString( 'T267743-' ) );
+		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
 		await SuiteLoginPage.loginAdmin();
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + querystring.stringify( query )
+			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 		const destructiveButtonEl = await $(
 			'.oo-ui-flaggedElement-destructive button'

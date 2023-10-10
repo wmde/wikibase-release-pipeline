@@ -1,8 +1,6 @@
-'use strict';
-
-const Util = require( 'wdio-mediawiki/Util' );
-const assert = require( 'assert' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import { getTestString } from 'wdio-mediawiki/Util.js';
+import assert from 'assert';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId;
@@ -38,7 +36,7 @@ describe( 'Property Prefetching', function () {
 		assert.strictEqual( claims.length, NUM_PROPERTIES );
 
 		const data = { claims: claims };
-		itemId = await WikibaseApi.createItem( Util.getTestString( itemLabel ), data );
+		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
 		const toolbarButtonEl = await $(

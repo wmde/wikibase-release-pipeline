@@ -1,18 +1,13 @@
-'use strict';
-
-const assert = require( 'assert' );
-const fsPromises = require( 'fs/promises' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const readFileEncoding = require( '../../../helpers/readFileEncoding' );
+import assert from 'assert';
+import { readFile } from 'fs/promises';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {
 	it( 'Should be able to execute lua module', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
-		const fileContents = await fsPromises.readFile(
-			__dirname + '/bananas.lua',
-			readFileEncoding.utf8
-		);
+		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 		await browser.editPage(
 			process.env.MW_SERVER,
 			'Module:Bananas',
@@ -30,7 +25,7 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await skipIfExtensionNotPresent( this, 'Scribunto' );
 
 		const cpuTime = await browser.getLuaCpuTime(
 			process.env.MW_SERVER,

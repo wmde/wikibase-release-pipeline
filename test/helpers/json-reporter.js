@@ -1,10 +1,7 @@
-'use strict';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import reporter from '@wdio/reporter';
 
-const fs = require( 'fs' );
-const reporter = require( '@wdio/reporter' );
-
-class JsonReporter extends reporter.default {
-
+class JsonReporter extends reporter {
 	constructor( options ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
@@ -46,8 +43,8 @@ class JsonReporter extends reporter.default {
 			}
 		};
 
-		if ( fs.existsSync( this.resultFilePath ) ) {
-			const existing = JSON.parse( fs.readFileSync( this.resultFilePath, 'utf8' ) );
+		if ( existsSync( this.resultFilePath ) ) {
+			const existing = JSON.parse( readFileSync( this.resultFilePath, 'utf8' ) );
 
 			result.start = suiteStats.start;
 
@@ -59,9 +56,12 @@ class JsonReporter extends reporter.default {
 			}
 		}
 
-		fs.writeFileSync( this.resultFilePath, JSON.stringify( result, null, 2 ), 'utf-8' );
+		writeFileSync(
+			this.resultFilePath,
+			JSON.stringify( result, null, 2 ),
+			'utf-8'
+		);
 	}
-
 }
 
-module.exports = JsonReporter;
+export default JsonReporter;

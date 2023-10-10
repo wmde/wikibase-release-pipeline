@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Patches the use of `browser.config` in the screenshot-related code in
  * https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/wmf/1.40.0-wmf.24/tests/selenium/wdio-mediawiki/index.js
@@ -7,8 +5,8 @@
  * See https://phabricator.wikimedia.org/T347137
  */
 
-const fs = require( 'fs' );
-const { makeFilenameDate } = require( 'wdio-mediawiki' );
+import { mkdirSync, statSync } from 'fs';
+import { makeFilenameDate } from 'wdio-mediawiki';
 
 /**
  * @since 1.1.0
@@ -43,13 +41,13 @@ function saveScreenshot( screenshotPath, title ) {
 	const path = filePath( title, 'png' );
 	// Ensure directory exists, based on WebDriverIO#saveScreenshotSync()
 	try {
-		fs.statSync( screenshotPath );
+		statSync( screenshotPath );
 	} catch ( err ) {
-		fs.mkdirSync( screenshotPath );
+		mkdirSync( screenshotPath );
 	}
 	// Create and save screenshot
 	browser.saveScreenshot( path );
 	return path;
 }
 
-module.exports = saveScreenshot;
+export default saveScreenshot;

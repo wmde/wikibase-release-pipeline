@@ -1,14 +1,12 @@
-'use strict';
-
-const assert = require( 'assert' );
-const defaultFunctions = require( '../../../helpers/default-functions' );
-const WikibaseApi = require( '../../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {
 	let propertyId, itemId;
 
 	it( 'Should allow to create and use the EDTF property', async () => {
-		defaultFunctions.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 
 		// create the property
 		propertyId = await WikibaseApi.createProperty( 'edtf' );

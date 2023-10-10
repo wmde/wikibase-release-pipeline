@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require( 'assert' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
+import assert from 'assert';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase pre upgrade', function () {
 	it( 'Should be able to create a specific item', async () => {

@@ -1,11 +1,9 @@
-'use strict';
+import assert from 'assert';
+import { getTestString } from 'wdio-mediawiki/Util.js';
+import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
-const assert = require( 'assert' );
-const Util = require( 'wdio-mediawiki/Util' );
-const WikibaseApi = require( '../../helpers/WDIOWikibaseApiPatch' );
-
-const itemAlias = Util.getTestString( 'alias' );
-const itemLabel = Util.getTestString( 'testItem' );
+const itemAlias = getTestString( 'alias' );
+const itemLabel = getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
 	let itemId;
