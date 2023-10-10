@@ -54,7 +54,6 @@ describe( 'QuickStatements Service', function () {
 		const navbarEl = await $( 'nav.navbar' );
 		await navbarEl.waitForDisplayed();
 		const navbarText = await navbarEl.getText();
-		// assert.equal( navbarText, 'QuickStatements' );
 		assert( navbarText.includes( 'QuickStatements' ) );
 	} );
 
@@ -121,9 +120,7 @@ describe( 'QuickStatements Service', function () {
 	it( 'Should be able to add a statement to an item', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
-		await browser.executeQuickStatement(
-			'Q1|' + propertyId + '|"Will it blend?"'
-		);
+		await browser.executeQuickStatement( `Q1|${propertyId}|"Will it blend?"` );
 
 		const responseQ1 = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
@@ -161,11 +158,11 @@ describe( 'QuickStatements Service', function () {
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
 			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
 				it(
-					'Should be able to add a ' +
-					mainSnakDataType +
-					' statement with a ' +
-					qualifierSnakDataType +
-					' qualifier.',
+					`Should be able to add a ${
+						mainSnakDataType
+					} statement with a ${
+						qualifierSnakDataType
+					} qualifier.`,
 					async () => {
 						const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
 
@@ -175,21 +172,21 @@ describe( 'QuickStatements Service', function () {
 							qualifierSnakDataType
 						);
 						await browser.executeQuickStatement(
-							itemId +
-							'|' +
-							mainPropertyId +
-							'|' +
-							exampleSnakValues[ mainSnakDataType ] +
-							'|' +
-							qualifierPropertyId +
-							'|' +
-							exampleSnakValues[ qualifierSnakDataType ]
+							`${
+								itemId
+							}|${
+								mainPropertyId
+							}|${
+								exampleSnakValues[ mainSnakDataType ]
+							}|${
+								qualifierPropertyId
+							}|${
+								exampleSnakValues[ qualifierSnakDataType ]
+							}`
 						);
 
 						const responseQ1 = await browser.makeRequest(
-							process.env.MW_SERVER +
-							'/w/api.php?action=wbgetclaims&format=json&entity=' +
-							itemId
+							`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 						);
 						assert.strictEqual(
 							getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
@@ -205,7 +202,7 @@ describe( 'QuickStatements Service', function () {
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
 
 		await browser.executeQuickStatement(
-			'Q1|' + propertyIdItem + '|Q1|' + propertyIdItem + '|Q1'
+			`Q1|${propertyIdItem}|Q1|${propertyIdItem}|Q1`
 		);
 
 		const responseQ1 = await browser.makeRequest(
@@ -223,20 +220,11 @@ describe( 'QuickStatements Service', function () {
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
 		const propertyNumber = propertyIdItem.replace( 'P', '' );
 		await browser.executeQuickStatement(
-			itemId +
-			'|' +
-			propertyIdItem +
-			'|Q2|S' +
-			propertyNumber +
-			'|Q2|S' +
-			propertyNumber +
-			'|Q2'
+			`${itemId}|${propertyIdItem}|Q2|S${propertyNumber}|Q2|S${propertyNumber}|Q2`
 		);
 
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER +
-			'/w/api.php?action=wbgetclaims&format=json&entity=' +
-			itemId
+			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue(
 			response,
@@ -254,13 +242,11 @@ describe( 'QuickStatements Service', function () {
 		const propertyNumber = propertyURL.replace( 'P', '' );
 
 		await browser.executeQuickStatement(
-			itemId + '|' + propertyIdItem + '|Q1|S' + propertyNumber + '|' + url
+			`${itemId}|${propertyIdItem}|Q1|S${propertyNumber}|${url}`
 		);
 
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER +
-			'/w/api.php?action=wbgetclaims&format=json&entity=' +
-			itemId
+			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
@@ -272,19 +258,11 @@ describe( 'QuickStatements Service', function () {
 		const stringValue = '"some string"';
 		const propertyNumber = propertyId.replace( 'P', '' );
 		await browser.executeQuickStatement(
-			itemId +
-			'|' +
-			propertyIdItem +
-			'|Q1|S' +
-			propertyNumber +
-			'|' +
-			stringValue
+			`${itemId}|${propertyIdItem}|Q1|S${propertyNumber}|${stringValue}`
 		);
 
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER +
-			'/w/api.php?action=wbgetclaims&format=json&entity=' +
-			itemId
+			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
@@ -294,22 +272,20 @@ describe( 'QuickStatements Service', function () {
 	it( 'Should be able to add and remove a property on an item', async () => {
 		const itemId = await WikibaseApi.createItem( 'add-remove', {} );
 
-		await browser.executeQuickStatement( itemId + '|' + propertyIdItem + '|Q1' );
+		await browser.executeQuickStatement( `${itemId}|${propertyIdItem}|Q1` );
 
 		let response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		assert.strictEqual(
 			propertyIdItem in response.data.entities[ itemId ].claims,
 			true
 		);
 
-		await browser.executeQuickStatement(
-			'-' + itemId + '|' + propertyIdItem + '|Q1'
-		);
+		await browser.executeQuickStatement( `-${itemId}|${propertyIdItem}|Q1` );
 
 		response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		assert.strictEqual(
 			propertyIdItem in response.data.entities[ itemId ].claims,

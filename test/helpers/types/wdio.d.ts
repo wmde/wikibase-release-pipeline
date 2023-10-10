@@ -10,6 +10,7 @@ declare namespace WebdriverIO {
 		deleteClaim: ( claimGuid: string ) => Promise<BotResponse>;
 		dockerExecute: ( container: string, command: string, opts?: string, shouldLog?: boolean ) => Promise<unknown>;
 		editPage: ( host: string, title: string, content: Buffer | string, captcha?: string ) => Promise<string>;
+		executeQuickStatement: ( theQuery: string ) => Promise<void>;
 		getDispatchedExternalChange<T>( host: string, expectedChange: T ) : Promise<T | undefined>;
 		getInstalledExtensions: ( server: string ) => Promise<string[] | undefined>;
 		getLuaCpuTime: ( host: string, page: string ) => Promise<LuaCPUValue>;

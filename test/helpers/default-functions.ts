@@ -190,7 +190,7 @@ export function defaultFunctions() {
 	/**
 	 * Execute quickstatements query
 	 */
-	browser.addCommand( 'executeQuickStatement', async ( theQuery ) => {
+	browser.addCommand( 'executeQuickStatement', async ( theQuery: string ) : Promise<void> => {
 		await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 		// create a batch
