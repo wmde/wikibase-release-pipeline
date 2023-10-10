@@ -8,7 +8,5 @@
   "ts-node": {
     "files": true
   },
-  "include": [
-    "./**/*.ts",
-  ]
+  "include": ["./**/*.ts"]
 }
