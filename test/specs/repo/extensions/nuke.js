@@ -49,6 +49,8 @@ describe( 'Nuke', function () {
 		await browser.acceptAlert();
 		console.log( 'done, waiting now' );
 
+		await browser.pause( 5 * 1000 );
+
 		await browser.waitForJobs();
 
 		const pageIsGoneResult = await browser.makeRequest(
