@@ -6,7 +6,7 @@ class Property extends Page {
 	get addStatement() { return $( '=add statement' ); }
 	get addReference() { return $( '=add reference' ); }
 
-	async open( id ) {
+	async open( id: string ): Promise<void> {
 		await browser.url( process.env.MW_SERVER + '/wiki/Property:' + id );
 	}
 }

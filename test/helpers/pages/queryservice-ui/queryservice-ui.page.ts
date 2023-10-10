@@ -1,26 +1,25 @@
 import Page from '../page.js';
 
 class QueryServiceUI extends Page {
-
 	get queryEditor() { return $( '.queryEditor' ); }
 	get submitBtn() { return $( '#execute-button' ); }
 	get resultTable() { return $( '#query-result table.table.table-hover' ); }
 	get resultTableRows() { return $( '#query-result table.table.table-hover tr' ); }
 
-	open( query, prefixes ) {
+	open( query: string, prefixes?: string[] ) : Promise<void> {
 		if ( prefixes ) {
 			query = prefixes.join( '\n' ) + '\n' + query;
 		}
-		super.open( '/#' + encodeURI( query ) );
+		return super.open( '/#' + encodeURI( query ) );
 	}
 
-	async submit() {
+	async submit() : Promise<void> {
 		const button = await this.submitBtn;
 		await button.waitForDisplayed();
 		await button.click();
 	}
 
-	async resultIncludes( prop, value ) {
+	async resultIncludes( prop: string, value: string ) : Promise<boolean> {
 		const resultTable = await this.resultTable;
 		const text = await resultTable.getText();
 		if ( !value ) {
@@ -31,7 +30,6 @@ class QueryServiceUI extends Page {
 		const matches = text.match( regexp );
 		return matches !== null;
 	}
-
 }
 
 export default new QueryServiceUI();
