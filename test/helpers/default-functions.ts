@@ -144,7 +144,7 @@ export function defaultFunctions() {
 	 */
 	browser.addCommand(
 		'getDispatchedExternalChange',
-		async ( host, expectedChange ) => {
+		async function<T>( host: string, expectedChange: T ) : Promise<T | undefined> {
 			// to get a screenshot
 			await browser.url(
 				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`

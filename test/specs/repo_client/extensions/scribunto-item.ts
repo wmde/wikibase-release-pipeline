@@ -10,7 +10,7 @@ import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 const itemLabel = getTestString( 'The Item' );
 
 describe( 'Scribunto Item', function () {
-	let itemId = null;
+	let itemId: string = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const luaPageTitle = 'RepoClientLuaTest';
 
@@ -46,6 +46,7 @@ describe( 'Scribunto Item', function () {
 
 		const template = await readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
 		const luaScript = template
+			.toString()
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );
 

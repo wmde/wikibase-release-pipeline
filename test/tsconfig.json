@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "module": "Node16",
     "target": "es5",
     "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
   },
