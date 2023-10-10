@@ -96,7 +96,7 @@ export function defaultFunctions() {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', async ( host: string, title: string, content: string, captcha: string = null ) => {
+	browser.addCommand( 'editPage', async ( host: string, title: string, content: string, captcha: string = null ) : Promise<string> => {
 		await browser.url( `${host}/wiki/${title}?action=edit` );
 
 		// wait for javascript to settle
