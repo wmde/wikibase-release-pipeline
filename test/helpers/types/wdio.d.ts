@@ -9,7 +9,7 @@ declare namespace WebdriverIO {
 		getDispatchedExternalChange<T>( host: string, expectedChange: T ) : Promise<T | undefined>;
 		getInstalledExtensions: ( server: string ) => Promise<string[] | undefined>;
 		makeRequest: ( url: string, params?: Object, postData?: any ) => Promise<AxiosResponse>;
-		waitForJobs: ( serverURL: string, timeout?: number, timeoutMsg?: string ) => Promise<boolean>;
+		waitForJobs: ( serverURL?: string, timeout?: number, timeoutMsg?: string ) => Promise<boolean>;
 	}
 
 	interface Element {

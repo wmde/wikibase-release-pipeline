@@ -7,12 +7,12 @@ describe( 'Special:Version', function () {
 			this.skip();
 		}
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
 		const softwareEl = await $( '#sv-software' );
 		await softwareEl.waitForDisplayed();
 		const text = await softwareEl.getText();
 		assert.strictEqual(
-			text.includes( 'MediaWiki\t' + process.env.MEDIAWIKI_VERSION ),
+			text.includes( `MediaWiki\t${process.env.MEDIAWIKI_VERSION}` ),
 			true
 		);
 	} );
@@ -47,17 +47,14 @@ describe( 'Special:Version', function () {
 			// Get the extension name from the override if available
 			const name = extension;
 
-			it( 'Should contain ' + name + ' extensions', async function () {
+			it( `Should contain ${name} extensions`, async function () {
 				await skipIfExtensionNotPresent( this, name );
 
-				await browser.url( process.env.MW_SERVER + '/wiki/Special:Version' );
+				await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = await $(
-					'#mw-version-ext-' +
-					extensionPackage +
-					'-' +
-					extension.replace( / /g, '_' )
+					`#mw-version-ext-${extensionPackage}-${extension.replace( / /g, '_' )}`
 				);
 				await elementSelector.waitForDisplayed();
 				await elementSelector.scrollIntoView();

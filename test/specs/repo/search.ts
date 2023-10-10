@@ -9,10 +9,11 @@ describe( 'Search', function () {
 		await browser.waitForJobs();
 
 		const result = await browser.makeRequest(
-			process.env.MW_SERVER +
-			'/w/api.php?action=wbsearchentities&search=' +
-			itemLabel +
-			'&format=json&errorformat=plaintext&language=en&uselang=en&type=item'
+			`${
+				process.env.MW_SERVER
+			}/w/api.php?action=wbsearchentities&search=${
+				itemLabel
+			}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );
 	} );

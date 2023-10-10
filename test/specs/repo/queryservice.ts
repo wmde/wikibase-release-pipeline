@@ -68,7 +68,7 @@ describe( 'QueryService', () => {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
+		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
 		await browser.pause( 20 * 1000 );
@@ -92,13 +92,13 @@ describe( 'QueryService', () => {
 		// property value is set with correct rdf
 		assert(
 			await QueryServiceUI.resultIncludes(
-				'<' + process.env.MW_SERVER + '/prop/direct/' + propertyId + '>',
+				`<${process.env.MW_SERVER}/prop/direct/${propertyId}>`,
 				propertyValue
 			)
 		);
 
 		// query the property using wdt: prefix
-		await QueryServiceUI.open( 'SELECT * WHERE{ ?s wdt:' + propertyId + ' ?o }' );
+		await QueryServiceUI.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
 
 		await QueryServiceUI.submit();
 		await ( await QueryServiceUI.resultTable ).waitForDisplayed();
@@ -106,7 +106,7 @@ describe( 'QueryService', () => {
 		// should be set only to the item
 		assert(
 			await QueryServiceUI.resultIncludes(
-				'<' + process.env.MW_SERVER + '/entity/' + itemId + '>',
+				`<${process.env.MW_SERVER}/entity/${itemId}>`,
 				propertyValue
 			)
 		);
@@ -129,7 +129,7 @@ describe( 'QueryService', () => {
 		await destructiveButtonEl.waitForDisplayed();
 		await destructiveButtonEl.click();
 
-		await QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
+		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
 		await browser.pause( 20 * 1000 );

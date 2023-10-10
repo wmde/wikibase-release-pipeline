@@ -8,7 +8,7 @@ describe( 'Property', function () {
 	it( 'Should be able to add statement and reference to property', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
-		const propertyIdSelector = '=' + propertyId + ' (' + propertyId + ')'; // =P1 (P1)
+		const propertyIdSelector = `=${propertyId} (${propertyId})`; // =P1 (P1)
 
 		await Property.open( propertyId );
 		const addStatementEl = await Property.addStatement;
@@ -51,10 +51,7 @@ describe( 'Property', function () {
 
 	it( 'Should contain statement and reference in EntityData', async () => {
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER +
-			'/wiki/Special:EntityData/' +
-			propertyId +
-			'.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${propertyId}.json`
 		);
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];
