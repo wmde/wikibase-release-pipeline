@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
 import DatabaseConfig from './types/database-config.js';
+import LuaCPUValue from './types/lua-cpu-value.js';
 
 export function defaultFunctions() {
 	/**
@@ -12,9 +13,9 @@ export function defaultFunctions() {
 	 */
 	browser.addCommand( 'makeRequest', ( url: string, params?: Object, postData?: any ) : Promise<AxiosResponse> => {
 		if ( postData ) {
-			return axios.post( url, postData, params );
+			return axios.default.post( url, postData, params );
 		} else {
-			return axios.get( url, params );
+			return axios.default.get( url, params );
 		}
 	} );
 
@@ -97,7 +98,7 @@ export function defaultFunctions() {
 	/**
 	 * Creates or edits a page with content
 	 */
-	browser.addCommand( 'editPage', async ( host: string, title: string, content: string, captcha: string = null ) : Promise<string> => {
+	browser.addCommand( 'editPage', async ( host: string, title: string, content: Buffer | string, captcha: string = null ) : Promise<string> => {
 		await browser.url( `${host}/wiki/${title}?action=edit` );
 
 		// wait for javascript to settle
@@ -118,7 +119,7 @@ export function defaultFunctions() {
 		// fill out form
 		const textBoxEl = await $( '#wpTextbox1' );
 		await textBoxEl.waitForDisplayed();
-		await textBoxEl.setValue( content );
+		await textBoxEl.setValue( content.toString() );
 
 		if ( captcha ) {
 			const captchaEl = await $( '#wpCaptchaWord' );
@@ -130,7 +131,7 @@ export function defaultFunctions() {
 		await browser.execute( async () => {
 			const editFormEl = await $( '#editform.mw-editform' );
 			await editFormEl.submit();
-		}, this );
+		} );
 
 		await browser.pause( 2 * 1000 );
 
@@ -172,7 +173,7 @@ export function defaultFunctions() {
 	/**
 	 * Makes a request to a page and returns the lua cpu profiling data
 	 */
-	browser.addCommand( 'getLuaCpuTime', async ( host, page ) => {
+	browser.addCommand( 'getLuaCpuTime', async ( host: string, page: string ): Promise<LuaCPUValue> => {
 		const response = await browser.makeRequest( `${host}/wiki/${page}` );
 
 		const cpuMatches = response.data.match(

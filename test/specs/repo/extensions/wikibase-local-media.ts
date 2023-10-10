@@ -37,7 +37,7 @@ describe( 'WikibaseLocalMedia', function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Property:' + propertyId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Property:${propertyId}` );
 
 		const firstHeadingEl = await $( '#firstHeading' );
 		await firstHeadingEl.waitForDisplayed();
@@ -65,7 +65,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		itemId = await WikibaseApi.createItem( 'image-test', data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		const snakviewEl = await $( '.wikibase-snakview-value img' );
 		await snakviewEl.waitForDisplayed();
 		const imageSourceEl = await $( '.wikibase-snakview-value img' );

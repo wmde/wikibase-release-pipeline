@@ -32,7 +32,7 @@ describe( 'WikibaseEdtf', function () {
 
 		// go look at wikibase
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/' + itemId + '.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		const responseSnak =
       response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
