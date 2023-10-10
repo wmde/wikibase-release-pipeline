@@ -19,9 +19,9 @@ describe( 'Property Prefetching', function () {
 		const claims = await Promise.all(
 			links.map( async ( link ) => {
 				const linkHref = await link.getAttribute( 'href' );
-				const prop =
-					'http://www.wikidata.org/entity/' +
-					linkHref.replace( '/wiki/Property:', '' );
+				const prop = `http://www.wikidata.org/entity/${
+					linkHref.replace( '/wiki/Property:', '' )
+				}`;
 				return {
 					mainsnak: {
 						snaktype: 'value',
@@ -38,7 +38,7 @@ describe( 'Property Prefetching', function () {
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		const toolbarButtonEl = await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -64,7 +64,7 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render history page list within threshold', async () => {
 		await browser.url(
-			process.env.MW_SERVER + '/wiki/Item:' + itemId + '?action=history'
+			`${process.env.MW_SERVER}/wiki/Item:${itemId}?action=history`
 		);
 		const historyEl = await $( '#pagehistory' );
 		await historyEl.waitForDisplayed( { timeout: 2000 } );

@@ -38,7 +38,7 @@ describe( 'Fed props Item', function () {
 		};
 		await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 
 		const actualPropertyEl = await $( '.wikibase-statementgroupview-property' );
 		await actualPropertyEl.waitForDisplayed();
@@ -85,7 +85,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show property in queryservice ui after creation using prefixes', async () => {
 		const prefixes = [ 'prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ];
-		const query = 'SELECT * WHERE{ ?s fpwdt:' + propertyId + ' ?o }';
+		const query = `SELECT * WHERE{ ?s fpwdt:${propertyId} ?o }`;
 
 		await QueryServiceUI.open( query, prefixes );
 
@@ -99,7 +99,7 @@ describe( 'Fed props Item', function () {
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
 			!( await QueryServiceUI.resultIncludes(
-				'<' + process.env.MW_SERVER + '/entity/' + itemId + '>',
+				`<${process.env.MW_SERVER}/entity/${itemId}>`,
 				propertyValue
 			) )
 		);
@@ -107,7 +107,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in queryservice ui after creation', async () => {
 		// query the item using wd: prefix
-		await QueryServiceUI.open( 'SELECT * WHERE{ wd:' + itemId + ' ?p ?o }' );
+		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		await QueryServiceUI.submit();
 		const resultTable = await QueryServiceUI.resultTable;

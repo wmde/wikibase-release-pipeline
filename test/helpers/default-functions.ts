@@ -3,8 +3,10 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
+import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
+import Binding from './types/binding.js';
 
 export function defaultFunctions() {
 	/**
@@ -46,7 +48,7 @@ export function defaultFunctions() {
 	/**
 	 * Delete a claim by guid or pipe-separated list of guids
 	 */
-	browser.addCommand( 'deleteClaim', async ( claimGuid ) => {
+	browser.addCommand( 'deleteClaim', async ( claimGuid: string ): Promise<BotResponse> => {
 		const bot = await WikibaseApi.getBot();
 
 		return bot.request( {
@@ -229,7 +231,7 @@ export function defaultFunctions() {
 	/**
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
-	browser.addCommand( 'queryBlazeGraphItem', async ( itemId ) => {
+	browser.addCommand( 'queryBlazeGraphItem', async function<T>( itemId: string ) : Promise<Binding<T>[]> {
 		const sparqlEndpoint = `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
