@@ -3,6 +3,7 @@ import assert from 'assert';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import ExternalChange from '../../helpers/types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -96,7 +97,7 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', async () => {
-		const expectedSiteLinkChange = {
+		const expectedSiteLinkChange: ExternalChange = {
 			type: 'external',
 			ns: 0,
 			title: pageTitle,
@@ -132,7 +133,7 @@ describe( 'Item', function () {
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
 		await browser.pause( 30 * 1000 );
 
-		const expectedTestDeletionChange = {
+		const expectedTestDeletionChange: ExternalChange = {
 			type: 'external',
 			ns: 0,
 			title: pageTitle,

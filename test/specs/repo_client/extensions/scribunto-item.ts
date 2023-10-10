@@ -6,6 +6,7 @@ import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
+import ExternalChange from '../../../helpers/types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -92,7 +93,7 @@ describe( 'Scribunto Item', function () {
 
 		await browser.pause( 30 * 1000 );
 
-		const expectedDeletionChange = {
+		const expectedDeletionChange: ExternalChange = {
 			type: 'external',
 			ns: 0,
 			title: luaPageTitle,

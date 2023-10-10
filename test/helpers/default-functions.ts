@@ -7,6 +7,7 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
 import Binding from './types/binding.js';
+import ExternalChange from './types/external-change.js';
 
 export function defaultFunctions() {
 	/**
@@ -147,7 +148,7 @@ export function defaultFunctions() {
 	 */
 	browser.addCommand(
 		'getDispatchedExternalChange',
-		async function<T>( host: string, expectedChange: T ) : Promise<T | undefined> {
+		async ( host: string, expectedChange: ExternalChange ) : Promise<ExternalChange | undefined> => {
 			// to get a screenshot
 			await browser.url(
 				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
