@@ -47,7 +47,8 @@ describe( 'Nuke', function () {
 		await browser.acceptAlert();
 		console.log( 'done, waiting now' );
 
-		await browser.pause( 5 * 1000 );
+		const resultPageText = $('//*[normalize-space(text())="has been queued for deletion"]');
+		resultPageText.waitForDisplayed();
 
 		await browser.waitForJobs();
 
