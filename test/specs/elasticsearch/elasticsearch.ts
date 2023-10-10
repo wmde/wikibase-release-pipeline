@@ -6,12 +6,12 @@ const itemAlias = getTestString( 'alias' );
 const itemLabel = getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
-	let itemId;
+	let itemId: string;
 
 	it( 'Should create an item', async () => {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		const addButtonEl = await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -42,7 +42,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'should be able to search case-insensitive', async () => {
-		let searchResult;
+		let searchResult: string | any[];
 
 		await browser.waitUntil(
 			async () => {
@@ -73,7 +73,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'should be able to search via alias', async function () {
-		let searchResult;
+		let searchResult: string | any[];
 
 		await browser.waitUntil(
 			async () => {
