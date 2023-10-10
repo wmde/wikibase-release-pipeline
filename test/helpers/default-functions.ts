@@ -258,7 +258,7 @@ export function defaultFunctions() {
 			timeout: number = ( Number.parseInt(process.env.MOCHA_OPTS_TIMEOUT) || 90 * 1000 ) - 1000,
 			timeoutMsg?: string
 		) : Promise<boolean> => {
-			let jobsInQueue;
+			let jobsInQueue: number;
 
 			return browser.waitUntil(
 				async () => {

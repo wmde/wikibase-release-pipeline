@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
+import Binding from '../../helpers/types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
-	let oldItemID;
-	let oldPropertyID;
+	let oldItemID: string;
+	let oldPropertyID: string;
 
 	beforeEach( function () {
 		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
@@ -31,7 +32,7 @@ describe( 'Wikibase post upgrade', function () {
 
 	it( 'Should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/' + oldItemID + '.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${oldItemID}.json`
 		);
 
 		const body = response.data;
@@ -43,7 +44,7 @@ describe( 'Wikibase post upgrade', function () {
 	} );
 
 	it( 'Should show up in the Queryservice', async () => {
-		let bindings;
+		let bindings: Binding<any>[];
 
 		await browser.waitUntil(
 			async () => {

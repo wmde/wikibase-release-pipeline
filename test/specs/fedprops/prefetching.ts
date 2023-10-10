@@ -3,7 +3,7 @@ import assert from 'assert';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Property Prefetching', function () {
-	let itemId;
+	let itemId: string;
 	const itemLabel = 'T267743-';
 	const NUM_PROPERTIES = 25;
 
