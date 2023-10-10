@@ -22,15 +22,15 @@ class JsonReporter extends reporter {
 	}
 
 	onTestSkip( test: TestStats ) {
-		this.skippedTests.push( { ...test } );
+		this.skippedTests.push( { fullTitle: test.fullTitle } );
 	}
 
 	onTestPass( test: TestStats ) {
-		this.successfulTests.push( { ...test } );
+		this.successfulTests.push( { fullTitle: test.fullTitle } );
 	}
 
 	onTestFail( test: TestStats ) {
-		this.failedTests.push( { ...test } );
+		this.failedTests.push( { fullTitle: test.fullTitle, error: test.error } );
 	}
 
 	onSuiteEnd( suiteStats: SuiteStats ) {
