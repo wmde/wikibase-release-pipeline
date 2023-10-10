@@ -7,8 +7,8 @@ import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 const itemLabel = getTestString( 'The Item' );
 
 describe( 'Item', function () {
-	let itemId = null;
-	let propertyId = null;
+	let itemId: string = null;
+	let propertyId: string = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
 
@@ -55,7 +55,7 @@ describe( 'Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		const button = await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -67,7 +67,7 @@ describe( 'Item', function () {
 		const bodyText = await browser.editPage(
 			process.env.MW_CLIENT_SERVER,
 			pageTitle,
-			'{{#statements:' + propertyId + '|from=' + itemId + '}}'
+			`{{#statements:${propertyId}|from=${itemId}}}`
 		);
 		// label should come from repo property
 		assert.equal( bodyText, propertyValue );
@@ -78,9 +78,7 @@ describe( 'Item', function () {
 	it( 'Should be able to create site-links from item to client', async () => {
 		// Create a site-link on a the Main_Page
 		await browser.url(
-			process.env.MW_SERVER +
-			'/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=' +
-			pageTitle
+			`${process.env.MW_SERVER}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
 		);
 		const submitButtonEl = await $( '#wb-setsitelink-submit button' );
 		await submitButtonEl.waitForDisplayed();
@@ -119,7 +117,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			`${browser.options.baseUrl}/index.php?${stringify( query )}`
 		);
 
 		const destructiveButtonEl = await $(
@@ -128,7 +126,7 @@ describe( 'Item', function () {
 		await destructiveButtonEl.waitForDisplayed();
 		await destructiveButtonEl.click();
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {

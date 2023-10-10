@@ -9,6 +9,7 @@ describe( 'Interwiki links', function () {
 			utf8
 		);
 		const repoLink = repoLinkFile
+			.toString()
 			.replace( /<WIKI_ID>/g, 'client_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_CLIENT_SERVER );
 		await browser.dbQuery( repoLink );
@@ -23,6 +24,7 @@ describe( 'Interwiki links', function () {
 			database: 'client_wiki'
 		};
 		const clientLink = repoLinkFile
+			.toString()
 			.replace( /<WIKI_ID>/g, 'my_wiki' )
 			.replace( /<HOSTNAME>/g, process.env.MW_SERVER );
 
