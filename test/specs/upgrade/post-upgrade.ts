@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 describe( 'Wikibase post upgrade', function () {
-	let oldItemID;
+	let oldItemID: string;
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(

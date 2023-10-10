@@ -1,12 +1,13 @@
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
+import Binding from '../../helpers/types/binding.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
 	const propertyValue = 'NewUpgradeItemStringValue';
-	let newItemId;
-	let newPropertyId;
+	let newItemId: string;
+	let newPropertyId: string;
 
 	beforeEach( function () {
 		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
@@ -37,7 +38,7 @@ describe( 'Wikibase post upgrade', function () {
 	} );
 
 	it( 'New item should show up in Queryservice', async () => {
-		let bindings;
+		let bindings: Binding<any>[];
 
 		await browser.waitUntil(
 			async () => {
