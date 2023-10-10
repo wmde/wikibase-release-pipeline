@@ -1,6 +1,12 @@
 declare namespace WebdriverIO {
+	type AxiosResponse = import("axios").AxiosResponse;
+	type DatabaseConfig = import("./database-config").default;
+
 	interface Browser {
-		editPage: ( host: string, title: string, content: string, captcha?: string ) => Promise<string>
+		dbQuery:  ( query: string, config?: DatabaseConfig ) => Promise<string>;
+		dockerExecute: ( container: string, command: string, opts?: string, shouldLog?: boolean ) => Promise<unknown>;
+		editPage: ( host: string, title: string, content: string, captcha?: string ) => Promise<string>;
+		makeRequest: ( url: string, params?: Object, postData?: any ) => Promise<AxiosResponse>;
 	}
 
 	// interface Element {

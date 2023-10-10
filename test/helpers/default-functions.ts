@@ -3,13 +3,14 @@ import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
 import WikibaseApi from './WDIOWikibaseApiPatch.js';
+import DatabaseConfig from './types/database-config.js';
 
 export function defaultFunctions() {
 	/**
 	 * Make a get request to get full request response
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'makeRequest', ( url: string, params: Object, postData: any ) : Promise<AxiosResponse> => {
+	browser.addCommand( 'makeRequest', ( url: string, params?: Object, postData?: any ) : Promise<AxiosResponse> => {
 		if ( postData ) {
 			return axios.post( url, postData, params );
 		} else {
@@ -20,7 +21,7 @@ export function defaultFunctions() {
 	/**
 	 * Execute query on database
 	 */
-	browser.addCommand( 'dbQuery', async ( query, config ) => {
+	browser.addCommand( 'dbQuery', async ( query: string, config?: DatabaseConfig ) => {
 		if ( !config ) {
 			config = {
 				user: process.env.DB_USER,
@@ -68,7 +69,7 @@ export function defaultFunctions() {
 	 * Execute docker command on container and get output
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'dockerExecute', ( container, command, opts, shouldLog ) => {
+	browser.addCommand( 'dockerExecute', ( container: string, command: string, opts?: string, shouldLog?: boolean ) : Promise<unknown> => {
 		if ( !container ) {
 			throw new Error( 'dockerExecute: Container not specified!' );
 		}
