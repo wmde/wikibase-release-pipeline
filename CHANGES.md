@@ -4,6 +4,20 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## October 2023: Security releases for 1.39.5
+
+- [Maintenance release: MediaWiki 1.39.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/UJBH5OGW5M5Q22KETIQY4MV2Q6XJPQWG/)
+- [MediaWiki security and maintenance release announcement: 1.35.10 / 1.38.6 / 1.39.3](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)
+- [MediaWiki security and maintenance release announcement: 1.35.11 / 1.38.7 / 1.39.4](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/HVT3U3XYY35PSCIQPHMY4VQNF3Q6MHUO/)
+- [MediaWiki security and maintenance release announcement: 1.35.12 / 1.39.5 / 1.40.1](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/BRWOWACCHMYRIS7JRTT6XD44X3362MVL/)
+
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+
+| Suite Version | MediaWiki release                                                       | Date available | Run number     | Release task  |
+|---------------|-------------------------------------------------------------------------|----------------|----------------| --------------|
+| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.39.5, PHP 8.1.24, debian/apache2 2.4.57-2), WDQS (0.3.135) | October 2023 | **TODO** | [T348616](https://phabricator.wikimedia.org/T348616) |
+
+
 ## August 2023: Security releases for 1.38.7
 
 - [MediaWiki security and maintenance release announcement: 1.35.10 / 1.38.6 / 1.39.3](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/)
