@@ -44,12 +44,12 @@ describe( 'Nuke', function () {
 		await submitButtonEl.waitForDisplayed();
 		await submitButtonEl.click();
 		await browser.acceptAlert();
-		console.log(new Date(), "waiting for job queue message");
-		const resultPageText = $( '//*[normalize-space(text())="has been queued for deletion"]' );
-		resultPageText.waitForDisplayed();
-		console.log(new Date(), "message found, waiting for job completion");
+		console.log( new Date(), 'waiting for job queue message' );
+		const resultPageText = $( 'li*=has been queued for deletion' );
+		await resultPageText.waitForDisplayed();
+		console.log( new Date(), 'message found, waiting for job completion' );
 		await browser.waitForJobs();
-		console.log(new Date(), "jobs done");
+		console.log( new Date(), 'jobs done' );
 
 		const pageIsGoneResult = await browser.makeRequest(
 			process.env.MW_SERVER + '/wiki/Vandalism',
