@@ -8,7 +8,7 @@ import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
-import {Options} from "@wdio/types"
+import {Options, Frameworks} from "@wdio/types"
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -114,9 +114,9 @@ export const config: WebdriverIO.Config = {
 	/**
 	 * Save a screenshot when test fails.
 	 *
-	 * @param {Object} test Mocha Test object
+	 * @param {Frameworks.Test} test
 	 */
-	afterTest: function ( test ) {
+	afterTest: function ( test: Frameworks.Test ) {
 		const testFile = encodeURIComponent(
 			test.file.match( /.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-' )
 		);
