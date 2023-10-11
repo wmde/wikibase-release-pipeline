@@ -5,11 +5,11 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 describe( 'Nuke', function () {
 	this.retries( 3 );
 
-	beforeEach( async function() {
+	beforeEach( async function () {
 		await browser.waitForJobs();
 	} );
 
-	it( 'Should be able to delete a page through Special:Nuke', async function() {
+	it( 'Should be able to delete a page through Special:Nuke', async function () {
 		await skipIfExtensionNotPresent( this, 'Nuke' );
 
 		await browser.editPage(
