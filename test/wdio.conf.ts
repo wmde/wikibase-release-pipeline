@@ -8,7 +8,7 @@ import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
-import {Options, Frameworks} from "@wdio/types"
+import { Options, Frameworks } from "@wdio/types"
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;

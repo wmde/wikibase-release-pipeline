@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import reporter, { SuiteStats, TestStats } from '@wdio/reporter';
+import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from "@wdio/types";
 import { ResultType, TestResult } from './types/test-results.js';
 
-class JsonReporter extends reporter {
+class JsonReporter extends WDIOReporter {
 	resultFilePath: string | URL;
 	failedTests: TestResult[];
 	successfulTests: TestResult[];
