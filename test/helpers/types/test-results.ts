@@ -9,5 +9,6 @@ export type ResultType = {
         pass: TestResult[];
         skip: TestResult[];
     };
-    start?: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	start?: any;
 };
