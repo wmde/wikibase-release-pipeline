@@ -44,7 +44,7 @@ describe( 'Wikibase post upgrade', function () {
 	} );
 
 	it( 'Should show up in the Queryservice', async () => {
-		let bindings: Binding<any>[];
+		let bindings: Binding[];
 
 		await browser.waitUntil(
 			async () => {

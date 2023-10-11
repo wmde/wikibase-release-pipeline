@@ -1,6 +1,6 @@
 declare namespace WebdriverIO {
 	type AxiosResponse = import("axios").AxiosResponse;
-	type Binding = import("./binding.js").default<any>;
+	type Binding = import("./binding.js").default;
 	type BotResponse = import("./bot-response.js").default;
 	type DatabaseConfig = import("./database-config.js").default;
 	type ExternalChange = import("./external-change.js").default;
@@ -15,12 +15,13 @@ declare namespace WebdriverIO {
 		getDispatchedExternalChange: ( host: string, expectedChange: ExternalChange ) => Promise<ExternalChange | undefined>;
 		getInstalledExtensions: ( server: string ) => Promise<string[] | undefined>;
 		getLuaCpuTime: ( host: string, page: string ) => Promise<LuaCPUValue>;
-		makeRequest: ( url: string, params?: Object, postData?: any ) => Promise<AxiosResponse>;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		makeRequest: ( url: string, params?: any, postData?: any) => Promise<AxiosResponse>;
 		queryBlazeGraphItem: ( itemId: string ) => Promise<Binding[]>;
 		waitForJobs: ( serverURL?: string, timeout?: number, timeoutMsg?: string ) => Promise<boolean>;
 	}
 
 	interface Element {
-	    submit: () => Promise<void>;
+		submit: () => Promise<void>;
 	}
 }

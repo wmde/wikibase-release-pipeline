@@ -1,9 +1,9 @@
-type Binding<T> ={ 
+type Binding ={ 
 	o : {
-		value: T;
+		value: string;
 	};
 	p: {
-		value : T;
+		value : string;
 	};
 };
 

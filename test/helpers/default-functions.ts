@@ -15,7 +15,8 @@ export function defaultFunctions() {
 	 * Make a get request to get full request response
 	 * Returns a Promise
 	 */
-	browser.addCommand( 'makeRequest', ( url: string, params?: Object, postData?: any ) : Promise<AxiosResponse> => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	browser.addCommand( 'makeRequest', ( url: string, params?: any, postData?: any ) : Promise<AxiosResponse> => {
 		if ( postData ) {
 			return axios.default.post( url, postData, params );
 		} else {
@@ -233,7 +234,7 @@ export function defaultFunctions() {
 	/**
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
-	browser.addCommand( 'queryBlazeGraphItem', async function<T>( itemId: string ) : Promise<Binding<T>[]> {
+	browser.addCommand( 'queryBlazeGraphItem', async ( itemId: string ) : Promise<Binding[]> => {
 		const sparqlEndpoint = `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
 		const params = {
 			headers: { Accept: 'application/sparql-results+json' },
