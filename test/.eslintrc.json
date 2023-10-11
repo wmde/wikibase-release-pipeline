@@ -1,14 +1,18 @@
 {
 	"root": true,
 	"extends": [
-		"wikimedia/selenium",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		// "wikimedia/selenium"
 		"wikimedia/language/es2019"
 	],
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"sourceType": "module",
 		"allowImportExportEverywhere": true,
 		"ecmaVersion": "latest"
 	},
+	"plugins": ["@typescript-eslint"],
 	"rules": {
 		"mocha/no-setup-in-describe": "warn"
 	}
