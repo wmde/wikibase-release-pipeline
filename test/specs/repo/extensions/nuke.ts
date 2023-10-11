@@ -3,7 +3,7 @@ import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Nuke', function () {
-	this.retries(3);
+	this.retries( 3 );
 
 	beforeEach( async function() {
 		await browser.waitForJobs();
