@@ -19,7 +19,7 @@ class QueryServiceUI extends Page {
 		await button.click();
 	}
 
-	async resultIncludes( prop: string, value: string ) : Promise<boolean> {
+	async resultIncludes( prop: string, value?: string ) : Promise<boolean> {
 		const resultTable = await this.resultTable;
 		const text = await resultTable.getText();
 		if ( !value ) {
