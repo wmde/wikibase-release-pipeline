@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import SearchResult from '../../helpers/types/search-result.js';
 
-const itemAlias = getTestString( 'alias' );
-const itemLabel = getTestString( 'testItem' );
+const itemAlias: string = getTestString( 'alias' );
+const itemLabel: string = getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
 	let itemId: string;
@@ -42,7 +43,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'should be able to search case-insensitive', async () => {
-		let searchResult: string | any[];
+		let searchResult: SearchResult[];
 
 		await browser.waitUntil(
 			async () => {
@@ -73,7 +74,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'should be able to search via alias', async function () {
-		let searchResult: string | any[];
+		let searchResult: SearchResult[];
 
 		await browser.waitUntil(
 			async () => {
