@@ -7,11 +7,10 @@ describe( 'Nuke', function () {
 
 	beforeEach( async function () {
 		await browser.waitForJobs();
+		await skipIfExtensionNotPresent( this, 'Nuke' );
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async function () {
-		await skipIfExtensionNotPresent( this, 'Nuke' );
-
 		await browser.editPage(
 			process.env.MW_SERVER,
 			'Vandalism',

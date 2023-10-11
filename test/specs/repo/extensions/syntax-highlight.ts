@@ -3,10 +3,12 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'SyntaxHighlight', function () {
-	it( 'Should highlight lua script', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'Scribunto' );
 		await skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
+	} );
 
+	it( 'Should highlight lua script', async () => {
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 
 		await browser.editPage(

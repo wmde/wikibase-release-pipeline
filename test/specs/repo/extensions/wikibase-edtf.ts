@@ -3,13 +3,13 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseEdtf', function () {
-	let propertyId, itemId;
+	beforeEach( async function () {
+		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+	} );
 
 	it( 'Should allow to create and use the EDTF property', async () => {
-		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
-
 		// create the property
-		propertyId = await WikibaseApi.createProperty( 'edtf' );
+		const propertyId = await WikibaseApi.createProperty( 'edtf' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
 		const rawValue = '1985-04-12T23:20:30';
@@ -28,7 +28,7 @@ describe( 'WikibaseEdtf', function () {
 			]
 		};
 
-		itemId = await WikibaseApi.createItem( 'edtf-test', data );
+		const itemId = await WikibaseApi.createItem( 'edtf-test', data );
 
 		// go look at wikibase
 		const response = await browser.makeRequest(

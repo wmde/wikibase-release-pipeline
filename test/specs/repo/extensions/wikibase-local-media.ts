@@ -4,12 +4,13 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 
 describe( 'WikibaseLocalMedia', function () {
-	let itemId = null;
-	let propertyId = null;
+	let propertyId: string;
+
+	beforeEach( async function () {
+		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+	} );
 
 	it( 'Should allow to upload an image', async () => {
-		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
-
 		await SuiteLoginPage.loginAdmin();
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
@@ -32,8 +33,6 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', async () => {
-		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
-
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
@@ -47,8 +46,6 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
-
 		const data = {
 			claims: [
 				{
@@ -63,7 +60,7 @@ describe( 'WikibaseLocalMedia', function () {
 			]
 		};
 
-		itemId = await WikibaseApi.createItem( 'image-test', data );
+		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		const snakviewEl = await $( '.wikibase-snakview-value img' );

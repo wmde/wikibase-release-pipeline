@@ -4,9 +4,11 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'Scribunto', function () {
-	it( 'Should be able to execute lua module', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'Scribunto' );
+	} );
 
+	it( 'Should be able to execute lua module', async () => {
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 		await browser.editPage(
 			process.env.MW_SERVER,
@@ -25,8 +27,6 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
-
 		const cpuTime = await browser.getLuaCpuTime(
 			process.env.MW_SERVER,
 			'LuaTest'

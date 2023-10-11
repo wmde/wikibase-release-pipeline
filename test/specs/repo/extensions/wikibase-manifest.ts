@@ -2,9 +2,11 @@ import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'WikibaseManifest', function () {
-	it( 'Should have rest endpoint and data', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'WikibaseManifest' );
+	} );
 
+	it( 'Should have rest endpoint and data', async () => {
 		const result = await browser.makeRequest(
 			process.env.MW_SERVER + '/w/rest.php/wikibase-manifest/v0/manifest'
 		);

@@ -2,9 +2,11 @@ import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'VisualEditor', function () {
-	it( 'Should be able to edit a page using the editor', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'VisualEditor' );
+	} );
 
+	it( 'Should be able to edit a page using the editor', async () => {
 		await browser.url(
 			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
 		);

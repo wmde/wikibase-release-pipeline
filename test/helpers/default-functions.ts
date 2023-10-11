@@ -8,6 +8,7 @@ import DatabaseConfig from './types/database-config.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
 import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
+import { Context } from 'mocha';
 
 export function defaultFunctions() {
 	/**
@@ -288,7 +289,7 @@ export function defaultFunctions() {
 	);
 }
 
-export async function skipIfExtensionNotPresent( test, extension ) {
+export async function skipIfExtensionNotPresent( test: Context, extension: string ) : Promise<void> {
 	const installedExtensions = await browser.getInstalledExtensions(
 		process.env.MW_SERVER
 	);

@@ -3,9 +3,11 @@ import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Babel', function () {
-	it( 'Should be able to update the user page with language skills', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'Babel' );
+	} );
 
+	it( 'Should be able to update the user page with language skills', async () => {
 		await SuiteLoginPage.loginAdmin();
 
 		const executionContent = await browser.editPage(

@@ -7,9 +7,11 @@ describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
 	const testDescription = 'A description';
 
-	it( 'Should be able to create an EntitySchema', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'EntitySchema' );
+	} );
 
+	it( 'Should be able to create an EntitySchema', async () => {
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema

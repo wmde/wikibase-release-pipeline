@@ -11,13 +11,15 @@ import ExternalChange from '../../../helpers/types/external-change.js';
 const itemLabel = getTestString( 'The Item' );
 
 describe( 'Scribunto Item', function () {
-	let itemId: string = null;
+	let itemId: string;
 	const propertyValue = 'PropertyExampleStringValue';
 	const luaPageTitle = 'RepoClientLuaTest';
 
-	it( 'Should create an item on repo', async () => {
+	beforeEach( async function () {
 		await skipIfExtensionNotPresent( this, 'Scribunto' );
+	} );
 
+	it( 'Should create an item on repo', async () => {
 		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -43,8 +45,6 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async () => {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
-
 		const template = await readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
 		const luaScript = template
 			.toString()
@@ -69,8 +69,6 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
-
 		await SuiteLoginPage.loginAdmin();
 
 		// goto delete page
@@ -89,8 +87,6 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
-
 		await browser.pause( 30 * 1000 );
 
 		const expectedDeletionChange: ExternalChange = {
