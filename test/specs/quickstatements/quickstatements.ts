@@ -1,13 +1,26 @@
 import assert from 'assert';
 import lodash from 'lodash';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import { AxiosResponse } from 'axios';
 
-const getReferenceValue = function ( response, propertyId, refPropertyId ) {
-	const references = response.data.claims[ propertyId ][ 0 ].references;
-	return references[ 0 ].snaks[ refPropertyId ][ 0 ].datavalue.value;
+type ReferenceValue = {
+	id: string;
 };
 
-const getQualifierType = function ( response, propertyId, qualPropertyId ) {
+function getReferenceValue(
+	response: AxiosResponse,
+	propertyId: string | number,
+	refPropertyId: string | number
+): string | ReferenceValue {
+	const references = response.data.claims[ propertyId ][ 0 ].references;
+	return references[ 0 ].snaks[ refPropertyId ][ 0 ].datavalue.value;
+}
+
+function getQualifierType(
+	response: AxiosResponse,
+	propertyId: string | number,
+	qualPropertyId: string
+): string {
 	for ( const statements of response.data.claims[ propertyId ] ) {
 		if ( 'qualifiers' in statements ) {
 			if ( qualPropertyId in statements.qualifiers ) {
@@ -15,7 +28,7 @@ const getQualifierType = function ( response, propertyId, qualPropertyId ) {
 			}
 		}
 	}
-};
+}
 
 describe( 'QuickStatements Service', function () {
 	let propertyId = null;

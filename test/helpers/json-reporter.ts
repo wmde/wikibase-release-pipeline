@@ -4,12 +4,12 @@ import { Reporters } from '@wdio/types';
 import { ResultType, TestResult } from './types/test-results.js';
 
 class JsonReporter extends WDIOReporter {
-	resultFilePath: string | URL;
-	failedTests: TestResult[];
-	successfulTests: TestResult[];
-	skippedTests: TestResult[];
+	private resultFilePath: string | URL;
+	private failedTests: TestResult[];
+	private successfulTests: TestResult[];
+	private skippedTests: TestResult[];
 
-	constructor( options: Partial<Reporters.Options> ) {
+	public constructor( options: Partial<Reporters.Options> ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
 		super( options );
@@ -21,19 +21,19 @@ class JsonReporter extends WDIOReporter {
 		this.skippedTests = [];
 	}
 
-	onTestSkip( test: TestStats ) {
+	public onTestSkip( test: TestStats ): void {
 		this.skippedTests.push( { fullTitle: test.fullTitle } );
 	}
 
-	onTestPass( test: TestStats ) {
+	public onTestPass( test: TestStats ): void {
 		this.successfulTests.push( { fullTitle: test.fullTitle } );
 	}
 
-	onTestFail( test: TestStats ) {
+	public onTestFail( test: TestStats ): void {
 		this.failedTests.push( { fullTitle: test.fullTitle, error: test.error } );
 	}
 
-	onSuiteEnd( suiteStats: SuiteStats ) {
+	public onSuiteEnd( suiteStats: SuiteStats ): void {
 		const suite = process.env.SUITE;
 
 		const result: ResultType = {

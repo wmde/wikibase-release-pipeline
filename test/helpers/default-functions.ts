@@ -10,7 +10,7 @@ import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
 import { Context } from 'mocha';
 
-export function defaultFunctions() {
+export function defaultFunctions(): void {
 	/**
 	 * Make a get request to get full request response
 	 * Returns a Promise
@@ -18,6 +18,7 @@ export function defaultFunctions() {
 
 	browser.addCommand(
 		'makeRequest',
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		( url: string, params?: any, postData?: any ): Promise<AxiosResponse> => {
 			if ( postData ) {
 				return axios.default.post( url, postData, params );

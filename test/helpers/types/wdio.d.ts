@@ -31,7 +31,9 @@ declare namespace WebdriverIO {
 
 		makeRequest: (
 			url: string,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			params?: any,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			postData?: any,
 		) => Promise<AxiosResponse>;
 		queryBlazeGraphItem: ( itemId: string ) => Promise<Binding[]>;
