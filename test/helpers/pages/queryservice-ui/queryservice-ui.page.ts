@@ -26,7 +26,7 @@ class QueryServiceUI extends Page {
 			return text.includes( prop );
 		}
 
-		const regexp = new RegExp( '(' + prop + ')(\\s+)(' + value + ')' );
+		const regexp = new RegExp( `(${prop})(\\s+)(${value})` );
 		const matches = text.match( regexp );
 		return matches !== null;
 	}

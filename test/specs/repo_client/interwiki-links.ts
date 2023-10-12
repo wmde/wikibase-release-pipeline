@@ -16,7 +16,7 @@ describe( 'Interwiki links', function () {
 		const clientWikiQueryResults = await browser.dbQuery(
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"'
 		);
-		assert( clientWikiQueryResults.indexOf( process.env.MW_CLIENT_SERVER ) > -1 );
+		assert( clientWikiQueryResults.includes( process.env.MW_CLIENT_SERVER ) );
 
 		const config = {
 			user: process.env.DB_USER,
@@ -33,6 +33,6 @@ describe( 'Interwiki links', function () {
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"',
 			config
 		);
-		assert( myWikiQueryResults.indexOf( process.env.MW_SERVER ) > -1 );
+		assert( myWikiQueryResults.includes( process.env.MW_SERVER ) );
 	} );
 } );

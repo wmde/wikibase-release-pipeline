@@ -1,0 +1,9 @@
+{
+	"extends": [
+		"wikimedia/common",
+		"wikimedia/node"
+	],
+	"rules": {
+		"es-x/no-hashbang": "off"
+	}
+}

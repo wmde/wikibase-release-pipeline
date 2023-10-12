@@ -228,6 +228,7 @@ describe( 'QuickStatements Service', function () {
 			propertyIdItem
 		);
 
+		assert( typeof refValue !== 'string' );
 		assert.strictEqual( refValue.id, 'Q2' );
 	} );
 
