@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import { ResultType, TestResult } from './types/test-results.js';
+import { utf8 } from './readFileEncoding.js';
 
 class JsonReporter extends WDIOReporter {
 	private resultFilePath: string | URL;
@@ -62,7 +63,7 @@ class JsonReporter extends WDIOReporter {
 		writeFileSync(
 			this.resultFilePath,
 			JSON.stringify( result, null, 2 ),
-			'utf-8'
+			utf8.encoding
 		);
 	}
 }
