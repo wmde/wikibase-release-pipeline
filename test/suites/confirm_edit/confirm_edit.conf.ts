@@ -1,6 +1,6 @@
 import { config as wdioConf } from '../../wdio.conf.js';
 
-export const config : WebdriverIO.Config = {
+export const config: WebdriverIO.Config = {
 	...wdioConf,
 	specs: [ '../../specs/confirm_edit/*.ts' ]
 };

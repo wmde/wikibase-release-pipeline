@@ -15,7 +15,7 @@ describe( 'Wikibase post upgrade', function () {
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
 			process.env.MW_SERVER +
-			'/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
+        '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -102,10 +102,10 @@ describe( 'Wikibase post upgrade', function () {
 		assert( timestamp !== null );
 		assert( statement !== null );
 
-		assert(property !== null);
+		assert( property !== null );
 		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
 
-		assert(itemLabelValue !== null);
+		assert( itemLabelValue !== null );
 		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
 	} );
 } );

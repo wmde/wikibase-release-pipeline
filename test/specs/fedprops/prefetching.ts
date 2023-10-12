@@ -19,9 +19,10 @@ describe( 'Property Prefetching', function () {
 		const claims = await Promise.all(
 			links.map( async ( link ) => {
 				const linkHref = await link.getAttribute( 'href' );
-				const prop = `http://www.wikidata.org/entity/${
-					linkHref.replace( '/wiki/Property:', '' )
-				}`;
+				const prop = `http://www.wikidata.org/entity/${linkHref.replace(
+					'/wiki/Property:',
+					''
+				)}`;
 				return {
 					mainsnak: {
 						snaktype: 'value',
@@ -79,7 +80,7 @@ describe( 'Property Prefetching', function () {
 	it( 'Should render recent changes list within threshold', async () => {
 		await browser.url(
 			process.env.MW_SERVER +
-			'/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
+        '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
 		);
 		const specialEl = await $( 'ul.special' );
 		await specialEl.waitForDisplayed( { timeout: 2000 } );

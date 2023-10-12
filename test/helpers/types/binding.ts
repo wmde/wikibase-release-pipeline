@@ -1,9 +1,9 @@
-type Binding ={ 
-	o : {
+type Binding = {
+	o: {
 		value: string;
 	};
 	p: {
-		value : string;
+		value: string;
 	};
 };
 

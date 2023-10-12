@@ -13,7 +13,7 @@ describe( 'Fed props Item', function () {
 	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
 		const result = await browser.makeRequest(
 			process.env.MW_SERVER +
-			'/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
+        '/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property'
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;

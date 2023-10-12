@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
-import { Reporters } from "@wdio/types";
+import { Reporters } from '@wdio/types';
 import { ResultType, TestResult } from './types/test-results.js';
 
 class JsonReporter extends WDIOReporter {
@@ -9,7 +9,7 @@ class JsonReporter extends WDIOReporter {
 	successfulTests: TestResult[];
 	skippedTests: TestResult[];
 
-	constructor( options : Partial<Reporters.Options>) {
+	constructor( options: Partial<Reporters.Options> ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
 		super( options );
@@ -45,7 +45,9 @@ class JsonReporter extends WDIOReporter {
 		};
 
 		if ( existsSync( this.resultFilePath ) ) {
-			const existing: ResultType = JSON.parse( readFileSync( this.resultFilePath, 'utf8' ) );
+			const existing: ResultType = JSON.parse(
+				readFileSync( this.resultFilePath, 'utf8' )
+			);
 
 			result.start = suiteStats.start;
 

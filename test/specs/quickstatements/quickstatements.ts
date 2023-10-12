@@ -157,43 +157,26 @@ describe( 'QuickStatements Service', function () {
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
 			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
-				it(
-					`Should be able to add a ${
-						mainSnakDataType
-					} statement with a ${
+				it( `Should be able to add a ${mainSnakDataType} statement with a ${qualifierSnakDataType} qualifier.`, async () => {
+					const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
+
+					const mainPropertyId =
+            await WikibaseApi.getProperty( mainSnakDataType );
+					const qualifierPropertyId = await WikibaseApi.getProperty(
 						qualifierSnakDataType
-					} qualifier.`,
-					async () => {
-						const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
+					);
+					await browser.executeQuickStatement(
+						`${itemId}|${mainPropertyId}|${exampleSnakValues[ mainSnakDataType ]}|${qualifierPropertyId}|${exampleSnakValues[ qualifierSnakDataType ]}`
+					);
 
-						const mainPropertyId =
-							await WikibaseApi.getProperty( mainSnakDataType );
-						const qualifierPropertyId = await WikibaseApi.getProperty(
-							qualifierSnakDataType
-						);
-						await browser.executeQuickStatement(
-							`${
-								itemId
-							}|${
-								mainPropertyId
-							}|${
-								exampleSnakValues[ mainSnakDataType ]
-							}|${
-								qualifierPropertyId
-							}|${
-								exampleSnakValues[ qualifierSnakDataType ]
-							}`
-						);
-
-						const responseQ1 = await browser.makeRequest(
-							`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
-						);
-						assert.strictEqual(
-							getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
-							qualifierSnakDataType
-						);
-					}
-				);
+					const responseQ1 = await browser.makeRequest(
+						`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
+					);
+					assert.strictEqual(
+						getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
+						qualifierSnakDataType
+					);
+				} );
 			} );
 		} );
 	} );

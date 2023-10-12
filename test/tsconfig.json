@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "Node16",
-    "target": "es2019",
-    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
-  },
-  "ts-node": {
-    "files": true
-  },
-  "include": ["./**/*.ts"]
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"module": "Node16",
+		"target": "es2019",
+		"types": [ "node", "@wdio/globals/types", "@wdio/mocha-framework" ]
+	},
+	"ts-node": {
+		"files": true
+	},
+	"include": [ "./**/*.ts" ]
 }

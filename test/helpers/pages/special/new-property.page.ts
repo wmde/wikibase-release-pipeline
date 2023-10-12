@@ -12,7 +12,7 @@ class SpecialNewProperty extends Page {
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:NewProperty' + dataType );
 	}
 
-	async submit() : Promise<void> {
+	async submit(): Promise<void> {
 		const submitBtn = await this.submitBtn;
 		await submitBtn.waitForDisplayed();
 		await submitBtn.click();

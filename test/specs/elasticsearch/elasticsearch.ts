@@ -48,8 +48,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					process.env.MW_SERVER +
-					'/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item'
+					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -79,8 +78,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					process.env.MW_SERVER +
-					'/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item'
+					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 

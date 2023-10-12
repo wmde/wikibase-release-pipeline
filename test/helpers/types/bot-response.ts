@@ -1,5 +1,5 @@
 type BotResponse = {
-    success: number;
+	success: number;
 };
 
 export default BotResponse;

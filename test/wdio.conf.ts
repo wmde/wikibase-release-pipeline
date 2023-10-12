@@ -8,7 +8,7 @@ import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
 import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
-import { Options, Frameworks } from "@wdio/types"
+import { Options, Frameworks } from '@wdio/types';
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -54,7 +54,8 @@ export const config: WebdriverIO.Config = {
 	// ===================
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel: process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes || 'error',
+	logLevel:
+    ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
