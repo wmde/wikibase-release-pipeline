@@ -1,8 +1,0 @@
-{
-	"extends": [
-		"./server",
-		"wikimedia/mocha",
-		"plugin:wdio/recommended"
-	],
-	"plugins": [ "wdio" ]
-}
