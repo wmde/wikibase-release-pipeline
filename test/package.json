@@ -13,7 +13,7 @@
 		"@wmde/eslint-config-wikimedia-typescript": "^0.2.6",
 		"api-testing": "^1.2.0",
 		"apollo-boost": "^0.4.9",
-		"axios": "^0.21.0",
+		"axios": "^1.5.1",
 		"cross-fetch": "^3.0.6",
 		"eslint": "^8.51.0",
 		"eslint-config-wikimedia": "0.25.1",

@@ -21,9 +21,9 @@ export function defaultFunctions(): void {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		( url: string, params?: any, postData?: any ): Promise<AxiosResponse> => {
 			if ( postData ) {
-				return axios.default.post( url, postData, params );
+				return axios.post( url, postData, params );
 			} else {
-				return axios.default.get( url, params );
+				return axios.get( url, params );
 			}
 		}
 	);
