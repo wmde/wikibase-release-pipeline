@@ -115,6 +115,7 @@ describe( 'Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
 		await SuiteLoginPage.loginAdmin();
+
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(

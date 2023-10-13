@@ -173,8 +173,9 @@ describe( 'QuickStatements Service', function () {
 				it( `Should be able to add a ${mainSnakDataType} statement with a ${qualifierSnakDataType} qualifier.`, async () => {
 					const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
 
-					const mainPropertyId =
-            await WikibaseApi.getProperty( mainSnakDataType );
+					const mainPropertyId = await WikibaseApi.getProperty(
+						mainSnakDataType
+					);
 					const qualifierPropertyId = await WikibaseApi.getProperty(
 						qualifierSnakDataType
 					);
