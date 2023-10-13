@@ -1,9 +1,9 @@
 {
 	"root": true,
 	"extends": [
-		"@wmde/wikimedia-typescript",
+		"wikimedia/selenium",
 		"wikimedia/language/es2022",
-		"./eslint/selenium"
+		"@wmde/wikimedia-typescript"
 	],
 	"parserOptions": {
 		"sourceType": "module",
@@ -12,10 +12,9 @@
 	},
 	"rules": {
 		"mocha/no-setup-in-describe": "warn",
-		"jsdoc/check-param-names": "off",
-		"jsdoc/require-param": "off",
+		"node/no-missing-import": "off",
 		"wdio/no-pause": "warn",
-		"no-undef": "off",
-		"node/no-missing-import": "off"
+		"es-x/no-import-meta": "off",
+		"es-x/no-class-fields": "off"
 	}
 }
