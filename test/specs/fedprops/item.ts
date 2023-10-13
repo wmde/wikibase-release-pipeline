@@ -3,6 +3,7 @@ import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import { AxiosError } from 'axios';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -55,8 +56,8 @@ describe( 'Fed props Item', function () {
 				process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl'
 			);
 		} catch ( error ) {
-			assert.equal( error.response.status, 500 );
-			assert.equal( error.message, 'Request failed with status code 500' );
+			assert( error instanceof AxiosError );
+			assert.equal( error.request.res.statusCode, 500 );
 		}
 	} );
 
@@ -78,8 +79,8 @@ describe( 'Fed props Item', function () {
 				process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf'
 			);
 		} catch ( error ) {
-			assert.equal( error.response.status, 500 );
-			assert.equal( error.message, 'Request failed with status code 500' );
+			assert( error instanceof AxiosError );
+			assert.equal( error.request.res.statusCode, 500 );
 		}
 	} );
 

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 declare namespace WebdriverIO {
 	type AxiosResponse = import( 'axios' ).AxiosResponse;
 	type Binding = import( './binding.js' ).default;
