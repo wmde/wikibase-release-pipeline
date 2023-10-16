@@ -1,6 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import awaitDisplayed from '../../helpers/awaitDisplayed.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -11,8 +12,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
 		);
-		const specialLiEl = await $( 'ol.special li a' );
-		await specialLiEl.waitForDisplayed();
+		await awaitDisplayed( 'ol.special li a' );
 
 		const links = ( await $$( 'ol.special li a' ) ).slice( 0, NUM_PROPERTIES );
 
@@ -40,10 +40,9 @@ describe( 'Property Prefetching', function () {
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		const toolbarButtonEl = await $(
+		await awaitDisplayed(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
-		await toolbarButtonEl.waitForDisplayed();
 	} );
 
 	it( 'should delete all statements and generate individual changes', async () => {

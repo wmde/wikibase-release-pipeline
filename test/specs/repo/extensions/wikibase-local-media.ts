@@ -2,6 +2,7 @@ import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
+import awaitDisplayed from '../../../helpers/awaitDisplayed.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
@@ -15,18 +16,14 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 
-		const fileUpload = await $( '#wpUploadFile' );
-		await fileUpload.waitForDisplayed();
-
+		const fileUpload = await awaitDisplayed( '#wpUploadFile' );
 		const filePath = new URL( 'image.png', import.meta.url );
 		await fileUpload.setValue( filePath.pathname );
 
-		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
-		await submitButtonEl.waitForDisplayed();
+		const submitButtonEl = await awaitDisplayed( 'input.mw-htmlform-submit' );
 		await submitButtonEl.click();
 
-		const firstHeadingEl = await $( '#firstHeading' );
-		await firstHeadingEl.waitForDisplayed();
+		const firstHeadingEl = await awaitDisplayed( '#firstHeading' );
 		const title = await firstHeadingEl.getText();
 
 		assert.strictEqual( title, 'File:Image.png' );
@@ -38,8 +35,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Property:${propertyId}` );
 
-		const firstHeadingEl = await $( '#firstHeading' );
-		await firstHeadingEl.waitForDisplayed();
+		const firstHeadingEl = await awaitDisplayed( '#firstHeading' );
 		const title = await firstHeadingEl.getText();
 
 		assert.strictEqual( title.includes( propertyId ), true );
@@ -63,10 +59,8 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		const snakviewEl = await $( '.wikibase-snakview-value img' );
-		await snakviewEl.waitForDisplayed();
-		const imageSourceEl = await $( '.wikibase-snakview-value img' );
-		await imageSourceEl.waitForDisplayed();
+		await awaitDisplayed( '.wikibase-snakview-value img' );
+		const imageSourceEl = await awaitDisplayed( '.wikibase-snakview-value img' );
 		const imageSource = await imageSourceEl.getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );

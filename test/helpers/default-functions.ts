@@ -9,6 +9,7 @@ import LuaCPUValue from './types/lua-cpu-value.js';
 import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
 import { Context } from 'mocha';
+import awaitDisplayed from './awaitDisplayed.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -147,13 +148,11 @@ export function defaultFunctions(): void {
 			}
 
 			// fill out form
-			const textBoxEl = await $( '#wpTextbox1' );
-			await textBoxEl.waitForDisplayed();
+			const textBoxEl = await awaitDisplayed( '#wpTextbox1' );
 			await textBoxEl.setValue( content.toString() );
 
 			if ( captcha ) {
-				const captchaEl = await $( '#wpCaptchaWord' );
-				await captchaEl.waitForDisplayed();
+				const captchaEl = await awaitDisplayed( '#wpCaptchaWord' );
 				await captchaEl.setValue( captcha );
 			}
 
@@ -165,8 +164,7 @@ export function defaultFunctions(): void {
 
 			await browser.pause( 2 * 1000 );
 
-			const contentTextEl = await $( '#mw-content-text' );
-			await contentTextEl.waitForDisplayed();
+			const contentTextEl = await awaitDisplayed( '#mw-content-text' );
 			return await contentTextEl.getText();
 		}
 	);
@@ -231,22 +229,19 @@ export function defaultFunctions(): void {
 			await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 			// create a batch
-			const createBatchBoxTextareaEl = await $( '.create_batch_box textarea' );
-			await createBatchBoxTextareaEl.waitForDisplayed();
+			const createBatchBoxTextareaEl = await awaitDisplayed( '.create_batch_box textarea' );
 			await createBatchBoxTextareaEl.setValue( theQuery );
 
 			await browser.pause( 1000 );
 
 			// click import
-			const importButtonEl = await $( "button[tt='dialog_import_v1']" );
-			await importButtonEl.waitForDisplayed();
+			const importButtonEl = await awaitDisplayed( "button[tt='dialog_import_v1']" );
 			await importButtonEl.click();
 
 			await browser.pause( 1000 );
 
 			// click run
-			const runButtonEl = await $( "button[tt='run']" );
-			await runButtonEl.waitForDisplayed();
+			const runButtonEl = await awaitDisplayed( "button[tt='run']" );
 			await runButtonEl.click();
 
 			const commands = await $$( '.command_status' );

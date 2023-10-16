@@ -7,6 +7,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
+import awaitDisplayed from '../../../helpers/awaitDisplayed.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -38,14 +39,16 @@ describe( 'Scribunto Item', function () {
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-		const addButtonEl = await $(
+		await awaitDisplayed(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
-		await addButtonEl.waitForDisplayed();
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async () => {
-		const template = await readFile( new URL( 'repo-client.lua', import.meta.url ), utf8 );
+		const template = await readFile(
+			new URL( 'repo-client.lua', import.meta.url ),
+			utf8
+		);
 		const luaScript = template
 			.toString()
 			.replace( '<ITEM_ID>', itemId )
@@ -77,10 +80,9 @@ describe( 'Scribunto Item', function () {
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
-		const destructiveButtonEl = await $(
+		const destructiveButtonEl = await awaitDisplayed(
 			'.oo-ui-flaggedElement-destructive button'
 		);
-		await destructiveButtonEl.waitForDisplayed();
 		await destructiveButtonEl.click();
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );

@@ -4,6 +4,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import awaitDisplayed from '../../helpers/awaitDisplayed.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -123,10 +124,9 @@ describe( 'QueryService', () => {
 		await browser.url(
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
-		const destructiveButtonEl = await $(
+		const destructiveButtonEl = await awaitDisplayed(
 			'.oo-ui-flaggedElement-destructive button'
 		);
-		await destructiveButtonEl.waitForDisplayed();
 		await destructiveButtonEl.click();
 
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );

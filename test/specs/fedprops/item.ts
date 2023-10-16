@@ -4,6 +4,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import { AxiosError } from 'axios';
+import awaitDisplayed from '../../helpers/awaitDisplayed.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -40,8 +41,7 @@ describe( 'Fed props Item', function () {
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 
-		const actualPropertyEl = await $( '.wikibase-statementgroupview-property' );
-		await actualPropertyEl.waitForDisplayed();
+		const actualPropertyEl = await awaitDisplayed( '.wikibase-statementgroupview-property' );
 		const actualPropertyValue = await actualPropertyEl.getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 

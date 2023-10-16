@@ -2,6 +2,7 @@ import assert from 'assert';
 import lodash from 'lodash';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import { AxiosResponse } from 'axios';
+import awaitDisplayed from '../../helpers/awaitDisplayed.js';
 
 type ReferenceValue = {
 	id: string;
@@ -37,35 +38,28 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to load the start page', async () => {
 		await browser.url( process.env.QS_SERVER );
-		const navbar = await $( 'nav.navbar' );
-		await navbar.waitForDisplayed();
+		await awaitDisplayed( 'nav.navbar' );
 	} );
 
 	it( 'Should be able to log in', async () => {
 		await browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
-		const wpNameEl = await $( '#wpName1' );
-		await wpNameEl.waitForDisplayed();
-		const wpPasswordEl = await $( '#wpPassword1' );
-		await wpPasswordEl.waitForDisplayed();
-		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
-		await wpLoginButtonEl.waitForDisplayed();
+		const wpNameEl = await awaitDisplayed( '#wpName1' );
+		const wpPasswordEl = await awaitDisplayed( '#wpPassword1' );
+		const wpLoginButtonEl = await awaitDisplayed( '#wpLoginAttempt' );
 
 		await wpNameEl.setValue( process.env.MW_ADMIN_NAME );
 		await wpPasswordEl.setValue( process.env.MW_ADMIN_PASS );
 		await wpLoginButtonEl.click();
 
 		// oauth dialog
-		const authFormEl = await $( '#mw-mwoauth-authorize-form' );
-		await authFormEl.waitForDisplayed();
-		const authFormAcceptEl = await $( '#mw-mwoauth-accept' );
-		await authFormAcceptEl.waitForDisplayed();
+		await awaitDisplayed( '#mw-mwoauth-authorize-form' );
+		const authFormAcceptEl = await awaitDisplayed( '#mw-mwoauth-accept' );
 		await authFormAcceptEl.click();
 
 		// redirect back to app
-		const navbarEl = await $( 'nav.navbar' );
-		await navbarEl.waitForDisplayed();
+		const navbarEl = await awaitDisplayed( 'nav.navbar' );
 		const navbarText = await navbarEl.getText();
 		assert( navbarText.includes( 'QuickStatements' ) );
 	} );

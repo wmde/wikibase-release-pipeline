@@ -1,5 +1,6 @@
 import assert from 'assert';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
+import awaitDisplayed from '../../helpers/awaitDisplayed.js';
 
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {
@@ -19,10 +20,9 @@ describe( 'Special:NewProperty', function () {
 
 		await SpecialNewProperty.submit();
 
-		const propertyviewDatatypeValueEl = await $(
+		const propertyviewDatatypeValueEl = await awaitDisplayed(
 			'.wikibase-propertyview-datatype-value'
 		);
-		await propertyviewDatatypeValueEl.waitForDisplayed();
 		const dataTypeText = await propertyviewDatatypeValueEl.getText();
 
 		assert.strictEqual( dataTypeText, 'String' );
