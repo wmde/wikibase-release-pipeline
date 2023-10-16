@@ -122,7 +122,7 @@ export const config: WebdriverIO.Config = {
 	 */
 	afterTest: function ( test: Frameworks.Test ) {
 		const testFile = encodeURIComponent(
-			test.file.match( /.+\/(.+)\.js$/ )[ 1 ].replace( /\s+/g, '-' )
+			test.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 		);
 		const screenshotFilename = `${testFile}__${test.title}`;
 
