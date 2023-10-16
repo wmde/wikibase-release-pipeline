@@ -75,7 +75,7 @@ describe( 'QueryService', () => {
 		await browser.pause( 20 * 1000 );
 
 		await QueryServiceUI.submit();
-		await ( await QueryServiceUI.resultTable ).waitForDisplayed();
+		await awaitDisplayed( QueryServiceUI.resultTable );
 
 		assert( await QueryServiceUI.resultIncludes( 'schema:version' ) );
 		assert( await QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
@@ -102,7 +102,7 @@ describe( 'QueryService', () => {
 		await QueryServiceUI.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
 
 		await QueryServiceUI.submit();
-		await ( await QueryServiceUI.resultTable ).waitForDisplayed();
+		await awaitDisplayed( QueryServiceUI.resultTable );
 
 		// should be set only to the item
 		assert(
@@ -136,8 +136,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUI.submit();
 
-		const resultTable = await QueryServiceUI.resultTable;
-		await resultTable.waitForDisplayed();
+		const resultTable = await awaitDisplayed( QueryServiceUI.resultTable );
 		const resultText = await resultTable.getText();
 
 		// item should not be included

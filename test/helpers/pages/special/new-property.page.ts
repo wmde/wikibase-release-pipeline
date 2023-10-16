@@ -1,3 +1,4 @@
+import awaitDisplayed from '../../await-displayed.js';
 import Page from '../page.js';
 
 class SpecialNewProperty extends Page {
@@ -13,8 +14,7 @@ class SpecialNewProperty extends Page {
 	}
 
 	public async submit(): Promise<void> {
-		const submitBtn = await this.submitBtn;
-		await submitBtn.waitForDisplayed();
+		const submitBtn = await awaitDisplayed( this.submitBtn );
 		await submitBtn.click();
 	}
 }

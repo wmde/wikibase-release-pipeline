@@ -1,3 +1,4 @@
+import awaitDisplayed from '../../await-displayed.js';
 import Page from '../page.js';
 
 class SpecialNewItem extends Page {
@@ -11,8 +12,7 @@ class SpecialNewItem extends Page {
 	}
 
 	public async submit(): Promise<void> {
-		const button = await this.submitBtn;
-		await this.submitBtn.waitForDisplayed();
+		const button = await awaitDisplayed( this.submitBtn );
 		await button.click();
 	}
 }

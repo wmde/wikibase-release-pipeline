@@ -45,8 +45,7 @@ describe( 'Fed props Item', function () {
 		const actualPropertyValue = await actualPropertyEl.getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		const addStatementLink = await ItemPage.addStatementLink;
-		await addStatementLink.waitForDisplayed();
+		await awaitDisplayed( ItemPage.addStatementLink );
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
@@ -93,8 +92,7 @@ describe( 'Fed props Item', function () {
 		await browser.pause( 11 * 1000 );
 
 		await QueryServiceUI.submit();
-		const resultTable = await QueryServiceUI.resultTable;
-		await resultTable.waitForDisplayed();
+		await awaitDisplayed( QueryServiceUI.resultTable );
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
@@ -110,8 +108,7 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		await QueryServiceUI.submit();
-		const resultTable = await QueryServiceUI.resultTable;
-		await resultTable.waitForDisplayed();
+		await awaitDisplayed( QueryServiceUI.resultTable );
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert( !( await QueryServiceUI.resultIncludes( 'schema:version' ) ) );

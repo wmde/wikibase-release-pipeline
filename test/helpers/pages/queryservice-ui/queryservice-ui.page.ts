@@ -1,3 +1,4 @@
+import awaitDisplayed from '../../await-displayed.js';
 import Page from '../page.js';
 
 class QueryServiceUI extends Page {
@@ -14,8 +15,7 @@ class QueryServiceUI extends Page {
 	}
 
 	public async submit(): Promise<void> {
-		const button = await this.submitBtn;
-		await button.waitForDisplayed();
+		const button = await awaitDisplayed( this.submitBtn );
 		await button.click();
 	}
 

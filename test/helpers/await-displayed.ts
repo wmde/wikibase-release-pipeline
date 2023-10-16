@@ -3,10 +3,11 @@ type WaitForOptions = {
 };
 
 const awaitDisplayed = async (
-	identifier: string,
+	identifier: string | ChainablePromiseElement | WebdriverIO.Element,
 	options?: WaitForOptions
-): Promise<ChainablePromiseElement> => {
-	const resultElement = await $( identifier );
+): Promise<WebdriverIO.Element> => {
+	const resultElement =
+		typeof identifier === 'string' ? await $( identifier ) : await identifier;
 	await resultElement.waitForDisplayed( options );
 	return resultElement;
 };
