@@ -1,22 +1,24 @@
-import awaitDisplayed from '../../await-displayed.js';
-import Page from '../page.js';
+import SubmittablePage from '../submittable.page.js';
 
-class QueryServiceUI extends Page {
-	public get queryEditor(): ChainablePromiseElement { return $( '.queryEditor' ); }
-	public get submitBtn(): ChainablePromiseElement { return $( '#execute-button' ); }
-	public get resultTable(): ChainablePromiseElement { return $( '#query-result table.table.table-hover' ); }
-	public get resultTableRows(): ChainablePromiseElement { return $( '#query-result table.table.table-hover tr' ); }
+class QueryServiceUI extends SubmittablePage {
+	public get queryEditor(): ChainablePromiseElement {
+		return $( '.queryEditor' );
+	}
+	public get submitBtn(): ChainablePromiseElement {
+		return $( '#execute-button' );
+	}
+	public get resultTable(): ChainablePromiseElement {
+		return $( '#query-result table.table.table-hover' );
+	}
+	public get resultTableRows(): ChainablePromiseElement {
+		return $( '#query-result table.table.table-hover tr' );
+	}
 
 	public open( query: string, prefixes?: string[] ): Promise<void> {
 		if ( prefixes ) {
 			query = prefixes.join( '\n' ) + '\n' + query;
 		}
 		return super.open( '/#' + encodeURI( query ) );
-	}
-
-	public async submit(): Promise<void> {
-		const button = await awaitDisplayed( this.submitBtn );
-		await button.click();
 	}
 
 	public async resultIncludes( prop: string, value?: string ): Promise<boolean> {
