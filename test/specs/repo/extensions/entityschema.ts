@@ -2,7 +2,7 @@ import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
-import awaitDisplayed from '../../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';

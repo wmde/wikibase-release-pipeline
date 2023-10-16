@@ -2,7 +2,7 @@ import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import SearchResult from '../../helpers/types/search-result.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 const itemAlias: string = getTestString( 'alias' );
 const itemLabel: string = getTestString( 'testItem' );

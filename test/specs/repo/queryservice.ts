@@ -4,7 +4,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {

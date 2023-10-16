@@ -2,7 +2,7 @@ import assert from 'assert';
 import lodash from 'lodash';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import { AxiosResponse } from 'axios';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 type ReferenceValue = {
 	id: string;

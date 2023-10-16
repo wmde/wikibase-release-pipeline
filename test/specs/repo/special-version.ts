@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {

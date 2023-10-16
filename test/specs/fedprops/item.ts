@@ -4,7 +4,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import { AxiosError } from 'axios';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';

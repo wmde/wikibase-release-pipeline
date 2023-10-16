@@ -1,7 +1,7 @@
 import assert from 'assert';
 import Property from '../../helpers/pages/entity/property.page.js';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property', function () {
 	let propertyId = null;

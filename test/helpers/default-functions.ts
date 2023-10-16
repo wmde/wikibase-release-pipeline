@@ -9,7 +9,7 @@ import LuaCPUValue from './types/lua-cpu-value.js';
 import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
 import { Context } from 'mocha';
-import awaitDisplayed from './awaitDisplayed.js';
+import awaitDisplayed from './await-displayed.js';
 
 export function defaultFunctions(): void {
 	/**

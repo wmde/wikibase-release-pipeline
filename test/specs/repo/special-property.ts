@@ -1,6 +1,6 @@
 import assert from 'assert';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {

@@ -4,7 +4,7 @@ import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
 import ExternalChange from '../../helpers/types/external-change.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 const itemLabel = getTestString( 'The Item' );
 

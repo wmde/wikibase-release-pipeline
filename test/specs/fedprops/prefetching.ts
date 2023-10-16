@@ -1,7 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
-import awaitDisplayed from '../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;

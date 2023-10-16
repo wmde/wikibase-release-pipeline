@@ -7,7 +7,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
-import awaitDisplayed from '../../../helpers/awaitDisplayed.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 const itemLabel = getTestString( 'The Item' );
 
