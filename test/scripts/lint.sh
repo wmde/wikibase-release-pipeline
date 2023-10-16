@@ -29,8 +29,9 @@ docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadol
 # https://github.com/koalaman/shellcheck#from-your-terminal
 find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
 
-# ℹ️ Linting Javascript (test/**/*.js and docs/diagrams/**/*.js)
+# ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
 docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+  npm ci --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
   $NPM_LINT_COMMAND --silent &&
   cd /tmp/diagrams &&
   npm ci --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
