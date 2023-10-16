@@ -79,8 +79,7 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render recent changes list within threshold', async () => {
 		await browser.url(
-			process.env.MW_SERVER +
-        '/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
+			`${process.env.MW_SERVER}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
 		const specialEl = await $( 'ul.special' );
 		await specialEl.waitForDisplayed( { timeout: 2000 } );
