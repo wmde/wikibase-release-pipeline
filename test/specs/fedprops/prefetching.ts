@@ -66,8 +66,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Item:${itemId}?action=history`
 		);
-		const historyEl = await $( '#pagehistory' );
-		await historyEl.waitForDisplayed( { timeout: 2000 } );
+		await awaitDisplayed( '#pagehistory', { timeout: 2000 } );
 
 		// +1 for the initial item creation
 		assert.strictEqual(
@@ -80,8 +79,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
-		const specialEl = await $( 'ul.special' );
-		await specialEl.waitForDisplayed( { timeout: 2000 } );
+		await awaitDisplayed( 'ul.special', { timeout: 2000 } );
 
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
