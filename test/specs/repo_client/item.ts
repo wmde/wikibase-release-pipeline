@@ -92,7 +92,7 @@ describe( 'Item', function () {
 		// label should come from repo property
 		assert(
 			siteLinkValue.includes( 'client_wiki' ) &&
-        siteLinkValue.includes( pageTitle )
+			siteLinkValue.includes( pageTitle )
 		);
 	} );
 
