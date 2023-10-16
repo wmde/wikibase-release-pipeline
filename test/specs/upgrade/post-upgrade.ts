@@ -5,8 +5,7 @@ describe( 'Wikibase post upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			process.env.MW_SERVER +
-        '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
+			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -18,12 +17,12 @@ describe( 'Wikibase post upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + oldItemID );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${oldItemID}` );
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/' + oldItemID + '.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${oldItemID}.json`
 		);
 		const body = response.data;
 
