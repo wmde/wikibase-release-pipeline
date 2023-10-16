@@ -13,9 +13,7 @@ import { Context } from 'mocha';
 export function defaultFunctions(): void {
 	/**
 	 * Make a get request to get full request response
-	 * Returns a Promise
 	 */
-
 	browser.addCommand(
 		'makeRequest',
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,7 +84,6 @@ export function defaultFunctions(): void {
 
 	/**
 	 * Execute docker command on container and get output
-	 * Returns a Promise
 	 */
 	browser.addCommand(
 		'dockerExecute',

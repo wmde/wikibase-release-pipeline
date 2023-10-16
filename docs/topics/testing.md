@@ -71,7 +71,7 @@ MW_ADMIN_PASS=superpassword
 
 MW_SCRIPT_PATH=/w
 
-FILTER=api.js
+FILTER=api.ts
 MOCHA_OPTS_TIMEOUT=3600000000
 ```
 
