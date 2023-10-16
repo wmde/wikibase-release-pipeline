@@ -90,10 +90,8 @@ describe( 'Item', function () {
 		const siteLinkValue = await siteLinkEl.getText();
 
 		// label should come from repo property
-		assert(
-			siteLinkValue.includes( 'client_wiki' ) &&
-        siteLinkValue.includes( pageTitle )
-		);
+		assert( siteLinkValue.includes( 'client_wiki' ) );
+		assert( siteLinkValue.includes( pageTitle ) );
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', async () => {
