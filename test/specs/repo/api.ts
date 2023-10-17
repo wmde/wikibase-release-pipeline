@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Wikibase API', function () {
 	it( 'Should be able to create many properties and items', async () => {

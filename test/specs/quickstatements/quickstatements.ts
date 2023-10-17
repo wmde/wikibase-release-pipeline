@@ -1,6 +1,6 @@
 import assert from 'assert';
 import lodash from 'lodash';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { AxiosResponse } from 'axios';
 
 type ReferenceValue = {

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {

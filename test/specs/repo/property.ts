@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Property from '../../helpers/pages/entity/property.page.js';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Property', function () {
 	let propertyId = null;
