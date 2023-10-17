@@ -111,7 +111,11 @@ export const config: WebdriverIO.Config = {
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: async () => {
-		await WikibaseApi.initialize();
+		await WikibaseApi.initialize(
+			undefined,
+			process.env.MW_ADMIN_NAME,
+			process.env.MW_ADMIN_PASS
+		);
 		defaultFunctionsInit();
 	},
 
