@@ -10,20 +10,6 @@ services:
      - WORKFLOW_RUN_NUMBER
     volumes:
       - ../artifacts:/extractedArtifacts
-  tag_git:
-    build:
-      context: ../Docker/publish/tag_git
-      dockerfile: Dockerfile
-    environment:
-     - WORKFLOW_RUN_NUMBER
-     - WIKIBASE_BRANCH_NAME=master
-     - RELEASE_VERSION
-     - WMDE_RELEASE_VERSION
-     - DRY_RUN
-    volumes:
-      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
-      - ${HOME}/.gitconfig:/root/.gitconfig:ro
-      - ../git_cache/:/git_cache
   upload_dockerhub:
     build:
       context: ../Docker/publish/upload_dockerhub
