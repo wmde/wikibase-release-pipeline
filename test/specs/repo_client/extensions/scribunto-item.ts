@@ -5,7 +5,7 @@ import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
-import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );

@@ -26,7 +26,7 @@
 		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2",
 		"wdio-mediawiki": "^2.3.0",
-		"wdio-wikibase": "^6.0.0"
+		"wdio-wikibase": "https://github.com/RickiJay-WMDE/wdio-wikibase.git"
 	},
 	"browserslist": [
 		"ie 11"

@@ -2,7 +2,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { AxiosError } from 'axios';
 
 describe( 'Fed props Item', function () {
