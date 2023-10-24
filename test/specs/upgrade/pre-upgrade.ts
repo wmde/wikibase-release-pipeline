@@ -1,5 +1,5 @@
 import assert from 'assert';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Wikibase pre upgrade', function () {
 	it( 'Should be able to create a specific item', async () => {

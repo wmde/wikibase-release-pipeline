@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import assert from 'assert';
 import { exec } from 'child_process';
 import lodash from 'lodash';
-import WikibaseApi from './WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import LuaCPUValue from './types/lua-cpu-value.js';

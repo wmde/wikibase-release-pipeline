@@ -2,7 +2,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
-import WikibaseApi from '../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../helpers/types/external-change.js';
 import awaitDisplayed from '../../helpers/await-displayed.js';
 

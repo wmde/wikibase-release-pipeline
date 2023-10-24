@@ -1,7 +1,7 @@
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import WikibaseApi from '../../../helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'WikibaseLocalMedia', function () {

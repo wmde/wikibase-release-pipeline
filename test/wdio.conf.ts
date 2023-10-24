@@ -7,7 +7,7 @@ import { existsSync, mkdir, rm } from 'fs';
 import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
-import WikibaseApi from './helpers/WDIOWikibaseApiPatch.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { Options, Frameworks } from '@wdio/types';
 
 const resultsDir = process.env.RESULTS_DIR;
@@ -111,7 +111,11 @@ export const config: WebdriverIO.Config = {
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: async () => {
-		await WikibaseApi.initialize();
+		await WikibaseApi.initialize(
+			undefined,
+			process.env.MW_ADMIN_NAME,
+			process.env.MW_ADMIN_PASS
+		);
 		defaultFunctionsInit();
 	},
 
