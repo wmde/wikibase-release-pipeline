@@ -1,6 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -11,8 +12,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
 		);
-		const specialLiEl = await $( 'ol.special li a' );
-		await specialLiEl.waitForDisplayed();
+		await awaitDisplayed( 'ol.special li a' );
 
 		const links = ( await $$( 'ol.special li a' ) ).slice( 0, NUM_PROPERTIES );
 
@@ -40,10 +40,9 @@ describe( 'Property Prefetching', function () {
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		const toolbarButtonEl = await $(
+		await awaitDisplayed(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
-		await toolbarButtonEl.waitForDisplayed();
 	} );
 
 	it( 'should delete all statements and generate individual changes', async () => {
@@ -67,8 +66,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Item:${itemId}?action=history`
 		);
-		const historyEl = await $( '#pagehistory' );
-		await historyEl.waitForDisplayed( { timeout: 2000 } );
+		await awaitDisplayed( '#pagehistory', { timeout: 2000 } );
 
 		// +1 for the initial item creation
 		assert.strictEqual(
@@ -81,8 +79,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
-		const specialEl = await $( 'ul.special' );
-		await specialEl.waitForDisplayed( { timeout: 2000 } );
+		await awaitDisplayed( 'ul.special', { timeout: 2000 } );
 
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?

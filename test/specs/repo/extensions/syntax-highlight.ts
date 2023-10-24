@@ -1,6 +1,7 @@
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'SyntaxHighlight', function () {
 	beforeEach( async function () {
@@ -20,7 +21,6 @@ describe( 'SyntaxHighlight', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
-		const highlightEl = await $( '.mw-highlight' );
-		await highlightEl.waitForDisplayed();
+		await awaitDisplayed( '.mw-highlight' );
 	} );
 } );

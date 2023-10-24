@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
@@ -12,42 +13,38 @@ describe( 'VisualEditor', function () {
 		);
 
 		// start editing
-		const messageDialogEl = await $( '.oo-ui-messageDialog-actions' );
-		await messageDialogEl.waitForDisplayed();
+		await awaitDisplayed( '.oo-ui-messageDialog-actions' );
 		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
-		const startEditbutton = messageDialogAEl[ 1 ];
-		await startEditbutton.waitForDisplayed();
+		const startEditbutton = await awaitDisplayed( messageDialogAEl[ 1 ] );
 		await startEditbutton.click();
 
 		await browser.pause( 5 * 1000 );
 
 		// disable notice popup and focus on editor
-		const toolLinkEl = await $( '.oo-ui-tool-name-notices .oo-ui-tool-link' );
-		await toolLinkEl.waitForDisplayed();
+		const toolLinkEl = await awaitDisplayed(
+			'.oo-ui-tool-name-notices .oo-ui-tool-link'
+		);
 		await toolLinkEl.click();
 
-		const surfaceEl = await $( '.ve-ce-surface' );
-		await surfaceEl.waitForDisplayed();
+		const surfaceEl = await awaitDisplayed( '.ve-ce-surface' );
 		await surfaceEl.click();
 
 		await browser.keys( [ 'T', 'E', 'S', 'T' ] );
 
 		// save changes
-		const saveButtonEl = await $( 'a.ve-ui-toolbar-saveButton' );
-		await saveButtonEl.waitForDisplayed();
+		const saveButtonEl = await awaitDisplayed( 'a.ve-ui-toolbar-saveButton' );
 		await saveButtonEl.click();
 
 		// fill-out for summary popup and submit
-		const inputEl = await $( '.oo-ui-inputWidget-input' );
-		await inputEl.waitForDisplayed();
+		await awaitDisplayed( '.oo-ui-inputWidget-input' );
 		await browser.keys( 'X' );
 
-		const primaryAEl = await $( '.oo-ui-processDialog-actions-primary a' );
-		await primaryAEl.waitForDisplayed();
+		const primaryAEl = await awaitDisplayed(
+			'.oo-ui-processDialog-actions-primary a'
+		);
 		await primaryAEl.click();
 
-		const outputEl = await $( '.mw-parser-output' );
-		await outputEl.waitForDisplayed();
+		const outputEl = await awaitDisplayed( '.mw-parser-output' );
 		const contentBody = await outputEl.getText();
 
 		assert.strictEqual( contentBody, 'TEST' );

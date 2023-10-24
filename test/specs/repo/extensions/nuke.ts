@@ -1,6 +1,7 @@
 import assert from 'assert';
 import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async function () {
@@ -26,26 +27,24 @@ describe( 'Nuke', function () {
 		await SuiteLoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
-		const buttonEl = await $( 'button.oo-ui-inputWidget-input' );
-		await buttonEl.waitForDisplayed();
+		const buttonEl = await awaitDisplayed( 'button.oo-ui-inputWidget-input' );
 		await buttonEl.click();
 
-		const formEl = await $( 'form li' );
-		await formEl.waitForDisplayed();
+		await awaitDisplayed( 'form li' );
 
-		const checkboxEl = await $( '.mw-checkbox-none' );
-		await checkboxEl.waitForDisplayed();
+		const checkboxEl = await awaitDisplayed( '.mw-checkbox-none' );
 		await checkboxEl.click();
-		const vandalismCheckEl = await $( 'input[value="Vandalism"]' );
-		await vandalismCheckEl.waitForDisplayed();
+
+		const vandalismCheckEl = await awaitDisplayed( 'input[value="Vandalism"]' );
 		await vandalismCheckEl.click();
-		const submitButtonEl = await $( 'input[type="submit"]' );
-		await submitButtonEl.waitForDisplayed();
+
+		const submitButtonEl = await awaitDisplayed( 'input[type="submit"]' );
 		await submitButtonEl.click();
+
 		await browser.acceptAlert();
 
-		const resultPageText = $( 'li*=has been queued for deletion' );
-		await resultPageText.waitForDisplayed();
+		await awaitDisplayed( 'li*=has been queued for deletion' );
+
 		await browser.waitForJobs();
 
 		const pageIsGoneResult = await browser.makeRequest(

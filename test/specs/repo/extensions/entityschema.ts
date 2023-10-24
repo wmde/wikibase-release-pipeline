@@ -2,6 +2,7 @@ import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
+import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -15,32 +16,32 @@ describe( 'EntitySchema', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
-		const noarticletextEl = await $( '.noarticletext a' );
-		await noarticletextEl.waitForDisplayed();
+		const noarticletextEl = await awaitDisplayed( '.noarticletext a' );
 		await noarticletextEl.click();
 
 		// set label and description
-		const labelInputEl = await $( 'input[name ="label"]' );
-		await labelInputEl.waitForDisplayed();
+		const labelInputEl = await awaitDisplayed( 'input[name ="label"]' );
 		await labelInputEl.setValue( testLabel );
-		const descriptionInputEl = await $( 'input[name ="description"]' );
-		await labelInputEl.waitForDisplayed();
+		const descriptionInputEl = await awaitDisplayed(
+			'input[name ="description"]'
+		);
 		await descriptionInputEl.setValue( testDescription );
 
 		// set template
 		const shexTemplate = (
 			await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
-		).toString().trim();
-		const schemaTextInputEl = await $( 'textarea[name ="schema-text"]' );
-		await schemaTextInputEl.waitForDisplayed();
+		)
+			.toString()
+			.trim();
+		const schemaTextInputEl = await awaitDisplayed(
+			'textarea[name ="schema-text"]'
+		);
 		await schemaTextInputEl.setValue( shexTemplate );
 
-		const submitButtonEl = await $( 'button[name ="submit"]' );
-		await submitButtonEl.waitForDisplayed();
+		const submitButtonEl = await awaitDisplayed( 'button[name ="submit"]' );
 		await submitButtonEl.click();
 
-		const schemaTextEl = await $( '#entityschema-schema-text' );
-		await schemaTextEl.waitForDisplayed();
+		await awaitDisplayed( '#entityschema-schema-text' );
 
 		const entitySchemaEl = await $( '#entityschema-schema-text' );
 		const actualTemplate = ( await entitySchemaEl.getText() ).trim();
