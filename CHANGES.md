@@ -33,7 +33,7 @@ This provides an overview of the releases that have been made using this release
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
 - [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
-- [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_38/RELEASE-NOTES-1.39)
+- [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_39/RELEASE-NOTES-1.39)
 
 Users that still have lines in their LocalSettings.php file that look like this:
  - `require_once "$IP/extensions/Wikibase/client/WikibaseClient.php"`
