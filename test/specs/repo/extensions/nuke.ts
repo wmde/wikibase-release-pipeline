@@ -1,5 +1,5 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import awaitDisplayed from '../../../helpers/await-displayed.js';
 
@@ -24,7 +24,7 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
 		const buttonEl = await awaitDisplayed( 'button.oo-ui-inputWidget-input' );

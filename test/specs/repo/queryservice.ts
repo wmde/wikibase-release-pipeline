@@ -1,7 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import awaitDisplayed from '../../helpers/await-displayed.js';
@@ -117,7 +117,7 @@ describe( 'QueryService', () => {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.loginAdmin();
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

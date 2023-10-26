@@ -1,5 +1,5 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Babel', function () {
@@ -8,7 +8,7 @@ describe( 'Babel', function () {
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.loginAdmin();
 
 		const executionContent = await browser.editPage(
 			process.env.MW_SERVER,
