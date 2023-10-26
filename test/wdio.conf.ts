@@ -6,7 +6,7 @@
 import { existsSync, mkdir, rm } from 'fs';
 import JsonReporter from './helpers/json-reporter.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
-import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
+import { saveScreenshot } from 'wdio-mediawiki';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { Options, Frameworks } from '@wdio/types';
 
@@ -131,7 +131,7 @@ export const config: WebdriverIO.Config = {
 		const screenshotFilename = `${testFile}__${test.title}`;
 
 		try {
-			saveScreenshot( screenshotPath, screenshotFilename );
+			saveScreenshot( screenshotFilename, screenshotPath );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
