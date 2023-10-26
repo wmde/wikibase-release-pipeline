@@ -15,7 +15,7 @@ This provides an overview of the releases that have been made using this release
 
 | Suite Version | MediaWiki release                                                       | Date available | Run number     | Release task  |
 |---------------|-------------------------------------------------------------------------|----------------|----------------| --------------|
-| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.39.5, PHP 8.1.24, debian/apache2 2.4.57-2), WDQS (0.3.135) | October 2023 | **TODO** | [T348616](https://phabricator.wikimedia.org/T348616) |
+| wmde.13 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.13/versions/wmde13.env),[metadata](https://github.com/wmde/wikibase-release-pipeline/blob/main/versions/wmde13)) | MediaWiki (1.39.5, PHP 8.1.24, debian/apache2 2.4.57-2), WDQS (0.3.135) | October 2023 | [6637828869](https://github.com/wmde/wikibase-release-pipeline/actions/runs/6637828869) | [T348616](https://phabricator.wikimedia.org/T348616) |
 
 
 ## August 2023: Security releases for 1.38.7
