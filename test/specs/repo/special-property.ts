@@ -27,7 +27,7 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.labelInput.setValue( 'Property type string' );
 		await SpecialNewProperty.descriptionInput.setValue( 'A string property' );
 		await SpecialNewProperty.submit();
-		
+
 		// wait for the cache to timeout, so the list of properties reflects the change
 		await browser.pause( 1100 );
 
