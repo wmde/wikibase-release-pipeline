@@ -25,7 +25,7 @@
 		"stylelint-config-wikimedia": "0.16.1",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.2.2",
-		"wdio-mediawiki": "^2.3.0",
+		"wdio-mediawiki": "file:./wdio-mediawiki",
 		"wdio-wikibase": "https://github.com/RickiJay-WMDE/wdio-wikibase.git"
 	},
 	"browserslist": [
