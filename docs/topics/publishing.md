@@ -96,7 +96,7 @@ Publishing docker images and tarballs can be a scary business. To do a test-run 
 ```
 DRY_RUN=1
 ```
-This is supported by the tarball uploading and the dockerhub publishing scripts. The git-tagging scripts is just outputting the commands for later execution.
+This is supported by the tarball uploading and the dockerhub publishing scripts.
 
 After a first dry run you can issue the following to command to remove the variable.
 
