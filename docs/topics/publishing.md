@@ -17,6 +17,16 @@
 - Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key from [here](https://hub.docker.com/settings/security)
 - Add `RELEASE_HOST` to your `local.env` file pointing to the releases server for tars, e.g. `releases1002.eqiad.wmnet`
 
+So your local.env file could look like this:
+```
+GITHUB_TOKEN=ghp_KsOtthisisnotavalidtokenoXcafeaffeR4
+DOCKER_HUB_ID=dockerhubuser
+DOCKER_HUB_ACCESS_TOKEN=dckr_pat_tHisAlsoX_PisNOTaValidToken
+RELEASE_HOST=releases1002.eqiad.wmnet
+
+WORKFLOW_RUN_NUMBER=5692069809
+```
+
 ## Steps
 
 Before getting started you need a build that has been made on Github Actions using your versioned wmde .env file.
