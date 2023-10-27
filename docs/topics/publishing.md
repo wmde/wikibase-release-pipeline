@@ -12,9 +12,9 @@
 
 ## Prerequisutes
 
-- Add `GITHUB_TOKEN` to your `local.env` file with the `repo` and `workflow` scopes selected.
+- Add `GITHUB_TOKEN` to your `local.env` file with the `repo` and `workflow` scopes selected from [here](https://github.com/settings/tokens). 
 - Add `DOCKER_HUB_ID`  to your `local.env` file with your docker hub username.
-- Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key
+- Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key from [here](https://hub.docker.com/settings/security)
 - Add `RELEASE_HOST` to your `local.env` file pointing to the releases server for tars, e.g. `releases1002.eqiad.wmnet`
 
 ## Steps
