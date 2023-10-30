@@ -116,7 +116,7 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 
 ## Publishing tarballs
 
-Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
+Publishing of tarballs is done by a [bash script](../../Docker/publish/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
 It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
 
 After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
