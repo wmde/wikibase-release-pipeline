@@ -29,7 +29,7 @@
             echo "$ make test"
             echo "$ make test SUITE=repo"
             echo "$ make test SUITE=repo FILTER=special-item"
-            echo "$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env"
+            echo "$ make test-upgrade VERSION=wmde.9"
             echo
             echo "Example Instance Commands:"
             echo "$ docker compose \\"

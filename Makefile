@@ -33,7 +33,7 @@ test-upgrade:
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_upgrade.sh ${VERSION} ${TO_VERSION}
+	@bash test/scripts/test_upgrade.sh ${VERSION}
 
 .PHONY: test-example
 test-example:

@@ -5,17 +5,6 @@ set -e
 cd test
 
 ENV_VERSION=$1
-TO_VERSION=$2
-
-if [ -z "$TO_VERSION" ]; then
-    echo "TO_VERSION is not set"
-    exit 1
-fi
-
-if [ ! -f "../$TO_VERSION" ]; then
-    echo "TO_VERSION does not exist"
-    exit 1
-fi
 
 # Why is this neccessary locally, but not in CI?
 set -o allexport; source ../variables.env set +o allexport;
@@ -56,7 +45,7 @@ echo -e "\n▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee 
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
-set -o allexport; source "suites/$SUITE_CONFIG_NAME/default_variables.env"; source "suites/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../$TO_VERSION" set +o allexport
+set -o allexport; source "suites/$SUITE_CONFIG_NAME/default_variables.env"; source "suites/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../versions.env" set +o allexport
 
 # old wikibase version
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"
@@ -91,7 +80,7 @@ docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&
 mkdir -p "$RESULTS_DIR"
 
 echo "" 2>&1 | tee -a "$TEST_LOG"
-echo "✳️  Performing upgrade steps for \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
+echo "✳️  Performing upgrade steps"  2>&1 | tee -a "$TEST_LOG"
 echo "" 2>&1 | tee -a "$TEST_LOG"
 
 # the entrypoint logic is always depending on LocalSettings.php to be there
@@ -146,7 +135,7 @@ if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
 fi
 
 # load new version and start it 
-echo "🔄 Creating Docker test services and volumes for \"${TO_VERSION}\"" 2>&1 | tee -a "$TEST_LOG"
+echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
 $TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
@@ -156,11 +145,11 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 $TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
-echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\" on \"${TO_VERSION}\""  2>&1 | tee -a "$TEST_LOG"
+echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""  2>&1 | tee -a "$TEST_LOG"
 
 docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick >> "$TEST_LOG" 2>&1
 
-echo -e "\n✳️  Running \"$SUITE\" test suite (\"${TO_VERSION}\")" 2>&1 | tee -a "$TEST_LOG"
+echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 
