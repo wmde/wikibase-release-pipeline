@@ -39,7 +39,7 @@ describe( 'Special:Version', function () {
 	// should be disabled for dynamic tests
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	Object.keys( extensions ).forEach( ( extensionPackage ) => {
-		extensions[ extensionPackage ].forEach( ( extension ) => {
+		extensions[ extensionPackage ].forEach( ( extension: string ) => {
 			// Get the extension name from the override if available
 			const name = extension;
 
