@@ -4,23 +4,15 @@ set -e
 cd test
 
 export SUITE=$1
-export CHANNEL=$2
 
 if [ -z "$SUITE" ]; then
     echo "🚨 SUITE is not set"
     exit 1
 fi
 
-if [ -z "$CHANNEL" ]; then
-    echo "⚠️  CHANNEL is not set! Using 'stable' as fallback"
-    CHANNEL="stable"
-else
-    echo "▶️  Testing '${CHANNEL}'"
-fi
-
 set -o allexport; 
-# shellcheck disable=SC1090 # cannot follow dynamic import
-source ../channels/"$CHANNEL".env
+# shellcheck disable=SC1091 # cannot find file
+source ../versions.env
 set +o allexport;
 
 # log directory setup

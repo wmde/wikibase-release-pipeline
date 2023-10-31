@@ -4,9 +4,6 @@ inputs:
   image_name:
     description: "name of the docker image to work with"
     required: true
-  channel:
-    description: "the version channel this image was built for"
-    required: true
 
 runs:
   using: "composite"
@@ -40,6 +37,6 @@ runs:
     - name: Archive scan artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ScanResults-${{ inputs.channel }}
+        name: ScanResults
         if-no-files-found: error
         path: /tmp/sarif-reports/${{ inputs.image_name }}.sarif

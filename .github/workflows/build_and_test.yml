@@ -42,8 +42,6 @@ jobs:
             "quickstatements",
           ]
 
-        channel: ["lts", "stable", "next"]
-
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
@@ -51,17 +49,16 @@ jobs:
       - name: Prepare environment and caches
         uses: ./.github/actions/prep-env-and-cache
         with:
-          env_file: "channels/${{ matrix.channel }}.env"
+          env_file: "versions.env"
 
       - name: Build
-        run: ./build.sh ${{ matrix.component }} "channels/${{ matrix.channel }}.env"
+        run: ./build.sh ${{ matrix.component }}
         shell: bash
 
       - name: Upload results
         uses: ./.github/actions/upload-results
         with:
           component: ${{ matrix.component }}
-          channel: ${{ matrix.channel }}
 
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Upload additional bundle results for wikibase build
@@ -69,14 +66,12 @@ jobs:
         uses: ./.github/actions/upload-results
         with:
           component: ${{ matrix.component }}-bundle
-          channel: ${{ matrix.channel }}
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
         continue-on-error: true
         with:
           image_name: ${{ matrix.component }}
-          channel: ${{ matrix.channel }}
 
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - name: Scan additional bundle Image for wikibase builds
@@ -85,7 +80,6 @@ jobs:
         continue-on-error: true
         with:
           image_name: "${{ matrix.component }}-bundle"
-          channel: ${{ matrix.channel }}
 
   test:
     strategy:
@@ -107,7 +101,6 @@ jobs:
             base__fedprops,
           ]
 
-        channel: ["lts", "stable", "next"]
 
         databaseImageName: [
             # 'mysql:5.6', disabled https://phabricator.wikimedia.org/T296066
@@ -126,13 +119,13 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: DockerImages-${{ matrix.channel }}
+          name: DockerImages
           path: artifacts/
 
       - name: Test ${{ matrix.suite }}
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
-        run: make test SUITE=${{ matrix.suite }} CHANNEL=${{ matrix.channel }}
+        run: make test SUITE=${{ matrix.suite }}
 
       - name: Report Selenium
         if: always()
@@ -152,7 +145,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestResults-${{ matrix.channel }}
+          name: TestResults
           path: test/suites/**/results
 
   test_upgrade_base:
@@ -170,8 +163,6 @@ jobs:
             "wmde.10",
           ]
 
-        channel: ["lts", "stable", "next"]
-
     needs:
       - build
 
@@ -181,14 +172,14 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: DockerImages-${{ matrix.channel }}
+          name: DockerImages
           path: artifacts/
 
       - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=channels/${{ matrix.channel }}.env
+        run: make test-upgrade VERSION=${{ matrix.version }}
 
       - name: Show Docker Logs
         if: always()
@@ -199,7 +190,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestResults-${{ matrix.channel }}
+          name: TestResults
           path: test/suites/**/results
 
   test_upgrade_bundle:
@@ -220,8 +211,6 @@ jobs:
             "wmde.10-bundle",
           ]
 
-        channel: ["lts", "stable", "next"]
-
     env:
       TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
 
@@ -231,14 +220,14 @@ jobs:
       - name: Get built Docker artifacts
         uses: actions/download-artifact@v3
         with:
-          name: DockerImages-${{ matrix.channel }}
+          name: DockerImages
           path: artifacts/
 
       - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }} TO_VERSION=channels/${{ matrix.channel }}.env
+        run: make test-upgrade VERSION=${{ matrix.version }}
 
       - name: Show Docker Logs
         if: always()
@@ -249,7 +238,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: TestResults-${{ matrix.channel }}
+          name: TestResults
           path: test/suites/**/results
 
   # TODO: https://phabricator.wikimedia.org/T347084
@@ -262,25 +251,23 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        channel: ["lts", "stable", "next"]
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
-          env-file: "channels/${{ matrix.channel }}.env"
+          env-file: "versions.env"
 
       - name: Build version requirements
         shell: bash
         run: |
-          ./build.sh requirements "channels/${{ matrix.channel }}.env"
+          ./build.sh requirements
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Metadata-${{ matrix.channel }}
+          name: Metadata
           path: artifacts/built_versions.log
           if-no-files-found: error
 
@@ -305,7 +292,6 @@ jobs:
             "wdqs-proxy",
             "quickstatements",
           ]
-        channel: ["lts", "stable", "next"]
 
     steps:
       - uses: actions/checkout@v4

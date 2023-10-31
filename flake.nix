@@ -22,14 +22,12 @@
             echo
 
             echo "Build Commands:"
-            echo "$ ./build.sh all channels/stable.env"
-            echo "$ ./build.sh wikibase channels/stable.env"
+            echo "$ ./build.sh all"
+            echo "$ ./build.sh wikibase"
             echo
             echo "Test Commands:"
             echo "$ make test"
-            echo "$ make test CHANNEL=next"
             echo "$ make test SUITE=repo"
-            echo "$ make test SUITE=repo CHANNEL=lts"
             echo "$ make test SUITE=repo FILTER=special-item"
             echo "$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env"
             echo

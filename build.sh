@@ -3,7 +3,6 @@
 set -e
 
 TARGET=$1
-RELEASE_ENV_FILE=$2
 
 if ! [[ -d .git ]]; then
     echo "ERROR: builder.sh must be executed from the root of the repository!" >&2
@@ -11,17 +10,11 @@ if ! [[ -d .git ]]; then
 fi
 
 usage() {
-    echo "USAGE: $0 <TARGET> <RELEASE_ENV_FILE>" >&2
+    echo "USAGE: $0 <TARGET>" >&2
 }
 
 if [[ -z "$TARGET" ]]; then
     echo "ERROR: TARGET is not set!" >&2
-    usage
-    exit 1
-fi
-
-if ! [[ -f "$RELEASE_ENV_FILE" ]]; then
-    echo "ERROR: RELEASE_ENV_FILE is not set!" >&2
     usage
     exit 1
 fi
@@ -38,6 +31,7 @@ remove_builder_tmp() {
 trap remove_builder_tmp EXIT
 
 docker build --quiet . -t builder:latest
+
 docker run \
     --rm \
     \
@@ -47,7 +41,7 @@ docker run \
     -v "$(pwd)/Makefile":/app/Makefile \
     -v "$(pwd)/local.env":/app/local.env \
     -v "$(pwd)/variables.env":/app/variables.env \
-    -v "$(pwd)/$RELEASE_ENV_FILE":/app/builder_configuration.env \
+    -v "$(pwd)/versions.env":/app/versions.env \
     \
     -v "$(pwd)/build":/app/build \
     -v "$(pwd)/Docker/build":/app/Docker/build \

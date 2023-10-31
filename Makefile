@@ -1,6 +1,6 @@
 #!make
 include variables.env
--include builder_configuration.env
+-include versions.env
 -include local.env
 
 export
@@ -23,7 +23,7 @@ ifdef SUITE
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_suite.sh ${SUITE} ${CHANNEL}
+	@bash test/scripts/test_suite.sh ${SUITE}
 else
 	@make test-all
 endif
@@ -49,19 +49,19 @@ endif
 	@echo "\n⚠️  Running All Test Suites"
 
 	@# bundle tests
-	@bash test/scripts/test_suite.sh repo ${CHANNEL}
-	@bash test/scripts/test_suite.sh fedprops ${CHANNEL}
-	@bash test/scripts/test_suite.sh repo_client ${CHANNEL}
-	@bash test/scripts/test_suite.sh quickstatements ${CHANNEL}
-	@bash test/scripts/test_suite.sh pingback ${CHANNEL}
-	@bash test/scripts/test_suite.sh confirm_edit ${CHANNEL}
-	@bash test/scripts/test_suite.sh elasticsearch ${CHANNEL}
+	@bash test/scripts/test_suite.sh repo
+	@bash test/scripts/test_suite.sh fedprops
+	@bash test/scripts/test_suite.sh repo_client
+	@bash test/scripts/test_suite.sh quickstatements
+	@bash test/scripts/test_suite.sh pingback
+	@bash test/scripts/test_suite.sh confirm_edit
+	@bash test/scripts/test_suite.sh elasticsearch
 
 	@# base tests
-	@bash test/scripts/test_suite.sh base__repo ${CHANNEL}
-	@bash test/scripts/test_suite.sh base__repo_client ${CHANNEL}
-	@bash test/scripts/test_suite.sh base__fedprops ${CHANNEL}
-	@bash test/scripts/test_suite.sh base__pingback ${CHANNEL}
+	@bash test/scripts/test_suite.sh base__repo
+	@bash test/scripts/test_suite.sh base__repo_client
+	@bash test/scripts/test_suite.sh base__fedprops
+	@bash test/scripts/test_suite.sh base__pingback
 
 # TODO: https://phabricator.wikimedia.org/T347084
 requirements:

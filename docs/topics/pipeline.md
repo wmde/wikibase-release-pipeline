@@ -1,13 +1,4 @@
 # The pipeline
-## The versions folder
-
-The `channels` folder contains .env files defining all supported version channels. 
-
-- `lts` for long term support
-- `stable` for the current latest stable version
-- `next` for cutting edge builds of unreleased components
-
-The .env files specify the actual version built, its [Semantic Version](https://semver.org/) number and all the component versions it consits of.
 
 ## Github Actions Workflows
 
@@ -52,16 +43,16 @@ After triggering the pipeline a set of jobs will start running, which after a su
 To execute the entire build pipeline you can use the `all` make target.
 
 ```sh
-./build.sh all channels/stable.env
+./build.sh all
 ```
 
 To build single artifacts locally you can issue the following command.
 
 ```sh
-./build.sh wikibase channels/stable.env
+./build.sh wikibase
 ```
 
-The output ends up in the `artifacts/` folder and will be built as described by the `channels/stable.env` environment file.
+The output ends up in the `artifacts/` folder and will be built as described by the `versions.env` environment file.
 
 
 See the [Makefile](../../Makefile) for more build options.
