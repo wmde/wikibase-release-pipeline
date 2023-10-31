@@ -10,11 +10,14 @@ services:
      - WORKFLOW_RUN_NUMBER
     volumes:
       - ../artifacts:/extractedArtifacts
+
   upload_dockerhub:
     build:
       context: ../Docker/publish/upload_dockerhub
       dockerfile: Dockerfile
     privileged: true
+    # host user and group in order to allow docker.sock access
+    user: 1000:131
     environment:
       - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch.docker.tar.gz
       - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase-bundle.docker.tar.gz
@@ -44,6 +47,8 @@ services:
       - DRY_RUN
     volumes:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - /var/run/docker.sock:/var/run/docker.sock
+
   upload_tar:
     build:
       context: ../Docker/publish/upload_tar

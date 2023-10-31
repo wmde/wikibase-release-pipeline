@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 if [ -z "$WDQS_DOCKER_PATH" ] || \
 [ -z "$WDQS_FRONTEND_DOCKER_PATH" ] || \
@@ -44,11 +45,9 @@ function tag_and_push {
     fi
 }
 
-# start and wait for dockerd and set the correct socket
+# using the host systems
+export DOCKER_HOST=unix:///var/run/docker.sock
 docker --version
-sh /usr/local/bin/dockerd-entrypoint.sh dockerd &
-export DOCKER_HOST=unix:///run/user/1000/docker.sock
-sleep 5
 
 echo 'Start tagging & publishing ...'
 
