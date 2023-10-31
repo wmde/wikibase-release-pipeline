@@ -564,7 +564,9 @@ jobs:
           # Latest 1.37
           'wmde.9',
           # Latest 1.38
-          'wmde.10',
+          'wmde.12',
+          # Latest 1.39
+          'wmde.11',
         ]
     needs:
       - build_wikibase
@@ -604,7 +606,9 @@ jobs:
           # Latest 1.37
           'wmde.9-bundle',
           # Latest 1.38
-          'wmde.10-bundle',
+          'wmde.12-bundle',
+          # Latest 1.39
+          'wmde.11-bundle',
         ]
     needs:
       - build_wikibase_bundle
