@@ -1,4 +1,4 @@
-import querystring from 'querystring';
+import { stringify } from 'querystring';
 import Page from 'wdio-mediawiki/Page.js';
 
 /**
@@ -23,7 +23,7 @@ class PagePatch extends Page {
 		await browser.url(
 			browser.options.baseUrl +
 			'/index.php?' +
-			querystring.stringify( query ) +
+			stringify( query ) +
 			( fragment ? '#' + fragment : '' )
 		);
 	}

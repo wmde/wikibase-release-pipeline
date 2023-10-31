@@ -104,7 +104,7 @@ GERRIT_EXTENSION_BRANCH_NAME=REL1_35
 ```
 GZIP_COMPRESSION_RATE=1
 ```
-#### Log level for selenium tests see wdio.conf.js for options
+#### Log level for selenium tests see wdio.conf.ts for options
 ```
 SELENIUM_LOG_LEVEL=trace
 ```
