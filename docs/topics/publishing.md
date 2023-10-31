@@ -12,10 +12,20 @@
 
 ## Prerequisutes
 
-- Add `GITHUB_TOKEN` to your `local.env` file with the `repo` and `workflow` scopes selected.
+- Add `GITHUB_TOKEN` to your `local.env` file with the `repo` and `workflow` scopes selected from [here](https://github.com/settings/tokens). 
 - Add `DOCKER_HUB_ID`  to your `local.env` file with your docker hub username.
-- Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key
+- Add `DOCKER_HUB_ACCESS_TOKEN` to your `local.env` file with your docker hub api key from [here](https://hub.docker.com/settings/security)
 - Add `RELEASE_HOST` to your `local.env` file pointing to the releases server for tars, e.g. `releases1002.eqiad.wmnet`
+
+So your local.env file could look like this:
+```
+GITHUB_TOKEN=ghp_KsOtthisisnotavalidtokenoXcafeaffeR4
+DOCKER_HUB_ID=dockerhubuser
+DOCKER_HUB_ACCESS_TOKEN=dckr_pat_tHisAlsoX_PisNOTaValidToken
+RELEASE_HOST=releases1002.eqiad.wmnet
+
+WORKFLOW_RUN_NUMBER=5692069809
+```
 
 ## Steps
 
@@ -86,7 +96,7 @@ Publishing docker images and tarballs can be a scary business. To do a test-run 
 ```
 DRY_RUN=1
 ```
-This is supported by the tarball uploading and the dockerhub publishing scripts. The git-tagging scripts is just outputting the commands for later execution.
+This is supported by the tarball uploading and the dockerhub publishing scripts.
 
 After a first dry run you can issue the following to command to remove the variable.
 
@@ -116,7 +126,7 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 
 ## Publishing tarballs
 
-Publishing of tarballs is done by a [bash script](../../Docker/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
+Publishing of tarballs is done by a [bash script](../../Docker/publish/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
 It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
 
 After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
