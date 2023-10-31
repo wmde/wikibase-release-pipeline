@@ -1,0 +1,10 @@
+import { config as wdioConf } from '../../wdio.conf.js';
+
+export const config: WebdriverIO.Config = {
+	...wdioConf,
+	specs: [
+		'../../specs/quickstatements/*.ts',
+		'../../specs/repo/queryservice.ts',
+		'../../specs/elasticsearch/*.ts'
+	]
+};

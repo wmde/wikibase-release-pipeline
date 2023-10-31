@@ -12,8 +12,10 @@ Wikibase running on Mediawiki bundled with other extensions.
 - [Nuke](https://www.mediawiki.org/wiki/Extension:Nuke)
 - [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth)
 - [Scribunto](https://www.mediawiki.org/wiki/Extension:Scribunto)
+- [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight)
 - [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)
 - [VisualEditor](https://www.mediawiki.org/wiki/Extension:VisualEditor)
+- [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)
 - [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)
 - [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)
 

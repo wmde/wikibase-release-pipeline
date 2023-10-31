@@ -4,4 +4,4 @@ Wikibase and related software gets release through this repository. The process 
 
 The diagram below describes the general steps involved in making a release.
 
-![Release workflow overview](../../diagrams/output/release-workflow.svg "Release workflow overview")
+![Release workflow overview](../diagrams/output/release-workflow.svg "Release workflow overview")

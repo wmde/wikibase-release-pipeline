@@ -95,7 +95,7 @@ In some newer images, the default value of upload images is written inside the c
 # Do the upgrade
 ## Stop the running containers
 
-Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase_jobrunner` containers.
+Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase-jobrunner` containers.
 
 ### Review the mounts currently used by the wikibase container
 
@@ -117,13 +117,13 @@ We need to remember this name as we will have to remove it manually after the co
 1. Stop the containers
 
 ```sh
-docker-compose stop wikibase wikibase_jobrunner
+docker compose stop wikibase wikibase-jobrunner
 ```
 
 2. Remove the containers
 
 ```sh
-docker-compose rm wikibase wikibase_jobrunner
+docker compose rm wikibase wikibase-jobrunner
 ```
 
 3. Finally, remove the shared container

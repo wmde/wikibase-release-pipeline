@@ -5,12 +5,16 @@ on:
     branches:
       - "main"
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '*.txt'
 
 jobs:
   lint_dockerfiles:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           recursive: true
@@ -18,13 +22,13 @@ jobs:
   lint_shell_scripts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: bewuethr/shellcheck-action@v2
 
   lint_selenium_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
@@ -36,13 +40,13 @@ jobs:
           key: npm-lint-cache
       - name: lint the selenium javascript tests
         run: |
-          cd Docker/test/selenium 
+          cd test
           npm install
           npm run lint
   lint_diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
@@ -54,11 +58,6 @@ jobs:
           key: npm-lint-cache
       - name: lint the selenium javascript tests
         run: |
-          cd diagrams
+          cd docs/diagrams
           npm install
           npm run lint
-      - name: test building diagram
-        run: |
-          cd diagrams
-          node make_overview.js
-          

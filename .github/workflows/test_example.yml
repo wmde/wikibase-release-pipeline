@@ -1,20 +1,14 @@
-name: Test Example
+name: Test Example Distribution
 
 on:
-  push:
-    branches:
-      - "main"
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
+  workflow_dispatch:
 
 jobs:
   test_example:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Test example
         run: make test-example SUITE=example
@@ -26,6 +20,5 @@ jobs:
           name: TestExampleArtifacts
           if-no-files-found: error
           path: |
-            example/log
-            test/log
+            test/suites/example/results
           

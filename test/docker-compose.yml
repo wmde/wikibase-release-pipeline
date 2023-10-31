@@ -1,108 +1,60 @@
-# Wikibase for testing
-version: '3'
+# Test runner
+version: '3.4'
 
 services:
-  wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
-    links:
-      - mysql
-    depends_on:
-      - mysql
-    restart: unless-stopped
+
+  test-runner:
+    build:
+      context: ../test
+      dockerfile: Dockerfile
+    entrypoint: /bin/bash
     volumes:
-      - ./suite-config/${LOCALSETTINGS_VARIANT}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./mwlog/${LOCALSETTINGS_VARIANT}+wikibase:/var/log/mediawiki
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CHROME_PATH=/usr/bin/chromium-browser
+      - SELENIUM_LOG_LEVEL
+      - MOCHA_OPTS_TIMEOUT
+      - HEADED_TESTS
+      - RESULTS_DIR
+      - TEST_LOG
+
+      - MW_SERVER
+      - MW_CLIENT_SERVER
+      - QS_SERVER
+      - WDQS_FRONTEND_SERVER
+      - WDQS_SERVER
+      - PINGBACK_BEACON_SERVER
+      - WDQS_PROXY_SERVER
+      
+      - MW_ADMIN_NAME
+      - MW_ADMIN_PASS
+      - MW_SCRIPT_PATH
+
+      - WMDE_RELEASE_VERSION
+      - MEDIAWIKI_VERSION
+      - DATABASE_IMAGE_NAME
+      - SUITE
+      - FILTER
+      
+      - DOCKER_MYSQL_NAME
+
+      - DB_USER
+      - DB_PASS
+      - DB_NAME
+
+      - RUN_QUERYSERVICE_POST_UPGRADE_TEST
+
+  browser:
+    # use a fixed selenium chrome version for stability in our testing environment
+    image: selenium/standalone-chrome:116.0.5845.140-chromedriver-116.0.5845.96-grid-4.12.1-20230904
     ports:
-      - "8181:80"
-    networks:
-      default:
-        aliases:
-         - wikibase.svc
-         # CONFIG - Add your real wikibase hostname here, only for internal names and when NOT terminating SSL outside the container.
-    environment:
-      - DB_SERVER=mysql.svc:3306
-      # CONFIG - Change the default values below
-      - MW_ADMIN_NAME=WikibaseAdmin
-      - MW_ADMIN_PASS=WikibaseDockerAdminPass
-      - MW_ADMIN_EMAIL=admin@example.com
-      - MW_WG_SECRET_KEY=secretkey
-      # CONFIG - Change the default values below (should match mysql values in this file)
-      - DB_USER=wikiuser
-      - DB_PASS=sqlpass
-      - DB_NAME=my_wiki
-      - MW_WG_ENABLE_UPLOADS=true
-  mysql:
-    image: ${DATABASE_IMAGE_NAME}
-    restart: unless-stopped
-    environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: 'my_wiki'
-      MYSQL_USER: 'wikiuser'
-      MYSQL_PASSWORD: 'sqlpass'
-      MYSQL_ROOT_PASSWORD: 'toor'
-    networks:
-      default:
-        aliases:
-         - mysql.svc
-    volumes: 
-    - ./config/repo/mysql/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
-  wdqs-frontend:
-    image: "${WDQS_FRONTEND_IMAGE_NAME}"
-    restart: unless-stopped
-    ports:
-    # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
-     - "8282:80"
-    depends_on:
-    - wdqs-proxy
-    networks:
-      default:
-        aliases:
-         - wdqs-frontend.svc
-    environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs-proxy.svc
-  wdqs:
-    image: "${WDQS_IMAGE_NAME}"
-    restart: always
-    command: /runBlazegraph.sh
-    networks:
-      default:
-        aliases:
-         - wdqs.svc
-    environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - WDQS_HOST=wdqs.svc
-      - WDQS_PORT=9999
-    expose:
-      - 9999
-  wdqs-proxy:
-    image: "${WDQS_PROXY_IMAGE_NAME}"
-    restart: unless-stopped
-    environment:
-      - PROXY_PASS_HOST=wdqs.svc:9999
-    depends_on:
-    - wdqs
-    ports:
-     - "8989:80"
-    networks:
-      default:
-        aliases:
-         - wdqs-proxy.svc
-  wdqs-updater:
-    image: "${WDQS_IMAGE_NAME}"
-    restart: unless-stopped
-    command: /runUpdate.sh
-    depends_on:
-    - wdqs
-    - wikibase
-    networks:
-      default:
-        aliases:
-         - wdqs-updater.svc
-    environment:
-     - WIKIBASE_HOST=wikibase.svc
-     - WDQS_HOST=wdqs.svc
-     - WDQS_PORT=9999
+      - "4444:4444"
+      - "7900:7900"
+    volumes:
+      - .:/usr/src/app
+    shm_size: '2g'
 
 volumes:
-  LocalSettings:
+  node_modules:

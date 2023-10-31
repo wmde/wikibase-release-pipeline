@@ -14,7 +14,7 @@ MEDIAWIKI_BRANCH_NAME=REL1_35
 ## Github Actions Workflows
 
 At it's core this repository is just a set of make targets that gets orchestrated by Github Actions workflows. We currently have the following workflows.
-#### [.github/workflows/built_and_test.yml](.github/workflows/built_and_test.yml)
+#### [.github/workflows/build_and_test.yml](.github/workflows/build_and_test.yml)
 
 This is the main workflow that builds Wikibase and related software, tests it and then produces release candidate artifacts that can be used for further acceptance testing and publishing.
 #### [.github/workflows/lint.yml](.github/workflows/lint.yml)
@@ -47,7 +47,7 @@ To manually run the pipeline go to to actions, click the workflow and run the wo
 
 After triggering the pipeline a set of jobs will start running, which after a successful run will result in a number of artifacts as described in the diagram below.
 
-![Queuing the pipeline](../../diagrams/output/overview.svg "Queuing the pipeline")
+![Queuing the pipeline](../diagrams/output/overview.svg "Queuing the pipeline")
 
 `BuildArtifacts` - contains the release candidate artifact for each component that was built.
 
@@ -107,10 +107,6 @@ For more info on downloading artifacts from github see [publishing](publishing.m
 
 On build a local.env file can be used to override any default settings
 
-#### Use locally installed selenium test dependencies
-```
-SKIP_INSTALL_SELENIUM_TEST_DEPENDENCIES=1
-```
 #### Override for branch name of extensions cloned from gerrit
 ```
 GERRIT_EXTENSION_BRANCH_NAME=REL1_35
@@ -119,7 +115,7 @@ GERRIT_EXTENSION_BRANCH_NAME=REL1_35
 ```
 GZIP_COMPRESSION_RATE=1
 ```
-#### Log level for selenium tests see wdio.conf.js for options
+#### Log level for selenium tests see wdio.conf.ts for options
 ```
 SELENIUM_LOG_LEVEL=trace
 ```

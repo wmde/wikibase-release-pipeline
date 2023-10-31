@@ -1,0 +1,20 @@
+{
+	"root": true,
+	"extends": [
+		"wikimedia/selenium",
+		"wikimedia/language/es2019",
+		"@wmde/wikimedia-typescript"
+	],
+	"parserOptions": {
+		"sourceType": "module",
+		"allowImportExportEverywhere": true,
+		"ecmaVersion": "latest"
+	},
+	"rules": {
+		"mocha/no-setup-in-describe": "warn",
+		"node/no-missing-import": "off",
+		"wdio/no-pause": "warn",
+		"es-x/no-import-meta": "off",
+		"es-x/no-class-fields": "off"
+	}
+}

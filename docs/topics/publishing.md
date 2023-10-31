@@ -161,7 +161,7 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 
 ## Update the example docker-compose
 
-Once the release images are pushed to docker hub, and BEFORE tagging this repository the docker-compose example should be updated to point to the new release on docker hub.
+Once the release images are pushed to docker hub, and BEFORE tagging this repository the docker compose example should be updated to point to the new release on docker hub.
 
 This is so that we can link to the example, using the tag that we will create in the next step.
 
@@ -170,72 +170,6 @@ The version used should be the latest release of the latest currently supported 
 Take a look at the `.env` file in the `example` directory and update the image tags.
 
 Example commit: https://github.com/wmde/wikibase-release-pipeline/commit/73f9942ebd92ded5f17fbb7f8537e9f2268e2bc4
-
-## Publish git tags
-
-### Tag this repository
-
-In order to keep a paper-trail of what commit was used to produce a certain release candidate.
-
-You can find the `<COMMIT_HASH_FROM_THIS_REPO>` by looking up the `WORKFLOW_RUN_NUMBER` on GitHub in the UI.
-
-https://github.com/wmde/wikibase-release-pipeline/actions/runs/<WORKFLOW_RUN_NUMBER>
-
-![](https://i.imgur.com/UKBwYpS.png)
-
-Or via CLI
-
-```sh
-gh run view <WORKFLOW_RUN_NUMBER> --json headSha
-```
-
-You can then run the following commands and replacing `<COMMIT_HASH_FROM_THIS_REPO>` with the commit that was used to create the Github action run that made the release.
-
-```sh
-git tag --force -a $WMDE_RELEASE_VERSION "<COMMIT_HASH_FROM_THIS_REPO>" -m $WMDE_RELEASE_VERSION
-```
-
-And pushing ...
-
-```sh
-git push --tags
-```
-
-### Tag WMDE maintained repositories
-
-Together with the other publishing steps we also need to tag what commit in the gerrit repository with the version number we built and published. This is done by executing the commands given by the [tag_git](../../Docker/tag_git/tag_git.sh) bash script that is run within a docker container.
-
-The script relies on the build metadata artifacts found within the folder of the downloaded workflow run.
-
-Example: `artifacts/<WORKFLOW_RUN_NUMBER>/BuildMetadata/build_metadata_wikibase.env`
-
-This file stores the commit hashes for the repositories we want to tag.
-
-Run with:
-
-```sh
-./publish/git_tag.sh
-```
-
-Example output:
-```
-...
-
-Use the following tag on Wikibase
-git tag --force -a "wmde.0" "d9422cf7fe2c19d2096a158a68b1fa2d69e84406" -m "Tagging: wmde.0 Build: 581263144"
-
-
-Use the following tag on WDQS frontend
-git tag --force -a "wmde.0" "e84ab35125557ff073f42ba522a684d35c288b38" -m "Tagging: wmde.0 Build: 581263144"
-
-...
-```
-
-Execute the commands in your local checked out repositories and push the tags using:
-
-```sh
-git push --tags
-```
 
 ## Update documentation references
 

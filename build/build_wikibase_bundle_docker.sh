@@ -1,18 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC1090
 set -e
 
-BUILT_EXTENSIONS_PATH=Docker/build/WikibaseBundle/artifacts/extensions
+BUILD_TMP="/tmp/build-wikibase-bundle-docker"
+
+mkdir -p "${BUILD_TMP}"
+cp -r Docker/build/WikibaseBundle/* "${BUILD_TMP}"
+
+BUILT_EXTENSIONS_PATH="${BUILD_TMP}/artifacts/extensions"
 
 mkdir -p "$BUILT_EXTENSIONS_PATH"
 
 docker load -i "artifacts/wikibase.docker.tar.gz"
 
 ## copy oauth template to build artifacts 
-cp Docker/build/QuickStatements/oauth.ini Docker/build/WikibaseBundle/artifacts/
+cp Docker/build/QuickStatements/oauth.ini "${BUILD_TMP}/artifacts/"
 
 ## Create LocalSettings dir in build folder
-mkdir -p Docker/build/WikibaseBundle/LocalSettings.d/
+mkdir -p "${BUILD_TMP}/LocalSettings.d/"
 
 ## If BUNDLE_WMF_EXTENSIONS not defined fallback to default
 if [ -z "$BUNDLE_WMF_EXTENSIONS" ]; then
@@ -29,7 +34,7 @@ IFS=',' read -ra EXTENSIONS <<< "$BUNDLE_WMF_EXTENSIONS"
 for EXTENSION in "${EXTENSIONS[@]}"; do
     bash build/build_extension.sh "$EXTENSION" "${GERRIT_EXTENSION_BRANCH_NAME}" "$BUILT_EXTENSIONS_PATH"
     ## Copy the configuration files to build directory
-    cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
+    cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXTENSION}.php" "${BUILD_TMP}/LocalSettings.d/"
 done
 
 ## If BUNDLE_EXT_EXTENSIONS not defined fallback to default
@@ -45,13 +50,13 @@ for EXT_EXTENSION in "${EXT_EXTENSIONS[@]}"; do
     ## build external extension
     . "build/external_extension/${EXT_EXTENSION}.sh"
     ## Copy the configuration files to build directory
-    cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXT_EXTENSION}.php" Docker/build/WikibaseBundle/LocalSettings.d/
+    cp "Docker/build/WikibaseBundle/LocalSettings.d.template/${EXT_EXTENSION}.php" "$BUILD_TMP/LocalSettings.d/"
 done
 
 docker build --no-cache \
     --build-arg WIKIBASE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_NAME="$COMPOSER_IMAGE_NAME" \
     --build-arg COMPOSER_IMAGE_VERSION="$COMPOSER_IMAGE_VERSION" \
-    Docker/build/WikibaseBundle/ -t "$WIKIBASE_BUNDLE_IMAGE_NAME"
+    "${BUILD_TMP}" -t "$WIKIBASE_BUNDLE_IMAGE_NAME"
 
-docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE"f > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz
+docker save "$WIKIBASE_BUNDLE_IMAGE_NAME" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/"$WIKIBASE_BUNDLE_IMAGE_NAME".docker.tar.gz

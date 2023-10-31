@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Build script for WDQS
 # Downloads the service-dist.tar file from archiva and caches it 
 set -e
