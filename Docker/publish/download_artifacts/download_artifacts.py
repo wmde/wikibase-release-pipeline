@@ -23,7 +23,15 @@ if not os.path.exists(basepath):
     for artifact in artifactsMetadata['artifacts']:
         print('Downloading %d bytes from %s' % (artifact['size_in_bytes'], artifact['name']))
 
-        r = requests.get( artifact['archive_download_url'], allow_redirects=True, headers={"Authorization": 'Bearer ' + os.getenv('GITHUB_TOKEN') } )
+        token = os.getenv('GITHUB_TOKEN')
+        if token is None:
+            raise Exception("need a github access token with repo and workflow scope in GITHUB_TOKEN env")
+
+        r = requests.get(
+                artifact['archive_download_url'], 
+                allow_redirects=True, 
+                headers={"Authorization": 'Bearer ' + token } )
+
         if r.status_code != 200:
             errorMessage = "Unknown error (http " + str(r.status_code) + ")."
             try:
