@@ -4,16 +4,11 @@ import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		const prerelease = process.env.WIKIBASE_SUITE_RELEASE_PRERELEASE_VERSION;
-		if ( prerelease && prerelease.length ) {
-			this.skip();
-		}
-
 		await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
 		const softwareEl = await awaitDisplayed( '#sv-software' );
 		const text = await softwareEl.getText();
 		assert.strictEqual(
-			text.includes( `MediaWiki\t${process.env.MEDIAWIKI_VERSION}` ),
+			text.includes( `MediaWiki ${process.env.MEDIAWIKI_VERSION}` ),
 			true
 		);
 	} );
