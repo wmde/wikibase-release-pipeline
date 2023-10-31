@@ -101,4 +101,5 @@ clean:
 	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
+
 all: wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
