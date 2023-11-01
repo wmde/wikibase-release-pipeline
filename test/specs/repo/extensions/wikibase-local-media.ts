@@ -12,7 +12,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to upload an image', async () => {
-		await LoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 

@@ -117,7 +117,7 @@ describe( 'QueryService', () => {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
-		await LoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

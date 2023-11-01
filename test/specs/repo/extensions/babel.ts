@@ -8,7 +8,7 @@ describe( 'Babel', function () {
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await LoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
 			process.env.MW_SERVER,

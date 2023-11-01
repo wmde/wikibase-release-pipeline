@@ -24,7 +24,7 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await LoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
 		const buttonEl = await awaitDisplayed( 'button.oo-ui-inputWidget-input' );

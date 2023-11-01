@@ -14,30 +14,15 @@ class LoginPage extends Page {
 
 	async login( username, password ) {
 		await this.open();
-
-		const usernameEl = await this.username;
-		await usernameEl.waitForDisplayed();
-		await usernameEl.setValue( username );
-
-		const passwordEl = await this.password;
-		await passwordEl.waitForDisplayed();
-		await passwordEl.setValue( password );
-
-		const loginButtonEl = await this.loginButton;
-		await loginButtonEl.waitForDisplayed();
-		await loginButtonEl.click();
+		await this.username.setValue( username );
+		await this.password.setValue( password );
+		await this.loginButton.click();
 	}
 
 	async loginAdmin() {
-		let username, password;
 		if ( browser.config ) {
-			username = browser.config.mwUser;
-			password = browser.config.mwPwd;
-		} else {
-			username = process.env.MW_ADMIN_NAME;
-			password = process.env.MW_ADMIN_PASS;
+			await this.login( browser.config.mwUser, browser.config.mwPwd );
 		}
-		await this.login( username, password );
 	}
 }
 
