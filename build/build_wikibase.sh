@@ -41,9 +41,9 @@ docker run --rm \
     install --no-dev --ignore-platform-reqs -vv -d "/tmp/Wikibase"
 chmod 755 "$COMPOSER_VENDOR"
 
-tar -C "$(dirname "$WIKIBASE_PATH")" -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$ARTIFACT_PATH"/Wikibase.tar.gz
+tar -C "$(dirname "$WIKIBASE_PATH")" -cf - Wikibase | gzip -"$GZIP_COMPRESSION_RATE" > "$ARTIFACT_PATH"/wikibase.tar.gz
 
-TARBALL_PATH="$ARTIFACT_PATH/Wikibase.tar.gz"
+TARBALL_PATH="$ARTIFACT_PATH/wikibase.tar.gz"
 
 if [ -n "$GITHUB_ENV" ]; then
     echo "TARBALL_PATH=$TARBALL_PATH" >> "$GITHUB_ENV"

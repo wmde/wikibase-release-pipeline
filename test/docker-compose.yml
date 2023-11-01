@@ -32,7 +32,6 @@ services:
       - MW_ADMIN_PASS
       - MW_SCRIPT_PATH
 
-      - WMDE_RELEASE_VERSION
       - MEDIAWIKI_VERSION
       - DATABASE_IMAGE_NAME
       - SUITE

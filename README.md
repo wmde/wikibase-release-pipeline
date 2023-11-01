@@ -15,17 +15,17 @@ For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targe
 ### Build Commands
 
 ```
-$ ./build.sh all versions/wmde11.env
-$ ./build.sh wikibase_bundle versions/wmde12.env
+$ ./build.sh all
+$ ./build.sh wikibase
 ```
 
 ### Test Commands
 
 ```
-$ make test-all
+$ make test
 $ make test SUITE=repo
 $ make test SUITE=repo FILTER=special-item
-$ make test-upgrade VERSION=wmde.9 TO_VERSION=versions/wmde12.env
+$ make test-upgrade VERSION=wmde.9
 ```
 
 ### Example Instance Commands

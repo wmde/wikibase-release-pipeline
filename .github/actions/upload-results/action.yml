@@ -1,0 +1,31 @@
+name: "checkout-and-prepare"
+description: "Upload build results as artifacts"
+
+inputs:
+  component:
+    description: "the name of the built artifact"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Archive build_metadata Artifacts (if any)
+      uses: actions/upload-artifact@v3
+      with:
+        name: Metadata
+        path: artifacts/build_metadata_*.env
+        if-no-files-found: ignore
+
+    - name: Archive tar artifacts (if any)
+      uses: actions/upload-artifact@v3
+      with:
+        name: TarBalls
+        path: artifacts/${{ inputs.component }}.tar.gz
+        if-no-files-found: ignore
+
+    - name: Archive Docker artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: DockerImages
+        path: artifacts/${{ inputs.component }}.docker.tar.gz
+        if-no-files-found: error
