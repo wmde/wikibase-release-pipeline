@@ -1,7 +1,8 @@
 import assert from 'assert';
-import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
-import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
+
 import awaitDisplayed from '../../helpers/await-displayed.js';
+import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
+import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {
@@ -20,7 +21,7 @@ describe( 'Special:NewProperty', function () {
 	} );
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
-		await SpecialListProperties.open();
+		await SpecialListProperties.openParams( { limit: 1000 } );
 		const numberOfPropertiesBefore = await SpecialListProperties.properties.length;
 
 		await SpecialNewProperty.open( 'string' );
@@ -28,13 +29,13 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.descriptionInput.setValue( 'A string property' );
 		await SpecialNewProperty.submit();
 
-		// wait for the cache to timeout, so the list of properties reflects the change
+		// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
+		// timeout, so the list of properties reflects the change
 		await browser.pause( 1100 );
 
-		await SpecialListProperties.open();
+		await SpecialListProperties.openParams( { limit: 1000 } );
 		const numberOfPropertiesAfter = await SpecialListProperties.properties.length;
 
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
-
 } );

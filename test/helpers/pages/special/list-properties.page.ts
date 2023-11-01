@@ -9,9 +9,17 @@ class SpecialListProperties extends Page {
 		return $$( '.mw-spcontent ol li' );
 	}
 
-	public async open(): Promise<void> {
+	public async openParams( params: {
+		dataType?: string;
+		limit?: number;
+		offset?: number;
+	} ): Promise<void> {
+		const dataType = 'datatype=' + ( params.dataType ?? '' );
+		const limit = 'limit=' + ( params.limit ?? 50 );
+		const offset = 'offset=' + ( params.offset ?? 0 );
+
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Special:ListProperties`
+			`${process.env.MW_SERVER}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
 		await awaitDisplayed( this.content );
