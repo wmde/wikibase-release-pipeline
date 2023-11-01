@@ -256,6 +256,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: "variables.env"
 
       - name: Build version requirements
         shell: bash
