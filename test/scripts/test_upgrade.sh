@@ -45,7 +45,7 @@ echo -e "\n▶️  Setting-up \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee 
 
 # It surprises me that we load both the old version's and new version's ENV VARS here,
 # I'd expect we'd load only the default.env + {old-version}.env at this stage.
-set -o allexport; source "suites/$SUITE_CONFIG_NAME/default_variables.env"; source "suites/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; source "../versions.env" set +o allexport
+set -o allexport; source "suites/$SUITE_CONFIG_NAME/default_variables.env"; source "suites/$SUITE_CONFIG_NAME/old-versions/$ENV_VERSION.env"; set +o allexport
 
 # old wikibase version
 export WIKIBASE_TEST_IMAGE_NAME="$WIKIBASE_SOURCE_IMAGE_NAME"

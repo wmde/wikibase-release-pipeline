@@ -41,7 +41,6 @@ docker run \
     -v "$(pwd)/Makefile":/app/Makefile \
     -v "$(pwd)/local.env":/app/local.env \
     -v "$(pwd)/variables.env":/app/variables.env \
-    -v "$(pwd)/versions.env":/app/versions.env \
     \
     -v "$(pwd)/build":/app/build \
     -v "$(pwd)/Docker/build":/app/Docker/build \

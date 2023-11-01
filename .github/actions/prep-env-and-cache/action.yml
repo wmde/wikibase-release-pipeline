@@ -1,11 +1,6 @@
 name: 'checkout-and-prepare'
 description: 'Prepare our github actions environment'
 
-inputs:
-  env_file:
-    description: 'the env file used for defining the environment'
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -17,15 +12,6 @@ runs:
         uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: variables.env
-
-      - name: Print the current env
-        run: cat ${{ inputs.env_file }}
-        shell: bash
-
-      - name: Set the env from ${{ inputs.env_file }}
-        uses: c-py/action-dotenv-to-setenv@v4
-        with:
-          env-file: ${{ inputs.env_file }}
 
       # https://phabricator.wikimedia.org/T346882
       - name: Cache composer files

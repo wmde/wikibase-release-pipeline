@@ -52,7 +52,7 @@ To build single artifacts locally you can issue the following command.
 ./build.sh wikibase
 ```
 
-The output ends up in the `artifacts/` folder and will be built as described by the `versions.env` environment file.
+The output ends up in the `artifacts/` folder and will be built as described by the `variables.env` environment file.
 
 
 See the [Makefile](../../Makefile) for more build options.

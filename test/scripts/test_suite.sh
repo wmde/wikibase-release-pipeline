@@ -10,11 +10,6 @@ if [ -z "$SUITE" ]; then
     exit 1
 fi
 
-set -o allexport; 
-# shellcheck disable=SC1091 # cannot find file
-source ../versions.env
-set +o allexport;
-
 # log directory setup
 export RESULTS_DIR="suites/$SUITE/results"
 export TEST_LOG="$RESULTS_DIR/$SUITE.log"

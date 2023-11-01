@@ -47,8 +47,6 @@ jobs:
 
       - name: Prepare environment and caches
         uses: ./.github/actions/prep-env-and-cache
-        with:
-          env_file: "versions.env"
 
       - name: Build
         run: ./build.sh ${{ matrix.component }}
@@ -258,8 +256,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: c-py/action-dotenv-to-setenv@v4
-        with:
-          env-file: "versions.env"
 
       - name: Build version requirements
         shell: bash
