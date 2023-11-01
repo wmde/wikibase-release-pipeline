@@ -4,15 +4,11 @@ import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		if ( process.env.WMDE_RELEASE_VERSION === 'wmdeprerelease' ) {
-			this.skip();
-		}
-
 		await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
 		const softwareEl = await awaitDisplayed( '#sv-software' );
 		const text = await softwareEl.getText();
 		assert.strictEqual(
-			text.includes( `MediaWiki\t${process.env.MEDIAWIKI_VERSION}` ),
+			text.includes( `MediaWiki ${process.env.MEDIAWIKI_VERSION}` ),
 			true
 		);
 	} );
@@ -43,7 +39,7 @@ describe( 'Special:Version', function () {
 	// should be disabled for dynamic tests
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	Object.keys( extensions ).forEach( ( extensionPackage ) => {
-		extensions[ extensionPackage ].forEach( ( extension ) => {
+		extensions[ extensionPackage ].forEach( ( extension: string ) => {
 			// Get the extension name from the override if available
 			const name = extension;
 

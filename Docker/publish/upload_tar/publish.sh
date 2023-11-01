@@ -25,7 +25,7 @@ eval "$(ssh-agent -s)"
 ssh-add /root/.ssh/"$RELEASE_SSH_IDENTITY"
 
 # move to uploads with release tag
-cp $ARTIFACT_PATH/Wikibase.tar.gz /uploads/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
+cp $ARTIFACT_PATH/wikibase.tar.gz /uploads/wikibase."$RELEASE_VERSION-$WMDE_RELEASE_VERSION".tar.gz
 cp $ARTIFACT_PATH/wdqs-frontend.tar.gz /uploads/wdqs-frontend."$WMDE_RELEASE_VERSION".tar.gz
 
 if [ -z "$DRY_RUN" ]; then

@@ -1,6 +1,5 @@
 #!make
 include variables.env
--include builder_configuration.env
 -include local.env
 
 export
@@ -33,7 +32,7 @@ test-upgrade:
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_upgrade.sh ${VERSION} ${TO_VERSION}
+	@bash test/scripts/test_upgrade.sh ${VERSION}
 
 .PHONY: test-example
 test-example:
@@ -63,17 +62,14 @@ endif
 	@bash test/scripts/test_suite.sh base__fedprops
 	@bash test/scripts/test_suite.sh base__pingback
 
+# TODO: https://phabricator.wikimedia.org/T347084
 requirements:
 	python3 build/requirements/build_version_requirements.py
 	cat artifacts/built_versions.log
 
 wikibase:
-	bash update_cache.sh base
-	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME}"
-
-wikibase_bundle:
 	bash update_cache.sh bundle
-	bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}
+	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME};bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
 
 quickstatements:
 	bash update_cache.sh services
@@ -101,5 +97,4 @@ clean:
 	rm -rf artifacts/*.log
 	rm -rf artifacts/*.env
 
-
-all: wikibase wikibase_bundle elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
+all: wikibase elasticsearch wdqs wdqs-frontend wdqs-proxy quickstatements
