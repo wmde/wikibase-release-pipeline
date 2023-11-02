@@ -322,5 +322,5 @@ jobs:
       - name: Store built docker image on GHCR
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: "wikibase/${{ matrix.docker_image }}"
+          image_name: ${{ matrix.docker_image }}
           tag: ${{ github.run_id }}
