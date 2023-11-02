@@ -299,6 +299,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get built Docker images
+        uses: actions/download-artifact@v3
+        with:
+          name: DockerImages
+          path: artifacts/
+
+      - name: Load docker images
+        shell: bash
+        run: |
+          for file in artifacts/*.docker.tar.gz; do     
+            docker load -i "$file"
+          done
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
