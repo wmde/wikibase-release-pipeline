@@ -284,9 +284,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component:
+        docker_image:
           [
             "wikibase",
+            "wikibase-bundle",
             "elasticsearch",
             "wdqs",
             "wdqs-frontend",
@@ -309,5 +310,5 @@ jobs:
         # if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
-          image_name: "wikibase/${{ inputs.name }}"
+          image_name: "wikibase/${{ matrix.docker_image }}"
           tag: ${{ github.run_id }}
