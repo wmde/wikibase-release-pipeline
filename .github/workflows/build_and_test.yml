@@ -275,6 +275,7 @@ jobs:
   upload_ghcr:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # if: github.ref == 'refs/heads/main'
 
     needs:
       - test
@@ -300,14 +301,12 @@ jobs:
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
-        # if: github.ref == 'refs/heads/main'
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Store built docker image on GHCR
-        # if: github.ref == 'refs/heads/main'
         uses: wmde/tag-push-ghcr-action@v3
         with:
           image_name: "wikibase/${{ matrix.docker_image }}"
