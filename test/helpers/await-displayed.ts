@@ -8,7 +8,8 @@ const awaitDisplayed = async (
 ): Promise<WebdriverIO.Element> => {
 	const resultElement =
 		typeof identifier === 'string' ? await $( identifier ) : await identifier;
-	await resultElement.waitForDisplayed( options );
+	console.log( options );
+	// await resultElement.waitForDisplayed( options );
 	return resultElement;
 };
 
