@@ -4,7 +4,7 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property', function () {
-	let propertyId = null;
+	let propertyId: string = null;
 
 	it( 'Should be able to add statement and reference to property', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );
