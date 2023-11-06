@@ -9,7 +9,6 @@ import LuaCPUValue from './types/lua-cpu-value.js';
 import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
 import { Context } from 'mocha';
-import awaitDisplayed from './await-displayed.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -148,11 +147,11 @@ export function defaultFunctions(): void {
 			}
 
 			// fill out form
-			const textBoxEl = await awaitDisplayed( '#wpTextbox1' );
+			const textBoxEl = await $( '#wpTextbox1' );
 			await textBoxEl.setValue( content.toString() );
 
 			if ( captcha ) {
-				const captchaEl = await awaitDisplayed( '#wpCaptchaWord' );
+				const captchaEl = await $( '#wpCaptchaWord' );
 				await captchaEl.setValue( captcha );
 			}
 
@@ -164,7 +163,7 @@ export function defaultFunctions(): void {
 
 			await browser.pause( 2 * 1000 );
 
-			const contentTextEl = await awaitDisplayed( '#mw-content-text' );
+			const contentTextEl = await $( '#mw-content-text' );
 			return await contentTextEl.getText();
 		}
 	);
@@ -229,19 +228,19 @@ export function defaultFunctions(): void {
 			await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 			// create a batch
-			const createBatchBoxTextareaEl = await awaitDisplayed( '.create_batch_box textarea' );
+			const createBatchBoxTextareaEl = await $( '.create_batch_box textarea' );
 			await createBatchBoxTextareaEl.setValue( theQuery );
 
 			await browser.pause( 1000 );
 
 			// click import
-			const importButtonEl = await awaitDisplayed( "button[tt='dialog_import_v1']" );
+			const importButtonEl = await $( "button[tt='dialog_import_v1']" );
 			await importButtonEl.click();
 
 			await browser.pause( 1000 );
 
 			// click run
-			const runButtonEl = await awaitDisplayed( "button[tt='run']" );
+			const runButtonEl = await $( "button[tt='run']" );
 			await runButtonEl.click();
 
 			const commands = await $$( '.command_status' );
@@ -293,7 +292,7 @@ export function defaultFunctions(): void {
 			serverURL: string = process.env.MW_SERVER,
 			// default timeout is 1 second less than default Mocha test timeout
 			timeout: number = ( Number.parseInt( process.env.MOCHA_OPTS_TIMEOUT ) ||
-        90 * 1000 ) - 1000,
+				90 * 1000 ) - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
 			let jobsInQueue: number;
@@ -313,11 +312,7 @@ export function defaultFunctions(): void {
 					timeout,
 					timeoutMsg:
 						timeoutMsg ||
-						`Timeout: Job queue on "${
-							serverURL
-						}" still contains ${
-							jobsInQueue
-						} jobs after waiting ${
+						`Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${
 							timeout / 1000
 						} seconds.`
 				}

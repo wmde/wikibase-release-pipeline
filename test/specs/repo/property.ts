@@ -1,7 +1,6 @@
 import assert from 'assert';
 import Property from '../../helpers/pages/entity/property.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property', function () {
 	let propertyId: string = null;
@@ -12,12 +11,12 @@ describe( 'Property', function () {
 		const propertyIdSelector = `=${propertyId} (${propertyId})`; // =P1 (P1)
 
 		await Property.open( propertyId );
-		const addStatementEl = await awaitDisplayed( Property.addStatement );
+		const addStatementEl = await $( Property.addStatement );
 		await addStatementEl.click();
 
 		// fill out property id for statement
 		await browser.keys( propertyId.split( '' ) );
-		const propertyIdEl = await awaitDisplayed( propertyIdSelector );
+		const propertyIdEl = await $( propertyIdSelector );
 		await propertyIdEl.click();
 		await browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
 
@@ -27,11 +26,11 @@ describe( 'Property', function () {
 		await saveEl.click();
 		await browser.pause( 1000 * 2 );
 
-		const referenceEl = await awaitDisplayed( Property.addReference );
+		const referenceEl = await $( Property.addReference );
 		await referenceEl.click();
 
 		// fill out property id for reference
-		await awaitDisplayed( '.ui-entityselector-input' );
+		await $( '.ui-entityselector-input' );
 		await browser.pause( 1000 * 1 );
 		await browser.keys( propertyId.split( '' ) );
 		// await $( propertyIdSelector ).click();

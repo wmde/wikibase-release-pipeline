@@ -2,7 +2,6 @@ import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -16,13 +15,13 @@ describe( 'EntitySchema', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
-		const noarticletextEl = await awaitDisplayed( '.noarticletext a' );
+		const noarticletextEl = await $( '.noarticletext a' );
 		await noarticletextEl.click();
 
 		// set label and description
-		const labelInputEl = await awaitDisplayed( 'input[name ="label"]' );
+		const labelInputEl = await $( 'input[name ="label"]' );
 		await labelInputEl.setValue( testLabel );
-		const descriptionInputEl = await awaitDisplayed(
+		const descriptionInputEl = await $(
 			'input[name ="description"]'
 		);
 		await descriptionInputEl.setValue( testDescription );
@@ -33,15 +32,15 @@ describe( 'EntitySchema', function () {
 		)
 			.toString()
 			.trim();
-		const schemaTextInputEl = await awaitDisplayed(
+		const schemaTextInputEl = await $(
 			'textarea[name ="schema-text"]'
 		);
 		await schemaTextInputEl.setValue( shexTemplate );
 
-		const submitButtonEl = await awaitDisplayed( 'button[name ="submit"]' );
+		const submitButtonEl = await $( 'button[name ="submit"]' );
 		await submitButtonEl.click();
 
-		await awaitDisplayed( '#entityschema-schema-text' );
+		await $( '#entityschema-schema-text' );
 
 		const entitySchemaEl = await $( '#entityschema-schema-text' );
 		const actualTemplate = ( await entitySchemaEl.getText() ).trim();

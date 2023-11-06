@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
@@ -20,30 +19,30 @@ describe( 'VisualEditor', function () {
 		await browser.pause( 5 * 1000 );
 
 		// disable notice popup and focus on editor
-		const toolLinkEl = await awaitDisplayed(
+		const toolLinkEl = await $(
 			'.oo-ui-tool-name-notices .oo-ui-tool-link'
 		);
 		await toolLinkEl.click();
 
-		const surfaceEl = await awaitDisplayed( '.ve-ce-surface' );
+		const surfaceEl = await $( '.ve-ce-surface' );
 		await surfaceEl.click();
 
 		await browser.keys( [ 'T', 'E', 'S', 'T' ] );
 
 		// save changes
-		const saveButtonEl = await awaitDisplayed( 'a.ve-ui-toolbar-saveButton' );
+		const saveButtonEl = await $( 'a.ve-ui-toolbar-saveButton' );
 		await saveButtonEl.click();
 
 		// fill-out for summary popup and submit
-		await awaitDisplayed( '.oo-ui-inputWidget-input' );
+		await $( '.oo-ui-inputWidget-input' );
 		await browser.keys( 'X' );
 
-		const primaryAEl = await awaitDisplayed(
+		const primaryAEl = await $(
 			'.oo-ui-processDialog-actions-primary a'
 		);
 		await primaryAEl.click();
 
-		const outputEl = await awaitDisplayed( '.mw-parser-output' );
+		const outputEl = await $( '.mw-parser-output' );
 		const contentBody = await outputEl.getText();
 
 		assert.strictEqual( contentBody, 'TEST' );
