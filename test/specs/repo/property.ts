@@ -34,7 +34,7 @@ describe( 'Property', function () {
 		await browser.pause( 1000 * 1 );
 		await browser.keys( propertyId.split( '' ) );
 		// await $( propertyIdSelector ).click();
-		await propertyIdEl.waitForDisplayed();
+		// await propertyIdEl.waitForDisplayed();
 		await propertyIdEl.click();
 		await browser.keys( [ 'R', 'E', 'F', 'E', 'R', 'E', 'N', 'C', 'E' ] );
 
