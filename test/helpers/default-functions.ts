@@ -139,7 +139,6 @@ export function defaultFunctions(): void {
 				'.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive'
 			);
 			if ( startEditbutton.elementId ) {
-				// await startEditbutton.waitForDisplayed();
 				await startEditbutton.click();
 
 				// wait for fade out animation to finish
