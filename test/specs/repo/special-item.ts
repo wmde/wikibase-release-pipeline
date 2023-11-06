@@ -16,6 +16,6 @@ describe( 'Special:NewItem', function () {
 
 		await SpecialNewItem.submit();
 
-		await $( ItemPage.addStatementLink );
+		await ItemPage.addStatementLink;
 	} );
 } );
