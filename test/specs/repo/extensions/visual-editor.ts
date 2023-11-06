@@ -13,10 +13,9 @@ describe( 'VisualEditor', function () {
 		);
 
 		// start editing
-		await awaitDisplayed( '.oo-ui-messageDialog-actions' );
+		await ( await $( '.oo-ui-messageDialog-actions' ) ).waitForDisplayed();
 		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
-		const startEditbutton = await awaitDisplayed( messageDialogAEl[ 1 ] );
-		await startEditbutton.click();
+		await messageDialogAEl[ 1 ].click();
 
 		await browser.pause( 5 * 1000 );
 
