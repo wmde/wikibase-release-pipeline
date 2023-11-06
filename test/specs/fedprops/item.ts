@@ -1,9 +1,9 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import { AxiosError } from 'axios';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { AxiosError } from 'axios';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -44,7 +44,7 @@ describe( 'Fed props Item', function () {
 		const actualPropertyValue = await actualPropertyEl.getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		await $( ItemPage.addStatementLink );
+		await ItemPage.addStatementLink;
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
@@ -91,7 +91,7 @@ describe( 'Fed props Item', function () {
 		await browser.pause( 11 * 1000 );
 
 		await QueryServiceUI.submit();
-		await $( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
@@ -107,7 +107,7 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		await QueryServiceUI.submit();
-		await $( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert( !( await QueryServiceUI.resultIncludes( 'schema:version' ) ) );

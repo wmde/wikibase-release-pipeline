@@ -5,13 +5,13 @@ describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {
 		await SpecialNewProperty.open( 'string' );
 
-		const labelInput = await $( SpecialNewProperty.labelInput );
+		const labelInput = await SpecialNewProperty.labelInput;
 		await labelInput.setValue( 'Cool label' );
 
-		const descriptionInput = await $( SpecialNewProperty.descriptionInput );
+		const descriptionInput = await SpecialNewProperty.descriptionInput;
 		await descriptionInput.setValue( 'Cool description' );
 
-		const aliasesInput = await $( SpecialNewProperty.aliasesInput );
+		const aliasesInput = await SpecialNewProperty.aliasesInput;
 		await aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 
 		await SpecialNewProperty.submit();

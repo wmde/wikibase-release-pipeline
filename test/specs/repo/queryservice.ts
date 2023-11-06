@@ -1,9 +1,9 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -74,7 +74,7 @@ describe( 'QueryService', () => {
 		await browser.pause( 20 * 1000 );
 
 		await QueryServiceUI.submit();
-		await $( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		assert( await QueryServiceUI.resultIncludes( 'schema:version' ) );
 		assert( await QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
@@ -101,7 +101,7 @@ describe( 'QueryService', () => {
 		await QueryServiceUI.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
 
 		await QueryServiceUI.submit();
-		await $( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// should be set only to the item
 		assert(
@@ -135,7 +135,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUI.submit();
 
-		const resultTable = await $( QueryServiceUI.resultTable );
+		const resultTable = await QueryServiceUI.resultTable;
 		const resultText = await resultTable.getText();
 
 		// item should not be included

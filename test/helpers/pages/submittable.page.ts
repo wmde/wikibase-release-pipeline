@@ -6,7 +6,7 @@ class SubmittablePage extends Page {
 	}
 
 	public async submit(): Promise<void> {
-		const button = await $( this.submitBtn );
+		const button = await this.submitBtn;
 		await button.click();
 	}
 }
