@@ -135,8 +135,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUI.submit();
 
-		const resultTable = await QueryServiceUI.resultTable;
-		const resultText = await resultTable.getText();
+		const resultText = await QueryServiceUI.resultTable.getText();
 
 		// item should not be included
 		assert( !resultText.includes( 'schema:version' ) );
