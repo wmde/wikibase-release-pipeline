@@ -160,7 +160,7 @@ jobs:
           # Latest 1.38
           'wmde.12',
           # Latest 1.39
-          'wmde.11',
+          'wmde.13',
         ]
     needs:
       - build
@@ -209,7 +209,7 @@ jobs:
           # Latest 1.38
           'wmde.12-bundle',
           # Latest 1.39
-          'wmde.11-bundle',
+          'wmde.13-bundle',
         ]
 
     env:
