@@ -14,7 +14,6 @@ describe( 'Search', function () {
 			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
-		// http/:localhost:8080/w/api.php?action=wbsearchentities&search=something&format=json&errorformat=plaintext&language=en&uselang=en&type=item
 		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );
 	} );
 } );
