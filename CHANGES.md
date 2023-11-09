@@ -7,6 +7,9 @@ This provides an overview of the releases that have been made using this release
 
 ## November 2023: First 1.40 release
 
+- [MediaWiki release announcement 1.40](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/H46H5ZYZG2PYUQ5STK7NWKF7GXYW7H6B/)
+- [MediaWiki security and maintenance release announcement: 1.35.12 / 1.39.5 / 1.40.1](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/BRWOWACCHMYRIS7JRTT6XD44X3362MVL/)
+
 The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
 
 - [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
