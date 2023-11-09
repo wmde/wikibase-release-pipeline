@@ -1,4 +1,5 @@
 import SubmittablePage from '../submittable.page.js';
+import awaitDisplayed from '../../await-displayed.js';
 
 class SpecialNewProperty extends SubmittablePage {
 	public get labelInput(): ChainablePromiseElement {
@@ -22,6 +23,11 @@ class SpecialNewProperty extends SubmittablePage {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Special:NewProperty${dataType}`
 		);
+		await awaitDisplayed( this.labelInput );
+		await awaitDisplayed( this.descriptionInput );
+		await awaitDisplayed( this.aliasesInput );
+		await awaitDisplayed( this.datatypeInput );
+		await awaitDisplayed( this.submitBtn );
 	}
 }
 
