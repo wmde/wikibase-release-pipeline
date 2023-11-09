@@ -15,6 +15,7 @@
 		"node/no-missing-import": "off",
 		"wdio/no-pause": "warn",
 		"es-x/no-import-meta": "off",
+		"es-x/no-nullish-coalescing-operators": "off",
 		"es-x/no-class-fields": "off"
 	}
 }
