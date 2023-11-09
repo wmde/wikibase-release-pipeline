@@ -20,7 +20,8 @@ describe( 'Special:NewProperty', function () {
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
 		await SpecialListProperties.openParams( { limit: 1000 } );
-		const numberOfPropertiesBefore = await SpecialListProperties.properties.length;
+		const numberOfPropertiesBefore =
+			await SpecialListProperties.properties.length;
 
 		await SpecialNewProperty.open( 'string' );
 		await SpecialNewProperty.labelInput.setValue( 'Property type string' );
@@ -32,7 +33,8 @@ describe( 'Special:NewProperty', function () {
 		await browser.pause( 1100 );
 
 		await SpecialListProperties.openParams( { limit: 1000 } );
-		const numberOfPropertiesAfter = await SpecialListProperties.properties.length;
+		const numberOfPropertiesAfter =
+			await SpecialListProperties.properties.length;
 
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
