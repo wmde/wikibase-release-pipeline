@@ -45,11 +45,15 @@ describe( 'QuickStatements Service', function () {
 
 		// login after redirect
 		const wpNameEl = await $( '#wpName1' );
-		const wpPasswordEl = await $( '#wpPassword1' );
-		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
-
+		await wpNameEl.waitForDisplayed();
 		await wpNameEl.setValue( process.env.MW_ADMIN_NAME );
+
+		const wpPasswordEl = await $( '#wpPassword1' );
+		await wpPasswordEl.waitForDisplayed();
 		await wpPasswordEl.setValue( process.env.MW_ADMIN_PASS );
+
+		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
+		await wpLoginButtonEl.waitForDisplayed();
 		await wpLoginButtonEl.click();
 
 		// oauth dialog
