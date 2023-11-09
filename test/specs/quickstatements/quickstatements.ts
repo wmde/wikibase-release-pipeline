@@ -1,7 +1,7 @@
 import assert from 'assert';
+import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { AxiosResponse } from 'axios';
 
 type ReferenceValue = {
 	id: string;

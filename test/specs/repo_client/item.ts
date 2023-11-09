@@ -1,8 +1,8 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import { stringify } from 'querystring';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import SuiteLoginPage from '../../helpers/pages/SuiteLoginPage.js';
 import ExternalChange from '../../helpers/types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );

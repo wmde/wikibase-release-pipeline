@@ -1,14 +1,14 @@
-import axios, { AxiosResponse } from 'axios';
 import assert from 'assert';
+import axios, { AxiosResponse } from 'axios';
 import { exec } from 'child_process';
 import lodash from 'lodash';
+import { Context } from 'mocha';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import Binding from './types/binding.js';
 import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
-import LuaCPUValue from './types/lua-cpu-value.js';
-import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
-import { Context } from 'mocha';
+import LuaCPUValue from './types/lua-cpu-value.js';
 
 export function defaultFunctions(): void {
 	/**
