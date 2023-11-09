@@ -8,7 +8,7 @@ describe( 'Search', function () {
 
 		await browser.waitForJobs();
 
-		await browser.pause(2000);
+		await browser.pause( 2000 );
 
 		const result = await browser.makeRequest(
 			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
