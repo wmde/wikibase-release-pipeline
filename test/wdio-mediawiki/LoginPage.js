@@ -20,9 +20,7 @@ class LoginPage extends Page {
 	}
 
 	async loginAdmin() {
-		if ( browser.config ) {
-			await this.login( browser.config.mwUser, browser.config.mwPwd );
-		}
+		await this.login( browser.config.mwUser, browser.config.mwPwd );
 	}
 }
 
