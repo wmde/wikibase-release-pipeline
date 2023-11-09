@@ -1,11 +1,11 @@
 import Page from '../page.js';
-import awaitDisplayed from '../../await-displayed.js';
+import { ChainablePromiseArray } from 'webdriverio';
 
 class SpecialListProperties extends Page {
 	public get content(): ChainablePromiseElement {
 		return $( '.mw-spcontent' );
 	}
-	public get properties(): ChainablePromiseArray {
+	public get properties(): ChainablePromiseArray<WebdriverIO.ElementArray> {
 		return $$( '.mw-spcontent ol li' );
 	}
 
@@ -22,7 +22,7 @@ class SpecialListProperties extends Page {
 			`${process.env.MW_SERVER}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
-		await awaitDisplayed( this.content );
+		await this.content;
 	}
 }
 
