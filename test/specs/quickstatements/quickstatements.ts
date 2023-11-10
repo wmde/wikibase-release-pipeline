@@ -30,6 +30,28 @@ function getQualifierType(
 	}
 }
 
+const mainSnakDataTypes = [
+	'string',
+	'wikibase-item',
+	'url',
+	'quantity',
+	'time'
+];
+const qualifierSnakDataTypes = [
+	'string',
+	'wikibase-item',
+	'url',
+	'quantity',
+	'time'
+];
+const exampleSnakValues = {
+	string: '"cat"',
+	'wikibase-item': 'Q1',
+	url: '"https://example.com"',
+	quantity: '5',
+	time: '+1967-01-17T00:00:00Z/11'
+};
+
 describe( 'QuickStatements Service', function () {
 	let propertyId = null;
 	let propertyIdItem = null;
@@ -61,9 +83,10 @@ describe( 'QuickStatements Service', function () {
 		const authFormAcceptEl = await $( '#mw-mwoauth-accept' );
 		await authFormAcceptEl.click();
 
+		await browser.pause( 2 * 1000 );
+
 		// redirect back to app
-		const navbarEl = await $( 'nav.navbar' );
-		const navbarText = await navbarEl.getText();
+		const navbarText = await $( 'nav.navbar' ).getText();
 		assert( navbarText.includes( 'QuickStatements' ) );
 	} );
 
@@ -142,27 +165,6 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', () => {
-		const mainSnakDataTypes = [
-			'string',
-			'wikibase-item',
-			'url',
-			'quantity',
-			'time'
-		];
-		const qualifierSnakDataTypes = [
-			'string',
-			'wikibase-item',
-			'url',
-			'quantity',
-			'time'
-		];
-		const exampleSnakValues = {
-			string: '"cat"',
-			'wikibase-item': 'Q1',
-			url: '"https://example.com"',
-			quantity: '5',
-			time: '+1967-01-17T00:00:00Z/11'
-		};
 		// should be disabled for dynamic tests
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
