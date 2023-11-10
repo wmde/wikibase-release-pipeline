@@ -17,7 +17,7 @@ The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:U
 
 | Suite Version | Version Info | Date available | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.14 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.14/variables.env)) | MediaWiki (1.40.1, PHP 8.1.24), WDQS (0.3.135)    | 10 November 2023 | [6809413425](https://github.com/wmde/wikibase-release-pipeline/actions/runs/6809413425) | [T340939](https://phabricator.wikimedia.org/T340939) |
+| wmde.14 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.14/variables.env)) | MediaWiki (1.40.1, PHP 8.1.25), WDQS (0.3.135)    | 10 November 2023 | [6809413425](https://github.com/wmde/wikibase-release-pipeline/actions/runs/6809413425) | [T340939](https://phabricator.wikimedia.org/T340939) |
 
 ## October 2023: Security releases for 1.39.5
 
