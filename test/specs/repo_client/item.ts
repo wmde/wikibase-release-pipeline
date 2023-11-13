@@ -22,8 +22,7 @@ describe( 'Item', function () {
 		await browser.url(
 			process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx'
 		);
-		const heading = await $( 'h1#firstHeading' );
-		const notFoundText = await heading.getText();
+		const notFoundText = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
@@ -31,8 +30,7 @@ describe( 'Item', function () {
 		await browser.url(
 			process.env.MW_SERVER + '/wiki/Special:NewItem?uselang=qqx'
 		);
-		const heading = await $( 'h1#firstHeading' );
-		const createNewItem = await heading.getText();
+		const createNewItem = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
@@ -78,11 +76,11 @@ describe( 'Item', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
 		);
-		const submitButtonEl = await $( '#wb-setsitelink-submit button' );
-		await submitButtonEl.click();
+		await $( '#wb-setsitelink-submit button' ).click();
 
-		const siteLinkEl = await $( '.wikibase-sitelinklistview-listview li' );
-		const siteLinkValue = await siteLinkEl.getText();
+		const siteLinkValue = await $(
+			'.wikibase-sitelinklistview-listview li'
+		).getText();
 
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) );
@@ -115,10 +113,7 @@ describe( 'Item', function () {
 			`${browser.options.baseUrl}/index.php?${stringify( query )}`
 		);
 
-		const destructiveButtonEl = await $(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );

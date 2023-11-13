@@ -79,12 +79,9 @@ describe( 'Scribunto Item', function () {
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
-		const destructiveButtonEl = await $(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
