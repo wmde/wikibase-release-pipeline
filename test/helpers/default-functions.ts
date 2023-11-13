@@ -146,24 +146,18 @@ export function defaultFunctions(): void {
 			}
 
 			// fill out form
-			const textBoxEl = await $( '#wpTextbox1' );
-			await textBoxEl.setValue( content.toString() );
+			await $( '#wpTextbox1' ).setValue( content.toString() );
 
 			if ( captcha ) {
-				const captchaEl = await $( '#wpCaptchaWord' );
-				await captchaEl.setValue( captcha );
+				await $( '#wpCaptchaWord' ).setValue( captcha );
 			}
 
 			// save page
-			await browser.execute( async () => {
-				const editFormEl = await $( '#editform.mw-editform' );
-				await editFormEl.submit();
-			} );
+			await browser.execute( async () => $( '#editform.mw-editform' ).submit() );
 
 			await browser.pause( 2 * 1000 );
 
-			const contentTextEl = await $( '#mw-content-text' );
-			return await contentTextEl.getText();
+			return await $( '#mw-content-text' ).getText();
 		}
 	);
 
@@ -227,20 +221,17 @@ export function defaultFunctions(): void {
 			await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 			// create a batch
-			const createBatchBoxTextareaEl = await $( '.create_batch_box textarea' );
-			await createBatchBoxTextareaEl.setValue( theQuery );
+			await $( '.create_batch_box textarea' ).setValue( theQuery );
 
 			await browser.pause( 1000 );
 
 			// click import
-			const importButtonEl = await $( "button[tt='dialog_import_v1']" );
-			await importButtonEl.click();
+			await $( "button[tt='dialog_import_v1']" ).click();
 
 			await browser.pause( 1000 );
 
 			// click run
-			const runButtonEl = await $( "button[tt='run']" );
-			await runButtonEl.click();
+			await $( "button[tt='run']" ).click();
 
 			const commands = await $$( '.command_status' );
 
