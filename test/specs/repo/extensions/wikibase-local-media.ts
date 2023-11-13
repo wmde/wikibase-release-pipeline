@@ -15,15 +15,12 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 
-		const fileUpload = await $( '#wpUploadFile' );
 		const filePath = new URL( 'image.png', import.meta.url );
-		await fileUpload.setValue( filePath.pathname );
+		await $( '#wpUploadFile' ).setValue( filePath.pathname );
 
-		const submitButtonEl = await $( 'input.mw-htmlform-submit' );
-		await submitButtonEl.click();
+		await $( 'input.mw-htmlform-submit' ).click();
 
-		const firstHeadingEl = await $( '#firstHeading' );
-		const title = await firstHeadingEl.getText();
+		const title = await $( '#firstHeading' ).getText();
 
 		assert.strictEqual( title, 'File:Image.png' );
 	} );
@@ -34,8 +31,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Property:${propertyId}` );
 
-		const firstHeadingEl = await $( '#firstHeading' );
-		const title = await firstHeadingEl.getText();
+		const title = await $( '#firstHeading' ).getText();
 
 		assert.strictEqual( title.includes( propertyId ), true );
 	} );

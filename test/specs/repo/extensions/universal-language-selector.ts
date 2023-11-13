@@ -8,14 +8,10 @@ describe( 'UniversalLanguageSelector', function () {
 
 	it( 'Should be able to see the language selector menu', async () => {
 		await browser.url( process.env.MW_SERVER );
-		const searchInputEl = await $( '#searchInput' );
-		await searchInputEl.click();
+		await $( '#searchInput' ).click();
+		await $( '.imeselector' ).click();
 
-		const selectorEl = await $( '.imeselector' );
-		await selectorEl.click();
-
-		const firstLangEl = await $( '.imeselector-menu h3' );
-		const firstLang = await firstLangEl.getText();
+		const firstLang = await $( '.imeselector-menu h3' ).getText();
 
 		assert.strictEqual( firstLang, 'English' );
 	} );

@@ -4,8 +4,7 @@ import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
 		await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
-		const softwareEl = await $( '#sv-software' );
-		const text = await softwareEl.getText();
+		const text = await $( '#sv-software' ).getText();
 		assert.strictEqual(
 			text.includes( `MediaWiki ${process.env.MEDIAWIKI_VERSION}` ),
 			true

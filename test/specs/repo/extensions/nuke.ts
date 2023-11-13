@@ -26,19 +26,13 @@ describe( 'Nuke', function () {
 		await SuiteLoginPage.loginAdmin();
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
 
-		const buttonEl = await $( 'button.oo-ui-inputWidget-input' );
-		await buttonEl.click();
+		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		await $( 'form li' );
 
-		const checkboxEl = await $( '.mw-checkbox-none' );
-		await checkboxEl.click();
-
-		const vandalismCheckEl = await $( 'input[value="Vandalism"]' );
-		await vandalismCheckEl.click();
-
-		const submitButtonEl = await $( 'input[type="submit"]' );
-		await submitButtonEl.click();
+		await $( '.mw-checkbox-none' ).click();
+		await $( 'input[value="Vandalism"]' ).click();
+		await $( 'input[type="submit"]' ).click();
 
 		await browser.acceptAlert();
 

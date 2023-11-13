@@ -123,10 +123,7 @@ describe( 'QueryService', () => {
 		await browser.url(
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
-		const destructiveButtonEl = await $(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 

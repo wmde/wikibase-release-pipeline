@@ -12,38 +12,28 @@ describe( 'VisualEditor', function () {
 		);
 
 		// start editing
-		await ( await $( '.oo-ui-messageDialog-actions' ) ).waitForDisplayed();
+		await $( '.oo-ui-messageDialog-actions' ).waitForDisplayed();
 		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
 		await messageDialogAEl[ 1 ].click();
 
 		await browser.pause( 5 * 1000 );
 
 		// disable notice popup and focus on editor
-		const toolLinkEl = await $(
-			'.oo-ui-tool-name-notices .oo-ui-tool-link'
-		);
-		await toolLinkEl.click();
-
-		const surfaceEl = await $( '.ve-ce-surface' );
-		await surfaceEl.click();
+		await $( '.oo-ui-tool-name-notices .oo-ui-tool-link' ).click();
+		await $( '.ve-ce-surface' ).click();
 
 		await browser.keys( [ 'T', 'E', 'S', 'T' ] );
 
 		// save changes
-		const saveButtonEl = await $( 'a.ve-ui-toolbar-saveButton' );
-		await saveButtonEl.click();
+		await $( 'a.ve-ui-toolbar-saveButton' ).click();
 
 		// fill-out for summary popup and submit
 		await $( '.oo-ui-inputWidget-input' );
 		await browser.keys( 'X' );
 
-		const primaryAEl = await $(
-			'.oo-ui-processDialog-actions-primary a'
-		);
-		await primaryAEl.click();
+		await $( '.oo-ui-processDialog-actions-primary a' ).click();
 
-		const outputEl = await $( '.mw-parser-output' );
-		const contentBody = await outputEl.getText();
+		const contentBody = await $( '.mw-parser-output' ).getText();
 
 		assert.strictEqual( contentBody, 'TEST' );
 	} );

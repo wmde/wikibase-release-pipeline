@@ -11,10 +11,9 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 		await SpecialNewProperty.submit();
 
-		const propertyviewDatatypeValueEl = await $(
+		const dataTypeText = await $(
 			'.wikibase-propertyview-datatype-value'
-		);
-		const dataTypeText = await propertyviewDatatypeValueEl.getText();
+		).getText();
 		assert.strictEqual( dataTypeText, 'String' );
 	} );
 
