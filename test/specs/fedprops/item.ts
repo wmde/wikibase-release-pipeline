@@ -1,10 +1,9 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import { AxiosError } from 'axios';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { AxiosError } from 'axios';
-import awaitDisplayed from '../../helpers/await-displayed.js';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -41,11 +40,12 @@ describe( 'Fed props Item', function () {
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 
-		const actualPropertyEl = await awaitDisplayed( '.wikibase-statementgroupview-property' );
-		const actualPropertyValue = await actualPropertyEl.getText();
+		const actualPropertyValue = await $(
+			'.wikibase-statementgroupview-property'
+		).getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		await awaitDisplayed( ItemPage.addStatementLink );
+		await ItemPage.addStatementLink;
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
@@ -92,7 +92,7 @@ describe( 'Fed props Item', function () {
 		await browser.pause( 11 * 1000 );
 
 		await QueryServiceUI.submit();
-		await awaitDisplayed( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
@@ -108,7 +108,7 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		await QueryServiceUI.submit();
-		await awaitDisplayed( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert( !( await QueryServiceUI.resultIncludes( 'schema:version' ) ) );

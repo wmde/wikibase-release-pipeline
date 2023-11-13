@@ -1,10 +1,9 @@
 import assert from 'assert';
-import Property from '../../helpers/pages/entity/property.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
+import Property from '../../helpers/pages/entity/property.page.js';
 
 describe( 'Property', function () {
-	let propertyId = null;
+	let propertyId: string = null;
 
 	it( 'Should be able to add statement and reference to property', async () => {
 		propertyId = await WikibaseApi.getProperty( 'string' );
@@ -12,35 +11,30 @@ describe( 'Property', function () {
 		const propertyIdSelector = `=${propertyId} (${propertyId})`; // =P1 (P1)
 
 		await Property.open( propertyId );
-		const addStatementEl = await awaitDisplayed( Property.addStatement );
-		await addStatementEl.click();
+		await Property.addStatement.click();
 
 		// fill out property id for statement
 		await browser.keys( propertyId.split( '' ) );
-		const propertyIdEl = await awaitDisplayed( propertyIdSelector );
-		await propertyIdEl.click();
+		await $( propertyIdSelector ).click();
 		await browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
 
 		// wait for save button to re-enable
 		await browser.pause( 1000 * 1 );
-		const saveEl = await Property.save;
-		await saveEl.click();
+		await Property.save.click();
 		await browser.pause( 1000 * 2 );
 
-		const referenceEl = await awaitDisplayed( Property.addReference );
-		await referenceEl.click();
+		await Property.addReference.click();
 
 		// fill out property id for reference
-		await awaitDisplayed( '.ui-entityselector-input' );
+		await $( '.ui-entityselector-input' );
 		await browser.pause( 1000 * 1 );
 		await browser.keys( propertyId.split( '' ) );
 		// await $( propertyIdSelector ).click();
-		await propertyIdEl.waitForDisplayed();
-		await propertyIdEl.click();
+		await $( propertyIdSelector ).click();
 		await browser.keys( [ 'R', 'E', 'F', 'E', 'R', 'E', 'N', 'C', 'E' ] );
 
 		await browser.pause( 1000 * 1 );
-		await saveEl.click();
+		await Property.save.click();
 
 		await Property.open( propertyId );
 	} );

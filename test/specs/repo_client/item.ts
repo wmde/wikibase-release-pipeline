@@ -1,10 +1,9 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../helpers/types/external-change.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -23,8 +22,7 @@ describe( 'Item', function () {
 		await browser.url(
 			process.env.MW_CLIENT_SERVER + '/wiki/Special:NewItem?uselang=qqx'
 		);
-		const heading = await awaitDisplayed( 'h1#firstHeading' );
-		const notFoundText = await heading.getText();
+		const notFoundText = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
@@ -32,8 +30,7 @@ describe( 'Item', function () {
 		await browser.url(
 			process.env.MW_SERVER + '/wiki/Special:NewItem?uselang=qqx'
 		);
-		const heading = await awaitDisplayed( 'h1#firstHeading' );
-		const createNewItem = await heading.getText();
+		const createNewItem = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
@@ -56,7 +53,7 @@ describe( 'Item', function () {
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		await awaitDisplayed(
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
@@ -79,15 +76,11 @@ describe( 'Item', function () {
 		await browser.url(
 			`${process.env.MW_SERVER}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
 		);
-		const submitButtonEl = await awaitDisplayed(
-			'#wb-setsitelink-submit button'
-		);
-		await submitButtonEl.click();
+		await $( '#wb-setsitelink-submit button' ).click();
 
-		const siteLinkEl = await awaitDisplayed(
+		const siteLinkValue = await $(
 			'.wikibase-sitelinklistview-listview li'
-		);
-		const siteLinkValue = await siteLinkEl.getText();
+		).getText();
 
 		// label should come from repo property
 		assert( siteLinkValue.includes( 'client_wiki' ) );
@@ -120,10 +113,7 @@ describe( 'Item', function () {
 			`${browser.options.baseUrl}/index.php?${stringify( query )}`
 		);
 
-		const destructiveButtonEl = await awaitDisplayed(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );

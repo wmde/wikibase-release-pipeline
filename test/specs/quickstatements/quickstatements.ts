@@ -1,8 +1,7 @@
 import assert from 'assert';
+import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { AxiosResponse } from 'axios';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 type ReferenceValue = {
 	id: string;
@@ -31,6 +30,28 @@ function getQualifierType(
 	}
 }
 
+const mainSnakDataTypes = [
+	'string',
+	'wikibase-item',
+	'url',
+	'quantity',
+	'time'
+];
+const qualifierSnakDataTypes = [
+	'string',
+	'wikibase-item',
+	'url',
+	'quantity',
+	'time'
+];
+const exampleSnakValues = {
+	string: '"cat"',
+	'wikibase-item': 'Q1',
+	url: '"https://example.com"',
+	quantity: '5',
+	time: '+1967-01-17T00:00:00Z/11'
+};
+
 describe( 'QuickStatements Service', function () {
 	let propertyId = null;
 	let propertyIdItem = null;
@@ -38,29 +59,33 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to load the start page', async () => {
 		await browser.url( process.env.QS_SERVER );
-		await awaitDisplayed( 'nav.navbar' );
+		await $( 'nav.navbar' );
 	} );
 
 	it( 'Should be able to log in', async () => {
 		await browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
-		const wpNameEl = await awaitDisplayed( '#wpName1' );
-		const wpPasswordEl = await awaitDisplayed( '#wpPassword1' );
-		const wpLoginButtonEl = await awaitDisplayed( '#wpLoginAttempt' );
-
+		const wpNameEl = await $( '#wpName1' );
+		await wpNameEl.waitForDisplayed();
 		await wpNameEl.setValue( process.env.MW_ADMIN_NAME );
+
+		const wpPasswordEl = await $( '#wpPassword1' );
+		await wpPasswordEl.waitForDisplayed();
 		await wpPasswordEl.setValue( process.env.MW_ADMIN_PASS );
+
+		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
+		await wpLoginButtonEl.waitForDisplayed();
 		await wpLoginButtonEl.click();
 
 		// oauth dialog
-		await awaitDisplayed( '#mw-mwoauth-authorize-form' );
-		const authFormAcceptEl = await awaitDisplayed( '#mw-mwoauth-accept' );
-		await authFormAcceptEl.click();
+		await $( '#mw-mwoauth-authorize-form' );
+		await $( '#mw-mwoauth-accept' ).click();
+
+		await browser.pause( 2 * 1000 );
 
 		// redirect back to app
-		const navbarEl = await awaitDisplayed( 'nav.navbar' );
-		const navbarText = await navbarEl.getText();
+		const navbarText = await $( 'nav.navbar' ).getText();
 		assert( navbarText.includes( 'QuickStatements' ) );
 	} );
 
@@ -139,27 +164,6 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', () => {
-		const mainSnakDataTypes = [
-			'string',
-			'wikibase-item',
-			'url',
-			'quantity',
-			'time'
-		];
-		const qualifierSnakDataTypes = [
-			'string',
-			'wikibase-item',
-			'url',
-			'quantity',
-			'time'
-		];
-		const exampleSnakValues = {
-			string: '"cat"',
-			'wikibase-item': 'Q1',
-			url: '"https://example.com"',
-			quantity: '5',
-			time: '+1967-01-17T00:00:00Z/11'
-		};
 		// should be disabled for dynamic tests
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
@@ -167,9 +171,8 @@ describe( 'QuickStatements Service', function () {
 				it( `Should be able to add a ${mainSnakDataType} statement with a ${qualifierSnakDataType} qualifier.`, async () => {
 					const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
 
-					const mainPropertyId = await WikibaseApi.getProperty(
-						mainSnakDataType
-					);
+					const mainPropertyId =
+						await WikibaseApi.getProperty( mainSnakDataType );
 					const qualifierPropertyId = await WikibaseApi.getProperty(
 						qualifierSnakDataType
 					);

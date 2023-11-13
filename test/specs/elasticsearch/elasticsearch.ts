@@ -2,7 +2,6 @@ import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import SearchResult from '../../helpers/types/search-result.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 const itemAlias: string = getTestString( 'alias' );
 const itemLabel: string = getTestString( 'testItem' );
@@ -14,7 +13,7 @@ describe( 'ElasticSearch', function () {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		await awaitDisplayed(
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
@@ -23,21 +22,15 @@ describe( 'ElasticSearch', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
 
 		// input id
-		const inputIdEl = await awaitDisplayed( '#wb-modifyentity-id input' );
-		await inputIdEl.setValue( itemId );
+		await $( '#wb-modifyentity-id input' ).setValue( itemId );
 
 		// input alias term and submit
-		const inputValueEl = await awaitDisplayed( '#wb-modifyterm-value input' );
-		await inputValueEl.setValue( itemAlias );
+		await $( '#wb-modifyterm-value input' ).setValue( itemAlias );
 
-		const inputWidgetEl = await $( 'button.oo-ui-inputWidget-input' );
-		await inputWidgetEl.click();
+		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const aliasesViewEl = await awaitDisplayed(
-			'.wikibase-aliasesview-list-item'
-		);
-		const alias = await aliasesViewEl.getText();
+		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
 		assert.strictEqual( alias, itemAlias );
 	} );
 
@@ -65,9 +58,9 @@ describe( 'ElasticSearch', function () {
 		);
 		assert(
 			searchResult.length === 1 &&
-			searchResult[ 0 ].id === itemId &&
-			searchResult[ 0 ].match.type === 'label' &&
-			searchResult[ 0 ].match.text === itemLabel
+				searchResult[ 0 ].id === itemId &&
+				searchResult[ 0 ].match.type === 'label' &&
+				searchResult[ 0 ].match.text === itemLabel
 		);
 	} );
 
@@ -96,9 +89,9 @@ describe( 'ElasticSearch', function () {
 
 		assert(
 			searchResult.length === 1 &&
-			searchResult[ 0 ].id === itemId &&
-			searchResult[ 0 ].match.type === 'alias' &&
-			searchResult[ 0 ].match.text === itemAlias
+				searchResult[ 0 ].id === itemId &&
+				searchResult[ 0 ].match.type === 'alias' &&
+				searchResult[ 0 ].match.text === itemAlias
 		);
 	} );
 } );

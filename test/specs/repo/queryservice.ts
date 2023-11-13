@@ -1,10 +1,9 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
+import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -75,7 +74,7 @@ describe( 'QueryService', () => {
 		await browser.pause( 20 * 1000 );
 
 		await QueryServiceUI.submit();
-		await awaitDisplayed( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		assert( await QueryServiceUI.resultIncludes( 'schema:version' ) );
 		assert( await QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
@@ -102,7 +101,7 @@ describe( 'QueryService', () => {
 		await QueryServiceUI.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
 
 		await QueryServiceUI.submit();
-		await awaitDisplayed( QueryServiceUI.resultTable );
+		await QueryServiceUI.resultTable;
 
 		// should be set only to the item
 		assert(
@@ -124,10 +123,7 @@ describe( 'QueryService', () => {
 		await browser.url(
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
-		const destructiveButtonEl = await awaitDisplayed(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
@@ -136,8 +132,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUI.submit();
 
-		const resultTable = await awaitDisplayed( QueryServiceUI.resultTable );
-		const resultText = await resultTable.getText();
+		const resultText = await QueryServiceUI.resultTable.getText();
 
 		// item should not be included
 		assert( !resultText.includes( 'schema:version' ) );
