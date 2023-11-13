@@ -22,19 +22,15 @@ describe( 'ElasticSearch', function () {
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
 
 		// input id
-		const inputIdEl = await $( '#wb-modifyentity-id input' );
-		await inputIdEl.setValue( itemId );
+		await $( '#wb-modifyentity-id input' ).setValue( itemId );
 
 		// input alias term and submit
-		const inputValueEl = await $( '#wb-modifyterm-value input' );
-		await inputValueEl.setValue( itemAlias );
+		await $( '#wb-modifyterm-value input' ).setValue( itemAlias );
 
-		const inputWidgetEl = await $( 'button.oo-ui-inputWidget-input' );
-		await inputWidgetEl.click();
+		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const aliasesViewEl = await $( '.wikibase-aliasesview-list-item' );
-		const alias = await aliasesViewEl.getText();
+		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
 		assert.strictEqual( alias, itemAlias );
 	} );
 
