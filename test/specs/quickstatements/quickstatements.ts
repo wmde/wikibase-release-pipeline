@@ -80,8 +80,7 @@ describe( 'QuickStatements Service', function () {
 
 		// oauth dialog
 		await $( '#mw-mwoauth-authorize-form' );
-		const authFormAcceptEl = await $( '#mw-mwoauth-accept' );
-		await authFormAcceptEl.click();
+		await $( '#mw-mwoauth-accept' ).click();
 
 		await browser.pause( 2 * 1000 );
 
