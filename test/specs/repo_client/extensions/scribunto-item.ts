@@ -7,7 +7,6 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -39,7 +38,7 @@ describe( 'Scribunto Item', function () {
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-		await awaitDisplayed(
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
@@ -80,12 +79,9 @@ describe( 'Scribunto Item', function () {
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
-		const destructiveButtonEl = await awaitDisplayed(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {

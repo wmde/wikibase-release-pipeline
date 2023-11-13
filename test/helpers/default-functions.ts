@@ -1,15 +1,14 @@
-import axios, { AxiosResponse } from 'axios';
 import assert from 'assert';
+import axios, { AxiosResponse } from 'axios';
 import { exec } from 'child_process';
 import lodash from 'lodash';
+import { Context } from 'mocha';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import Binding from './types/binding.js';
 import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
-import LuaCPUValue from './types/lua-cpu-value.js';
-import Binding from './types/binding.js';
 import ExternalChange from './types/external-change.js';
-import { Context } from 'mocha';
-import awaitDisplayed from './await-displayed.js';
+import LuaCPUValue from './types/lua-cpu-value.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -140,7 +139,6 @@ export function defaultFunctions(): void {
 				'.oo-ui-messageDialog-actions .oo-ui-flaggedElement-progressive'
 			);
 			if ( startEditbutton.elementId ) {
-				await startEditbutton.waitForDisplayed();
 				await startEditbutton.click();
 
 				// wait for fade out animation to finish
@@ -148,24 +146,18 @@ export function defaultFunctions(): void {
 			}
 
 			// fill out form
-			const textBoxEl = await awaitDisplayed( '#wpTextbox1' );
-			await textBoxEl.setValue( content.toString() );
+			await $( '#wpTextbox1' ).setValue( content.toString() );
 
 			if ( captcha ) {
-				const captchaEl = await awaitDisplayed( '#wpCaptchaWord' );
-				await captchaEl.setValue( captcha );
+				await $( '#wpCaptchaWord' ).setValue( captcha );
 			}
 
 			// save page
-			await browser.execute( async () => {
-				const editFormEl = await $( '#editform.mw-editform' );
-				await editFormEl.submit();
-			} );
+			await browser.execute( async () => $( '#editform.mw-editform' ).submit() );
 
 			await browser.pause( 2 * 1000 );
 
-			const contentTextEl = await awaitDisplayed( '#mw-content-text' );
-			return await contentTextEl.getText();
+			return await $( '#mw-content-text' ).getText();
 		}
 	);
 
@@ -229,20 +221,17 @@ export function defaultFunctions(): void {
 			await browser.url( `${process.env.QS_SERVER}/#/batch` );
 
 			// create a batch
-			const createBatchBoxTextareaEl = await awaitDisplayed( '.create_batch_box textarea' );
-			await createBatchBoxTextareaEl.setValue( theQuery );
+			await $( '.create_batch_box textarea' ).setValue( theQuery );
 
 			await browser.pause( 1000 );
 
 			// click import
-			const importButtonEl = await awaitDisplayed( "button[tt='dialog_import_v1']" );
-			await importButtonEl.click();
+			await $( "button[tt='dialog_import_v1']" ).click();
 
 			await browser.pause( 1000 );
 
 			// click run
-			const runButtonEl = await awaitDisplayed( "button[tt='run']" );
-			await runButtonEl.click();
+			await $( "button[tt='run']" ).click();
 
 			const commands = await $$( '.command_status' );
 
@@ -293,7 +282,7 @@ export function defaultFunctions(): void {
 			serverURL: string = process.env.MW_SERVER,
 			// default timeout is 1 second less than default Mocha test timeout
 			timeout: number = ( Number.parseInt( process.env.MOCHA_OPTS_TIMEOUT ) ||
-        90 * 1000 ) - 1000,
+				90 * 1000 ) - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
 			let jobsInQueue: number;
@@ -313,11 +302,7 @@ export function defaultFunctions(): void {
 					timeout,
 					timeoutMsg:
 						timeoutMsg ||
-						`Timeout: Job queue on "${
-							serverURL
-						}" still contains ${
-							jobsInQueue
-						} jobs after waiting ${
+						`Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${
 							timeout / 1000
 						} seconds.`
 				}

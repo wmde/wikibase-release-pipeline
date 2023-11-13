@@ -1,6 +1,4 @@
 import assert from 'assert';
-
-import awaitDisplayed from '../../helpers/await-displayed.js';
 import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 
@@ -13,16 +11,16 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
 		await SpecialNewProperty.submit();
 
-		const propertyviewDatatypeValueEl = await awaitDisplayed(
+		const dataTypeText = await $(
 			'.wikibase-propertyview-datatype-value'
-		);
-		const dataTypeText = await propertyviewDatatypeValueEl.getText();
+		).getText();
 		assert.strictEqual( dataTypeText, 'String' );
 	} );
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
 		await SpecialListProperties.openParams( { limit: 1000 } );
-		const numberOfPropertiesBefore = await SpecialListProperties.properties.length;
+		const numberOfPropertiesBefore =
+			await SpecialListProperties.properties.length;
 
 		await SpecialNewProperty.open( 'string' );
 		await SpecialNewProperty.labelInput.setValue( 'Property type string' );
@@ -34,7 +32,8 @@ describe( 'Special:NewProperty', function () {
 		await browser.pause( 1100 );
 
 		await SpecialListProperties.openParams( { limit: 1000 } );
-		const numberOfPropertiesAfter = await SpecialListProperties.properties.length;
+		const numberOfPropertiesAfter =
+			await SpecialListProperties.properties.length;
 
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
