@@ -37,4 +37,25 @@ describe( 'Special:NewProperty', function () {
 
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
+
+	it( 'Should be able to create a new property of datatype Item', async () => {
+		await SpecialNewProperty.open();
+
+		await SpecialNewProperty.labelInput.setValue( 'Cool Item label' );
+		await SpecialNewProperty.descriptionInput.setValue( 'Cool Item description' );
+		await SpecialNewProperty.aliasesInput.setValue(
+			'Great Item!|Greatest Item!'
+		);
+
+		await SpecialNewProperty.datatypeInput.click();
+		await browser.pause( 1 * 1000 );
+		await $( '.oo-ui-labelElement-label=Item' ).click();
+
+		await SpecialNewProperty.submit();
+
+		const dataTypeText = await $(
+			'.wikibase-propertyview-datatype-value'
+		).getText();
+		assert.strictEqual( dataTypeText, 'Item' );
+	} );
 } );
