@@ -275,7 +275,7 @@ jobs:
   upload_ghcr:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-')
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.ref, 'refs/heads/prep-mw-')
 
     needs:
       - test
