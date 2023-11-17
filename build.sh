@@ -1,63 +1,24 @@
 #!/usr/bin/env bash
 
-set -e
 
-TARGET=$1
+set -o allexport
+source ./variables.env
+set +o allexport
 
-if ! [[ -d .git ]]; then
-    echo "ERROR: builder.sh must be executed from the root of the repository!" >&2
-    exit 1
-fi
+env
 
-usage() {
-    echo "USAGE: $0 <TARGET>" >&2
-}
-
-if [[ -z "$TARGET" ]]; then
-    echo "ERROR: TARGET is not set!" >&2
-    usage
-    exit 1
-fi
-
-if ! [[ -f "local.env" ]]; then
-    touch local.env
-fi
-
-HOST_TMP="$(mktemp -d)"
-
-remove_builder_tmp() {
-    rm -rf "${HOST_TMP}"
-}
-trap remove_builder_tmp EXIT
-
-docker build --quiet . -t builder:latest
-
-docker run \
-    --rm \
+# TODO: move to flat file hierarchy
+# TODO: how do we tag actually?
+docker build \
+    --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
+    --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+    --build-arg MEDIAWIKI_SETTINGS_TEMPLATE_FILE="$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" \
     \
-    --user "$(id -u):$(id -g)" \
-    --group-add "$(getent group docker | cut -d: -f3)" \
+    --build-arg MW_SITE_NAME="$MW_SITE_NAME" \
+    --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
+    --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \
+    --build-arg MW_WG_ENABLE_UPLOADS="$MW_WG_ENABLE_UPLOADS" \
+    --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
+    --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    -v "$(pwd)/Makefile":/app/Makefile \
-    -v "$(pwd)/local.env":/app/local.env \
-    -v "$(pwd)/variables.env":/app/variables.env \
-    \
-    -v "$(pwd)/build":/app/build \
-    -v "$(pwd)/Docker/build":/app/Docker/build \
-    \
-    -v "$(pwd)/update_cache.sh":/app/update_cache.sh \
-    -v "$(pwd)/cache":/app/cache \
-    -v "$(pwd)/git_cache":/app/git_cache \
-    \
-    -v "$(pwd)/artifacts":/app/artifacts \
-    \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    \
-    -v "${HOST_TMP}":/tmp \
-    -e HOST_TMP="${HOST_TMP}" \
-    \
-    -e BUILD_TIMESTAMP="$(date +%Y%m%d%H%M%S)" \
-    -e GIT_REVISION_HASH="$(git rev-parse --short HEAD)" \
-    -e GIT_REVISION_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
-    \
-    builder:latest make "$TARGET"
+    ./Docker/build/Wikibase -t wikibase:latest

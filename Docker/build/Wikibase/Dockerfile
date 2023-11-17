@@ -1,38 +1,44 @@
 # Build configuration
-ARG COMPOSER_IMAGE_NAME
-ARG COMPOSER_IMAGE_VERSION
-ARG MEDIAWIKI_IMAGE_NAME
-ARG MEDIAWIKI_IMAGE_VERSION
+ARG MEDIAWIKI_IMAGE
+ARG COMPOSER_IMAGE
+ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 
-FROM ubuntu:xenial as unpacker
+# ###########################################################################
+FROM bitnami/git:2.42.1-debian-11-r0 as git-checkout
+WORKDIR /tmp
+RUN git clone --single-branch --branch REL1_40 \
+    https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase wikibase
+WORKDIR /tmp/wikibase
+RUN git submodule update --init --recursive
+# TODO: do submodules have .git folders?
+RUN rm -rf .git && rm -f .travis.yml
 
-RUN mkdir artifacts
+# ###########################################################################
+FROM ${MEDIAWIKI_IMAGE} as collector
+COPY --from=git-checkout /tmp/wikibase /var/www/html/extensions/Wikibase
 
-COPY artifacts/wikibase.tar.gz artifacts
-RUN tar xzf artifacts/wikibase.tar.gz
-
-FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION} as collector
-
-COPY --from=unpacker Wikibase /var/www/html/extensions/Wikibase
-
-RUN rm /var/www/html/extensions/Wikibase/vendor -rf
-
-FROM ${COMPOSER_IMAGE_NAME}:${COMPOSER_IMAGE_VERSION} as composer
+# ###########################################################################
+FROM ${COMPOSER_IMAGE} as composer
 COPY --from=collector --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
-RUN composer install --verbose -n --no-dev
+RUN composer install --verbose -n --no-dev \
+    --ignore-platform-req=ext-calendar \
+    --ignore-platform-req=ext-intl
 
-FROM ${MEDIAWIKI_IMAGE_NAME}:${MEDIAWIKI_IMAGE_VERSION}
-
+# ###########################################################################
+FROM ${MEDIAWIKI_IMAGE}
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 # Set error_reporting PHP.ini settings
 # This is needed with PHP8+ and MediaWiki 1.39, as Wikibase contains deprecated code
+# TODO: remove this and see how far we get
 RUN { \
 		echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
 	} > /usr/local/etc/php/conf.d/error_reporting.ini
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base && \
     rm -rf /var/lib/apt/lists/* && \
     a2enmod rewrite && \
     install -d /var/log/mediawiki -o www-data && \
@@ -42,13 +48,12 @@ COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY artifacts/wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 
-ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
-COPY ${MEDIAWIKI_SETTINGS_TEMPLATE_FILE} /LocalSettings.php.template
+COPY LocalSettings.php.template /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
 
-# Mediawiki configuration
+# Mediawiki build time configuration
 ARG MW_SITE_NAME
 ARG MW_SITE_LANG
 ARG MW_WG_JOB_RUN_RATE
@@ -63,10 +68,9 @@ ENV MW_SITE_NAME=${MW_SITE_NAME}\
     MW_WG_UPLOAD_DIRECTORY=${MW_WG_UPLOAD_DIRECTORY}\
     WIKIBASE_PINGBACK=${WIKIBASE_PINGBACK}
 
-RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R && \
+RUN mkdir /var/www/html/uploads && \
+    chown www-data /var/www/html/uploads -R && \
     chmod o-w /var/www/html
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
-
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
