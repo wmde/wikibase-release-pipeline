@@ -6,19 +6,28 @@ import {
 	Reference,
 	SpecialEntityData
 } from '../../helpers/types/request-response.js';
+import WikibasePropertyType from '../../helpers/types/wikibase-property-type.js';
+import {
+	wikibasePropertyItem,
+	wikibasePropertyString
+} from '../../helpers/wikibase-property-types.js';
 
-const dataTypes = [ 'string' ];
+const dataTypes = [
+	wikibasePropertyItem,
+	wikibasePropertyString
+];
 
 const propertyIdSelector = ( id: string ): string => `=${id} (${id})`; // =P1 (P1)
 
 describe( 'Property', () => {
 	// eslint-disable-next-line mocha/no-setup-in-describe
-	dataTypes.forEach( ( dataType: string ) => {
-		describe( `Should be able to work with type ${dataType}`, () => {
+	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
+		// eslint-disable-next-line mocha/no-setup-in-describe
+		describe( `Should be able to work with type ${dataType.name}`, () => {
 			let propertyId: string = null;
 
 			before( async () => {
-				propertyId = await WikibaseApi.getProperty( dataType );
+				propertyId = await WikibaseApi.getProperty( dataType.urlName );
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
@@ -37,7 +46,7 @@ describe( 'Property', () => {
 				await Property.open( propertyId );
 			} );
 
-			it( `Should be able to add reference to property of type ${dataType}`, async () => {
+			it( `Should be able to add reference to property of type ${dataType.name}`, async () => {
 				await Property.open( propertyId );
 				await Property.addReference.click();
 
