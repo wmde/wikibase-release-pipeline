@@ -2,6 +2,24 @@ import assert from 'assert';
 import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 
+const dataTypes = [
+	'Commons media file',
+	'EDTF Date/Time',
+	'Entity Schema',
+	'External identifier',
+	'Geographic coordinates',
+	'Geographic shape',
+	'Item',
+	'Media file',
+	'Monolingual text',
+	'Point in time',
+	'Property',
+	'Quantity',
+	'String',
+	'Tabular data',
+	'URL'
+];
+
 describe( 'Special:NewProperty', function () {
 	it( 'Should be able to create a new property', async () => {
 		await SpecialNewProperty.open( 'string' );
@@ -38,23 +56,27 @@ describe( 'Special:NewProperty', function () {
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
 
-	it( 'Should be able to create a new property of datatype Item', async () => {
-		await SpecialNewProperty.open();
+	dataTypes.forEach( ( dataType: string ) => {
+		it( `Should be able to create a new property of datatype ${dataType}`, async () => {
+			await SpecialNewProperty.open();
 
-		await SpecialNewProperty.labelInput.setValue( 'Cool Item label' );
-		await SpecialNewProperty.descriptionInput.setValue( 'Cool Item description' );
-		await SpecialNewProperty.aliasesInput.setValue(
-			'Great Item!|Greatest Item!'
-		);
+			await SpecialNewProperty.labelInput.setValue( `Cool ${dataType} label` );
+			await SpecialNewProperty.descriptionInput.setValue(
+				`Cool ${dataType} description`
+			);
+			await SpecialNewProperty.aliasesInput.setValue(
+				`Great ${dataType}!|Greatest ${dataType}!`
+			);
 
-		await SpecialNewProperty.datatypeInput.click();
-		await $( '.oo-ui-labelElement-label=Item' ).click();
+			await SpecialNewProperty.datatypeInput.click();
+			await $( `.oo-ui-labelElement-label=${dataType}` ).click();
 
-		await SpecialNewProperty.submit();
+			await SpecialNewProperty.submit();
 
-		const dataTypeText = await $(
-			'.wikibase-propertyview-datatype-value'
-		).getText();
-		assert.strictEqual( dataTypeText, 'Item' );
+			const dataTypeText = await $(
+				'.wikibase-propertyview-datatype-value'
+			).getText();
+			assert.strictEqual( dataTypeText, dataType );
+		} );
 	} );
 } );
