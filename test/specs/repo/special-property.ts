@@ -40,8 +40,6 @@ describe( 'Special:NewProperty', function () {
 
 			await SpecialNewProperty.submit();
 
-			// await saveScreenshot( dataType, 'repo/special-property' );
-
 			const dataTypeText = await $(
 				'.wikibase-propertyview-datatype-value'
 			).getText();
