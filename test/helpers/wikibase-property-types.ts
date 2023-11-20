@@ -8,3 +8,18 @@ export const wikibasePropertyString: WikibasePropertyType = {
 	name: 'String',
 	urlName: 'string'
 };
+
+// OTHER TYPES:
+// 'Commons media file',
+// 'EDTF Date/Time',
+// 'Entity Schema',
+// 'External identifier',
+// 'Geographic coordinates',
+// 'Geographic shape',
+// 'Media file',
+// 'Monolingual text',
+// 'Point in time',
+// 'Property',
+// 'Quantity',
+// 'Tabular data',
+// 'URL'
