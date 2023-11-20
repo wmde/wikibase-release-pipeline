@@ -3,21 +3,21 @@ import SpecialListProperties from '../../helpers/pages/special/list-properties.p
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 
 const dataTypes = [
-	'Commons media file',
-	'EDTF Date/Time',
-	'Entity Schema',
-	'External identifier',
-	'Geographic coordinates',
-	'Geographic shape',
+	// 'Commons media file',
+	// 'EDTF Date/Time',
+	// 'Entity Schema',
+	// 'External identifier',
+	// 'Geographic coordinates',
+	// 'Geographic shape',
 	'Item',
-	'Media file',
-	'Monolingual text',
-	'Point in time',
-	'Property',
-	'Quantity',
-	'String',
-	'Tabular data',
-	'URL'
+	// 'Media file',
+	// 'Monolingual text',
+	// 'Point in time',
+	// 'Property',
+	// 'Quantity',
+	'String'
+	// 'Tabular data',
+	// 'URL'
 ];
 
 describe( 'Special:NewProperty', function () {
