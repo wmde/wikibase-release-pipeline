@@ -21,18 +21,32 @@ const dataTypes = [
 ];
 
 describe( 'Special:NewProperty', function () {
-	it( 'Should be able to create a new property', async () => {
-		await SpecialNewProperty.open( 'string' );
+	// eslint-disable-next-line mocha/no-setup-in-describe
+	dataTypes.forEach( ( dataType: string ) => {
+		it( `Should be able to create a new property of datatype ${dataType}`, async () => {
+			await SpecialNewProperty.open();
 
-		await SpecialNewProperty.labelInput.setValue( 'Cool label' );
-		await SpecialNewProperty.descriptionInput.setValue( 'Cool description' );
-		await SpecialNewProperty.aliasesInput.setValue( 'Great job!|Bra Jobbat' );
-		await SpecialNewProperty.submit();
+			await SpecialNewProperty.labelInput.setValue( `Cool ${dataType} label` );
+			await SpecialNewProperty.descriptionInput.setValue(
+				`Cool ${dataType} description`
+			);
+			await SpecialNewProperty.aliasesInput.setValue(
+				`Great ${dataType}!|Greatest ${dataType}!`
+			);
 
-		const dataTypeText = await $(
-			'.wikibase-propertyview-datatype-value'
-		).getText();
-		assert.strictEqual( dataTypeText, 'String' );
+			await SpecialNewProperty.datatypeInput.click();
+			await $( 'oo-ui-menuSelectWidget' );
+			await $( `.oo-ui-labelElement-label=${dataType}` ).click();
+
+			await SpecialNewProperty.submit();
+
+			// await saveScreenshot( dataType, 'repo/special-property' );
+
+			const dataTypeText = await $(
+				'.wikibase-propertyview-datatype-value'
+			).getText();
+			assert.strictEqual( dataTypeText, dataType );
+		} );
 	} );
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
@@ -54,29 +68,5 @@ describe( 'Special:NewProperty', function () {
 			await SpecialListProperties.properties.length;
 
 		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
-	} );
-
-	dataTypes.forEach( ( dataType: string ) => {
-		it( `Should be able to create a new property of datatype ${dataType}`, async () => {
-			await SpecialNewProperty.open();
-
-			await SpecialNewProperty.labelInput.setValue( `Cool ${dataType} label` );
-			await SpecialNewProperty.descriptionInput.setValue(
-				`Cool ${dataType} description`
-			);
-			await SpecialNewProperty.aliasesInput.setValue(
-				`Great ${dataType}!|Greatest ${dataType}!`
-			);
-
-			await SpecialNewProperty.datatypeInput.click();
-			await $( `.oo-ui-labelElement-label=${dataType}` ).click();
-
-			await SpecialNewProperty.submit();
-
-			const dataTypeText = await $(
-				'.wikibase-propertyview-datatype-value'
-			).getText();
-			assert.strictEqual( dataTypeText, dataType );
-		} );
 	} );
 } );
