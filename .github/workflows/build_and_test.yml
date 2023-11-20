@@ -275,7 +275,12 @@ jobs:
   upload_ghcr:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.ref, 'refs/heads/prep-mw-')
+
+    # we only upload builds to github container registry
+    # - from main branch builds
+    # - from release branch builds and 
+    # - builds from PRs going to a release branch
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
 
     needs:
       - test
