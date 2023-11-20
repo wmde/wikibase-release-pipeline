@@ -48,7 +48,6 @@ describe( 'Special:NewProperty', function () {
 		);
 
 		await SpecialNewProperty.datatypeInput.click();
-		await browser.pause( 1 * 1000 );
 		await $( '.oo-ui-labelElement-label=Item' ).click();
 
 		await SpecialNewProperty.submit();
