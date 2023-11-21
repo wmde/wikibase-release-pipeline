@@ -256,7 +256,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: c-py/action-dotenv-to-setenv@v4
+      - uses: c-py/action-dotenv-to-setenv@v5
         with:
           env-file: "variables.env"
 
@@ -275,7 +275,12 @@ jobs:
   upload_ghcr:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-')
+
+    # we only upload builds to github container registry
+    # - from main branch builds
+    # - from release branch builds and 
+    # - builds from PRs going to a release branch
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
 
     needs:
       - test
