@@ -1,17 +1,21 @@
 # Build configuration
 ARG MEDIAWIKI_IMAGE
 ARG COMPOSER_IMAGE
+ARG GIT_IMAGE
+ARG WIKIBASE_COMMIT
+ARG GIT_CURRENT_REVISION
+
 ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 
 # ###########################################################################
-FROM bitnami/git:2.42.1-debian-11-r0 as git-checkout
+FROM ${GIT_IMAGE} as git-checkout
 WORKDIR /tmp
-RUN git clone --single-branch --branch REL1_40 \
-    https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase wikibase
+RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase wikibase
 WORKDIR /tmp/wikibase
+RUN git checkout ${WIKIBASE_COMMIT}
 RUN git submodule update --init --recursive
-# TODO: do submodules have .git folders?
-RUN rm -rf .git && rm -f .travis.yml
+RUN rm -f .travis.yml
+RUN find . -name .git | xargs rm -rf
 
 # ###########################################################################
 FROM ${MEDIAWIKI_IMAGE} as collector
@@ -33,8 +37,8 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-
 # This is needed with PHP8+ and MediaWiki 1.39, as Wikibase contains deprecated code
 # TODO: remove this and see how far we get
 RUN { \
-		echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
-	} > /usr/local/etc/php/conf.d/error_reporting.ini
+    echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
+} > /usr/local/etc/php/conf.d/error_reporting.ini
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \

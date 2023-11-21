@@ -10,8 +10,11 @@ env
 # TODO: move to flat file hierarchy
 # TODO: how do we tag actually?
 docker build \
-    --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
     --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+    --build-arg GIT_IMAGE="$GIT_IMAGE" \
+    --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
+		--build-arg GIT_CURRENT_REVISION="$(git rev-parse HEAD)" \
+    \
     --build-arg MEDIAWIKI_SETTINGS_TEMPLATE_FILE="$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" \
     \
     --build-arg MW_SITE_NAME="$MW_SITE_NAME" \

@@ -34,7 +34,7 @@ load_image() {
 echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 if [ -z "$DATABASE_IMAGE_NAME" ]; then
-    export DATABASE_IMAGE_NAME="$DEFAULT_DATABASE_IMAGE_NAME"
+    export DATABASE_IMAGE_NAME="$MARIADB_IMAGE"
 fi
 
 # select image based on prepended suite name
