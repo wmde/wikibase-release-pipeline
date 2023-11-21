@@ -1,5 +1,5 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
@@ -11,7 +11,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to upload an image', async () => {
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 
 		await browser.url( process.env.MW_SERVER + '/wiki/Special:Upload/' );
 

@@ -3,12 +3,12 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
+import { Frameworks, Options } from '@wdio/types';
 import { existsSync, mkdir, rm } from 'fs';
-import JsonReporter from './helpers/json-reporter.js';
-import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
-import saveScreenshot from './helpers/WDIOMediawikiScreenshotPatch.js';
+import { saveScreenshot } from 'wdio-mediawiki';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { Options, Frameworks } from '@wdio/types';
+import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
+import JsonReporter from './helpers/json-reporter.js';
 
 const resultsDir = process.env.RESULTS_DIR;
 const screenshotPath = `${resultsDir}/screenshots`;
@@ -55,7 +55,7 @@ export const config: WebdriverIO.Config = {
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
 	logLevel:
-    ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
+		( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
@@ -93,7 +93,7 @@ export const config: WebdriverIO.Config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		// eslint-disable-next-line @typescript-eslint/no-empty-function, security/detect-non-literal-fs-filename
 		mkdir( resultsDir, { recursive: true }, () => {} );
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		rm( screenshotPath, { recursive: true, force: true }, () => {} );
@@ -126,7 +126,7 @@ export const config: WebdriverIO.Config = {
 		const screenshotFilename = `${testFile}__${test.title}`;
 
 		try {
-			saveScreenshot( screenshotPath, screenshotFilename );
+			saveScreenshot( screenshotFilename, screenshotPath );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );

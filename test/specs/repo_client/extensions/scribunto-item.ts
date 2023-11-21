@@ -1,6 +1,6 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
@@ -72,7 +72,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
