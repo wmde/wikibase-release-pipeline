@@ -58,6 +58,7 @@ describe( 'Property Prefetching', function () {
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 2000 );
 	} );
 
