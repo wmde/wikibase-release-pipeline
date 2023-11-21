@@ -24,4 +24,4 @@ docker build \
     --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
     --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
     \
-    ./Docker/build/Wikibase -t wikibase:latest
+    ./Docker/build/Wikibase -t wikibase:${WMDE_RELEASE_VERSION}
