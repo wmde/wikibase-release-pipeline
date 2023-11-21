@@ -83,7 +83,7 @@ Remove locally created artifacts and use the downloaded ones
 
 ```
 $ make clean
-$ cp artifacts/WORKFLOW_RUN_NUMBER/BuildArtifacts/* artifacts/
+$ cp artifacts/WORKFLOW_RUN_NUMBER/DockerImages/* artifacts/
 $ make test SUITE=<suite-name>
 ```
 
