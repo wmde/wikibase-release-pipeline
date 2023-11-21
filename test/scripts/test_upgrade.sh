@@ -59,10 +59,6 @@ echo "🔄 Creating Docker test services and volumes on ${ENV_VERSION}" 2>&1 | t
 $TEST_COMPOSE up -d --build --scale test-runner=0 >> "$TEST_LOG" 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
-# wait until containers start
-# shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
-
 echo -e "\n✳️  Running \"$SUITE\" test suite ($ENV_VERSION)"  2>&1 | tee -a "$TEST_LOG"
 
 $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
@@ -139,10 +135,6 @@ echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
 $TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
-
-# wait until containers start
-# shellcheck disable=SC2016
-$TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
 echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""  2>&1 | tee -a "$TEST_LOG"

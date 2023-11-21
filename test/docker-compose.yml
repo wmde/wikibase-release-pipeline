@@ -1,6 +1,8 @@
 # Test runner
 version: '3.4'
 
+name: test-runner
+
 services:
 
   test-runner:
@@ -57,3 +59,8 @@ services:
 
 volumes:
   node_modules:
+
+networks:
+  default:
+      external:
+        name: wikibase-suite

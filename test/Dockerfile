@@ -1,9 +1,12 @@
 FROM node:18.17.1-bullseye
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         docker.io \
-        python3-pip && \
+        python3-pip \
+        docker && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/* && \
     pip3 install --no-cache-dir --upgrade \
@@ -15,4 +18,6 @@ WORKDIR /usr/src/app/
 COPY package.json .
 COPY package-lock.json .
 
+RUN curl -fsSL https://get.docker.com -o get-docker.sh | sh
+RUN sh get-docker.sh
 RUN npm ci

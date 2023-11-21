@@ -32,10 +32,6 @@ if [[ -n "${HEADED_TESTS}" ]]; then
     echo "💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests." 2>&1 | tee -a "$TEST_LOG"
 fi
 
-# run the global suite setup.sh (waits for containers to come up, etc)
-echo "🔄 Running \"suites/setup.sh\"" 2>&1 | tee -a "$TEST_LOG"
-$TEST_COMPOSE run --rm test-runner -c suites/setup.sh
-
 echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 WDIO_COMMAND='npm run test:run --silent'
 if [ -n "$FILTER" ]; then
