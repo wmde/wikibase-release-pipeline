@@ -1,15 +1,15 @@
-version: '3.4'
+version: '3.5'
 
 services:
 
   mysql:
     volumes:  
-      - ./suites/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
+      - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     volumes:
-      - ./suites/repo-LocalSettings.php.template:/LocalSettings.php.template
-      - ./suites/repo-extra-install.sh:/extra-install.sh
+      - ./repo-LocalSettings.php.template:/LocalSettings.php.template
+      - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
@@ -21,9 +21,9 @@ services:
       - wikibase
     restart: always
     volumes:
-      - ./suites/client-LocalSettings.php.template:/LocalSettings.php.template
-      - ./suites/client-extra-install.sh:/extra-install.sh
-      - ./suites/${SUITE}/results:/var/log/mediawiki
+      - ./client-LocalSettings.php.template:/LocalSettings.php.template
+      - ./client-extra-install.sh:/extra-install.sh
+      - ./${SUITE}/results:/var/log/mediawiki
     ports:
       - "80:80"
     networks:

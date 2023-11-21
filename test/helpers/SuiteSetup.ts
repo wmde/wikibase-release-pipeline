@@ -1,8 +1,16 @@
-import { spawn } from 'child_process'
-import { mkdir, rm, stat } from 'fs';
+import { spawnSync } from 'child_process'
+import { mkdir, rm, stat } from 'fs/promises';
 import axios from 'axios';
 import asyncWaitUntil from 'async-wait-until';
 import dotenv from 'dotenv';
+
+// CURRENT WORKING DIRECTORY IS 'test/suites'~!
+// process.chdir('./suites');
+
+// Load current local build variables
+dotenv.config( { path: 'default.env' } );
+dotenv.config( { path: 'variables.env' } );
+dotenv.config( { path: 'local.env' } );
 
 const { waitUntil, TimeoutError } = asyncWaitUntil;
 
@@ -16,54 +24,43 @@ const testLog = `${resultsDir}/${suiteName}.log`;
 export const screenshotPath = `${resultsDir}/screenshots`;
 export const resultFilePath = `${resultsDir}/result.json`;
 
+let dockerComposeCmd = 'docker compose --env-file variables.env --env-file default.env --env-file local.env -f suites/docker-compose.yml';
+const composeOverrideFilePath = `${suiteName}/docker-compose.override.yml`
 
-let dockerComposeCmd = 'docker compose --env-file default.env -f docker-compose.yml -f suites/docker-compose.yml';
-const composeOverrideFilePath = `suites/${suiteName}/docker-compose.override.yml`
+try {
+  await stat(composeOverrideFilePath)
+  dockerComposeCmd += ` -f ${composeOverrideFilePath}`
+} catch {}
 
-stat(composeOverrideFilePath, ( err ) => {
-  if ( !err ) {
-    dockerComposeCmd += ` -f ${composeOverrideFilePath}`
-  }
-});
+console.log(dockerComposeCmd);
 
 export const SuiteSetup = {
-  setupLogs: (): boolean => {
+  setupLogs: async (): Promise<void> => {
     try {
       console.log(`\n▶️  Setting-up "${suiteName}" test suite`);
       // eslint-disable-next-line security/detect-non-literal-fs-filename, @typescript-eslint/no-empty-function
-      rm( resultsDir, { recursive: true, force: true }, () => {} );
+      await rm( resultsDir, { recursive: true, force: true } );
       // eslint-disable-next-line security/detect-non-literal-fs-filename, @typescript-eslint/no-empty-function
-      mkdir( resultsDir, { recursive: true }, () => {} );
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      rm( screenshotPath, { recursive: true, force: true }, () => {} );
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      rm( resultFilePath, { force: true }, () => {} );
-      return true;
+      await mkdir( resultsDir, { recursive: true } );
     } catch (e) {
       console.log('❌ Error occurred in setting-up logs:', e);
-      return false;
     }
   },
 
-  loadDockerImages: (): boolean => {
-    const loadLocalDockerImage = ( imageName: string ): boolean => {
+  loadDockerImages: (): void => {
+    const loadLocalDockerImage = ( imageName: string ): void => {
+      // TODO: Check if image is already loaded
       // if ( `docker images -q ${imageName}` ) {
       //   console.log(`ℹ️  Image ${imageName} already loaded.`);
       // } else {
       // }
 
-      console.log(`🔄 Loading image: ${imageName}`);
       // eslint-disable-next-line security/detect-child-process
-      spawn( `docker load -i "../artifacts/${imageName}.docker.tar.gz"`, {
+      spawnSync( `docker load -i artifacts/${imageName}.docker.tar.gz`, {
         stdio: 'inherit',
         shell: true
       } );
-  
-      return true;
     };
-
-    // Load current local build variables
-    dotenv.config( { path: '../variables.env' } );
 
     process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME || process.env.DEFAULT_DATABASE_IMAGE_NAME;
     process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite
@@ -90,34 +87,37 @@ export const SuiteSetup = {
     process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
     process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
 
-    defaultImages.forEach( loadLocalDockerImage );
+    defaultImages.forEach( defaultImage => loadLocalDockerImage(defaultImage) );
     
     if (!isBaseSuite) {
-      bundleImages.forEach( loadLocalDockerImage );
+      bundleImages.forEach( bundleImage => loadLocalDockerImage(bundleImage) );
     };
-
-    return true;
   },
 
   stopServices:  (): void => {
     const stopServiceCmd = `${dockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
     // eslint-disable-next-line security/detect-child-process
-    spawn( stopServiceCmd, {
+    spawnSync( stopServiceCmd, {
       stdio: 'inherit',
       shell: true
     } );
   },
 
-  startServices:  (): void => {
-    const startServicesCmd = `${dockerComposeCmd} up -d --build --scale test-runner=0 `;
+  startServices: (): void => {
+    const startServicesCmd = `${dockerComposeCmd} up -d`;
 
     // eslint-disable-next-line security/detect-child-process
-    spawn( startServicesCmd, {
+    spawnSync( startServicesCmd, {
       stdio: 'inherit',
       shell: true
     } );
   },
+
+  // after: async (): Promose<void> => {
+  //   //	console.log(`🔄 \"process.env.SUITE\" test suite run complete. Removing running Docker test services and volumes\n`)
+	//   // 	SuiteSetup.stopServices();
+  // },
 
   checkIfUp: async (
     serverURL: string,

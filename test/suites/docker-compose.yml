@@ -1,5 +1,9 @@
 # Wikibase Suite for testing
-version: '3.4'
+version: '3.5'
+
+networks:
+  default:
+    name: wikibase-suite
 
 x-common-variables: &wikibase_variables
     DB_SERVER: ${DB_SERVER}
@@ -25,8 +29,8 @@ services:
       - mysql
     restart: unless-stopped
     volumes:
-      - ./suites/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./suites/${SUITE}/results:/var/log/mediawiki
+      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ./${SUITE}/results:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
       - "8181:80"
@@ -48,7 +52,7 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
     networks:
       default:
         aliases:
@@ -71,7 +75,7 @@ services:
         aliases:
          - mysql.svc
     volumes: 
-    - ./suites/wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+      - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
 
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
@@ -136,8 +140,3 @@ services:
 
 volumes:
   shared:
-
-networks:
-  default:
-      external:
-        name: wikibase-suite

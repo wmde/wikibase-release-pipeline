@@ -1,10 +1,13 @@
 # Test runner
-version: '3.4'
+version: '3.5'
 
 name: test-runner
 
-services:
+networks:
+  default:
+    name: wikibase-suite
 
+services:
   test-runner:
     build:
       context: ../test
@@ -12,6 +15,10 @@ services:
     entrypoint: /bin/bash
     volumes:
       - .:/usr/src/app
+      - ../artifacts:/usr/src/app/artifacts
+      - ../variables.env:/usr/src/app/variables.env
+      - ../local.env:/usr/src/app/local.env
+      - ../example:/usr/src/app/example
       - node_modules:/usr/src/app/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -59,8 +66,3 @@ services:
 
 volumes:
   node_modules:
-
-networks:
-  default:
-      external:
-        name: wikibase-suite

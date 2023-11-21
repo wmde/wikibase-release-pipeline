@@ -4,15 +4,13 @@
  */
 
 import { Frameworks, Options } from '@wdio/types';
-import { existsSync, mkdir, rm } from 'fs';
+import { existsSync } from 'fs';
 import { saveScreenshot } from 'wdio-mediawiki';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import JsonReporter from './helpers/json-reporter.js';
-
-const resultsDir = process.env.RESULTS_DIR;
-const screenshotPath = `${resultsDir}/screenshots`;
-const resultFilePath = `${resultsDir}/result.json`;
+import { SuiteSetup } from './helpers/SuiteSetup.js';
+import { resultFilePath, screenshotPath } from './helpers/SuiteSetup.js';
 
 export const config: WebdriverIO.Config = {
 	// ======
@@ -55,7 +53,7 @@ export const config: WebdriverIO.Config = {
 
 	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
 	logLevel:
-		( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
+    ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
 
 	// Default timeout for each waitFor* command.
 	waitforTimeout: 30 * 1000,
@@ -89,16 +87,15 @@ export const config: WebdriverIO.Config = {
 	/**
 	 * Remove screenshots and result.json from previous runs before any tests start running
 	 */
-	onPrepare: function () {
-		// NOTE: This log/result directory setup is already handled in the shellscript before
-		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
-		// the future. These operations are harmless as-is.
-		// eslint-disable-next-line @typescript-eslint/no-empty-function, security/detect-non-literal-fs-filename
-		mkdir( resultsDir, { recursive: true }, () => {} );
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		rm( screenshotPath, { recursive: true, force: true }, () => {} );
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		rm( resultFilePath, { force: true }, () => {} );
+	onPrepare: async function () {
+		SuiteSetup.loadDockerImages();
+		await SuiteSetup.setupLogs();
+		SuiteSetup.stopServices();
+		SuiteSetup.startServices();
+		// // Check if default services are up before running specs
+		await SuiteSetup.checkIfUp( `${process.env.MW_SERVER}/wiki/Main_Page` );
+		await SuiteSetup.checkIfUp( `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql` );
+		await SuiteSetup.checkIfUp( `http://${process.env.WDQS_FRONTEND_SERVER}` );
 	},
 
 	/**
@@ -106,12 +103,13 @@ export const config: WebdriverIO.Config = {
 	 * polls the wikibase docker container for installed extensions
 	 */
 	before: async () => {
+		defaultFunctionsInit();
+
 		await WikibaseApi.initialize(
 			undefined,
 			process.env.MW_ADMIN_NAME,
 			process.env.MW_ADMIN_PASS
 		);
-		defaultFunctionsInit();
 	},
 
 	/**
