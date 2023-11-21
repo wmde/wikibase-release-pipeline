@@ -93,7 +93,7 @@ export const config: WebdriverIO.Config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		// eslint-disable-next-line @typescript-eslint/no-empty-function, security/detect-non-literal-fs-filename
 		mkdir( resultsDir, { recursive: true }, () => {} );
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		rm( screenshotPath, { recursive: true, force: true }, () => {} );
