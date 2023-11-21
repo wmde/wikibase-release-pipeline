@@ -9,7 +9,7 @@ if [ -z "$RELEASE_HOST" ] || \
     exit 1;
 fi
 
-ARTIFACT_PATH=./artifacts/$WORKFLOW_RUN_NUMBER/BuildArtifacts
+ARTIFACT_PATH=./artifacts/$WORKFLOW_RUN_NUMBER/TarBalls
 RELEASE_FULL_PATH=$RELEASE_DIR/$RELEASE_MAJOR_VERSION
 
 echo "Will upload tarballs from $ARTIFACT_PATH to $RELEASE_HOST at $RELEASE_FULL_PATH"
