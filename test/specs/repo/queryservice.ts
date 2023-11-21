@@ -71,6 +71,7 @@ describe( 'QueryService', () => {
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 20 * 1000 );
 
 		await QueryServiceUI.submit();
@@ -128,6 +129,7 @@ describe( 'QueryService', () => {
 		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 20 * 1000 );
 
 		await QueryServiceUI.submit();

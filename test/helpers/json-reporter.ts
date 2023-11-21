@@ -45,8 +45,10 @@ class JsonReporter extends WDIOReporter {
 			}
 		};
 
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		if ( existsSync( this.resultFilePath ) ) {
 			const existing: ResultType = JSON.parse(
+				// eslint-disable-next-line security/detect-non-literal-fs-filename
 				readFileSync( this.resultFilePath, 'utf8' )
 			);
 
@@ -60,6 +62,7 @@ class JsonReporter extends WDIOReporter {
 			}
 		}
 
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		writeFileSync(
 			this.resultFilePath,
 			JSON.stringify( result, null, 2 ),

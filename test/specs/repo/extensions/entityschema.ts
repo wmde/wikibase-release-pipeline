@@ -23,6 +23,7 @@ describe( 'EntitySchema', function () {
 
 		// set template
 		const shexTemplate = (
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
 		)
 			.toString()

@@ -66,11 +66,6 @@ export const config: WebdriverIO.Config = {
 			'spec',
 			{
 				showPreface: false
-				// Only available after we're on the v8 version of this plugin.
-				// Once we're there this may do something we don't want, but
-				// keeping here to remind us to consider the possibility of silencing
-				// the "[0-0] RUNNING in chrome..." logging and just relying spec reporter.
-				// realtimeReporting: true
 			}
 		],
 		[

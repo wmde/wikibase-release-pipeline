@@ -44,6 +44,7 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async () => {
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const template = await readFile(
 			new URL( 'repo-client.lua', import.meta.url ),
 			utf8
@@ -85,6 +86,7 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
 		const expectedDeletionChange: ExternalChange = {
