@@ -1,7 +1,7 @@
 # Test runner
 version: '3.5'
 
-name: test-runner
+name: wikibase-suite-test-runner
 
 networks:
   default:
@@ -51,6 +51,7 @@ services:
       - DB_USER
       - DB_PASS
       - DB_NAME
+      - HOST_PWD=${PWD}
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
 

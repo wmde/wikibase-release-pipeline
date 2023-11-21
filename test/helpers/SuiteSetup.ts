@@ -4,9 +4,6 @@ import axios from 'axios';
 import asyncWaitUntil from 'async-wait-until';
 import dotenv from 'dotenv';
 
-// CURRENT WORKING DIRECTORY IS 'test/suites'~!
-// process.chdir('./suites');
-
 // Load current local build variables
 dotenv.config( { path: 'default.env' } );
 dotenv.config( { path: 'variables.env' } );
@@ -24,20 +21,19 @@ const testLog = `${resultsDir}/${suiteName}.log`;
 export const screenshotPath = `${resultsDir}/screenshots`;
 export const resultFilePath = `${resultsDir}/result.json`;
 
-let dockerComposeCmd = 'docker compose --env-file variables.env --env-file default.env --env-file local.env -f suites/docker-compose.yml';
-const composeOverrideFilePath = `${suiteName}/docker-compose.override.yml`
+let dockerComposeCmd = `docker compose --env-file variables.env --env-file default.env --env-file local.env -f suites/docker-compose.yml --project-directory ${process.env.HOST_PWD}/suites`;
+const composeOverrideFilePath = `suites/${suiteName}/docker-compose.override.yml`
 
 try {
   await stat(composeOverrideFilePath)
   dockerComposeCmd += ` -f ${composeOverrideFilePath}`
 } catch {}
 
-console.log(dockerComposeCmd);
 
 export const SuiteSetup = {
   setupLogs: async (): Promise<void> => {
+    console.log(`\n▶️  Setting-up "${suiteName}" test suite`);
     try {
-      console.log(`\n▶️  Setting-up "${suiteName}" test suite`);
       // eslint-disable-next-line security/detect-non-literal-fs-filename, @typescript-eslint/no-empty-function
       await rm( resultsDir, { recursive: true, force: true } );
       // eslint-disable-next-line security/detect-non-literal-fs-filename, @typescript-eslint/no-empty-function
@@ -49,17 +45,15 @@ export const SuiteSetup = {
 
   loadDockerImages: (): void => {
     const loadLocalDockerImage = ( imageName: string ): void => {
-      // TODO: Check if image is already loaded
-      // if ( `docker images -q ${imageName}` ) {
-      //   console.log(`ℹ️  Image ${imageName} already loaded.`);
-      // } else {
-      // }
+      const result = spawnSync('docker', [ 'images', '-q', imageName ], { encoding: 'utf-8' });
 
-      // eslint-disable-next-line security/detect-child-process
-      spawnSync( `docker load -i artifacts/${imageName}.docker.tar.gz`, {
-        stdio: 'inherit',
-        shell: true
-      } );
+      if ( !result.stdout ) {
+        // eslint-disable-next-line security/detect-child-process
+        spawnSync( 'docker', [ 'load', '-i', `artifacts/${imageName}.docker.tar.gz` ], {
+          stdio: 'inherit',
+          shell: true
+        } );
+      }
     };
 
     process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME || process.env.DEFAULT_DATABASE_IMAGE_NAME;
@@ -96,6 +90,7 @@ export const SuiteSetup = {
 
   stopServices:  (): void => {
     const stopServiceCmd = `${dockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
+    console.log(stopServiceCmd);
 
     // eslint-disable-next-line security/detect-child-process
     spawnSync( stopServiceCmd, {
@@ -106,6 +101,7 @@ export const SuiteSetup = {
 
   startServices: (): void => {
     const startServicesCmd = `${dockerComposeCmd} up -d`;
+    console.log(startServicesCmd);
 
     // eslint-disable-next-line security/detect-child-process
     spawnSync( startServicesCmd, {

@@ -1,10 +1,6 @@
 # Wikibase Suite for testing
 version: '3.5'
 
-networks:
-  default:
-    name: wikibase-suite
-
 x-common-variables: &wikibase_variables
     DB_SERVER: ${DB_SERVER}
     MW_ADMIN_NAME: WikibaseAdmin
@@ -18,6 +14,10 @@ x-common-variables: &wikibase_variables
     MW_WG_JOB_RUN_RATE: 0
 
 name: wikibase-suite
+
+networks:
+  default:
+    name: wikibase-suite
 
 services:
 
@@ -52,7 +52,7 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
     networks:
       default:
         aliases:
