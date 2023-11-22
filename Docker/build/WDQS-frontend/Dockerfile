@@ -1,14 +1,22 @@
-FROM ubuntu:xenial as fetcher
+ARG COMPOSER_IMAGE
+ARG NGINX_IMAGE
+ARG NODE_IMAGE
 
-ARG tarball
-COPY $tarball .
-RUN mkdir wikidata-query-gui \
-    && tar xfv $tarball -C ./wikidata-query-gui \
-    && rm $tarball
+# ###########################################################################
+FROM ${COMPOSER_IMAGE} as composer
+ARG WDQSQUERYGUI_COMMIT
 
-FROM node:14-alpine as builder
+RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
+    git -C /tmp/wikidata-query-gui checkout ${WDQSQUERYGUI_COMMIT} && \
+    git -C /tmp/wikidata-query-gui submodule update --init --recursive && \
+    rm -f /tmp/wikidata-query-gui/.travis.yml && \
+    find /tmp/wikidata-query-gui -name ".git*" | xargs rm -rf
 
-COPY --from=fetcher /wikidata-query-gui /tmp/wikidata-query-gui
+
+# ###########################################################################
+FROM ${NODE_IMAGE} as builder
+
+COPY --from=composer /tmp/wikidata-query-gui /tmp/wikidata-query-gui
 
 WORKDIR /tmp/wikidata-query-gui
 
@@ -26,7 +34,9 @@ RUN mv package.json package.json.orig \
     && npm run build
 
 
-FROM nginx:stable-alpine as final
+# ###########################################################################
+FROM ${NGINX_IMAGE} as final
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 WORKDIR /usr/share/nginx/html
 
@@ -43,4 +53,3 @@ ENV LANGUAGE=en\
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

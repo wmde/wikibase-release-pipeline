@@ -76,7 +76,17 @@ function build_wdqs {
 }
 
 function build_wdqs-frontend {
-    echo "implement me"
+    image_name="wdqs-frontend:${WMDE_RELEASE_VERSION}"
+
+    docker build \
+        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+        --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
+        --build-arg NODE_IMAGE="$NODE_IMAGE" \
+        --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
+        \
+        Docker/build/WDQS-frontend/ -t "$image_name"
+
+    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs-frontend.docker.tar.gz
 }
 
 function build_wdqs-proxy {
