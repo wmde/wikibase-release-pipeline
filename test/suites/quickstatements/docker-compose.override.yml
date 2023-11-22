@@ -4,7 +4,7 @@ services:
 
   mysql:
     volumes:  
-      - ./suites/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
+      - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     environment: 

@@ -5,10 +5,11 @@ name: wikibase-suite-test-runner
 
 networks:
   default:
-    name: wikibase-suite
+    name: wikibase-suite_default
 
 services:
   test-runner:
+    scale: 0
     build:
       context: ../test
       dockerfile: Dockerfile

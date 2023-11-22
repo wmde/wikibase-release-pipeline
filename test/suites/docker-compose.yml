@@ -15,10 +15,6 @@ x-common-variables: &wikibase_variables
 
 name: wikibase-suite
 
-networks:
-  default:
-    name: wikibase-suite
-
 services:
 
   wikibase:
