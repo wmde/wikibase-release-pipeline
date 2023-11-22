@@ -25,7 +25,7 @@ export class TestSetup {
 	protected baseDockerComposeCmd: string;
 	// testLogStream: any;
 
-	constructor(
+	public constructor(
 		suiteName: string,
 		config: TestSetupConfig = {}
 	) {
@@ -45,11 +45,13 @@ export class TestSetup {
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
 
-	async execute() {
+	public async execute(): Promise<void> {
 		console.log( `\n▶️  Setting-up "${this.suiteName}" test suite` );
 		this.setupLogs();
 		this.loadEnvVars();
-		!this.config.skipLocalDockerImageLoad && this.setupAndLoadDockerImages();
+		if ( !this.config.skipLocalDockerImageLoad ) {
+			this.setupAndLoadDockerImages();
+		}
 		this.stopServices();
 		this.startServices();
 
@@ -73,14 +75,14 @@ export class TestSetup {
 		}
 	}
 
-	private loadEnvVars() {
+	private loadEnvVars(): void {
 		// Load current local build variables
 		this.config.envFiles.forEach( ( envFilePath ) => {
 			dotenv.config( { path: envFilePath } );
 		} );
 	}
 
-	private makeBaseDockerComposeCmd() {
+	private makeBaseDockerComposeCmd(): string {
 		const dockerComposeCmdArray: string[] = [ 'docker compose' ];
 		this.config.envFiles.forEach( ( envFile ) => dockerComposeCmdArray.push( `--env-file ${envFile}` ) );
 		this.config.composeFiles.forEach( ( composeFile ) => dockerComposeCmdArray.push( `-f ${composeFile}` ) );
@@ -95,8 +97,9 @@ export class TestSetup {
 		return `${dockerComposeCmdArray.join( ' ' )}`;
 	}
 
-	setupAndLoadDockerImages() {
-		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME || process.env.DEFAULT_DATABASE_IMAGE_NAME;
+	public setupAndLoadDockerImages(): void {
+		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME ||
+			process.env.DEFAULT_DATABASE_IMAGE_NAME;
 		process.env.WIKIBASE_TEST_IMAGE_NAME = this.isBaseSuite ?
 			process.env.WIKIBASE_IMAGE_NAME :
 			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
@@ -128,7 +131,7 @@ export class TestSetup {
 		}
 	}
 
-	startServices() {
+	public startServices(): void {
 		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
 
 		// const startServicesResult =
@@ -137,14 +140,17 @@ export class TestSetup {
 		// this.testLogStream.write(startServicesResult.stderr);
 	}
 
-	async waitForServices(): Promise<any> {
-		return Promise.all( this.config.checkIfUpURLs.map( async ( checkIfUpURL ) => {
-			return checkIfUp( checkIfUpURL );
-		} ) );
+	public async waitForServices(): Promise<void[]> {
+		return Promise.all( this.config.checkIfUpURLs.map(
+			async ( checkIfUpURL: string ): Promise<void> => {
+				return checkIfUp( checkIfUpURL );
+			}
+		) );
 	}
 
-	stopServices() {
-		const stopServiceCmd = `${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
+	public stopServices(): void {
+		const stopServiceCmd =
+			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
 		// const stopServicesResult =
 		spawnSync( stopServiceCmd, { stdio: 'inherit', shell: true } );
@@ -170,14 +176,23 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 };
 
 export class DefaultTestSetup extends TestSetup {
-	constructor(
+	public constructor(
 		suiteName: string,
 		config: TestSetupConfig = {}
 	) {
 		const testConfig = {
-			envFiles: [ ...defaultTestSetupConfig.envFiles, ...( config.envFiles || [] ) ],
-			composeFiles: [ ...defaultTestSetupConfig.composeFiles, ...( config.composeFiles || [] ) ],
-			checkIfUpURLs: [ ...defaultTestSetupConfig.checkIfUpURLs, ...( config.checkIfUpURLs || [] ) ]
+			envFiles: [
+				...defaultTestSetupConfig.envFiles,
+				...( config.envFiles || [] )
+			],
+			composeFiles: [
+				...defaultTestSetupConfig.composeFiles,
+				...( config.composeFiles || [] )
+			],
+			checkIfUpURLs: [
+				...defaultTestSetupConfig.checkIfUpURLs,
+				...( config.checkIfUpURLs || [] )
+			]
 		};
 
 		super( suiteName, testConfig );
