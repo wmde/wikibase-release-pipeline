@@ -5,7 +5,8 @@ ARG GIT_IMAGE
 ARG WIKIBASE_COMMIT
 ARG GIT_CURRENT_REVISION
 
-ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
+# TODO
+# ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 
 # ###########################################################################
 FROM ${GIT_IMAGE} as git-checkout
