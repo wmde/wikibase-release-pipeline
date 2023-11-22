@@ -11,7 +11,7 @@ async function checkIfUp(
 	timeoutMsg: string = null
 ): Promise<void> {
 	try {
-		const predicate = async () => {
+		const predicate = async (): Promise<boolean> => {
 			try {
 				await axios.get( serverURL );
 				return true;
@@ -25,9 +25,7 @@ async function checkIfUp(
 		if ( e instanceof TimeoutError ) {
 			console.log(
 				timeoutMsg ||
-          `❌ Could not load ${serverURL} after ${
-          	timeout / 1000
-          } seconds.`
+					`❌ Could not load ${serverURL} after ${timeout / 1000} seconds.`
 			);
 		} else {
 			console.log(

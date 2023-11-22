@@ -9,8 +9,9 @@ import { saveScreenshot } from 'wdio-mediawiki';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import JsonReporter from './helpers/json-reporter.js';
+import { TestSetup } from './helpers/TestSetup.js';
 
-export function wdioConfig( testSetup, specs ): WebdriverIO.Config {
+export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO.Config {
 	return {
 		specs,
 
