@@ -8,13 +8,11 @@ ARG COMPOSER_IMAGE
 # ###########################################################################
 FROM ${COMPOSER_IMAGE} as git-checkout
 ARG WIKIBASE_COMMIT
-WORKDIR /tmp
-RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase wikibase
-WORKDIR /tmp/wikibase
-RUN git checkout ${WIKIBASE_COMMIT} && \
-    git submodule update --init --recursive && \
-    rm -f .travis.yml && \
-    find . -name .git | xargs rm -rf
+RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /tmp/wikibase && \
+    git -C /tmp/wikibase checkout ${WIKIBASE_COMMIT} && \
+    git -C /tmp/wikibase submodule update --init --recursive && \
+    rm -f /tmp/wikibase/.travis.yml && \
+    find /tmp/wikibase -name ".git*" | xargs rm -rf
 
 # ###########################################################################
 FROM ${MEDIAWIKI_IMAGE} as collector
