@@ -97,7 +97,7 @@ export class TestSetup {
 		return `${dockerComposeCmdArray.join( ' ' )}`;
 	}
 
-	public setupAndLoadDockerImages(): void {
+	private setupAndLoadDockerImages(): void {
 		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME ||
 			process.env.DEFAULT_DATABASE_IMAGE_NAME;
 		process.env.WIKIBASE_TEST_IMAGE_NAME = this.isBaseSuite ?
@@ -131,7 +131,7 @@ export class TestSetup {
 		}
 	}
 
-	public startServices(): void {
+	private startServices(): void {
 		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
 
 		// const startServicesResult =
@@ -140,7 +140,7 @@ export class TestSetup {
 		// this.testLogStream.write(startServicesResult.stderr);
 	}
 
-	public async waitForServices(): Promise<void[]> {
+	private async waitForServices(): Promise<void[]> {
 		return Promise.all( this.config.checkIfUpURLs.map(
 			async ( checkIfUpURL: string ): Promise<void> => {
 				return checkIfUp( checkIfUpURL );
@@ -148,7 +148,7 @@ export class TestSetup {
 		) );
 	}
 
-	public stopServices(): void {
+	private stopServices(): void {
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
