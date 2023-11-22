@@ -9,6 +9,6 @@ export const testSetup = new DefaultTestSetup( 'pingback', {
 	composeFiles: [
 		'./suites/pingback/docker-compose.override.yml'
 	]
-});
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

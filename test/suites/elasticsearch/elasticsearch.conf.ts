@@ -12,6 +12,6 @@ export const testSetup = new DefaultTestSetup( 'elasticsearch', {
 	checkIfUpURLs: [
 		`http://${process.env.MW_ELASTIC_HOST}:${process.env.MW_ELASTIC_PORT}`
 	]
-});
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

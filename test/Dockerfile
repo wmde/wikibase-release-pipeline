@@ -18,6 +18,7 @@ WORKDIR /usr/src/app/
 COPY package.json .
 COPY package-lock.json .
 
+# hadolint global ignore=DL3059
 RUN curl -fsSL https://get.docker.com -o get-docker.sh | sh
 RUN sh get-docker.sh
 RUN npm ci

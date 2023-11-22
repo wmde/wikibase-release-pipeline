@@ -9,6 +9,6 @@ export const testSetup = new DefaultTestSetup( 'fedprops', {
 	composeFiles: [
 		'./suites/fedprops/docker-compose.override.yml'
 	]
-});
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

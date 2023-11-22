@@ -14,6 +14,6 @@ export const testSetup = new DefaultTestSetup( 'repo', {
 		process.env.QS_SERVER,
 		process.env.MW_CLIENT_SERVER
 	]
-});
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

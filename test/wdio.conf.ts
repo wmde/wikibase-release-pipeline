@@ -10,7 +10,7 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import JsonReporter from './helpers/json-reporter.js';
 
-export function wdioConfig ( testSetup, specs ): WebdriverIO.Config {
+export function wdioConfig( testSetup, specs ): WebdriverIO.Config {
 	return {
 		specs,
 
@@ -87,7 +87,7 @@ export function wdioConfig ( testSetup, specs ): WebdriverIO.Config {
 		onPrepare: async function () {
 			await testSetup.execute();
 		},
-		
+
 		/**
 		 * Initializes the default functions for every test and
 		 * polls the wikibase docker container for installed extensions
@@ -120,5 +120,5 @@ export function wdioConfig ( testSetup, specs ): WebdriverIO.Config {
 				console.error( error );
 			}
 		}
-	}
+	};
 }

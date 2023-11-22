@@ -9,6 +9,6 @@ export const testSetup = new DefaultTestSetup( 'confirm_edit', {
 	composeFiles: [
 		'./suites/confirm_edit/docker-compose.override.yml'
 	]
-});
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
