@@ -111,6 +111,7 @@ function build_quickstatements {
 
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+        --build-arg PHP_IMAGE="$PHP_IMAGE" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
