@@ -5,7 +5,9 @@ IFS=$'\n\t'
 set -x
 
 set -o allexport
+# shellcheck disable=SC1091
 source ./variables.env
+# shellcheck disable=SC1091
 source ./local.env
 set +o allexport
 
@@ -29,9 +31,9 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        ./Docker/build/Wikibase -t wikibase:${WMDE_RELEASE_VERSION}
+        ./Docker/build/Wikibase -t wikibase:"${WMDE_RELEASE_VERSION}"
 
-    docker save wikibase:${WMDE_RELEASE_VERSION} | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase.docker.tar.gz
+    docker save wikibase:"${WMDE_RELEASE_VERSION}" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase.docker.tar.gz
 
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
@@ -56,9 +58,9 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        ./Docker/build/WikibaseBundle -t wikibase-bundle:${WMDE_RELEASE_VERSION}
+        ./Docker/build/WikibaseBundle -t wikibase-bundle:"${WMDE_RELEASE_VERSION}"
 
-    docker save wikibase-bundle:${WMDE_RELEASE_VERSION} | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase-bundle.docker.tar.gz
+    docker save wikibase-bundle:"${WMDE_RELEASE_VERSION}" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase-bundle.docker.tar.gz
 }
 
 function build_elasticseach {
@@ -66,9 +68,9 @@ function build_elasticseach {
     docker build \
         --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
         --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
-        Docker/build/Elasticsearch/ -t $image_name
+        Docker/build/Elasticsearch/ -t "$image_name"
 
-    docker save $image_name | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/elasticsearch.docker.tar.gz
+    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/elasticsearch.docker.tar.gz
 }
 
 function build_wdqs {
@@ -110,7 +112,7 @@ function build_quickstatements {
         \
         Docker/build/QuickStatements/ -t "$image_name"
 
-    docker save $image_name | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/quickstatements.docker.tar.gz
+    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/quickstatements.docker.tar.gz
 }
 
 function build_all {

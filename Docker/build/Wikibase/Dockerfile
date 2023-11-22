@@ -6,19 +6,22 @@ ARG COMPOSER_IMAGE
 # ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE} as git-checkout
 ARG WIKIBASE_COMMIT
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /tmp/wikibase && \
     git -C /tmp/wikibase checkout ${WIKIBASE_COMMIT} && \
     git -C /tmp/wikibase submodule update --init --recursive && \
     rm -f /tmp/wikibase/.travis.yml && \
-    find /tmp/wikibase -name ".git*" | xargs rm -rf
+    find /tmp/wikibase -name ".git*" -exec rm -rf {} +
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${MEDIAWIKI_IMAGE} as collector
 COPY --from=git-checkout /tmp/wikibase /var/www/html/extensions/Wikibase
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE} as composer
 COPY --from=collector --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html/
@@ -28,6 +31,7 @@ RUN composer install --verbose -n --no-dev \
     --ignore-platform-req=ext-intl
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${MEDIAWIKI_IMAGE}
 ARG GIT_CURRENT_REVISION
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"

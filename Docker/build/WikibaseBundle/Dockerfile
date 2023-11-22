@@ -5,14 +5,13 @@ ARG WMDE_RELEASE_VERSION
 FROM wikibase:${WMDE_RELEASE_VERSION} as wikibase
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE} as composer
 
 COPY --from=wikibase --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
 COPY LocalSettings.d.template /tmp/LocalSettings.d.template
-
-SHELL ["/bin/bash", "-c"]
 
 ARG ALL_EXTENSIONS="Babel,cldr,CirrusSearch,ConfirmEdit,Elastica,EntitySchema,Nuke,OAuth,Scribunto,SyntaxHighlight_GeSHi,UniversalLanguageSelector,VisualEditor,WikibaseCirrusSearch,WikibaseManifest"
 ARG BABEL_COMMIT
@@ -32,6 +31,7 @@ ARG WIKIBASEMANIFEST_COMMIT
 ARG WIKIBASEEDTF_COMMIT
 ARG WIKIBASELOCALMEDIA_COMMIT
 
+SHELL ["/bin/bash", "-c"]
 RUN set -euo pipefail; \
     set -x; \
     IFS=',' read -ra EXTENSIONS <<< ${ALL_EXTENSIONS}; \

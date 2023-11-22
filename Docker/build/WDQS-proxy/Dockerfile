@@ -1,6 +1,7 @@
 ARG NGINX_IMAGE
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${NGINX_IMAGE}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
