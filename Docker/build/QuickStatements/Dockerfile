@@ -1,6 +1,8 @@
 ARG COMPOSER_IMAGE
+ARG PHP_IMAGE
 
 # ###########################################################################
+# hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE} as composer
 ARG QUICKSTATEMENTS_COMMIT
 ARG MAGNUSTOOLS_COMMIT
@@ -16,7 +18,8 @@ WORKDIR /tmp/quickstatements
 RUN composer install --no-dev
 
 # ###########################################################################
-FROM php:8.1-apache
+# hadolint ignore=DL3006
+FROM ${PHP_IMAGE}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 # Install envsubst
