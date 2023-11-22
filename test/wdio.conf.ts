@@ -13,11 +13,12 @@ import JsonReporter from './helpers/json-reporter.js';
 import { TestSetup } from './helpers/TestSetup.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// eslint-disable-next-line no-underscore-dangle
+const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
 export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO.Config {
 	return {
-		specs: specs.map( specFilepath => `${__dirname}/${specFilepath}` ),
+		specs: specs.map( ( specFilepath ) => `${__dirname}/${specFilepath}` ),
 
 		// ======
 		// Custom WDIO config specific to MediaWiki
