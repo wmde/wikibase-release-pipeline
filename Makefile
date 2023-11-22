@@ -22,7 +22,7 @@ ifdef SUITE
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_suite.sh ${SUITE}
+	@bash ./test.sh ${SUITE}
 else
 	@make test-all
 endif
@@ -39,7 +39,7 @@ test-example:
 ifndef GITHUB_ACTIONS
 	-@make lint
 endif
-	@bash test/scripts/test_example.sh ${SUITE}
+	@bash ./test.sh ${SUITE}
 
 test-all:
 ifndef GITHUB_ACTIONS
