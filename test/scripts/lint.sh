@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+# ℹ️ Linting Dockerfiles (**/Dockerfile)
+# https://github.com/hadolint/hadolint
+docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint"
+
+# ℹ️ Linting Shell Scripts (**/*.sh)
+# https://github.com/koalaman/shellcheck#from-your-terminal
+find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
+
 SHOULD_FIX=false
 while getopts f flag
 do
@@ -9,7 +17,6 @@ do
         *)
     esac
 done
-
 
 if $SHOULD_FIX
 then
@@ -21,16 +28,10 @@ else
   PYTHON_FLAGS=""
 fi
 
-# ℹ️ Linting Dockerfiles (**/Dockerfile)
-# https://github.com/hadolint/hadolint
-docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint"
-
-# ℹ️ Linting Shell Scripts (**/*.sh)
-# https://github.com/koalaman/shellcheck#from-your-terminal
-find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
+TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml"
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+$TEST_RUNNER_COMPOSE run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
   npm ci --loglevel=error --progress=false --no-audit --no-fund > /dev/null &&
   $NPM_LINT_COMMAND --silent &&
   cd /tmp/diagrams &&
@@ -40,6 +41,6 @@ docker compose -f test/docker-compose.yml run --rm -v "$(pwd)/docs/diagrams:/tmp
 
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
-docker compose -f test/docker-compose.yml run --rm -v "$(pwd):/tmp" test-runner -c "
+$TEST_RUNNER_COMPOSE run --rm -v "$(pwd):/tmp" test-runner -c "
   python3 ./scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
 "
