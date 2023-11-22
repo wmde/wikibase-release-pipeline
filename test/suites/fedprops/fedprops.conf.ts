@@ -1,13 +1,13 @@
 import { DefaultTestSetup } from '../../helpers/TestSetup.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
-const specs = [
-	'../../specs/fedprops/*.ts'
+export const specs = [
+	'specs/fedprops/*.ts'
 ];
 
 export const testSetup = new DefaultTestSetup( 'fedprops', {
 	composeFiles: [
-		'./suites/fedprops/docker-compose.override.yml'
+		'suites/fedprops/docker-compose.override.yml'
 	]
 } );
 

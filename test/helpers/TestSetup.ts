@@ -14,16 +14,16 @@ export type TestSetupConfig = {
 
 export class TestSetup {
 	protected config: TestSetupConfig;
-	protected suiteName: string;
-	protected suiteConfigName: string;
-	protected resultsDir: string;
-	protected testLogFilePath: string;
-	protected screenshotPath: string;
-	protected resultFilePath: string;
 	protected isBaseSuite: boolean;
 	protected hostCWD: string;
 	protected baseDockerComposeCmd: string;
+	protected resultsDir: string;
 	// testLogStream: any;
+	public suiteName: string;
+	public suiteConfigName: string;
+	public testLogFilePath: string;
+	public screenshotPath: string;
+	public resultFilePath: string;
 
 	public constructor(
 		suiteName: string,
@@ -161,9 +161,9 @@ export class TestSetup {
 
 export const defaultTestSetupConfig: TestSetupConfig = {
 	envFiles: [
+		'../variables.env',
 		'default.env',
-		'variables.env',
-		'local.env'
+		'../local.env'
 	],
 	composeFiles: [
 		'suites/docker-compose.yml'

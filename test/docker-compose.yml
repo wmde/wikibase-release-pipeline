@@ -15,12 +15,13 @@ services:
       dockerfile: Dockerfile
     entrypoint: /bin/bash
     volumes:
-      - .:/usr/src/app
-      - ../artifacts:/usr/src/app/artifacts
-      - ../variables.env:/usr/src/app/variables.env
-      - ../local.env:/usr/src/app/local.env
-      - ../example:/usr/src/app/example
-      - node_modules:/usr/src/app/node_modules
+      - ..:/usr/src
+      # # - .:/usr/src/test
+      # - ../artifacts:/usr/src/test/artifacts
+      # - ../variables.env:/usr/src/test/variables.env
+      # - ../local.env:/usr/src/test/local.env
+      # - ../example:/usr/src/test/example
+      - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CHROME_PATH=/usr/bin/chromium-browser
@@ -63,7 +64,7 @@ services:
       - "4444:4444"
       - "7900:7900"
     volumes:
-      - .:/usr/src/app
+      - .:/usr/src/test
     shm_size: '2g'
 
 volumes:

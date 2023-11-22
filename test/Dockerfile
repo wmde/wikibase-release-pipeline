@@ -13,7 +13,7 @@ RUN apt-get update && \
         pip \
         setuptools
 
-WORKDIR /usr/src/app/
+WORKDIR /usr/src/test/
 
 COPY package.json .
 COPY package-lock.json .
