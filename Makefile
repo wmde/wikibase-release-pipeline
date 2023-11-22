@@ -48,19 +48,19 @@ endif
 	@echo "\n⚠️  Running All Test Suites"
 
 	@# bundle tests
-	@bash test/scripts/test_suite.sh repo
-	@bash test/scripts/test_suite.sh fedprops
-	@bash test/scripts/test_suite.sh repo_client
-	@bash test/scripts/test_suite.sh quickstatements
-	@bash test/scripts/test_suite.sh pingback
-	@bash test/scripts/test_suite.sh confirm_edit
-	@bash test/scripts/test_suite.sh elasticsearch
+	@bash ./test.sh repo
+	@bash ./test.sh fedprops
+	@bash ./test.sh repo_client
+	@bash ./test.sh quickstatements
+	@bash ./test.sh pingback
+	@bash ./test.sh confirm_edit
+	@bash ./test.sh elasticsearch
 
 	@# base tests
-	@bash test/scripts/test_suite.sh base__repo
-	@bash test/scripts/test_suite.sh base__repo_client
-	@bash test/scripts/test_suite.sh base__fedprops
-	@bash test/scripts/test_suite.sh base__pingback
+	@bash ./test.sh base__repo
+	@bash ./test.sh base__repo_client
+	@bash ./test.sh base__fedprops
+	@bash ./test.sh base__pingback
 
 # TODO: https://phabricator.wikimedia.org/T347084
 requirements:
