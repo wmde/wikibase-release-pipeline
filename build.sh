@@ -7,8 +7,12 @@ set -x
 set -o allexport
 # shellcheck disable=SC1091
 source ./variables.env
-# shellcheck disable=SC1091
-source ./local.env
+
+if [ -f ./local.env ]; then
+    # shellcheck disable=SC1091
+    source ./local.env
+fi
+
 set +o allexport
 
 # env

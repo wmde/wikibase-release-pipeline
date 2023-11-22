@@ -4,6 +4,7 @@ description: 'Prepare our github actions environment'
 runs:
   using: "composite"
   steps:
+      # TODO: can we just source in shell? to make the CI simpler?
       - name: Print the env from variables.env
         run: cat variables.env
         shell: bash
