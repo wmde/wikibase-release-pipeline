@@ -17,7 +17,6 @@ set +o allexport
 function build_wikibase {
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
-        --build-arg GIT_IMAGE="$GIT_IMAGE" \
         --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
         --build-arg GIT_CURRENT_REVISION="$(git rev-parse HEAD)" \
         \
@@ -63,7 +62,13 @@ function build_wikibase {
 }
 
 function build_elasticseach {
-    echo "implement me"
+    image_name="elasticsearch:${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
+    docker build \
+        --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
+        --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
+        Docker/build/Elasticsearch/ -t $image_name
+
+    docker save $image_name | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/elasticsearch.docker.tar.gz
 }
 
 function build_wdqs {
@@ -75,31 +80,54 @@ function build_wdqs-frontend {
 }
 
 function build_wdqs-proxy {
-    echo "implement me"
+    image_name="wdqs-proxy:${WMDE_RELEASE_VERSION}"
+
+    docker build \
+        --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
+        \
+        Docker/build/WDQS-proxy/ -t "$image_name"
+
+    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs-proxy.docker.tar.gz
 }
 
 function build_quickstatements {
-    echo "implement me"
+    image_name="quickstatements:${WMDE_RELEASE_VERSION}"
+
+    docker build \
+        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+        --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
+        --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
+        \
+        Docker/build/QuickStatements/ -t "$image_name"
+
+    docker save $image_name | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/quickstatements.docker.tar.gz
 }
 
-for arg in "$@"; do
-    case $arg in
-        wikibase) build_wikibase ;;
-        elasticsearch) build_elasticseach ;;
-        wdqs) build_wdqs ;;
-        wdqs-frontend) build_wdqs-frontend ;;
-        wdqs-proxy) build_wdqs-proxy ;;
-    quickstatements) build_quickstatements ;; all)
-        build_wikibase
-        build_elasticseach
-        build_wdqs
-        build_wdqs-frontend
-        build_wdqs-proxy
-        build_quickstatements
-        ;;
-    *)
-        echo "Unknown option: $arg"
-        exit 2 # code appropriate?
-        ;;
-esac
-done
+function build_all {
+    build_wikibase
+    build_elasticseach
+    build_wdqs
+    build_wdqs-frontend
+    build_wdqs-proxy
+    build_quickstatements
+}
+
+if [ $# -eq 0 ]; then
+    build_all
+else
+    for arg in "$@"; do
+        case $arg in
+            wikibase) build_wikibase ;;
+            elasticsearch) build_elasticseach ;;
+            wdqs) build_wdqs ;;
+            wdqs-frontend) build_wdqs-frontend ;;
+            wdqs-proxy) build_wdqs-proxy ;;
+            quickstatements) build_quickstatements ;;
+            all) build_all ;;
+            *)
+                echo "Unknown option: $arg"
+                exit 2 # code appropriate?
+                ;;
+        esac
+    done
+fi

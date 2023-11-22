@@ -1,22 +1,20 @@
 # Build configuration
 ARG MEDIAWIKI_IMAGE
 ARG COMPOSER_IMAGE
-ARG GIT_IMAGE
-ARG WIKIBASE_COMMIT
-ARG GIT_CURRENT_REVISION
 
 # TODO
 # ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
 
 # ###########################################################################
-FROM ${GIT_IMAGE} as git-checkout
+FROM ${COMPOSER_IMAGE} as git-checkout
+ARG WIKIBASE_COMMIT
 WORKDIR /tmp
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase wikibase
 WORKDIR /tmp/wikibase
-RUN git checkout ${WIKIBASE_COMMIT}
-RUN git submodule update --init --recursive
-RUN rm -f .travis.yml
-RUN find . -name .git | xargs rm -rf
+RUN git checkout ${WIKIBASE_COMMIT} && \
+    git submodule update --init --recursive && \
+    rm -f .travis.yml && \
+    find . -name .git | xargs rm -rf
 
 # ###########################################################################
 FROM ${MEDIAWIKI_IMAGE} as collector
@@ -33,6 +31,7 @@ RUN composer install --verbose -n --no-dev \
 
 # ###########################################################################
 FROM ${MEDIAWIKI_IMAGE}
+ARG GIT_CURRENT_REVISION
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 # Set error_reporting PHP.ini settings
 # This is needed with PHP8+ and MediaWiki 1.39, as Wikibase contains deprecated code
@@ -45,6 +44,7 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base && \
     rm -rf /var/lib/apt/lists/* && \
+    \
     a2enmod rewrite && \
     install -d /var/log/mediawiki -o www-data && \
     docker-php-ext-install calendar bz2

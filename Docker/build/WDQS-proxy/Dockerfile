@@ -1,4 +1,6 @@
-FROM nginx:stable-alpine
+ARG NGINX_IMAGE
+
+FROM ${NGINX_IMAGE}
 
 COPY entrypoint.sh /entrypoint.sh
 COPY wdqs.template /etc/nginx/conf.d/wdqs.template
