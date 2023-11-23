@@ -33,7 +33,9 @@ services:
       - WDQS_SERVER
       - PINGBACK_BEACON_SERVER
       - WDQS_PROXY_SERVER
-      
+      - MW_ELASTIC_HOST
+      - MW_ELASTIC_PORT
+
       - MW_ADMIN_NAME
       - MW_ADMIN_PASS
       - MW_SCRIPT_PATH
