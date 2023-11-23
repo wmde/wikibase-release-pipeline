@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
-set -x
+# set -x
 
 set -o allexport
 # shellcheck disable=SC1091
@@ -47,7 +47,7 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        ./build/Wikibase -t "$tag_version" -t "$tag_latest"
+        build/Wikibase -t "$tag_version" -t "$tag_latest"
     save_image
 
     if $EXTRACT_TARBALL; then
@@ -86,7 +86,7 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        ./build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
+        build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -97,8 +97,10 @@ function build_elasticseach {
     tag_latest="${service_name}:latest"
 
     docker build \
-        --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
-        --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
+        --build-arg=ELASTICSEARCH_IMAGE="$ELASTICSEARCH_IMAGE" \
+        --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
+        --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
+        \
         build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
