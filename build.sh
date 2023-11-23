@@ -55,7 +55,7 @@ function build_wikibase {
             tar cz -C /var/www --transform="s,^html,${service_name}," html \
                 > "artifacts/${tag_version//:/-}.tar.gz"
         pushd artifacts
-        ln -s "artifacts/${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        ln -s "${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
         popd
     fi
 
@@ -138,7 +138,7 @@ function build_wdqs-frontend {
             tar cz -C /usr/share/nginx --transform="s,^html,${service_name}," html \
                 > "artifacts/${tag_version//:/-}.tar.gz"
         pushd artifacts
-        ln -s "artifacts/${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        ln -s "${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
         popd
     fi
 }
