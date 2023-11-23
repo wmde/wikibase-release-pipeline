@@ -90,8 +90,8 @@ TMP_DIR="$(mktemp -d)"
 TMP_LOCALSETTINGS="$TMP_DIR/LocalSettings.php"
 
 # Source the default env vars used for building and create a new LocalSettings file 
-set -o allexport; source ../Docker/build/Wikibase/default.env; set +o allexport
-envsubst < "../Docker/build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
+set -o allexport; source ../variables.env; set +o allexport
+envsubst < "../build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
 export TMP_LOCALSETTINGS
 
 # MODIFY OLD LocalSettings.php as part of upgrading
@@ -136,7 +136,8 @@ fi
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
-docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
+WIKIBASE_DOCKER_TAR=$(find ../artifacts -name 'wikibase-*.docker.tar.gz' | grep -v wikibase-bundle)
+docker load -i "$WIKIBASE_DOCKER_TAR" >> $TEST_LOG 2>&1
 $TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
