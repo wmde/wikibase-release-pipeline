@@ -11,8 +11,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN set -x; \
+SHELL ["/bin/bash", "-c"]
+RUN set -euo pipefail; \
+    set -x; \
     TARBALL="service-${WDQS_VERSION}-dist.tar.gz"; \
     wget --no-verbose "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$TARBALL"; \
     SIGNATURE="$TARBALL".md5; \
