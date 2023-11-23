@@ -8,21 +8,6 @@ export
 download:
 	bash publish/download.sh
 
-.PHONY: lint
-lint:
-	@bash ./lint.sh
-
-.PHONY: lint-fix
-lint-fix:
-	@bash ./lint.sh -f
-
-.PHONY: test-upgrade
-test-upgrade:
-ifndef GITHUB_ACTIONS
-	-@make lint
-endif
-	@bash test/scripts/test_upgrade.sh ${VERSION}
-
 # TODO: https://phabricator.wikimedia.org/T347084
 requirements:
 	python3 build/requirements/build_version_requirements.py
