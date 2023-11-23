@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# TODO: can delete?
 # Use this script to test if a given TCP host/port are available
 # shellcheck disable=SC2064,SC2086,SC2206,SC2124,SC2230,SC2046
 cmdname=$(basename $0)

@@ -78,7 +78,16 @@ function build_elasticseach {
 }
 
 function build_wdqs {
-    echo "implement me"
+    image_name="wdqs:${WDQS_VERSION}"
+
+    docker build \
+        --build-arg DEBIAN_IMAGE="$DEBIAN_IMAGE" \
+        --build-arg JDK_IMAGE="$JDK_IMAGE" \
+        --build-arg WDQS_VERSION="$WDQS_VERSION" \
+        \
+        Docker/build/WDQS/ -t "$image_name"
+
+    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs.docker.tar.gz
 }
 
 function build_wdqs-frontend {

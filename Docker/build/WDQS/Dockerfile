@@ -1,14 +1,25 @@
-FROM ubuntu:xenial as fetcher
+ARG DEBIAN_IMAGE
+ARG JDK_IMAGE
+
+FROM ${DEBIAN_IMAGE} as fetcher
+ARG WDQS_VERSION
 
 RUN apt-get update && \
-    apt-get install --yes --no-install-recommends unzip=6.* && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install --yes --no-install-recommends wget ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-ARG tarball
-COPY $tarball .
-RUN mkdir wdqs-service && \
- tar xfv $tarball -C ./wdqs-service --strip-components=1 \
- && rm $tarball
+SHELL ["/bin/bash", "-c"]
+RUN set -euo pipefail; \
+    set -x; \
+    TARBALL="service-${WDQS_VERSION}-dist.tar.gz"; \
+    wget --no-verbose "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$TARBALL"; \
+    SIGNATURE="$TARBALL".md5; \
+    wget --no-verbose "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$SIGNATURE"; \
+    echo "$(cat $SIGNATURE)  $TARBALL" | md5sum -c; \
+    mkdir /tmp/wdqs-service; \
+    tar zxvf $TARBALL -C /tmp/wdqs-service --strip-components=1
+
 
 FROM openjdk:8-jdk-alpine
 
@@ -19,7 +30,7 @@ RUN set -x ; \
     apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2 && \
     addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
 
-COPY --from=fetcher --chown=blazegraph:blazegraph /wdqs-service /wdqs
+COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
 
 RUN mkdir /var/log/wdqs && chown blazegraph /var/log/wdqs
 
