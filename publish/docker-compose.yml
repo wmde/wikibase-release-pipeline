@@ -3,7 +3,7 @@ version: '3'
 services:
   download_artifacts:
     build:
-      context: ../Docker/publish/download_artifacts
+      context: download_artifacts
       dockerfile: Dockerfile
     environment:
      - GITHUB_TOKEN
@@ -12,7 +12,7 @@ services:
       - ../artifacts:/extractedArtifacts
   upload_dockerhub:
     build:
-      context: ../Docker/publish/upload_dockerhub
+      context: upload_dockerhub
       dockerfile: Dockerfile
     privileged: true
     environment:
@@ -46,7 +46,7 @@ services:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
   upload_tar:
     build:
-      context: ../Docker/publish/upload_tar
+      context: /upload_tar
       dockerfile: Dockerfile
     privileged: true
     environment:

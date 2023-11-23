@@ -50,7 +50,7 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        ./Docker/build/Wikibase -t "$tag_version" -t "$tag_latest"
+        ./build/Wikibase -t "$tag_version" -t "$tag_latest"
     save_image
 
     service_name="wikibase-bundle"
@@ -80,7 +80,7 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        ./Docker/build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
+        ./build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -92,7 +92,7 @@ function build_elasticseach {
     docker build \
         --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
         --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
-        Docker/build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
+        build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -106,7 +106,7 @@ function build_wdqs {
         --build-arg JDK_IMAGE="$JDK_IMAGE" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
-        Docker/build/WDQS/ -t "$tag_version" -t "$tag_latest"
+        build/WDQS/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -121,7 +121,7 @@ function build_wdqs-frontend {
         --build-arg NODE_IMAGE="$NODE_IMAGE" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
-        Docker/build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
+        build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -133,7 +133,7 @@ function build_wdqs-proxy {
     docker build \
         --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
         \
-        Docker/build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
+        build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
 
@@ -148,7 +148,7 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        Docker/build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
+        build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
     save_image
 }
 
