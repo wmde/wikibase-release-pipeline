@@ -1,4 +1,3 @@
-// import { createWriteStream } from 'fs';
 import { mkdir, rm } from 'fs/promises';
 import { spawnSync } from 'child_process';
 import { createWriteStream } from 'fs';
@@ -82,18 +81,15 @@ export class TestSetup {
 			await rm( this.resultsDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await mkdir( this.resultsDir, { recursive: true } );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			const outputLog = createWriteStream( this.testLogFilePath );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			const errorsLog = createWriteStream( this.testLogFilePath );
 
 			this.testLog = new Console( outputLog, errorsLog );
 		} catch ( e ) {
 			console.log( '❌ Error occurred in setting-up logs:', e );
 		}
-	}
-
-	private log( textToLog ): void {
-		const testLogStream = createWriteStream( this.testLogFilePath, { flags: 'a' } );
-		testLogStream.write( textToLog );
 	}
 
 	private loadEnvVars(): void {

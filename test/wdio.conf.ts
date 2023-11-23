@@ -4,7 +4,7 @@
  */
 
 import { Frameworks, Options } from '@wdio/types';
-import { SevereServiceError } from 'webdriverio'
+import { SevereServiceError } from 'webdriverio';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -95,7 +95,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		onPrepare: async function () {
 			try {
 				await testSetup.execute();
-			} catch (e) {
+			} catch ( e ) {
 				throw new SevereServiceError( e );
 			}
 		},
