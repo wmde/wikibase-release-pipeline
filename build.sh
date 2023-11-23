@@ -1,28 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
-
 set -x
 
 set -o allexport
 # shellcheck disable=SC1091
 source ./variables.env
-
 if [ -f ./local.env ]; then
     # shellcheck disable=SC1091
     source ./local.env
 fi
-
 set +o allexport
 
-# env
 
 SAVE_IMAGE=false
+EXTRACT_TARBALL=false
 
-# TODO: move to flat file hierarchy
-# TODO: how do we tag actually?
-#
-#
 
 function save_image {
     if $SAVE_IMAGE; then
@@ -30,6 +23,7 @@ function save_image {
             gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
     fi
 }
+
 
 function build_wikibase {
     service_name="wikibase"
@@ -52,6 +46,12 @@ function build_wikibase {
         \
         ./build/Wikibase -t "$tag_version" -t "$tag_latest"
     save_image
+
+    if $EXTRACT_TARBALL; then
+        docker run --entrypoint="" --rm $tag_version \
+            tar cz -C /var/www --transform="s,^html,${service_name}," html \
+                > artifacts/${tag_version//:/-}.tar.gz
+    fi
 
     service_name="wikibase-bundle"
     tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
@@ -84,6 +84,7 @@ function build_wikibase {
     save_image
 }
 
+
 function build_elasticseach {
     service_name="elasticsearch"
     tag_version="${service_name}:${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
@@ -95,6 +96,7 @@ function build_elasticseach {
         build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
+
 
 function build_wdqs {
     service_name="wdqs"
@@ -110,6 +112,7 @@ function build_wdqs {
     save_image
 }
 
+
 function build_wdqs-frontend {
     service_name="wdqs-frontend"
     tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
@@ -123,7 +126,14 @@ function build_wdqs-frontend {
         \
         build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
     save_image
+
+    if $EXTRACT_TARBALL; then
+        docker run --entrypoint="" --rm $tag_version \
+            tar cz -C /usr/share/nginx --transform="s,^html,${service_name}," html \
+                > artifacts/${tag_version//:/-}.tar.gz
+    fi
 }
+
 
 function build_wdqs-proxy {
     service_name="wdqs-proxy"
@@ -136,6 +146,7 @@ function build_wdqs-proxy {
         build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
     save_image
 }
+
 
 function build_quickstatements {
     service_name="quickstatements"
@@ -151,6 +162,7 @@ function build_quickstatements {
         build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
     save_image
 }
+
 
 function build_all {
     build_wikibase
@@ -175,6 +187,7 @@ else
             quickstatements) build_quickstatements ;;
             all) build_all ;;
             -s|--save-image) SAVE_IMAGE=true ;;
+            -t|--extract-tarball) EXTRACT_TARBALL=true ;;
             *)
                 echo "Unknown argument: $arg"
                 exit 1
