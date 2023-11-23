@@ -40,26 +40,24 @@ After triggering the pipeline a set of jobs will start running, which after a su
 
 ## Running the pipeline locally
 
-To execute the entire build pipeline you can use the `all` make target.
+To execute the entire build pipeline, just run `build.sh`.
 
 ```sh
-./build.sh all
+./build.sh
 ```
 
-To build single artifacts locally you can issue the following command.
+To build single artifacts locally, you can issue the following command.
 
 ```sh
 ./build.sh wikibase
 ```
 
-The output ends up in the `artifacts/` folder and will be built as described by the `variables.env` environment file.
+When building locally the artifacts are only stored in the docker daemons image storage. If you want to create files as well, use the `--save-image` option with `build.sh`.
 
-
-See the [Makefile](../../Makefile) for more build options.
-
-## Local artifacts
-
-When building locally the artifacts will be output into the `artifacts/` folder. They are not zip'd as on Github.
+```sh
+# build and store results in artifacts folder
+$ ./build.sh --save-image
+```
 
 ### Clean local artifacts
 
@@ -67,12 +65,6 @@ To remove any locally produced artifacts you can run the following commands.
 
 ```sh
 make clean
-```
-
-To clean the git_cache used for building
-
-```sh
-make clean-cache
 ```
 
 ### Downloaded artifacts
