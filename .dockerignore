@@ -1,6 +1,3 @@
-# comment
-cache/*
-git_cache/*
 Docker/**/*.tar.gz
 test/suites/**/results
 test/log

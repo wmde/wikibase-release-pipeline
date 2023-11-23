@@ -46,9 +46,6 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Prepare environment and caches
-        uses: ./.github/actions/prep-env-and-cache
-
       - name: Build
         run: ./build.sh ${{ matrix.component }}
         shell: bash
@@ -241,36 +238,6 @@ jobs:
         with:
           name: TestResults
           path: test/suites/**/results
-
-  # TODO: https://phabricator.wikimedia.org/T347084
-  metadata:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    needs:
-      - test
-
-    strategy:
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: c-py/action-dotenv-to-setenv@v5
-        with:
-          env-file: "variables.env"
-
-      - name: Build version requirements
-        shell: bash
-        run: |
-          ./build.sh requirements
-
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Metadata
-          path: artifacts/built_versions.log
-          if-no-files-found: error
 
   upload_ghcr:
     runs-on: ubuntu-latest
