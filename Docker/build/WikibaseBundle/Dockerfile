@@ -41,6 +41,7 @@ RUN set -x; \
         EXTENSION_COMMIT_VAR="${EXTENSION^^}_COMMIT"; \
         EXTENSION_COMMIT="${!EXTENSION_COMMIT_VAR}"; \
         git -C "extensions/${EXTENSION}" checkout "${EXTENSION_COMMIT}"; \
+        git -C "extensions/${EXTENSION}" submodule update --init --recursive; \
         rm -rf "extensions/${EXTENSION}/.git*"; \
         cp "/tmp/LocalSettings.d.template/${EXTENSION}.php" LocalSettings.d/; \
     done; \
