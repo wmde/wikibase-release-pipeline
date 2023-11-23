@@ -22,9 +22,9 @@ $ ./build.sh wikibase
 ### Test Commands
 
 ```
-$ make test
-$ make test SUITE=repo
-$ make test SUITE=repo FILTER=special-item
+$ ./test.sh
+$ ./test.sh repo
+$ ./test.sh repo special-item
 $ make test-upgrade VERSION=wmde.9
 ```
 

@@ -10,22 +10,11 @@ download:
 
 .PHONY: lint
 lint:
-	@bash test/scripts/lint.sh
+	@bash ./lint.sh
 
 .PHONY: lint-fix
 lint-fix:
-	@bash test/scripts/lint.sh -f
-
-.PHONY: test
-test:
-ifdef SUITE
-ifndef GITHUB_ACTIONS
-	-@make lint
-endif
-	@bash ./test.sh ${SUITE}
-else
-	@make test-all
-endif
+	@bash ./lint.sh -f
 
 .PHONY: test-upgrade
 test-upgrade:
@@ -33,34 +22,6 @@ ifndef GITHUB_ACTIONS
 	-@make lint
 endif
 	@bash test/scripts/test_upgrade.sh ${VERSION}
-
-.PHONY: test-example
-test-example:
-ifndef GITHUB_ACTIONS
-	-@make lint
-endif
-	@bash ./test.sh ${SUITE}
-
-test-all:
-ifndef GITHUB_ACTIONS
-	-@make lint
-endif
-	@echo "\n⚠️  Running All Test Suites"
-
-	@# bundle tests
-	@bash ./test.sh repo
-	@bash ./test.sh fedprops
-	@bash ./test.sh repo_client
-	@bash ./test.sh quickstatements
-	@bash ./test.sh pingback
-	@bash ./test.sh confirm_edit
-	@bash ./test.sh elasticsearch
-
-	@# base tests
-	@bash ./test.sh base__repo
-	@bash ./test.sh base__repo_client
-	@bash ./test.sh base__fedprops
-	@bash ./test.sh base__pingback
 
 # TODO: https://phabricator.wikimedia.org/T347084
 requirements:

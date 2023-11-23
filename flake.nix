@@ -26,9 +26,9 @@
             echo "$ ./build.sh wikibase"
             echo
             echo "Test Commands:"
-            echo "$ make test"
-            echo "$ make test SUITE=repo"
-            echo "$ make test SUITE=repo FILTER=special-item"
+            echo "$ ./test.sh"
+            echo "$ ./test.sh repo"
+            echo "$ ./test.sh repo special-item"
             echo "$ make test-upgrade VERSION=wmde.9"
             echo
             echo "Example Instance Commands:"

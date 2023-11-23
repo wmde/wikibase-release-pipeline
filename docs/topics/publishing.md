@@ -84,7 +84,7 @@ Remove locally created artifacts and use the downloaded ones
 ```
 $ make clean
 $ cp artifacts/WORKFLOW_RUN_NUMBER/BuildArtifacts/* artifacts/
-$ make test SUITE=<suite-name>
+$ ./test.sh <suite-name>
 ```
 
 After this you can follow the instructions as defined in [testing](testing.md) to run the desired tests. Remember that the test containers will remain running after a test run is completed. This can be useful when manually testing that the build looks ok. 

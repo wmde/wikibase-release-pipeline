@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Lint
-        run: make lint
+        run: ./lint
 
   build:
     runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
       - name: Test ${{ matrix.suite }}
         env:
           DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
-        run: make test SUITE=${{ matrix.suite }}
+        run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
         if: always()

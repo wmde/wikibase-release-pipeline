@@ -28,7 +28,7 @@ else
   PYTHON_FLAGS=""
 fi
 
-TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml"
+TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml --progress quiet"
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
 $TEST_RUNNER_COMPOSE run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
@@ -42,5 +42,5 @@ $TEST_RUNNER_COMPOSE run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runne
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
 $TEST_RUNNER_COMPOSE run --rm -v "$(pwd):/tmp" test-runner -c "
-  python3 ./scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
+  python3 scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
 "

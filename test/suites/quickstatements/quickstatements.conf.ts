@@ -6,7 +6,7 @@ export const specs = [
 	'specs/quickstatements/*.ts'
 ];
 
-export const testSetup = new DefaultTestSetup( 'repo', {
+export const testSetup = new DefaultTestSetup( 'quickstatements', {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
