@@ -47,6 +47,13 @@ export class TestSetup {
 
 	public async execute(): Promise<void> {
 		console.log( `\n▶️  Setting-up "${this.suiteName}" test suite` );
+
+		if ( process.envHEADED_TESTS ) {
+    	console.log(
+				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
+			);
+		}
+
 		this.setupLogs();
 		this.loadEnvVars();
 		if ( !this.config.skipLocalDockerImageLoad ) {
@@ -54,13 +61,11 @@ export class TestSetup {
 		}
 		this.stopServices();
 		this.startServices();
-
 		await this.waitForServices();
 	}
 
 	private async setupLogs(): Promise<void> {
 		try {
-
 			await rm( this.resultsDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await mkdir( this.resultsDir, { recursive: true } );

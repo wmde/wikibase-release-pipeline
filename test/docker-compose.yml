@@ -16,11 +16,6 @@ services:
     entrypoint: /bin/bash
     volumes:
       - ..:/usr/src
-      # # - .:/usr/src/test
-      # - ../artifacts:/usr/src/test/artifacts
-      # - ../variables.env:/usr/src/test/variables.env
-      # - ../local.env:/usr/src/test/local.env
-      # - ../example:/usr/src/test/example
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

@@ -36,9 +36,6 @@
 		"node": ">=10"
 	},
 	"scripts": {
-		"test:run": "wdio ./suites/$SUITE/$SUITE.conf.ts",
-		"test:run-spec-file": "wdio ./suites/$SUITE/$SUITE.conf.ts --spec $SPEC_FILE",
-		"test:run-filter": "wdio ./suites/$SUITE/$SUITE.conf.ts --spec $FILTER",
 		"lint": "npx eslint . --ext .ts",
 		"fix": "npx eslint . --fix --ext .ts"
 	}
