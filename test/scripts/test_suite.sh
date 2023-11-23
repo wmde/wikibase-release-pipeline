@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 cd test
 
@@ -26,7 +27,7 @@ load_image() {
             echo "ℹ️  Image $image already loaded."
         else
             echo "🔄 Loading image: $image"
-            docker load -i ../artifacts/"${image}"-*.docker.tar.gz
+            docker load -i "../artifacts/$image.docker.tar.gz"
         fi
     } >> "$TEST_LOG" 2>&1
 }

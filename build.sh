@@ -21,6 +21,9 @@ function save_image {
     if $SAVE_IMAGE; then
         docker save "$tag_version" "$tag_latest"| \
             gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${tag_version//:/-}.docker.tar.gz"
+        pushd artifacts
+        ln -s "${tag_version//:/-}.docker.tar.gz" "${service_name}.docker.tar.gz"
+        popd
     fi
 }
 
@@ -51,6 +54,9 @@ function build_wikibase {
         docker run --entrypoint="" --rm "$tag_version" \
             tar cz -C /var/www --transform="s,^html,${service_name}," html \
                 > "artifacts/${tag_version//:/-}.tar.gz"
+        pushd artifacts
+        ln -s "artifacts/${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        popd
     fi
 
     service_name="wikibase-bundle"
@@ -131,6 +137,9 @@ function build_wdqs-frontend {
         docker run --entrypoint="" --rm "$tag_version" \
             tar cz -C /usr/share/nginx --transform="s,^html,${service_name}," html \
                 > "artifacts/${tag_version//:/-}.tar.gz"
+        pushd artifacts
+        ln -s "artifacts/${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        popd
     fi
 }
 

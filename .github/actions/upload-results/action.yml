@@ -14,13 +14,13 @@ runs:
       with:
         name: TarBalls
         path: |
-          artifacts/${{ inputs.component }}-*.tar.gz
-          !artifacts/${{ inputs.component }}-*.docker.tar.gz
+          artifacts/${{ inputs.component }}*.tar.gz
+          !artifacts/${{ inputs.component }}*.docker.tar.gz
         if-no-files-found: ignore
 
     - name: Archive Docker artifact
       uses: actions/upload-artifact@v3
       with:
         name: DockerImages
-        path: artifacts/${{ inputs.component }}-*.docker.tar.gz
+        path: artifacts/${{ inputs.component }}*.docker.tar.gz
         if-no-files-found: error
