@@ -40,8 +40,6 @@ services:
 
       - MEDIAWIKI_VERSION
       - DATABASE_IMAGE_NAME
-      - SUITE
-      - FILTER
       
       - DOCKER_MYSQL_NAME
 

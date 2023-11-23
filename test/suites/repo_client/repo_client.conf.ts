@@ -10,7 +10,7 @@ export const testSetup = new DefaultTestSetup( 'repo_client', {
 	composeFiles: [
 		'suites/repo_client/docker-compose.override.yml'
 	],
-	checkIfUpURLs: [
+	waitForURLs: [
 		process.env.MW_CLIENT_SERVER
 	]
 } );

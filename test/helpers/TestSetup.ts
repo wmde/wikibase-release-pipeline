@@ -8,7 +8,7 @@ import loadLocalDockerImage from './loadLocalDockerImage.js';
 export type TestSetupConfig = {
 	envFiles?: string[];
 	composeFiles?: string[];
-	checkIfUpURLs?: string[];
+	waitForURLs?: string[];
 	skipLocalDockerImageLoad?: boolean;
 };
 
@@ -32,6 +32,8 @@ export class TestSetup {
 		this.suiteName = suiteName;
 		this.suiteConfigName = this.suiteName.replace( 'base__', '' );
 		this.isBaseSuite = this.suiteName !== this.suiteConfigName;
+
+		process.env.SUITE = this.suiteName;
 		process.env.SUITE_CONFIG_NAME = this.suiteConfigName;
 
 		this.config = config;
@@ -137,6 +139,7 @@ export class TestSetup {
 	}
 
 	private startServices(): void {
+		console.log( `\n▶️  Starting Wikibase Suite services` );
 		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
 
 		// const startServicesResult =
@@ -146,14 +149,16 @@ export class TestSetup {
 	}
 
 	private async waitForServices(): Promise<void[]> {
-		return Promise.all( this.config.checkIfUpURLs.map(
-			async ( checkIfUpURL: string ): Promise<void> => {
-				return checkIfUp( checkIfUpURL );
+		console.log( `\n▶️  Waiting for Wikibase Suite services` );
+		return Promise.all( this.config.waitForURLs.map(
+			async ( waitForURL: string ): Promise<void> => {
+				return checkIfUp( waitForURL );
 			}
 		) );
 	}
 
 	private stopServices(): void {
+		console.log( `\n▶️  Stopping Wikibase Suite services` );
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
@@ -173,7 +178,7 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 	composeFiles: [
 		'suites/docker-compose.yml'
 	],
-	checkIfUpURLs: [
+	waitForURLs: [
 		`${process.env.MW_SERVER}/wiki/Main_Page`,
 		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 		`http://${process.env.WDQS_FRONTEND_SERVER}`
@@ -194,9 +199,9 @@ export class DefaultTestSetup extends TestSetup {
 				...defaultTestSetupConfig.composeFiles,
 				...( config.composeFiles || [] )
 			],
-			checkIfUpURLs: [
-				...defaultTestSetupConfig.checkIfUpURLs,
-				...( config.checkIfUpURLs || [] )
+			waitForURLs: [
+				...defaultTestSetupConfig.waitForURLs,
+				...( config.waitForURLs || [] )
 			]
 		};
 

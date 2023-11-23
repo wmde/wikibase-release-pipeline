@@ -18,7 +18,7 @@ export const testSetup = new TestSetup( 'example', {
 		'../example/template.env',
 		'suites/example/example.env'
 	],
-	checkIfUpURLs: defaultTestSetupConfig.checkIfUpURLs
+	waitForURLs: defaultTestSetupConfig.waitForURLs
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

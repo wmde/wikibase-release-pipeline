@@ -10,7 +10,7 @@ export const testSetup = new DefaultTestSetup( 'repo', {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
-	checkIfUpURLs: [
+	waitForURLs: [
 		process.env.QS_SERVER,
 		process.env.MW_CLIENT_SERVER
 	]

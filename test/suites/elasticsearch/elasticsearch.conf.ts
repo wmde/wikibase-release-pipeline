@@ -9,7 +9,7 @@ export const testSetup = new DefaultTestSetup( 'elasticsearch', {
 	composeFiles: [
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
-	checkIfUpURLs: [
+	waitForURLs: [
 		`http://${process.env.MW_ELASTIC_HOST}:${process.env.MW_ELASTIC_PORT}`
 	]
 } );
