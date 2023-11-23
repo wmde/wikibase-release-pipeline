@@ -1,6 +1,8 @@
 ARG DEBIAN_IMAGE
 ARG JDK_IMAGE
 
+# ###########################################################################
+# hadolint ignore=DL3006
 FROM ${DEBIAN_IMAGE} as fetcher
 ARG WDQS_VERSION
 
@@ -9,9 +11,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-c"]
-RUN set -euo pipefail; \
-    set -x; \
+SHELL ["/bin/bash", "-c", "-o pipefail"]
+RUN set -x; \
     TARBALL="service-${WDQS_VERSION}-dist.tar.gz"; \
     wget --no-verbose "https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/$WDQS_VERSION/$TARBALL"; \
     SIGNATURE="$TARBALL".md5; \
@@ -20,7 +21,8 @@ RUN set -euo pipefail; \
     mkdir /tmp/wdqs-service; \
     tar zxvf $TARBALL -C /tmp/wdqs-service --strip-components=1
 
-
+# ###########################################################################
+# hadolint ignore=DL3006
 FROM openjdk:8-jdk-alpine
 
 # Blazegraph scripts require bash
