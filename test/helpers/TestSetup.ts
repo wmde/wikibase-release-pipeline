@@ -1,6 +1,8 @@
 // import { createWriteStream } from 'fs';
 import { mkdir, rm } from 'fs/promises';
 import { spawnSync } from 'child_process';
+import { createWriteStream } from 'fs';
+import { Console } from 'console';
 import dotenv from 'dotenv';
 import checkIfUp from './checkIfUp.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
@@ -24,7 +26,7 @@ export class TestSetup {
 	protected hostCWD: string;
 	protected baseDockerComposeCmd: string;
 	protected resultsDir: string;
-	// testLogStream: any;
+	protected testLog: Console;
 	public suiteName: string;
 	public suiteConfigName: string;
 	public testLogFilePath: string;
@@ -54,16 +56,20 @@ export class TestSetup {
 	public async execute(): Promise<void> {
 		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
-		this.setupLogs();
+		await this.setupLogs();
 		this.loadEnvVars();
+
 		if ( !this.config.skipLocalDockerImageLoad ) {
 			this.setupAndLoadDockerImages();
 		}
+
 		this.stopServices();
 		this.startServices();
+
 		await this.waitForServices();
 
 		console.log( `▶️  Running specs for "${this.suiteName}" test suite` );
+
 		if ( this.runHeaded ) {
 			console.log(
 				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
@@ -76,15 +82,18 @@ export class TestSetup {
 			await rm( this.resultsDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			await mkdir( this.resultsDir, { recursive: true } );
+			const outputLog = createWriteStream( this.testLogFilePath );
+			const errorsLog = createWriteStream( this.testLogFilePath );
 
-			// TODO: Logging
-			// console.log('!!!! this.testLogFilePath', this.testLogFilePath);
-			// this.testLogStream = createWriteStream( this.testLogFilePath );
-			// this.testLogStream.write('!!!! test');
-
+			this.testLog = new Console( outputLog, errorsLog );
 		} catch ( e ) {
 			console.log( '❌ Error occurred in setting-up logs:', e );
 		}
+	}
+
+	private log( textToLog ): void {
+		const testLogStream = createWriteStream( this.testLogFilePath, { flags: 'a' } );
+		testLogStream.write( textToLog );
 	}
 
 	private loadEnvVars(): void {
@@ -99,7 +108,6 @@ export class TestSetup {
 			`export SUITE=${this.suiteName} &&`,
 			`SUITE_CONFIG_NAME=${this.suiteConfigName}`,
 			'docker compose',
-			'--progress quiet',
 			`--project-directory ${this.hostCWD}/suites`,
 			'-p wikibase-suite'
 		];
@@ -149,12 +157,12 @@ export class TestSetup {
 
 	private startServices(): void {
 		console.log( '▶️  Starting Wikibase Suite services' );
-		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
 
-		// const startServicesResult =
-		spawnSync( startServicesCmd, { stdio: 'inherit', shell: true } );
-		// this.testLogStream.write(startServicesResult.stdout);
-		// this.testLogStream.write(startServicesResult.stderr);
+		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
+		const result = spawnSync( startServicesCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+
+		this.testLog.log( result.stdout );
+		this.testLog.log( result.stderr );
 	}
 
 	private async waitForServices(): Promise<void[]> {
@@ -168,13 +176,14 @@ export class TestSetup {
 
 	private stopServices(): void {
 		console.log( '▶️  Stopping Wikibase Suite services' );
+
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
-		// const stopServicesResult =
-		spawnSync( stopServiceCmd, { stdio: 'inherit', shell: true } );
-		// this.testLogStream.write(stopServicesResult.stdout);
-		// this.testLogStream.write(stopServicesResult.stderr);
+		const result = spawnSync( stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+
+		this.testLog.log( result.stdout );
+		this.testLog.log( result.stderr );
 	}
 }
 

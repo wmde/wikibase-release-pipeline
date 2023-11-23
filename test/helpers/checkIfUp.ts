@@ -23,12 +23,12 @@ async function checkIfUp(
 		console.log( `ℹ️  Successfully loaded ${serviceURL}` );
 	} catch ( e ) {
 		if ( e instanceof TimeoutError ) {
-			console.log(
+			throw(
 				timeoutMsg ||
 					`❌ Could not load ${serviceURL} after ${timeout / 1000} seconds.`
 			);
 		} else {
-			console.log(
+			throw(
 				`❌ Could not load ${serviceURL} with error: ${e}`
 			);
 		}
