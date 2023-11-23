@@ -31,9 +31,8 @@ ARG WIKIBASEMANIFEST_COMMIT
 ARG WIKIBASEEDTF_COMMIT
 ARG WIKIBASELOCALMEDIA_COMMIT
 
-SHELL ["/bin/bash", "-c"]
-RUN set -euo pipefail; \
-    set -x; \
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+RUN set -x; \
     IFS=',' read -ra EXTENSIONS <<< ${ALL_EXTENSIONS}; \
     mkdir LocalSettings.d; \
     for EXTENSION in "${EXTENSIONS[@]}"; do \
