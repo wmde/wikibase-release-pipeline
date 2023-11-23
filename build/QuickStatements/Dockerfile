@@ -23,7 +23,6 @@ RUN composer install --no-dev
 FROM ${PHP_IMAGE}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
-# Install envsubst
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base jq libicu-dev && \
     rm -rf /var/lib/apt/lists/* && \
