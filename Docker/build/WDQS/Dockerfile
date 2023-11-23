@@ -23,7 +23,7 @@ RUN set -x; \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM openjdk:8-jdk-alpine
+FROM ${JDK_IMAGE}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 # Blazegraph scripts require bash
