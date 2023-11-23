@@ -9,23 +9,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Archive build_metadata Artifacts (if any)
-      uses: actions/upload-artifact@v3
-      with:
-        name: Metadata
-        path: artifacts/build_metadata_*.env
-        if-no-files-found: ignore
-
     - name: Archive tar artifacts (if any)
       uses: actions/upload-artifact@v3
       with:
         name: TarBalls
-        path: artifacts/${{ inputs.component }}.tar.gz
+        path: |
+          artifacts/${{ inputs.component }}-*.tar.gz
+          !artifacts/${{ inputs.component }}-*.docker.tar.gz
         if-no-files-found: ignore
 
     - name: Archive Docker artifact
       uses: actions/upload-artifact@v3
       with:
         name: DockerImages
-        path: artifacts/${{ inputs.component }}.docker.tar.gz
+        path: artifacts/${{ inputs.component }}-*.docker.tar.gz
         if-no-files-found: error
