@@ -20,7 +20,7 @@ EXTRACT_TARBALL=false
 function save_image {
     if $SAVE_IMAGE; then
         docker save "$tag_version" "$tag_latest"| \
-            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${tag_version//:/-}.docker.tar.gz"
     fi
 }
 
