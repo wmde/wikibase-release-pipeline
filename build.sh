@@ -140,7 +140,7 @@ function build_wdqs-proxy {
 }
 
 function build_quickstatements {
-    service_name="wdqs-proxy"
+    service_name="quickstatements"
     tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
     tag_latest="${service_name}:latest"
 
