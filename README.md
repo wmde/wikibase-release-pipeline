@@ -15,14 +15,17 @@ For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targe
 ### Build Commands
 
 ```
-# Build all wikibase suite component
+# Build all wikibase suite components docker images
 $ ./build.sh
 
 # Build only the mediawiki/wikibase containers
 $ ./build.sh wikibase
 
-# Build only the query service container and save it to a tarball
+# Build only the query service container and save the docker image to a tarball
 $ ./build.sh --save-image wdqs
+
+# Build the wdqs-frontend container and extract a standalone tarball from the webroot
+$ ./build.sh --extract-tarball wdqs-frontend
 ```
 
 ### Test Commands
