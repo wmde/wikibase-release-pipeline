@@ -52,8 +52,7 @@ RUN apt-get update && \
     docker-php-ext-install calendar bz2
 
 COPY --from=composer --chown=root:root /var/www/html /var/www/html
-# TODO find a better way to get wait-for-it into several build contexts
-RUN curl https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/${GIT_CURRENT_REVISION}/Docker/build/wait-for-it.sh --output /wait-for-it.sh
+COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 
 COPY LocalSettings.php.template /LocalSettings.php.template
