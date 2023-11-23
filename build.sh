@@ -21,6 +21,10 @@ set +o allexport
 # TODO: how do we tag actually?
 #
 function build_wikibase {
+    service_name="wikibase"
+    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
+
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
         --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
@@ -35,9 +39,15 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        ./Docker/build/Wikibase -t wikibase:"${WMDE_RELEASE_VERSION}"
+        ./Docker/build/Wikibase -t "$tag_version" -t "$tag_latest"
 
-    docker save wikibase:"${WMDE_RELEASE_VERSION}" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+
+
+    service_name="wikibase-bundle"
+    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
 
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
@@ -62,36 +72,46 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        ./Docker/build/WikibaseBundle -t wikibase-bundle:"${WMDE_RELEASE_VERSION}"
+        ./Docker/build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
 
-    docker save wikibase-bundle:"${WMDE_RELEASE_VERSION}" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wikibase-bundle.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_elasticseach {
-    image_name="elasticsearch:${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
+    service_name="elasticsearch"
+    tag_version="${service_name}:${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
+
     docker build \
         --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
         --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
-        Docker/build/Elasticsearch/ -t "$image_name"
+        Docker/build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
 
-    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/elasticsearch.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_wdqs {
-    image_name="wdqs:${WDQS_VERSION}"
+    service_name="wdqs"
+    tag_version="${service_name}:${WDQS_VERSION}"
+    tag_latest="${service_name}:latest"
 
     docker build \
         --build-arg DEBIAN_IMAGE="$DEBIAN_IMAGE" \
         --build-arg JDK_IMAGE="$JDK_IMAGE" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
-        Docker/build/WDQS/ -t "$image_name"
+        Docker/build/WDQS/ -t "$tag_version" -t "$tag_latest"
 
-    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_wdqs-frontend {
-    image_name="wdqs-frontend:${WMDE_RELEASE_VERSION}"
+    service_name="wdqs-frontend"
+    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
 
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
@@ -99,24 +119,30 @@ function build_wdqs-frontend {
         --build-arg NODE_IMAGE="$NODE_IMAGE" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
-        Docker/build/WDQS-frontend/ -t "$image_name"
+        Docker/build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
 
-    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs-frontend.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_wdqs-proxy {
-    image_name="wdqs-proxy:${WMDE_RELEASE_VERSION}"
+    service_name="wdqs-proxy"
+    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
 
     docker build \
         --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
         \
-        Docker/build/WDQS-proxy/ -t "$image_name"
+        Docker/build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
 
-    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/wdqs-proxy.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_quickstatements {
-    image_name="quickstatements:${WMDE_RELEASE_VERSION}"
+    service_name="wdqs-proxy"
+    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
+    tag_latest="${service_name}:latest"
 
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
@@ -124,9 +150,10 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        Docker/build/QuickStatements/ -t "$image_name"
+        Docker/build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
 
-    docker save "$image_name" | gzip -"$GZIP_COMPRESSION_RATE" > artifacts/quickstatements.docker.tar.gz
+    docker save "$tag_version" "$tag_latest"| \
+        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
 }
 
 function build_all {
