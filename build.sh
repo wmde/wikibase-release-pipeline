@@ -48,9 +48,9 @@ function build_wikibase {
     save_image
 
     if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm $tag_version \
+        docker run --entrypoint="" --rm "$tag_version" \
             tar cz -C /var/www --transform="s,^html,${service_name}," html \
-                > artifacts/${tag_version//:/-}.tar.gz
+                > "artifacts/${tag_version//:/-}.tar.gz"
     fi
 
     service_name="wikibase-bundle"
@@ -128,9 +128,9 @@ function build_wdqs-frontend {
     save_image
 
     if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm $tag_version \
+        docker run --entrypoint="" --rm "$tag_version" \
             tar cz -C /usr/share/nginx --transform="s,^html,${service_name}," html \
-                > artifacts/${tag_version//:/-}.tar.gz
+                > "artifacts/${tag_version//:/-}.tar.gz"
     fi
 }
 
