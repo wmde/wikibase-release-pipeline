@@ -56,7 +56,13 @@ When building locally the artifacts are only stored in the docker daemons image 
 
 ```sh
 # build and store results in artifacts folder
-$ ./build.sh --save-image
+$ ./build.sh --save-image all
+```
+
+If you want to also extract standalone tarballs, use the following command. This is basically also what the CI calls.
+
+```sh
+$ ./build.sh --save-image --extract-tarball all
 ```
 
 ### Clean local artifacts
