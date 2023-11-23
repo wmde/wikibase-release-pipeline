@@ -24,6 +24,7 @@ RUN set -x; \
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM openjdk:8-jdk-alpine
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 # Blazegraph scripts require bash
 # Install gettext for envsubst command, (it needs libintl package)
@@ -56,5 +57,3 @@ COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt logback.xml 
 RUN chmod +x /wdqs/runUpdate.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
