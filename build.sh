@@ -16,10 +16,20 @@ fi
 set +o allexport
 
 # env
+SAVE_IMAGE=true
 
 # TODO: move to flat file hierarchy
 # TODO: how do we tag actually?
 #
+#
+
+function save_image {
+    if $SAVE_IMAGE; then
+        docker save "$tag_version" "$tag_latest"| \
+            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    fi
+}
+
 function build_wikibase {
     service_name="wikibase"
     tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
@@ -28,7 +38,7 @@ function build_wikibase {
     docker build \
         --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
         --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
-        --build-arg GIT_CURRENT_REVISION="$(git rev-parse HEAD)" \
+        --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
         \
         --build-arg MEDIAWIKI_SETTINGS_TEMPLATE_FILE="$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" \
         \
@@ -40,10 +50,7 @@ function build_wikibase {
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
         ./Docker/build/Wikibase -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
-
+    save_image
 
     service_name="wikibase-bundle"
     tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
@@ -73,9 +80,7 @@ function build_wikibase {
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
         ./Docker/build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_elasticseach {
@@ -87,9 +92,7 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
         --build-arg=ELASTICSEARCH_PLUGIN_EXTRA_VERSION="$ELASTICSEARCH_PLUGIN_EXTRA_VERSION" \
         Docker/build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_wdqs {
@@ -103,9 +106,7 @@ function build_wdqs {
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
         Docker/build/WDQS/ -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_wdqs-frontend {
@@ -120,9 +121,7 @@ function build_wdqs-frontend {
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
         Docker/build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_wdqs-proxy {
@@ -134,9 +133,7 @@ function build_wdqs-proxy {
         --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
         \
         Docker/build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_quickstatements {
@@ -151,9 +148,7 @@ function build_quickstatements {
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
         Docker/build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
-
-    docker save "$tag_version" "$tag_latest"| \
-        gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${service_name}.docker.tar.gz"
+    save_image
 }
 
 function build_all {
@@ -164,6 +159,7 @@ function build_all {
     build_wdqs-proxy
     build_quickstatements
 }
+
 
 if [ $# -eq 0 ]; then
     build_all
@@ -177,6 +173,7 @@ else
             wdqs-proxy) build_wdqs-proxy ;;
             quickstatements) build_quickstatements ;;
             all) build_all ;;
+            -n|--no-save) SAVE_IMAGE=false ;;
             *)
                 echo "Unknown option: $arg"
                 exit 2 # code appropriate?
