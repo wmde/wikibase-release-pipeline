@@ -9,7 +9,13 @@ export type TestSetupConfig = {
 	envFiles?: string[];
 	composeFiles?: string[];
 	waitForURLs?: string[];
+	// Currently only used for the "example" test suite, but is useful
+	// for using any docker compose service setup not based upon
+	// local builds.
 	skipLocalDockerImageLoad?: boolean;
+	// Can configure headed runs for the test environment directly,
+	// or globally by setting the HEADED_TESTS env var
+	runHeaded?: boolean;
 };
 
 export class TestSetup {
@@ -24,6 +30,7 @@ export class TestSetup {
 	public testLogFilePath: string;
 	public screenshotPath: string;
 	public resultFilePath: string;
+	public runHeaded: boolean;
 
 	public constructor(
 		suiteName: string,
@@ -32,29 +39,20 @@ export class TestSetup {
 		this.suiteName = suiteName;
 		this.suiteConfigName = this.suiteName.replace( 'base__', '' );
 		this.isBaseSuite = this.suiteName !== this.suiteConfigName;
-
-		process.env.SUITE = this.suiteName;
-		process.env.SUITE_CONFIG_NAME = this.suiteConfigName;
+		this.hostCWD = process.env.HOST_PWD;
+		this.resultsDir = `suites/${this.suiteName}/results`;
 
 		this.config = config;
 
-		this.resultsDir = `suites/${this.suiteName}/results`;
 		this.testLogFilePath = `${this.resultsDir}/${this.suiteName}.log`;
 		this.screenshotPath = `${this.resultsDir}/screenshots`;
 		this.resultFilePath = `${this.resultsDir}/result.json`;
-		this.hostCWD = process.env.HOST_PWD;
-
+		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
 
 	public async execute(): Promise<void> {
-		console.log( `\n▶️  Setting-up "${this.suiteName}" test suite` );
-
-		if ( process.envHEADED_TESTS ) {
-    	console.log(
-				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
-			);
-		}
+		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
 		this.setupLogs();
 		this.loadEnvVars();
@@ -64,6 +62,13 @@ export class TestSetup {
 		this.stopServices();
 		this.startServices();
 		await this.waitForServices();
+
+		console.log( `▶️  Running specs for "${this.suiteName}" test suite` );
+		if ( this.runHeaded ) {
+			console.log(
+				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
+			);
+		}
 	}
 
 	private async setupLogs(): Promise<void> {
@@ -90,18 +95,22 @@ export class TestSetup {
 	}
 
 	private makeBaseDockerComposeCmd(): string {
-		const dockerComposeCmdArray: string[] = [ 'docker compose' ];
-		this.config.envFiles.forEach( ( envFile ) => dockerComposeCmdArray.push( `--env-file ${envFile}` ) );
-		this.config.composeFiles.forEach( ( composeFile ) => dockerComposeCmdArray.push( `-f ${composeFile}` ) );
-		// const composeOverrideFilePath = `suites/${this.suiteName}/docker-compose.override.yml`
-		// try {
-		//   await stat(composeOverrideFilePath)
-		//   dockerComposeCmd += ` -f ${composeOverrideFilePath}`
-		// } catch {}
-		dockerComposeCmdArray.push( `--project-directory ${this.hostCWD}/suites` );
-		dockerComposeCmdArray.push( '-p wikibase-suite' );
+		const dockerComposeCmdArray: string[] = [
+			`export SUITE=${this.suiteName} &&`,
+			`SUITE_CONFIG_NAME=${this.suiteConfigName}`,
+			'docker compose',
+			'--progress quiet',
+			`--project-directory ${this.hostCWD}/suites`,
+			'-p wikibase-suite'
+		];
+		this.config.envFiles.forEach( ( envFile ) =>
+			dockerComposeCmdArray.push( `--env-file ${envFile}` )
+		);
+		this.config.composeFiles.forEach( ( composeFile ) =>
+			dockerComposeCmdArray.push( `-f ${composeFile}` )
+		);
 
-		return `${dockerComposeCmdArray.join( ' ' )}`;
+		return dockerComposeCmdArray.join( ' ' );
 	}
 
 	private setupAndLoadDockerImages(): void {
@@ -139,7 +148,7 @@ export class TestSetup {
 	}
 
 	private startServices(): void {
-		console.log( `\n▶️  Starting Wikibase Suite services` );
+		console.log( '▶️  Starting Wikibase Suite services' );
 		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
 
 		// const startServicesResult =
@@ -149,7 +158,7 @@ export class TestSetup {
 	}
 
 	private async waitForServices(): Promise<void[]> {
-		console.log( `\n▶️  Waiting for Wikibase Suite services` );
+		console.log( '▶️  Waiting for Wikibase Suite services' );
 		return Promise.all( this.config.waitForURLs.map(
 			async ( waitForURL: string ): Promise<void> => {
 				return checkIfUp( waitForURL );
@@ -158,7 +167,7 @@ export class TestSetup {
 	}
 
 	private stopServices(): void {
-		console.log( `\n▶️  Stopping Wikibase Suite services` );
+		console.log( '▶️  Stopping Wikibase Suite services' );
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
@@ -182,7 +191,9 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 		`${process.env.MW_SERVER}/wiki/Main_Page`,
 		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 		`http://${process.env.WDQS_FRONTEND_SERVER}`
-	]
+	],
+	skipLocalDockerImageLoad: false,
+	runHeaded: false
 };
 
 export class DefaultTestSetup extends TestSetup {
@@ -191,6 +202,8 @@ export class DefaultTestSetup extends TestSetup {
 		config: TestSetupConfig = {}
 	) {
 		const testConfig = {
+			...defaultTestSetupConfig,
+			...config,
 			envFiles: [
 				...defaultTestSetupConfig.envFiles,
 				...( config.envFiles || [] )

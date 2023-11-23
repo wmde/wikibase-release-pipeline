@@ -46,7 +46,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 						// as XL, let's use that.
 						// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
 						...[ '--window-size=1280,800' ],
-						...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
+						...( testSetup.runHeaded ? [] : [ '--headless' ] ),
 						// Chrome sandbox does not work in Docker
 						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 					]
@@ -76,7 +76,8 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 			[
 				JsonReporter,
 				{
-					resultFilePath: testSetup.resultFilePath
+					resultFilePath: testSetup.resultFilePath,
+					suiteName: testSetup.suiteName
 				}
 			]
 		],
