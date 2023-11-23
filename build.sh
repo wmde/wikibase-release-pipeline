@@ -16,7 +16,8 @@ fi
 set +o allexport
 
 # env
-SAVE_IMAGE=true
+
+SAVE_IMAGE=false
 
 # TODO: move to flat file hierarchy
 # TODO: how do we tag actually?
@@ -173,10 +174,10 @@ else
             wdqs-proxy) build_wdqs-proxy ;;
             quickstatements) build_quickstatements ;;
             all) build_all ;;
-            -n|--no-save) SAVE_IMAGE=false ;;
+            -s|--save-image) SAVE_IMAGE=true ;;
             *)
-                echo "Unknown option: $arg"
-                exit 2 # code appropriate?
+                echo "Unknown argument: $arg"
+                exit 1
                 ;;
         esac
     done
