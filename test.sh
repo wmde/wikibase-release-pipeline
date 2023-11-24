@@ -2,7 +2,11 @@
 
 set -e
 trap stop_test_runner EXIT
+echo "here before 'cd test'"
+ls
+docker --version
 cd test
+echo "after 'cd test'"
 
 TEST_RUNNER_COMPOSE="\
 docker compose \
@@ -23,13 +27,13 @@ function test_suite {
 		WDIO_COMMAND="$WDIO_COMMAND $WDIO_OPTIONS"
 	fi
 
-	$TEST_RUNNER_COMPOSE up -d --build --scale test-runner=0 > /dev/null 2>&1
+	$TEST_RUNNER_COMPOSE up -d --build --scale test-runner=0
 	$TEST_RUNNER_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
 	stop_test_runner
 }
 
 function stop_test_runner {
-	$TEST_RUNNER_COMPOSE down --volumes > /dev/null 2>&1
+	$TEST_RUNNER_COMPOSE down --volumes
 }
 
 function test_all_suites {
