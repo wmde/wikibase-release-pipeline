@@ -192,7 +192,7 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 	envFiles: [
 		'../variables.env',
 		'default.env',
-		!process.env.CI && '../local.env'
+		!process.env.GITHUB_ACTIONS && '../local.env'
 	],
 	composeFiles: [
 		'suites/docker-compose.yml'

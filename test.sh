@@ -4,6 +4,10 @@ set -e
 trap stop_test_runner EXIT
 cd test
 
+# if ! [[ -f "local.env" ]]; then
+# 	touch local.env
+# fi
+
 TEST_RUNNER_COMPOSE="\
 docker compose \
 -f docker-compose.yml
@@ -11,7 +15,7 @@ docker compose \
 --env-file ../variables.env \
 --env-file default.env"
 
-if [ -z "$CI" ]; then
+if [ -z "$GITHUB_ACTIONS" ]; then
 	TEST_RUNNER_COMPOSE="$TEST_RUNNER_COMPOSE --env-file ../local.env"
 fi
 
