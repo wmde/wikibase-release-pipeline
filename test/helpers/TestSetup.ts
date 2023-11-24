@@ -98,11 +98,11 @@ export class TestSetup {
 	private loadEnvVars(): void {
 		// Load current local build variables
 		this.config.envFiles
-			.filter( envFilePath => envFilePath )
+			.filter( ( envFilePath ) => envFilePath )
 			.forEach( ( envFilePath ) => {
 				dotenv.config( { path: envFilePath, override: true } );
 			}
-		);
+			);
 	}
 
 	private makeBaseDockerComposeCmd(): string {
