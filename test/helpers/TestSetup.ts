@@ -99,9 +99,8 @@ export class TestSetup {
 		// Load current local build variables
 		this.config.envFiles
 			.filter( ( envFilePath ) => envFilePath )
-			.forEach( ( envFilePath ) => {
-				dotenv.config( { path: envFilePath, override: true } );
-			}
+			.forEach( ( envFilePath ) =>
+				dotenv.config( { path: envFilePath, override: true } )
 			);
 	}
 
@@ -111,9 +110,11 @@ export class TestSetup {
 			`--project-directory ${this.hostCWD}/suites`,
 			'-p wikibase-suite'
 		];
-		this.config.envFiles.forEach( ( envFile ) =>
-			dockerComposeCmdArray.push( `--env-file ${envFile}` )
-		);
+		this.config.envFiles
+			.filter( ( envFilePath ) => envFilePath )
+			.forEach( ( envFile ) =>
+				dockerComposeCmdArray.push( `--env-file ${envFile}` )
+			);
 		this.config.composeFiles.forEach( ( composeFile ) =>
 			dockerComposeCmdArray.push( `-f ${composeFile}` )
 		);
@@ -180,7 +181,7 @@ export class TestSetup {
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
-		const result = spawnSync( stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+		const result = spawnSync(stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
 		this.testLog.log( result.stdout );
 		this.testLog.log( result.stderr );
