@@ -2,11 +2,12 @@
 
 set -e
 trap stop_test_runner EXIT
-cd test
 
 if ! [[ -f "local.env" ]]; then
 	touch local.env
 fi
+
+cd test
 
 TEST_RUNNER_COMPOSE="\
 docker compose \
