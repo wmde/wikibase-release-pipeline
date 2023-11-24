@@ -13,7 +13,6 @@ docker compose \
 -f docker-compose.yml
 --env-file ../variables.env \
 --env-file default.env \
---env-file ../local.env \
 --progress quiet\
 "
 

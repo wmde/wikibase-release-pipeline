@@ -186,8 +186,7 @@ export class TestSetup {
 export const defaultTestSetupConfig: TestSetupConfig = {
 	envFiles: [
 		'../variables.env',
-		'default.env',
-		'../local.env'
+		'default.env'
 	],
 	composeFiles: [
 		'suites/docker-compose.yml'
