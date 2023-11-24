@@ -9,6 +9,10 @@ export const specs = [
 	'specs/repo/queryservice.ts'
 ];
 
-export const testSetup = new DefaultTestSetup( 'base__repo' );
+export const testSetup = new DefaultTestSetup( 'base__repo', {
+	composeFiles: [
+		'suites/repo/docker-compose.override.yml'
+	]
+} );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
