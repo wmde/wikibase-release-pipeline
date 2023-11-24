@@ -38,10 +38,11 @@ export class TestSetup {
 		config: TestSetupConfig = {}
 	) {
 		this.suiteName = suiteName;
-		process.env.SUITE_NAME = this.suiteName;
 		this.suiteConfigName = this.suiteName.replace( 'base__', '' );
+		process.env.SUITE = this.suiteName;
 		process.env.SUITE_CONFIG_NAME = this.suiteConfigName;
 		this.isBaseSuite = this.suiteName !== this.suiteConfigName;
+
 		this.hostCWD = process.env.HOST_PWD;
 		this.resultsDir = `suites/${this.suiteName}/results`;
 
@@ -97,7 +98,7 @@ export class TestSetup {
 	private loadEnvVars(): void {
 		// Load current local build variables
 		this.config.envFiles.forEach( ( envFilePath ) => {
-			dotenv.config( { path: envFilePath } );
+			dotenv.config( { path: envFilePath, override: true } );
 		} );
 	}
 
@@ -182,7 +183,7 @@ export class TestSetup {
 		this.testLog.log( result.stderr );
 	}
 }
-console.log( '!!! process.env.CI', process.env.CI );
+
 export const defaultTestSetupConfig: TestSetupConfig = {
 	envFiles: [
 		'../variables.env',
