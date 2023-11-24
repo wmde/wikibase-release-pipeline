@@ -11,6 +11,9 @@ on:
       - '**/*.md'
       - '**/*.txt'
 
+env:
+  CI: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -97,6 +100,8 @@ jobs:
             base__repo_client,
             base__pingback,
             base__fedprops,
+
+            example
           ]
 
 
