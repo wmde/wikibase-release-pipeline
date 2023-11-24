@@ -9,7 +9,7 @@ docker compose \
 -f docker-compose.yml
 --progress quiet \
 --env-file ../variables.env \
---env-file default.env "
+--env-file default.env"
 
 if [ -z "$CI" ]; then
 	TEST_RUNNER_COMPOSE="$TEST_RUNNER_COMPOSE --env-file ../local.env"

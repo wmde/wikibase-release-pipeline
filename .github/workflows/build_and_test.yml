@@ -29,9 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    needs:
-      - lint
-
     strategy:
       fail-fast: false
       matrix:
@@ -103,8 +100,6 @@ jobs:
 
             example
           ]
-
-
         databaseImageName: [
             # 'mysql:5.6', disabled https://phabricator.wikimedia.org/T296066
             "mariadb:10.9",
