@@ -181,7 +181,7 @@ export class TestSetup {
 		const stopServiceCmd =
 			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
 
-		const result = spawnSync(stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+		const result = spawnSync( stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
 		this.testLog.log( result.stdout );
 		this.testLog.log( result.stderr );
