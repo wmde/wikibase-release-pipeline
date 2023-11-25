@@ -1,7 +1,7 @@
 import { TestSetup } from '../../helpers/TestSetup.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
-const versions = {
+export const versions = {
 	WMDE9: 'wikibase/wikibase:1.37.6-wmde.9',
 	WMDE9_BUNDLE: 'wikibase/wikibase-bundle:1.37.6-wmde.9',
 
@@ -20,6 +20,9 @@ const versions = {
 
 const upgradeFromVersion = process.env.UPGRADE_FROM_VERSION;
 const wikibaseImageName = versions[ upgradeFromVersion ];
+// TODO: Doing this here and not loading /variables.env as there
+// is currently no elegant way to override WIKIBASE_TEST_IMAGE_NAME
+// from the TestSetupConfig. There is likely be a better solution.
 process.env.WIKIBASE_TEST_IMAGE_NAME = wikibaseImageName;
 
 export const specs = [
