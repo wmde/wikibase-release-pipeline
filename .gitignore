@@ -22,3 +22,4 @@ local.env
 example/log
 .DS_Store
 .direnv
+tmp-LocalSettings.php
