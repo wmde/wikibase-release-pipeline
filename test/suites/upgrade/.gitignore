@@ -1,1 +1,2 @@
+# Placing the file here avoids the need to volume map tmp directories
 tmp_LocalSettings.php
