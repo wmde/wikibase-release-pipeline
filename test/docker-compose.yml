@@ -49,6 +49,7 @@ services:
       - DB_PASS
       - DB_NAME
       - HOST_PWD=${PWD}
+      - UPGRADE_FROM_VERSION
 
       - RUN_QUERYSERVICE_POST_UPGRADE_TEST
 

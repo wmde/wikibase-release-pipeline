@@ -82,6 +82,8 @@ jobs:
       matrix:
         suite:
           [
+            example,
+
             repo,
             fedprops,
             repo_client,
@@ -93,13 +95,7 @@ jobs:
             base__repo,
             base__repo_client,
             base__pingback,
-            base__fedprops,
-
-            example
-          ]
-        databaseImageName: [
-            # 'mysql:5.6', disabled https://phabricator.wikimedia.org/T296066
-            "mariadb:10.9",
+            base__fedprops
           ]
 
     needs:
@@ -118,8 +114,6 @@ jobs:
           path: artifacts/
 
       - name: Test ${{ matrix.suite }}
-        env:
-          DATABASE_IMAGE_NAME: ${{ matrix.databaseImageName }}
         run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
@@ -143,7 +137,7 @@ jobs:
           name: TestResults
           path: test/suites/**/results
 
-  test_upgrade_base:
+  test_upgrade:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -153,11 +147,14 @@ jobs:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
           # Latest 1.37
-          'wmde.9',
+          'WMDE9',
+          'WMDE9_BUNDLE',
           # Latest 1.38
-          'wmde.12',
+          'WMDE12',
+          'WMDE12_BUNDLE',
           # Latest 1.39
-          'wmde.13',
+          'WMDE13',
+          'WMDE13_BUNDLE'
         ]
     needs:
       - build
@@ -175,57 +172,7 @@ jobs:
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }}
-
-      - name: Show Docker Logs
-        if: always()
-        run: test/scripts/docker_logs.sh
-
-      # TODO: DRY
-      - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: TestResults
-          path: test/suites/**/results
-
-  test_upgrade_bundle:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    needs:
-      - build
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
-        version: [
-          # Latest 1.37
-          'wmde.9-bundle',
-          # Latest 1.38
-          'wmde.12-bundle',
-          # Latest 1.39
-          'wmde.13-bundle',
-        ]
-
-    env:
-      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get built Docker artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: DockerImages
-          path: artifacts/
-
-      - name: Test upgrade from ${{ matrix.version }}
-        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
-        # Set a specific lower timeout to allow us to retry sooner
-        timeout-minutes: 10
-        run: make test-upgrade VERSION=${{ matrix.version }}
+        run: UPGRADE_FROM_VERSION=${{ matrix.version }} ./test.sh
 
       - name: Show Docker Logs
         if: always()
@@ -256,11 +203,6 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: "variables.env"
-
-      - name: Build version requirements
-        shell: bash
-        run: |
-          ./build.sh requirements
 
       - name: Archive metadata artifacts
         uses: actions/upload-artifact@v3

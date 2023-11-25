@@ -3,6 +3,7 @@ import { spawnSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import { Console } from 'console';
 import dotenv from 'dotenv';
+import { SevereServiceError } from 'webdriverio';
 import checkIfUp from './checkIfUp.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 
@@ -21,17 +22,17 @@ export type TestSetupConfig = {
 
 export class TestSetup {
 	protected config: TestSetupConfig;
-	protected isBaseSuite: boolean;
 	protected hostCWD: string;
-	protected baseDockerComposeCmd: string;
 	protected resultsDir: string;
 	protected testLog: Console;
+	public baseDockerComposeCmd: string;
+	public isBaseSuite: boolean;
+	public resultFilePath: string;
+	public runHeaded: boolean;
+	public screenshotPath: string;
 	public suiteName: string;
 	public suiteConfigName: string;
 	public testLogFilePath: string;
-	public screenshotPath: string;
-	public resultFilePath: string;
-	public runHeaded: boolean;
 
 	public constructor(
 		suiteName: string,
@@ -156,17 +157,21 @@ export class TestSetup {
 		}
 	}
 
-	private startServices(): void {
-		console.log( '▶️  Starting Wikibase Suite services' );
+	public startServices( dockerComposeOptions = '' ): void {
+		try {
+			console.log( '▶️  Starting Wikibase Suite services' );
 
-		const startServicesCmd = `${this.baseDockerComposeCmd} up -d`;
-		const result = spawnSync( startServicesCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+			const startServicesCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptions} up -d`;
+			const result = spawnSync( startServicesCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
-		this.testLog.log( result.stdout );
-		this.testLog.log( result.stderr );
+			this.testLog.log( result.stdout );
+			this.testLog.log( result.stderr );
+		} catch ( e ) {
+			throw new SevereServiceError( e );
+		}
 	}
 
-	private async waitForServices(): Promise<void[]> {
+	public async waitForServices(): Promise<void[]> {
 		console.log( '▶️  Waiting for Wikibase Suite services' );
 		return Promise.all( this.config.waitForURLs.map(
 			async ( waitForURL: string ): Promise<void> => {
@@ -175,11 +180,11 @@ export class TestSetup {
 		) );
 	}
 
-	private stopServices(): void {
+	public stopServices( removeVolumes: boolean = true ): void {
 		console.log( '▶️  Stopping Wikibase Suite services' );
 
 		const stopServiceCmd =
-			`${this.baseDockerComposeCmd} down --volumes --remove-orphans --timeout 1`;
+			`${this.baseDockerComposeCmd} down ${removeVolumes ? '--volumes' : ''} --remove-orphans --timeout 1`;
 
 		const result = spawnSync( stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
