@@ -1,7 +1,7 @@
 import { spawnSync } from 'child_process';
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { testSetup } from '../../suites/upgrade/upgrade.conf.js'
+import { testSetup } from '../../suites/upgrade/upgrade.conf.js';
 import loadLocalDockerImage from '../../helpers/loadLocalDockerImage.js';
 import { defaultFunctions as defaultFunctionsInit } from '../../helpers/default-functions.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -9,16 +9,16 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 describe( 'Wikibase post upgrade', function () {
 	let oldItemID: string;
 
-	before ( async () => {
+	before( async () => {
 		process.env.TEST_COMPOSE = testSetup.baseDockerComposeCmd;
 
 		// Set new version and load the docker image it (assumed local)
-		process.env.WIKIBASE_TEST_IMAGE_NAME = `${ testSetup.isBaseSuite ? 'wikibase' : 'wikibase-bundle' }:latest`;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = `${testSetup.isBaseSuite ? 'wikibase' : 'wikibase-bundle'}:latest`;
 		loadLocalDockerImage( process.env.WIKIBASE_TEST_IMAGE_NAME );
 
 		spawnSync(
 			'specs/upgrade/setup.sh',
-			{ shell: true, stdio: 'inherit', env: process.env } 
+			{ shell: true, stdio: 'inherit', env: process.env }
 		);
 
 		// Wait for services to restart after they were cycled at the end of setup.sh above
@@ -30,7 +30,7 @@ describe( 'Wikibase post upgrade', function () {
 		//  TODO: consider adding a "testSetup.dockerExec( optionsAndCmd: string )" method
 		spawnSync(
 			'$TEST_COMPOSE exec wikibase php /var/www/html/maintenance/update.php --quick',
-			{ shell: true, stdio: 'inherit', env: process.env } 
+			{ shell: true, stdio: 'inherit', env: process.env }
 		);
 
 		// Make sure services are settled and available again

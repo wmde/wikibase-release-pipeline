@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 # ==== Load the Wikibase default env vars and create a new LocalSettings file 
 # the entrypoint logic is always depending on LocalSettings.php to be there
