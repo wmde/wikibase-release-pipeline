@@ -223,8 +223,7 @@ jobs:
 
     needs:
       - test
-      - test_upgrade_base
-      - test_upgrade_bundle
+      - test_upgrade
 
     strategy:
       fail-fast: false
