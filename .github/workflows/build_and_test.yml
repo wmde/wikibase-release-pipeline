@@ -82,8 +82,6 @@ jobs:
       matrix:
         suite:
           [
-            example,
-
             repo,
             fedprops,
             repo_client,
@@ -95,7 +93,9 @@ jobs:
             base__repo,
             base__repo_client,
             base__pingback,
-            base__fedprops
+            base__fedprops,
+
+            example
           ]
 
     needs:

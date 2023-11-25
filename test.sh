@@ -54,6 +54,9 @@ function test_all_suites {
 	test_suite base__repo_client
 	test_suite base__fedprops
 	test_suite base__pingback
+
+	# example test
+	test_suite example
 }
 
 WDIO_OPTIONS="${*:2}"

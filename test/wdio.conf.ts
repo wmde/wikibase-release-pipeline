@@ -7,8 +7,6 @@ import { Frameworks, Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
 import JsonReporter from './helpers/json-reporter.js';
 import { TestSetup } from './helpers/TestSetup.js';
 import { saveScreenshot } from 'wdio-mediawiki';
@@ -99,15 +97,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		 * Initializes the default functions for every test and
 		 * polls the wikibase docker container for installed extensions
 		 */
-		before: async () => {
-			defaultFunctionsInit();
-
-			await WikibaseApi.initialize(
-				undefined,
-				process.env.MW_ADMIN_NAME,
-				process.env.MW_ADMIN_PASS
-			);
-		},
+		before: async () => testSetup.before(),
 
 		/**
 		 * Save a screenshot when test fails.

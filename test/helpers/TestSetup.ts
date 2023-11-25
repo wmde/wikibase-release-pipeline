@@ -18,6 +18,7 @@ export type TestSetupConfig = {
 	// Can configure headed runs for the test environment directly,
 	// or globally by setting the HEADED_TESTS env var
 	runHeaded?: boolean;
+	before?(): Promise<void>;
 };
 
 export class TestSetup {
@@ -28,7 +29,6 @@ export class TestSetup {
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
 	public resultFilePath: string;
-	public runHeaded: boolean;
 	public screenshotPath: string;
 	public suiteName: string;
 	public suiteConfigName: string;
@@ -52,7 +52,7 @@ export class TestSetup {
 		this.testLogFilePath = `${this.resultsDir}/${this.suiteName}.log`;
 		this.screenshotPath = `${this.resultsDir}/screenshots`;
 		this.resultFilePath = `${this.resultsDir}/result.json`;
-		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
+		this.config.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
 
@@ -73,11 +73,15 @@ export class TestSetup {
 
 		console.log( `▶️  Running specs for "${this.suiteName}" test suite` );
 
-		if ( this.runHeaded ) {
+		if ( this.config.runHeaded ) {
 			console.log(
 				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
 			);
 		}
+	}
+
+	public async before(): Promise<void> {
+		await this.config.before();
 	}
 
 	private async setupLogs(): Promise<void> {
@@ -190,49 +194,5 @@ export class TestSetup {
 
 		this.testLog.log( result.stdout );
 		this.testLog.log( result.stderr );
-	}
-}
-
-export const defaultTestSetupConfig: TestSetupConfig = {
-	envFiles: [
-		'../variables.env',
-		'default.env',
-		'../local.env'
-	],
-	composeFiles: [
-		'suites/docker-compose.yml'
-	],
-	waitForURLs: [
-		`${process.env.MW_SERVER}/wiki/Main_Page`,
-		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
-		`http://${process.env.WDQS_FRONTEND_SERVER}`
-	],
-	skipLocalDockerImageLoad: false,
-	runHeaded: false
-};
-
-export class DefaultTestSetup extends TestSetup {
-	public constructor(
-		suiteName: string,
-		config: TestSetupConfig = {}
-	) {
-		const testConfig = {
-			...defaultTestSetupConfig,
-			...config,
-			envFiles: [
-				...defaultTestSetupConfig.envFiles,
-				...( config.envFiles || [] )
-			],
-			composeFiles: [
-				...defaultTestSetupConfig.composeFiles,
-				...( config.composeFiles || [] )
-			],
-			waitForURLs: [
-				...defaultTestSetupConfig.waitForURLs,
-				...( config.waitForURLs || [] )
-			]
-		};
-
-		super( suiteName, testConfig );
 	}
 }
