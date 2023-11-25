@@ -33,9 +33,8 @@ export const specs = [
 export const testSetup = new TestSetup( 'upgrade', {
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
-    // TODO: Explore further what happend
-    // with WDQS in upgrade tests
-    // 'suites/upgrade/docker-compose.wdqs.yml'
+		// TODO: Explore further what happened with WDQS
+		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
 		'suites/upgrade/default_variables.env'

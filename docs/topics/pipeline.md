@@ -11,10 +11,6 @@ This is the main workflow that builds Wikibase and related software, tests it an
 
 This workflow is used to publish the artifacts of a workflow from Github.
 
-#### [.Github/workflows/publish.yml](.github/workflows/test_example.yml)
-
-This workflow tests against the docker-compose in the `example` directory.
-
 ## Running the pipeline on Github
 
 The build workflow will trigger on pushes on `main` and PRs.
