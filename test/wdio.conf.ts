@@ -8,13 +8,19 @@ import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import JsonReporter from './helpers/json-reporter.js';
-import { TestSetup } from './helpers/TestSetup.js';
+import { TestSetup, testSetupLog } from './helpers/TestSetup.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
 export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO.Config {
+	const baseUrl = process.env.MW_SERVER + process.env.MW_SCRIPT_PATH;
+	const logLevel = ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error';
+	const mochaTimeout = process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000;
+	const outputDir = testSetup.resultsDir;
+	const waitforTimeout = 30 * 1000;
+
 	return {
 		specs: specs.map( ( specFilepath ) => `${__dirname}/${specFilepath}` ),
 
@@ -24,7 +30,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		// Use in a test as `browser.options.<key>`.
 
 		// Base for browser.url() and Page#openTitle()
-		baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
+		baseUrl,
 
 		hostname: 'browser',
 		port: 4444,
@@ -57,11 +63,12 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		// ===================
 
 		// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-		logLevel:
-			( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
+		logLevel,
+
+		outputDir,
 
 		// Default timeout for each waitFor* command.
-		waitforTimeout: 30 * 1000,
+		waitforTimeout,
 
 		// See also: http://webdriver.io/guide/testrunner/reporters.html
 		reporters: [
@@ -83,21 +90,27 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		// See also: http://mochajs.org
 		mochaOpts: {
 			ui: 'bdd',
-			timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
+			timeout: mochaTimeout
 		},
 
 		// =====
 		// Hooks
 		// =====
-		onPrepare: async function () {
-			await testSetup.execute();
-		},
+		onPrepare: async () => testSetup.execute(),
 
 		/**
 		 * Initializes the default functions for every test and
 		 * polls the wikibase docker container for installed extensions
 		 */
 		before: async () => testSetup.before(),
+
+		beforeSuite: async ( suite ) => {
+			testSetupLog.info( `📘 ${suite.title.toUpperCase()}` );
+		},
+
+		beforeTest: function ( test ) {
+			testSetupLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
+		},
 
 		/**
 		 * Save a screenshot when test fails.

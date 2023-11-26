@@ -1,49 +1,32 @@
 import { spawnSync } from 'child_process';
-import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { testSetup } from '../../suites/upgrade/upgrade.conf.js';
-import loadLocalDockerImage from '../../helpers/loadLocalDockerImage.js';
-import { defaultFunctions as defaultFunctionsInit } from '../../helpers/default-functions.js';
+import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
+import { testSetup } from '../../suites/upgrade/upgrade.conf.js';
 
-describe( 'Wikibase post upgrade', function () {
+describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
 	before( async () => {
-		process.env.TEST_COMPOSE = testSetup.baseDockerComposeCmd;
-
-		// Set new version and load the docker image (assumed local)
-		process.env.WIKIBASE_TEST_IMAGE_NAME = `${testSetup.isBaseSuite ? 'wikibase' : 'wikibase-bundle'}:latest`;
-		loadLocalDockerImage( process.env.WIKIBASE_TEST_IMAGE_NAME );
-
+		// === Set image for currently build wikibase version
+		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = process.env.WIKIBASE_TEST_IMAGE_NAME;
+		// Fix for LocalSettings.php (see notes in the script)
 		spawnSync(
-			'specs/upgrade/setup.sh',
+			'specs/upgrade/recreateLocalSettings.sh',
 			{ shell: true, stdio: 'inherit', env: process.env }
 		);
 
-		// Wait for services to restart after they were cycled at the end of setup.sh above
-		// TODO: consider moving that out of shell script and use testSetup.stopServices() and
-		// startServices()  or a new testSetup.resetServices() instead
+		// === Take down and start with new wikibase version (without removing data / volumes)
+		testSetup.runDockerComposeCmd( '--progress quiet down' );
+		testSetup.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
 		await testSetup.waitForServices();
 
-		// Run "php /var/www/html/maintenance/update.php" on wikibase-service
-		//  TODO: consider adding a "testSetup.dockerExec( optionsAndCmd: string )" method
-		spawnSync(
-			'$TEST_COMPOSE exec wikibase php /var/www/html/maintenance/update.php --quick',
-			{ shell: true, stdio: 'inherit', env: process.env }
-		);
-
+		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
+		testSetup.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
 		// Make sure services are settled and available again
 		await testSetup.waitForServices();
-
-		// Repeat WDIO before initialization for the new wikibase instance
-		// TODO: consider integrating this logic as part of a testSetup.resetServices() method?
-		defaultFunctionsInit();
-		await WikibaseApi.initialize(
-			undefined,
-			process.env.MW_ADMIN_NAME,
-			process.env.MW_ADMIN_PASS
-		);
+		// Repeat WDIO initialization with new services up
+		await testSetup.before();
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {

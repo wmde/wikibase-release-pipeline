@@ -11,9 +11,9 @@ export const testSetup = new DefaultTestSetup( 'base__repo_client', {
 	composeFiles: [
 		'suites/repo_client/docker-compose.override.yml'
 	],
-	waitForURLs: [
+	waitForURLs: () => ( [
 		process.env.MW_CLIENT_SERVER
-	]
+	] )
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

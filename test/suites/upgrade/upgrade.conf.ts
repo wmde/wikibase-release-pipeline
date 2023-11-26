@@ -19,12 +19,7 @@ export const versions = {
 	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13'
 };
 
-const upgradeFromVersion = process.env.UPGRADE_FROM_VERSION;
-const wikibaseImageName = versions[ upgradeFromVersion ];
-// TODO: Doing this here and not loading /variables.env as there
-// is currently no elegant way to override WIKIBASE_TEST_IMAGE_NAME
-// from the TestSetupConfig. There is likely be a better solution.
-process.env.WIKIBASE_TEST_IMAGE_NAME = wikibaseImageName;
+process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = versions[ process.env.UPGRADE_FROM_VERSION ];
 
 export const specs = [
 	'specs/upgrade/pre-upgrade.ts',
@@ -41,12 +36,12 @@ export const testSetup = new TestSetup( 'upgrade', {
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
+		...defaultTestSetupConfig.envFiles,
 		'suites/upgrade/default_variables.env'
 	],
-	waitForURLs: [
+	waitForURLs: () => ( [
 		`${process.env.MW_SERVER}/wiki/Main_Page`
-	],
-	skipLocalDockerImageLoad: true,
+	] ),
 	before: defaultTestSetupConfig.before
 } );
 

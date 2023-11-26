@@ -1,34 +1,29 @@
-import { mkdir, rm } from 'fs/promises';
+import { mkdirSync, rmSync } from 'fs';
 import { spawnSync } from 'child_process';
-import { createWriteStream } from 'fs';
-import { Console } from 'console';
 import { SevereServiceError } from 'webdriverio';
+import logger from '@wdio/logger';
 import checkIfUp from './checkIfUp.js';
-import loadLocalDockerImage from './loadLocalDockerImage.js';
 import loadEnvVars from './loadEnvVars.js';
+
+export const testSetupLog = logger( 'TestSetup' );
 
 export type TestSetupConfig = {
 	envFiles?: string[];
 	composeFiles?: string[];
-	waitForURLs?: string[];
-	// Currently only used for the "example" test suite, but is useful
-	// for using any docker compose service setup not based upon
-	// local builds.
-	skipLocalDockerImageLoad?: boolean;
+	waitForURLs?(): string[];
+	before?(): Promise<void>;
 	// Can configure headed runs for the test environment directly,
 	// or globally by setting the HEADED_TESTS env var
 	runHeaded?: boolean;
-	before?(): Promise<void>;
 };
 
 export class TestSetup {
 	protected config: TestSetupConfig;
 	protected hostCWD: string;
-	protected resultsDir: string;
-	protected testLog: Console;
 	protected testLogFilePath: string;
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
+	public resultsDir: string;
 	public resultFilePath: string;
 	public screenshotPath: string;
 	public suiteName: string;
@@ -60,13 +55,9 @@ export class TestSetup {
 	public async execute(): Promise<void> {
 		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
-		await this.setupResultsDir();
+		this.setupResultsDir();
 		this.loadEnvFiles();
-
-		if ( !this.config.skipLocalDockerImageLoad ) {
-			this.setupAndLoadDockerImages();
-		}
-
+		this.setupAndLoadLocalDockerImages();
 		this.stopServices();
 		this.startServices();
 
@@ -87,19 +78,13 @@ export class TestSetup {
 		}
 	}
 
-	private async setupResultsDir(): Promise<void> {
+	private setupResultsDir(): void {
 		try {
-			await rm( this.resultsDir, { recursive: true, force: true } );
+			rmSync( this.resultsDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			await mkdir( this.resultsDir, { recursive: true } );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			const outputLog = createWriteStream( this.testLogFilePath );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			const errorsLog = createWriteStream( this.testLogFilePath );
-
-			this.testLog = new Console( outputLog, errorsLog );
+			mkdirSync( this.resultsDir, { recursive: true } );
 		} catch ( e ) {
-			console.log( '❌ Error occurred in setting-up logs:', e );
+			testSetupLog.error( '❌ Error occurred in setting-up logs:', e );
 		}
 	}
 
@@ -115,11 +100,6 @@ export class TestSetup {
 			`--project-directory ${this.hostCWD}/suites`,
 			'-p wikibase-suite'
 		];
-		this.config.envFiles
-			.filter( ( envFilePath ) => envFilePath )
-			.forEach( ( envFile ) =>
-				dockerComposeCmdArray.push( `--env-file ${envFile}` )
-			);
 		this.config.composeFiles.forEach( ( composeFile ) =>
 			dockerComposeCmdArray.push( `-f ${composeFile}` )
 		);
@@ -127,69 +107,37 @@ export class TestSetup {
 		return dockerComposeCmdArray.join( ' ' );
 	}
 
-	private setupAndLoadDockerImages(): void {
-		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME ||
-			process.env.DEFAULT_DATABASE_IMAGE_NAME;
-		process.env.WIKIBASE_TEST_IMAGE_NAME = this.isBaseSuite ?
-			process.env.WIKIBASE_IMAGE_NAME :
-			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	protected setupAndLoadLocalDockerImages(): void {}
 
-		const defaultImages = [
-			process.env.WIKIBASE_TEST_IMAGE_NAME,
-			process.env.WDQS_IMAGE_NAME,
-			process.env.WDQS_FRONTEND_IMAGE_NAME,
-			process.env.WDQS_PROXY_IMAGE_NAME
-		];
-
-		const bundleImages = [
-			process.env.ELASTICSEARCH_IMAGE_NAME,
-			process.env.QUICKSTATEMENTS_IMAGE_NAME
-		];
-
-		// Does it do anything to be adding the ":latest" tag to these?
-		process.env.WIKIBASE_TEST_IMAGE_NAME = `${process.env.WIKIBASE_TEST_IMAGE_NAME}:latest`;
-		process.env.QUERYSERVICE_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
-		process.env.QUERYSERVICE_UI_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
-		process.env.WDQS_PROXY_IMAGE_NAME = `${process.env.WDQS_PROXY_IMAGE_NAME}:latest`;
-		process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
-		process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
-
-		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
-
-		if ( !this.isBaseSuite ) {
-			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
-		}
-	}
-
-	public startServices( dockerComposeOptions = '' ): void {
+	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
 		try {
-			console.log( '▶️  Starting Wikibase Suite services' );
+			const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
-			const startServicesCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptions} up -d`;
-			const result = spawnSync( startServicesCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+			testSetupLog.info( 'Running: ', dockerComposeCmd );
 
-			this.testLog.log( result.stdout );
-			this.testLog.log( result.stderr );
+			const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+
+			testSetupLog.debug( result.stdout );
+			testSetupLog.debug( result.stderr );
 		} catch ( e ) {
 			throw new SevereServiceError( e );
 		}
 	}
 
-	public stopServices( removeVolumes: boolean = true ): void {
+	public startServices(): void {
+		console.log( '▶️  Starting Wikibase Suite services' );
+		this.runDockerComposeCmd( 'up -d' );
+	}
+
+	public stopServices(): void {
 		console.log( '▶️  Stopping Wikibase Suite services' );
-
-		const stopServiceCmd =
-			`${this.baseDockerComposeCmd} down ${removeVolumes ? '--volumes' : ''} --remove-orphans --timeout 1`;
-
-		const result = spawnSync( stopServiceCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
-
-		this.testLog.log( result.stdout );
-		this.testLog.log( result.stderr );
+		this.runDockerComposeCmd( 'down --volumes --remove-orphans --timeout 1' );
 	}
 
 	public async waitForServices(): Promise<void[]> {
 		console.log( '▶️  Waiting for Wikibase Suite services' );
-		return Promise.all( this.config.waitForURLs.map(
+		return Promise.all( this.config.waitForURLs().map(
 			async ( waitForURL: string ): Promise<void> => {
 				return checkIfUp( waitForURL );
 			}

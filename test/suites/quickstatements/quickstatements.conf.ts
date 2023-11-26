@@ -10,10 +10,10 @@ export const testSetup = new DefaultTestSetup( 'quickstatements', {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
-	waitForURLs: [
+	waitForURLs: () => ( [
 		process.env.QS_SERVER,
 		process.env.MW_CLIENT_SERVER
-	]
+	] )
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

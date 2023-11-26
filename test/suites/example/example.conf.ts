@@ -9,7 +9,6 @@ export const specs = [
 ];
 
 export const testSetup = new TestSetup( 'example', {
-	skipLocalDockerImageLoad: true,
 	composeFiles: [
 		'../example/docker-compose.yml',
 		'../example/docker-compose.extra.yml',

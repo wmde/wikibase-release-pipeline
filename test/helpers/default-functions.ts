@@ -9,6 +9,7 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
+import { testSetupLog } from './TestSetup.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -103,14 +104,14 @@ export function defaultFunctions(): void {
 
 			const fullCommand = `docker exec ${opts} ${container} ${command}`;
 			if ( shouldLog ) {
-				console.log( `executing: ${fullCommand}` );
+				testSetupLog.info( `executing: ${fullCommand}` );
 			}
 
 			return new Promise( ( resolve ) => {
 				// eslint-disable-next-line security/detect-child-process
 				exec( fullCommand, ( error, stdout, stderr ) => {
 					if ( error ) {
-						console.warn( error );
+						testSetupLog.error( error );
 					}
 
 					resolve( stdout || stderr );
@@ -188,10 +189,10 @@ export function defaultFunctions(): void {
 			assert.strictEqual( result.status, 200 );
 
 			if ( !foundResult ) {
-				console.error( 'Could not find:' );
-				console.log( expectedChange );
-				console.error( 'Response: ' );
-				console.log( changes );
+				testSetupLog.error( 'Could not find:' );
+				testSetupLog.error( expectedChange );
+				testSetupLog.error( 'Response: ' );
+				testSetupLog.error( changes );
 			}
 
 			return foundResult;

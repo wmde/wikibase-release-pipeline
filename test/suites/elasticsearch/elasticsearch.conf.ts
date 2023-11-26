@@ -9,9 +9,9 @@ export const testSetup = new DefaultTestSetup( 'elasticsearch', {
 	composeFiles: [
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
-	waitForURLs: [
+	waitForURLs: () => ( [
 		`http://${process.env.MW_ELASTIC_HOST}:${process.env.MW_ELASTIC_PORT}`
-	]
+	] )
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
