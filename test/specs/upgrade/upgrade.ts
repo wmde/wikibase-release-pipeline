@@ -12,7 +12,7 @@ describe( 'Wikibase post upgrade', function () {
 	before( async () => {
 		process.env.TEST_COMPOSE = testSetup.baseDockerComposeCmd;
 
-		// Set new version and load the docker image it (assumed local)
+		// Set new version and load the docker image (assumed local)
 		process.env.WIKIBASE_TEST_IMAGE_NAME = `${testSetup.isBaseSuite ? 'wikibase' : 'wikibase-bundle'}:latest`;
 		loadLocalDockerImage( process.env.WIKIBASE_TEST_IMAGE_NAME );
 

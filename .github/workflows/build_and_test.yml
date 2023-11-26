@@ -121,7 +121,7 @@ jobs:
         run: |
           cd .github/reporter
           npm install
-          SUITE=${{ matrix.suite }} node report.js
+          node report.js ${{ matrix.suite }}
 
       - name: Show Logs
         if: always()

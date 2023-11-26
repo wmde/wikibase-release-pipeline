@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
 
-const loadLocalDockerImage = (
+export const loadLocalDockerImage = (
 	providedImageName: string,
 	reload: boolean = false
 ): void => {

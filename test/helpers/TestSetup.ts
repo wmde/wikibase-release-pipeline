@@ -2,11 +2,10 @@ import { mkdir, rm } from 'fs/promises';
 import { spawnSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import { Console } from 'console';
-import dotenv from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
 import { SevereServiceError } from 'webdriverio';
 import checkIfUp from './checkIfUp.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
+import loadEnvVars from './loadEnvVars.js';
 
 export type TestSetupConfig = {
 	envFiles?: string[];
@@ -27,13 +26,14 @@ export class TestSetup {
 	protected hostCWD: string;
 	protected resultsDir: string;
 	protected testLog: Console;
+	protected testLogFilePath: string;
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
 	public resultFilePath: string;
 	public screenshotPath: string;
 	public suiteName: string;
 	public suiteConfigName: string;
-	public testLogFilePath: string;
+	public runHeaded: boolean;
 
 	public constructor(
 		suiteName: string,
@@ -53,7 +53,7 @@ export class TestSetup {
 		this.testLogFilePath = `${this.resultsDir}/${this.suiteName}.log`;
 		this.screenshotPath = `${this.resultsDir}/screenshots`;
 		this.resultFilePath = `${this.resultsDir}/result.json`;
-		this.config.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
+		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
 
@@ -61,7 +61,7 @@ export class TestSetup {
 		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
 		await this.setupLogs();
-		this.loadEnvVars();
+		this.loadEnvFiles();
 
 		if ( !this.config.skipLocalDockerImageLoad ) {
 			this.setupAndLoadDockerImages();
@@ -74,7 +74,7 @@ export class TestSetup {
 
 		console.log( `▶️  Running specs for "${this.suiteName}" test suite` );
 
-		if ( this.config.runHeaded ) {
+		if ( this.runHeaded ) {
 			console.log(
 				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
 			);
@@ -103,15 +103,10 @@ export class TestSetup {
 		}
 	}
 
-	private loadEnvVars(): void {
-		// Load current local build variables
+	private loadEnvFiles(): void {
 		this.config.envFiles
 			.filter( ( envFilePath ) => envFilePath )
-			.forEach( ( envFilePath ) =>
-				dotenvExpand.expand(
-					dotenv.config( { path: envFilePath, override: true } )
-				)
-			);
+			.forEach( ( envFilePath ) => loadEnvVars( envFilePath ) );
 	}
 
 	private makeBaseDockerComposeCmd(): string {

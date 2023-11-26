@@ -19,10 +19,10 @@ docker compose \
 "
 
 function test_suite {
-	SUITE=$1
+	SUITE_NAME=$1
 	WDIO_OPTIONS=$2
 
-	WDIO_COMMAND="npx wdio suites/$SUITE/$SUITE.conf.ts --silent"
+	WDIO_COMMAND="npx wdio suites/$SUITE_NAME/$SUITE_NAME.conf.ts --silent"
 
 	if [ -n "$WDIO_OPTIONS" ]; then
 		WDIO_COMMAND="$WDIO_COMMAND $WDIO_OPTIONS"
