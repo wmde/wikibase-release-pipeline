@@ -60,7 +60,7 @@ export class TestSetup {
 	public async execute(): Promise<void> {
 		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
-		await this.setupLogs();
+		await this.setupResultsDir();
 		this.loadEnvFiles();
 
 		if ( !this.config.skipLocalDockerImageLoad ) {
@@ -87,7 +87,7 @@ export class TestSetup {
 		}
 	}
 
-	private async setupLogs(): Promise<void> {
+	private async setupResultsDir(): Promise<void> {
 		try {
 			await rm( this.resultsDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
