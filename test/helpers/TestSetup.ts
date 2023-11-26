@@ -82,7 +82,9 @@ export class TestSetup {
 	}
 
 	public async before(): Promise<void> {
-		await this.config.before();
+		if ( this.config.before ) {
+			await this.config.before();
+		}
 	}
 
 	private async setupLogs(): Promise<void> {
