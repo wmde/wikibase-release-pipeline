@@ -48,7 +48,13 @@ export class DefaultTestSetup extends TestSetup {
 			waitForURLs: [
 				...defaultTestSetupConfig.waitForURLs,
 				...( config.waitForURLs || [] )
-			]
+			],
+			before: async (): Promise<void> => {
+				await defaultTestSetupConfig.before();
+				if ( config.before ) {
+					await config.before();
+				}
+			}
 		};
 
 		super( suiteName, testConfig );

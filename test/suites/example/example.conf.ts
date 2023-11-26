@@ -1,4 +1,5 @@
-import { TestSetup, defaultTestSetupConfig } from '../../helpers/TestSetup.js';
+import { TestSetup } from '../../helpers/TestSetup.js';
+import { defaultTestSetupConfig } from '../../helpers/DefaultTestSetup.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [
@@ -18,7 +19,8 @@ export const testSetup = new TestSetup( 'example', {
 		'../example/template.env',
 		'suites/example/example.env'
 	],
-	waitForURLs: defaultTestSetupConfig.waitForURLs
+	waitForURLs: defaultTestSetupConfig.waitForURLs,
+	before: defaultTestSetupConfig.before
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

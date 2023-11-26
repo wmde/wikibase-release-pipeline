@@ -3,6 +3,7 @@ import { spawnSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import { Console } from 'console';
 import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 import { SevereServiceError } from 'webdriverio';
 import checkIfUp from './checkIfUp.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
@@ -105,7 +106,9 @@ export class TestSetup {
 		this.config.envFiles
 			.filter( ( envFilePath ) => envFilePath )
 			.forEach( ( envFilePath ) =>
-				dotenv.config( { path: envFilePath, override: true } )
+				dotenvExpand.expand(
+					dotenv.config( { path: envFilePath, override: true, debug: true } )
+				)
 			);
 	}
 
