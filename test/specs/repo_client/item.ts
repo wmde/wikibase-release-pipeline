@@ -119,6 +119,7 @@ describe( 'Item', function () {
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
 		const expectedTestDeletionChange: ExternalChange = {

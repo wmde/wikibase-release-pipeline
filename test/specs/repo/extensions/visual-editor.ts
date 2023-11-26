@@ -16,6 +16,7 @@ describe( 'VisualEditor', function () {
 		const messageDialogAEl = await $$( '.oo-ui-messageDialog-actions a' );
 		await messageDialogAEl[ 1 ].click();
 
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );
 
 		// disable notice popup and focus on editor

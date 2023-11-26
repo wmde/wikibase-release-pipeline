@@ -40,8 +40,10 @@ describe( 'Property', () => {
 				await browser.keys( 'STATEMENT'.split( '' ) );
 
 				// wait for save button to re-enable
+		// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
+		// eslint-disable-next-line wdio/no-pause
 
 				await Property.open( propertyId );
 			} );
@@ -52,12 +54,14 @@ describe( 'Property', () => {
 
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' );
+		// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await browser.keys( propertyId.split( '' ) );
 				// await $( propertyIdSelector ).click();
 				await $( propertyIdSelector( propertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
 
+		// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
 

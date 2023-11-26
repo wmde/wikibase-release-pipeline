@@ -27,6 +27,7 @@ class QueryServiceUI extends SubmittablePage {
 			return text.includes( prop );
 		}
 
+		// eslint-disable-next-line security/detect-non-literal-regexp
 		const regexp = new RegExp( `(${prop})(\\s+)(${value})` );
 		const matches = text.match( regexp );
 		return matches !== null;

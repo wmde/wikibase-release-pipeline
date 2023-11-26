@@ -66,11 +66,6 @@ export const config: WebdriverIO.Config = {
 			'spec',
 			{
 				showPreface: false
-				// Only available after we're on the v8 version of this plugin.
-				// Once we're there this may do something we don't want, but
-				// keeping here to remind us to consider the possibility of silencing
-				// the "[0-0] RUNNING in chrome..." logging and just relying spec reporter.
-				// realtimeReporting: true
 			}
 		],
 		[
@@ -98,7 +93,7 @@ export const config: WebdriverIO.Config = {
 		// NOTE: This log/result directory setup is already handled in the shellscript before
 		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
 		// the future. These operations are harmless as-is.
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		// eslint-disable-next-line @typescript-eslint/no-empty-function, security/detect-non-literal-fs-filename
 		mkdir( resultsDir, { recursive: true }, () => {} );
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		rm( screenshotPath, { recursive: true, force: true }, () => {} );
