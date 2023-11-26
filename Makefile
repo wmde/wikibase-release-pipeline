@@ -8,6 +8,11 @@ export
 download:
 	bash publish/download.sh
 
+# TODO: https://phabricator.wikimedia.org/T347084
+requirements:
+	python3 build/requirements/build_version_requirements.py
+	cat artifacts/built_versions.log
+
 wikibase:
 	bash update_cache.sh bundle
 	eval ". ./build/build_wikibase.sh; bash build/build_wikibase_docker.sh ${WIKIBASE_IMAGE_NAME};bash build/build_wikibase_bundle_docker.sh ${WIKIBASE_IMAGE_NAME} ${WIKIBASE_BUNDLE_IMAGE_NAME}"
