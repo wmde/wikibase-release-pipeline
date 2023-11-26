@@ -175,15 +175,6 @@ export class TestSetup {
 		}
 	}
 
-	public async waitForServices(): Promise<void[]> {
-		console.log( '▶️  Waiting for Wikibase Suite services' );
-		return Promise.all( this.config.waitForURLs.map(
-			async ( waitForURL: string ): Promise<void> => {
-				return checkIfUp( waitForURL );
-			}
-		) );
-	}
-
 	public stopServices( removeVolumes: boolean = true ): void {
 		console.log( '▶️  Stopping Wikibase Suite services' );
 
@@ -194,5 +185,14 @@ export class TestSetup {
 
 		this.testLog.log( result.stdout );
 		this.testLog.log( result.stderr );
+	}
+
+	public async waitForServices(): Promise<void[]> {
+		console.log( '▶️  Waiting for Wikibase Suite services' );
+		return Promise.all( this.config.waitForURLs.map(
+			async ( waitForURL: string ): Promise<void> => {
+				return checkIfUp( waitForURL );
+			}
+		) );
 	}
 }
