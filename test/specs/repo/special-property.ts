@@ -29,6 +29,7 @@ describe( 'Special:NewProperty', function () {
 
 		// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
 		// timeout, so the list of properties reflects the change
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 1100 );
 
 		await SpecialListProperties.openParams( { limit: 1000 } );

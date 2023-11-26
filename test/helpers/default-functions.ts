@@ -107,6 +107,7 @@ export function defaultFunctions(): void {
 			}
 
 			return new Promise( ( resolve ) => {
+				// eslint-disable-next-line security/detect-child-process
 				exec( fullCommand, ( error, stdout, stderr ) => {
 					if ( error ) {
 						console.warn( error );
@@ -132,6 +133,7 @@ export function defaultFunctions(): void {
 			await browser.url( `${host}/wiki/${title}?action=edit` );
 
 			// wait for javascript to settle
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 5 * 1000 );
 
 			// this shows up one time for anonymous users (VisualEditor)
@@ -142,6 +144,7 @@ export function defaultFunctions(): void {
 				await startEditbutton.click();
 
 				// wait for fade out animation to finish
+				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 2 * 1000 );
 			}
 
@@ -155,6 +158,7 @@ export function defaultFunctions(): void {
 			// save page
 			await browser.execute( async () => $( '#editform.mw-editform' ).submit() );
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 2 * 1000 );
 
 			return await $( '#mw-content-text' ).getText();
@@ -223,11 +227,13 @@ export function defaultFunctions(): void {
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
 
 			// click import
 			await $( "button[tt='dialog_import_v1']" ).click();
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
 
 			// click run
