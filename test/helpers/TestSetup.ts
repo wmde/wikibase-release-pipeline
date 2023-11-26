@@ -107,7 +107,7 @@ export class TestSetup {
 			.filter( ( envFilePath ) => envFilePath )
 			.forEach( ( envFilePath ) =>
 				dotenvExpand.expand(
-					dotenv.config( { path: envFilePath, override: true, debug: true } )
+					dotenv.config( { path: envFilePath, override: true } )
 				)
 			);
 	}

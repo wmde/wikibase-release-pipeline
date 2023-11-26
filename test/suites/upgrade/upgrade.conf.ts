@@ -1,4 +1,5 @@
 import { TestSetup } from '../../helpers/TestSetup.js';
+import { defaultTestSetupConfig } from '../../helpers/DefaultTestSetup.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const versions = {
@@ -45,7 +46,8 @@ export const testSetup = new TestSetup( 'upgrade', {
 	waitForURLs: [
 		`${process.env.MW_SERVER}/wiki/Main_Page`
 	],
-	skipLocalDockerImageLoad: true
+	skipLocalDockerImageLoad: true,
+	before: defaultTestSetupConfig.before
 } );
 
 export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
