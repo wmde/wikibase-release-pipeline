@@ -1,9 +1,10 @@
 import { spawnSync } from 'child_process';
 
 const loadLocalDockerImage = (
-	imageName: string,
+	providedImageName: string,
 	reload: boolean = false
 ): void => {
+	const imageName = providedImageName.replace( ':latest', '' );
 	const result = spawnSync( 'docker', [ 'images', '-q', imageName ], { encoding: 'utf-8' } );
 
 	if ( !result.stdout || reload ) {
