@@ -19,39 +19,18 @@ services:
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - CHROME_PATH=/usr/bin/chromium-browser
+      - HOST_PWD=${PWD}
       - SELENIUM_LOG_LEVEL
       - MOCHA_OPTS_TIMEOUT
       - HEADED_TESTS
-      - RESULTS_DIR
-      - TEST_LOG
-
-      - MW_SERVER
-      - MW_CLIENT_SERVER
-      - QS_SERVER
-      - WDQS_FRONTEND_SERVER
-      - WDQS_SERVER
-      - PINGBACK_BEACON_SERVER
-      - WDQS_PROXY_SERVER
-      - MW_ELASTIC_HOST
-      - MW_ELASTIC_PORT
-
-      - MW_ADMIN_NAME
-      - MW_ADMIN_PASS
-      - MW_SCRIPT_PATH
-
-      - MEDIAWIKI_VERSION
-      - DATABASE_IMAGE_NAME
-      
-      - DOCKER_MYSQL_NAME
-
-      - DB_USER
-      - DB_PASS
-      - DB_NAME
-      - HOST_PWD=${PWD}
+      # TODO: Update test CLI --
+      # from:
+      #   UPGRADE_FROM_VERSION=WMDE11 ./test.sh upgrade
+      # to:
+      #   ./test.sh upgrade WMDE11 <to_version>
+      # Handle the CLI args within this container such that UPGRADE_FROM_VERSION doesn't need to be passed between
+      # environments.
       - UPGRADE_FROM_VERSION
-
-      - RUN_QUERYSERVICE_POST_UPGRADE_TEST
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment
