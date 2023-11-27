@@ -36,12 +36,6 @@
 - [X] Create item with an alias and search by item alias
 - [X] Case-insensitive search should work through Wikibase
 
-
-# Selenium tests
-
-source the `.env` file in the root directory
-
-Please see tests/selenium/README.md file in mediawiki repository.
 ## Environment
 
 The behavior of the tests can be modified with several environment variables.

@@ -169,7 +169,7 @@ jobs:
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: UPGRADE_FROM_VERSION=${{ matrix.version }} ./test.sh upgrade
+        run: FROM_VERSION=${{ matrix.version }} ./test.sh upgrade
 
       - name: Show Docker Logs
         if: always()

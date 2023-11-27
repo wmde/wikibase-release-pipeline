@@ -25,12 +25,12 @@ services:
       - HEADED_TESTS
       # TODO: Update test CLI --
       # from:
-      #   UPGRADE_FROM_VERSION=WMDE11 ./test.sh upgrade
+      #   FROM_VERSION=WMDE11 ./test.sh upgrade
       # to:
       #   ./test.sh upgrade WMDE11 <to_version>
-      # Handle the CLI args within this container such that UPGRADE_FROM_VERSION doesn't need to be passed between
+      # Handle the CLI args within this container such that FROM_VERSION doesn't need to be passed between
       # environments.
-      - UPGRADE_FROM_VERSION
+      - FROM_VERSION
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment

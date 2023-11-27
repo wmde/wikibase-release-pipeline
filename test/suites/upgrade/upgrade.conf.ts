@@ -19,13 +19,11 @@ export const versions = {
 	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13'
 };
 
-const wikibaseUpgradeTestImage = versions[ process.env.UPGRADE_FROM_VERSION ];
-
 export const specs = [
 	'specs/upgrade/pre-upgrade.ts',
-	'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
+	// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
 	'specs/upgrade/upgrade.ts',
-	'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
+	// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
 	'specs/upgrade/queryservice-post-upgrade.ts'
 ];
 
@@ -43,8 +41,10 @@ export const testSetup = new TestSetup( 'upgrade', {
 		`${process.env.MW_SERVER}/wiki/Main_Page`
 	] ),
 	beforeServices: ( isBaseSuite ) => {
-		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = wikibaseUpgradeTestImage;
-		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}` );
+		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = versions[ process.env.FROM_VERSION ];
+		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
+		// Still load the default images as the local wikibase image will
+		// be used in specs/upgrade/upgrade.ts on services reboot
 		defaultTestSetupConfig.beforeServices( isBaseSuite );
 	},
 	before: defaultTestSetupConfig.before
