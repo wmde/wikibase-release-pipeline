@@ -18,7 +18,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 	const baseUrl = process.env.MW_SERVER + process.env.MW_SCRIPT_PATH;
 	const logLevel = ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error';
 	const mochaTimeout = process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000;
-	const outputDir = testSetup.resultsDir;
+	const outputDir = testSetup.outputDir;
 	const waitforTimeout = 30 * 1000;
 
 	return {
@@ -101,8 +101,12 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		/**
 		 * Initializes the default functions for every test and
 		 * polls the wikibase docker container for installed extensions
+		 *
+		 * @param {...any} args
 		 */
-		before: async () => testSetup.before(),
+		before: async () => {
+			await testSetup.before();
+		},
 
 		beforeSuite: async ( suite ) => {
 			testSetupLog.info( `📘 ${suite.title.toUpperCase()}` );
@@ -129,6 +133,10 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 				console.error( 'failed writing screenshot ...' );
 				console.error( error );
 			}
+		},
+
+		onComplete: function () {
+			testSetup.onComplete();
 		}
 	};
 }

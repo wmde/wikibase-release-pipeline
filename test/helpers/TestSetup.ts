@@ -12,6 +12,7 @@ export type TestSetupConfig = {
 	composeFiles?: string[];
 	waitForURLs?(): string[];
 	before?(): Promise<void>;
+	beforeServices?( isBaseSuite: boolean ): void;
 	// Can configure headed runs for the test environment directly,
 	// or globally by setting the HEADED_TESTS env var
 	runHeaded?: boolean;
@@ -23,7 +24,7 @@ export class TestSetup {
 	protected testLogFilePath: string;
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
-	public resultsDir: string;
+	public outputDir: string;
 	public resultFilePath: string;
 	public screenshotPath: string;
 	public suiteName: string;
@@ -41,13 +42,13 @@ export class TestSetup {
 		this.isBaseSuite = this.suiteName !== this.suiteConfigName;
 
 		this.hostCWD = process.env.HOST_PWD;
-		this.resultsDir = `suites/${this.suiteName}/results`;
+		this.outputDir = `suites/${this.suiteName}/results`;
 
 		this.config = config;
 
-		this.testLogFilePath = `${this.resultsDir}/${this.suiteName}.log`;
-		this.screenshotPath = `${this.resultsDir}/screenshots`;
-		this.resultFilePath = `${this.resultsDir}/result.json`;
+		this.testLogFilePath = `${this.outputDir}/${this.suiteName}.log`;
+		this.screenshotPath = `${this.outputDir}/screenshots`;
+		this.resultFilePath = `${this.outputDir}/result.json`;
 		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
@@ -55,9 +56,9 @@ export class TestSetup {
 	public async execute(): Promise<void> {
 		console.log( `▶️  Starting "${this.suiteName}" test environment` );
 
-		this.setupResultsDir();
+		this.setupOutputDir();
 		this.loadEnvFiles();
-		this.setupAndLoadLocalDockerImages();
+		this.beforeServices();
 		this.stopServices();
 		this.startServices();
 
@@ -72,17 +73,27 @@ export class TestSetup {
 		}
 	}
 
+	protected beforeServices(): void {
+		if ( this.config.beforeServices ) {
+			this.config.beforeServices( this.isBaseSuite );
+		}
+	}
+
 	public async before(): Promise<void> {
 		if ( this.config.before ) {
 			await this.config.before();
 		}
 	}
 
-	private setupResultsDir(): void {
+	public async onComplete(): Promise<void> {
+		this.stopServices();
+	}
+
+	private setupOutputDir(): void {
 		try {
-			rmSync( this.resultsDir, { recursive: true, force: true } );
+			rmSync( this.outputDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			mkdirSync( this.resultsDir, { recursive: true } );
+			mkdirSync( this.outputDir, { recursive: true } );
 		} catch ( e ) {
 			testSetupLog.error( '❌ Error occurred in setting-up logs:', e );
 		}
@@ -106,9 +117,6 @@ export class TestSetup {
 
 		return dockerComposeCmdArray.join( ' ' );
 	}
-
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	protected setupAndLoadLocalDockerImages(): void {}
 
 	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
 		try {

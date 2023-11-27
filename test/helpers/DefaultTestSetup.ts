@@ -9,14 +9,51 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 		'default.env',
 		'../local.env'
 	],
+
 	composeFiles: [
 		'suites/docker-compose.yml'
 	],
+
 	waitForURLs: () => ( [
 		`${process.env.MW_SERVER}/wiki/Main_Page`,
 		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 		`http://${process.env.WDQS_FRONTEND_SERVER}`
 	] ),
+
+	beforeServices: ( isBaseSuite: boolean ): void => {
+		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME ||
+			process.env.DEFAULT_DATABASE_IMAGE_NAME;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite ?
+			process.env.WIKIBASE_IMAGE_NAME :
+			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
+
+		const defaultImages = [
+			process.env.WIKIBASE_TEST_IMAGE_NAME,
+			process.env.WDQS_IMAGE_NAME,
+			process.env.WDQS_FRONTEND_IMAGE_NAME,
+			process.env.WDQS_PROXY_IMAGE_NAME
+		];
+
+		const bundleImages = [
+			process.env.ELASTICSEARCH_IMAGE_NAME,
+			process.env.QUICKSTATEMENTS_IMAGE_NAME
+		];
+
+		// Does it do anything to be adding the ":latest" tag to these?
+		process.env.WIKIBASE_TEST_IMAGE_NAME = `${process.env.WIKIBASE_TEST_IMAGE_NAME}:latest`;
+		process.env.QUERYSERVICE_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
+		process.env.QUERYSERVICE_UI_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
+		process.env.WDQS_PROXY_IMAGE_NAME = `${process.env.WDQS_PROXY_IMAGE_NAME}:latest`;
+		process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
+		process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
+
+		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
+
+		if ( !isBaseSuite ) {
+			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
+		}
+	},
+
 	before: async () => {
 		defaultFunctionsInit();
 
@@ -26,6 +63,7 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 			process.env.MW_ADMIN_PASS
 		);
 	},
+
 	runHeaded: false
 };
 
@@ -54,43 +92,15 @@ export class DefaultTestSetup extends TestSetup {
 				if ( config.before ) {
 					await config.before();
 				}
+			},
+			beforeServices: (): void => {
+				defaultTestSetupConfig.beforeServices( this.isBaseSuite );
+				if ( config.beforeServices ) {
+					config.beforeServices( this.isBaseSuite );
+				}
 			}
 		};
 
 		super( suiteName, testConfig );
-	}
-
-	protected setupAndLoadLocalDockerImages(): void {
-		process.env.DATABASE_IMAGE_NAME = process.env.DATABASE_IMAGE_NAME ||
-			process.env.DEFAULT_DATABASE_IMAGE_NAME;
-		process.env.WIKIBASE_TEST_IMAGE_NAME = this.isBaseSuite ?
-			process.env.WIKIBASE_IMAGE_NAME :
-			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
-
-		const defaultImages = [
-			process.env.WIKIBASE_TEST_IMAGE_NAME,
-			process.env.WDQS_IMAGE_NAME,
-			process.env.WDQS_FRONTEND_IMAGE_NAME,
-			process.env.WDQS_PROXY_IMAGE_NAME
-		];
-
-		const bundleImages = [
-			process.env.ELASTICSEARCH_IMAGE_NAME,
-			process.env.QUICKSTATEMENTS_IMAGE_NAME
-		];
-
-		// Does it do anything to be adding the ":latest" tag to these?
-		process.env.WIKIBASE_TEST_IMAGE_NAME = `${process.env.WIKIBASE_TEST_IMAGE_NAME}:latest`;
-		process.env.QUERYSERVICE_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
-		process.env.QUERYSERVICE_UI_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
-		process.env.WDQS_PROXY_IMAGE_NAME = `${process.env.WDQS_PROXY_IMAGE_NAME}:latest`;
-		process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
-		process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
-
-		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
-
-		if ( !this.isBaseSuite ) {
-			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
-		}
 	}
 }
