@@ -157,6 +157,8 @@ export class TestSetup {
 	// EXPERIMENTAL - For use in restarting services between tests
 	public async resetServices( removeVolumes: boolean = false ): Promise<void> {
 		console.log( '▶️  Resetting Docker services' );
+		this.loadEnvFiles();
+		this.beforeServices();
 		this.stopServices( removeVolumes );
 		this.startServices();
 		await this.waitForServices();

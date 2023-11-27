@@ -42,9 +42,7 @@ export const testSetup = new TestSetup( 'upgrade', {
 	waitForURLs: () => ( [
 		`${process.env.MW_SERVER}/wiki/Main_Page`
 	] ),
-	beforeServices: () => {
-		defaultTestSetupConfig.beforeServices
-	},
+	beforeServices: defaultTestSetupConfig.beforeServices,
 	before: defaultTestSetupConfig.before
 } );
 
