@@ -15,9 +15,8 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 	],
 
 	beforeServices: ( isBaseSuite: boolean ): void => {
-		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite
-			? process.env.WIKIBASE_IMAGE_NAME
-			: process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite ?
+			process.env.WIKIBASE_IMAGE_NAME : process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
 		const defaultImages = [
 			process.env.WIKIBASE_TEST_IMAGE_NAME,
