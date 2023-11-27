@@ -16,13 +16,13 @@ services:
       dockerfile: Dockerfile
     privileged: true
     environment:
-      - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch.docker.tar.gz
-      - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase-bundle.docker.tar.gz
-      - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
-      - WDQS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
-      - WDQS_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
-      - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/quickstatements.docker.tar.gz
-      - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-proxy.docker.tar.gz
+      - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/DockerImages/elasticsearch.docker.tar.gz
+      - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/DockerImages/wikibase-bundle.docker.tar.gz
+      - WIKIBASE_DOCKER_PATH=/extractedArtifacts/DockerImages/wikibase.docker.tar.gz
+      - WDQS_DOCKER_PATH=/extractedArtifacts/DockerImages/wdqs.docker.tar.gz
+      - WDQS_FRONTEND_DOCKER_PATH=/extractedArtifacts/DockerImages/wdqs-frontend.docker.tar.gz
+      - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/DockerImages/quickstatements.docker.tar.gz
+      - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/DockerImages/wdqs-proxy.docker.tar.gz
 
       - WDQS_IMAGE_NAME
       - WDQS_FRONTEND_IMAGE_NAME

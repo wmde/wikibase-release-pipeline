@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: c-py/action-dotenv-to-setenv@v4
+      - uses: c-py/action-dotenv-to-setenv@v5
         with:
           env-file: variables.env
-      - uses: c-py/action-dotenv-to-setenv@v4
+      - uses: c-py/action-dotenv-to-setenv@v5
         with:
           env-file: ${{ env.env_file }}
       - name: run the publish script
