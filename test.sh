@@ -28,13 +28,25 @@ function test_suite {
 		WDIO_COMMAND="$WDIO_COMMAND $WDIO_OPTIONS"
 	fi
 
-	$TEST_RUNNER_COMPOSE up -d --build > /dev/null 2>&1
-	$TEST_RUNNER_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
+	if [ -n "$BUILD" ]; then
+		echo "ℹ️  Building Wikibase Suite images"
+		cd ..
+		./build.sh		
+		cd test
+	fi
+
+	stop_test_runner
+	start_test_runner
 }
 
 function stop_test_runner {
 	echo "ℹ️  Taking down wikibase-suite-test-runner"
 	$TEST_RUNNER_COMPOSE down --volumes > /dev/null 2>&1
+}
+
+function start_test_runner {
+	$TEST_RUNNER_COMPOSE up -d --build > /dev/null 2>&1
+	$TEST_RUNNER_COMPOSE run --rm test-runner -c "$WDIO_COMMAND"
 }
 
 function test_all_suites {
