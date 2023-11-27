@@ -4,6 +4,7 @@ describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async () => {
 		await browser.url( process.env.MW_SERVER + '/wiki/Main_Page' );
 
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );
 
 		const sqlResult = await browser.dbQuery(

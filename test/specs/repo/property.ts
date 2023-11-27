@@ -19,20 +19,24 @@ describe( 'Property', function () {
 		await browser.keys( [ 'S', 'T', 'A', 'T', 'E', 'M', 'E', 'N', 'T' ] );
 
 		// wait for save button to re-enable
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 1000 * 1 );
 		await Property.save.click();
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 1000 * 2 );
 
 		await Property.addReference.click();
 
 		// fill out property id for reference
 		await $( '.ui-entityselector-input' );
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 1000 * 1 );
 		await browser.keys( propertyId.split( '' ) );
 		// await $( propertyIdSelector ).click();
 		await $( propertyIdSelector ).click();
 		await browser.keys( [ 'R', 'E', 'F', 'E', 'R', 'E', 'N', 'C', 'E' ] );
 
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 1000 * 1 );
 		await Property.save.click();
 
