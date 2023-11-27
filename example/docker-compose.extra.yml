@@ -108,8 +108,8 @@ services:
     environment:
       - QUICKSTATEMENTS_HOST
       - QS_PUBLIC_SCHEME_HOST_AND_PORT
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.example.orb.local
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.example.orb.local
+      - WIKIBASE_SCHEME_AND_HOST=http://wikibase-docker.svc
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
