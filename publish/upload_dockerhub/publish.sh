@@ -9,13 +9,13 @@ if [ -z "$WDQS_DOCKER_PATH" ] || \
 [ -z "$QUICKSTATEMENTS_DOCKER_PATH" ] || \
 [ -z "$WDQS_PROXY_DOCKER_PATH" ] || \
 \
-[ -z "$WDQS_FRONTEND_IMAGE_NAME" ] || \
-[ -z "$WDQS_IMAGE_NAME" ] || \
-[ -z "$WDQS_PROXY_IMAGE_NAME" ] || \
-[ -z "$WIKIBASE_IMAGE_NAME" ] || \
-[ -z "$WIKIBASE_BUNDLE_IMAGE_NAME" ] || \
-[ -z "$ELASTICSEARCH_IMAGE_NAME" ] || \
-[ -z "$QUICKSTATEMENTS_IMAGE_NAME" ] || \
+[ -z "$WDQS_FRONTEND_IMAGE" ] || \
+[ -z "$WDQS_IMAGE" ] || \
+[ -z "$WDQS_PROXY_IMAGE" ] || \
+[ -z "$WIKIBASE_IMAGE" ] || \
+[ -z "$WIKIBASE_BUNDLE_IMAGE" ] || \
+[ -z "$ELASTICSEARCH_IMAGE" ] || \
+[ -z "$QUICKSTATEMENTS_IMAGE" ] || \
 \
 [ -z "$RELEASE_VERSION" ] || \
 [ -z "$WMDE_RELEASE_VERSION" ] || \
@@ -66,25 +66,25 @@ docker load -i "$QUICKSTATEMENTS_DOCKER_PATH"
 docker load -i "$WDQS_PROXY_DOCKER_PATH"
 
 # Tag Queryservice Proxy with version
-tag_and_push "$WDQS_PROXY_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+tag_and_push "$WDQS_PROXY_IMAGE" "$WMDE_RELEASE_VERSION"
 
 # Tag WDQS-frontend with version
-tag_and_push "$WDQS_FRONTEND_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+tag_and_push "$WDQS_FRONTEND_IMAGE" "$WMDE_RELEASE_VERSION"
 
 # Tag WDQS with version
-tag_and_push "$WDQS_IMAGE_NAME" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
+tag_and_push "$WDQS_IMAGE" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Wikibase with version
-tag_and_push "$WIKIBASE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+tag_and_push "$WIKIBASE_IMAGE" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Wikibase-bundle with version
-tag_and_push "$WIKIBASE_BUNDLE_IMAGE_NAME" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+tag_and_push "$WIKIBASE_BUNDLE_IMAGE" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Elasticsearch with version
-tag_and_push "$ELASTICSEARCH_IMAGE_NAME" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
+tag_and_push "$ELASTICSEARCH_IMAGE" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
 # Tag Quickstatements with version
-tag_and_push "$QUICKSTATEMENTS_IMAGE_NAME" "$WMDE_RELEASE_VERSION"
+tag_and_push "$QUICKSTATEMENTS_IMAGE" "$WMDE_RELEASE_VERSION"
 
 # logout and remove credentials 
 docker logout

@@ -18,7 +18,7 @@ name: wikibase-suite
 services:
 
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    image: "${WIKIBASE_TEST_IMAGE}"
     links:
       - mysql
     depends_on:
@@ -38,7 +38,7 @@ services:
       <<: *wikibase_variables
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    image: "${WIKIBASE_TEST_IMAGE}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh
     links:
@@ -58,7 +58,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: ${DATABASE_IMAGE_NAME}
+    image: ${MARIADB_IMAGE}
     restart: unless-stopped
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
@@ -74,7 +74,7 @@ services:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
 
   wdqs-frontend:
-    image: "${WDQS_FRONTEND_IMAGE_NAME}"
+    image: "${WDQS_FRONTEND_IMAGE}"
     restart: unless-stopped
     ports:
     # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
@@ -90,7 +90,7 @@ services:
       - WDQS_HOST=wdqs-proxy.svc
 
   wdqs:
-    image: "${WDQS_IMAGE_NAME}"
+    image: "${WDQS_IMAGE}"
     restart: always
     command: /runBlazegraph.sh
     networks:
@@ -105,7 +105,7 @@ services:
       - 9999
 
   wdqs-proxy:
-    image: "${WDQS_PROXY_IMAGE_NAME}"
+    image: "${WDQS_PROXY_IMAGE}"
     restart: unless-stopped
     environment:
       - PROXY_PASS_HOST=wdqs.svc:9999
@@ -119,7 +119,7 @@ services:
          - wdqs-proxy.svc
 
   wdqs-updater:
-    image: "${WDQS_IMAGE_NAME}"
+    image: "${WDQS_IMAGE}"
     restart: unless-stopped
     command: /runUpdate.sh
     depends_on:

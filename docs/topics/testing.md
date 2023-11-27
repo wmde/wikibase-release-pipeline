@@ -31,10 +31,10 @@ Tests upgrading between a previous release defined in `test/suites/upgrade/old-v
 make test-upgrade VERSION=wmde.0
 ```
 
-To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE_NAME` variable.
+To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE` variable.
 
 ```
-make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle
+make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE=wikibase-bundle
 ```
 
 ## Test the example

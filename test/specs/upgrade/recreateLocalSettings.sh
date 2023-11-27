@@ -6,9 +6,8 @@
 # since it's now mounted per default it gets removed when the container changes.
 # copy the one from the pipeline and run envsubst in this shell
 TMP_LOCALSETTINGS="./suites/upgrade/tmp_LocalSettings.php"
-rm $TMP_LOCALSETTINGS
-set -o allexport; source ../Docker/build/Wikibase/default.env; set +o allexport
-npx envsub "../Docker/build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" "$TMP_LOCALSETTINGS"
+rm -r $TMP_LOCALSETTINGS
+npx envsub "../build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" "$TMP_LOCALSETTINGS"
 
 # === Modify old LocalSettings.php
 # This section is needed to create the 1.39 releases

@@ -17,7 +17,7 @@ services:
       <<: *elastic_search
 
   elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}"
+    image: "${ELASTICSEARCH_IMAGE}"
     restart: unless-stopped
     networks:
       default:

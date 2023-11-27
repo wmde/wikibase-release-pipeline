@@ -9,7 +9,8 @@ describe( 'Wikibase upgrade', function () {
 
 	before( async () => {
 		// === Set image for currently build wikibase version
-		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = process.env.WIKIBASE_TEST_IMAGE_NAME;
+		process.env.WIKIBASE_UPGRADE_TEST_IMAGE = process.env.WIKIBASE_TEST_IMAGE;
+
 		// Fix for LocalSettings.php (see notes in the script)
 		spawnSync(
 			'specs/upgrade/recreateLocalSettings.sh',
