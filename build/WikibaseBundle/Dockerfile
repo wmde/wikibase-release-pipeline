@@ -1,4 +1,4 @@
-ARG COMPOSER_IMAGE
+ARG COMPOSER_IMAGE_URL
 ARG WMDE_RELEASE_VERSION
 
 # ###########################################################################
@@ -6,7 +6,7 @@ FROM wikibase:${WMDE_RELEASE_VERSION} as wikibase
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE} as composer
+FROM ${COMPOSER_IMAGE_URL} as composer
 
 COPY --from=wikibase --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html

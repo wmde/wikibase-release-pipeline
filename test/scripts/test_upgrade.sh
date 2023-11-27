@@ -123,15 +123,15 @@ echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
-    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
+    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL"
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
 # echo "ℹ️  Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
 
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
-    export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+    export WDQS_TEST_IMAGE_NAME="$WIKIBASE_SUITE_WDQS_IMAGE_URL:latest";
+    docker load -i "../artifacts/wdqs.docker.tar.gz"
 fi
 
 # load new version and start it 

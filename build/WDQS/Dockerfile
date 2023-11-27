@@ -1,9 +1,9 @@
-ARG DEBIAN_IMAGE
-ARG JDK_IMAGE
+ARG DEBIAN_IMAGE_URL
+ARG JDK_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${DEBIAN_IMAGE} as fetcher
+FROM ${DEBIAN_IMAGE_URL} as fetcher
 ARG WDQS_VERSION
 
 RUN apt-get update && \
@@ -23,7 +23,7 @@ RUN set -x; \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${JDK_IMAGE}
+FROM ${JDK_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 # Blazegraph scripts require bash
