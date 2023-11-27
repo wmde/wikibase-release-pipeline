@@ -19,6 +19,8 @@ export const versions = {
 	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13'
 };
 
+const wikibaseUpgradeTestImage = versions[ process.env.UPGRADE_FROM_VERSION ];
+
 export const specs = [
 	'specs/upgrade/pre-upgrade.ts',
 	'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
@@ -27,7 +29,6 @@ export const specs = [
 	'specs/upgrade/queryservice-post-upgrade.ts'
 ];
 
-process.env.WIKIBASE_UPGRADE_TEST_IMAGE = versions[ process.env.UPGRADE_FROM_VERSION ];
 
 export const testSetup = new TestSetup( 'upgrade', {
 	composeFiles: [
@@ -42,7 +43,11 @@ export const testSetup = new TestSetup( 'upgrade', {
 	waitForURLs: () => ( [
 		`${process.env.MW_SERVER}/wiki/Main_Page`
 	] ),
-	beforeServices: defaultTestSetupConfig.beforeServices,
+	beforeServices: ( isBaseSuite ) => {
+		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = wikibaseUpgradeTestImage;
+		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}`)
+		defaultTestSetupConfig.beforeServices( isBaseSuite );
+	},
 	before: defaultTestSetupConfig.before
 } );
 

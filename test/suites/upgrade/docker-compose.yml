@@ -4,7 +4,7 @@ version: '3.5'
 services:
 
   wikibase:
-    image: "${WIKIBASE_UPGRADE_TEST_IMAGE}"
+    image: "${WIKIBASE_UPGRADE_TEST_IMAGE_NAME}"
     links:
       - mysql
     depends_on:

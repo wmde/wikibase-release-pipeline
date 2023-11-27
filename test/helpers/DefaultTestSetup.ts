@@ -21,29 +21,29 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 	] ),
 
 	beforeServices: ( isBaseSuite: boolean ): void => {
-		process.env.WIKIBASE_TEST_IMAGE = isBaseSuite ?
-			process.env.WIKIBASE_IMAGE :
-			process.env.WIKIBASE_BUNDLE_IMAGE;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite ?
+			process.env.WIKIBASE_IMAGE_NAME :
+			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
 		const defaultImages = [
-			process.env.WIKIBASE_TEST_IMAGE,
-			process.env.WDQS_IMAGE,
-			process.env.WDQS_FRONTEND_IMAGE,
-			process.env.WDQS_PROXY_IMAGE
+			process.env.WIKIBASE_TEST_IMAGE_NAME,
+			process.env.WDQS_IMAGE_NAME,
+			process.env.WDQS_FRONTEND_IMAGE_NAME,
+			process.env.WDQS_PROXY_IMAGE_NAME
 		];
 
 		const bundleImages = [
-			process.env.ELASTICSEARCH_IMAGE,
-			process.env.QUICKSTATEMENTS_IMAGE
+			process.env.ELASTICSEARCH_IMAGE_NAME,
+			process.env.QUICKSTATEMENTS_IMAGE_NAME
 		];
 
 		// Does it do anything to be adding the ":latest" tag to these?
-		process.env.WIKIBASE_TEST_IMAGE = `${process.env.WIKIBASE_TEST_IMAGE}:latest`;
-		process.env.QUERYSERVICE_IMAGE = `${process.env.QUERYSERVICE_IMAGE}:latest`;
-		process.env.QUERYSERVICE_UI_IMAGE = `${process.env.QUERYSERVICE_IMAGE}:latest`;
-		process.env.WDQS_PROXY_IMAGE = `${process.env.WDQS_PROXY_IMAGE}:latest`;
-		process.env.QUICKSTATEMENTS_IMAGE = `${process.env.QUICKSTATEMENTS_IMAGE}:latest`;
-		process.env.ELASTICSEARCH_IMAGE = `${process.env.ELASTICSEARCH_IMAGE}:latest`;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = `${process.env.WIKIBASE_TEST_IMAGE_NAME}:latest`;
+		process.env.QUERYSERVICE_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
+		process.env.QUERYSERVICE_UI_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
+		process.env.WDQS_PROXY_IMAGE_NAME = `${process.env.WDQS_PROXY_IMAGE_NAME}:latest`;
+		process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
+		process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
 
 		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
 

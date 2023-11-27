@@ -12,7 +12,7 @@ services:
       - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
-    image: "${WIKIBASE_TEST_IMAGE}"
+    image: "${WIKIBASE_TEST_IMAGE_NAME}"
     links:
       - mysql
       - wikibase

@@ -24,13 +24,13 @@ services:
       - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/DockerImages/quickstatements.docker.tar.gz
       - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/DockerImages/wdqs-proxy.docker.tar.gz
 
-      - WDQS_IMAGE
-      - WDQS_FRONTEND_IMAGE
-      - WDQS_PROXY_IMAGE
-      - QUICKSTATEMENTS_IMAGE
-      - WIKIBASE_IMAGE
-      - WIKIBASE_BUNDLE_IMAGE
-      - ELASTICSEARCH_IMAGE
+      - WDQS_IMAGE_NAME
+      - WDQS_FRONTEND_IMAGE_NAME
+      - WDQS_PROXY_IMAGE_NAME
+      - QUICKSTATEMENTS_IMAGE_NAME
+      - WIKIBASE_IMAGE_NAME
+      - WIKIBASE_BUNDLE_IMAGE_NAME
+      - ELASTICSEARCH_IMAGE_NAME
 
       - WDQS_VERSION
       - RELEASE_VERSION

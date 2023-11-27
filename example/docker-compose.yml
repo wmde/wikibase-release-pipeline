@@ -16,7 +16,7 @@ x-common-variables: &wikibase_variables
 
 services:
   wikibase:
-    image: "${WIKIBASE_BUNDLE_IMAGE}"
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     links:
       - mysql
     depends_on:
@@ -41,7 +41,7 @@ services:
       MW_WG_ENABLE_UPLOADS:
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_BUNDLE_IMAGE}"
+    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh
     links:
@@ -64,7 +64,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MYSQL_IMAGE}"
+    image: "${MYSQL_IMAGE_NAME}"
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql

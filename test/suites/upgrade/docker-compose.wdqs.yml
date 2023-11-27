@@ -4,7 +4,7 @@ version: '3.5'
 services:
 
   wdqs:
-    image: "${WDQS_TEST_IMAGE}"
+    image: "${WDQS_TEST_IMAGE_NAME}"
     restart: always
     command: /runBlazegraph.sh
     networks:
@@ -23,7 +23,7 @@ services:
       - 9999
 
   wdqs-updater:
-    image: "${WDQS_TEST_IMAGE}"
+    image: "${WDQS_TEST_IMAGE_NAME}"
     restart: unless-stopped
     command: /runUpdate.sh
     depends_on:
