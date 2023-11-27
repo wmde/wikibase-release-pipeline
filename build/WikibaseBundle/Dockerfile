@@ -1,8 +1,9 @@
 ARG COMPOSER_IMAGE_URL
 ARG WMDE_RELEASE_VERSION
+ARG WIKIBASE_SUITE_WIKIBASE_IMAGE_URL
 
 # ###########################################################################
-FROM wikibase:${WMDE_RELEASE_VERSION} as wikibase
+FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${WMDE_RELEASE_VERSION} as wikibase
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -62,7 +63,7 @@ RUN set -x; \
     composer install --no-dev -vv -n
 
 # ###########################################################################
-FROM wikibase:${WMDE_RELEASE_VERSION} as final
+FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${WMDE_RELEASE_VERSION}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install \

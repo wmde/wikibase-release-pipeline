@@ -38,7 +38,7 @@ RUN mv package.json package.json.orig \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${NGINX_IMAGE_URL} as final
+FROM ${NGINX_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 WORKDIR /usr/share/nginx/html
