@@ -1,12 +1,18 @@
-import { config as wdioConf } from '../../wdio.conf.js';
+import { DefaultTestSetup } from '../../helpers/DefaultTestSetup.js';
+import { wdioConfig } from '../../wdio.conf.js';
 
-export const config: WebdriverIO.Config = {
-	...wdioConf,
-	specs: [
-		'../../specs/repo/api.ts',
-		'../../specs/repo/property.ts',
-		'../../specs/repo/special-item.ts',
-		'../../specs/repo/special-property.ts',
-		'../../specs/repo/queryservice.ts'
+export const specs = [
+	'specs/repo/api.ts',
+	'specs/repo/property.ts',
+	'specs/repo/special-item.ts',
+	'specs/repo/special-property.ts',
+	'specs/repo/queryservice.ts'
+];
+
+export const testSetup = new DefaultTestSetup( 'base__repo', {
+	composeFiles: [
+		'suites/repo/docker-compose.override.yml'
 	]
-};
+} );
+
+export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );

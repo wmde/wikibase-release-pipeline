@@ -1,10 +1,10 @@
 # Wikibase and Database for testing when upgrading
-version: '3.4'
+version: '3.5'
 
 services:
 
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    image: "${WIKIBASE_UPGRADE_TEST_IMAGE_NAME}"
     links:
       - mysql
     depends_on:

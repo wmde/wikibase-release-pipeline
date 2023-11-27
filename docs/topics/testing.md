@@ -7,12 +7,12 @@ You can run the tests in the docker container locally. Testing locally requires 
 
 ## To run all
 ```
-make test
+./test.sh
 ```
 
 ## To only run a single suite
 ```
-make test SUITE=repo
+./test.sh repo
 ```
 
 In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested. 
@@ -20,7 +20,7 @@ In order to test your own instances of the services, make sure to set the follow
 
 ## To only run a specific file in the repo tests
 ```
-make test SUITE=repo FILTER=babel*
+./test.sh repo babel*
 ```
 
 ## Test upgrading between base/bundle images
@@ -42,7 +42,7 @@ make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikib
 Tests the example configuration by running the `example` suite against it.
 
 ```
-make test-example SUITE=example
+./test.sh example
 ```
 
 ##  Variables for testing some other instance

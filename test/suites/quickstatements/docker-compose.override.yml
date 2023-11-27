@@ -1,20 +1,20 @@
-version: '3.4'
+version: '3.5'
 
 services:
 
   mysql:
     volumes:  
-      - ./suites/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
+      - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     environment: 
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
       - quickstatements-data:/quickstatements/data
-      - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
-      - ./suites/repo-LocalSettings.php.template:/LocalSettings.php.template
-      - ./suites/quickstatements/wikibase-extra-install.sh:/extra-install.sh
-      - ./suites/repo-extra-install.sh:/client-extra-install.sh
+      - ./${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./repo-LocalSettings.php.template:/LocalSettings.php.template
+      - ./quickstatements/wikibase-extra-install.sh:/extra-install.sh
+      - ./repo-extra-install.sh:/client-extra-install.sh
 
   wikibase-client:
     image: "${WIKIBASE_TEST_IMAGE_NAME}"
@@ -26,8 +26,8 @@ services:
       - wikibase
     restart: always
     volumes:
-      - ./suites/client-LocalSettings.php.template:/LocalSettings.php.template
-      - ./suites/client-extra-install.sh:/extra-install.sh
+      - ./client-LocalSettings.php.template:/LocalSettings.php.template
+      - ./client-extra-install.sh:/extra-install.sh
     ports:
       - "8383:80"
     networks:

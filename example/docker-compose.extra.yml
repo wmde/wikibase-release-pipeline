@@ -1,5 +1,5 @@
 # Additional services example
-version: '3.4'
+version: '3.5'
 
 x-common-variables: &wikibase_extra_variables
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}

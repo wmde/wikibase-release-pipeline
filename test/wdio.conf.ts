@@ -4,137 +4,139 @@
  */
 
 import { Frameworks, Options } from '@wdio/types';
-import { existsSync, mkdir, rm } from 'fs';
-import { saveScreenshot } from 'wdio-mediawiki';
-import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { defaultFunctions as defaultFunctionsInit } from './helpers/default-functions.js';
+import { existsSync } from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import JsonReporter from './helpers/json-reporter.js';
+import { TestSetup, testSetupLog } from './helpers/TestSetup.js';
+import { saveScreenshot } from 'wdio-mediawiki';
 
-const resultsDir = process.env.RESULTS_DIR;
-const screenshotPath = `${resultsDir}/screenshots`;
-const resultFilePath = `${resultsDir}/result.json`;
+// eslint-disable-next-line no-underscore-dangle
+const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export const config: WebdriverIO.Config = {
-	// ======
-	// Custom WDIO config specific to MediaWiki
-	// ======
-	// Use in a test as `browser.options.<key>`.
+export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO.Config {
+	const baseUrl = process.env.MW_SERVER + process.env.MW_SCRIPT_PATH;
+	const logLevel = ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error';
+	const mochaTimeout = process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000;
+	const outputDir = testSetup.outputDir;
+	const waitforTimeout = 30 * 1000;
 
-	// Base for browser.url() and Page#openTitle()
-	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
+	return {
+		specs: specs.map( ( specFilepath ) => `${__dirname}/${specFilepath}` ),
 
-	hostname: 'browser',
-	port: 4444,
-	path: '/wd/hub',
-	// ============
-	// Capabilities
-	// ============
-	// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-	capabilities: [
-		{
-			browserName: 'chrome',
-			maxInstances: 1,
-			'goog:chromeOptions': {
-				args: [
-					// The window size is relevant for responsive pages rendering differently on
-					// different screen sizes. Bootstrap considers widths between 1200 and 1400
-					// as XL, let's use that.
-					// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-					...[ '--window-size=1280,800' ],
-					...( process.env.HEADED_TESTS ? [] : [ '--headless' ] ),
-					// Chrome sandbox does not work in Docker
-					...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
-				]
-			}
-		}
-	],
+		// ======
+		// Custom WDIO config specific to MediaWiki
+		// ======
+		// Use in a test as `browser.options.<key>`.
 
-	// ===================
-	// Test Configurations
-	// ===================
+		// Base for browser.url() and Page#openTitle()
+		baseUrl,
 
-	// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-	logLevel:
-		( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error',
-
-	// Default timeout for each waitFor* command.
-	waitforTimeout: 30 * 1000,
-
-	// See also: http://webdriver.io/guide/testrunner/reporters.html
-	reporters: [
-		[
-			'spec',
+		hostname: 'browser',
+		port: 4444,
+		path: '/wd/hub',
+		// ============
+		// Capabilities
+		// ============
+		// https://sites.google.com/a/chromium.org/chromedriver/capabilities
+		capabilities: [
 			{
-				showPreface: false
-				// Only available after we're on the v8 version of this plugin.
-				// Once we're there this may do something we don't want, but
-				// keeping here to remind us to consider the possibility of silencing
-				// the "[0-0] RUNNING in chrome..." logging and just relying spec reporter.
-				// realtimeReporting: true
+				browserName: 'chrome',
+				maxInstances: 1,
+				'goog:chromeOptions': {
+					args: [
+						// The window size is relevant for responsive pages rendering differently on
+						// different screen sizes. Bootstrap considers widths between 1200 and 1400
+						// as XL, let's use that.
+						// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
+						...[ '--window-size=1280,800' ],
+						...( testSetup.runHeaded ? [] : [ '--headless' ] ),
+						// Chrome sandbox does not work in Docker
+						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
+					]
+				}
 			}
 		],
-		[
-			JsonReporter,
-			{
-				resultFilePath
+
+		// ===================
+		// Test Configurations
+		// ===================
+
+		// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
+		logLevel,
+
+		outputDir,
+
+		// Default timeout for each waitFor* command.
+		waitforTimeout,
+
+		// See also: http://webdriver.io/guide/testrunner/reporters.html
+		reporters: [
+			[
+				'spec',
+				{
+					showPreface: false
+				}
+			],
+			[
+				JsonReporter,
+				{
+					resultFilePath: testSetup.resultFilePath,
+					suiteName: testSetup.suiteName
+				}
+			]
+		],
+
+		// See also: http://mochajs.org
+		mochaOpts: {
+			ui: 'bdd',
+			timeout: mochaTimeout
+		},
+
+		// =====
+		// Hooks
+		// =====
+		onPrepare: async () => testSetup.execute(),
+
+		/**
+		 * Initializes the default functions for every test and
+		 * polls the wikibase docker container for installed extensions
+		 *
+		 * @param {...any} args
+		 */
+		before: async () => {
+			await testSetup.before();
+		},
+
+		beforeSuite: async ( suite ) => {
+			testSetupLog.info( `📘 ${suite.title.toUpperCase()}` );
+		},
+
+		beforeTest: function ( test ) {
+			testSetupLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
+		},
+
+		/**
+		 * Save a screenshot when test fails.
+		 *
+		 * @param {Frameworks.Test} test
+		 */
+		afterTest: function ( test: Frameworks.Test ) {
+			const testFile = encodeURIComponent(
+				test.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
+			);
+			const screenshotFilename = `${testFile}__${test.title}`;
+
+			try {
+				saveScreenshot( screenshotFilename, testSetup.screenshotPath );
+			} catch ( error ) {
+				console.error( 'failed writing screenshot ...' );
+				console.error( error );
 			}
-		]
-	],
+		},
 
-	// See also: http://mochajs.org
-	mochaOpts: {
-		ui: 'bdd',
-		timeout: process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000
-	},
-
-	// =====
-	// Hooks
-	// =====
-
-	/**
-	 * Remove screenshots and result.json from previous runs before any tests start running
-	 */
-	onPrepare: function () {
-		// NOTE: This log/result directory setup is already handled in the shellscript before
-		// WDIO is ran (e.g. scripts/test_suite.sh. It may be preferable to handle here in
-		// the future. These operations are harmless as-is.
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		mkdir( resultsDir, { recursive: true }, () => {} );
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		rm( screenshotPath, { recursive: true, force: true }, () => {} );
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		rm( resultFilePath, { force: true }, () => {} );
-	},
-
-	/**
-	 * Initializes the default functions for every test and
-	 * polls the wikibase docker container for installed extensions
-	 */
-	before: async () => {
-		await WikibaseApi.initialize(
-			undefined,
-			process.env.MW_ADMIN_NAME,
-			process.env.MW_ADMIN_PASS
-		);
-		defaultFunctionsInit();
-	},
-
-	/**
-	 * Save a screenshot when test fails.
-	 *
-	 * @param {Frameworks.Test} test
-	 */
-	afterTest: function ( test: Frameworks.Test ) {
-		const testFile = encodeURIComponent(
-			test.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
-		);
-		const screenshotFilename = `${testFile}__${test.title}`;
-
-		try {
-			saveScreenshot( screenshotFilename, screenshotPath );
-		} catch ( error ) {
-			console.error( 'failed writing screenshot ...' );
-			console.error( error );
+		onComplete: function () {
+			testSetup.onComplete();
 		}
-	}
-};
+	};
+}

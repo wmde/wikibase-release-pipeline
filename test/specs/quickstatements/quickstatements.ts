@@ -82,6 +82,7 @@ describe( 'QuickStatements Service', function () {
 		await $( '#mw-mwoauth-authorize-form' );
 		await $( '#mw-mwoauth-accept' ).click();
 
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 2 * 1000 );
 
 		// redirect back to app

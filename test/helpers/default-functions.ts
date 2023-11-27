@@ -9,6 +9,7 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
+import { testSetupLog } from './TestSetup.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -103,13 +104,14 @@ export function defaultFunctions(): void {
 
 			const fullCommand = `docker exec ${opts} ${container} ${command}`;
 			if ( shouldLog ) {
-				console.log( `executing: ${fullCommand}` );
+				testSetupLog.info( `executing: ${fullCommand}` );
 			}
 
 			return new Promise( ( resolve ) => {
+				// eslint-disable-next-line security/detect-child-process
 				exec( fullCommand, ( error, stdout, stderr ) => {
 					if ( error ) {
-						console.warn( error );
+						testSetupLog.error( error );
 					}
 
 					resolve( stdout || stderr );
@@ -132,6 +134,7 @@ export function defaultFunctions(): void {
 			await browser.url( `${host}/wiki/${title}?action=edit` );
 
 			// wait for javascript to settle
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 5 * 1000 );
 
 			// this shows up one time for anonymous users (VisualEditor)
@@ -142,6 +145,7 @@ export function defaultFunctions(): void {
 				await startEditbutton.click();
 
 				// wait for fade out animation to finish
+				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 2 * 1000 );
 			}
 
@@ -155,6 +159,7 @@ export function defaultFunctions(): void {
 			// save page
 			await browser.execute( async () => $( '#editform.mw-editform' ).submit() );
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 2 * 1000 );
 
 			return await $( '#mw-content-text' ).getText();
@@ -184,10 +189,10 @@ export function defaultFunctions(): void {
 			assert.strictEqual( result.status, 200 );
 
 			if ( !foundResult ) {
-				console.error( 'Could not find:' );
-				console.log( expectedChange );
-				console.error( 'Response: ' );
-				console.log( changes );
+				testSetupLog.error( 'Could not find:' );
+				testSetupLog.error( expectedChange );
+				testSetupLog.error( 'Response: ' );
+				testSetupLog.error( changes );
 			}
 
 			return foundResult;
@@ -223,11 +228,13 @@ export function defaultFunctions(): void {
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
 
 			// click import
 			await $( "button[tt='dialog_import_v1']" ).click();
 
+			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
 
 			// click run
