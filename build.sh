@@ -18,11 +18,14 @@ EXTRACT_TARBALL=false
 
 
 function save_image {
+    image_name="$1"
+    tag_version="$2"
+
     if $SAVE_IMAGE; then
-        docker save "$tag_version" "$tag_latest"| \
+        docker save "$image_name" "$tag_version" | \
             gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${tag_version//:/-}.docker.tar.gz"
         pushd artifacts
-        ln -s "${tag_version//:/-}.docker.tar.gz" "${service_name}.docker.tar.gz"
+        ln -s "${tag_version//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
         popd
     fi
 }
@@ -48,7 +51,7 @@ function build_wikibase {
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
         build/Wikibase -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 
     if $EXTRACT_TARBALL; then
         docker run --entrypoint="" --rm "$tag_version" \
@@ -87,7 +90,7 @@ function build_wikibase {
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
         build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 }
 
 
@@ -102,7 +105,7 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
         build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 }
 
 
@@ -117,7 +120,7 @@ function build_wdqs {
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
         build/WDQS/ -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 }
 
 
@@ -133,7 +136,7 @@ function build_wdqs-frontend {
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
         build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 
     if $EXTRACT_TARBALL; then
         docker run --entrypoint="" --rm "$tag_version" \
@@ -155,7 +158,7 @@ function build_wdqs-proxy {
         --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
         \
         build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
-    save_image
+    save_image $image_name $tag_version
 }
 
 
@@ -171,7 +174,7 @@ function build_quickstatements {
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
         build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
-    save_image
+    save_image $image_name $tag_version
 }
 
 
