@@ -29,7 +29,6 @@ export const specs = [
 	'specs/upgrade/queryservice-post-upgrade.ts'
 ];
 
-
 export const testSetup = new TestSetup( 'upgrade', {
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
@@ -45,7 +44,7 @@ export const testSetup = new TestSetup( 'upgrade', {
 	] ),
 	beforeServices: ( isBaseSuite ) => {
 		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = wikibaseUpgradeTestImage;
-		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}`)
+		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}` );
 		defaultTestSetupConfig.beforeServices( isBaseSuite );
 	},
 	before: defaultTestSetupConfig.before
