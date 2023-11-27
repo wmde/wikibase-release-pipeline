@@ -37,6 +37,12 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 			process.env.QUICKSTATEMENTS_IMAGE_NAME
 		];
 
+		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
+
+		if ( !isBaseSuite ) {
+			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
+		}
+
 		// Does it do anything to be adding the ":latest" tag to these?
 		process.env.WIKIBASE_TEST_IMAGE_NAME = `${process.env.WIKIBASE_TEST_IMAGE_NAME}:latest`;
 		process.env.QUERYSERVICE_IMAGE_NAME = `${process.env.QUERYSERVICE_IMAGE_NAME}:latest`;
@@ -44,12 +50,6 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 		process.env.WDQS_PROXY_IMAGE_NAME = `${process.env.WDQS_PROXY_IMAGE_NAME}:latest`;
 		process.env.QUICKSTATEMENTS_IMAGE_NAME = `${process.env.QUICKSTATEMENTS_IMAGE_NAME}:latest`;
 		process.env.ELASTICSEARCH_IMAGE_NAME = `${process.env.ELASTICSEARCH_IMAGE_NAME}:latest`;
-
-		defaultImages.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage ) );
-
-		if ( !isBaseSuite ) {
-			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
-		}
 	},
 
 	before: async () => {
