@@ -54,24 +54,29 @@ export class TestSetup {
 	}
 
 	public async execute(): Promise<void> {
-		console.log( `▶️  Starting "${this.suiteName}" Wikibase Suite test environment` );
+		try {
+			console.log( `▶️  Starting "${this.suiteName}" Wikibase Suite test environment` );
 
-		this.setupOutputDir();
-		this.loadEnvFiles();
-		this.beforeServices();
-		this.stopServices();
-		this.startServices();
+			this.setupOutputDir();
+			this.loadEnvFiles();
+			this.beforeServices();
 
-		console.log( '▶️  Waiting for Docker services to start' );
+			this.stopServices();
+			this.startServices();
 
-		await this.waitForServices();
+			console.log( '▶️  Waiting for Docker services to start' );
 
-		console.log( `▶️  Running "${this.suiteName}" test suite` );
+			await this.waitForServices();
 
-		if ( this.runHeaded ) {
-			console.log(
-				'\n💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
-			);
+			console.log( `▶️  Running "${this.suiteName}" test suite` );
+
+			if ( this.runHeaded ) {
+				console.log(
+					'\n💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
+				);
+			}
+		} catch ( e ) {
+			throw new SevereServiceError( e );
 		}
 	}
 
@@ -121,18 +126,14 @@ export class TestSetup {
 	}
 
 	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
-		try {
-			const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
+		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
-			testSetupLog.debug( 'Running: ', dockerComposeCmd );
+		testSetupLog.debug( 'Running: ', dockerComposeCmd );
 
-			const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
+		const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
-			testSetupLog.debug( result.stdout );
-			testSetupLog.debug( result.stderr );
-		} catch ( e ) {
-			throw new SevereServiceError( e );
-		}
+		testSetupLog.debug( result.stdout );
+		testSetupLog.debug( result.stderr );
 	}
 
 	public startServices(): void {

@@ -5,19 +5,13 @@ export function loadEnvVars(
 	envFilePath: string,
 	opts: DotenvConfigOptions = {}
 ): DotenvExpandOutput {
-	const envVars = {};
-
-	dotenv.config( {
-		override: true,
-		...opts,
-		path: envFilePath,
-		processEnv: envVars
-	} );
-
-	return dotenvExpand.expand( {
-		ignoreProcessEnv: false,
-		parsed: envVars
-	} );
+	return dotenvExpand.expand(
+		dotenv.config( {
+			override: true,
+			...opts,
+			path: envFilePath
+		} )
+	);
 }
 
 export default loadEnvVars;

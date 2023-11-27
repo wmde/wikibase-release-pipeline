@@ -16,7 +16,8 @@ export const testSetup = new TestSetup( 'example', {
 	],
 	envFiles: [
 		'../example/template.env',
-		'suites/example/example.env'
+		'suites/example/example.env',
+		'../local.env'
 	],
 	waitForURLs: defaultTestSetupConfig.waitForURLs,
 	before: defaultTestSetupConfig.before

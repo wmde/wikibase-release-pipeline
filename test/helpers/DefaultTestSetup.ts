@@ -14,16 +14,10 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 		'suites/docker-compose.yml'
 	],
 
-	waitForURLs: () => ( [
-		`${process.env.MW_SERVER}/wiki/Main_Page`,
-		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
-		`http://${process.env.WDQS_FRONTEND_SERVER}`
-	] ),
-
 	beforeServices: ( isBaseSuite: boolean ): void => {
-		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite ?
-			process.env.WIKIBASE_IMAGE_NAME :
-			process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
+		process.env.WIKIBASE_TEST_IMAGE_NAME = isBaseSuite
+			? process.env.WIKIBASE_IMAGE_NAME
+			: process.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
 		const defaultImages = [
 			process.env.WIKIBASE_TEST_IMAGE_NAME,
@@ -43,6 +37,12 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 			bundleImages.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage ) );
 		}
 	},
+
+	waitForURLs: () => ( [
+		`${process.env.MW_SERVER}/wiki/Main_Page`,
+		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
+		`http://${process.env.WDQS_FRONTEND_SERVER}`
+	] ),
 
 	before: async () => {
 		defaultFunctionsInit();
