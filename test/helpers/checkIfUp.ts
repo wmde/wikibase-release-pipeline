@@ -20,7 +20,6 @@ async function checkIfUp(
 			}
 		};
 		await waitUntil( predicate, { timeout } );
-		console.log( `ℹ️  Successfully loaded ${serviceURL}` );
 	} catch ( e ) {
 		if ( e instanceof TimeoutError ) {
 			throw (

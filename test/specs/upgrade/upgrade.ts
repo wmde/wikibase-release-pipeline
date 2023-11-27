@@ -1,7 +1,7 @@
 import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
+import assert from 'assert';
 import { testSetup } from '../../suites/upgrade/upgrade.conf.js';
 
 describe( 'Wikibase upgrade', function () {

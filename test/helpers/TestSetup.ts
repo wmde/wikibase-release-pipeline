@@ -54,7 +54,7 @@ export class TestSetup {
 	}
 
 	public async execute(): Promise<void> {
-		console.log( `▶️  Starting "${this.suiteName}" test environment` );
+		console.log( `▶️  Starting "${this.suiteName}" Wikibase Suite test environment` );
 
 		this.setupOutputDir();
 		this.loadEnvFiles();
@@ -62,13 +62,15 @@ export class TestSetup {
 		this.stopServices();
 		this.startServices();
 
+		console.log( '▶️  Waiting for Docker services to start' );
+
 		await this.waitForServices();
 
-		console.log( `▶️  Running specs for "${this.suiteName}" test suite` );
+		console.log( `▶️  Running "${this.suiteName}" test suite` );
 
 		if ( this.runHeaded ) {
 			console.log(
-				'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.'
+				'\n💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
 			);
 		}
 	}
@@ -122,7 +124,7 @@ export class TestSetup {
 		try {
 			const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
-			testSetupLog.info( 'Running: ', dockerComposeCmd );
+			testSetupLog.debug( 'Running: ', dockerComposeCmd );
 
 			const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
@@ -134,21 +136,30 @@ export class TestSetup {
 	}
 
 	public startServices(): void {
-		console.log( '▶️  Starting Wikibase Suite services' );
+		testSetupLog.info( '▶️  Starting Wikibase Suite services' );
 		this.runDockerComposeCmd( 'up -d' );
 	}
 
-	public stopServices(): void {
-		console.log( '▶️  Stopping Wikibase Suite services' );
-		this.runDockerComposeCmd( 'down --volumes --remove-orphans --timeout 1' );
+	public stopServices( removeVolumes: boolean = true ): void {
+		testSetupLog.info( '▶️  Stopping Wikibase Suite services' );
+		this.runDockerComposeCmd( `down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1` );
 	}
 
 	public async waitForServices(): Promise<void[]> {
-		console.log( '▶️  Waiting for Wikibase Suite services' );
 		return Promise.all( this.config.waitForURLs().map(
 			async ( waitForURL: string ): Promise<void> => {
-				return checkIfUp( waitForURL );
+				await checkIfUp( waitForURL );
+				testSetupLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
 			}
 		) );
+	}
+
+	// EXPERIMENTAL - For use in restarting services between tests
+	public async resetServices( removeVolumes: boolean = false ): Promise<void> {
+		console.log( '▶️  Resetting Docker services' );
+		this.stopServices( removeVolumes );
+		this.startServices();
+		await this.waitForServices();
+		await this.before();
 	}
 }
