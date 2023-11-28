@@ -19,17 +19,20 @@ EXTRACT_TARBALL=false
 
 function save_image {
     local image_name="$1"
-    local image_name_with_tag="$2"
+    local image_url="$2"
+    local image_name_with_tag="$3"
+    local image_url_with_tag="$4"
 
     if $SAVE_IMAGE; then
-        docker save "$image_name" "$image_name_with_tag" | \
+        docker save "$image_url" "$image_url_with_tag" | \
             gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${image_name_with_tag//:/-}.docker.tar.gz"
         pushd artifacts
-        ln -s "${image_name_with_tag//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
         popd
     fi
 }
 
+# wikibase/wdqs -> wdqs
 function image_url_to_image_name {
    local image_url="$1"
 
@@ -47,6 +50,7 @@ function image_url_to_image_name {
        exit 1
    fi
 
+   # only take the second half of the url, the name after the slash
    echo "$image_url" | cut -d'/' -f 2
 }
 
@@ -77,14 +81,14 @@ function build_wikibase {
         \
         build/Wikibase -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
     if $EXTRACT_TARBALL; then
         docker run --entrypoint="" --rm "$image_url_with_tag" \
             tar cz -C /var/www --transform="s,^html,${image_name}," html \
                 > "artifacts/${image_name_with_tag//:/-}.tar.gz"
         pushd artifacts
-        ln -s "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
         popd
     fi
 
@@ -116,7 +120,7 @@ function build_wikibase {
         \
         build/WikibaseBundle -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_name_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -130,7 +134,7 @@ function build_elasticseach {
         \
         build/Elasticsearch/ -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -144,7 +148,7 @@ function build_wdqs {
         \
         build/WDQS/ -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -159,14 +163,14 @@ function build_wdqs-frontend {
         \
         build/WDQS-frontend/ -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
     if $EXTRACT_TARBALL; then
         docker run --entrypoint="" --rm "$image_url_with_tag" \
             tar cz -C /usr/share/nginx --transform="s,^html,${image_name}," html \
                 > "artifacts/${image_name_with_tag//:/-}.tar.gz"
         pushd artifacts
-        ln -s "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
         popd
     fi
 }
@@ -180,7 +184,7 @@ function build_wdqs-proxy {
         \
         build/WDQS-proxy/ -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -195,7 +199,7 @@ function build_quickstatements {
         \
         build/QuickStatements/ -t "$image_url_with_tag"
 
-    save_image "$image_name" "$image_url_with_tag"
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
