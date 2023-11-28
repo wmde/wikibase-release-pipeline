@@ -4,6 +4,21 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+
+## November 2023: First 1.40 release
+
+- [MediaWiki release announcement 1.40](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/H46H5ZYZG2PYUQ5STK7NWKF7GXYW7H6B/)
+- [MediaWiki security and maintenance release announcement: 1.35.12 / 1.39.5 / 1.40.1](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/BRWOWACCHMYRIS7JRTT6XD44X3362MVL/)
+
+The [standard MediaWiki upgrade process](https://www.mediawiki.org/wiki/Manual:Upgrading) can be followed for this release.
+
+- [MediaWiki release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
+- [Wikibase release notes](https://github.com/wikimedia/Wikibase/blob/REL1_40/RELEASE-NOTES-1.40)
+
+| Suite Version | Version Info | Date available | Run number | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.14 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.14/variables.env)) | MediaWiki (1.40.1, PHP 8.1.25, debian/apache 2.4.57-2), WDQS (0.3.135)    | 15 November 2023 | [6928788894](https://github.com/wmde/wikibase-release-pipeline/actions/runs/6928788894) | [T340939](https://phabricator.wikimedia.org/T340939) |
+
 ## October 2023: Security releases for 1.39.5
 
 - [Maintenance release: MediaWiki 1.39.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/UJBH5OGW5M5Q22KETIQY4MV2Q6XJPQWG/)
