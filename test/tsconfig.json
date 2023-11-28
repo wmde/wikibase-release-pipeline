@@ -6,7 +6,8 @@
 		"types": [ "node", "@wdio/globals/types", "@wdio/mocha-framework" ]
 	},
 	"ts-node": {
-		"files": true
+		"files": true,
+		"esm": true
 	},
 	"include": [ "./**/*.ts" ]
 }

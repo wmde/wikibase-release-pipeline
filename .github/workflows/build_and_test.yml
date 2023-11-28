@@ -111,7 +111,7 @@ jobs:
           path: artifacts/
 
       - name: Test ${{ matrix.suite }}
-        run: ./test.sh ${{ matrix.suite }}
+        run: ./test2.sh ${{ matrix.suite }}
 
       - name: Report Selenium
         if: always()
@@ -169,7 +169,7 @@ jobs:
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: FROM_VERSION=${{ matrix.version }} ./test.sh upgrade
+        run: FROM_VERSION=${{ matrix.version }} ./test2.sh upgrade
 
       - name: Show Docker Logs
         if: always()

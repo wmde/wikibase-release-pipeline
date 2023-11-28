@@ -6,7 +6,7 @@
 # since it's now mounted per default it gets removed when the container changes.
 # copy the one from the pipeline and run envsubst in this shell
 TMP_LOCALSETTINGS="./suites/upgrade/tmp_LocalSettings.php"
-rm -r $TMP_LOCALSETTINGS
+rm -r $TMP_LOCALSETTINGS 2>/dev/null
 npx envsub "../build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" "$TMP_LOCALSETTINGS"
 
 # === Modify old LocalSettings.php

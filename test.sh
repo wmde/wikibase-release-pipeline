@@ -40,7 +40,6 @@ function test_suite {
 }
 
 function stop_test_runner {
-	echo "ℹ️  Taking down wikibase-suite-test-runner"
 	$TEST_RUNNER_COMPOSE down --volumes > /dev/null 2>&1
 }
 

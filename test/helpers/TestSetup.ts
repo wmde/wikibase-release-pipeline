@@ -49,13 +49,18 @@ export class TestSetup {
 		this.testLogFilePath = `${this.outputDir}/${this.suiteName}.log`;
 		this.screenshotPath = `${this.outputDir}/screenshots`;
 		this.resultFilePath = `${this.outputDir}/result.json`;
-		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
+		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 	}
 
 	public async execute(): Promise<void> {
 		try {
 			console.log( `▶️  Starting "${this.suiteName}" Wikibase Suite test environment` );
+
+			process.on( 'SIGINT', () => {
+				this.stopServices();
+				process.exit( 1 );
+			} );
 
 			this.setupOutputDir();
 			this.loadEnvFiles();
@@ -153,16 +158,5 @@ export class TestSetup {
 				testSetupLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
 			}
 		) );
-	}
-
-	// EXPERIMENTAL - For use in restarting services between tests
-	public async resetServices( removeVolumes: boolean = false ): Promise<void> {
-		console.log( '▶️  Resetting Docker services' );
-		this.loadEnvFiles();
-		this.beforeServices();
-		this.stopServices( removeVolumes );
-		this.startServices();
-		await this.waitForServices();
-		await this.before();
 	}
 }
