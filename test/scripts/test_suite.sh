@@ -18,16 +18,18 @@ docker compose run --rm test-runner -c "rm -rf \"$RESULTS_DIR\"" > /dev/null 2>&
 mkdir -p "$RESULTS_DIR"
 
 # Load image if it's not already loaded
-load_image() { 
+load_image() {
     local image="$1"
-    
+
     # Check if the image exists
     {
         if docker images -q "$image" 2>/dev/null | grep -q .; then
             echo "ℹ️  Image $image already loaded."
         else
+            local image_filename
             echo "🔄 Loading image: $image"
-            docker load -i "../artifacts/$image.docker.tar.gz"
+            image_filename="../artifacts/$(echo "$image" | cut -d'/' -f2).docker.tar.gz"
+            docker load -i "$image_filename"
         fi
     } >> "$TEST_LOG" 2>&1
 }
