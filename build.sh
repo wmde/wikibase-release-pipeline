@@ -79,7 +79,7 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        build/Wikibase -t "$image_url_with_tag"
+        build/Wikibase -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
@@ -118,7 +118,7 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        build/WikibaseBundle -t "$image_url_with_tag"
+        build/WikibaseBundle -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
@@ -132,7 +132,7 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
-        build/Elasticsearch/ -t "$image_url_with_tag"
+        build/Elasticsearch/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
@@ -146,7 +146,7 @@ function build_wdqs {
         --build-arg JDK_IMAGE_URL="$JDK_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
-        build/WDQS/ -t "$image_url_with_tag"
+        build/WDQS/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
@@ -161,7 +161,7 @@ function build_wdqs-frontend {
         --build-arg NODE_IMAGE_URL="$NODE_IMAGE_URL" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
-        build/WDQS-frontend/ -t "$image_url_with_tag"
+        build/WDQS-frontend/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
@@ -182,7 +182,7 @@ function build_wdqs-proxy {
     docker build \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
-        build/WDQS-proxy/ -t "$image_url_with_tag"
+        build/WDQS-proxy/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
