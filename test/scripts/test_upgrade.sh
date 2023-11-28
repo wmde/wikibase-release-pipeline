@@ -91,7 +91,7 @@ TMP_LOCALSETTINGS="$TMP_DIR/LocalSettings.php"
 
 # Source the default env vars used for building and create a new LocalSettings file 
 set -o allexport; source ../variables.env; set +o allexport
-envsubst < "../build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
+envsubst < "../build/Wikibase/LocalSettings.php.template" > "$TMP_LOCALSETTINGS"
 export TMP_LOCALSETTINGS
 
 # MODIFY OLD LocalSettings.php as part of upgrading

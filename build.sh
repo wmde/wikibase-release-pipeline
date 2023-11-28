@@ -68,8 +68,6 @@ function build_wikibase {
         --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
         \
-        --build-arg MEDIAWIKI_SETTINGS_TEMPLATE_FILE="$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" \
-        \
         --build-arg MW_SITE_NAME="$MW_SITE_NAME" \
         --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
         --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \

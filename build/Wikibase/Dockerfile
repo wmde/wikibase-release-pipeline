@@ -2,9 +2,6 @@
 ARG MEDIAWIKI_IMAGE_URL
 ARG COMPOSER_IMAGE_URL
 
-# TODO
-# ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
-
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE_URL} as git-checkout
