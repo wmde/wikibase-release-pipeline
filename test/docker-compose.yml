@@ -13,6 +13,7 @@ services:
     build:
       context: ../test
       dockerfile: Dockerfile
+    stop_grace_period: 1s
     entrypoint: /bin/bash
     volumes:
       - ..:/usr/src
@@ -20,21 +21,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - HOST_PWD=${PWD}
-      - SELENIUM_LOG_LEVEL
-      - MOCHA_OPTS_TIMEOUT
-      - HEADED_TESTS
-      # TODO: Update test CLI --
-      # from:
-      #   FROM_VERSION=WMDE11 ./test.sh upgrade
-      # to:
-      #   ./test.sh upgrade WMDE11 <to_version>
-      # Handle the CLI args within this container such that FROM_VERSION doesn't need to be passed between
-      # environments.
-      - FROM_VERSION
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment
     image: selenium/standalone-chrome:116.0.5845.140-chromedriver-116.0.5845.96-grid-4.12.1-20230904
+    stop_grace_period: 1s
     ports:
       - "4444:4444"
       - "7900:7900"

@@ -61,7 +61,7 @@ y.option( 'watch', {
 } );
 
 y.version('1.0.0');
-y.scriptName('./test2.sh');
+y.scriptName('./test.sh');
 y.help();
 y.wrap( y.terminalWidth() );
 y.demandCommand();
