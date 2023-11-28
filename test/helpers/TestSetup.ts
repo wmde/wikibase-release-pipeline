@@ -2,6 +2,7 @@ import { mkdirSync, rmSync } from 'fs';
 import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import logger from '@wdio/logger';
+import chalk from 'chalk';
 import checkIfUp from './checkIfUp.js';
 import loadEnvVars from './loadEnvVars.js';
 
@@ -19,9 +20,6 @@ export type TestSetupConfig = {
 };
 
 export class TestSetup {
-	protected config: TestSetupConfig;
-	protected hostCWD: string;
-	protected testLogFilePath: string;
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
 	public outputDir: string;
@@ -30,6 +28,9 @@ export class TestSetup {
 	public suiteName: string;
 	public suiteConfigName: string;
 	public runHeaded: boolean;
+	protected config: TestSetupConfig;
+	protected hostCWD: string;
+	protected testLogFilePath: string;
 
 	public constructor(
 		suiteName: string,
@@ -55,29 +56,27 @@ export class TestSetup {
 
 	public async execute(): Promise<void> {
 		try {
-			console.log( `▶️  Starting "${this.suiteName}" Wikibase Suite test environment` );
-
 			process.on( 'SIGINT', () => {
 				this.stopServices();
+				// eslint-disable-next-line no-process-exit
 				process.exit( 1 );
 			} );
+
+			console.log( chalk.bgWhiteBright.black.bold( `"${this.suiteName}" test suite ${' '.repeat( 100 )}` ) );
 
 			this.setupOutputDir();
 			this.loadEnvFiles();
 			this.beforeServices();
 
+			console.log( '\n▶️  Waiting for test services to become available' );
+
 			this.stopServices();
 			this.startServices();
-
-			console.log( '▶️  Waiting for Docker services to start' );
-
 			await this.waitForServices();
-
-			console.log( `▶️  Running "${this.suiteName}" test suite` );
 
 			if ( this.runHeaded ) {
 				console.log(
-					'\n💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
+					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
 				);
 			}
 		} catch ( e ) {
