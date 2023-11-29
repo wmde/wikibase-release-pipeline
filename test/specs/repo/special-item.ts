@@ -1,10 +1,9 @@
+import assert from 'assert';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItem from '../../helpers/pages/special/new-item.page.js';
-import assert from 'assert';
 
 describe( 'Special:NewItem', function () {
 	it( 'Should be able to create a new item', async () => {
-
 		const label = 'Cool label';
 		const description = 'Cool description';
 		const firstAlias = 'Great job';
