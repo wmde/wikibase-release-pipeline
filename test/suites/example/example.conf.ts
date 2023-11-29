@@ -1,14 +1,17 @@
-import { TestEnvironment } from '../../setup/TestEnvironment.js';
-import { defaultTestEnvironmentConfig } from '../../setup/DefaultTestEnvironment.js';
-import { wdioConfig } from '../../wdio.conf.js';
+import { TestConfig } from '../../setup/TestConfig.js';
+import { TestEnvironment, defaultTestEnvironmentSettings } from '../../setup/TestEnvironment.js';
+import { wdioConfig } from '../../setup/wdio.conf.js';
 
-export const specs = [
-	'specs/quickstatements/*.ts',
-	'specs/repo/queryservice.ts',
-	'specs/elasticsearch/*.ts'
-];
+export const settings = TestConfig.getSettings( {
+	name: 'example',
+	specs: [
+		'specs/quickstatements/*.ts',
+		'specs/repo/queryservice.ts',
+		'specs/elasticsearch/*.ts'
+	]
+} );
 
-export const testEnvironment = new TestEnvironment( 'example', {
+export const environment = new TestEnvironment( {
 	composeFiles: [
 		'../example/docker-compose.yml',
 		'../example/docker-compose.extra.yml',
@@ -19,8 +22,7 @@ export const testEnvironment = new TestEnvironment( 'example', {
 		'suites/example/example.env',
 		'../local.env'
 	],
-	waitForURLs: defaultTestEnvironmentConfig.waitForURLs,
-	before: defaultTestEnvironmentConfig.before
-} );
+	waitForURLs: defaultTestEnvironmentSettings.waitForURLs,
+}, settings );
 
-export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );
+export const config: WebdriverIO.Config = wdioConfig( settings, environment );

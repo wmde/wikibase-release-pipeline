@@ -1,69 +1,90 @@
-import { mkdirSync, rmSync } from 'fs';
-import { SevereServiceError } from 'webdriverio';
-import testLog from './testLog.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
+import loadEnvVars from './loadEnvVars.js';
 
-export type TestConfigSettings = {
-  name: string;
-	before?(): Promise<void>;
-	// Can configure headed runs for the test environment directly,
-	// or globally by setting the HEADED_TESTS env var
-	runHeaded?: boolean;
-  pwd?: string;
+export type TestSettings = {
+	name: string,
+	specs: string[],
+	pwd: string,
+	nameWithoutBase: string,
+	isBaseSuite: boolean,
+	outputDir: string,
+	resultFilePath: string,
+	screenshotPath: string,
+	logLevel: string,
+	testTimeout: number,
+	waitForTimeout: number,
+	baseUrl: string,
+	runHeaded: boolean,
+	dbUser: string,
+	dbPass: string,
+	dbName: string,
+	dockerMysqlName: string,
+	mwAdminName: string,
+	mwAdminPass: string,
+	mwServer: string,
+	mwClientServer: string,
+	qsServer: string,
+	wdqsServer: string,
+	elasticsearchServer: string,
+	before( settings: TestSettings ): Promise<void>
+}
+
+loadEnvVars( './setup/default.env' );
+loadEnvVars( '../local.env' );
+
+export const defaultTestSettings: Partial<TestSettings> = {
+	pwd: process.env.HOST_PWD,
+	logLevel: process.env.SELENIUM_LOG_LEVEL,
+	testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ) || 90 * 1000,
+	waitForTimeout: 30 * 1000,
+	baseUrl: process.env.MW_SERVER + process.env.MW_SCRIPT_PATH,
+	runHeaded: !!process.env.HEADED_TESTS,
+	// mostly used by defaultFunctions
+	dbUser: process.env.DB_USER,
+	dbPass: process.env.DB_PASS,
+	dbName: process.env.DB_NAME,
+	dockerMysqlName: process.env.DOCKER_MYSQL_NAME,
+	mwAdminName: process.env.MW_ADMIN_NAME,
+	mwAdminPass: process.env.MW_ADMIN_PASS,
+	mwServer: process.env.MW_SERVER,
+	mwClientServer: process.env.MW_CLIENT_SERVER,
+	qsServer: process.env.QS_SERVER,
+	wdqsServer: process.env.WDQS_SERVER,
+	elasticsearchServer: `http://${process.env.MW_ELASTIC_HOST}:${process.env.MW_ELASTIC_PORT}`
 };
 
-// if ( this.runHeaded ) {
-//   console.log(
-//     '💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
-//   );
-// }
-
 export class TestConfig {
-	public isBaseSuite: boolean;
-	public outputDir: string;
-	public resultFilePath: string;
-	public screenshotPath: string;
-	public name: string;
-	public suiteConfigName: string;
-	public runHeaded: boolean;
-	protected settings: TestConfigSettings;
-	protected pwd: string;
+  public settings: TestSettings;
+  
+	public constructor( providedSettings: Partial<TestSettings> ) {
+    const settings = { ...defaultTestSettings, ...providedSettings } as Partial<TestSettings>;
 
-	public constructor( settings: TestConfigSettings ) {
-		this.name = settings.name;
-		this.suiteConfigName = this.name.replace( 'base__', '' );
-		process.env.SUITE = this.name;
-		process.env.SUITE_CONFIG_NAME = this.suiteConfigName;
-		this.isBaseSuite = this.name !== this.suiteConfigName;
+    this.settings = settings as TestSettings;
+		this.settings.nameWithoutBase = settings.name.replace( 'base__', '' );
+		this.settings.isBaseSuite = settings.name !== this.settings.nameWithoutBase;
+		this.settings.outputDir = `suites/${settings.name}/results`;
+		this.settings.resultFilePath = `${this.settings.outputDir}/result.json`;
+		this.settings.screenshotPath = `${this.settings.outputDir}/screenshots`;
+		this.settings.before = async (): Promise<void> => {
+			defaultFunctionsInit( this.settings as TestSettings );
 
-		this.settings = settings;
-		this.runHeaded = this.settings.runHeaded || !!process.env.HEADED_TESTS;
-		this.pwd = settings.pwd || process.env.HOST_PWD || process.env.PWD;
-		this.outputDir = `suites/${this.name}/results`;
-		this.screenshotPath = `${this.outputDir}/screenshots`;
-		this.resultFilePath = `${this.outputDir}/result.json`;
-	}
-
-	public async execute(): Promise<void> {
-		try {
-			this.setupOutputDir();
-		} catch ( e ) {
-			throw new SevereServiceError( e );
+			await WikibaseApi.initialize(
+				undefined,
+				this.settings.mwAdminName,
+				this.settings.mwAdminPass
+			);
+	
+			if ( providedSettings.before ) {
+				await providedSettings.before( this.settings as TestSettings );
+			}
 		}
-	}
 
-	public async before(): Promise<void> {
-		if ( this.settings.before ) {
-			await this.settings.before();
-		}
-	}
+		process.env.SUITE = this.settings.name as string;
+		process.env.SUITE_CONFIG_NAME = this.settings.nameWithoutBase;
+  }
 
-	private setupOutputDir(): void {
-		try {
-			rmSync( this.outputDir, { recursive: true, force: true } );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			mkdirSync( this.outputDir, { recursive: true } );
-		} catch ( e ) {
-			testLog.error( '❌ Error occurred in setting-up logs:', e );
-		}
+	static getSettings( settings: Partial<TestSettings> ) {
+		return new TestConfig( settings ).settings
 	}
 }

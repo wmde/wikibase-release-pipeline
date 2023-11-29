@@ -1,18 +1,21 @@
-import { DefaultTestEnvironment } from '../../setup/DefaultTestEnvironment.js';
-import { wdioConfig } from '../../wdio.conf.js';
+import { TestConfig } from '../../setup/TestConfig.js';
+import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import { wdioConfig } from '../../setup/wdio.conf.js';
 
-export const specs = [
-	'specs/repo_client/*.ts',
-	'specs/repo_client/extensions/*.ts'
-];
+export const settings = TestConfig.getSettings( {
+	name: 'repo_client',
+	specs: [
+		'specs/repo_client/*.ts',
+		'specs/repo_client/extensions/*.ts'	]
+} );
 
-export const testEnvironment = new DefaultTestEnvironment( 'repo_client', {
+export const environment = TestEnvironment.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/repo_client/docker-compose.override.yml'
 	],
 	waitForURLs: () => ( [
-		process.env.MW_CLIENT_SERVER
+		settings.mwClientServer
 	] )
-} );
+}, settings );
 
-export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );
+export const config: WebdriverIO.Config = wdioConfig( settings, environment );

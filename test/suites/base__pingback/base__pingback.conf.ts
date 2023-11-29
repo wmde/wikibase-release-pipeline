@@ -1,14 +1,18 @@
-import { DefaultTestEnvironment } from '../../setup/DefaultTestEnvironment.js';
-import { wdioConfig } from '../../wdio.conf.js';
+import { TestConfig } from '../../setup/TestConfig.js';
+import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import { wdioConfig } from '../../setup/wdio.conf.js';
 
-export const specs = [
-	'specs/pingback/*.ts'
-];
-
-export const testEnvironment = new DefaultTestEnvironment( 'base__pingback', {
-	composeFiles: [
-		'suites/pingback/docker-compose.override.yml'
+export const settings = TestConfig.getSettings( {
+	name: 'base__pingback',
+	specs: [
+		'specs/pingback/*.ts'
 	]
 } );
 
-export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );
+export const environment = TestEnvironment.createAppendingToDefaults( {
+	composeFiles: [
+		'suites/pingback/docker-compose.override.yml'
+	]
+}, settings );
+
+export const config: WebdriverIO.Config = wdioConfig( settings, environment );

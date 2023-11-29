@@ -9,9 +9,10 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
+import { TestSettings } from '../setup/TestConfig.js';
 import testLog from '../setup/testLog.js';
 
-export function defaultFunctions(): void {
+export function defaultFunctions( settings: TestSettings ): void {
 	/**
 	 * Make a get request to get full request response
 	 */
@@ -35,9 +36,9 @@ export function defaultFunctions(): void {
 		async ( query: string, config?: DatabaseConfig ) => {
 			if ( !config ) {
 				config = {
-					user: process.env.DB_USER,
-					pass: process.env.DB_PASS,
-					database: process.env.DB_NAME
+					user: settings.dbUser,
+					pass: settings.dbPass,
+					database: settings.dbName
 				};
 			}
 
@@ -48,7 +49,7 @@ export function defaultFunctions(): void {
 			}
 
 			return await browser.dockerExecute(
-				process.env.DOCKER_MYSQL_NAME,
+				settings.dockerMysqlName,
 				`mysql --user "${config.user}" --password="${config.pass}" "${config.database}" -e '${query}'`
 			);
 		}
@@ -223,7 +224,7 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${process.env.QS_SERVER}/#/batch` );
+			await browser.url( `${settings.qsServer}/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -265,7 +266,7 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `http://${settings.wdqsServer}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
@@ -286,10 +287,9 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'waitForJobs',
 		async (
-			serverURL: string = process.env.MW_SERVER,
+			serverURL: string = settings.mwServer,
 			// default timeout is 1 second less than default Mocha test timeout
-			timeout: number = ( Number.parseInt( process.env.MOCHA_OPTS_TIMEOUT ) ||
-				90 * 1000 ) - 1000,
+			timeout: number = ( settings.testTimeout || 90 * 1000 ) - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
 			let jobsInQueue: number;

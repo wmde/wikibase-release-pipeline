@@ -1,6 +1,6 @@
-import { TestEnvironment } from '../../setup/TestEnvironment.js';
-import { defaultTestEnvironmentConfig } from '../../setup/DefaultTestEnvironment.js';
-import { wdioConfig } from '../../wdio.conf.js';
+import { TestConfig } from '../../setup/TestConfig.js';
+import { TestEnvironment, defaultTestEnvironmentSettings } from '../../setup/TestEnvironment.js';
+import { wdioConfig } from '../../setup/wdio.conf.js';
 
 export const versions = {
 	WMDE9: 'wikibase/wikibase:1.37.6-wmde.9',
@@ -19,35 +19,37 @@ export const versions = {
 	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13'
 };
 
-export const specs = [
-	'specs/upgrade/pre-upgrade.ts',
-	// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
-	'specs/upgrade/upgrade.ts',
-	// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
-	// 'specs/upgrade/queryservice-post-upgrade.ts'
-];
+export const settings = TestConfig.getSettings( {
+	name: 'upgrade',
+	specs: [
+		'specs/upgrade/pre-upgrade.ts',
+		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
+		'specs/upgrade/upgrade.ts',
+		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
+		// 'specs/upgrade/queryservice-post-upgrade.ts'
+	]
+} );
 
-export const testEnvironment = new TestEnvironment( 'upgrade', {
+export const environment = new TestEnvironment( {
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
 		// TODO: Explore further what happened with WDQS
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
-		...defaultTestEnvironmentConfig.envFiles,
+		...defaultTestEnvironmentSettings.envFiles,
 		'suites/upgrade/default_variables.env'
 	],
 	waitForURLs: () => ( [
-		`${process.env.MW_SERVER}/wiki/Main_Page`
+		`${settings.mwServer}/wiki/Main_Page`
 	] ),
-	beforeServices: ( isBaseSuite ) => {
+	beforeServices: () => {
 		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.FROM_VERSION ];
 		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts on services reboot
-		defaultTestEnvironmentConfig.beforeServices( isBaseSuite );
+		defaultTestEnvironmentSettings.beforeServices();
 	},
-	before: defaultTestEnvironmentConfig.before
-} );
+}, settings );
 
-export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );
+export const config: WebdriverIO.Config = wdioConfig( settings, environment );

@@ -7,24 +7,22 @@ import { Frameworks, Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import JsonReporter from './helpers/json-reporter.js';
-import { TestEnvironment } from './setup/TestEnvironment.js';
-import testLog from './setup/testLog.js';
-import { saveScreenshot } from 'wdio-mediawiki';
 import type { Capabilities } from '@wdio/types';
+import JsonReporter from '../helpers/json-reporter.js';
+import { TestSettings } from './TestConfig.js';
+import { TestEnvironment } from './TestEnvironment.js';
+import testLog from './testLog.js';
+import { saveScreenshot } from 'wdio-mediawiki';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ): WebdriverIO.Config {
-	const baseUrl = process.env.MW_SERVER + process.env.MW_SCRIPT_PATH;
-	const logLevel = ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error';
-	const mochaTimeout = process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000;
-	const outputDir = testEnvironment.outputDir;
-	const waitforTimeout = 30 * 1000;
-
+export function wdioConfig(
+	settings: TestSettings,
+	environment: TestEnvironment
+): WebdriverIO.Config {
 	return {
-		specs: specs.map( ( specFilepath ) => `${__dirname}/${specFilepath}` ),
+		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
 
 		// ======
 		// Custom WDIO config specific to MediaWiki
@@ -32,7 +30,7 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 		// Use in a test as `browser.options.<key>`.
 
 		// Base for browser.url() and Page#openTitle()
-		baseUrl,
+		baseUrl: settings.baseUrl,
 
 		hostname: 'browser',
 		port: 4444,
@@ -52,7 +50,7 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 						// as XL, let's use that.
 						// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
 						...[ '--window-size=1280,800' ],
-						...( testEnvironment.runHeaded ? [] : [ '--headless' ] ),
+						...( settings.runHeaded ? [] : [ '--headless' ] ),
 						// Chrome sandbox does not work in Docker
 						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 					]
@@ -65,12 +63,12 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 		// ===================
 
 		// Level of verbosity: "trace", "debug", "info", "warn", "error", "silent"
-		logLevel,
+		logLevel: settings.logLevel as Options.WebDriverLogTypes,
 
-		outputDir,
+		outputDir: settings.outputDir,
 
 		// Default timeout for each waitFor* command.
-		waitforTimeout,
+		waitforTimeout: settings.waitForTimeout as number,
 
 		// See also: http://webdriver.io/guide/testrunner/reporters.html
 		reporters: [
@@ -83,8 +81,8 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 			[
 				JsonReporter,
 				{
-					resultFilePath: testEnvironment.resultFilePath,
-					suiteName: testEnvironment.suiteName
+					suiteName: settings.name,
+					resultFilePath: settings.resultFilePath
 				}
 			]
 		],
@@ -92,13 +90,13 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 		// See also: http://mochajs.org
 		mochaOpts: {
 			ui: 'bdd',
-			timeout: mochaTimeout
+			timeout: settings.testTimeout
 		},
 
 		// =====
 		// Hooks
 		// =====
-		onPrepare: async () => testEnvironment.execute(),
+		onPrepare: async () => environment.up(),
 
 		/**
 		 * Initializes the default functions for every test and
@@ -106,9 +104,7 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 		 *
 		 * @param {...any} args
 		 */
-		before: async () => {
-			await testEnvironment.before();
-		},
+		before: async () => settings.before( settings ),
 
 		beforeSuite: async ( suite ) => {
 			testLog.info( `📘 ${suite.title.toUpperCase()}` );
@@ -130,15 +126,13 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 			const screenshotFilename = `${testFile}__${test.title}`;
 
 			try {
-				saveScreenshot( screenshotFilename, testEnvironment.screenshotPath );
+				saveScreenshot( screenshotFilename, settings.screenshotPath );
 			} catch ( error ) {
 				console.error( 'failed writing screenshot ...' );
 				console.error( error );
 			}
 		},
 
-		onComplete: function () {
-			testEnvironment.onComplete();
-		}
+		onComplete: () => environment.down()
 	};
 }
