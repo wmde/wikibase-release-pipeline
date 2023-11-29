@@ -64,7 +64,7 @@ RUN set -x; \
     composer install --no-dev -vv -n
 
 # ###########################################################################
-FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${WMDE_RELEASE_VERSION}
+FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${RELEASE_VERSION}-${WMDE_RELEASE_VERSION} as wikibase
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install \
