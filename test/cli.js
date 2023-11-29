@@ -26,7 +26,7 @@ export const allSuiteNames = [
 
 const y = yargs( hideBin( process.argv ) );
 
-const processCLI = async () => {
+const runCLI = async () => {
 	y.command( {
 		command: '*<suiteName>',
 		description: 'Run a test suite',
@@ -94,6 +94,7 @@ const processCLI = async () => {
 	y.demandCommand();
 	y.showHelpOnFail( true );
 	y.help();
+
 	return y.argv;
 }
 
@@ -159,4 +160,4 @@ async function runWdio( configFile, wdioOpts ) {
 	}
 }
 
-await ( async () => await processCLI() )();
+await ( async () => await runCLI() )();
