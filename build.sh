@@ -32,6 +32,7 @@ function save_image {
     fi
 }
 
+
 # wikibase/wdqs -> wdqs
 function image_url_to_image_name {
    local image_url="$1"
@@ -54,18 +55,20 @@ function image_url_to_image_name {
    echo "$image_url" | cut -d'/' -f 2
 }
 
+
 function setup_image_name_url_and_tag {
-    # HEADS UP, this will set the global vars 👿
+    local version_string="$2"
+
+    # ‼️  HEADS UP! This will set the global vars 👿
     image_url="$1"
     image_name="$(image_url_to_image_name "$image_url")"
-    image_name_with_tag="${image_name}:${WMDE_RELEASE_VERSION}"
-    image_url_with_tag="${image_url}:${WMDE_RELEASE_VERSION}"
+    image_name_with_tag="${image_name}:${version_string}"
+    image_url_with_tag="${image_url}:${version_string}"
 }
 
 
-
 function build_wikibase {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -92,7 +95,7 @@ function build_wikibase {
         popd
     fi
 
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -125,7 +128,7 @@ function build_wikibase {
 
 
 function build_elasticseach {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
@@ -139,7 +142,7 @@ function build_elasticseach {
 
 
 function build_wdqs {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
@@ -153,7 +156,7 @@ function build_wdqs {
 
 
 function build_wdqs-frontend {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -177,7 +180,7 @@ function build_wdqs-frontend {
 
 
 function build_wdqs-proxy {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
@@ -189,7 +192,7 @@ function build_wdqs-proxy {
 
 
 function build_quickstatements {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
