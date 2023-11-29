@@ -2,7 +2,6 @@ import { mkdirSync, rmSync } from 'fs';
 import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import logger from '@wdio/logger';
-import chalk from 'chalk';
 import checkIfUp from './checkIfUp.js';
 import loadEnvVars from './loadEnvVars.js';
 
