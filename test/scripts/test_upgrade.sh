@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC1090,SC2086
 set -e
+set -x
 
 cd test
 
@@ -137,8 +138,8 @@ fi
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
 image_filename="../artifacts/$(echo "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" | cut -d'/' -f2).docker.tar.gz"
-docker load -i "$image_filename" >> $TEST_LOG 2>&1
-$TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
+docker load -i "$image_filename"
+$TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
@@ -146,14 +147,14 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 $TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
-echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""  2>&1 | tee -a "$TEST_LOG"
+echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""
 
-docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick >> "$TEST_LOG" 2>&1
+docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick
 
-echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
+echo -e "\n✳️  Running \"$SUITE\" test suite"
 
 $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
-echo -e "🔄 Removing running Docker test services and volumes\n"  2>&1 | tee -a "$TEST_LOG"
+echo -e "🔄 Removing running Docker test services and volumes\n"
 remove_services_and_volumes
