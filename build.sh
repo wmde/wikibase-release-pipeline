@@ -221,39 +221,39 @@ build_target_set=false
 
 for arg in "$@"; do
     case $arg in
-        wikibase) 
-            build_wikibase 
+        wikibase)
+            build_wikibase
             build_target_set=true
             ;;
-        elasticsearch) 
-            build_elasticseach 
+        elasticsearch)
+            build_elasticseach
             build_target_set=true
             ;;
-        wdqs) 
-            build_wdqs 
+        wdqs)
+            build_wdqs
             build_target_set=true
             ;;
-        wdqs-frontend) 
-            build_wdqs-frontend 
+        wdqs-frontend)
+            build_wdqs-frontend
             build_target_set=true
             ;;
-        wdqs-proxy) 
-            build_wdqs-proxy 
+        wdqs-proxy)
+            build_wdqs-proxy
             build_target_set=true
             ;;
-        quickstatements) 
-            build_quickstatements 
+        quickstatements)
+            build_quickstatements
             build_target_set=true
             ;;
-        all) 
-            build_all 
+        all)
+            build_all
             build_target_set=true
             ;;
-        -s|--save-image) 
-            SAVE_IMAGE=true 
+        -s|--save-image)
+            SAVE_IMAGE=true
             ;;
-        -t|--extract-tarball) 
-            EXTRACT_TARBALL=true 
+        -t|--extract-tarball)
+            EXTRACT_TARBALL=true
             ;;
         *)
             echo "Unknown argument: $arg" > /dev/stderr
