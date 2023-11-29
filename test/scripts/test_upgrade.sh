@@ -136,7 +136,8 @@ fi
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
-docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
+image_filename="../artifacts/$(echo "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" | cut -d'/' -f2).docker.tar.gz"
+docker load -i "$image_filename" >> $TEST_LOG 2>&1
 $TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
