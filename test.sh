@@ -16,4 +16,4 @@ TEST_RUNNER_COMPOSE="docker compose -f docker-compose.yml --progress quiet"
 # }
 
 $TEST_RUNNER_COMPOSE up -d --build > /dev/null 2>&1
-$TEST_RUNNER_COMPOSE run --rm test-runner -c "npx ts-node test.js ${*:1}"
+$TEST_RUNNER_COMPOSE run --rm test-runner -c "npx ts-node cli.js ${*:1}"
