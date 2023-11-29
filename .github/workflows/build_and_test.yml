@@ -210,7 +210,7 @@ jobs:
         ]
 
     env:
-      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
+      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase/wikibase-bundle
 
     steps:
       - uses: actions/checkout@v4
