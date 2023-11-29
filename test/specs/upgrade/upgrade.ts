@@ -8,7 +8,7 @@ describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
 	before( async () => {
-		// === Set image for currently build wikibase version
+		// === Set image for current local build of wikibase
 		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = process.env.WIKIBASE_TEST_IMAGE_NAME;
 		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}` );
 
