@@ -1,4 +1,4 @@
-import { DefaultTestEnvironment } from '../../helpers/DefaultTestEnvironment.js';
+import { DefaultTestEnvironment } from '../../setup/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [

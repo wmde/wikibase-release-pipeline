@@ -1,5 +1,5 @@
-import { TestEnvironment } from '../../helpers/TestEnvironment.js';
-import { defaultTestEnvironmentConfig } from '../../helpers/DefaultTestEnvironment.js';
+import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import { defaultTestEnvironmentConfig } from '../../setup/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [

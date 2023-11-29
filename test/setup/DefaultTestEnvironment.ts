@@ -1,6 +1,6 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { TestEnvironment, TestEnvironmentConfig } from './TestEnvironment.js';
-import { defaultFunctions as defaultFunctionsInit } from './default-functions.js';
+import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 
 export const defaultTestEnvironmentConfig: TestEnvironmentConfig = {

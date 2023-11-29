@@ -3,7 +3,7 @@ import lodash from 'lodash';
 import chalk from 'chalk';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import loadEnvVars from './helpers/loadEnvVars.js';
+import loadEnvVars from './setup/loadEnvVars.js';
 import { versions } from './suites/upgrade/upgrade.conf.js';
 
 loadEnvVars( './default.env' );

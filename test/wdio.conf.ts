@@ -8,7 +8,8 @@ import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import JsonReporter from './helpers/json-reporter.js';
-import { TestEnvironment, testEnvironmentLog } from './helpers/TestEnvironment.js';
+import { TestEnvironment } from './setup/TestEnvironment.js';
+import testLog from './setup/testLog.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 import type { Capabilities } from '@wdio/types';
 
@@ -110,11 +111,11 @@ export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ):
 		},
 
 		beforeSuite: async ( suite ) => {
-			testEnvironmentLog.info( `📘 ${suite.title.toUpperCase()}` );
+			testLog.info( `📘 ${suite.title.toUpperCase()}` );
 		},
 
 		beforeTest: function ( test ) {
-			testEnvironmentLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
+			testLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
 		},
 
 		/**
