@@ -135,6 +135,11 @@ const commandHandler = async ( argv ) => {
 		}
 		for ( const suiteName of suiteNames ) {
 			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
+			console.log(
+				chalk.bgWhiteBright.black.bold(
+					`\n"${suiteName}" test suite ${' '.repeat( 140 - suiteName.length )}`
+				)
+			);
 			exitCode = await runWdio( configFilePath, wdioCommandArguments );
 		}
 	}
