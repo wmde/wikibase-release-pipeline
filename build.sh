@@ -100,6 +100,7 @@ function build_wikibase {
     docker build \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
+        --build-arg RELEASE_VERSION="$RELEASE_VERSION" \
         --build-arg WIKIBASE_SUITE_WIKIBASE_IMAGE_URL="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \

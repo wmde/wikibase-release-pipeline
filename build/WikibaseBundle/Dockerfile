@@ -1,9 +1,10 @@
 ARG COMPOSER_IMAGE_URL
 ARG WMDE_RELEASE_VERSION
+ARG RELEASE_VERSION
 ARG WIKIBASE_SUITE_WIKIBASE_IMAGE_URL
 
 # ###########################################################################
-FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${WMDE_RELEASE_VERSION} as wikibase
+FROM ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}:${RELEASE_VERSION}-${WMDE_RELEASE_VERSION} as wikibase
 
 # ###########################################################################
 # hadolint ignore=DL3006
