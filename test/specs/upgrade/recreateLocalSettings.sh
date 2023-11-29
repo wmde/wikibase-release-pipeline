@@ -2,12 +2,12 @@
 # shellcheck disable=SC1091
 
 # ==== Load the Wikibase default env vars and create a new LocalSettings file 
-# the entrypoint logic is always depending on LocalSettings.php to be there
-# since it's now mounted per default it gets removed when the container changes.
-# copy the one from the pipeline and run envsubst in this shell
+# Entrypoint logic depends on LocalSettings.php to exist and it is mounted by
+# default and is removed when the container changes. Copy the one from the
+# pipeline and run envsubst in this shell.
 TMP_LOCALSETTINGS="./suites/upgrade/tmp_LocalSettings.php"
 rm -r $TMP_LOCALSETTINGS 2>/dev/null
-npx envsub "../build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" "$TMP_LOCALSETTINGS"
+npx envsub "../build/Wikibase/LocalSettings.php.template" "$TMP_LOCALSETTINGS"
 
 # === Modify old LocalSettings.php
 # This section is needed to create the 1.39 releases
