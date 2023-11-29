@@ -8,7 +8,7 @@ services:
 
   wikibase:
     volumes:
-      - ./${SUITE_CONFIG_NAME}/wikibase-extra-install.sh:/extra-install.sh
+      - ./elasticsearch/wikibase-extra-install.sh:/extra-install.sh
     environment: 
       <<: *elastic_search
 

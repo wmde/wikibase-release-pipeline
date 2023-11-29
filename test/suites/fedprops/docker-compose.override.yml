@@ -4,4 +4,4 @@ services:
 
   wikibase:
     volumes:
-      - ./${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./fedprops/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.fedprops.php

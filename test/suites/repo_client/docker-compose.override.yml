@@ -23,7 +23,7 @@ services:
     volumes:
       - ./client-LocalSettings.php.template:/LocalSettings.php.template
       - ./client-extra-install.sh:/extra-install.sh
-      - ./${SUITE}/results:/var/log/mediawiki
+      - ../${OUTPUT_DIR}:/var/log/mediawiki
     ports:
       - "80:80"
     networks:

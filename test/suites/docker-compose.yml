@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./${SUITE}/results:/var/log/mediawiki
+      - ./${OUTPUT_DIR}:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
       - "8181:80"

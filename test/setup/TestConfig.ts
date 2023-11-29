@@ -80,8 +80,7 @@ export class TestConfig {
 			}
 		}
 
-		process.env.SUITE = this.settings.name as string;
-		process.env.SUITE_CONFIG_NAME = this.settings.nameWithoutBase;
+		process.env.OUTPUT_DIR = this.settings.outputDir as string;
   }
 
 	static getSettings( settings: Partial<TestSettings> ) {

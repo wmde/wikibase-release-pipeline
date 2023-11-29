@@ -3,4 +3,4 @@ version: '3.5'
 services:
   wikibase:
     volumes:
-      - ./${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./confirm_edit/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.confirm_edit.php

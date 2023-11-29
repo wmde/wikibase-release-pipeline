@@ -120,8 +120,8 @@ const commandHandler = async ( argv ) => {
 	let exitCode;
 
 	if ( argv.setup ) {
-		const { testEnvironment } = await import( `./suites/${suiteNames[0]}/${suiteNames[0]}.conf.ts` );
-		await testEnvironment.execute();
+		const { environment } = await import( `./suites/${suiteNames[0]}/${suiteNames[0]}.conf.ts` );
+		await environment.up();
 		exitCode = 0;
 	} else {
 		if ( suiteNames.length > 1 ) {
