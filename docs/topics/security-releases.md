@@ -10,6 +10,8 @@ You can find the latest base components that may need updating from these locati
 
 **Commit hash based**
 
+**outdated**
+
 You can see all new commits since the commit being used using a comparison URL (see below).
 
  You can then use a new commit hash that only includes minor fixes including security updates to packages and code.
