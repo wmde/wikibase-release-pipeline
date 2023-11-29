@@ -9,8 +9,8 @@ describe( 'Wikibase upgrade', function () {
 
 	before( async () => {
 		// === Set image for current local build of wikibase
-		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME = process.env.WIKIBASE_TEST_IMAGE_NAME;
-		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_NAME}` );
+		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = process.env.WIKIBASE_TEST_IMAGE_NAME;
+		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
 
 		// Fix for LocalSettings.php (see notes in the script)
 		spawnSync(

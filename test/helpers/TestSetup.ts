@@ -42,16 +42,15 @@ export class TestSetup {
 		process.env.SUITE_CONFIG_NAME = this.suiteConfigName;
 		this.isBaseSuite = this.suiteName !== this.suiteConfigName;
 
-		this.hostCWD = process.env.HOST_PWD;
-		this.outputDir = `suites/${this.suiteName}/results`;
-
 		this.config = config;
-
+		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
+		this.hostCWD = process.env.HOST_PWD || process.env.PWD;
+		this.outputDir = `suites/${this.suiteName}/results`;
 		this.testLogFilePath = `${this.outputDir}/${this.suiteName}.log`;
 		this.screenshotPath = `${this.outputDir}/screenshots`;
 		this.resultFilePath = `${this.outputDir}/result.json`;
+
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
-		this.runHeaded = this.config.runHeaded || !!process.env.HEADED_TESTS;
 	}
 
 	public async execute(): Promise<void> {
