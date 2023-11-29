@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import JsonReporter from './helpers/json-reporter.js';
 import { TestSetup, testSetupLog } from './helpers/TestSetup.js';
 import { saveScreenshot } from 'wdio-mediawiki';
+import type { Capabilities } from '@wdio/types';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
@@ -55,7 +56,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 					]
 				}
-			}
+			} as Capabilities.ChromeCapabilities
 		],
 
 		// ===================

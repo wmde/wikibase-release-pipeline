@@ -62,13 +62,15 @@ export class TestSetup {
 				process.exit( 1 );
 			} );
 
-			console.log( chalk.bgWhiteBright.black.bold( `"${this.suiteName}" test suite ${' '.repeat( 100 )}` ) );
+			console.log(
+				chalk.bgWhiteBright.black.bold( `"${this.suiteName}" test suite ${' '.repeat( 100 )}\n` )
+			);
 
 			this.setupOutputDir();
 			this.loadEnvFiles();
 			this.beforeServices();
 
-			console.log( '\n▶️  Waiting for test services to become available' );
+			console.log( '▶️  Waiting for test services to become available' );
 
 			this.stopServices();
 			this.startServices();
