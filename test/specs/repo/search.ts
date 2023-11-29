@@ -8,6 +8,7 @@ describe( 'Search', function () {
 
 		await browser.waitForJobs();
 
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 2000 );
 
 		const result = await browser.makeRequest(

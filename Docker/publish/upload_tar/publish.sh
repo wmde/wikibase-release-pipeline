@@ -11,7 +11,7 @@ if [ -z "$RELEASE_HOST" ] || \
     exit 1;
 fi
 
-ARTIFACT_PATH=/extractedArtifacts/BuildArtifacts
+ARTIFACT_PATH=/extractedArtifacts/TarBalls
 RELEASE_FULL_PATH=$RELEASE_DIR/$RELEASE_MAJOR_VERSION
 
 # Setup ssh-keys

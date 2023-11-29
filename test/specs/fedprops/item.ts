@@ -89,6 +89,7 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUI.open( query, prefixes );
 
 		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 11 * 1000 );
 
 		await QueryServiceUI.submit();
