@@ -34,7 +34,7 @@
             echo "Test Commands:"
             echo "$ ./test.sh"
             echo "$ ./test.sh repo"
-            echo "$ ./test.sh repo special-item"
+            echo "$ ./test.sh repo --spec special-item"
             echo "$ make test-upgrade VERSION=wmde.9"
             echo
             echo "Example Instance Commands:"

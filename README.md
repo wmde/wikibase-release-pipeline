@@ -33,7 +33,7 @@ $ ./build.sh --extract-tarball wdqs-frontend
 ```
 $ ./test.sh
 $ ./test.sh repo
-$ ./test.sh repo special-item
+$ ./test.sh repo --spec special-item
 $ make test-upgrade VERSION=wmde.9
 ```
 
