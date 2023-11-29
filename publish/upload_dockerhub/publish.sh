@@ -35,7 +35,6 @@ function tag_and_push {
 
     # example: wikibase/wikibase:1.35
     IMAGE_TAG="$DOCKER_HUB_REPOSITORY_NAME/$IMAGE_NAME:$IMAGE_VERSION"
-    docker tag "$IMAGE_NAME:latest" "$IMAGE_TAG"
 
     if [ -z "$DRY_RUN" ]; then
         docker push "$IMAGE_TAG"
