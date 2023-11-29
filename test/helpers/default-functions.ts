@@ -9,7 +9,7 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
-import { testSetupLog } from './TestSetup.js';
+import { testEnvironmentLog } from './TestEnvironment.js';
 
 export function defaultFunctions(): void {
 	/**
@@ -104,14 +104,14 @@ export function defaultFunctions(): void {
 
 			const fullCommand = `docker exec ${opts} ${container} ${command}`;
 			if ( shouldLog ) {
-				testSetupLog.info( `executing: ${fullCommand}` );
+				testEnvironmentLog.info( `executing: ${fullCommand}` );
 			}
 
 			return new Promise( ( resolve ) => {
 				// eslint-disable-next-line security/detect-child-process
 				exec( fullCommand, ( error, stdout, stderr ) => {
 					if ( error ) {
-						testSetupLog.error( error );
+						testEnvironmentLog.error( error );
 					}
 
 					resolve( stdout || stderr );
@@ -189,10 +189,10 @@ export function defaultFunctions(): void {
 			assert.strictEqual( result.status, 200 );
 
 			if ( !foundResult ) {
-				testSetupLog.error( 'Could not find:' );
-				testSetupLog.error( expectedChange );
-				testSetupLog.error( 'Response: ' );
-				testSetupLog.error( changes );
+				testEnvironmentLog.error( 'Could not find:' );
+				testEnvironmentLog.error( expectedChange );
+				testEnvironmentLog.error( 'Response: ' );
+				testEnvironmentLog.error( changes );
 			}
 
 			return foundResult;

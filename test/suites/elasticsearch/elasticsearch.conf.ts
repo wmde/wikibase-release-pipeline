@@ -1,11 +1,11 @@
-import { DefaultTestSetup } from '../../helpers/DefaultTestSetup.js';
+import { DefaultTestEnvironment } from '../../helpers/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [
 	'specs/elasticsearch/*.ts'
 ];
 
-export const testSetup = new DefaultTestSetup( 'elasticsearch', {
+export const testEnvironment = new DefaultTestEnvironment( 'elasticsearch', {
 	composeFiles: [
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
@@ -14,4 +14,4 @@ export const testSetup = new DefaultTestSetup( 'elasticsearch', {
 	] )
 } );
 
-export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
+export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );

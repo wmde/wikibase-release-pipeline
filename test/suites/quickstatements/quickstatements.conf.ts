@@ -1,4 +1,4 @@
-import { DefaultTestSetup } from '../../helpers/DefaultTestSetup.js';
+import { DefaultTestEnvironment } from '../../helpers/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [
@@ -6,7 +6,7 @@ export const specs = [
 	'specs/quickstatements/*.ts'
 ];
 
-export const testSetup = new DefaultTestSetup( 'quickstatements', {
+export const testEnvironment = new DefaultTestEnvironment( 'quickstatements', {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
@@ -16,4 +16,4 @@ export const testSetup = new DefaultTestSetup( 'quickstatements', {
 	] )
 } );
 
-export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
+export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );

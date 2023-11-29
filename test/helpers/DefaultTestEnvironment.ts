@@ -1,9 +1,9 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { TestSetup, TestSetupConfig } from './TestSetup.js';
+import { TestEnvironment, TestEnvironmentConfig } from './TestEnvironment.js';
 import { defaultFunctions as defaultFunctionsInit } from './default-functions.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 
-export const defaultTestSetupConfig: TestSetupConfig = {
+export const defaultTestEnvironmentConfig: TestEnvironmentConfig = {
 	envFiles: [
 		'../variables.env',
 		'default.env',
@@ -56,34 +56,34 @@ export const defaultTestSetupConfig: TestSetupConfig = {
 	runHeaded: false
 };
 
-export class DefaultTestSetup extends TestSetup {
+export class DefaultTestEnvironment extends TestEnvironment {
 	public constructor(
 		suiteName: string,
-		config: TestSetupConfig = {}
+		config: TestEnvironmentConfig = {}
 	) {
 		const testConfig = {
-			...defaultTestSetupConfig,
+			...defaultTestEnvironmentConfig,
 			...config,
 			envFiles: [
-				...defaultTestSetupConfig.envFiles,
+				...defaultTestEnvironmentConfig.envFiles,
 				...( config.envFiles || [] )
 			],
 			composeFiles: [
-				...defaultTestSetupConfig.composeFiles,
+				...defaultTestEnvironmentConfig.composeFiles,
 				...( config.composeFiles || [] )
 			],
 			waitForURLs: () => ( [
-				...defaultTestSetupConfig.waitForURLs(),
+				...defaultTestEnvironmentConfig.waitForURLs(),
 				...( config.waitForURLs ? config.waitForURLs : () => ( [] ) )()
 			] ),
 			before: async (): Promise<void> => {
-				await defaultTestSetupConfig.before();
+				await defaultTestEnvironmentConfig.before();
 				if ( config.before ) {
 					await config.before();
 				}
 			},
 			beforeServices: (): void => {
-				defaultTestSetupConfig.beforeServices( this.isBaseSuite );
+				defaultTestEnvironmentConfig.beforeServices( this.isBaseSuite );
 				if ( config.beforeServices ) {
 					config.beforeServices( this.isBaseSuite );
 				}

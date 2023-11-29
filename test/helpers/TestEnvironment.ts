@@ -6,9 +6,9 @@ import chalk from 'chalk';
 import checkIfUp from './checkIfUp.js';
 import loadEnvVars from './loadEnvVars.js';
 
-export const testSetupLog = logger( 'TestSetup' );
+export const testEnvironmentLog = logger( 'TestEnvironment' );
 
-export type TestSetupConfig = {
+export type TestEnvironmentConfig = {
 	envFiles?: string[];
 	composeFiles?: string[];
 	waitForURLs?(): string[];
@@ -19,7 +19,7 @@ export type TestSetupConfig = {
 	runHeaded?: boolean;
 };
 
-export class TestSetup {
+export class TestEnvironment {
 	public baseDockerComposeCmd: string;
 	public isBaseSuite: boolean;
 	public outputDir: string;
@@ -28,13 +28,13 @@ export class TestSetup {
 	public suiteName: string;
 	public suiteConfigName: string;
 	public runHeaded: boolean;
-	protected config: TestSetupConfig;
+	protected config: TestEnvironmentConfig;
 	protected hostCWD: string;
 	protected testLogFilePath: string;
 
 	public constructor(
 		suiteName: string,
-		config: TestSetupConfig = {}
+		config: TestEnvironmentConfig = {}
 	) {
 		this.suiteName = suiteName;
 		this.suiteConfigName = this.suiteName.replace( 'base__', '' );
@@ -103,7 +103,7 @@ export class TestSetup {
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			mkdirSync( this.outputDir, { recursive: true } );
 		} catch ( e ) {
-			testSetupLog.error( '❌ Error occurred in setting-up logs:', e );
+			testEnvironmentLog.error( '❌ Error occurred in setting-up logs:', e );
 		}
 	}
 
@@ -129,21 +129,21 @@ export class TestSetup {
 	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
 		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
-		testSetupLog.debug( 'Running: ', dockerComposeCmd );
+		testEnvironmentLog.debug( 'Running: ', dockerComposeCmd );
 
 		const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8' } );
 
-		testSetupLog.debug( result.stdout );
-		testSetupLog.debug( result.stderr );
+		testEnvironmentLog.debug( result.stdout );
+		testEnvironmentLog.debug( result.stderr );
 	}
 
 	public startServices(): void {
-		testSetupLog.info( '▶️  Starting Wikibase Suite services' );
+		testEnvironmentLog.info( '▶️  Starting Wikibase Suite services' );
 		this.runDockerComposeCmd( 'up -d' );
 	}
 
 	public stopServices( removeVolumes: boolean = true ): void {
-		testSetupLog.info( '▶️  Stopping Wikibase Suite services' );
+		testEnvironmentLog.info( '▶️  Stopping Wikibase Suite services' );
 		this.runDockerComposeCmd( `down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1` );
 	}
 
@@ -151,7 +151,7 @@ export class TestSetup {
 		return Promise.all( this.config.waitForURLs().map(
 			async ( waitForURL: string ): Promise<void> => {
 				await checkIfUp( waitForURL );
-				testSetupLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
+				testEnvironmentLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
 			}
 		) );
 	}

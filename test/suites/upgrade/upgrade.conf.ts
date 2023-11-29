@@ -1,5 +1,5 @@
-import { TestSetup } from '../../helpers/TestSetup.js';
-import { defaultTestSetupConfig } from '../../helpers/DefaultTestSetup.js';
+import { TestEnvironment } from '../../helpers/TestEnvironment.js';
+import { defaultTestEnvironmentConfig } from '../../helpers/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const versions = {
@@ -27,14 +27,14 @@ export const specs = [
 	// 'specs/upgrade/queryservice-post-upgrade.ts'
 ];
 
-export const testSetup = new TestSetup( 'upgrade', {
+export const testEnvironment = new TestEnvironment( 'upgrade', {
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
 		// TODO: Explore further what happened with WDQS
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
-		...defaultTestSetupConfig.envFiles,
+		...defaultTestEnvironmentConfig.envFiles,
 		'suites/upgrade/default_variables.env'
 	],
 	waitForURLs: () => ( [
@@ -45,9 +45,9 @@ export const testSetup = new TestSetup( 'upgrade', {
 		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts on services reboot
-		defaultTestSetupConfig.beforeServices( isBaseSuite );
+		defaultTestEnvironmentConfig.beforeServices( isBaseSuite );
 	},
-	before: defaultTestSetupConfig.before
+	before: defaultTestEnvironmentConfig.before
 } );
 
-export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
+export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );

@@ -8,18 +8,18 @@ import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import JsonReporter from './helpers/json-reporter.js';
-import { TestSetup, testSetupLog } from './helpers/TestSetup.js';
+import { TestEnvironment, testEnvironmentLog } from './helpers/TestEnvironment.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 import type { Capabilities } from '@wdio/types';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO.Config {
+export function wdioConfig( testEnvironment: TestEnvironment, specs: string[] ): WebdriverIO.Config {
 	const baseUrl = process.env.MW_SERVER + process.env.MW_SCRIPT_PATH;
 	const logLevel = ( process.env.SELENIUM_LOG_LEVEL as Options.WebDriverLogTypes ) || 'error';
 	const mochaTimeout = process.env.MOCHA_OPTS_TIMEOUT || 90 * 1000;
-	const outputDir = testSetup.outputDir;
+	const outputDir = testEnvironment.outputDir;
 	const waitforTimeout = 30 * 1000;
 
 	return {
@@ -51,7 +51,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 						// as XL, let's use that.
 						// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
 						...[ '--window-size=1280,800' ],
-						...( testSetup.runHeaded ? [] : [ '--headless' ] ),
+						...( testEnvironment.runHeaded ? [] : [ '--headless' ] ),
 						// Chrome sandbox does not work in Docker
 						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 					]
@@ -82,8 +82,8 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 			[
 				JsonReporter,
 				{
-					resultFilePath: testSetup.resultFilePath,
-					suiteName: testSetup.suiteName
+					resultFilePath: testEnvironment.resultFilePath,
+					suiteName: testEnvironment.suiteName
 				}
 			]
 		],
@@ -97,7 +97,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		// =====
 		// Hooks
 		// =====
-		onPrepare: async () => testSetup.execute(),
+		onPrepare: async () => testEnvironment.execute(),
 
 		/**
 		 * Initializes the default functions for every test and
@@ -106,15 +106,15 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		 * @param {...any} args
 		 */
 		before: async () => {
-			await testSetup.before();
+			await testEnvironment.before();
 		},
 
 		beforeSuite: async ( suite ) => {
-			testSetupLog.info( `📘 ${suite.title.toUpperCase()}` );
+			testEnvironmentLog.info( `📘 ${suite.title.toUpperCase()}` );
 		},
 
 		beforeTest: function ( test ) {
-			testSetupLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
+			testEnvironmentLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
 		},
 
 		/**
@@ -129,7 +129,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 			const screenshotFilename = `${testFile}__${test.title}`;
 
 			try {
-				saveScreenshot( screenshotFilename, testSetup.screenshotPath );
+				saveScreenshot( screenshotFilename, testEnvironment.screenshotPath );
 			} catch ( error ) {
 				console.error( 'failed writing screenshot ...' );
 				console.error( error );
@@ -137,7 +137,7 @@ export function wdioConfig( testSetup: TestSetup, specs: string[] ): WebdriverIO
 		},
 
 		onComplete: function () {
-			testSetup.onComplete();
+			testEnvironment.onComplete();
 		}
 	};
 }

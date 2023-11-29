@@ -1,5 +1,5 @@
-import { TestSetup } from '../../helpers/TestSetup.js';
-import { defaultTestSetupConfig } from '../../helpers/DefaultTestSetup.js';
+import { TestEnvironment } from '../../helpers/TestEnvironment.js';
+import { defaultTestEnvironmentConfig } from '../../helpers/DefaultTestEnvironment.js';
 import { wdioConfig } from '../../wdio.conf.js';
 
 export const specs = [
@@ -8,7 +8,7 @@ export const specs = [
 	'specs/elasticsearch/*.ts'
 ];
 
-export const testSetup = new TestSetup( 'example', {
+export const testEnvironment = new TestEnvironment( 'example', {
 	composeFiles: [
 		'../example/docker-compose.yml',
 		'../example/docker-compose.extra.yml',
@@ -19,8 +19,8 @@ export const testSetup = new TestSetup( 'example', {
 		'suites/example/example.env',
 		'../local.env'
 	],
-	waitForURLs: defaultTestSetupConfig.waitForURLs,
-	before: defaultTestSetupConfig.before
+	waitForURLs: defaultTestEnvironmentConfig.waitForURLs,
+	before: defaultTestEnvironmentConfig.before
 } );
 
-export const config: WebdriverIO.Config = wdioConfig( testSetup, specs );
+export const config: WebdriverIO.Config = wdioConfig( testEnvironment, specs );

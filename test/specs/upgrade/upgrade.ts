@@ -2,7 +2,7 @@ import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import { testSetup } from '../../suites/upgrade/upgrade.conf.js';
+import { testEnvironment } from '../../suites/upgrade/upgrade.conf.js';
 
 describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
@@ -19,16 +19,16 @@ describe( 'Wikibase upgrade', function () {
 		);
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
-		testSetup.runDockerComposeCmd( '--progress quiet down' );
-		testSetup.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
-		await testSetup.waitForServices();
+		testEnvironment.runDockerComposeCmd( '--progress quiet down' );
+		testEnvironment.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
+		await testEnvironment.waitForServices();
 
 		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
-		testSetup.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
+		testEnvironment.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
 		// Make sure services are settled and available again
-		await testSetup.waitForServices();
+		await testEnvironment.waitForServices();
 		// Repeat WDIO initialization with new services up
-		await testSetup.before();
+		await testEnvironment.before();
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {
