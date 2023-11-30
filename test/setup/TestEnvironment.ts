@@ -7,6 +7,10 @@ import loadEnvVars from './loadEnvVars.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 import testLog from './testLog.js';
 
+// beforeServices: runs before services are started. Runs in WDIO `onPrepare` after `outputDir` is cleared and BEFORE existing services are stopped. If using defaults this will run after local images are loaded.
+// afterServices: runs after services are started
+// afterServicesAvailable: runs after services are started and available (waitForItURLs all respond true)
+
 export type TestEnvironmentSettings = {
 	envFiles?: string[];
 	composeFiles?: string[];
@@ -48,7 +52,7 @@ export const defaultTestEnvironmentSettings: TestEnvironmentSettings = {
 		`${process.env.MW_SERVER}/wiki/Main_Page`,
 		`http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 		`http://${process.env.WDQS_FRONTEND_SERVER}`
-	] ),
+	] )
 };
 
 export class TestEnvironment {
@@ -123,7 +127,7 @@ export class TestEnvironment {
 		}
 	}
 
-	public async down(): Promise<void> {
+	public down(): void {
 		this.stopServices();
 	}
 

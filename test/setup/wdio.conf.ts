@@ -8,6 +8,8 @@ import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import type { Capabilities } from '@wdio/types';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import JsonReporter from '../helpers/json-reporter.js';
 import { TestSettings } from './TestConfig.js';
 import { TestEnvironment } from './TestEnvironment.js';
@@ -104,14 +106,26 @@ export function wdioConfig(
 		 *
 		 * @param {...any} args
 		 */
-		before: async () => settings.before( settings ),
+		before: async () => {
+			defaultFunctionsInit( settings );
 
-		beforeSuite: async ( suite ) => {
-			testLog.info( `📘 ${suite.title.toUpperCase()}` );
+			await WikibaseApi.initialize(
+				undefined,
+				this.settings.mwAdminName,
+				this.settings.mwAdminPass
+			);
+	
+			if ( settings.before ) settings.before( settings, environment )
 		},
 
-		beforeTest: function ( test ) {
-			testLog.info( `▶️ SPEC: ${test.title.toUpperCase()}` );
+		beforeSuite: async ( mochaSuite ) => {
+			testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
+			if ( settings.beforeMochaSuite ) settings.beforeMochaSuite( mochaSuite, settings, environment )
+		},
+
+		beforeTest: function ( mochaTest ) {
+			testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
+			if ( settings.beforeTest ) settings.beforeTest( mochaTest )
 		},
 
 		/**
@@ -119,11 +133,11 @@ export function wdioConfig(
 		 *
 		 * @param {Frameworks.Test} test
 		 */
-		afterTest: function ( test: Frameworks.Test ) {
+		afterTest: function ( mochaTest ) {
 			const testFile = encodeURIComponent(
-				test.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
+				mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 			);
-			const screenshotFilename = `${testFile}__${test.title}`;
+			const screenshotFilename = `${testFile}__${mochaTest.title}`;
 
 			try {
 				saveScreenshot( screenshotFilename, settings.screenshotPath );
@@ -131,6 +145,15 @@ export function wdioConfig(
 				console.error( 'failed writing screenshot ...' );
 				console.error( error );
 			}
+			if ( settings.afterTest ) settings.afterTest( mochaTest )
+		},
+
+		afterSuite: async ( mochaSuite ) => {
+			if ( settings.afterMochaSuite ) settings.afterMochaSuite( mochaSuite, settings, environment )
+		},
+
+		after: async () => {
+			if ( settings.after ) settings.after( settings, environment )
 		},
 
 		onComplete: () => environment.down()
