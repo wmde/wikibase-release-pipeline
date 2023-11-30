@@ -7,6 +7,7 @@ import { Frameworks, Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { SevereServiceError } from 'webdriverio';
 import type { Capabilities } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
@@ -107,15 +108,18 @@ export function wdioConfig(
 		 * @param {...any} args
 		 */
 		before: async () => {
-			defaultFunctionsInit( settings );
-
-			await WikibaseApi.initialize(
-				undefined,
-				this.settings.mwAdminName,
-				this.settings.mwAdminPass
-			);
-	
-			if ( settings.before ) await settings.before( settings, environment );
+			try {
+				defaultFunctionsInit( settings );
+				await WikibaseApi.initialize(
+					undefined,
+					settings.mwAdminName,
+					settings.mwAdminPass
+				);
+		
+				if ( settings.before ) await settings.before( settings, environment );
+			} catch ( e ) {
+				throw new SevereServiceError( e );
+			}
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
