@@ -115,7 +115,7 @@ export function wdioConfig(
 				this.settings.mwAdminPass
 			);
 	
-			if ( settings.before ) settings.before( settings, environment )
+			if ( settings.before ) await settings.before( settings, environment );
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
