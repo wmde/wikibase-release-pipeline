@@ -3,7 +3,7 @@
  * See also: http://webdriver.io/guide/testrunner/configurationfile.html
  */
 
-import { Frameworks, Options } from '@wdio/types';
+import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';

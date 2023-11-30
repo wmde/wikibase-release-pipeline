@@ -38,7 +38,7 @@ export const environment = new TestEnvironment( {
 	],
 	envFiles: [
 		...defaultTestEnvironmentSettings.envFiles,
-		'suites/upgrade/default_variables.env'
+		'suites/upgrade/upgrade.env'
 	],
 	waitForURLs: () => ( [
 		`${settings.mwServer}/wiki/Main_Page`
@@ -49,7 +49,7 @@ export const environment = new TestEnvironment( {
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts on services reboot
 		defaultTestEnvironmentSettings.beforeServices();
-	},
+	}
 }, settings );
 
 export const config: WebdriverIO.Config = wdioConfig( settings, environment );

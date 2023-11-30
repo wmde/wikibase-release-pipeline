@@ -3,7 +3,7 @@ import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import { TestSettings } from './TestConfig.js';
 import checkIfUp from './checkIfUp.js';
-import loadEnvVars from './loadEnvVars.js';
+import loadEnvFiles from './loadEnvVars.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 import testLog from './testLog.js';
 
@@ -95,6 +95,7 @@ export class TestEnvironment {
 		testSettings: TestSettings 
 	) {
 		this.settings = settings;
+		loadEnvFiles( this.settings.envFiles, true );
 		this.testSettings = testSettings;
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
@@ -102,16 +103,15 @@ export class TestEnvironment {
 	public async up(): Promise<void> {
 		try {
 			process.on( 'SIGINT', () => {
-				this.stopServices();
+				this.down();
 				// eslint-disable-next-line no-process-exit
 				process.exit( 1 );
 			} );
 
 			this.resetOutputDirectory();
-			this.loadEnvFiles();
 			this.beforeServices();
 
-			console.log( '▶️  Waiting for test services to become available' );
+			console.log( '▶️  Bringing up test environment' );
 
 			this.stopServices();
 			this.startServices();
@@ -131,39 +131,13 @@ export class TestEnvironment {
 		this.stopServices();
 	}
 
-	private resetOutputDirectory(): void {
-		try {
-			rmSync( this.testSettings.outputDir, { recursive: true, force: true } );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			mkdirSync( this.testSettings.outputDir, { recursive: true } );
-		} catch ( e ) {
-			testLog.error( '❌ Error occurred in setting-up logs:', e );
-		}
-	}
-
-	protected beforeServices(): void {
-		if ( this.settings.beforeServices ) {
-			this.settings.beforeServices( this.testSettings.isBaseSuite );
-		}
-	}
-
-	private loadEnvFiles(): void {
-		this.settings.envFiles
-			.filter( ( envFilePath ) => envFilePath )
-			.forEach( ( envFilePath ) => loadEnvVars( envFilePath ) );
-	}
-
-	private makeBaseDockerComposeCmd(): string {
-		const dockerComposeCmdArray: string[] = [
-			'docker compose',
-			`--project-directory ${this.testSettings.pwd}/suites`,
-			'-p wikibase-suite'
-		];
-		this.settings.composeFiles.forEach( ( composeFile ) =>
-			dockerComposeCmdArray.push( `-f ${composeFile}` )
-		);
-
-		return dockerComposeCmdArray.join( ' ' );
+	public async waitForServices(): Promise<void[]> {
+		return Promise.all( this.settings.waitForURLs().map(
+			async ( waitForURL: string ): Promise<void> => {
+				await checkIfUp( waitForURL );
+				testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
+			}
+		) );
 	}
 
 	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
@@ -177,22 +151,42 @@ export class TestEnvironment {
 		testLog.debug( result.stderr );
 	}
 
-	public startServices(): void {
+	protected beforeServices(): void {
+		if ( this.settings.beforeServices ) {
+			this.settings.beforeServices( this.testSettings.isBaseSuite );
+		}
+	}
+
+	protected resetOutputDirectory(): void {
+		try {
+			rmSync( this.testSettings.outputDir, { recursive: true, force: true } );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
+			mkdirSync( this.testSettings.outputDir, { recursive: true } );
+		} catch ( e ) {
+			testLog.error( '❌ Error occurred in setting-up logs:', e );
+		}
+	}
+
+	protected makeBaseDockerComposeCmd(): string {
+		const dockerComposeCmdArray: string[] = [
+			'docker compose',
+			`--project-directory ${this.testSettings.pwd}/suites`,
+			'-p wikibase-suite'
+		];
+		this.settings.composeFiles.forEach( ( composeFile ) =>
+			dockerComposeCmdArray.push( `-f ${composeFile}` )
+		);
+
+		return dockerComposeCmdArray.join( ' ' );
+	}
+
+	protected startServices(): void {
 		testLog.info( '▶️  Starting Wikibase Suite services' );
 		this.runDockerComposeCmd( 'up -d' );
 	}
 
-	public stopServices( removeVolumes: boolean = true ): void {
+	protected stopServices( removeVolumes: boolean = true ): void {
 		testLog.info( '▶️  Stopping Wikibase Suite services' );
 		this.runDockerComposeCmd( `down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1` );
-	}
-
-	public async waitForServices(): Promise<void[]> {
-		return Promise.all( this.settings.waitForURLs().map(
-			async ( waitForURL: string ): Promise<void> => {
-				await checkIfUp( waitForURL );
-				testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
-			}
-		) );
 	}
 }
