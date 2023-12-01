@@ -1,5 +1,6 @@
 import logger from '@wdio/logger';
 
-const testLog = logger( 'TestEnvironment' );
+const testLog = logger( 'test-environment' );
+testLog.setDefaultLevel( 'debug' );
 
 export default testLog;

@@ -110,6 +110,7 @@ export function wdioConfig(
 		before: async () => {
 			try {
 				defaultFunctionsInit( settings );
+
 				await WikibaseApi.initialize(
 					undefined,
 					settings.mwAdminName,

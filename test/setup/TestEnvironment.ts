@@ -108,7 +108,7 @@ export class TestEnvironment {
 				process.exit( 1 );
 			} );
 
-			this.resetOutputDirectory();
+			this.resetOutputDir();
 			this.beforeServices();
 
 			console.log( '▶️  Bringing up test environment' );
@@ -157,7 +157,7 @@ export class TestEnvironment {
 		}
 	}
 
-	protected resetOutputDirectory(): void {
+	protected resetOutputDir(): void {
 		try {
 			rmSync( this.testSettings.outputDir, { recursive: true, force: true } );
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -171,7 +171,7 @@ export class TestEnvironment {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
 			`--project-directory ${this.testSettings.pwd}/suites`,
-			'-p wikibase-suite'
+			'-p wikibase-suite-test-services'
 		];
 		this.settings.composeFiles.forEach( ( composeFile ) =>
 			dockerComposeCmdArray.push( `-f ${composeFile}` )

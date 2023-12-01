@@ -13,8 +13,6 @@ x-common-variables: &wikibase_variables
     MW_WG_ENABLE_UPLOADS: true
     MW_WG_JOB_RUN_RATE: 0
 
-name: wikibase-suite
-
 services:
 
   wikibase:
