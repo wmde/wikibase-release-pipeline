@@ -1,5 +1,6 @@
 import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { defaultFunctions as defaultFunctionsInit } from '../../helpers/default-functions.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import { versions, environment } from '../../suites/upgrade/upgrade.conf.js';
@@ -9,18 +10,13 @@ describe( 'Wikibase upgrade', function () {
 
 	before( async () => {
 		// === Set image for current local build of wikibase
-		if ( globalThis.env.TO_VERSION && versions[ globalThis.env.TO_VERSION ] ) {
-			globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ globalThis.env.TO_VERSION ];
-			console.log( `ℹ️  Using Wikibase Docker image: ${globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
-		} else {
-			globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL =	versions[ globalThis.env.LOCAL_BUILD ];
-			console.log( `ℹ️  Using Wikibase Docker image: ${globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL} (latest local build)` );
-		}
+		globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.TO_VERSION ];
+		console.log( `ℹ️  Using Wikibase Docker image: ${globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
 
 		// === Fix for LocalSettings.php (see notes in the script)
 		spawnSync(
 			'specs/upgrade/recreateLocalSettings.sh',
-			{ shell: true, stdio: 'inherit', env: globalThis.env }
+			{ shell: true, stdio: 'inherit', env: { PATH: process.env.PATH, ...globalThis.env } }
 		);
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
@@ -33,7 +29,14 @@ describe( 'Wikibase upgrade', function () {
 		// Make sure services are settled and available again
 		await environment.waitForServices();
 		// Repeat WDIO initialization with new services up
-		await environment.settings.before( environment.settings );
+
+		// TODO: Repeats wdioConf#before hook. Move the hook outside of conf for reuse.
+		defaultFunctionsInit( environment.settings );
+		await WikibaseApi.initialize(
+			undefined,
+			globalThis.env.MW_ADMIN_NAME,
+			globalThis.env.MW_ADMIN_PASS
+		);	
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {

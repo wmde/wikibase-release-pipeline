@@ -31,7 +31,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase.svc
+         - ${WIKIBASE_HOST}
     environment:
       <<: *wikibase_variables
 
@@ -85,7 +85,7 @@ services:
         aliases:
          - wdqs-frontend.svc
     environment:
-      - WIKIBASE_HOST=wikibase.svc
+      - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
 
   wdqs:
@@ -97,7 +97,7 @@ services:
         aliases:
          - wdqs.svc
     environment:
-      - WIKIBASE_HOST=wikibase.svc
+      - WIKIBASE_HOST
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
     expose:
@@ -129,7 +129,7 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=wikibase.svc
+     - WIKIBASE_HOST
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
 

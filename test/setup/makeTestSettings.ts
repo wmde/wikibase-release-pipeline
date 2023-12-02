@@ -12,16 +12,16 @@ export const defaultComposeFiles = [
 ];
 
 export const defaultEnvFiles: string[] = [
-	'./setup/default.env',
+	'./setup/testServices.env',
 	'../local.env'
 ];
 
 export const defaultWaitForURLs = ( settings ) => ( [
 	`${globalThis.env.MW_SERVER}/wiki/Main_Page`,
-	`http://${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
-	`http://${globalThis.env.WDQS_FRONTEND_SERVER}`
+	`${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
+	globalThis.env.WDQS_FRONTEND_SERVER
 ] );
-	
+
 export const defaultBeforeServices = ( settings ): void => {
 	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
 		globalThis.env.WIKIBASE_IMAGE_NAME : globalThis.env.WIKIBASE_BUNDLE_IMAGE_NAME;
@@ -46,29 +46,32 @@ export const defaultBeforeServices = ( settings ): void => {
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles ) as NodeJS.ProcessEnv;
+	const nameWithoutBase = providedSettings.name.replace( 'base__', '' );
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
-		nameWithoutBase: providedSettings.name.replace( 'base__', '' ),
-		isBaseSuite: providedSettings.name !== providedSettings.nameWithoutBase,
+		nameWithoutBase,
+		isBaseSuite: providedSettings.name !== nameWithoutBase,
 		specs: providedSettings.specs,
 	}
+	const outputDir = `suites/${providedSettings.name}/results`;
 	const testRunnerSettings: TestRunnerSettings = {
-		runHeaded: !!globalThis.env.HEADED_TESTS,
-		logLevel: globalThis.env.TEST_LOG_LEVEL,
-		testTimeout: parseInt( globalThis.env.MOCHA_OPTS_TIMEOUT ),
-		waitForTimeout: parseInt( globalThis.env.WAIT_FOR_TIMEOUT ),
+		runHeaded: process.env.HEADED_TESTS === 'true',
+		logLevel: process.env.TEST_LOG_LEVEL,
+		testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
+		waitForTimeout: parseInt( process.env.WAIT_FOR_TIMEOUT ),
+		maxInstances: parseInt( process.env.MAX_INSTANCES ),
 		baseUrl: globalThis.env.MW_SERVER + globalThis.env.MW_SCRIPT_PATH,
 		pwd: process.env.HOST_PWD || process.cwd(),
-		outputDir: `suites/${providedSettings.name}/results`,
-		resultFilePath: `suites/${providedSettings.name}/results/result.json`,
-		screenshotPath: `suites/${providedSettings.name}/results/screenshots`,
+		outputDir,
+		resultFilePath: `${outputDir}/result.json`,
+		screenshotPath: `${outputDir}/screenshots`,
 	}
 	const testHooks: TestHooks = {
-		beforeServices: defaultBeforeServices
+		beforeServices: providedSettings.beforeServices || defaultBeforeServices
 	}
 	const testEnvironmentSettings: TestEnvironmentSettings = {
-		composeFiles: defaultComposeFiles,
-		waitForURLs: defaultWaitForURLs
+		composeFiles: providedSettings.composeFiles || defaultComposeFiles,
+		waitForURLs: providedSettings.waitForURLs || defaultWaitForURLs
 	};
 
 	return {

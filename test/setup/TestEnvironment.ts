@@ -27,7 +27,7 @@ export class TestEnvironment {
 
 	public async up(): Promise<void> {
 		try {
-			process.on( 'SIGINT', () => {
+			process.once( 'SIGINT', () => {
 				this.down();
 				// eslint-disable-next-line no-process-exit
 				process.exit( 1 );

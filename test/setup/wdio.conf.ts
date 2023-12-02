@@ -43,7 +43,7 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 		capabilities: [
 			{
 				browserName: 'chrome',
-				maxInstances: 1,
+				maxInstances: settings.maxInstances,
 				'goog:chromeOptions': {
 					args: [
 						// The window size is relevant for responsive pages rendering differently on

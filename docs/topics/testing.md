@@ -50,8 +50,8 @@ Tests the example configuration by running the `example` suite against it.
 MW_SERVER=http://wikibase.svc
 MW_CLIENT_SERVER=http://wikibase-client.svc
 QS_SERVER=http://quickstatements.svc:80
-WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-WDQS_SERVER=wdqs.svc:9999
+WDQS_FRONTEND_SERVER=http://wdqs-frontend.svc:80
+WDQS_SERVER=http://wdqs.svc:9999
 PINGBACK_BEACON_SERVER=http://mediawiki.svc
 WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
 MW_ADMIN_NAME=

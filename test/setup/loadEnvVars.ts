@@ -3,38 +3,32 @@ import dotenvExpand, { DotenvExpandOutput } from 'dotenv-expand';
 
 export function loadEnvFile(
 	envFilePath: string,
-	setProcessEnv: boolean = false,
-	opts: DotenvConfigOptions = {}
-): DotenvExpandOutput {
-	const unexpandedEnvVars: DotenvPopulateInput = {};
-
+	providedEnvvars: Record<string, string> = {}
+): Record<string, string> {
 	const result = dotenv.config( {
-		...opts,
 		override: true,
 		path: envFilePath,
-		processEnv: setProcessEnv ? process.env : unexpandedEnvVars
+		processEnv: providedEnvvars
 	} );
 
 	if (result.error) {
 		throw result.error
 	}
 
-	const envVars = dotenvExpand.expand( { parsed: unexpandedEnvVars, ignoreProcessEnv: !setProcessEnv } );
+	const envVars = dotenvExpand.expand( { parsed: providedEnvvars, ignoreProcessEnv: true } );
 
 	return envVars.parsed
 }
 
 export default function loadEnvFiles(
-	envFilePaths: string[],
-	setProcessEnv = false,
-	opts = {}
+	envFilePaths: string[]
 ) {
 	let envVars: Record<string, string> = {};
 
 	envFilePaths
 		.filter( ( envFilePath ) => envFilePath )
 		.forEach( ( envFilePath ) => {
-			envVars = Object.assign( envVars, loadEnvFile( envFilePath, setProcessEnv, opts ) );
+			envVars = loadEnvFile( envFilePath, envVars );
 		} );
 
 	return envVars;

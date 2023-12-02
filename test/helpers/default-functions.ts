@@ -266,7 +266,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `http://${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false

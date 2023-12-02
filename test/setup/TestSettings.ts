@@ -13,6 +13,7 @@ export type TestRunnerSettings = {
 	logLevel?: string,
 	testTimeout?: number,
 	waitForTimeout?: number,
+	maxInstances: number,
 	baseUrl: string,
 	pwd: string,
 	outputDir: string,
@@ -54,7 +55,6 @@ export type TestEnvironmentSettings = {
 export type TestSettings =
 	TestSuiteSettings &
 	TestRunnerSettings &
-	TestServiceSettings &
 	TestHooks &
 	TestEnvironmentSettings
 

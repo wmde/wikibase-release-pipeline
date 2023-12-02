@@ -19,12 +19,13 @@ services:
       - ..:/usr/src
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file: ./setup/testRunner.env
     environment:
       - HOST_PWD=${PWD}
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment
-    image: selenium/standalone-chrome:116.0.5845.140-chromedriver-116.0.5845.96-grid-4.12.1-20230904
+    image: ${TEST_BROWSER_IMAGE_URL}
     stop_grace_period: 1s
     ports:
       - "4444:4444"
@@ -33,6 +34,8 @@ services:
     volumes:
       - .:/usr/src/test
     shm_size: '2g'
+    environment:
+      - SE_NODE_MAX_SESSIONS=${MAX_INSTANCES}
 
 volumes:
   node_modules:

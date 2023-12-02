@@ -37,7 +37,7 @@ const runCLI = async () => {
 	} );
 
 	y.command( {
-		command: 'upgrade <fromVersion> <toVersion?',
+		command: 'upgrade <fromVersion> [toVersion]',
 		description: 'run upgrade test',
 		builder: ( yy ) => { 
 			yy.positional( 'fromVersion', {
@@ -110,7 +110,7 @@ const commandHandler = async ( argv ) => {
 
 	for (let [ key, value ] of Object.entries( options ) ) {
 		if ( [ 'fromVersion', 'toVersion', 'headedTests' ].includes( key ) ) {
-			process.env[ lodash.toUpper( lodash.snakeCase( key.toString() ) ) ] = value.toString();
+			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] = value.toString();
 			delete options[ key ];
 		}
 	}
@@ -134,7 +134,7 @@ const commandHandler = async ( argv ) => {
 			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
 			console.log(
 				chalk.bgWhiteBright.black.bold(
-					`\n"${suiteName}" test suite ${' '.repeat( 140 - suiteName.length )}`
+					`\n"${suiteName}" test suite ${' '.repeat( 80 - suiteName.length )}`
 				)
 			);
 			exitCode = await runWdio( configFilePath, wdioCommandArguments );
