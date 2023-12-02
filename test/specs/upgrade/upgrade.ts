@@ -2,17 +2,22 @@ import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import { environment } from '../../suites/upgrade/upgrade.conf.js';
+import { versions, environment } from '../../suites/upgrade/upgrade.conf.js';
 
 describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
 	before( async () => {
 		// === Set image for current local build of wikibase
-		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = process.env.WIKIBASE_TEST_IMAGE_NAME;
-		console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
+		if ( process.env.TO_VERSION && versions[ process.env.TO_VERSION ] ) {
+			process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.TO_VERSION ];
+			console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
+		} else {
+			process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL =	versions[ process.env.LOCAL_BUILD ];
+			console.log( `ℹ️  Using Wikibase Docker image: ${process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL} (latest local build)` );
+		}
 
-		// Fix for LocalSettings.php (see notes in the script)
+		// === Fix for LocalSettings.php (see notes in the script)
 		spawnSync(
 			'specs/upgrade/recreateLocalSettings.sh',
 			{ shell: true, stdio: 'inherit', env: process.env }
@@ -28,7 +33,7 @@ describe( 'Wikibase upgrade', function () {
 		// Make sure services are settled and available again
 		await environment.waitForServices();
 		// Repeat WDIO initialization with new services up
-		await environment.testSettings.before( environment.testSettings );
+		await environment.settings.before( environment.settings );
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {

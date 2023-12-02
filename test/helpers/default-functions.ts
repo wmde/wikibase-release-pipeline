@@ -3,13 +3,13 @@ import axios, { AxiosResponse } from 'axios';
 import { exec } from 'child_process';
 import lodash from 'lodash';
 import { Context } from 'mocha';
+import { TestSettings } from '../setup/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from './types/binding.js';
 import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
-import { TestSettings } from '../setup/TestConfig.js';
 import testLog from '../setup/testLog.js';
 
 export function defaultFunctions( settings: TestSettings ): void {
@@ -36,9 +36,9 @@ export function defaultFunctions( settings: TestSettings ): void {
 		async ( query: string, config?: DatabaseConfig ) => {
 			if ( !config ) {
 				config = {
-					user: settings.dbUser,
-					pass: settings.dbPass,
-					database: settings.dbName
+					user: settings.envVars.DB_USER,
+					pass: settings.envVars.DB_PASS,
+					database: settings.envVars.DB_NAME
 				};
 			}
 
@@ -49,7 +49,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 			}
 
 			return await browser.dockerExecute(
-				settings.dockerMysqlName,
+				settings.envVars.DOCKER_MYSQL_NAME,
 				`mysql --user "${config.user}" --password="${config.pass}" "${config.database}" -e '${query}'`
 			);
 		}
@@ -224,7 +224,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${settings.qsServer}/#/batch` );
+			await browser.url( `${settings.envVars.QS_SERVER}/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -266,7 +266,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `http://${settings.wdqsServer}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `http://${settings.envVars.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
@@ -287,7 +287,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 	browser.addCommand(
 		'waitForJobs',
 		async (
-			serverURL: string = settings.mwServer,
+			serverURL: string = settings.envVars.MW_SERVER,
 			// default timeout is 1 second less than default Mocha test timeout
 			timeout: number = ( settings.testTimeout || 90 * 1000 ) - 1000,
 			timeoutMsg: string = null

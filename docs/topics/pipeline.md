@@ -91,11 +91,15 @@ GZIP_COMPRESSION_RATE=1
 ```
 #### Log level for selenium tests see wdio.conf.ts for options
 ```
-SELENIUM_LOG_LEVEL=trace
+TEST_LOG_LEVEL=trace
 ```
-#### Timeout for mocha tests
+#### Timeout for mocha tests (in milliseconds)
 ```
-MOCHA_OPTS_TIMEOUT=90
+MOCHA_OPTS_TIMEOUT=90000
+```
+#### Timeout for waitFor* calls in tests (in milliseconds)
+```
+WAIT_FOR_TIMEOUT=30000
 ```
 
 #### Settings related to tarball publishing

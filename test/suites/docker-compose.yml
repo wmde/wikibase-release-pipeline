@@ -3,15 +3,15 @@ version: '3.5'
 
 x-common-variables: &wikibase_variables
     DB_SERVER: ${DB_SERVER}
-    MW_ADMIN_NAME: WikibaseAdmin
-    MW_ADMIN_PASS: WikibaseDockerAdminPass
-    MW_ADMIN_EMAIL: admin@example.com
-    MW_WG_SECRET_KEY: secretkey
-    DB_USER: wikiuser
-    DB_PASS: sqlpass
-    DB_NAME: my_wiki
-    MW_WG_ENABLE_UPLOADS: true
-    MW_WG_JOB_RUN_RATE: 0
+    MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+    MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+    MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+    MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
+    DB_USER: ${DB_USER}
+    DB_PASS: ${DB_PASS}
+    DB_NAME: ${DB_NAME}
+    MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+    MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
 services:
 
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./${OUTPUT_DIR}:/var/log/mediawiki
+      - ../${OUTPUT_DIR}:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
       - "8181:80"
@@ -60,10 +60,11 @@ services:
     restart: unless-stopped
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: 'my_wiki'
-      MYSQL_USER: 'wikiuser'
-      MYSQL_PASSWORD: 'sqlpass'
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: 'toor'
+
     networks:
       default:
         aliases:

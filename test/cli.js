@@ -37,7 +37,7 @@ const runCLI = async () => {
 	} );
 
 	y.command( {
-		command: 'upgrade <fromVersion>',
+		command: 'upgrade <fromVersion> <toVersion?',
 		description: 'run upgrade test',
 		builder: ( yy ) => { 
 			yy.positional( 'fromVersion', {
@@ -109,7 +109,7 @@ const commandHandler = async ( argv ) => {
 	const options = getOptions( argv );
 
 	for (let [ key, value ] of Object.entries( options ) ) {
-		if ( [ 'fromVersion', 'headedTests' ].includes( key ) ) {
+		if ( [ 'fromVersion', 'toVersion', 'headedTests' ].includes( key ) ) {
 			process.env[ lodash.toUpper( lodash.snakeCase( key.toString() ) ) ] = value.toString();
 			delete options[ key ];
 		}

@@ -14,7 +14,7 @@ describe( 'Pingback', function () {
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
 
 		const result = await browser.makeRequest(
-			process.env.PINGBACK_BEACON_SERVER
+			'http://mediawiki.svc'
 		);
 		assert.strictEqual( result.data.length, 2 );
 

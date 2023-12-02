@@ -1,6 +1,6 @@
-import { TestConfig } from '../../setup/TestConfig.js';
-import { TestEnvironment, defaultTestEnvironmentSettings } from '../../setup/TestEnvironment.js';
-import { wdioConfig } from '../../setup/wdio.conf.js';
+import { TestEnvironment } from "../../setup/TestEnvironment.js";
+import { defaultBeforeServices, defaultEnvFiles } from "../../setup/makeTestSettings.js";
+import wdioConfig from "../../setup/wdio.conf.js";
 
 export const versions = {
 	WMDE9: 'wikibase/wikibase:1.37.6-wmde.9',
@@ -16,10 +16,13 @@ export const versions = {
 	WMDE12_BUNDLE: 'wikibase/wikibase:1.38.7-wmde.12',
 
 	WMDE13: 'wikibase/wikibase-bundle:1.39.5-wmde.13',
-	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13'
+	WMDE13_BUNDLE: 'wikibase/wikibase:1.39.5-wmde.13',
+
+	LOCAL_BUILD: 'wikibase',
+	LOCAL_BUILD_BUNDLE: 'wikibase-bundle'
 };
 
-export const settings = TestConfig.getSettings( {
+export const environment = TestEnvironment.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
@@ -27,29 +30,26 @@ export const settings = TestConfig.getSettings( {
 		'specs/upgrade/upgrade.ts',
 		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
 		// 'specs/upgrade/queryservice-post-upgrade.ts'
-	]
-} );
-
-export const environment = new TestEnvironment( {
+	],
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
 		// TODO: Explore further what happened with WDQS
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
-		...defaultTestEnvironmentSettings.envFiles,
+		...defaultEnvFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForURLs: () => ( [
-		`${settings.mwServer}/wiki/Main_Page`
+	waitForURLs: ( settings ) => ( [
+		`${settings.envVars.MW_SERVER}/wiki/Main_Page`
 	] ),
-	beforeServices: () => {
+	beforeServices: ( settings ) => {
 		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.FROM_VERSION ];
 		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts on services reboot
-		defaultTestEnvironmentSettings.beforeServices();
+		defaultBeforeServices( settings );
 	}
-}, settings );
+} );
 
-export const config: WebdriverIO.Config = wdioConfig( settings, environment );
+export const config = wdioConfig( environment );

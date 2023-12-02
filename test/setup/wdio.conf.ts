@@ -12,7 +12,6 @@ import type { Capabilities } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import JsonReporter from '../helpers/json-reporter.js';
-import { TestSettings } from './TestConfig.js';
 import { TestEnvironment } from './TestEnvironment.js';
 import testLog from './testLog.js';
 import { saveScreenshot } from 'wdio-mediawiki';
@@ -20,10 +19,9 @@ import { saveScreenshot } from 'wdio-mediawiki';
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig(
-	settings: TestSettings,
-	environment: TestEnvironment
-): WebdriverIO.Config {
+export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
+	const settings = environment.settings;
+	
 	return {
 		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
 
@@ -113,8 +111,8 @@ export function wdioConfig(
 
 				await WikibaseApi.initialize(
 					undefined,
-					settings.mwAdminName,
-					settings.mwAdminPass
+					settings.envVars.MW_ADMIN_NAME,
+					settings.envVars.MW_ADMIN_PASS
 				);
 		
 				if ( settings.before ) await settings.before( settings, environment );
@@ -164,3 +162,5 @@ export function wdioConfig(
 		onComplete: () => environment.down()
 	};
 }
+
+export default wdioConfig;
