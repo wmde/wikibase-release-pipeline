@@ -19,7 +19,7 @@ services:
       - ..:/usr/src
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
-    env_file: ./setup/testRunner.env
+    env_file: ./setup/test-runner.env
     environment:
       - HOST_PWD=${PWD}
 

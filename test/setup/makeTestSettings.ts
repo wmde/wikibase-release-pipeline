@@ -12,7 +12,7 @@ export const defaultComposeFiles = [
 ];
 
 export const defaultEnvFiles: string[] = [
-	'./setup/testServices.env',
+	'./setup/test-services.env',
 	'../local.env'
 ];
 

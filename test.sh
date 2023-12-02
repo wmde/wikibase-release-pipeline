@@ -5,7 +5,7 @@ trap stop_test_runner EXIT
 
 cd test
 
-TEST_RUNNER_COMPOSE="docker compose -f docker-compose.yml --env-file ./setup/testRunner.env --env-file ../local.env --progress quiet"
+TEST_RUNNER_COMPOSE="docker compose -f docker-compose.yml --env-file ./setup/test-runner.env --env-file ../local.env --progress quiet"
 
 function stop_test_runner {
 	$TEST_RUNNER_COMPOSE down > /dev/null 2>&1
