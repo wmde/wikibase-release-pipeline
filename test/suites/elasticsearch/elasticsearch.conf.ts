@@ -10,7 +10,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
 	waitForURLs: ( settings ) => ( [
-		`http://${settings.envVars.MW_ELASTIC_HOST}:${settings.envVars.MW_ELASTIC_PORT}`
+		`http://${globalThis.env.MW_ELASTIC_HOST}:${globalThis.env.MW_ELASTIC_PORT}`
 	] )
 } );
 

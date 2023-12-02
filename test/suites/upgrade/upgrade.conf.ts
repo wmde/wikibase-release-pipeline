@@ -40,11 +40,11 @@ export const environment = TestEnvironment.createWithDefaults( {
 		...defaultEnvFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForURLs: ( settings ) => ( [
-		`${settings.envVars.MW_SERVER}/wiki/Main_Page`
+	waitForURLs: () => ( [
+		`${globalThis.env.MW_SERVER}/wiki/Main_Page`
 	] ),
 	beforeServices: ( settings ) => {
-		process.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.FROM_VERSION ];
+		globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.FROM_VERSION ];
 		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts on services reboot

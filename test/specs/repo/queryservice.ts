@@ -8,7 +8,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
+			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
 			{ validateStatus: false },
 			{}
 		);
@@ -17,14 +17,14 @@ describe( 'QueryService', () => {
 
 	it( 'Should be able to get sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql'
+			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql'
 		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/ldf',
+			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/ldf',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -32,7 +32,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/assets',
+			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/assets',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -40,7 +40,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph workbench', async () => {
 		const result = await browser.makeRequest(
-			process.env.WDQS_PROXY_SERVER + '/bigdata/#query',
+			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/#query',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -93,7 +93,7 @@ describe( 'QueryService', () => {
 		// property value is set with correct rdf
 		assert(
 			await QueryServiceUI.resultIncludes(
-				`<${process.env.MW_SERVER}/prop/direct/${propertyId}>`,
+				`<${globalThis.env.MW_SERVER}/prop/direct/${propertyId}>`,
 				propertyValue
 			)
 		);
@@ -107,7 +107,7 @@ describe( 'QueryService', () => {
 		// should be set only to the item
 		assert(
 			await QueryServiceUI.resultIncludes(
-				`<${process.env.MW_SERVER}/entity/${itemId}>`,
+				`<${globalThis.env.MW_SERVER}/entity/${itemId}>`,
 				propertyValue
 			)
 		);
@@ -117,7 +117,7 @@ describe( 'QueryService', () => {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
+		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

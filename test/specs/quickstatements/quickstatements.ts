@@ -58,21 +58,21 @@ describe( 'QuickStatements Service', function () {
 	let propertyURL = null;
 
 	it( 'Should be able to load the start page', async () => {
-		await browser.url( process.env.QS_SERVER );
+		await browser.url( globalThis.env.QS_SERVER );
 		await $( 'nav.navbar' );
 	} );
 
 	it( 'Should be able to log in', async () => {
-		await browser.url( process.env.QS_SERVER + '/api.php?action=oauth_redirect' );
+		await browser.url( globalThis.env.QS_SERVER + '/api.php?action=oauth_redirect' );
 
 		// login after redirect
 		const wpNameEl = await $( '#wpName1' );
 		await wpNameEl.waitForDisplayed();
-		await wpNameEl.setValue( process.env.MW_ADMIN_NAME );
+		await wpNameEl.setValue( globalThis.env.MW_ADMIN_NAME );
 
 		const wpPasswordEl = await $( '#wpPassword1' );
 		await wpPasswordEl.waitForDisplayed();
-		await wpPasswordEl.setValue( process.env.MW_ADMIN_PASS );
+		await wpPasswordEl.setValue( globalThis.env.MW_ADMIN_PASS );
 
 		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
 		await wpLoginButtonEl.waitForDisplayed();
@@ -91,15 +91,15 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create two items', async () => {
-		await browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( globalThis.env.QS_SERVER + '/#/batch' );
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 		const responseQ2 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
 		);
 
 		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
@@ -111,7 +111,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
 		assert( lodash.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
@@ -122,7 +122,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
 		assert( lodash.isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
@@ -133,7 +133,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
 		assert( lodash.isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
@@ -144,7 +144,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 
 		assert( lodash.isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
@@ -156,7 +156,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `Q1|${propertyId}|"Will it blend?"` );
 
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 		assert.strictEqual(
 			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
@@ -182,7 +182,7 @@ describe( 'QuickStatements Service', function () {
 					);
 
 					const responseQ1 = await browser.makeRequest(
-						`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
+						`${globalThis.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 					);
 					assert.strictEqual(
 						getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
@@ -201,7 +201,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
 		);
 		assert.strictEqual(
 			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
@@ -219,7 +219,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
+			`${globalThis.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue(
 			response,
@@ -242,7 +242,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
+			`${globalThis.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
@@ -258,7 +258,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
+			`${globalThis.env.MW_SERVER}/w/api.php?action=wbgetclaims&format=json&entity=${itemId}`
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
@@ -271,7 +271,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `${itemId}|${propertyIdItem}|Q1` );
 
 		let response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
+			`${globalThis.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		assert.strictEqual(
 			propertyIdItem in response.data.entities[ itemId ].claims,
@@ -281,7 +281,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `-${itemId}|${propertyIdItem}|Q1` );
 
 		response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
+			`${globalThis.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		assert.strictEqual(
 			propertyIdItem in response.data.entities[ itemId ].claims,
@@ -290,12 +290,12 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to merge two items', async () => {
-		await browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( globalThis.env.QS_SERVER + '/#/batch' );
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
 		const responseQ2 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
+			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q2.json'
 		);
 		assert.strictEqual( responseQ2.data.entities.Q1.id, 'Q1' );
 	} );

@@ -8,7 +8,7 @@ describe( 'VisualEditor', function () {
 
 	it( 'Should be able to edit a page using the editor', async () => {
 		await browser.url(
-			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
+			globalThis.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
 		);
 
 		// start editing

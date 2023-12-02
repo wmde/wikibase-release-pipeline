@@ -2,7 +2,6 @@ import TestSettings, {
 	TestEnvironmentSettings,
 	TestHooks,
 	TestRunnerSettings,
-	TestServiceSettings,
 	TestSuiteSettings
 } from './TestSettings.js';
 import loadEnvFiles from './loadEnvVars.js';
@@ -18,24 +17,24 @@ export const defaultEnvFiles: string[] = [
 ];
 
 export const defaultWaitForURLs = ( settings ) => ( [
-	`${settings.envVars.MW_SERVER}/wiki/Main_Page`,
-	`http://${settings.envVars.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
-	`http://${settings.envVars.WDQS_FRONTEND_SERVER}`
+	`${globalThis.env.MW_SERVER}/wiki/Main_Page`,
+	`http://${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
+	`http://${globalThis.env.WDQS_FRONTEND_SERVER}`
 ] );
 	
 export const defaultBeforeServices = ( settings ): void => {
-	settings.envVars.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
-		settings.envVars.WIKIBASE_IMAGE_NAME : settings.envVars.WIKIBASE_BUNDLE_IMAGE_NAME;
+	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
+		globalThis.env.WIKIBASE_IMAGE_NAME : globalThis.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
 	const dockerImageUrls = [
-		settings.envVars.WIKIBASE_TEST_IMAGE_NAME,
-		settings.envVars.WDQS_IMAGE_NAME,
-		settings.envVars.WDQS_FRONTEND_IMAGE_NAME,
-		settings.envVars.WDQS_PROXY_IMAGE_NAME
+		globalThis.env.WIKIBASE_TEST_IMAGE_NAME,
+		globalThis.env.WDQS_IMAGE_NAME,
+		globalThis.env.WDQS_FRONTEND_IMAGE_NAME,
+		globalThis.env.WDQS_PROXY_IMAGE_NAME
 	];
 	const dockerExtraImageUrls = [
-		settings.envVars.ELASTICSEARCH_IMAGE_NAME,
-		settings.envVars.QUICKSTATEMENTS_IMAGE_NAME
+		globalThis.env.ELASTICSEARCH_IMAGE_NAME,
+		globalThis.env.QUICKSTATEMENTS_IMAGE_NAME
 	];
 
 	dockerImageUrls.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage as string ) );
@@ -46,7 +45,7 @@ export const defaultBeforeServices = ( settings ): void => {
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	const envVars = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
+	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles ) as NodeJS.ProcessEnv;
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
 		nameWithoutBase: providedSettings.name.replace( 'base__', '' ),
@@ -54,18 +53,15 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		specs: providedSettings.specs,
 	}
 	const testRunnerSettings: TestRunnerSettings = {
-		runHeaded: !!envVars.HEADED_TESTS,
-		logLevel: envVars.TEST_LOG_LEVEL,
-		testTimeout: parseInt( envVars.MOCHA_OPTS_TIMEOUT ),
-		waitForTimeout: parseInt( envVars.WAIT_FOR_TIMEOUT ),
-		baseUrl: envVars.MW_SERVER + envVars.MW_SCRIPT_PATH,
+		runHeaded: !!globalThis.env.HEADED_TESTS,
+		logLevel: globalThis.env.TEST_LOG_LEVEL,
+		testTimeout: parseInt( globalThis.env.MOCHA_OPTS_TIMEOUT ),
+		waitForTimeout: parseInt( globalThis.env.WAIT_FOR_TIMEOUT ),
+		baseUrl: globalThis.env.MW_SERVER + globalThis.env.MW_SCRIPT_PATH,
 		pwd: process.env.HOST_PWD || process.cwd(),
 		outputDir: `suites/${providedSettings.name}/results`,
 		resultFilePath: `suites/${providedSettings.name}/results/result.json`,
 		screenshotPath: `suites/${providedSettings.name}/results/screenshots`,
-	}
-	const testServicesSettings: TestServiceSettings = {
-		envVars
 	}
 	const testHooks: TestHooks = {
 		beforeServices: defaultBeforeServices
@@ -78,7 +74,6 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 	return {
 		...testSuiteSettings,
 		...testRunnerSettings,
-		...testServicesSettings,
 		...testHooks,
 		...testEnvironmentSettings
 	 } as TestSettings;

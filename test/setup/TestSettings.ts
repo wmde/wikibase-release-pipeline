@@ -20,10 +20,6 @@ export type TestRunnerSettings = {
 	screenshotPath: string
 }
 
-export type TestServiceSettings = {
-	envVars: NodeJS.ProcessEnv
-}
-
 export type TestHooks = {
 	// == TestEnvironment Hooks
 	// Runs before services are started. Runs in WDIO `onPrepare` after `outputDir` is cleared and BEFORE existing services are stopped.

@@ -70,8 +70,8 @@ export class TestEnvironment {
 
 		testLog.debug( 'Running: ', dockerComposeCmd );
 
-		this.settings.envVars.OUTPUT_DIR = this.settings.outputDir;
-		const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8', env: this.settings.envVars } );
+		globalThis.env.OUTPUT_DIR = this.settings.outputDir;
+		const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8', env: globalThis.env } );
 
 		testLog.debug( result.stdout );
 		testLog.debug( result.stderr );

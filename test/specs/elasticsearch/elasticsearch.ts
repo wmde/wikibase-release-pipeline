@@ -12,14 +12,14 @@ describe( 'ElasticSearch', function () {
 	it( 'Should create an item', async () => {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${itemId}` );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
+		await browser.url( globalThis.env.MW_SERVER + '/wiki/Special:SetAliases/' );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -40,7 +40,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${globalThis.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -70,7 +70,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${globalThis.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 

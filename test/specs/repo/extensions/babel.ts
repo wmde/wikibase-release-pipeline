@@ -8,11 +8,11 @@ describe( 'Babel', function () {
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
+		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
-			process.env.MW_SERVER,
-			'User:' + process.env.MW_ADMIN_NAME,
+			globalThis.env.MW_SERVER,
+			'User:' + globalThis.env.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);
 

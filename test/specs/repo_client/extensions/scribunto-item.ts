@@ -37,7 +37,7 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( globalThis.env.MW_SERVER + '/wiki/Item:' + itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -55,13 +55,13 @@ describe( 'Scribunto Item', function () {
 			.replace( '<LANG>', 'en' );
 
 		await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			globalThis.env.MW_CLIENT_SERVER,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			globalThis.env.MW_CLIENT_SERVER,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -72,7 +72,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
+		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -82,7 +82,7 @@ describe( 'Scribunto Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
@@ -97,7 +97,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			globalThis.env.MW_CLIENT_SERVER,
 			expectedDeletionChange
 		);
 

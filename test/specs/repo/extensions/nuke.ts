@@ -10,21 +10,21 @@ describe( 'Nuke', function () {
 
 	it( 'Should be able to delete a page through Special:Nuke', async function () {
 		await browser.editPage(
-			process.env.MW_SERVER,
+			globalThis.env.MW_SERVER,
 			'Vandalism',
 			'Vandals In Motion'
 		);
 
 		const pageExistsResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			globalThis.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
+		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
+		await browser.url( globalThis.env.MW_SERVER + '/wiki/Special:Nuke' );
 
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
@@ -41,7 +41,7 @@ describe( 'Nuke', function () {
 		await browser.waitForJobs();
 
 		const pageIsGoneResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			globalThis.env.MW_SERVER + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);

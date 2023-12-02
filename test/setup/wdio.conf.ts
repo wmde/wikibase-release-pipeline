@@ -111,8 +111,8 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 
 				await WikibaseApi.initialize(
 					undefined,
-					settings.envVars.MW_ADMIN_NAME,
-					settings.envVars.MW_ADMIN_PASS
+					globalThis.env.MW_ADMIN_NAME,
+					globalThis.env.MW_ADMIN_PASS
 				);
 		
 				if ( settings.before ) await settings.before( settings, environment );

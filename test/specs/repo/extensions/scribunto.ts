@@ -12,13 +12,13 @@ describe( 'Scribunto', function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 		await browser.editPage(
-			process.env.MW_SERVER,
+			globalThis.env.MW_SERVER,
 			'Module:Bananas',
 			fileContents
 		);
 
 		const executionContent = await browser.editPage(
-			process.env.MW_SERVER,
+			globalThis.env.MW_SERVER,
 			'LuaTest',
 			'{{#invoke:Bananas|hello}}'
 		);
@@ -29,7 +29,7 @@ describe( 'Scribunto', function () {
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
 		const cpuTime = await browser.getLuaCpuTime(
-			process.env.MW_SERVER,
+			globalThis.env.MW_SERVER,
 			'LuaTest'
 		);
 

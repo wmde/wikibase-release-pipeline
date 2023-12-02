@@ -11,7 +11,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 		'suites/repo_client/docker-compose.override.yml'
 	],
 	waitForURLs: ( settings ) => ( [
-		settings.envVars.MW_CLIENT_SERVER
+		globalThis.env.MW_CLIENT_SERVER
 	] )
 } );
 

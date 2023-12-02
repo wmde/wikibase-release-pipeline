@@ -19,7 +19,7 @@ class SpecialListProperties extends Page {
 		const offset = 'offset=' + ( params.offset ?? 0 );
 
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
+			`${globalThis.env.MW_SERVER}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
 		await this.content;

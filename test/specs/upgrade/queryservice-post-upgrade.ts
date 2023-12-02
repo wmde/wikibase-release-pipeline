@@ -10,7 +10,7 @@ describe( 'Wikibase post upgrade', function () {
 	let newPropertyId: string;
 
 	beforeEach( function () {
-		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
+		if ( globalThis.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
 			this.skip();
 		}
 	} );
@@ -54,11 +54,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			process.env.MW_SERVER + '/prop/' + newPropertyId,
+			globalThis.env.MW_SERVER + '/prop/' + newPropertyId,
 			bindings
 		);
 		const property = getElementByURI(
-			process.env.MW_SERVER + '/prop/direct/' + newPropertyId,
+			globalThis.env.MW_SERVER + '/prop/direct/' + newPropertyId,
 			bindings
 		);
 
