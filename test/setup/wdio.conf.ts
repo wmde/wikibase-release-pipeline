@@ -17,7 +17,7 @@ const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
 export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 	const settings = environment.settings;
-	
+
 	return {
 		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
 
@@ -95,38 +95,38 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 		// =====
 
 		onPrepare: async () => {
-			if ( settings.onPrepare ) await settings.onPrepare( environment );
+			if ( settings.onPrepare ) { await settings.onPrepare( environment ); }
 		},
 
 		before: async () => {
-			if ( settings.before ) await settings.before( environment );
+			if ( settings.before ) { await settings.before( environment ); }
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
 			testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
-			if ( settings.beforeMochaSuite ) await settings.beforeMochaSuite( mochaSuite, environment );
+			if ( settings.beforeMochaSuite ) { await settings.beforeMochaSuite( mochaSuite, environment ); }
 		},
 
 		beforeTest: async function ( mochaTest ) {
 			testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
-			if ( settings.beforeTest ) await settings.beforeTest( mochaTest, environment );
+			if ( settings.beforeTest ) { await settings.beforeTest( mochaTest, environment ); }
 		},
 
 		afterTest: async function ( mochaTest ) {
-			if ( settings.afterTest ) await settings.afterTest( mochaTest, environment );
+			if ( settings.afterTest ) { await settings.afterTest( mochaTest, environment ); }
 		},
 
 		afterSuite: async ( mochaSuite ) => {
-			if ( settings.afterMochaSuite ) await settings.afterMochaSuite( mochaSuite, environment );
+			if ( settings.afterMochaSuite ) { await settings.afterMochaSuite( mochaSuite, environment ); }
 		},
 
 		after: async () => {
-			if ( settings.after ) await settings.after( environment );
+			if ( settings.after ) { await settings.after( environment ); }
 		},
 
 		onComplete: async () => {
-			if ( settings.onComplete ) await settings.onComplete( environment );
-		},
+			if ( settings.onComplete ) { await settings.onComplete( environment ); }
+		}
 	};
 }
 

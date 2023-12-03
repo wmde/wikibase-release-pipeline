@@ -1,6 +1,6 @@
-import { TestEnvironment } from "../../setup/TestEnvironment.js";
-import { defaultBeforeServices, defaultEnvFiles } from "../../setup/makeTestSettings.js";
-import wdioConfig from "../../setup/wdio.conf.js";
+import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import { defaultBeforeServices, defaultEnvFiles } from '../../setup/makeTestSettings.js';
+import wdioConfig from '../../setup/wdio.conf.js';
 
 // TODO: Explore what happened with WDQS in upgrade tests
 
@@ -29,7 +29,7 @@ export const environment = TestEnvironment.createWithDefaults( {
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
 		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
-		'specs/upgrade/upgrade.ts',
+		'specs/upgrade/upgrade.ts'
 		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
 		// 'specs/upgrade/queryservice-post-upgrade.ts'
 	],
@@ -50,7 +50,7 @@ export const environment = TestEnvironment.createWithDefaults( {
 
 		if ( !process.env.TO_VERSION || !versions[ process.env.TO_VERSION ] ) {
 			const toVersionBundle = process.env.FROM_VERSION.includes( '_BUNDLE' );
-			process.env.TO_VERSION = `LOCAL_BUILD${ toVersionBundle ? '_BUNDLE' : '' }`;
+			process.env.TO_VERSION = `LOCAL_BUILD${toVersionBundle ? '_BUNDLE' : ''}`;
 		}
 
 		// Still load the default images as the local wikibase image will

@@ -1,5 +1,5 @@
 import { mkdirSync, rmSync } from 'fs';
-import { spawnSync, exec } from 'child_process';
+import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../helpers/types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
@@ -10,14 +10,14 @@ export class TestEnvironment {
 	public settings: TestSettings;
 	public baseDockerComposeCmd: string;
 
-	static createAppendingToDefaults ( providedSettings: Partial<TestSettings> ) {
+	public static createAppendingToDefaults( providedSettings: Partial<TestSettings> ): TestEnvironment {
 		const settings = makeSettingsAppendingToDefaults( providedSettings );
 		return new this( settings );
 	}
 
-	static createWithDefaults ( providedSettings: Partial<TestSettings> ) {
+	public static createWithDefaults( providedSettings: Partial<TestSettings> ): TestEnvironment {
 		const settings = makeSettings( providedSettings );
-		return new this( settings )
+		return new this( settings );
 	}
 
 	public constructor( settings: TestSettings ) {
@@ -83,7 +83,7 @@ export class TestEnvironment {
 			testLog.error( result.stderr );
 		}
 
-		return result.stdout || result.stderr
+		return result.stdout || result.stderr;
 	}
 
 	protected resetOutputDir(): void {

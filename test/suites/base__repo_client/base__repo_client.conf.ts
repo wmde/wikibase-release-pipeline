@@ -1,5 +1,5 @@
-import { TestEnvironment } from "../../setup/TestEnvironment.js";
-import wdioConfig from "../../setup/wdio.conf.js";
+import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
 	name: 'base__repo_client',

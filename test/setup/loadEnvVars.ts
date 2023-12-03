@@ -1,4 +1,4 @@
-import dotenv, { DotenvConfigOptions, DotenvPopulateInput } from 'dotenv';
+import dotenv from 'dotenv';
 import dotenvExpand, { DotenvExpandOutput } from 'dotenv-expand';
 
 export function loadEnvFile(
@@ -11,13 +11,13 @@ export function loadEnvFile(
 		processEnv: providedEnvvars
 	} );
 
-	if (result.error) {
-		throw result.error
+	if ( result.error ) {
+		throw result.error;
 	}
 
 	const envVars = dotenvExpand.expand( { parsed: providedEnvvars, ignoreProcessEnv: true } );
 
-	return envVars.parsed
+	return envVars.parsed;
 }
 
 export default function loadEnvFiles(

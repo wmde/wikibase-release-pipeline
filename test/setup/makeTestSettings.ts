@@ -27,8 +27,8 @@ export const defaultWaitForURLs = () => ( [
 ] );
 
 export const defaultOnPrepare = async ( environment ): Promise<void> => {
-	await environment.up()
-}
+	await environment.up();
+};
 
 export const defaultBeforeServices = async ( { settings } ): Promise<void> => {
 	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
@@ -64,7 +64,7 @@ export const defaultBefore = async ( environment ): Promise<void> => {
 	} catch ( e ) {
 		throw new SevereServiceError( e );
 	}
-}
+};
 
 export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> => {
 	const testFile = encodeURIComponent(
@@ -78,11 +78,11 @@ export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> 
 		console.error( 'failed writing screenshot ...' );
 		console.error( error );
 	}
-}
+};
 
 export const defaultOnComplete = async ( environment ): Promise<void> => {
-	await environment.down()
-}
+	await environment.down();
+};
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles ) as NodeJS.ProcessEnv;
@@ -91,8 +91,8 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		name: providedSettings.name,
 		nameWithoutBase,
 		isBaseSuite: providedSettings.name !== nameWithoutBase,
-		specs: providedSettings.specs,
-	}
+		specs: providedSettings.specs
+	};
 	const outputDir = `suites/${providedSettings.name}/results`;
 	const testRunnerSettings: TestRunnerSettings = {
 		runHeaded: process.env.HEADED_TESTS === 'true',
@@ -104,15 +104,15 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		pwd: process.env.HOST_PWD || process.cwd(),
 		outputDir,
 		resultFilePath: `${outputDir}/result.json`,
-		screenshotPath: `${outputDir}/screenshots`,
-	}
+		screenshotPath: `${outputDir}/screenshots`
+	};
 	const testHooks: TestHooks = {
 		onPrepare: providedSettings.onPrepare || defaultOnPrepare,
 		beforeServices: providedSettings.beforeServices || defaultBeforeServices,
 		before: providedSettings.before || defaultBefore,
 		afterTest: providedSettings.afterTest || defaultAfterTest,
 		onComplete: providedSettings.onComplete || defaultOnComplete
-	}
+	};
 	const testEnvironmentSettings: TestEnvironmentSettings = {
 		composeFiles: providedSettings.composeFiles || defaultComposeFiles,
 		waitForURLs: providedSettings.waitForURLs || defaultWaitForURLs
@@ -126,7 +126,7 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 	 } as TestSettings;
 };
 
-export function makeSettingsAppendingToDefaults (
+export function makeSettingsAppendingToDefaults(
 	providedSettings: Partial<TestSettings>
 ): TestSettings {
 	const appendedSettings = {
@@ -151,25 +151,25 @@ export function makeSettingsAppendingToDefaults (
 		},
 		onPrepare: async ( environment ) => {
 			await defaultOnPrepare( environment );
-			if ( providedSettings.onPrepare ) await providedSettings.onPrepare( environment );
+			if ( providedSettings.onPrepare ) { await providedSettings.onPrepare( environment ); }
 		},
 		beforeServices: async ( environment ) => {
 			await defaultBeforeServices( environment );
-			if ( providedSettings.beforeServices ) await providedSettings.beforeServices( environment );
+			if ( providedSettings.beforeServices ) { await providedSettings.beforeServices( environment ); }
 		},
 		before: async ( environment ) => {
 			await defaultBefore( environment );
-			if ( providedSettings.before ) await providedSettings.before( environment );
+			if ( providedSettings.before ) { await providedSettings.before( environment ); }
 		},
 		afterTest: async ( mochaTest, environment ) => {
 			await defaultAfterTest( mochaTest, environment );
-			if ( providedSettings.afterTest ) await providedSettings.afterTest( mochaTest, environment );
+			if ( providedSettings.afterTest ) { await providedSettings.afterTest( mochaTest, environment ); }
 		},
 		onComplete: async ( environment ) => {
 			await defaultOnComplete( environment );
-			if ( providedSettings.onComplete ) await providedSettings.onComplete( environment );
+			if ( providedSettings.onComplete ) { await providedSettings.onComplete( environment ); }
 		}
-	}
+	};
 
 	return makeSettings( appendedSettings );
-};
+}
