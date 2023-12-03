@@ -25,7 +25,7 @@ export const loadLocalDockerImage = (
 					throw result.stderr;
 				}
 
-				testLog.debug(result);
+				testLog.debug( result );
 			}
 		}
 	} catch ( e ) {
