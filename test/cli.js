@@ -86,7 +86,7 @@ const runCLI = async () => {
 
 	y.version( '1.0.0' );
 	y.scriptName( './test.sh' );
-	y.wrap( y.terminalWidth() - 20 );
+	y.wrap( 120 );
 	y.demandCommand();
 	y.showHelpOnFail( true );
 	y.help();
@@ -134,7 +134,7 @@ const commandHandler = async ( argv ) => {
 			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
 			console.log(
 				chalk.bgWhiteBright.black.bold(
-					`\n"${suiteName}" test suite ${' '.repeat( 80 - suiteName.length )}`
+					`\n"${suiteName}" test suite ${' '.repeat( 96 - suiteName.length )}`
 				)
 			);
 			exitCode = await runWdio( configFilePath, wdioCommandArguments );
