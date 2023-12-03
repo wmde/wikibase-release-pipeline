@@ -37,22 +37,23 @@ export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Pr
 		globalThis.env.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
 		globalThis.env.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
 
-	const dockerImageUrls = [
+	const defaultImageUrls = [
 		globalThis.env.WIKIBASE_TEST_IMAGE_URL,
 		globalThis.env.WIKIBASE_SUITE_WDQS_IMAGE_URL,
 		globalThis.env.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
 		globalThis.env.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
 	];
-	const dockerExtraImageUrls = [
+	const extraImageUrls = [
 		globalThis.env.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
 		globalThis.env.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
 	];
 
-	dockerImageUrls.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage as string ) );
+	defaultImageUrls.forEach( ( defaultImageUrl ) =>
+		loadLocalDockerImage( defaultImageUrl as string ) );
 
 	if ( !settings.isBaseSuite ) {
-		dockerExtraImageUrls.forEach( ( bundleImage ) =>
-			loadLocalDockerImage( bundleImage as string )
+		extraImageUrls.forEach( ( extraImageUrl ) =>
+			loadLocalDockerImage( extraImageUrl as string )
 		);
 	}
 };
