@@ -1,5 +1,5 @@
 import { mkdirSync, rmSync } from 'fs';
-import { spawnSync } from 'child_process';
+import { spawnSync, exec } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from './TestSettings.js';
 import checkIfUp from './checkIfUp.js';
@@ -65,16 +65,25 @@ export class TestEnvironment {
 		) );
 	}
 
-	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): void {
+	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): string {
 		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
 		testLog.debug( 'Running: ', dockerComposeCmd );
 
-		globalThis.env.OUTPUT_DIR = this.settings.outputDir;
-		const result = spawnSync( dockerComposeCmd, { stdio: 'pipe', shell: true, encoding: 'utf-8', env: globalThis.env } );
+		const result = spawnSync( dockerComposeCmd, {
+			stdio: 'pipe',
+			shell: true,
+			encoding: 'utf-8',
+			env: { ...globalThis.env, OUTPUT_DIR: this.settings.outputDir }
+		} );
 
 		testLog.debug( result.stdout );
-		testLog.debug( result.stderr );
+
+		if ( result.stderr ) {
+			testLog.error( result.stderr );
+		}
+
+		return result.stdout || result.stderr
 	}
 
 	protected resetOutputDir(): void {

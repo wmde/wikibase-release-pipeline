@@ -107,7 +107,7 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 		 */
 		before: async () => {
 			try {
-				defaultFunctionsInit( settings );
+				defaultFunctionsInit( environment );
 
 				await WikibaseApi.initialize(
 					undefined,

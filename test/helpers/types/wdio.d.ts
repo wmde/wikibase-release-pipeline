@@ -10,22 +10,12 @@ declare namespace WebdriverIO {
 		/**
 		 * Execute query on database
 		 */
-		dbQuery: ( query: string, config?: DatabaseConfig ) => Promise<string>;
+		dbQuery: ( query: string, config?: DatabaseConfig ) => string;
 
 		/**
 		 * Delete a claim by guid or pipe-separated list of guids
 		 */
 		deleteClaim: ( claimGuid: string ) => Promise<BotResponse>;
-
-		/**
-		 * Execute docker command on container and get output
-		 */
-		dockerExecute: (
-			container: string,
-			command: string,
-			opts?: string,
-			shouldLog?: boolean,
-		) => Promise<unknown>;
 
 		/**
 		 * Creates or edits a page with content

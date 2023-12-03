@@ -1,8 +1,8 @@
 import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
-import { exec } from 'child_process';
 import lodash from 'lodash';
 import { Context } from 'mocha';
+import { TestEnvironment } from '../setup/TestEnvironment.js';
 import { TestSettings } from '../setup/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from './types/binding.js';
@@ -12,7 +12,9 @@ import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
 import testLog from '../setup/testLog.js';
 
-export function defaultFunctions( settings: TestSettings ): void {
+export function defaultFunctions( environment: TestEnvironment ): void {
+	const settings: TestSettings = environment.settings;
+
 	/**
 	 * Make a get request to get full request response
 	 */
@@ -33,7 +35,7 @@ export function defaultFunctions( settings: TestSettings ): void {
 	 */
 	browser.addCommand(
 		'dbQuery',
-		async ( query: string, config?: DatabaseConfig ) => {
+		( query: string, config?: DatabaseConfig ): string => {
 			if ( !config ) {
 				config = {
 					user: globalThis.env.DB_USER,
@@ -48,9 +50,8 @@ export function defaultFunctions( settings: TestSettings ): void {
 				);
 			}
 
-			return await browser.dockerExecute(
-				globalThis.env.DOCKER_MYSQL_NAME,
-				`mysql --user "${config.user}" --password="${config.pass}" "${config.database}" -e '${query}'`
+			return environment.runDockerComposeCmd(
+				`exec mysql mysql --user ${config.user} --password=${config.pass} ${config.database} -e '${query}'`
 			);
 		}
 	);
@@ -81,43 +82,6 @@ export function defaultFunctions( settings: TestSettings ): void {
 				`${server}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 			);
 			return lodash.map( result.data.query.extensions, 'name' );
-		}
-	);
-
-	/**
-	 * Execute docker command on container and get output
-	 */
-	browser.addCommand(
-		'dockerExecute',
-		(
-			container: string,
-			command: string,
-			opts?: string,
-			shouldLog?: boolean
-		): Promise<unknown> => {
-			if ( !container ) {
-				throw new Error( 'dockerExecute: Container not specified!' );
-			}
-
-			if ( !opts ) {
-				opts = '';
-			}
-
-			const fullCommand = `docker exec ${opts} ${container} ${command}`;
-			if ( shouldLog ) {
-				testLog.info( `executing: ${fullCommand}` );
-			}
-
-			return new Promise( ( resolve ) => {
-				// eslint-disable-next-line security/detect-child-process
-				exec( fullCommand, ( error, stdout, stderr ) => {
-					if ( error ) {
-						testLog.error( error );
-					}
-
-					resolve( stdout || stderr );
-				} );
-			} );
 		}
 	);
 

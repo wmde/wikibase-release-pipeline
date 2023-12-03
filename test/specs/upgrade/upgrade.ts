@@ -31,7 +31,7 @@ describe( 'Wikibase upgrade', function () {
 		// Repeat WDIO initialization with new services up
 
 		// TODO: Repeats wdioConf#before hook. Move the hook outside of conf for reuse.
-		defaultFunctionsInit( environment.settings );
+		defaultFunctionsInit( environment );
 		await WikibaseApi.initialize(
 			undefined,
 			globalThis.env.MW_ADMIN_NAME,
