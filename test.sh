@@ -3,6 +3,10 @@
 set -e
 trap stop_test_runner EXIT
 
+if ! [[ -f "local.env" ]]; then
+	touch local.env
+fi
+
 cd test
 
 TEST_RUNNER_COMPOSE="docker compose -f docker-compose.yml --env-file ./test-runner.env --env-file ../local.env --progress quiet"
