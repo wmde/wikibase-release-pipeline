@@ -28,7 +28,6 @@ else
   PYTHON_FLAGS=""
 fi
 
-TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml --progress quiet"
 # ℹ️ Linting Dockerfiles (**/Dockerfile)
 # https://github.com/hadolint/hadolint
 docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint"
@@ -36,6 +35,8 @@ docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadol
 # ℹ️ Linting Shell Scripts (**/*.sh)
 # https://github.com/koalaman/shellcheck#from-your-terminal
 find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
+
+TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml --env-file ./test/test-runner.env --env-file ./local.env --progress quiet"
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
 $TEST_RUNNER_COMPOSE run --rm -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "

@@ -1,28 +1,36 @@
+import { SevereServiceError } from 'webdriverio';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
+import loadEnvFiles from './loadEnvVars.js';
+import loadLocalDockerImage from './loadLocalDockerImage.js';
+import { saveScreenshot } from 'wdio-mediawiki';
 import TestSettings, {
 	TestEnvironmentSettings,
 	TestHooks,
 	TestRunnerSettings,
 	TestSuiteSettings
-} from './TestSettings.js';
-import loadEnvFiles from './loadEnvVars.js';
-import loadLocalDockerImage from './loadLocalDockerImage.js';
+} from '../helpers/types/TestSettings.js';
 
 export const defaultComposeFiles = [
 	'suites/docker-compose.yml'
 ];
 
 export const defaultEnvFiles: string[] = [
-	'./setup/test-services.env',
+	'./test-services.env',
 	'../local.env'
 ];
 
-export const defaultWaitForURLs = ( settings ) => ( [
+export const defaultWaitForURLs = () => ( [
 	`${globalThis.env.MW_SERVER}/wiki/Main_Page`,
 	`${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 	globalThis.env.WDQS_FRONTEND_SERVER
 ] );
 
-export const defaultBeforeServices = ( settings ): void => {
+export const defaultOnPrepare = async ( environment ): Promise<void> => {
+	environment.up()
+}
+
+export const defaultBeforeServices = async ( { settings } ): Promise<void> => {
 	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
 		globalThis.env.WIKIBASE_IMAGE_NAME : globalThis.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
@@ -43,6 +51,39 @@ export const defaultBeforeServices = ( settings ): void => {
 		dockerExtraImageUrls.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage as string ) );
 	}
 };
+
+export const defaultBefore = async ( environment ): Promise<void> => {
+	try {
+		defaultFunctionsInit( environment );
+
+		await WikibaseApi.initialize(
+			undefined,
+			globalThis.env.MW_ADMIN_NAME,
+			globalThis.env.MW_ADMIN_PASS
+		);
+	} catch ( e ) {
+		console.log('!!! error', e)
+		throw new SevereServiceError( e );
+	}
+}
+
+export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> => {
+	const testFile = encodeURIComponent(
+		mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
+	);
+	const screenshotFilename = `${testFile}__${mochaTest.title}`;
+
+	try {
+		saveScreenshot( screenshotFilename, environment.settings.screenshotPath );
+	} catch ( error ) {
+		console.error( 'failed writing screenshot ...' );
+		console.error( error );
+	}
+}
+
+export const defaultOnComplete = async ( environment ): Promise<void> => {
+	environment.down()
+}
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles ) as NodeJS.ProcessEnv;
@@ -67,7 +108,11 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		screenshotPath: `${outputDir}/screenshots`,
 	}
 	const testHooks: TestHooks = {
-		beforeServices: providedSettings.beforeServices || defaultBeforeServices
+		onPrepare: providedSettings.onPrepare || defaultOnPrepare,
+		beforeServices: providedSettings.beforeServices || defaultBeforeServices,
+		before: providedSettings.before || defaultBefore,
+		afterTest: providedSettings.afterTest || defaultAfterTest,
+		onComplete: providedSettings.onComplete || defaultOnComplete
 	}
 	const testEnvironmentSettings: TestEnvironmentSettings = {
 		composeFiles: providedSettings.composeFiles || defaultComposeFiles,
@@ -95,19 +140,35 @@ export function makeSettingsAppendingToDefaults (
 			...defaultEnvFiles,
 			...( providedSettings.envFiles ? providedSettings.envFiles : [] )
 		],
-		waitForURLs: ( settings ) => {
-			let waitForUrls = defaultWaitForURLs( settings );
+		waitForURLs: ( environment ) => {
+			let waitForUrls = defaultWaitForURLs();
 			if ( providedSettings.waitForURLs ) {
 				waitForUrls = [
 					...waitForUrls,
-					...providedSettings.waitForURLs( settings )
+					...providedSettings.waitForURLs( environment )
 				];
 			}
 			return waitForUrls;
 		},
-		beforeServices: ( settings ) => {
-			defaultBeforeServices( settings );
-			if ( providedSettings.beforeServices ) providedSettings.beforeServices( settings );
+		onPrepare: async ( environment ) => {
+			await defaultOnPrepare( environment );
+			if ( providedSettings.onPrepare ) await providedSettings.onPrepare( environment );
+		},
+		beforeServices: async ( environment ) => {
+			await defaultBeforeServices( environment );
+			if ( providedSettings.beforeServices ) await providedSettings.beforeServices( environment );
+		},
+		before: async ( environment ) => {
+			await defaultBefore( environment );
+			if ( providedSettings.before ) await providedSettings.before( environment );
+		},
+		afterTest: async ( mochaTest, environment ) => {
+			await defaultAfterTest( mochaTest, environment );
+			if ( providedSettings.afterTest ) await providedSettings.afterTest( mochaTest, environment );
+		},
+		onComplete: async ( environment ) => {
+			await defaultOnComplete( environment );
+			if ( providedSettings.onComplete ) await providedSettings.onComplete( environment );
 		}
 	}
 

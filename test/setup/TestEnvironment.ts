@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync } from 'fs';
 import { spawnSync, exec } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
-import TestSettings from './TestSettings.js';
+import TestSettings from '../helpers/types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
 import testLog from './testLog.js';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
@@ -34,7 +34,7 @@ export class TestEnvironment {
 			} );
 
 			this.resetOutputDir();
-			this.settings.beforeServices( this.settings );
+			await this.settings.beforeServices( this );
 
 			console.log( '▶️  Bringing up test environment' );
 
@@ -57,9 +57,9 @@ export class TestEnvironment {
 	}
 
 	public async waitForServices(): Promise<void[]> {
-		return Promise.all( this.settings.waitForURLs( this.settings ).map(
+		return Promise.all( this.settings.waitForURLs( this ).map(
 			async ( waitForURL: string ): Promise<void> => {
-				await checkIfUp( waitForURL );
+				await checkIfUp( waitForURL, this.settings.testTimeout );
 				testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
 			}
 		) );

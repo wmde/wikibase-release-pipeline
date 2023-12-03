@@ -7,14 +7,10 @@ import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { SevereServiceError } from 'webdriverio';
 import type { Capabilities } from '@wdio/types';
-import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import JsonReporter from '../helpers/json-reporter.js';
 import { TestEnvironment } from './TestEnvironment.js';
 import testLog from './testLog.js';
-import { saveScreenshot } from 'wdio-mediawiki';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
@@ -97,69 +93,40 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 		// =====
 		// Hooks
 		// =====
-		onPrepare: async () => environment.up(),
 
-		/**
-		 * Initializes the default functions for every test and
-		 * polls the wikibase docker container for installed extensions
-		 *
-		 * @param {...any} args
-		 */
+		onPrepare: async () => {
+			if ( settings.onPrepare ) await settings.onPrepare( environment );
+		},
+
 		before: async () => {
-			try {
-				defaultFunctionsInit( environment );
-
-				await WikibaseApi.initialize(
-					undefined,
-					globalThis.env.MW_ADMIN_NAME,
-					globalThis.env.MW_ADMIN_PASS
-				);
-		
-				if ( settings.before ) await settings.before( settings, environment );
-			} catch ( e ) {
-				throw new SevereServiceError( e );
-			}
+			if ( settings.before ) await settings.before( environment );
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
 			testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
-			if ( settings.beforeMochaSuite ) settings.beforeMochaSuite( mochaSuite, settings, environment )
+			if ( settings.beforeMochaSuite ) await settings.beforeMochaSuite( mochaSuite, environment );
 		},
 
-		beforeTest: function ( mochaTest ) {
+		beforeTest: async function ( mochaTest ) {
 			testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
-			if ( settings.beforeTest ) settings.beforeTest( mochaTest )
+			if ( settings.beforeTest ) await settings.beforeTest( mochaTest, environment );
 		},
 
-		/**
-		 * Save a screenshot when test fails.
-		 *
-		 * @param {Frameworks.Test} test
-		 */
-		afterTest: function ( mochaTest ) {
-			const testFile = encodeURIComponent(
-				mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
-			);
-			const screenshotFilename = `${testFile}__${mochaTest.title}`;
-
-			try {
-				saveScreenshot( screenshotFilename, settings.screenshotPath );
-			} catch ( error ) {
-				console.error( 'failed writing screenshot ...' );
-				console.error( error );
-			}
-			if ( settings.afterTest ) settings.afterTest( mochaTest )
+		afterTest: async function ( mochaTest ) {
+			if ( settings.afterTest ) await settings.afterTest( mochaTest, environment );
 		},
 
 		afterSuite: async ( mochaSuite ) => {
-			if ( settings.afterMochaSuite ) settings.afterMochaSuite( mochaSuite, settings, environment )
+			if ( settings.afterMochaSuite ) await settings.afterMochaSuite( mochaSuite, environment );
 		},
 
 		after: async () => {
-			if ( settings.after ) settings.after( settings, environment )
+			if ( settings.after ) await settings.after( environment );
 		},
 
-		onComplete: () => environment.down()
+		onComplete: async () => {
+			if ( settings.onComplete ) await settings.onComplete( environment );
+		},
 	};
 }
 

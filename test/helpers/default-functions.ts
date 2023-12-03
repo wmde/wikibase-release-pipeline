@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
 import { TestEnvironment } from '../setup/TestEnvironment.js';
-import { TestSettings } from '../setup/TestSettings.js';
+import { TestSettings } from './types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from './types/binding.js';
 import BotResponse from './types/bot-response.js';
@@ -252,8 +252,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 		'waitForJobs',
 		async (
 			serverURL: string = globalThis.env.MW_SERVER,
-			// default timeout is 1 second less than default Mocha test timeout
-			timeout: number = ( settings.testTimeout || 90 * 1000 ) - 1000,
+			timeout: number = settings.testTimeout - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
 			let jobsInQueue: number;

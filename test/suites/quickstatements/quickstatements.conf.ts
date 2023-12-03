@@ -10,7 +10,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
-	waitForURLs: ( settings ) => ( [
+	waitForURLs: () => ( [
 		globalThis.env.QS_SERVER,
 		globalThis.env.MW_CLIENT_SERVER
 	] )
