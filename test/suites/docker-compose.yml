@@ -16,7 +16,7 @@ x-common-variables: &wikibase_variables
 services:
 
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    image: "${WIKIBASE_TEST_IMAGE_URL}"
     links:
       - mysql
     depends_on:
@@ -36,7 +36,7 @@ services:
       <<: *wikibase_variables
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_TEST_IMAGE_NAME}"
+    image: "${WIKIBASE_TEST_IMAGE_URL}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh
     links:

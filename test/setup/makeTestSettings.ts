@@ -33,18 +33,19 @@ export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<
 };
 
 export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Promise<void> => {
-	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
-		globalThis.env.WIKIBASE_IMAGE_NAME : globalThis.env.WIKIBASE_BUNDLE_IMAGE_NAME;
+	globalThis.env.WIKIBASE_TEST_IMAGE_URL = settings.isBaseSuite ?
+		globalThis.env.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
+		globalThis.env.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
 
 	const dockerImageUrls = [
-		globalThis.env.WIKIBASE_TEST_IMAGE_NAME,
-		globalThis.env.WDQS_IMAGE_NAME,
-		globalThis.env.WDQS_FRONTEND_IMAGE_NAME,
-		globalThis.env.WDQS_PROXY_IMAGE_NAME
+		globalThis.env.WIKIBASE_TEST_IMAGE_URL,
+		globalThis.env.WIKIBASE_SUITE_WDQS_IMAGE_URL,
+		globalThis.env.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
+		globalThis.env.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
 	];
 	const dockerExtraImageUrls = [
-		globalThis.env.ELASTICSEARCH_IMAGE_NAME,
-		globalThis.env.QUICKSTATEMENTS_IMAGE_NAME
+		globalThis.env.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
+		globalThis.env.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
 	];
 
 	dockerImageUrls.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage as string ) );
