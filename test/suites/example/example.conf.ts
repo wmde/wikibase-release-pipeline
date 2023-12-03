@@ -17,7 +17,10 @@ export const environment = TestEnvironment.createWithDefaults( {
 		'../example/template.env',
 		'suites/example/example.env',
 		'../local.env'
-	]
+	],
+	beforeServices: async (): Promise<void> => {
+		// Here to bypass default local image loading
+	}
 } );
 
 export const config = wdioConfig( environment );
