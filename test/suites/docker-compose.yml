@@ -56,7 +56,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MARIADB_IMAGE}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
