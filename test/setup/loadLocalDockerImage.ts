@@ -20,8 +20,6 @@ export const loadLocalDockerImage = (
 
 	if ( dockerImageUrlMatch?.groups && dockerImageUrlMatch.groups.Repo ) {
 		const imageName = dockerImageUrlMatch.groups.Repo;
-		console.log( 'loading imageName', imageName );
-		// const imageName = dockerImageURL.split( '/' ).reverse()[0].split(':').reverse().[0];
 		const result = spawnSync( 'docker', [ 'images', '-q', imageName ], { encoding: 'utf-8' } );
 		if ( !result.stdout || reload ) {
 			spawnSync( 'docker', [ 'load', '-i', `../artifacts/${imageName}.docker.tar.gz` ], {
