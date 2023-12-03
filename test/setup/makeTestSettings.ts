@@ -27,7 +27,7 @@ export const defaultWaitForURLs = () => ( [
 ] );
 
 export const defaultOnPrepare = async ( environment ): Promise<void> => {
-	environment.up()
+	await environment.up()
 }
 
 export const defaultBeforeServices = async ( { settings } ): Promise<void> => {
@@ -62,7 +62,6 @@ export const defaultBefore = async ( environment ): Promise<void> => {
 			globalThis.env.MW_ADMIN_PASS
 		);
 	} catch ( e ) {
-		console.log('!!! error', e)
 		throw new SevereServiceError( e );
 	}
 }
@@ -82,7 +81,7 @@ export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> 
 }
 
 export const defaultOnComplete = async ( environment ): Promise<void> => {
-	environment.down()
+	await environment.down()
 }
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {

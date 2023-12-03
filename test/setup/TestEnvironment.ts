@@ -27,8 +27,8 @@ export class TestEnvironment {
 
 	public async up(): Promise<void> {
 		try {
-			process.once( 'SIGINT', () => {
-				this.down();
+			process.once( 'SIGINT', async () => {
+				await this.down();
 				// eslint-disable-next-line no-process-exit
 				process.exit( 1 );
 			} );
@@ -41,7 +41,7 @@ export class TestEnvironment {
 			this.stopServices();
 			this.startServices();
 			await this.waitForServices();
-
+			console.log( this.settings );
 			if ( this.settings.runHeaded ) {
 				console.log(
 					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
@@ -52,7 +52,7 @@ export class TestEnvironment {
 		}
 	}
 
-	public down(): void {
+	public async down(): Promise<void> {
 		this.stopServices();
 	}
 
