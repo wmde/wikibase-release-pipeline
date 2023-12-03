@@ -41,7 +41,7 @@ export class TestEnvironment {
 			this.stopServices();
 			this.startServices();
 			await this.waitForServices();
-			console.log( this.settings );
+
 			if ( this.settings.runHeaded ) {
 				console.log(
 					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
