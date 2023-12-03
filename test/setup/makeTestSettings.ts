@@ -1,4 +1,6 @@
 import { SevereServiceError } from 'webdriverio';
+import { TestEnvironment } from './TestEnvironment.js';
+import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import loadEnvFiles from './loadEnvVars.js';
@@ -10,8 +12,6 @@ import TestSettings, {
 	TestRunnerSettings,
 	TestSuiteSettings
 } from '../helpers/types/TestSettings.js';
-import { TestEnvironment } from './TestEnvironment.js';
-import { Frameworks } from '@wdio/types';
 
 export const defaultComposeFiles = [
 	'suites/docker-compose.yml'
