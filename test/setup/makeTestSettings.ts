@@ -10,6 +10,8 @@ import TestSettings, {
 	TestRunnerSettings,
 	TestSuiteSettings
 } from '../helpers/types/TestSettings.js';
+import { TestEnvironment } from './TestEnvironment.js';
+import { Frameworks } from '@wdio/types';
 
 export const defaultComposeFiles = [
 	'suites/docker-compose.yml'
@@ -20,17 +22,17 @@ export const defaultEnvFiles: string[] = [
 	'../local.env'
 ];
 
-export const defaultWaitForURLs = () => ( [
+export const defaultWaitForURLs = (): string[] => ( [
 	`${globalThis.env.MW_SERVER}/wiki/Main_Page`,
 	`${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
 	globalThis.env.WDQS_FRONTEND_SERVER
 ] );
 
-export const defaultOnPrepare = async ( environment ): Promise<void> => {
+export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<void> => {
 	await environment.up();
 };
 
-export const defaultBeforeServices = async ( { settings } ): Promise<void> => {
+export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Promise<void> => {
 	globalThis.env.WIKIBASE_TEST_IMAGE_NAME = settings.isBaseSuite ?
 		globalThis.env.WIKIBASE_IMAGE_NAME : globalThis.env.WIKIBASE_BUNDLE_IMAGE_NAME;
 
@@ -48,11 +50,13 @@ export const defaultBeforeServices = async ( { settings } ): Promise<void> => {
 	dockerImageUrls.forEach( ( defaultImage ) => loadLocalDockerImage( defaultImage as string ) );
 
 	if ( !settings.isBaseSuite ) {
-		dockerExtraImageUrls.forEach( ( bundleImage ) => loadLocalDockerImage( bundleImage as string ) );
+		dockerExtraImageUrls.forEach( ( bundleImage ) =>
+			loadLocalDockerImage( bundleImage as string )
+		);
 	}
 };
 
-export const defaultBefore = async ( environment ): Promise<void> => {
+export const defaultBefore = async ( environment: TestEnvironment ): Promise<void> => {
 	try {
 		defaultFunctionsInit( environment );
 
@@ -66,7 +70,10 @@ export const defaultBefore = async ( environment ): Promise<void> => {
 	}
 };
 
-export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> => {
+export const defaultAfterTest = async (
+	mochaTest: Frameworks.Test,
+	environment: TestEnvironment
+): Promise<void> => {
 	const testFile = encodeURIComponent(
 		mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 	);
@@ -80,12 +87,12 @@ export const defaultAfterTest = async ( mochaTest, environment ): Promise<void> 
 	}
 };
 
-export const defaultOnComplete = async ( environment ): Promise<void> => {
+export const defaultOnComplete = async ( environment: TestEnvironment ): Promise<void> => {
 	await environment.down();
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles ) as NodeJS.ProcessEnv;
+	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 	const nameWithoutBase = providedSettings.name.replace( 'base__', '' );
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
@@ -123,7 +130,7 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		...testRunnerSettings,
 		...testHooks,
 		...testEnvironmentSettings
-	 } as TestSettings;
+	} as TestSettings;
 };
 
 export function makeSettingsAppendingToDefaults(
@@ -151,23 +158,33 @@ export function makeSettingsAppendingToDefaults(
 		},
 		onPrepare: async ( environment ) => {
 			await defaultOnPrepare( environment );
-			if ( providedSettings.onPrepare ) { await providedSettings.onPrepare( environment ); }
+			if ( providedSettings.onPrepare ) {
+				await providedSettings.onPrepare( environment );
+			}
 		},
 		beforeServices: async ( environment ) => {
 			await defaultBeforeServices( environment );
-			if ( providedSettings.beforeServices ) { await providedSettings.beforeServices( environment ); }
+			if ( providedSettings.beforeServices ) {
+				await providedSettings.beforeServices( environment );
+			}
 		},
 		before: async ( environment ) => {
 			await defaultBefore( environment );
-			if ( providedSettings.before ) { await providedSettings.before( environment ); }
+			if ( providedSettings.before ) {
+				await providedSettings.before( environment );
+			}
 		},
 		afterTest: async ( mochaTest, environment ) => {
 			await defaultAfterTest( mochaTest, environment );
-			if ( providedSettings.afterTest ) { await providedSettings.afterTest( mochaTest, environment ); }
+			if ( providedSettings.afterTest ) {
+				await providedSettings.afterTest( mochaTest, environment );
+			}
 		},
 		onComplete: async ( environment ) => {
 			await defaultOnComplete( environment );
-			if ( providedSettings.onComplete ) { await providedSettings.onComplete( environment ); }
+			if ( providedSettings.onComplete ) {
+				await providedSettings.onComplete( environment );
+			}
 		}
 	};
 

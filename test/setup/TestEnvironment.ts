@@ -10,12 +10,16 @@ export class TestEnvironment {
 	public settings: TestSettings;
 	public baseDockerComposeCmd: string;
 
-	public static createAppendingToDefaults( providedSettings: Partial<TestSettings> ): TestEnvironment {
+	public static createAppendingToDefaults(
+		providedSettings: Partial<TestSettings>
+	): TestEnvironment {
 		const settings = makeSettingsAppendingToDefaults( providedSettings );
 		return new this( settings );
 	}
 
-	public static createWithDefaults( providedSettings: Partial<TestSettings> ): TestEnvironment {
+	public static createWithDefaults(
+		providedSettings: Partial<TestSettings>
+	): TestEnvironment {
 		const settings = makeSettings( providedSettings );
 		return new this( settings );
 	}

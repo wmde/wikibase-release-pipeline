@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import dotenvExpand, { DotenvExpandOutput } from 'dotenv-expand';
+import dotenvExpand from 'dotenv-expand';
 
 export function loadEnvFile(
 	envFilePath: string,
@@ -22,7 +22,7 @@ export function loadEnvFile(
 
 export default function loadEnvFiles(
 	envFilePaths: string[]
-) {
+): Record<string, string> {
 	let envVars: Record<string, string> = {};
 
 	envFilePaths
