@@ -2,6 +2,8 @@ import { TestEnvironment } from "../../setup/TestEnvironment.js";
 import { defaultBeforeServices, defaultEnvFiles } from "../../setup/makeTestSettings.js";
 import wdioConfig from "../../setup/wdio.conf.js";
 
+// TODO: Explore what happened with WDQS in upgrade tests
+
 export const versions = {
 	WMDE9: 'wikibase/wikibase:1.37.6-wmde.9',
 	WMDE9_BUNDLE: 'wikibase/wikibase-bundle:1.37.6-wmde.9',
@@ -33,7 +35,6 @@ export const environment = TestEnvironment.createWithDefaults( {
 	],
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
-		// TODO: Explore further what happened with WDQS
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
