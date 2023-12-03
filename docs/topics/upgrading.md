@@ -11,7 +11,7 @@ In all of our images we rely on a database to persist data. Normally these are s
 
 ```yml
   mysql:
-    image: "${MARIADB_IMAGE}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql

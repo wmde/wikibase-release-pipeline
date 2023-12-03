@@ -1,13 +1,10 @@
 # Build configuration
-ARG MEDIAWIKI_IMAGE
-ARG COMPOSER_IMAGE
-
-# TODO
-# ARG MEDIAWIKI_SETTINGS_TEMPLATE_FILE
+ARG MEDIAWIKI_IMAGE_URL
+ARG COMPOSER_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE} as git-checkout
+FROM ${COMPOSER_IMAGE_URL} as git-checkout
 ARG WIKIBASE_COMMIT
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /tmp/wikibase && \
     git -C /tmp/wikibase checkout ${WIKIBASE_COMMIT} && \
@@ -17,12 +14,12 @@ RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /tmp/
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${MEDIAWIKI_IMAGE} as collector
+FROM ${MEDIAWIKI_IMAGE_URL} as collector
 COPY --from=git-checkout /tmp/wikibase /var/www/html/extensions/Wikibase
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE} as composer
+FROM ${COMPOSER_IMAGE_URL} as composer
 COPY --from=collector --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html/
 COPY composer.local.json /var/www/html/composer.local.json
@@ -32,7 +29,7 @@ RUN composer install --verbose -n --no-dev \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${MEDIAWIKI_IMAGE}
+FROM ${MEDIAWIKI_IMAGE_URL}
 ARG GIT_CURRENT_REVISION
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 # Set error_reporting PHP.ini settings

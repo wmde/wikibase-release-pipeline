@@ -1,10 +1,10 @@
-ARG COMPOSER_IMAGE
-ARG NGINX_IMAGE
-ARG NODE_IMAGE
+ARG COMPOSER_IMAGE_URL
+ARG NGINX_IMAGE_URL
+ARG NODE_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE} as composer
+FROM ${COMPOSER_IMAGE_URL} as composer
 ARG WDQSQUERYGUI_COMMIT
 
 RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
@@ -16,7 +16,7 @@ RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-qu
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${NODE_IMAGE} as builder
+FROM ${NODE_IMAGE_URL} as builder
 
 COPY --from=composer /tmp/wikidata-query-gui /tmp/wikidata-query-gui
 
@@ -38,7 +38,7 @@ RUN mv package.json package.json.orig \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${NGINX_IMAGE} as final
+FROM ${NGINX_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 WORKDIR /usr/share/nginx/html

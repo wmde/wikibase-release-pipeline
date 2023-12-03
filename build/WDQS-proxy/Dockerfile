@@ -1,8 +1,8 @@
-ARG NGINX_IMAGE
+ARG NGINX_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${NGINX_IMAGE}
+FROM ${NGINX_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 COPY entrypoint.sh /entrypoint.sh

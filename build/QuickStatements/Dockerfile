@@ -1,9 +1,9 @@
-ARG COMPOSER_IMAGE
-ARG PHP_IMAGE
+ARG COMPOSER_IMAGE_URL
+ARG PHP_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE} as composer
+FROM ${COMPOSER_IMAGE_URL} as composer
 ARG QUICKSTATEMENTS_COMMIT
 ARG MAGNUSTOOLS_COMMIT
 
@@ -20,7 +20,7 @@ RUN composer install --no-dev
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${PHP_IMAGE}
+FROM ${PHP_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 RUN apt-get update && \

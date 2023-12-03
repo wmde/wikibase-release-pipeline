@@ -45,7 +45,7 @@ services:
       - DB_NAME=client_wiki
 
   quickstatements:
-    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
     restart: always
     volumes:
       - quickstatements-data:/quickstatements/data

@@ -18,27 +18,62 @@ EXTRACT_TARBALL=false
 
 
 function save_image {
+    local image_name="$1"
+    local image_url="$2"
+    local image_name_with_tag="$3"
+    local image_url_with_tag="$4"
+
     if $SAVE_IMAGE; then
-        docker save "$tag_version" "$tag_latest"| \
-            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${tag_version//:/-}.docker.tar.gz"
+        docker save "$image_url" "$image_url_with_tag" | \
+            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${image_name_with_tag//:/-}.docker.tar.gz"
         pushd artifacts
-        ln -s "${tag_version//:/-}.docker.tar.gz" "${service_name}.docker.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
         popd
     fi
 }
 
 
+# wikibase/wdqs -> wdqs
+function image_url_to_image_name {
+   local image_url="$1"
+
+   # this will complain about image urls with tags in the end, e.g. foo:latest
+   colon_count=$(grep -o ":" <<< "$image_url" | wc -l)
+   if [[ $colon_count -gt 0 ]]; then
+       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+       exit 1
+   fi
+
+   # this will complain about image urls with hostnames, e.g. ghcr.io/foo/bar
+   slash_count=$(grep -o "/" <<< "$image_url" | wc -l)
+   if [[ $slash_count -gt 1 ]]; then
+       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+       exit 1
+   fi
+
+   # only take the second half of the url, the name after the slash
+   echo "$image_url" | cut -d'/' -f 2
+}
+
+
+function setup_image_name_url_and_tag {
+    local version_string="$2"
+
+    # ‼️  HEADS UP! This will set the global vars 👿
+    image_url="$1"
+    image_name="$(image_url_to_image_name "$image_url")"
+    image_name_with_tag="${image_name}:${version_string}"
+    image_url_with_tag="${image_url}:${version_string}"
+}
+
+
 function build_wikibase {
-    service_name="wikibase"
-    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
-        --build-arg MEDIAWIKI_IMAGE="$MEDIAWIKI_IMAGE" \
+        --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
+        --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
-        \
-        --build-arg MEDIAWIKI_SETTINGS_TEMPLATE_FILE="$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" \
         \
         --build-arg MW_SITE_NAME="$MW_SITE_NAME" \
         --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
@@ -47,25 +82,26 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        build/Wikibase -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/Wikibase -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
     if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm "$tag_version" \
-            tar cz -C /var/www --transform="s,^html,${service_name}," html \
-                > "artifacts/${tag_version//:/-}.tar.gz"
+        docker run --entrypoint="" --rm "$image_url_with_tag" \
+            tar cz -C /var/www --transform="s,^html,${image_name}," html \
+                > "artifacts/${image_name_with_tag//:/-}.tar.gz"
         pushd artifacts
-        ln -s "${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
         popd
     fi
 
-    service_name="wikibase-bundle"
-    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
+        --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
+        --build-arg RELEASE_VERSION="$RELEASE_VERSION" \
+        --build-arg WIKIBASE_SUITE_WIKIBASE_IMAGE_URL="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
         --build-arg CLDR_COMMIT="$CLDR_COMMIT" \
@@ -86,92 +122,88 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        build/WikibaseBundle -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/WikibaseBundle -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
 function build_elasticseach {
-    service_name="elasticsearch"
-    tag_version="${service_name}:${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg=ELASTICSEARCH_IMAGE="$ELASTICSEARCH_IMAGE" \
+        --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
-        build/Elasticsearch/ -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/Elasticsearch/ -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
 function build_wdqs {
-    service_name="wdqs"
-    tag_version="${service_name}:${WDQS_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg DEBIAN_IMAGE="$DEBIAN_IMAGE" \
-        --build-arg JDK_IMAGE="$JDK_IMAGE" \
+        --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
+        --build-arg JDK_IMAGE_URL="$JDK_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
-        build/WDQS/ -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/WDQS/ -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
 function build_wdqs-frontend {
-    service_name="wdqs-frontend"
-    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
-        --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
-        --build-arg NODE_IMAGE="$NODE_IMAGE" \
+        --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
+        --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
+        --build-arg NODE_IMAGE_URL="$NODE_IMAGE_URL" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
-        build/WDQS-frontend/ -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/WDQS-frontend/ -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
     if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm "$tag_version" \
-            tar cz -C /usr/share/nginx --transform="s,^html,${service_name}," html \
-                > "artifacts/${tag_version//:/-}.tar.gz"
+        docker run --entrypoint="" --rm "$image_url_with_tag" \
+            tar cz -C /usr/share/nginx --transform="s,^html,${image_name}," html \
+                > "artifacts/${image_name_with_tag//:/-}.tar.gz"
         pushd artifacts
-        ln -s "${tag_version//:/-}.tar.gz" "${service_name}.tar.gz"
+        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
         popd
     fi
 }
 
 
 function build_wdqs-proxy {
-    service_name="wdqs-proxy"
-    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg NGINX_IMAGE="$NGINX_IMAGE" \
+        --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
-        build/WDQS-proxy/ -t "$tag_version" -t "$tag_latest"
-    save_image
+        build/WDQS-proxy/ -t "$image_url_with_tag" -t "$image_url"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
 function build_quickstatements {
-    service_name="quickstatements"
-    tag_version="${service_name}:${WMDE_RELEASE_VERSION}"
-    tag_latest="${service_name}:latest"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
-        --build-arg COMPOSER_IMAGE="$COMPOSER_IMAGE" \
-        --build-arg PHP_IMAGE="$PHP_IMAGE" \
+        --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
+        --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        build/QuickStatements/ -t "$tag_version" -t "$tag_latest" 
-    save_image
+        build/QuickStatements/ -t "$image_url_with_tag"
+
+    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -185,24 +217,51 @@ function build_all {
 }
 
 
-if [ $# -eq 0 ]; then
+build_target_set=false
+
+for arg in "$@"; do
+    case $arg in
+        wikibase)
+            build_wikibase
+            build_target_set=true
+            ;;
+        elasticsearch)
+            build_elasticseach
+            build_target_set=true
+            ;;
+        wdqs)
+            build_wdqs
+            build_target_set=true
+            ;;
+        wdqs-frontend)
+            build_wdqs-frontend
+            build_target_set=true
+            ;;
+        wdqs-proxy)
+            build_wdqs-proxy
+            build_target_set=true
+            ;;
+        quickstatements)
+            build_quickstatements
+            build_target_set=true
+            ;;
+        all)
+            build_all
+            build_target_set=true
+            ;;
+        -s|--save-image)
+            SAVE_IMAGE=true
+            ;;
+        -t|--extract-tarball)
+            EXTRACT_TARBALL=true
+            ;;
+        *)
+            echo "Unknown argument: $arg" > /dev/stderr
+            exit 1
+            ;;
+    esac
+done
+
+if ! $build_target_set; then
     build_all
-else
-    for arg in "$@"; do
-        case $arg in
-            wikibase) build_wikibase ;;
-            elasticsearch) build_elasticseach ;;
-            wdqs) build_wdqs ;;
-            wdqs-frontend) build_wdqs-frontend ;;
-            wdqs-proxy) build_wdqs-proxy ;;
-            quickstatements) build_quickstatements ;;
-            all) build_all ;;
-            -s|--save-image) SAVE_IMAGE=true ;;
-            -t|--extract-tarball) EXTRACT_TARBALL=true ;;
-            *)
-                echo "Unknown argument: $arg"
-                exit 1
-                ;;
-        esac
-    done
 fi
