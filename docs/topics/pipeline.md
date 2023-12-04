@@ -52,14 +52,21 @@ When building locally the artifacts are only stored in the docker daemons image 
 
 ```sh
 # build and store results in artifacts folder
-$ ./build.sh --save-image all
+$ ./build.sh --save-image
 ```
 
 If you want to also extract standalone tarballs, use the following command. This is basically also what the CI calls.
 
 ```sh
-$ ./build.sh --save-image --extract-tarball all
+$ ./build.sh --save-image --extract-tarball
 ```
+
+To rebuild without using Dockers cache, add the `--no-cache` option. Note that this will extend build times as all components need to be downloaded again (except Docker base images).
+
+```sh
+$ ./build.sh --no-cache
+```
+
 
 ### Clean local artifacts
 

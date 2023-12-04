@@ -208,7 +208,7 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        build/QuickStatements/ -t "$image_url_with_tag"
+        build/QuickStatements/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
