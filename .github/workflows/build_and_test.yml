@@ -144,14 +144,14 @@ jobs:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
           # Latest 1.37
-          'WMDE9',
-          'WMDE9_BUNDLE',
-          # Latest 1.38
-          'WMDE12',
-          'WMDE12_BUNDLE',
-          # Latest 1.39
-          'WMDE13',
-          'WMDE13_BUNDLE'
+          'WMDE9'
+          # 'WMDE9_BUNDLE',
+          # # Latest 1.38
+          # 'WMDE12',
+          # 'WMDE12_BUNDLE',
+          # # Latest 1.39
+          # 'WMDE13',
+          # 'WMDE13_BUNDLE'
         ]
     needs:
       - build
