@@ -59,7 +59,7 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to load the start page', async () => {
 		await browser.url( process.env.QS_SERVER );
-		await $( 'nav.navbar' );
+		await $( 'body' ).$( 'p*=QuickStatements is a tool' );
 	} );
 
 	it( 'Should be able to log in', async () => {
@@ -104,6 +104,18 @@ describe( 'QuickStatements Service', function () {
 
 		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
 		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
+	} );
+
+	it( 'Should be able to create item with label', async () => {
+		await browser.url( process.env.QS_SERVER + '/#/batch' );
+
+		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
+
+		const responseQ3 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q3.json'
+		);
+
+		assert.strictEqual( responseQ3.data.entities.Q3.labels.en.value, 'Best label' );
 	} );
 
 	it( 'Should be able to add an alias to an item', async () => {
@@ -161,6 +173,10 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual(
 			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
 			'statement'
+		);
+		assert.strictEqual(
+			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value,
+			'Will it blend?'
 		);
 	} );
 
@@ -287,6 +303,15 @@ describe( 'QuickStatements Service', function () {
 			propertyIdItem in response.data.entities[ itemId ].claims,
 			false
 		);
+	} );
+
+	it( 'Should be able to change label', async () => {
+		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
+
+		const responseQ1 = await browser.makeRequest(
+			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+		);
+		assert.strictEqual( responseQ1.data.entities.Q1.labels.sv.value, 'Some other label' );
 	} );
 
 	it( 'Should be able to merge two items', async () => {
