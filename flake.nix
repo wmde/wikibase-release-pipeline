@@ -30,6 +30,8 @@
             echo "$ ./build.sh --save-image wdqs"
             echo "# Build the wdqs-frontend container and extract a standalone tarball from the webroot"
             echo "$ ./build.sh --extract-tarball wdqs-frontend"
+            echo "# Build the wdqs container without using Dockers cache"
+            echo "$ ./build.sh --no-cache wdqs"
             echo
             echo "Test Commands:"
             echo "$ make test"

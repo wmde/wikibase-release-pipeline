@@ -26,6 +26,9 @@ $ ./build.sh --save-image wdqs
 
 # Build the wdqs-frontend container and extract a standalone tarball from the webroot
 $ ./build.sh --extract-tarball wdqs-frontend
+
+# Build the wdqs container without using Dockers cache
+$ ./build.sh --no-cache wdqs
 ```
 
 ### Test Commands
