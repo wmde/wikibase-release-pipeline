@@ -55,13 +55,6 @@ jobs:
         with:
           component: ${{ matrix.component }}
 
-      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      - name: Upload additional bundle results for wikibase build
-        if: matrix.component == 'wikibase'
-        uses: ./.github/actions/upload-results
-        with:
-          component: ${{ matrix.component }}-bundle
-
       - name: Scan Image
         uses: ./.github/actions/scan-image
         continue-on-error: true
