@@ -3,6 +3,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
 	name: 'base__repo',
+	isBaseSuite: true,
 	specs: [
 		'specs/repo/api.ts',
 		'specs/repo/property.ts',

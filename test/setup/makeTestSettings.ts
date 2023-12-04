@@ -95,11 +95,9 @@ export const defaultOnComplete = async ( environment: TestEnvironment ): Promise
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
-	const nameWithoutBase = providedSettings.name.replace( 'base__', '' );
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
-		nameWithoutBase,
-		isBaseSuite: providedSettings.name !== nameWithoutBase,
+		isBaseSuite: providedSettings.isBaseSuite,
 		specs: providedSettings.specs
 	};
 	const outputDir = `suites/${providedSettings.name}/results`;

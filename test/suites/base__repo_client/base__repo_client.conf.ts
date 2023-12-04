@@ -3,6 +3,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
 	name: 'base__repo_client',
+	isBaseSuite: true,
 	specs: [
 		'specs/repo_client/interwiki-links.ts',
 		'specs/repo_client/item.ts',

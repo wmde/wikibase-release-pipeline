@@ -3,6 +3,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
 	name: 'base__fedprops',
+	isBaseSuite: true,
 	specs: [
 		'specs/fedprops/*.ts'
 	],

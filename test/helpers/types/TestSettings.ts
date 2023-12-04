@@ -3,7 +3,6 @@ import { Frameworks } from '@wdio/types';
 
 export type TestSuiteSettings = {
 	name: string;
-	nameWithoutBase: string;
 	isBaseSuite: boolean;
 	specs: string[];
 };
@@ -23,14 +22,14 @@ export type TestRunnerSettings = {
 
 export type TestHooks = {
 	// Runs immediately after environment is created but before it is ran
-	onPrepare?( environment ): Promise<void>;
+	onPrepare?( environment?: TestEnvironment ): Promise<void>;
 	// Runs before services are started but after `outputDir` is
 	// cleared and BEFORE existing services are stopped
-	beforeServices?( environment: TestEnvironment ): Promise<void>;
+	beforeServices?( environment?: TestEnvironment ): Promise<void>;
 	// Runs after services are started
-	afterServices?( environment: TestEnvironment ): Promise<void>;
+	afterServices?( environment?: TestEnvironment ): Promise<void>;
 	// Runs after services are started and available (waitForItURLs all respond true)
-	afterServicesAvailable?( environment: TestEnvironment ): Promise<void>;
+	afterServicesAvailable?( environment?: TestEnvironment ): Promise<void>;
 	// Runs once at the beginning of each spec file (before each WDIO runner)
 	before?( environment?: TestEnvironment ): Promise<void>;
 	// Runs before every Mocha "suite" (`describe` blocks)
@@ -44,12 +43,12 @@ export type TestHooks = {
 	// Runs once at the end of each spec file (after each WDIO runner)
 	after?( environment?: TestEnvironment ): Promise<void>;
 	// Executed after all workers have shut down and the process is about to exit
-	onComplete?( environment ): Promise<void>;
+	onComplete?( environment?: TestEnvironment ): Promise<void>;
 };
 
 export type TestEnvironmentSettings = {
 	composeFiles?: string[];
-	waitForURLs?( environment: TestEnvironment ): string[];
+	waitForURLs?( environment?: TestEnvironment ): string[];
 	envFiles?: string[];
 };
 

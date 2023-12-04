@@ -41,7 +41,13 @@ const runCLI = async () => {
 		description: 'run upgrade test',
 		builder: ( yy ) => { 
 			yy.positional( 'fromVersion', {
-				describe: 'Version to upgrade from in the upgrade test',
+				describe: 'Version to upgrade FROM in the upgrade test',
+				type: 'string',
+				choices: Object.keys( versions ),
+				requiresArg: true
+			} );
+			yy.positional( 'toVersion', {
+				describe: 'Version to upgrade TO in the upgrade test',
 				type: 'string',
 				choices: Object.keys( versions ),
 				requiresArg: true

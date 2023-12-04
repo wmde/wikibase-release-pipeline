@@ -44,18 +44,24 @@ export const environment = TestEnvironment.createWithDefaults( {
 	waitForURLs: () => ( [
 		`${globalThis.env.MW_SERVER}/wiki/Main_Page`
 	] ),
-	beforeServices: async ( settings ) => {
-		globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.FROM_VERSION ];
-		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ process.env.FROM_VERSION ]}` );
+	beforeServices: async ( testEnv ) => {
+		const settings = testEnv.settings;
+		const fromVersion = process.env.FROM_VERSION;
+		const toVersion = process.env.TO_VERSION;
 
-		if ( !process.env.TO_VERSION || !versions[ process.env.TO_VERSION ] ) {
-			const toVersionBundle = process.env.FROM_VERSION.includes( '_BUNDLE' );
-			process.env.TO_VERSION = `LOCAL_BUILD${toVersionBundle ? '_BUNDLE' : ''}`;
-		}
+		settings.isBaseSuite = !(
+			( toVersion && toVersion.includes( '_BUNDLE' ) ) ||
+			( !toVersion && fromVersion.includes( '_BUNDLE' ) )
+		);
+
+		globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
+		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ fromVersion ]}` );
+
+		process.env.TO_VERSION = toVersion || `LOCAL_BUILD${settings.isBaseSuite ? '' : '_BUNDLE'}`;
 
 		// Still load the default images as the local wikibase image will
-		// be used in specs/upgrade/upgrade.ts on services reboot
-		await defaultBeforeServices( settings );
+		// be used in specs/upgrade/upgrade.ts#before where toVersion is used
+		await defaultBeforeServices( testEnv );
 	}
 } );
 
