@@ -46,7 +46,6 @@ describe( 'Property', () => {
 				// wait for save button to re-enable
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
-				// await browser.keys( [ Key.Enter, Key.Enter, Key.Enter ] );
 				await Property.save.click();
 			} );
 
@@ -68,7 +67,6 @@ describe( 'Property', () => {
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await browser.keys( stringPropertyId.split( '' ) );
-				// await $( propertyIdSelector ).click();
 
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 
