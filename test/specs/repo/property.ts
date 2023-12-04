@@ -48,23 +48,18 @@ describe( 'Property', () => {
 				await browser.pause( 1000 * 1 );
 				// await browser.keys( [ Key.Enter, Key.Enter, Key.Enter ] );
 				await Property.save.click();
-
-				await Property.open( propertyId );
-
-				const resultStatement = await $(
-					`aria/Property:${stringPropertyId}`
-				).getText();
-				assert.equal( resultStatement, stringPropertyId );
 			} );
 
 			it( 'Should be able to see added statement', async () => {
+				await $( '=STATEMENT' );
+
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
 				).getText();
 				assert.equal( resultStatement, stringPropertyId );
 			} );
 
-			it( `Should be able to add reference to property of type ${dataType.name}`, async () => {
+			it( 'Should be able to add reference to property', async () => {
 				await Property.addReference.click();
 
 				// fill out property id for reference
@@ -82,8 +77,11 @@ describe( 'Property', () => {
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
+			} );
 
-				await Property.open( propertyId );
+			it( 'Should be able to see added reference', async () => {
+				await $( '=1 reference' ).click();
+				await $( '=REFERENCE' );
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async () => {
