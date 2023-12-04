@@ -48,7 +48,7 @@ export class TestEnvironment {
 
 			if ( this.settings.runHeaded ) {
 				console.log(
-					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale&password=secret to observe headed tests.\n'
+					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale to observe headed tests.\n'
 				);
 			}
 		} catch ( e ) {
