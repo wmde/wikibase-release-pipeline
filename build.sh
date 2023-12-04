@@ -15,7 +15,7 @@ set +o allexport
 
 SAVE_IMAGE=false
 EXTRACT_TARBALL=false
-
+DOCKER_BUILD_CACHE_OPT=""
 
 function save_image {
     local image_name="$1"
@@ -71,6 +71,7 @@ function build_wikibase {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
@@ -98,6 +99,7 @@ function build_wikibase {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
         --build-arg RELEASE_VERSION="$RELEASE_VERSION" \
@@ -132,6 +134,7 @@ function build_elasticseach {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
@@ -146,6 +149,7 @@ function build_wdqs {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
         --build-arg JDK_IMAGE_URL="$JDK_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
@@ -160,6 +164,7 @@ function build_wdqs-frontend {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         --build-arg NODE_IMAGE_URL="$NODE_IMAGE_URL" \
@@ -184,6 +189,7 @@ function build_wdqs-proxy {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
         build/WDQS-proxy/ -t "$image_url_with_tag" -t "$image_url"
@@ -196,6 +202,7 @@ function build_quickstatements {
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WMDE_RELEASE_VERSION"
 
     docker build \
+        $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
@@ -254,6 +261,9 @@ for arg in "$@"; do
             ;;
         -t|--extract-tarball)
             EXTRACT_TARBALL=true
+            ;;
+        -n|--no-cache)
+            DOCKER_BUILD_CACHE_OPT="--no-cache"
             ;;
         *)
             echo "Unknown argument: $arg" > /dev/stderr
