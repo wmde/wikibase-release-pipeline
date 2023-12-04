@@ -20,8 +20,8 @@ export const versions = {
 	WMDE13: 'wikibase/wikibase:1.39.5-wmde.13',
 	WMDE13_BUNDLE: 'wikibase/wikibase-bundle:1.39.5-wmde.13',
 
-	LOCAL_BUILD: 'wikibase',
-	LOCAL_BUILD_BUNDLE: 'wikibase-bundle'
+	LOCAL_BUILD: 'wikibase/wikibase',
+	LOCAL_BUILD_BUNDLE: 'wikibase/wikibase-bundle'
 };
 
 export const environment = TestEnvironment.createWithDefaults( {
