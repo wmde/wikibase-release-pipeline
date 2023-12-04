@@ -137,7 +137,7 @@ jobs:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
           # Latest 1.37
-          'WMDE9'
+          'WMDE9',
           'WMDE9_BUNDLE',
           # Latest 1.38
           'WMDE12',
