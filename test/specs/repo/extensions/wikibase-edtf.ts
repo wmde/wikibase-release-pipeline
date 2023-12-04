@@ -32,7 +32,7 @@ describe( 'WikibaseEdtf', function () {
 
 		// go look at wikibase
 		const response = await browser.makeRequest(
-			`${globalThis.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
+			`${globalThis.env.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
 		);
 		const responseSnak =
       response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
@@ -41,6 +41,6 @@ describe( 'WikibaseEdtf', function () {
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		await browser.url( globalThis.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Item:' + itemId );
 	} );
 } );

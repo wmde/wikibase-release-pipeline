@@ -45,7 +45,7 @@ describe( 'Property', function () {
 
 	it( 'Should contain statement and reference in EntityData', async () => {
 		const response = await browser.makeRequest(
-			`${globalThis.env.MW_SERVER}/wiki/Special:EntityData/${propertyId}.json`
+			`${globalThis.env.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
 		);
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];

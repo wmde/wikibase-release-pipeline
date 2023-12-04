@@ -11,7 +11,7 @@ describe( 'Babel', function () {
 		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
-			globalThis.env.MW_SERVER,
+			globalThis.env.WIKIBASE_URL,
 			'User:' + globalThis.env.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);

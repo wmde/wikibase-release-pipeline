@@ -8,7 +8,7 @@ import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql',
+			globalThis.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql',
 			{ validateStatus: false },
 			{}
 		);
@@ -17,14 +17,14 @@ describe( 'QueryService', () => {
 
 	it( 'Should be able to get sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/sparql'
+			globalThis.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql'
 		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/ldf',
+			globalThis.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/ldf',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -32,7 +32,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/namespace/wdq/assets',
+			globalThis.env.WDQS_PROXY_URL + '/bigdata/namespace/wdq/assets',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -40,7 +40,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph workbench', async () => {
 		const result = await browser.makeRequest(
-			globalThis.env.WDQS_PROXY_SERVER + '/bigdata/#query',
+			globalThis.env.WDQS_PROXY_URL + '/bigdata/#query',
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -93,7 +93,7 @@ describe( 'QueryService', () => {
 		// property value is set with correct rdf
 		assert(
 			await QueryServiceUI.resultIncludes(
-				`<${globalThis.env.MW_SERVER}/prop/direct/${propertyId}>`,
+				`<${globalThis.env.WIKIBASE_URL}/prop/direct/${propertyId}>`,
 				propertyValue
 			)
 		);
@@ -107,7 +107,7 @@ describe( 'QueryService', () => {
 		// should be set only to the item
 		assert(
 			await QueryServiceUI.resultIncludes(
-				`<${globalThis.env.MW_SERVER}/entity/${itemId}>`,
+				`<${globalThis.env.WIKIBASE_URL}/entity/${itemId}>`,
 				propertyValue
 			)
 		);

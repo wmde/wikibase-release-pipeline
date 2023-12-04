@@ -42,7 +42,7 @@ export const environment = TestEnvironment.createWithDefaults( {
 		'suites/upgrade/upgrade.env'
 	],
 	waitForURLs: () => ( [
-		`${globalThis.env.MW_SERVER}/wiki/Main_Page`
+		`${globalThis.env.WIKIBASE_URL}/wiki/Main_Page`
 	] ),
 	beforeServices: async ( testEnv ) => {
 		const settings = testEnv.settings;

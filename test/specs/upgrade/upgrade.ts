@@ -63,7 +63,7 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			`${globalThis.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
+			`${globalThis.env.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -75,12 +75,12 @@ describe( 'Wikibase upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${oldItemID}` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${oldItemID}` );
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			`${globalThis.env.MW_SERVER}/wiki/Special:EntityData/${oldItemID}.json`
+			`${globalThis.env.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
 		);
 		const body = response.data;
 

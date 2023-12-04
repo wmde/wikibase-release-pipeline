@@ -7,7 +7,7 @@ describe( 'UniversalLanguageSelector', function () {
 	} );
 
 	it( 'Should be able to see the language selector menu', async () => {
-		await browser.url( globalThis.env.MW_SERVER );
+		await browser.url( globalThis.env.WIKIBASE_URL );
 		await $( '#searchInput' ).click();
 		await $( '.imeselector' ).click();
 

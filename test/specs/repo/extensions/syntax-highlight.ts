@@ -13,12 +13,12 @@ describe( 'SyntaxHighlight', function () {
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 
 		await browser.editPage(
-			globalThis.env.MW_SERVER,
+			globalThis.env.WIKIBASE_URL,
 			'Module:Olives',
 			fileContents
 		);
 
-		await browser.url( globalThis.env.MW_SERVER + '/wiki/Module:Olives' );
+		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
 		await $( '.mw-highlight' );

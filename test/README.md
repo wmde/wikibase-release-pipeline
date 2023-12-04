@@ -40,9 +40,9 @@
 
 The behavior of the tests can be modified with several environment variables.
 
-* `MW_SERVER`: protocol, host name and port of the MediaWiki installation.
+* `WIKIBASE_URL`: protocol, host name and port of the MediaWiki installation.
   Defaults to `http://127.0.0.1:8080` (Vagrant).
-* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `MW_SERVER`.
+* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_URL`.
   Defaults to `/w`.
 * `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.:
   Property ID of a property with datatype `string`, `url`, etc. –

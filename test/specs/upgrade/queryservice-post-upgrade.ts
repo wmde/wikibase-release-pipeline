@@ -54,11 +54,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			globalThis.env.MW_SERVER + '/prop/' + newPropertyId,
+			globalThis.env.WIKIBASE_URL + '/prop/' + newPropertyId,
 			bindings
 		);
 		const property = getElementByURI(
-			globalThis.env.MW_SERVER + '/prop/direct/' + newPropertyId,
+			globalThis.env.WIKIBASE_URL + '/prop/direct/' + newPropertyId,
 			bindings
 		);
 

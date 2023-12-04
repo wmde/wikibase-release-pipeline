@@ -3,7 +3,7 @@ import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Special:Version` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Special:Version` );
 		const text = await $( '#sv-software' ).getText();
 		assert.strictEqual(
 			text.includes( `MediaWiki ${globalThis.env.MEDIAWIKI_VERSION}` ),
@@ -44,7 +44,7 @@ describe( 'Special:Version', function () {
 			it( `Should contain ${name} extensions`, async function () {
 				await skipIfExtensionNotPresent( this, name );
 
-				await browser.url( `${globalThis.env.MW_SERVER}/wiki/Special:Version` );
+				await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Special:Version` );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = await $(

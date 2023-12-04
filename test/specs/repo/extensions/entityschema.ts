@@ -12,7 +12,7 @@ describe( 'EntitySchema', function () {
 	} );
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		await browser.url( globalThis.env.MW_SERVER + '/wiki/EntitySchema:test' );
+		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();

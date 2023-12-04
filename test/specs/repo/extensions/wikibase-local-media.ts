@@ -13,7 +13,7 @@ describe( 'WikibaseLocalMedia', function () {
 	it( 'Should allow to upload an image', async () => {
 		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
 
-		await browser.url( globalThis.env.MW_SERVER + '/wiki/Special:Upload/' );
+		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Special:Upload/' );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );
@@ -29,7 +29,7 @@ describe( 'WikibaseLocalMedia', function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Property:${propertyId}` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Property:${propertyId}` );
 
 		const title = await $( '#firstHeading' ).getText();
 
@@ -53,7 +53,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${itemId}` );
 		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );

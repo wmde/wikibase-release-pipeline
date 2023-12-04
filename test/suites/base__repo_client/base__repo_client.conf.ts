@@ -13,7 +13,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 		'suites/repo_client/docker-compose.override.yml'
 	],
 	waitForURLs: () => ( [
-		globalThis.env.MW_CLIENT_SERVER
+		globalThis.env.WIKIBASE_CLIENT_URL
 	] )
 } );
 

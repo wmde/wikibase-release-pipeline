@@ -24,9 +24,9 @@ export const defaultEnvFiles: string[] = [
 ];
 
 export const defaultWaitForURLs = (): string[] => ( [
-	`${globalThis.env.MW_SERVER}/wiki/Main_Page`,
-	`${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`,
-	globalThis.env.WDQS_FRONTEND_SERVER
+	`${globalThis.env.WIKIBASE_URL}/wiki/Main_Page`,
+	`${globalThis.env.WDQS_URL}/bigdata/namespace/wdq/sparql`,
+	globalThis.env.WDQS_FRONTEND_URL
 ] );
 
 export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<void> => {
@@ -111,7 +111,7 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
 		waitForTimeout: parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		baseUrl: globalThis.env.MW_SERVER + globalThis.env.MW_SCRIPT_PATH,
+		baseUrl: globalThis.env.WIKIBASE_URL + globalThis.env.MW_SCRIPT_PATH,
 		pwd: process.env.HOST_PWD || process.cwd(),
 		outputDir,
 		resultFilePath: `${outputDir}/result.json`,

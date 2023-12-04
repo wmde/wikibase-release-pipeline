@@ -37,7 +37,7 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( globalThis.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Item:' + itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -55,13 +55,13 @@ describe( 'Scribunto Item', function () {
 			.replace( '<LANG>', 'en' );
 
 		await browser.editPage(
-			globalThis.env.MW_CLIENT_SERVER,
+			globalThis.env.WIKIBASE_CLIENT_URL,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = await browser.editPage(
-			globalThis.env.MW_CLIENT_SERVER,
+			globalThis.env.WIKIBASE_CLIENT_URL,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -82,7 +82,7 @@ describe( 'Scribunto Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
@@ -97,7 +97,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			globalThis.env.MW_CLIENT_SERVER,
+			globalThis.env.WIKIBASE_CLIENT_URL,
 			expectedDeletionChange
 		);
 

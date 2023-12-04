@@ -13,7 +13,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
 		const result = await browser.makeRequest(
-			`${globalThis.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
+			`${globalThis.env.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -38,7 +38,7 @@ describe( 'Fed props Item', function () {
 		};
 		await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${globalThis.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${itemId}` );
 
 		const actualPropertyValue = await $(
 			'.wikibase-statementgroupview-property'
@@ -51,7 +51,7 @@ describe( 'Fed props Item', function () {
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
 		try {
 			await browser.makeRequest(
-				globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl'
+				globalThis.env.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.ttl'
 			);
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
@@ -61,7 +61,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
 		);
 		const body = response.data;
 
@@ -74,7 +74,7 @@ describe( 'Fed props Item', function () {
 	it( 'should NOT show up in Special:EntityData with rdf', async () => {
 		try {
 			await browser.makeRequest(
-				globalThis.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf'
+				globalThis.env.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.rdf'
 			);
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
@@ -98,7 +98,7 @@ describe( 'Fed props Item', function () {
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
 			!( await QueryServiceUI.resultIncludes(
-				`<${globalThis.env.MW_SERVER}/entity/${itemId}>`,
+				`<${globalThis.env.WIKIBASE_URL}/entity/${itemId}>`,
 				propertyValue
 			) )
 		);

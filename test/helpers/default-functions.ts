@@ -188,7 +188,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${globalThis.env.QS_SERVER}/#/batch` );
+			await browser.url( `${globalThis.env.QUICKSTATEMENTS_URL}/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -230,7 +230,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `${globalThis.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `${globalThis.env.WDQS_URL}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
@@ -251,7 +251,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'waitForJobs',
 		async (
-			serverURL: string = globalThis.env.MW_SERVER,
+			serverURL: string = globalThis.env.WIKIBASE_URL,
 			timeout: number = settings.testTimeout - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
@@ -286,7 +286,7 @@ export async function skipIfExtensionNotPresent(
 	extension: string
 ): Promise<void> {
 	const installedExtensions = await browser.getInstalledExtensions(
-		globalThis.env.MW_SERVER
+		globalThis.env.WIKIBASE_URL
 	);
 	if ( !installedExtensions || installedExtensions.length === 0 ) {
 		return;
