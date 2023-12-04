@@ -49,8 +49,6 @@ describe( 'Property', () => {
 				// await browser.keys( [ Key.Enter, Key.Enter, Key.Enter ] );
 				await Property.save.click();
 
-				await browser.pause( 10 * 1000 );
-
 				await Property.open( propertyId );
 
 				const resultStatement = await $(
@@ -69,33 +67,21 @@ describe( 'Property', () => {
 			it( `Should be able to add reference to property of type ${dataType.name}`, async () => {
 				await Property.addReference.click();
 
-				await browser.pause( 1 * 1000 );
-
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' );
-
-				await browser.pause( 1 * 1000 );
 
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await browser.keys( stringPropertyId.split( '' ) );
 				// await $( propertyIdSelector ).click();
 
-				await browser.pause( 1 * 1000 );
-
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 
-				await browser.pause( 1 * 1000 );
-
 				await browser.keys( 'REFERENCE'.split( '' ) );
-
-				await browser.pause( 1 * 1000 );
 
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
-
-				await browser.pause( 1 * 1000 );
 
 				await Property.open( propertyId );
 			} );
@@ -107,7 +93,8 @@ describe( 'Property', () => {
 				const body: SpecialEntityData = response.data;
 				const claim: Claim =
 					body.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
-				const reference: Reference = claim.references[ 0 ].snaks[ stringPropertyId ][ 0 ];
+				const reference: Reference =
+					claim.references[ 0 ].snaks[ stringPropertyId ][ 0 ];
 
 				assert.strictEqual( claim.mainsnak.datavalue.value, 'STATEMENT' );
 				assert.strictEqual( reference.datavalue.value, 'REFERENCE' );
