@@ -18,6 +18,7 @@ export const defaultComposeFiles = [
 ];
 
 export const defaultEnvFiles: string[] = [
+	'../variables.env',
 	'./test-services.env',
 	'../local.env'
 ];
@@ -94,7 +95,10 @@ export const defaultOnComplete = async ( environment: TestEnvironment ): Promise
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
+	// NOTE: The values from the loaded env files are put into this global variable
+	// to better isolate the test-service environment from the parent processes.
 	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
+
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
 		isBaseSuite: providedSettings.isBaseSuite,
