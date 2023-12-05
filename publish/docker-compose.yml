@@ -3,7 +3,7 @@ version: '3'
 services:
   download_artifacts:
     build:
-      context: ../Docker/publish/download_artifacts
+      context: download_artifacts
       dockerfile: Dockerfile
     environment:
      - GITHUB_TOKEN
@@ -12,7 +12,7 @@ services:
       - ../artifacts:/extractedArtifacts
   upload_dockerhub:
     build:
-      context: ../Docker/publish/upload_dockerhub
+      context: upload_dockerhub
       dockerfile: Dockerfile
     privileged: true
     environment:
@@ -24,13 +24,13 @@ services:
       - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/DockerImages/quickstatements.docker.tar.gz
       - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/DockerImages/wdqs-proxy.docker.tar.gz
 
-      - WDQS_IMAGE_NAME
-      - WDQS_FRONTEND_IMAGE_NAME
-      - WDQS_PROXY_IMAGE_NAME
-      - QUICKSTATEMENTS_IMAGE_NAME
-      - WIKIBASE_IMAGE_NAME
-      - WIKIBASE_BUNDLE_IMAGE_NAME
-      - ELASTICSEARCH_IMAGE_NAME
+      - WIKIBASE_SUITE_WDQS_IMAGE_URL
+      - WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL
+      - WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
+      - WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
+      - WIKIBASE_SUITE_WIKIBASE_IMAGE_URL
+      - WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL
+      - WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL
 
       - WDQS_VERSION
       - RELEASE_VERSION
@@ -46,7 +46,7 @@ services:
       - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
   upload_tar:
     build:
-      context: ../Docker/publish/upload_tar
+      context: /upload_tar
       dockerfile: Dockerfile
     privileged: true
     environment:

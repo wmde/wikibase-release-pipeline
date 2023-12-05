@@ -46,24 +46,14 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Prepare environment and caches
-        uses: ./.github/actions/prep-env-and-cache
-
       - name: Build
-        run: ./build.sh ${{ matrix.component }}
+        run: ./build.sh --save-image --extract-tarball ${{ matrix.component }}
         shell: bash
 
       - name: Upload results
         uses: ./.github/actions/upload-results
         with:
           component: ${{ matrix.component }}
-
-      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      - name: Upload additional bundle results for wikibase build
-        if: matrix.component == 'wikibase'
-        uses: ./.github/actions/upload-results
-        with:
-          component: ${{ matrix.component }}-bundle
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
@@ -213,7 +203,7 @@ jobs:
         ]
 
     env:
-      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase-bundle
+      TARGET_WIKIBASE_UPGRADE_IMAGE_NAME: wikibase/wikibase-bundle
 
     steps:
       - uses: actions/checkout@v4
@@ -241,36 +231,6 @@ jobs:
         with:
           name: TestResults
           path: test/suites/**/results
-
-  # TODO: https://phabricator.wikimedia.org/T347084
-  metadata:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    needs:
-      - test
-
-    strategy:
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: c-py/action-dotenv-to-setenv@v4
-        with:
-          env-file: "variables.env"
-
-      - name: Build version requirements
-        shell: bash
-        run: |
-          ./build.sh requirements
-
-      - name: Archive metadata artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Metadata
-          path: artifacts/built_versions.log
-          if-no-files-found: error
 
   upload_ghcr:
     runs-on: ubuntu-latest

@@ -21,7 +21,7 @@ services:
       <<: *elastic_search
 
   elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}"
     restart: unless-stopped
     networks:
       default:
