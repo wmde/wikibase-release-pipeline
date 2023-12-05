@@ -25,8 +25,8 @@ describe( 'Property', () => {
 			let stringPropertyId: string = null;
 
 			before( async () => {
-				propertyId = await WikibaseApi.getProperty( dataType.urlName );
-				stringPropertyId = await WikibaseApi.getProperty(
+				propertyId = await WikibaseApi.createProperty( dataType.urlName );
+				stringPropertyId = await WikibaseApi.createProperty(
 					wikibasePropertyString.urlName
 				);
 			} );
