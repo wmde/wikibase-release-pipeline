@@ -17,7 +17,3 @@ If you get a Chrome error `Running as root without --no-sandbox is not supported
 
 `docker run -it --rm -v "$PWD:/app" diagrams node_modules/.bin/mmdc -p puppeteer-config.json -i main.mmd -o output.svg`
 
-## Building diagrams for documentation
-
-There is a `build.sh` script to build all documentation diagrams in one go by running. This can be run either inside or outside the docker container.
-
