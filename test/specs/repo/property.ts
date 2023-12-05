@@ -64,13 +64,13 @@ describe( 'Property', () => {
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' );
 
-				await browser.waitForJobs();
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 1000 * 1 );
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
 
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await browser.waitForJobs();
 				await Property.save.click();
 			} );
 
