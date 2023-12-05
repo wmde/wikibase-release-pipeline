@@ -44,8 +44,12 @@ describe( 'Property', () => {
 				await browser.keys( 'STATEMENT'.split( '' ) );
 
 				// wait for save button to re-enable
-				await browser.waitForJobs();
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 1000 * 1 );
 				await Property.save.click();
+
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 1000 * 1 );
 			} );
 
 			it( 'Should be able to see added statement', async () => {
@@ -69,8 +73,12 @@ describe( 'Property', () => {
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
 
-				await browser.waitForJobs();
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 1000 * 1 );
 				await Property.save.click();
+
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 1000 * 1 );
 			} );
 
 			it( 'Should be able to see added reference', async () => {
