@@ -112,7 +112,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
 		const responseQ3 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q3.json'
+			globalThis.env.WIKIBASE_URL + '/wiki/Special:EntityData/Q3.json'
 		);
 
 		assert.strictEqual( responseQ3.data.entities.Q3.labels.en.value, 'Best label' );
@@ -309,7 +309,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
 		const responseQ1 = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			globalThis.env.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
 		);
 		assert.strictEqual( responseQ1.data.entities.Q1.labels.sv.value, 'Some other label' );
 	} );
