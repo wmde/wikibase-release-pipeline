@@ -44,8 +44,7 @@ describe( 'Property', () => {
 				await browser.keys( 'STATEMENT'.split( '' ) );
 
 				// wait for save button to re-enable
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await browser.waitForJobs();
 				await Property.save.click();
 			} );
 
