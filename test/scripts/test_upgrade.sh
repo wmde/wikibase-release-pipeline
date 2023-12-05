@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC1090,SC2086
 set -e
+# set -x
 
 cd test
 
@@ -90,8 +91,8 @@ TMP_DIR="$(mktemp -d)"
 TMP_LOCALSETTINGS="$TMP_DIR/LocalSettings.php"
 
 # Source the default env vars used for building and create a new LocalSettings file 
-set -o allexport; source ../Docker/build/Wikibase/default.env; set +o allexport
-envsubst < "../Docker/build/Wikibase/$MEDIAWIKI_SETTINGS_TEMPLATE_FILE" > "$TMP_LOCALSETTINGS"
+set -o allexport; source ../variables.env; set +o allexport
+envsubst < "../build/Wikibase/LocalSettings.php.template" > "$TMP_LOCALSETTINGS"
 export TMP_LOCALSETTINGS
 
 # MODIFY OLD LocalSettings.php as part of upgrading
@@ -123,21 +124,22 @@ echo -e "\n▶️  Setting-up \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
 
 # allow overriding target
 if [ -z "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" ]; then
-    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_IMAGE_NAME"
+    export TARGET_WIKIBASE_UPGRADE_IMAGE_NAME="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL"
 fi
 
 export WIKIBASE_TEST_IMAGE_NAME="$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME:latest";
 # echo "ℹ️  Target WIKIBASE_TEST_IMAGE_NAME is set to $WIKIBASE_TEST_IMAGE_NAME"
 
 if [ -n "$WDQS_SOURCE_IMAGE_NAME" ]; then
-    export WDQS_TEST_IMAGE_NAME="$WDQS_IMAGE_NAME:latest";
-    docker load -i "../artifacts/$WDQS_IMAGE_NAME.docker.tar.gz"
+    export WDQS_TEST_IMAGE_NAME="$WIKIBASE_SUITE_WDQS_IMAGE_URL:latest";
+    docker load -i "../artifacts/wdqs.docker.tar.gz"
 fi
 
 # load new version and start it 
 echo "🔄 Creating Docker test services and volumes" 2>&1 | tee -a "$TEST_LOG"
-docker load -i "../artifacts/$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME.docker.tar.gz" >> $TEST_LOG 2>&1
-$TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0 >> $TEST_LOG 2>&1
+image_filename="../artifacts/$(echo "$TARGET_WIKIBASE_UPGRADE_IMAGE_NAME" | cut -d'/' -f2).docker.tar.gz"
+docker load -i "$image_filename"
+$TEST_COMPOSE -f suites/$SUITE_CONFIG_NAME/docker-compose.override.yml up -d --scale test-runner=0
 $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 
 # wait until containers start
@@ -145,14 +147,14 @@ $TEST_COMPOSE logs -f --no-color >> "$TEST_LOG" &
 $TEST_COMPOSE run --rm test-runner -c suites/$SUITE_CONFIG_NAME/setup.sh
 
 # run update.php and log to separate file
-echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""  2>&1 | tee -a "$TEST_LOG"
+echo -e "ℹ️  Running \"php /var/www/html/maintenance/update.php\""
 
-docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick >> "$TEST_LOG" 2>&1
+docker exec "$WIKIBASE_TEST_CONTAINER" php /var/www/html/maintenance/update.php --quick
 
-echo -e "\n✳️  Running \"$SUITE\" test suite" 2>&1 | tee -a "$TEST_LOG"
+echo -e "\n✳️  Running \"$SUITE\" test suite"
 
 $TEST_COMPOSE run --rm test-runner -c "npm run test:run --silent"
 
 # shut down the stack, also remove volumes to test data does not interfere with next test runs
-echo -e "🔄 Removing running Docker test services and volumes\n"  2>&1 | tee -a "$TEST_LOG"
+echo -e "🔄 Removing running Docker test services and volumes\n"
 remove_services_and_volumes

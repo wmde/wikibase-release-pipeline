@@ -29,7 +29,7 @@ services:
       - WIKIBASE_HOST
 
   mysql:
-    image: "${DEFAULT_DATABASE_IMAGE_NAME}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql
