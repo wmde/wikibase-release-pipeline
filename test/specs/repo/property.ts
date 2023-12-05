@@ -48,8 +48,7 @@ describe( 'Property', () => {
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
 
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await browser.waitForJobs();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
@@ -77,8 +76,7 @@ describe( 'Property', () => {
 				await browser.pause( 1000 * 1 );
 				await Property.save.click();
 
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await browser.waitForJobs();
 			} );
 
 			it( 'Should be able to see added reference', async () => {
