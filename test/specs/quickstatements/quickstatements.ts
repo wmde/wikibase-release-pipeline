@@ -58,7 +58,7 @@ describe( 'QuickStatements Service', function () {
 	let propertyURL = null;
 
 	it( 'Should be able to load the start page', async () => {
-		await browser.url( process.env.QS_SERVER );
+		await browser.url( globalThis.env.QUICKSTATEMENTS_URL );
 		await $( 'body' ).$( 'p*=QuickStatements is a tool' );
 	} );
 
@@ -107,7 +107,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create item with label', async () => {
-		await browser.url( process.env.QS_SERVER + '/#/batch' );
+		await browser.url( globalThis.env.QUICKSTATEMENTS_URL + '/#/batch' );
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
