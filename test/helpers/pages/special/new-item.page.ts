@@ -1,3 +1,4 @@
+import envVars from '../../../setup/envVars.js';
 import SubmittablePage from '../submittable.page.js';
 
 class SpecialNewItem extends SubmittablePage {
@@ -15,7 +16,7 @@ class SpecialNewItem extends SubmittablePage {
 	}
 
 	public async open(): Promise<void> {
-		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Special:NewItem` );
+		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Special:NewItem` );
 	}
 }
 

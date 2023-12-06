@@ -7,6 +7,7 @@ import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
+import envVars from '../../../setup/envVars.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -37,7 +38,7 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await browser.url( envVars.WIKIBASE_URL + '/wiki/Item:' + itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -55,13 +56,13 @@ describe( 'Scribunto Item', function () {
 			.replace( '<LANG>', 'en' );
 
 		await browser.editPage(
-			globalThis.env.WIKIBASE_CLIENT_URL,
+			envVars.WIKIBASE_CLIENT_URL,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = await browser.editPage(
-			globalThis.env.WIKIBASE_CLIENT_URL,
+			envVars.WIKIBASE_CLIENT_URL,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -72,7 +73,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
+		await LoginPage.login( envVars.MW_ADMIN_NAME, envVars.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -82,7 +83,7 @@ describe( 'Scribunto Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
@@ -97,7 +98,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			globalThis.env.WIKIBASE_CLIENT_URL,
+			envVars.WIKIBASE_CLIENT_URL,
 			expectedDeletionChange
 		);
 

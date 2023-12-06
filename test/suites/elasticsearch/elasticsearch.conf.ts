@@ -1,4 +1,5 @@
 import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
@@ -10,7 +11,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
 	waitForURLs: () => ( [
-		`http://${globalThis.env.MW_ELASTIC_HOST}:${globalThis.env.MW_ELASTIC_PORT}`
+		`http://${envVars.MW_ELASTIC_HOST}:${envVars.MW_ELASTIC_PORT}`
 	] )
 } );
 

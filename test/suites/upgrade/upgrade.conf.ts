@@ -1,4 +1,5 @@
 import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import envVars from '../../setup/envVars.js';
 import { defaultBeforeServices, defaultEnvFiles } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
@@ -42,7 +43,7 @@ export const environment = TestEnvironment.createWithDefaults( {
 		'suites/upgrade/upgrade.env'
 	],
 	waitForURLs: () => ( [
-		`${globalThis.env.WIKIBASE_URL}/wiki/Main_Page`
+		`${envVars.WIKIBASE_URL}/wiki/Main_Page`
 	] ),
 	beforeServices: async ( testEnv ) => {
 		const settings = testEnv.settings;
@@ -54,7 +55,7 @@ export const environment = TestEnvironment.createWithDefaults( {
 			( !toVersion && fromVersion.includes( '_BUNDLE' ) )
 		);
 
-		globalThis.env.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
+		envVars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
 		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ fromVersion ]}` );
 
 		process.env.TO_VERSION = toVersion || `LOCAL_BUILD${settings.isBaseSuite ? '' : '_BUNDLE'}`;

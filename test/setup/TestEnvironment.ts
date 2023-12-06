@@ -4,6 +4,7 @@ import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../helpers/types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
 import testLog from './testLog.js';
+import envVars from './envVars.js';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
 
 export class TestEnvironment {
@@ -78,7 +79,7 @@ export class TestEnvironment {
 			stdio: 'pipe',
 			shell: true,
 			encoding: 'utf-8',
-			env: { ...globalThis.env, OUTPUT_DIR: this.settings.outputDir }
+			env: { ...envVars, OUTPUT_DIR: this.settings.outputDir }
 		} );
 
 		testLog.debug( result.stdout );

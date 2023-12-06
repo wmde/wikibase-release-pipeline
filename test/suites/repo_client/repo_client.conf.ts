@@ -1,4 +1,5 @@
 import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
 export const environment = TestEnvironment.createAppendingToDefaults( {
@@ -11,7 +12,7 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 		'suites/repo_client/docker-compose.override.yml'
 	],
 	waitForURLs: () => ( [
-		globalThis.env.WIKIBASE_CLIENT_URL
+		envVars.WIKIBASE_CLIENT_URL
 	] )
 } );
 

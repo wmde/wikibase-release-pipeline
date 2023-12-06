@@ -1,8 +1,9 @@
 import assert from 'assert';
+import envVars from '../../setup/envVars.js';
 
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async () => {
-		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Main_Page' );
+		await browser.url( envVars.WIKIBASE_URL + '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );

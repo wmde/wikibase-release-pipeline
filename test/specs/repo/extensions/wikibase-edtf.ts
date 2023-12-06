@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import envVars from '../../../setup/envVars.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {
@@ -32,7 +33,7 @@ describe( 'WikibaseEdtf', function () {
 
 		// go look at wikibase
 		const response = await browser.makeRequest(
-			`${globalThis.env.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
+			`${envVars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
 		);
 		const responseSnak =
       response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
@@ -41,6 +42,6 @@ describe( 'WikibaseEdtf', function () {
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await browser.url( envVars.WIKIBASE_URL + '/wiki/Item:' + itemId );
 	} );
 } );

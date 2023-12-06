@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
+import envVars from '../../setup/envVars.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import SearchResult from '../../helpers/types/search-result.js';
 
@@ -12,14 +13,14 @@ describe( 'ElasticSearch', function () {
 	it( 'Should create an item', async () => {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( `${globalThis.env.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
+		await browser.url( envVars.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -40,7 +41,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${globalThis.env.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${envVars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -70,7 +71,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${globalThis.env.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${envVars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 

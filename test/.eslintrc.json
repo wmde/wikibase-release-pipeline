@@ -16,9 +16,6 @@
 		"wdio/no-pause": "warn",
 		"es-x/no-import-meta": "off",
 		"es-x/no-nullish-coalescing-operators": "off",
-		"es-x/no-class-fields": "off",
-		// globalThis.env is currently used instead of process.env
-		// in an initial step towards better isolating the test environment
-		"es-x/no-global-this": "off"
+		"es-x/no-class-fields": "off"
 	}
 }

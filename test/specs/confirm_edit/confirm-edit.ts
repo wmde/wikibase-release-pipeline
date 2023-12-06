@@ -1,9 +1,10 @@
 import assert from 'assert';
+import envVars from '../../setup/envVars.js';
 
 describe( 'ConfirmEdit', function () {
 	it( 'Should allow to edit with captcha', async () => {
 		const executionResult = await browser.editPage(
-			globalThis.env.WIKIBASE_URL,
+			envVars.WIKIBASE_URL,
 			'ConfirmEditTest',
 			'something great',
 			'paris'

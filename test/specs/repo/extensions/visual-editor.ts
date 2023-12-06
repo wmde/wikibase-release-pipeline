@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import envVars from '../../../setup/envVars.js';
 
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
@@ -8,7 +9,7 @@ describe( 'VisualEditor', function () {
 
 	it( 'Should be able to edit a page using the editor', async () => {
 		await browser.url(
-			globalThis.env.WIKIBASE_URL + '/wiki/TestVisualEditor?veaction=edit'
+			envVars.WIKIBASE_URL + '/wiki/TestVisualEditor?veaction=edit'
 		);
 
 		// start editing

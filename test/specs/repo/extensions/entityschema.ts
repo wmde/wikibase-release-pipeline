@@ -2,6 +2,7 @@ import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
+import envVars from '../../../setup/envVars.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -12,7 +13,7 @@ describe( 'EntitySchema', function () {
 	} );
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		await browser.url( globalThis.env.WIKIBASE_URL + '/wiki/EntitySchema:test' );
+		await browser.url( envVars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();

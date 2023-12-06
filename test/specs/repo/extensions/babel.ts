@@ -1,6 +1,7 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import envVars from '../../../setup/envVars.js';
 
 describe( 'Babel', function () {
 	beforeEach( async function () {
@@ -8,11 +9,11 @@ describe( 'Babel', function () {
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await LoginPage.login( globalThis.env.MW_ADMIN_NAME, globalThis.env.MW_ADMIN_PASS );
+		await LoginPage.login( envVars.MW_ADMIN_NAME, envVars.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
-			globalThis.env.WIKIBASE_URL,
-			'User:' + globalThis.env.MW_ADMIN_NAME,
+			envVars.WIKIBASE_URL,
+			'User:' + envVars.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);
 

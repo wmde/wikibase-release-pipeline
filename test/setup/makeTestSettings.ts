@@ -3,7 +3,7 @@ import { TestEnvironment } from './TestEnvironment.js';
 import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
-import loadEnvFiles from './loadEnvVars.js';
+import envVars, { loadEnvFiles } from './envVars.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 import TestSettings, {
@@ -24,9 +24,9 @@ export const defaultEnvFiles: string[] = [
 ];
 
 export const defaultWaitForURLs = (): string[] => ( [
-	`${globalThis.env.WIKIBASE_URL}/wiki/Main_Page`,
-	`${globalThis.env.WDQS_URL}/bigdata/namespace/wdq/sparql`,
-	globalThis.env.WDQS_FRONTEND_URL
+	`${envVars.WIKIBASE_URL}/wiki/Main_Page`,
+	`${envVars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
+	envVars.WDQS_FRONTEND_URL
 ] );
 
 export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<void> => {
@@ -34,19 +34,19 @@ export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<
 };
 
 export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Promise<void> => {
-	globalThis.env.WIKIBASE_TEST_IMAGE_URL = settings.isBaseSuite ?
-		globalThis.env.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
-		globalThis.env.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
+	envVars.WIKIBASE_TEST_IMAGE_URL = settings.isBaseSuite ?
+		envVars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
+		envVars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
 
 	const defaultImageUrls = [
-		globalThis.env.WIKIBASE_TEST_IMAGE_URL,
-		globalThis.env.WIKIBASE_SUITE_WDQS_IMAGE_URL,
-		globalThis.env.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
-		globalThis.env.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
+		envVars.WIKIBASE_TEST_IMAGE_URL,
+		envVars.WIKIBASE_SUITE_WDQS_IMAGE_URL,
+		envVars.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
+		envVars.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
 	];
 	const extraImageUrls = [
-		globalThis.env.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
-		globalThis.env.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
+		envVars.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
+		envVars.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
 	];
 
 	defaultImageUrls.forEach( ( defaultImageUrl ) =>
@@ -65,8 +65,8 @@ export const defaultBefore = async ( environment: TestEnvironment ): Promise<voi
 
 		await WikibaseApi.initialize(
 			undefined,
-			globalThis.env.MW_ADMIN_NAME,
-			globalThis.env.MW_ADMIN_PASS
+			envVars.MW_ADMIN_NAME,
+			envVars.MW_ADMIN_PASS
 		);
 	} catch ( e ) {
 		throw new SevereServiceError( e );
@@ -97,7 +97,7 @@ export const defaultOnComplete = async ( environment: TestEnvironment ): Promise
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	// NOTE: The values from the loaded env files are put into this global variable
 	// to better isolate the test-service environment from the parent processes.
-	globalThis.env = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
+	loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
@@ -111,7 +111,7 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
 		waitForTimeout: parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		baseUrl: globalThis.env.WIKIBASE_URL + globalThis.env.MW_SCRIPT_PATH,
+		baseUrl: envVars.WIKIBASE_URL + envVars.MW_SCRIPT_PATH,
 		pwd: process.env.HOST_PWD || process.cwd(),
 		outputDir,
 		resultFilePath: `${outputDir}/result.json`,

@@ -1,3 +1,4 @@
+import envVars from '../../../setup/envVars.js';
 import Page from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
 
@@ -19,7 +20,7 @@ class SpecialListProperties extends Page {
 		const offset = 'offset=' + ( params.offset ?? 0 );
 
 		await browser.url(
-			`${globalThis.env.WIKIBASE_URL}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
+			`${envVars.WIKIBASE_URL}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
 		await this.content;
