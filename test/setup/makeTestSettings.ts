@@ -95,8 +95,8 @@ export const defaultOnComplete = async ( environment: TestEnvironment ): Promise
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	// NOTE: The values from the loaded env files are put into this global variable
-	// to better isolate the test-service environment from the parent processes.
+	// NOTE: The values from the loaded env files are put into the envVars singleton
+	// to better isolate the test-service environment from the parent process
 	loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 
 	const testSuiteSettings: TestSuiteSettings = {
