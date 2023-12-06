@@ -1,5 +1,5 @@
 import { spawnSync } from 'child_process';
-import testLog from './testLog.js';
+import TestEnvironment from './TestEnvironment.js';
 
 // https://regex101.com/r/eK9lPd/3
 // eslint-disable-next-line security/detect-unsafe-regex
@@ -10,6 +10,7 @@ export const loadLocalDockerImage = (
 	reload: boolean = false
 ): void => {
 	try {
+		const testEnv = new TestEnvironment();
 		const dockerImageUrlMatch = dockerImageUrlRegExp.exec( dockerImageURL );
 
 		if ( dockerImageUrlMatch.groups.Repo ) {
@@ -25,7 +26,7 @@ export const loadLocalDockerImage = (
 					throw result.stderr;
 				}
 
-				testLog.debug( result );
+				testEnv.testLog.debug( result );
 			}
 		}
 	} catch ( e ) {

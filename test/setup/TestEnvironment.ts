@@ -3,12 +3,15 @@ import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../helpers/types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
-import testLog from './testLog.js';
+import logger, { Logger } from '@wdio/logger';
 import envVars from './envVars.js';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
 
-export class TestEnvironment {
+export default class TestEnvironment {
+	private static instance: TestEnvironment;
 	public settings: TestSettings;
+	public vars: Record<string,string>;
+	public testLog: Logger
 	public baseDockerComposeCmd: string;
 
 	public static createAppendingToDefaults(
@@ -25,9 +28,22 @@ export class TestEnvironment {
 		return new this( settings );
 	}
 
-	public constructor( settings: TestSettings ) {
+	public constructor( settings?: TestSettings ) {
+		if ( TestEnvironment.instance ) {
+			return TestEnvironment.instance;
+		}
+		if ( !settings ) {
+			throw new Error(
+				'Settings are required to create a new Test Environment instance'
+			);
+		}
+
 		this.settings = settings;
+		this.vars = envVars;
+		this.testLog = logger( 'test-testEnv' );
+		this.testLog.setDefaultLevel( 'debug' );
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
+		TestEnvironment.instance = this;
 	}
 
 	public async up(): Promise<void> {
@@ -41,7 +57,7 @@ export class TestEnvironment {
 			this.resetOutputDir();
 			await this.settings.beforeServices( this );
 
-			console.log( '▶️  Bringing up test environment' );
+			console.log( '▶️  Bringing up test testEnv' );
 
 			this.stopServices();
 			this.startServices();
@@ -65,7 +81,7 @@ export class TestEnvironment {
 		return Promise.all( this.settings.waitForURLs( this ).map(
 			async ( waitForURL: string ): Promise<void> => {
 				await checkIfUp( waitForURL, this.settings.testTimeout );
-				testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
+				this.testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
 			}
 		) );
 	}
@@ -73,7 +89,7 @@ export class TestEnvironment {
 	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): string {
 		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
-		testLog.debug( 'Running: ', dockerComposeCmd );
+		this.testLog.debug( 'Running: ', dockerComposeCmd );
 
 		const result = spawnSync( dockerComposeCmd, {
 			stdio: 'pipe',
@@ -82,10 +98,10 @@ export class TestEnvironment {
 			env: { ...envVars, OUTPUT_DIR: this.settings.outputDir }
 		} );
 
-		testLog.debug( result.stdout );
+		this.testLog.debug( result.stdout );
 
 		if ( result.stderr ) {
-			testLog.error( result.stderr );
+			this.testLog.error( result.stderr );
 		}
 
 		return result.stdout || result.stderr;
@@ -97,7 +113,7 @@ export class TestEnvironment {
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			mkdirSync( this.settings.outputDir, { recursive: true } );
 		} catch ( e ) {
-			testLog.error( '❌ Error occurred in setting-up logs:', e );
+			this.testLog.error( '❌ Error occurred in setting-up logs:', e );
 		}
 	}
 
@@ -116,12 +132,12 @@ export class TestEnvironment {
 	}
 
 	protected startServices(): void {
-		testLog.info( '▶️  Starting Wikibase Suite services' );
+		this.testLog.info( '▶️  Starting Wikibase Suite services' );
 		this.runDockerComposeCmd( 'up -d' );
 	}
 
 	protected stopServices( removeVolumes: boolean = true ): void {
-		testLog.info( '▶️  Stopping Wikibase Suite services' );
+		this.testLog.info( '▶️  Stopping Wikibase Suite services' );
 		this.runDockerComposeCmd( `down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1` );
 	}
 }

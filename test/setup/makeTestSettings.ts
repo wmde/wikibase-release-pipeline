@@ -1,5 +1,5 @@
 import { SevereServiceError } from 'webdriverio';
-import { TestEnvironment } from './TestEnvironment.js';
+import TestEnvironment from './TestEnvironment.js';
 import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
@@ -29,8 +29,8 @@ export const defaultWaitForURLs = (): string[] => ( [
 	envVars.WDQS_FRONTEND_URL
 ] );
 
-export const defaultOnPrepare = async ( environment: TestEnvironment ): Promise<void> => {
-	await environment.up();
+export const defaultOnPrepare = async ( testEnv: TestEnvironment ): Promise<void> => {
+	await testEnv.up();
 };
 
 export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Promise<void> => {
@@ -59,9 +59,9 @@ export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Pr
 	}
 };
 
-export const defaultBefore = async ( environment: TestEnvironment ): Promise<void> => {
+export const defaultBefore = async ( testEnv: TestEnvironment ): Promise<void> => {
 	try {
-		defaultFunctionsInit( environment );
+		defaultFunctionsInit( testEnv );
 
 		await WikibaseApi.initialize(
 			undefined,
@@ -75,7 +75,7 @@ export const defaultBefore = async ( environment: TestEnvironment ): Promise<voi
 
 export const defaultAfterTest = async (
 	mochaTest: Frameworks.Test,
-	environment: TestEnvironment
+	testEnv: TestEnvironment
 ): Promise<void> => {
 	const testFile = encodeURIComponent(
 		mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
@@ -83,20 +83,20 @@ export const defaultAfterTest = async (
 	const screenshotFilename = `${testFile}__${mochaTest.title}`;
 
 	try {
-		saveScreenshot( screenshotFilename, environment.settings.screenshotPath );
+		saveScreenshot( screenshotFilename, testEnv.settings.screenshotPath );
 	} catch ( error ) {
 		console.error( 'failed writing screenshot ...' );
 		console.error( error );
 	}
 };
 
-export const defaultOnComplete = async ( environment: TestEnvironment ): Promise<void> => {
-	await environment.down();
+export const defaultOnComplete = async ( testEnv: TestEnvironment ): Promise<void> => {
+	await testEnv.down();
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
 	// NOTE: The values from the loaded env files are put into the envVars singleton
-	// to better isolate the test-service environment from the parent process
+	// to better isolate the test-service testEnv from the parent process
 	loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 
 	const testSuiteSettings: TestSuiteSettings = {
@@ -150,44 +150,44 @@ export function makeSettingsAppendingToDefaults(
 			...defaultEnvFiles,
 			...( providedSettings.envFiles ? providedSettings.envFiles : [] )
 		],
-		waitForURLs: ( environment ) => {
+		waitForURLs: ( testEnv ) => {
 			let waitForUrls = defaultWaitForURLs();
 			if ( providedSettings.waitForURLs ) {
 				waitForUrls = [
 					...waitForUrls,
-					...providedSettings.waitForURLs( environment )
+					...providedSettings.waitForURLs( testEnv )
 				];
 			}
 			return waitForUrls;
 		},
-		onPrepare: async ( environment ) => {
-			await defaultOnPrepare( environment );
+		onPrepare: async ( testEnv ) => {
+			await defaultOnPrepare( testEnv );
 			if ( providedSettings.onPrepare ) {
-				await providedSettings.onPrepare( environment );
+				await providedSettings.onPrepare( testEnv );
 			}
 		},
-		beforeServices: async ( environment ) => {
-			await defaultBeforeServices( environment );
+		beforeServices: async ( testEnv ) => {
+			await defaultBeforeServices( testEnv );
 			if ( providedSettings.beforeServices ) {
-				await providedSettings.beforeServices( environment );
+				await providedSettings.beforeServices( testEnv );
 			}
 		},
-		before: async ( environment ) => {
-			await defaultBefore( environment );
+		before: async ( testEnv ) => {
+			await defaultBefore( testEnv );
 			if ( providedSettings.before ) {
-				await providedSettings.before( environment );
+				await providedSettings.before( testEnv );
 			}
 		},
-		afterTest: async ( mochaTest, environment ) => {
-			await defaultAfterTest( mochaTest, environment );
+		afterTest: async ( mochaTest, testEnv ) => {
+			await defaultAfterTest( mochaTest, testEnv );
 			if ( providedSettings.afterTest ) {
-				await providedSettings.afterTest( mochaTest, environment );
+				await providedSettings.afterTest( mochaTest, testEnv );
 			}
 		},
-		onComplete: async ( environment ) => {
-			await defaultOnComplete( environment );
+		onComplete: async ( testEnv ) => {
+			await defaultOnComplete( testEnv );
 			if ( providedSettings.onComplete ) {
-				await providedSettings.onComplete( environment );
+				await providedSettings.onComplete( testEnv );
 			}
 		}
 	};

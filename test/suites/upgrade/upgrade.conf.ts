@@ -1,4 +1,4 @@
-import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import TestEnvironment from '../../setup/TestEnvironment.js';
 import envVars from '../../setup/envVars.js';
 import { defaultBeforeServices, defaultEnvFiles } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
@@ -25,7 +25,7 @@ export const versions = {
 	LOCAL_BUILD_BUNDLE: 'wikibase/wikibase-bundle'
 };
 
-export const environment = TestEnvironment.createWithDefaults( {
+export const testEnv = TestEnvironment.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
@@ -66,4 +66,4 @@ export const environment = TestEnvironment.createWithDefaults( {
 	}
 } );
 
-export const config = wdioConfig( environment );
+export const config = wdioConfig( testEnv );

@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { versions, environment } from '../../suites/upgrade/upgrade.conf.js';
+import { versions, testEnv } from '../../suites/upgrade/upgrade.conf.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
 import envVars from '../../setup/envVars.js';
@@ -20,16 +20,16 @@ describe( 'Wikibase upgrade', function () {
 		);
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
-		environment.runDockerComposeCmd( '--progress quiet down' );
-		environment.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
-		await environment.waitForServices();
+		testEnv.runDockerComposeCmd( '--progress quiet down' );
+		testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
+		await testEnv.waitForServices();
 
 		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
-		environment.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
+		testEnv.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
 		// Make sure services are settled and available again
-		await environment.waitForServices();
+		await testEnv.waitForServices();
 		// Repeat WDIO initialization with new services up
-		await environment.settings.before( environment );
+		await testEnv.settings.before( testEnv );
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {

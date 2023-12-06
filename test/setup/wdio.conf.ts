@@ -9,14 +9,15 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import type { Capabilities } from '@wdio/types';
 import JsonReporter from '../helpers/json-reporter.js';
-import { TestEnvironment } from './TestEnvironment.js';
-import testLog from './testLog.js';
+import TestEnvironment from './TestEnvironment.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
-	const settings = environment.settings;
+const testEnv = new TestEnvironment();
+
+export function wdioConfig( throwAway: TestEnvironment ): WebdriverIO.Config {
+	const settings = testEnv.settings;
 
 	return {
 		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
@@ -96,51 +97,51 @@ export function wdioConfig( environment: TestEnvironment ): WebdriverIO.Config {
 
 		onPrepare: async () => {
 			if ( settings.onPrepare ) {
-				await settings.onPrepare( environment );
+				await settings.onPrepare( testEnv );
 			}
 		},
 
 		before: async () => {
 			if ( settings.before ) {
-				await settings.before( environment );
+				await settings.before( testEnv );
 			}
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
-			testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
+			testEnv.testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
 			if ( settings.beforeMochaSuite ) {
-				await settings.beforeMochaSuite( mochaSuite, environment );
+				await settings.beforeMochaSuite( mochaSuite, testEnv );
 			}
 		},
 
 		beforeTest: async function ( mochaTest ) {
-			testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
+			testEnv.testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
 			if ( settings.beforeTest ) {
-				await settings.beforeTest( mochaTest, environment );
+				await settings.beforeTest( mochaTest, testEnv );
 			}
 		},
 
 		afterTest: async function ( mochaTest ) {
 			if ( settings.afterTest ) {
-				await settings.afterTest( mochaTest, environment );
+				await settings.afterTest( mochaTest, testEnv );
 			}
 		},
 
 		afterSuite: async ( mochaSuite ) => {
 			if ( settings.afterMochaSuite ) {
-				await settings.afterMochaSuite( mochaSuite, environment );
+				await settings.afterMochaSuite( mochaSuite, testEnv );
 			}
 		},
 
 		after: async () => {
 			if ( settings.after ) {
-				await settings.after( environment );
+				await settings.after( testEnv );
 			}
 		},
 
 		onComplete: async () => {
 			if ( settings.onComplete ) {
-				await settings.onComplete( environment );
+				await settings.onComplete( testEnv );
 			}
 		}
 	};

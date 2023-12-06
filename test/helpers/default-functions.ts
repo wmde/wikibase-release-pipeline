@@ -2,7 +2,7 @@ import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
-import { TestEnvironment } from '../setup/TestEnvironment.js';
+import TestEnvironment from '../setup/TestEnvironment.js';
 import { TestSettings } from './types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from './types/binding.js';
@@ -10,11 +10,12 @@ import BotResponse from './types/bot-response.js';
 import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
-import testLog from '../setup/testLog.js';
-import envVars from '../setup/envVars.js';
 
-export function defaultFunctions( environment: TestEnvironment ): void {
-	const settings: TestSettings = environment.settings;
+export function defaultFunctions( throwawaytestEnv: TestEnvironment ): void {
+	const testEnv = new TestEnvironment();
+	console.log(testEnv.vars)
+
+	const settings: TestSettings = testEnv.settings;
 
 	/**
 	 * Make a get request to get full request response
@@ -39,9 +40,9 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 		( query: string, config?: DatabaseConfig ): string => {
 			if ( !config ) {
 				config = {
-					user: envVars.DB_USER,
-					pass: envVars.DB_PASS,
-					database: envVars.DB_NAME
+					user: testEnv.vars.DB_USER,
+					pass: testEnv.vars.DB_PASS,
+					database: testEnv.vars.DB_NAME
 				};
 			}
 
@@ -51,7 +52,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 				);
 			}
 
-			return environment.runDockerComposeCmd(
+			return testEnv.runDockerComposeCmd(
 				`exec mysql mysql --user ${config.user} --password=${config.pass} ${config.database} -e '${query}'`
 			);
 		}
@@ -155,10 +156,10 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 			assert.strictEqual( result.status, 200 );
 
 			if ( !foundResult ) {
-				testLog.error( 'Could not find:' );
-				testLog.error( expectedChange );
-				testLog.error( 'Response: ' );
-				testLog.error( changes );
+				testEnv.testLog.error( 'Could not find:' );
+				testEnv.testLog.error( expectedChange );
+				testEnv.testLog.error( 'Response: ' );
+				testEnv.testLog.error( changes );
 			}
 
 			return foundResult;
@@ -189,7 +190,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${envVars.QUICKSTATEMENTS_URL}/#/batch` );
+			await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -231,7 +232,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `${envVars.WDQS_URL}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
@@ -252,7 +253,7 @@ export function defaultFunctions( environment: TestEnvironment ): void {
 	browser.addCommand(
 		'waitForJobs',
 		async (
-			serverURL: string = envVars.WIKIBASE_URL,
+			serverURL: string = testEnv.vars.WIKIBASE_URL,
 			timeout: number = settings.testTimeout - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
@@ -286,8 +287,10 @@ export async function skipIfExtensionNotPresent(
 	test: Context,
 	extension: string
 ): Promise<void> {
+	const testEnv = new TestEnvironment();
+
 	const installedExtensions = await browser.getInstalledExtensions(
-		envVars.WIKIBASE_URL
+		testEnv.vars.WIKIBASE_URL
 	);
 	if ( !installedExtensions || installedExtensions.length === 0 ) {
 		return;

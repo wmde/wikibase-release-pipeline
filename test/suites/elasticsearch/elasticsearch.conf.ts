@@ -1,8 +1,8 @@
-import { TestEnvironment } from '../../setup/TestEnvironment.js';
+import TestEnvironment from '../../setup/TestEnvironment.js';
 import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const environment = TestEnvironment.createAppendingToDefaults( {
+export const testEnv = TestEnvironment.createAppendingToDefaults( {
 	name: 'elasticsearch',
 	specs: [
 		'specs/elasticsearch/*.ts'
@@ -15,4 +15,4 @@ export const environment = TestEnvironment.createAppendingToDefaults( {
 	] )
 } );
 
-export const config = wdioConfig( environment );
+export const config = wdioConfig( testEnv );
