@@ -273,6 +273,7 @@ jobs:
       - name: Load docker images
         shell: bash
         run: |
+          ls -la artifacts
           for file in artifacts/*.docker.tar.gz; do     
             if [[ -f "$file" ]]; do
               docker load -i "$file"
