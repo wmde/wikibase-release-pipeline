@@ -63,10 +63,7 @@ describe( 'Property', () => {
 				await Property.addReference.click();
 
 				// fill out property id for reference
-				await $( '.ui-entityselector-input' );
-
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
