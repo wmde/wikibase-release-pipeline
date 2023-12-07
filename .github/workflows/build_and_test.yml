@@ -274,7 +274,9 @@ jobs:
         shell: bash
         run: |
           for file in artifacts/*.docker.tar.gz; do     
-            docker load -i "$file"
+            if [[ -f "$file" ]]; do
+              docker load -i "$file"
+            fi
           done
 
       - name: Login to GitHub Container Registry
