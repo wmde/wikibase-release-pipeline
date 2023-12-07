@@ -5,7 +5,7 @@ import {
 	Claim,
 	Reference,
 	SpecialEntityData
-} from '../../helpers/types/request-response.js';
+} from '../../helpers/types/special-entity-data.js';
 import WikibasePropertyType from '../../helpers/types/wikibase-property-type.js';
 import {
 	wikibasePropertyItem,
