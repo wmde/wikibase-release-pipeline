@@ -5,24 +5,13 @@ import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
-describe( 'Fed props Item', function () {
+describe( 'Fed Props Item', function () {
 	const propertyId = 'P213';
 	const propertyValue = 'ISNI';
-	const itemId = 'Q1';
+	let itemId: string;
 	const itemLabel = 'T267743-';
 
-	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
-		const result = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
-		);
-		const success = result.data.success;
-		const searchResults = result.data.search;
-
-		assert.strictEqual( success, 1 );
-		assert( searchResults.length > 0 );
-	} );
-
-	it( 'can add a federated property and it shows up in the ui', async () => {
+	before( 'can add a federated property', async () => {
 		const data = {
 			claims: [
 				{
@@ -36,8 +25,21 @@ describe( 'Fed props Item', function () {
 				}
 			]
 		};
-		await WikibaseApi.createItem( getTestString( itemLabel ), data );
+		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
+	} );
 
+	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
+		const result = await browser.makeRequest(
+			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
+		);
+		const success = result.data.success;
+		const searchResults = result.data.search;
+
+		assert.strictEqual( success, 1 );
+		assert( searchResults.length > 0 );
+	} );
+
+	it( 'an added federated property shows up in the ui', async () => {
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 
 		const actualPropertyValue = await $(
