@@ -4,6 +4,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import { CreateItemRequestData } from '../../helpers/types/create-item-request-data.js';
 
 describe( 'Fed Props Item', function () {
 	const propertyId = 'P213';
@@ -12,12 +13,12 @@ describe( 'Fed Props Item', function () {
 	const itemLabel = 'T267743-';
 
 	before( 'can add a federated property', async () => {
-		const data = {
+		const data: CreateItemRequestData = {
 			claims: [
 				{
 					mainsnak: {
 						snaktype: 'value',
-						property: 'http://www.wikidata.org/entity/P213',
+						property: `http://www.wikidata.org/entity/${propertyId}`,
 						datavalue: { value: propertyValue, type: 'string' }
 					},
 					type: 'statement',
@@ -28,9 +29,9 @@ describe( 'Fed Props Item', function () {
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 	} );
 
-	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
+	it( 'should search wikidata.org through wbsearchentities with no local properties', async () => {
 		const result = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
+			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${propertyValue}&format=json&language=en&type=property`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -39,7 +40,7 @@ describe( 'Fed Props Item', function () {
 		assert( searchResults.length > 0 );
 	} );
 
-	it( 'an added federated property shows up in the ui', async () => {
+	it( 'Should show an added federated property in the ui', async () => {
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 
 		const actualPropertyValue = await $(
@@ -53,7 +54,7 @@ describe( 'Fed Props Item', function () {
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
 		try {
 			await browser.makeRequest(
-				process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.ttl'
+				`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.ttl`
 			);
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
@@ -63,7 +64,7 @@ describe( 'Fed Props Item', function () {
 
 	it( 'should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.json'
+			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
 		const body = response.data;
 
@@ -76,7 +77,7 @@ describe( 'Fed Props Item', function () {
 	it( 'should NOT show up in Special:EntityData with rdf', async () => {
 		try {
 			await browser.makeRequest(
-				process.env.MW_SERVER + '/wiki/Special:EntityData/Q1.rdf'
+				`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.rdf`
 			);
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
@@ -125,6 +126,6 @@ describe( 'Fed Props Item', function () {
 		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) ) );
 		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) ) );
 
-		assert( !( await QueryServiceUI.resultIncludes( 'p:P213' ) ) );
+		assert( !( await QueryServiceUI.resultIncludes( `p:${propertyId}` ) ) );
 	} );
 } );
