@@ -1,22 +1,24 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import listPropertiesPage from '../../helpers/pages/special/list-properties.page.js';
+import { Claim } from '../../helpers/types/create-item-request-data.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
 	const itemLabel = 'T267743-';
 	const NUM_PROPERTIES = 25;
 
-	it( 'can add many federated properties and it shows up in the ui', async () => {
-		await browser.url(
-			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
-		);
-		await $( 'ol.special li a' );
-
-		const links = ( await $$( 'ol.special li a' ) ).slice( 0, NUM_PROPERTIES );
+	it( 'can add many federated properties', async () => {
+		await listPropertiesPage.openParams( {
+			server: 'https://www.wikidata.org',
+			dataType: 'string',
+			limit: NUM_PROPERTIES
+		} );
+		const links = await $$( 'ol.special li a' );
 
 		const claims = await Promise.all(
-			links.map( async ( link ) => {
+			links.map( async ( link ): Promise<Claim> => {
 				const linkHref = await link.getAttribute( 'href' );
 				const prop = `http://www.wikidata.org/entity/${linkHref.replace(
 					'/wiki/Property:',
@@ -37,7 +39,9 @@ describe( 'Property Prefetching', function () {
 
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
+	} );
 
+	it( 'can show added federated properties in the ui', async () => {
 		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'

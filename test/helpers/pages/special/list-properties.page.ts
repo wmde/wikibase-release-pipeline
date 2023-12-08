@@ -10,16 +10,18 @@ class SpecialListProperties extends Page {
 	}
 
 	public async openParams( params: {
+		server?: string ;
 		dataType?: string;
 		limit?: number;
 		offset?: number;
 	} ): Promise<void> {
+		const server = params.server ?? process.env.MW_SERVER;
 		const dataType = 'datatype=' + ( params.dataType ?? '' );
 		const limit = 'limit=' + ( params.limit ?? 50 );
 		const offset = 'offset=' + ( params.offset ?? 0 );
 
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
+			`${server}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
 		await this.content;
