@@ -1,7 +1,7 @@
-import TestEnvironment from '../../setup/TestEnvironment.js';
+import TestEnv from '../../setup/TestEnv.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnvironment.createAppendingToDefaults( {
+export const testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'confirm_edit',
 	specs: [
 		'specs/confirm_edit/*.ts'

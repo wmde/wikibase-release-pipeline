@@ -1,4 +1,4 @@
-import TestEnvironment from '../../setup/TestEnvironment.js';
+import TestEnv from '../../setup/TestEnv.js';
 import { Frameworks } from '@wdio/types';
 
 export type TestSuiteSettings = {
@@ -22,33 +22,33 @@ export type TestRunnerSettings = {
 
 export type TestHooks = {
 	// Runs immediately after testEnv is created but before it is ran
-	onPrepare?( testEnv?: TestEnvironment ): Promise<void>;
+	onPrepare?( testEnv?: TestEnv ): Promise<void>;
 	// Runs before services are started but after `outputDir` is
 	// cleared and BEFORE existing services are stopped
-	beforeServices?( testEnv?: TestEnvironment ): Promise<void>;
+	beforeServices?( testEnv?: TestEnv ): Promise<void>;
 	// Runs after services are started
-	afterServices?( testEnv?: TestEnvironment ): Promise<void>;
+	afterServices?( testEnv?: TestEnv ): Promise<void>;
 	// Runs after services are started and available (waitForItURLs all respond true)
-	afterServicesAvailable?( testEnv?: TestEnvironment ): Promise<void>;
+	afterServicesAvailable?( testEnv?: TestEnv ): Promise<void>;
 	// Runs once at the beginning of each spec file (before each WDIO runner)
-	before?( testEnv?: TestEnvironment ): Promise<void>;
+	before?( testEnv?: TestEnv ): Promise<void>;
 	// Runs before every Mocha "suite" (`describe` blocks)
-	beforeMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnvironment ): Promise<void>;
+	beforeMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnv ): Promise<void>;
 	// Runs at the start of every WDIO worker
-	beforeTest?( mochaTest: Frameworks.Test, testEnv?: TestEnvironment ): Promise<void>;
+	beforeTest?( mochaTest: Frameworks.Test, testEnv?: TestEnv ): Promise<void>;
 	// Runs at the end of every WDIO worker
-	afterTest?( mochaTest: Frameworks.Test, testEnv?: TestEnvironment ): Promise<void>;
+	afterTest?( mochaTest: Frameworks.Test, testEnv?: TestEnv ): Promise<void>;
 	// Runs after every Mocha "suite" (`describe` blocks)
-	afterMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnvironment ): Promise<void>;
+	afterMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnv ): Promise<void>;
 	// Runs once at the end of each spec file (after each WDIO runner)
-	after?( testEnv?: TestEnvironment ): Promise<void>;
+	after?( testEnv?: TestEnv ): Promise<void>;
 	// Executed after all workers have shut down and the process is about to exit
-	onComplete?( testEnv?: TestEnvironment ): Promise<void>;
+	onComplete?( testEnv?: TestEnv ): Promise<void>;
 };
 
-export type TestEnvironmentSettings = {
+export type TestEnvSettings = {
 	composeFiles?: string[];
-	waitForURLs?( testEnv?: TestEnvironment ): string[];
+	waitForURLs?( testEnv?: TestEnv ): string[];
 	envFiles?: string[];
 };
 
@@ -56,6 +56,6 @@ export type TestSettings =
 	TestSuiteSettings &
 	TestRunnerSettings &
 	TestHooks &
-	TestEnvironmentSettings;
+	TestEnvSettings;
 
 export default TestSettings;

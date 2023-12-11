@@ -7,8 +7,8 @@ import logger, { Logger } from '@wdio/logger';
 import envVars from './envVars.js';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
 
-export default class TestEnvironment {
-	private static instance: TestEnvironment;
+export default class TestEnv {
+	private static instance: TestEnv;
 	public settings: TestSettings;
 	public vars: Record<string,string>;
 	public testLog: Logger
@@ -16,22 +16,19 @@ export default class TestEnvironment {
 
 	public static createAppendingToDefaults(
 		providedSettings: Partial<TestSettings>
-	): TestEnvironment {
+	): TestEnv {
 		const settings = makeSettingsAppendingToDefaults( providedSettings );
 		return new this( settings );
 	}
 
 	public static createWithDefaults(
 		providedSettings: Partial<TestSettings>
-	): TestEnvironment {
+	): TestEnv {
 		const settings = makeSettings( providedSettings );
 		return new this( settings );
 	}
 
 	public constructor( settings?: TestSettings ) {
-		if ( TestEnvironment.instance ) {
-			return TestEnvironment.instance;
-		}
 		if ( !settings ) {
 			throw new Error(
 				'Settings are required to create a new Test Environment instance'
@@ -43,7 +40,6 @@ export default class TestEnvironment {
 		this.testLog = logger( 'test-testEnv' );
 		this.testLog.setDefaultLevel( 'debug' );
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
-		TestEnvironment.instance = this;
 	}
 
 	public async up(): Promise<void> {
@@ -57,7 +53,7 @@ export default class TestEnvironment {
 			this.resetOutputDir();
 			await this.settings.beforeServices( this );
 
-			console.log( '▶️  Bringing up test testEnv' );
+			console.log( '▶️  Bringing up test environment' );
 
 			this.stopServices();
 			this.startServices();

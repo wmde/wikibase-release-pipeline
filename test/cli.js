@@ -3,7 +3,7 @@ import lodash from 'lodash';
 import chalk from 'chalk';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { versions } from './suites/upgrade/upgrade.conf.js';
+import { versions } from './suites/upgrade/versions.js';
 
 export const allSuiteNames = [
 	'repo',

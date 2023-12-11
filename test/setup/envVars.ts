@@ -27,6 +27,7 @@ function loadEnvFile(
 export function loadEnvFiles(
 	envFilePaths: string[]
 ): Record<string, string> {
+	envVars = {};
 	envFilePaths
 		.filter( ( envFilePath ) => envFilePath )
 		.forEach( ( envFilePath ) => {

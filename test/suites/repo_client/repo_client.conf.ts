@@ -1,8 +1,8 @@
-import TestEnvironment from '../../setup/TestEnvironment.js';
+import TestEnv from '../../setup/TestEnv.js';
 import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnvironment.createAppendingToDefaults( {
+export const testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'repo_client',
 	specs: [
 		'specs/repo_client/*.ts',

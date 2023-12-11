@@ -2,7 +2,7 @@ import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
-import TestEnvironment from '../setup/TestEnvironment.js';
+import TestEnv from '../setup/TestEnv.js';
 import { TestSettings } from './types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from './types/binding.js';
@@ -11,7 +11,7 @@ import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
 
-export function defaultFunctions( testEnv: TestEnvironment ): void {
+export function defaultFunctions( testEnv: TestEnv ): void {
 	const settings: TestSettings = testEnv.settings;
 
 	/**
