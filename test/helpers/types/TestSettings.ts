@@ -1,4 +1,3 @@
-import TestEnv from '../../setup/TestEnv.js';
 import { Frameworks } from '@wdio/types';
 
 export type TestSuiteSettings = {
@@ -19,33 +18,33 @@ export type TestRunnerSettings = {
 
 export type TestHooks = {
 	// Runs immediately after testEnv is created but before it is ran
-	onPrepare?( testEnv?: TestEnv ): Promise<void>;
+	onPrepare?(): Promise<void>;
 	// Runs before services are started but after `outputDir` is
 	// cleared and BEFORE existing services are stopped
-	beforeServices?( testEnv?: TestEnv ): Promise<void>;
+	beforeServices?(): Promise<void>;
 	// Runs after services are started
-	afterServices?( testEnv?: TestEnv ): Promise<void>;
+	afterServices?(): Promise<void>;
 	// Runs after services are started and available (waitForItURLs all respond true)
-	afterServicesAvailable?( testEnv?: TestEnv ): Promise<void>;
+	afterServicesAvailable?(): Promise<void>;
 	// Runs once at the beginning of each spec file (before each WDIO runner)
-	before?( testEnv?: TestEnv ): Promise<void>;
+	before?(): Promise<void>;
 	// Runs before every Mocha "suite" (`describe` blocks)
-	beforeMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnv ): Promise<void>;
+	beforeMochaSuite?( mochaSuite: Frameworks.Suite ): Promise<void>;
 	// Runs at the start of every WDIO worker
-	beforeTest?( mochaTest: Frameworks.Test, testEnv?: TestEnv ): Promise<void>;
+	beforeTest?( mochaTest: Frameworks.Test ): Promise<void>;
 	// Runs at the end of every WDIO worker
-	afterTest?( mochaTest: Frameworks.Test, testEnv?: TestEnv ): Promise<void>;
+	afterTest?( mochaTest: Frameworks.Test ): Promise<void>;
 	// Runs after every Mocha "suite" (`describe` blocks)
-	afterMochaSuite?( mochaSuite: Frameworks.Suite, testEnv?: TestEnv ): Promise<void>;
+	afterMochaSuite?( mochaSuite: Frameworks.Suite ): Promise<void>;
 	// Runs once at the end of each spec file (after each WDIO runner)
-	after?( testEnv?: TestEnv ): Promise<void>;
+	after?(): Promise<void>;
 	// Executed after all workers have shut down and the process is about to exit
-	onComplete?( testEnv?: TestEnv ): Promise<void>;
+	onComplete?(): Promise<void>;
 };
 
 export type TestEnvSettings = {
 	composeFiles?: string[];
-	waitForURLs?( testEnv?: TestEnv ): string[];
+	waitForURLs?(): string[];
 	envFiles?: string[];
 	vars: Record<string, string>;
 };

@@ -1,5 +1,4 @@
 import { SevereServiceError } from 'webdriverio';
-import TestEnv from './TestEnv.js';
 import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
@@ -23,7 +22,8 @@ export const defaultEnvFiles: string[] = [
 	'../local.env'
 ];
 
-export const defaultWaitForURLs = ( { vars }: TestEnv ): string[] => {
+export const defaultWaitForURLs = (): string[] => {
+	const { vars } = testEnv;
 	return ( [
 		`${vars.WIKIBASE_URL}/wiki/Main_Page`,
 		`${vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
@@ -31,11 +31,11 @@ export const defaultWaitForURLs = ( { vars }: TestEnv ): string[] => {
 	] );
 };
 
-export const defaultOnPrepare = async ( testEnv: TestEnv ): Promise<void> => {
+export const defaultOnPrepare = async (): Promise<void> => {
 	await testEnv.up();
 };
 
-export const defaultBeforeServices = async ( testEnv: TestEnv ): Promise<void> => {
+export const defaultBeforeServices = async (): Promise<void> => {
 	testEnv.vars.WIKIBASE_TEST_IMAGE_URL = testEnv.settings.isBaseSuite ?
 		testEnv.vars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
 		testEnv.vars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
@@ -61,9 +61,9 @@ export const defaultBeforeServices = async ( testEnv: TestEnv ): Promise<void> =
 	}
 };
 
-export const defaultBefore = async ( testEnv: TestEnv ): Promise<void> => {
+export const defaultBefore = async (): Promise<void> => {
 	try {
-		defaultFunctionsInit( testEnv );
+		defaultFunctionsInit();
 
 		await WikibaseApi.initialize(
 			undefined,
@@ -75,10 +75,7 @@ export const defaultBefore = async ( testEnv: TestEnv ): Promise<void> => {
 	}
 };
 
-export const defaultAfterTest = async (
-	mochaTest: Frameworks.Test,
-	testEnv: TestEnv
-): Promise<void> => {
+export const defaultAfterTest = async ( mochaTest: Frameworks.Test ): Promise<void> => {
 	const testFile = encodeURIComponent(
 		mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 	);
@@ -92,12 +89,12 @@ export const defaultAfterTest = async (
 	}
 };
 
-export const defaultOnComplete = async ( testEnv: TestEnv ): Promise<void> => {
+export const defaultOnComplete = async (): Promise<void> => {
 	await testEnv.down();
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	// NOTE: The values from the loaded env files are put on the testEnv global
+	// NOTE: The values from the loaded env files are put on global.testEnv
 	// to better isolate the test-service testEnv from the parent process.
 	// To use these variables in spec files:
 	//   testEnv.vars.WIKIBASE_URL
@@ -152,44 +149,44 @@ export function makeSettingsAppendingToDefaults(
 			...defaultEnvFiles,
 			...( providedSettings.envFiles ? providedSettings.envFiles : [] )
 		],
-		waitForURLs: ( testEnv ) => {
-			let waitForUrls = defaultWaitForURLs( testEnv );
+		waitForURLs: () => {
+			let waitForUrls = defaultWaitForURLs();
 			if ( providedSettings.waitForURLs ) {
 				waitForUrls = [
 					...waitForUrls,
-					...providedSettings.waitForURLs( testEnv )
+					...providedSettings.waitForURLs()
 				];
 			}
 			return waitForUrls;
 		},
-		onPrepare: async ( testEnv ) => {
-			await defaultOnPrepare( testEnv );
+		onPrepare: async () => {
+			await defaultOnPrepare();
 			if ( providedSettings.onPrepare ) {
-				await providedSettings.onPrepare( testEnv );
+				await providedSettings.onPrepare();
 			}
 		},
-		beforeServices: async ( testEnv ) => {
-			await defaultBeforeServices( testEnv );
+		beforeServices: async () => {
+			await defaultBeforeServices();
 			if ( providedSettings.beforeServices ) {
-				await providedSettings.beforeServices( testEnv );
+				await providedSettings.beforeServices();
 			}
 		},
-		before: async ( testEnv ) => {
-			await defaultBefore( testEnv );
+		before: async () => {
+			await defaultBefore();
 			if ( providedSettings.before ) {
-				await providedSettings.before( testEnv );
+				await providedSettings.before();
 			}
 		},
-		afterTest: async ( mochaTest, testEnv ) => {
-			await defaultAfterTest( mochaTest, testEnv );
+		afterTest: async ( mochaTest ) => {
+			await defaultAfterTest( mochaTest );
 			if ( providedSettings.afterTest ) {
-				await providedSettings.afterTest( mochaTest, testEnv );
+				await providedSettings.afterTest( mochaTest );
 			}
 		},
-		onComplete: async ( testEnv ) => {
-			await defaultOnComplete( testEnv );
+		onComplete: async () => {
+			await defaultOnComplete();
 			if ( providedSettings.onComplete ) {
-				await providedSettings.onComplete( testEnv );
+				await providedSettings.onComplete();
 			}
 		}
 	};

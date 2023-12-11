@@ -86,51 +86,51 @@ export function wdioConfig(): WebdriverIO.Config {
 
 		onPrepare: async () => {
 			if ( settings.onPrepare ) {
-				await settings.onPrepare( testEnv );
+				await settings.onPrepare();
 			}
 		},
 
 		before: async () => {
 			if ( settings.before ) {
-				await settings.before( testEnv );
+				await settings.before();
 			}
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
 			testEnv.testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
 			if ( settings.beforeMochaSuite ) {
-				await settings.beforeMochaSuite( mochaSuite, testEnv );
+				await settings.beforeMochaSuite( mochaSuite );
 			}
 		},
 
 		beforeTest: async function ( mochaTest ) {
 			testEnv.testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
 			if ( settings.beforeTest ) {
-				await settings.beforeTest( mochaTest, testEnv );
+				await settings.beforeTest( mochaTest );
 			}
 		},
 
 		afterTest: async function ( mochaTest ) {
 			if ( settings.afterTest ) {
-				await settings.afterTest( mochaTest, testEnv );
+				await settings.afterTest( mochaTest );
 			}
 		},
 
 		afterSuite: async ( mochaSuite ) => {
 			if ( settings.afterMochaSuite ) {
-				await settings.afterMochaSuite( mochaSuite, testEnv );
+				await settings.afterMochaSuite( mochaSuite );
 			}
 		},
 
 		after: async () => {
 			if ( settings.after ) {
-				await settings.after( testEnv );
+				await settings.after();
 			}
 		},
 
 		onComplete: async () => {
 			if ( settings.onComplete ) {
-				await settings.onComplete( testEnv );
+				await settings.onComplete();
 			}
 		}
 	};

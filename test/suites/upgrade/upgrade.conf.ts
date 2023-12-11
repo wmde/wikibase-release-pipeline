@@ -22,26 +22,27 @@ global.testEnv = TestEnv.createWithDefaults( {
 		...defaultEnvFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForURLs: ( { vars } ) => ( [
-		`${vars.WIKIBASE_URL}/wiki/Main_Page`
+	waitForURLs: () => ( [
+		`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`
 	] ),
-	beforeServices: async ( { settings, vars } ) => {
+	beforeServices: async () => {
 		const fromVersion = process.env.FROM_VERSION;
 		const toVersion = process.env.TO_VERSION;
 
-		settings.isBaseSuite = !(
+		testEnv.settings.isBaseSuite = !(
 			( toVersion && toVersion.includes( '_BUNDLE' ) ) ||
 			( !toVersion && fromVersion.includes( '_BUNDLE' ) )
 		);
 
-		vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
+		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
 		console.log( `ℹ️  Upgrading FROM Wikibase Docker image: ${versions[ fromVersion ]}` );
 
-		process.env.TO_VERSION = toVersion || `LOCAL_BUILD${settings.isBaseSuite ? '' : '_BUNDLE'}`;
+		process.env.TO_VERSION = toVersion ||
+			`LOCAL_BUILD${testEnv.settings.isBaseSuite ? '' : '_BUNDLE'}`;
 
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts#before where toVersion is used
-		await defaultBeforeServices( testEnv );
+		await defaultBeforeServices();
 	}
 } );
 

@@ -28,7 +28,7 @@ describe( 'Wikibase upgrade', function () {
 		// Make sure services are settled and available again
 		await testEnv.waitForServices();
 		// Repeat WDIO initialization with new services up
-		await testEnv.settings.before( testEnv );
+		await testEnv.settings.before();
 	} );
 
 	it( 'Should be able to create many properties and items', async () => {

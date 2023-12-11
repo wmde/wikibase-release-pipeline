@@ -8,12 +8,11 @@ import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSetting
 
 declare global {
 	// eslint-disable-next-line no-var, no-use-before-define
-	var testEnv: unknown | TestEnv;
+	var testEnv: TestEnv | undefined;
 }
 
 export default class TestEnv {
 	public settings: TestSettings;
-	public vars: Record<string, string>;
 	public testLog: Logger;
 	public baseDockerComposeCmd: string;
 
@@ -39,10 +38,13 @@ export default class TestEnv {
 		}
 
 		this.settings = settings;
-		this.vars = settings.vars;
 		this.testLog = logger( 'test-env' );
 		this.testLog.setDefaultLevel( 'debug' );
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
+	}
+
+	public get vars(): Record<string, string> {
+		return this.settings.vars;
 	}
 
 	public async up(): Promise<void> {
@@ -54,7 +56,7 @@ export default class TestEnv {
 			} );
 
 			this.resetOutputDir();
-			await this.settings.beforeServices( this );
+			await this.settings.beforeServices();
 
 			console.log( '▶️  Bringing up the test environment' );
 
@@ -77,7 +79,7 @@ export default class TestEnv {
 	}
 
 	public async waitForServices(): Promise<void[]> {
-		return Promise.all( this.settings.waitForURLs( this ).map(
+		return Promise.all( this.settings.waitForURLs().map(
 			async ( waitForURL: string ): Promise<void> => {
 				await checkIfUp( waitForURL, this.settings.testTimeout );
 				this.testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
