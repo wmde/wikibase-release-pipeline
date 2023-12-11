@@ -1,4 +1,3 @@
-import envVars from '../../../setup/envVars.js';
 import SubmittablePage from '../submittable.page.js';
 
 class SpecialNewProperty extends SubmittablePage {
@@ -21,7 +20,7 @@ class SpecialNewProperty extends SubmittablePage {
 	public async open( dataType?: string ): Promise<void> {
 		dataType = dataType ? '?datatype=' + dataType : '';
 		await browser.url(
-			`${envVars.WIKIBASE_URL}/wiki/Special:NewProperty${dataType}`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:NewProperty${dataType}`
 		);
 		await this.labelInput;
 		await this.descriptionInput;

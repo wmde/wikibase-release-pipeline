@@ -2,7 +2,6 @@ import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import Binding from '../../helpers/types/binding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
@@ -11,7 +10,7 @@ describe( 'Wikibase post upgrade', function () {
 	let newPropertyId: string;
 
 	beforeEach( function () {
-		if ( envVars.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
+		if ( testEnv.vars.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
 			this.skip();
 		}
 	} );
@@ -55,11 +54,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			envVars.WIKIBASE_URL + '/prop/' + newPropertyId,
+			testEnv.vars.WIKIBASE_URL + '/prop/' + newPropertyId,
 			bindings
 		);
 		const property = getElementByURI(
-			envVars.WIKIBASE_URL + '/prop/direct/' + newPropertyId,
+			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + newPropertyId,
 			bindings
 		);
 

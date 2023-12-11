@@ -1,8 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
-import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createAppendingToDefaults( {
+global.testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'quickstatements',
 	specs: [
 		'specs/repo_client/interwiki-links.ts',
@@ -11,10 +10,10 @@ export const testEnv = TestEnv.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
-	waitForURLs: () => ( [
-		envVars.QUICKSTATEMENTS_URL,
-		envVars.WIKIBASE_CLIENT_URL
+	waitForURLs: ( { vars } ) => ( [
+		vars.QUICKSTATEMENTS_URL,
+		vars.WIKIBASE_CLIENT_URL
 	] )
 } );
 
-export const config = wdioConfig( testEnv );
+export const config = wdioConfig();

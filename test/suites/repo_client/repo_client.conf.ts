@@ -1,8 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
-import envVars from '../../setup/envVars.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createAppendingToDefaults( {
+global.testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'repo_client',
 	specs: [
 		'specs/repo_client/*.ts',
@@ -11,9 +10,9 @@ export const testEnv = TestEnv.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/repo_client/docker-compose.override.yml'
 	],
-	waitForURLs: () => ( [
-		envVars.WIKIBASE_CLIENT_URL
+	waitForURLs: ( { vars } ) => ( [
+		vars.WIKIBASE_CLIENT_URL
 	] )
 } );
 
-export const config = wdioConfig( testEnv );
+export const config = wdioConfig();

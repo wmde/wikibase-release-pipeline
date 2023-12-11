@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -39,7 +38,7 @@ describe( 'Property Prefetching', function () {
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -65,7 +64,7 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render history page list within threshold', async () => {
 		await browser.url(
-			`${envVars.WIKIBASE_URL}/wiki/Item:${itemId}?action=history`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}?action=history`
 		);
 		await $( '#pagehistory' );
 
@@ -78,7 +77,7 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render recent changes list within threshold', async () => {
 		await browser.url(
-			`${envVars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
 		await $( 'ul.special' );
 

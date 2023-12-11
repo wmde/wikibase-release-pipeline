@@ -1,22 +1,21 @@
 import { spawnSync } from 'child_process';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { versions, testEnv } from '../../suites/upgrade/upgrade.conf.js';
+import { versions } from '../../suites/upgrade/versions.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
 	before( async () => {
 		// === Set image for current local build of wikibase
-		envVars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.TO_VERSION ];
-		console.log( `ℹ️  Using Wikibase Docker image: ${envVars.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
+		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.TO_VERSION ];
+		console.log( `ℹ️  Upgrading TO Wikibase Docker image: ${testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
 
 		// === Fix for LocalSettings.php (see notes in the script)
 		spawnSync(
 			'specs/upgrade/recreateLocalSettings.sh',
-			{ shell: true, stdio: 'inherit', env: { ...envVars, PATH: process.env.PATH } }
+			{ shell: true, stdio: 'inherit', env: { ...testEnv.vars, PATH: process.env.PATH } }
 		);
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
@@ -64,7 +63,7 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			`${envVars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
+			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -76,12 +75,12 @@ describe( 'Wikibase upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${oldItemID}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${oldItemID}` );
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			`${envVars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
 		);
 		const body = response.data;
 

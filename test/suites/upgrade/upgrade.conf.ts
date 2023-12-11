@@ -1,11 +1,11 @@
 import TestEnv from '../../setup/TestEnv.js';
-import envVars from '../../setup/envVars.js';
 import { defaultBeforeServices, defaultEnvFiles } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
+import versions from './versions.js';
 
 // TODO: Explore what happened with WDQS in upgrade tests
 
-export const testEnv = TestEnv.createWithDefaults( {
+global.testEnv = TestEnv.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
@@ -22,11 +22,10 @@ export const testEnv = TestEnv.createWithDefaults( {
 		...defaultEnvFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForURLs: () => ( [
-		`${envVars.WIKIBASE_URL}/wiki/Main_Page`
+	waitForURLs: ( { vars } ) => ( [
+		`${vars.WIKIBASE_URL}/wiki/Main_Page`
 	] ),
-	beforeServices: async ( testEnv ) => {
-		const settings = testEnv.settings;
+	beforeServices: async ( { settings, vars } ) => {
 		const fromVersion = process.env.FROM_VERSION;
 		const toVersion = process.env.TO_VERSION;
 
@@ -35,8 +34,8 @@ export const testEnv = TestEnv.createWithDefaults( {
 			( !toVersion && fromVersion.includes( '_BUNDLE' ) )
 		);
 
-		envVars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
-		console.log( `ℹ️  Using Wikibase Docker image: ${versions[ fromVersion ]}` );
+		vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
+		console.log( `ℹ️  Upgrading FROM Wikibase Docker image: ${versions[ fromVersion ]}` );
 
 		process.env.TO_VERSION = toVersion || `LOCAL_BUILD${settings.isBaseSuite ? '' : '_BUNDLE'}`;
 
@@ -46,4 +45,4 @@ export const testEnv = TestEnv.createWithDefaults( {
 	}
 } );
 
-export const config = wdioConfig( testEnv );
+export const config = wdioConfig();

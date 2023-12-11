@@ -1,13 +1,13 @@
 import { SevereServiceError } from 'webdriverio';
-import TestEnvironment from './TestEnvironment.js';
+import TestEnv from './TestEnv.js';
 import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
-import envVars, { loadEnvFiles } from './envVars.js';
+import loadEnvFiles from './loadEnvFiles.js';
 import loadLocalDockerImage from './loadLocalDockerImage.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 import TestSettings, {
-	TestEnvironmentSettings,
+	TestEnvSettings,
 	TestHooks,
 	TestRunnerSettings,
 	TestSuiteSettings
@@ -23,50 +23,52 @@ export const defaultEnvFiles: string[] = [
 	'../local.env'
 ];
 
-export const defaultWaitForURLs = (): string[] => ( [
-	`${envVars.WIKIBASE_URL}/wiki/Main_Page`,
-	`${envVars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
-	envVars.WDQS_FRONTEND_URL
-] );
+export const defaultWaitForURLs = ( { vars }: TestEnv ): string[] => {
+	return ( [
+		`${vars.WIKIBASE_URL}/wiki/Main_Page`,
+		`${vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
+		vars.WDQS_FRONTEND_URL
+	] );
+};
 
-export const defaultOnPrepare = async ( testEnv: TestEnvironment ): Promise<void> => {
+export const defaultOnPrepare = async ( testEnv: TestEnv ): Promise<void> => {
 	await testEnv.up();
 };
 
-export const defaultBeforeServices = async ( { settings }: TestEnvironment ): Promise<void> => {
-	envVars.WIKIBASE_TEST_IMAGE_URL = settings.isBaseSuite ?
-		envVars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
-		envVars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
+export const defaultBeforeServices = async ( testEnv: TestEnv ): Promise<void> => {
+	testEnv.vars.WIKIBASE_TEST_IMAGE_URL = testEnv.settings.isBaseSuite ?
+		testEnv.vars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
+		testEnv.vars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
 
 	const defaultImageUrls = [
-		envVars.WIKIBASE_TEST_IMAGE_URL,
-		envVars.WIKIBASE_SUITE_WDQS_IMAGE_URL,
-		envVars.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
-		envVars.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
+		testEnv.vars.WIKIBASE_TEST_IMAGE_URL,
+		testEnv.vars.WIKIBASE_SUITE_WDQS_IMAGE_URL,
+		testEnv.vars.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
+		testEnv.vars.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
 	];
 	const extraImageUrls = [
-		envVars.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
-		envVars.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
+		testEnv.vars.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
+		testEnv.vars.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
 	];
 
 	defaultImageUrls.forEach( ( defaultImageUrl ) =>
 		loadLocalDockerImage( defaultImageUrl as string ) );
 
-	if ( !settings.isBaseSuite ) {
+	if ( !testEnv.settings.isBaseSuite ) {
 		extraImageUrls.forEach( ( extraImageUrl ) =>
 			loadLocalDockerImage( extraImageUrl as string )
 		);
 	}
 };
 
-export const defaultBefore = async ( testEnv: TestEnvironment ): Promise<void> => {
+export const defaultBefore = async ( testEnv: TestEnv ): Promise<void> => {
 	try {
 		defaultFunctionsInit( testEnv );
 
 		await WikibaseApi.initialize(
 			undefined,
-			envVars.MW_ADMIN_NAME,
-			envVars.MW_ADMIN_PASS
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
 		);
 	} catch ( e ) {
 		throw new SevereServiceError( e );
@@ -75,7 +77,7 @@ export const defaultBefore = async ( testEnv: TestEnvironment ): Promise<void> =
 
 export const defaultAfterTest = async (
 	mochaTest: Frameworks.Test,
-	testEnv: TestEnvironment
+	testEnv: TestEnv
 ): Promise<void> => {
 	const testFile = encodeURIComponent(
 		mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
@@ -83,22 +85,23 @@ export const defaultAfterTest = async (
 	const screenshotFilename = `${testFile}__${mochaTest.title}`;
 
 	try {
-		saveScreenshot( screenshotFilename, testEnv.settings.screenshotPath );
+		saveScreenshot( screenshotFilename, `${testEnv.settings.outputDir}/screenshots` );
 	} catch ( error ) {
 		console.error( 'failed writing screenshot ...' );
 		console.error( error );
 	}
 };
 
-export const defaultOnComplete = async ( testEnv: TestEnvironment ): Promise<void> => {
+export const defaultOnComplete = async ( testEnv: TestEnv ): Promise<void> => {
 	await testEnv.down();
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	// NOTE: The values from the loaded env files are put into the envVars singleton
-	// to better isolate the test-service testEnv from the parent process
-	loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
-
+	// NOTE: The values from the loaded env files are put on the testEnv global
+	// to better isolate the test-service testEnv from the parent process.
+	// To use these variables in spec files:
+	//   testEnv.vars.WIKIBASE_URL
+	const testEnvVars = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,
 		isBaseSuite: providedSettings.isBaseSuite,
@@ -111,11 +114,8 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
 		waitForTimeout: parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		baseUrl: envVars.WIKIBASE_URL + envVars.MW_SCRIPT_PATH,
 		pwd: process.env.HOST_PWD || process.cwd(),
-		outputDir,
-		resultFilePath: `${outputDir}/result.json`,
-		screenshotPath: `${outputDir}/screenshots`
+		outputDir
 	};
 	const testHooks: TestHooks = {
 		onPrepare: providedSettings.onPrepare || defaultOnPrepare,
@@ -124,9 +124,11 @@ export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSet
 		afterTest: providedSettings.afterTest || defaultAfterTest,
 		onComplete: providedSettings.onComplete || defaultOnComplete
 	};
-	const testEnvironmentSettings: TestEnvironmentSettings = {
+	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: providedSettings.composeFiles || defaultComposeFiles,
-		waitForURLs: providedSettings.waitForURLs || defaultWaitForURLs
+		waitForURLs: providedSettings.waitForURLs || defaultWaitForURLs,
+		envFiles: providedSettings.envFiles || defaultEnvFiles,
+		vars: testEnvVars
 	};
 
 	return {
@@ -151,7 +153,7 @@ export function makeSettingsAppendingToDefaults(
 			...( providedSettings.envFiles ? providedSettings.envFiles : [] )
 		],
 		waitForURLs: ( testEnv ) => {
-			let waitForUrls = defaultWaitForURLs();
+			let waitForUrls = defaultWaitForURLs( testEnv );
 			if ( providedSettings.waitForURLs ) {
 				waitForUrls = [
 					...waitForUrls,

@@ -1,7 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createWithDefaults( {
+global.testEnv = TestEnv.createWithDefaults( {
 	name: 'example',
 	specs: [
 		'specs/quickstatements/*.ts',
@@ -23,4 +23,4 @@ export const testEnv = TestEnv.createWithDefaults( {
 	}
 } );
 
-export const config = wdioConfig( testEnv );
+export const config = wdioConfig();

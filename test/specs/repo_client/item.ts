@@ -4,7 +4,6 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../helpers/types/external-change.js';
-import envVars from '../../setup/envVars.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -16,12 +15,12 @@ describe( 'Item', function () {
 
 	beforeEach( async () => {
 		await browser.waitForJobs();
-		await browser.waitForJobs( envVars.WIKIBASE_CLIENT_URL );
+		await browser.waitForJobs( testEnv.vars.WIKIBASE_CLIENT_URL );
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
 		await browser.url(
-			envVars.WIKIBASE_CLIENT_URL + '/wiki/Special:NewItem?uselang=qqx'
+			testEnv.vars.WIKIBASE_CLIENT_URL + '/wiki/Special:NewItem?uselang=qqx'
 		);
 		const notFoundText = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
@@ -29,7 +28,7 @@ describe( 'Item', function () {
 
 	it( 'Special:NewItem should be visible on repo', async () => {
 		await browser.url(
-			envVars.WIKIBASE_URL + '/wiki/Special:NewItem?uselang=qqx'
+			testEnv.vars.WIKIBASE_URL + '/wiki/Special:NewItem?uselang=qqx'
 		);
 		const createNewItem = await $( 'h1#firstHeading' ).getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
@@ -53,7 +52,7 @@ describe( 'Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -62,7 +61,7 @@ describe( 'Item', function () {
 	// creates usage
 	it( 'Should be able to use the item on client with wikitext', async () => {
 		const bodyText = await browser.editPage(
-			envVars.WIKIBASE_CLIENT_URL,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			pageTitle,
 			`{{#statements:${propertyId}|from=${itemId}}}`
 		);
@@ -75,7 +74,7 @@ describe( 'Item', function () {
 	it( 'Should be able to create site-links from item to client', async () => {
 		// Create a site-link on a the Main_Page
 		await browser.url(
-			`${envVars.WIKIBASE_URL}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
 		);
 		await $( '#wb-setsitelink-submit button' ).click();
 
@@ -97,7 +96,7 @@ describe( 'Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			envVars.WIKIBASE_CLIENT_URL,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			expectedSiteLinkChange
 		);
 
@@ -106,7 +105,7 @@ describe( 'Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( envVars.MW_ADMIN_NAME, envVars.MW_ADMIN_PASS );
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -116,7 +115,7 @@ describe( 'Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
@@ -131,7 +130,7 @@ describe( 'Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			envVars.WIKIBASE_CLIENT_URL,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			expectedTestDeletionChange
 		);
 

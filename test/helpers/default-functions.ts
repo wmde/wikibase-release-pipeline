@@ -14,6 +14,14 @@ import LuaCPUValue from './types/lua-cpu-value.js';
 export function defaultFunctions( testEnv: TestEnv ): void {
 	const settings: TestSettings = testEnv.settings;
 
+	// ======
+	// Custom WDIO config specific to MediaWiki
+	// ======
+	// Use in a test as `browser.options.<key>`.
+
+	// Base for browser.url() and Page#openTitle()
+	browser.options.baseUrl = testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
+
 	/**
 	 * Make a get request to get full request response
 	 */
@@ -295,11 +303,12 @@ export function defaultFunctions( testEnv: TestEnv ): void {
 
 /**
  * Get installed extensions on wiki (for given server URL)
+ *
+ * @param {string} serverUrl
  */
 export async function getInstalledExtensions( serverUrl: string ): Promise<string[] | undefined> {
 	const result = await browser.makeRequest(
 		`${serverUrl}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 	);
 	return lodash.map( result.data.query.extensions, 'name' );
-};
-
+}

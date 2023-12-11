@@ -1,4 +1,3 @@
-import envVars from '../../../setup/envVars.js';
 import Page from '../page.js';
 
 class Property extends Page {
@@ -13,7 +12,7 @@ class Property extends Page {
 	}
 
 	public async open( id: string ): Promise<void> {
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Property:${id}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Property:${id}` );
 	}
 }
 

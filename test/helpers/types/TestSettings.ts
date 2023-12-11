@@ -13,11 +13,8 @@ export type TestRunnerSettings = {
 	testTimeout?: number;
 	waitForTimeout?: number;
 	maxInstances: number;
-	baseUrl: string;
 	pwd: string;
 	outputDir: string;
-	resultFilePath: string;
-	screenshotPath: string;
 };
 
 export type TestHooks = {
@@ -50,6 +47,7 @@ export type TestEnvSettings = {
 	composeFiles?: string[];
 	waitForURLs?( testEnv?: TestEnv ): string[];
 	envFiles?: string[];
+	vars: Record<string, string>;
 };
 
 export type TestSettings =

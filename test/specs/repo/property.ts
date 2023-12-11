@@ -1,7 +1,6 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Property from '../../helpers/pages/entity/property.page.js';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Property', function () {
 	let propertyId: string = null;
@@ -46,7 +45,7 @@ describe( 'Property', function () {
 
 	it( 'Should contain statement and reference in EntityData', async () => {
 		const response = await browser.makeRequest(
-			`${envVars.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
 		);
 		const body = response.data;
 		const claim = body.entities[ propertyId ].claims[ propertyId ][ 0 ];

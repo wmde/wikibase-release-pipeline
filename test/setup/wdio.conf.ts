@@ -9,24 +9,15 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import type { Capabilities } from '@wdio/types';
 import JsonReporter from '../helpers/json-reporter.js';
-import TestEnvironment from './TestEnvironment.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig( testEnv: TestEnvironment ): WebdriverIO.Config {
+export function wdioConfig(): WebdriverIO.Config {
 	const settings = testEnv.settings;
 
 	return {
 		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
-
-		// ======
-		// Custom WDIO config specific to MediaWiki
-		// ======
-		// Use in a test as `browser.options.<key>`.
-
-		// Base for browser.url() and Page#openTitle()
-		baseUrl: settings.baseUrl,
 
 		hostname: 'browser',
 		port: 4444,
@@ -78,7 +69,7 @@ export function wdioConfig( testEnv: TestEnvironment ): WebdriverIO.Config {
 				JsonReporter,
 				{
 					suiteName: settings.name,
-					resultFilePath: settings.resultFilePath
+					resultFilePath: `${settings.outputDir}/result.json`
 				}
 			]
 		],

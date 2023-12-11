@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-export let envVars: Record<string, string> = {};
-
 function loadEnvFile(
 	envFilePath: string,
 	providedEnvvars: Record<string, string> = {}
@@ -24,10 +22,10 @@ function loadEnvFile(
 	return envVarsResult.parsed;
 }
 
-export function loadEnvFiles(
+export default function loadEnvFiles(
 	envFilePaths: string[]
 ): Record<string, string> {
-	envVars = {};
+	let envVars = {};
 	envFilePaths
 		.filter( ( envFilePath ) => envFilePath )
 		.forEach( ( envFilePath ) => {
@@ -36,5 +34,3 @@ export function loadEnvFiles(
 
 	return envVars;
 }
-
-export default envVars;

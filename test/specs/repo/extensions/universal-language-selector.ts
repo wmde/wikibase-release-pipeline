@@ -1,5 +1,4 @@
 import assert from 'assert';
-import envVars from '../../../setup/envVars.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {
@@ -7,7 +6,7 @@ describe( 'UniversalLanguageSelector', function () {
 	} );
 
 	it( 'Should be able to see the language selector menu', async () => {
-		await browser.url( envVars.WIKIBASE_URL );
+		await browser.url( testEnv.vars.WIKIBASE_URL );
 		await $( '#searchInput' ).click();
 		await $( '.imeselector' ).click();
 

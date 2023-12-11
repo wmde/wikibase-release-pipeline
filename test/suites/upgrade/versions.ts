@@ -1,4 +1,3 @@
-
 export const versions = {
 	WMDE9: 'wikibase/wikibase:1.37.6-wmde.9',
 	WMDE9_BUNDLE: 'wikibase/wikibase-bundle:1.37.6-wmde.9',

@@ -1,12 +1,11 @@
 import assert from 'assert';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		await browser.url( `${envVars.WIKIBASE_URL}/wiki/Special:Version` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Version` );
 		const text = await $( '#sv-software' ).getText();
 		assert.strictEqual(
-			text.includes( `MediaWiki ${envVars.MEDIAWIKI_VERSION}` ),
+			text.includes( `MediaWiki ${testEnv.vars.MEDIAWIKI_VERSION}` ),
 			true
 		);
 	} );
@@ -43,7 +42,7 @@ describe( 'Special:Version', function () {
 
 			it( `Should contain ${name} extensions`, async function () {
 				await browser.skipIfExtensionNotPresent( this, name );
-				await browser.url( `${envVars.WIKIBASE_URL}/wiki/Special:Version` );
+				await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Version` );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = await $(

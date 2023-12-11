@@ -1,6 +1,5 @@
 import { readFile } from 'fs/promises';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
-import envVars from '../../../setup/envVars.js';
 
 describe( 'SyntaxHighlight', function () {
 	beforeEach( async function () {
@@ -13,12 +12,12 @@ describe( 'SyntaxHighlight', function () {
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 
 		await browser.editPage(
-			envVars.WIKIBASE_URL,
+			testEnv.vars.WIKIBASE_URL,
 			'Module:Olives',
 			fileContents
 		);
 
-		await browser.url( envVars.WIKIBASE_URL + '/wiki/Module:Olives' );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
 		await $( '.mw-highlight' );

@@ -1,5 +1,4 @@
 import assert from 'assert';
-import envVars from '../../../setup/envVars.js';
 
 describe( 'WikibaseManifest', function () {
 	beforeEach( async function () {
@@ -8,17 +7,17 @@ describe( 'WikibaseManifest', function () {
 
 	it( 'Should have rest endpoint and data', async () => {
 		const result = await browser.makeRequest(
-			envVars.WIKIBASE_URL + '/w/rest.php/wikibase-manifest/v0/manifest'
+			testEnv.vars.WIKIBASE_URL + '/w/rest.php/wikibase-manifest/v0/manifest'
 		);
 		const data = result.data;
 
 		assert.strictEqual( 'wikibase-docker', data.name );
 
-		assert.strictEqual( envVars.WIKIBASE_URL + '/w/api.php', data.api.action );
-		assert.strictEqual( envVars.WIKIBASE_URL + '/w/rest.php', data.api.rest );
+		assert.strictEqual( testEnv.vars.WIKIBASE_URL + '/w/api.php', data.api.action );
+		assert.strictEqual( testEnv.vars.WIKIBASE_URL + '/w/rest.php', data.api.rest );
 
 		assert.strictEqual(
-			envVars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration',
+			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration',
 			data.oauth.registration_page
 		);
 	} );

@@ -1,5 +1,4 @@
-import { spawnSync } from 'child_process';
-import TestEnvironment from './TestEnvironment.js';
+import { SpawnSyncReturns, spawnSync } from 'child_process';
 
 // https://regex101.com/r/eK9lPd/3
 // eslint-disable-next-line security/detect-unsafe-regex
@@ -8,9 +7,8 @@ export const dockerImageUrlRegExp = /^(?<Name>(?<=^)(?:(?<Domain>(?:(?:localhost
 export const loadLocalDockerImage = (
 	dockerImageURL: string,
 	reload: boolean = false
-): void => {
+): SpawnSyncReturns<string> => {
 	try {
-		const testEnv = new TestEnvironment();
 		const dockerImageUrlMatch = dockerImageUrlRegExp.exec( dockerImageURL );
 
 		if ( dockerImageUrlMatch.groups.Repo ) {
@@ -27,6 +25,7 @@ export const loadLocalDockerImage = (
 				}
 
 				testEnv.testLog.debug( result );
+				return result;
 			}
 		}
 	} catch ( e ) {

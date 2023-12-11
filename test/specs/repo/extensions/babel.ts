@@ -1,18 +1,16 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import envVars from '../../../setup/envVars.js';
-
 describe( 'Babel', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Babel' );
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await LoginPage.login( envVars.MW_ADMIN_NAME, envVars.MW_ADMIN_PASS );
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
-			envVars.WIKIBASE_URL,
-			'User:' + envVars.MW_ADMIN_NAME,
+			testEnv.vars.WIKIBASE_URL,
+			'User:' + testEnv.vars.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);
 

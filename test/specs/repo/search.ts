@@ -1,6 +1,5 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import envVars from '../../setup/envVars.js';
 
 describe( 'Search', function () {
 	it( 'Should be able to create an item and search for it', async () => {
@@ -13,7 +12,7 @@ describe( 'Search', function () {
 		await browser.pause( 2000 );
 
 		const result = await browser.makeRequest(
-			`${envVars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
 		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );

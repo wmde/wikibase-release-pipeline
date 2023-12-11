@@ -4,14 +4,17 @@ import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../helpers/types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
 import logger, { Logger } from '@wdio/logger';
-import envVars from './envVars.js';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
 
+declare global {
+	// eslint-disable-next-line no-var, no-use-before-define
+	var testEnv: unknown | TestEnv;
+}
+
 export default class TestEnv {
-	private static instance: TestEnv;
 	public settings: TestSettings;
-	public vars: Record<string,string>;
-	public testLog: Logger
+	public vars: Record<string, string>;
+	public testLog: Logger;
 	public baseDockerComposeCmd: string;
 
 	public static createAppendingToDefaults(
@@ -31,13 +34,13 @@ export default class TestEnv {
 	public constructor( settings?: TestSettings ) {
 		if ( !settings ) {
 			throw new Error(
-				'Settings are required to create a new Test Environment instance'
+				'Settings are required to create a Test Environment'
 			);
 		}
 
 		this.settings = settings;
-		this.vars = envVars;
-		this.testLog = logger( 'test-testEnv' );
+		this.vars = settings.vars;
+		this.testLog = logger( 'test-env' );
 		this.testLog.setDefaultLevel( 'debug' );
 		this.baseDockerComposeCmd = this.makeBaseDockerComposeCmd();
 	}
@@ -53,7 +56,7 @@ export default class TestEnv {
 			this.resetOutputDir();
 			await this.settings.beforeServices( this );
 
-			console.log( '▶️  Bringing up test environment' );
+			console.log( '▶️  Bringing up the test environment' );
 
 			this.stopServices();
 			this.startServices();
@@ -91,7 +94,7 @@ export default class TestEnv {
 			stdio: 'pipe',
 			shell: true,
 			encoding: 'utf-8',
-			env: { ...envVars, OUTPUT_DIR: this.settings.outputDir }
+			env: { ...this.vars, OUTPUT_DIR: this.settings.outputDir }
 		} );
 
 		this.testLog.debug( result.stdout );

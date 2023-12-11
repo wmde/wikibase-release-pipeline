@@ -30,7 +30,7 @@ declare namespace WebdriverIO {
 			host: string,
 			title: string,
 			content: Buffer | string,
-			captcha?: string,	
+			captcha?: string,
 		) => Promise<string>;
 
 		/**
