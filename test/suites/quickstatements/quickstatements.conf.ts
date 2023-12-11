@@ -10,9 +10,9 @@ global.testEnv = TestEnv.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/quickstatements/docker-compose.override.yml'
 	],
-	waitForURLs: ( { vars } ) => ( [
-		vars.QUICKSTATEMENTS_URL,
-		vars.WIKIBASE_CLIENT_URL
+	waitForURLs: () => ( [
+		testEnv.vars.QUICKSTATEMENTS_URL,
+		testEnv.vars.WIKIBASE_CLIENT_URL
 	] )
 } );
 

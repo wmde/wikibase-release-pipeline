@@ -9,8 +9,8 @@ global.testEnv = TestEnv.createAppendingToDefaults( {
 	composeFiles: [
 		'suites/elasticsearch/docker-compose.override.yml'
 	],
-	waitForURLs: ( { vars } ) => ( [
-		`http://${vars.MW_ELASTIC_HOST}:${testEnv.vars.MW_ELASTIC_PORT}`
+	waitForURLs: () => ( [
+		`http://${testEnv.vars.MW_ELASTIC_HOST}:${testEnv.vars.MW_ELASTIC_PORT}`
 	] )
 } );
 
