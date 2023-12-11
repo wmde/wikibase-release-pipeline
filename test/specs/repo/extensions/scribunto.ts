@@ -1,12 +1,11 @@
 import assert from 'assert';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'Scribunto', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
+		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
 	it( 'Should be able to execute lua module', async () => {

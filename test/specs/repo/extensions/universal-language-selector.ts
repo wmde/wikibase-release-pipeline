@@ -1,10 +1,9 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
+		await browser.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
 	} );
 
 	it( 'Should be able to see the language selector menu', async () => {

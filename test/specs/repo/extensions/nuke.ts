@@ -1,12 +1,11 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async function () {
+		await browser.skipIfExtensionNotPresent( this, 'Nuke' );
 		await browser.waitForJobs();
-		await skipIfExtensionNotPresent( this, 'Nuke' );
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async function () {

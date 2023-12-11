@@ -1,10 +1,9 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'WikibaseManifest', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'WikibaseManifest' );
+		await browser.skipIfExtensionNotPresent( this, 'WikibaseManifest' );
 	} );
 
 	it( 'Should have rest endpoint and data', async () => {

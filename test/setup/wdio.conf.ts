@@ -14,9 +14,7 @@ import TestEnvironment from './TestEnvironment.js';
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-const testEnv = new TestEnvironment();
-
-export function wdioConfig( throwAway: TestEnvironment ): WebdriverIO.Config {
+export function wdioConfig( testEnv: TestEnvironment ): WebdriverIO.Config {
 	const settings = testEnv.settings;
 
 	return {

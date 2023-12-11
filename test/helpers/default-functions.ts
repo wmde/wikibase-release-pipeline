@@ -11,10 +11,7 @@ import DatabaseConfig from './types/database-config.js';
 import ExternalChange from './types/external-change.js';
 import LuaCPUValue from './types/lua-cpu-value.js';
 
-export function defaultFunctions( throwawaytestEnv: TestEnvironment ): void {
-	const testEnv = new TestEnvironment();
-	console.log(testEnv.vars)
-
+export function defaultFunctions( testEnv: TestEnvironment ): void {
 	const settings: TestSettings = testEnv.settings;
 
 	/**
@@ -75,15 +72,28 @@ export function defaultFunctions( throwawaytestEnv: TestEnvironment ): void {
 	);
 
 	/**
-	 * Get installed extensions on wiki
+	 * Skip test if extension is not installed (present) on the Wikibase server
 	 */
 	browser.addCommand(
-		'getInstalledExtensions',
-		async ( server: string ): Promise<string[] | undefined> => {
-			const result = await browser.makeRequest(
-				`${server}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
+		'skipIfExtensionNotPresent',
+		async (
+			test: Context,
+			extension: string
+		): Promise<void> => {
+			const installedExtensions = await getInstalledExtensions(
+				testEnv.vars.WIKIBASE_URL
 			);
-			return lodash.map( result.data.query.extensions, 'name' );
+			if ( !installedExtensions || installedExtensions.length === 0 ) {
+				return;
+			} else if (
+				installedExtensions &&
+				installedExtensions.includes( 'WikibaseRepository' ) &&
+				installedExtensions.includes( extension )
+			) {
+				return;
+			} else {
+				test.skip();
+			}
 		}
 	);
 
@@ -283,24 +293,13 @@ export function defaultFunctions( throwawaytestEnv: TestEnvironment ): void {
 	);
 }
 
-export async function skipIfExtensionNotPresent(
-	test: Context,
-	extension: string
-): Promise<void> {
-	const testEnv = new TestEnvironment();
-
-	const installedExtensions = await browser.getInstalledExtensions(
-		testEnv.vars.WIKIBASE_URL
+/**
+ * Get installed extensions on wiki (for given server URL)
+ */
+export async function getInstalledExtensions( serverUrl: string ): Promise<string[] | undefined> {
+	const result = await browser.makeRequest(
+		`${serverUrl}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 	);
-	if ( !installedExtensions || installedExtensions.length === 0 ) {
-		return;
-	} else if (
-		installedExtensions &&
-		installedExtensions.includes( 'WikibaseRepository' ) &&
-		installedExtensions.includes( extension )
-	) {
-		return;
-	} else {
-		test.skip();
-	}
-}
+	return lodash.map( result.data.query.extensions, 'name' );
+};
+

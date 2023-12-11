@@ -2,6 +2,7 @@ declare namespace WebdriverIO {
 	type AxiosResponse = import( 'axios' ).AxiosResponse;
 	type Binding = import( './binding.js' ).default;
 	type BotResponse = import( './bot-response.js' ).default;
+	type Context = import( 'mocha' ).Context;
 	type DatabaseConfig = import( './database-config.js' ).default;
 	type ExternalChange = import( './external-change.js' ).default;
 	type LuaCPUValue = import( './lua-cpu-value.js' ).default;
@@ -18,13 +19,18 @@ declare namespace WebdriverIO {
 		deleteClaim: ( claimGuid: string ) => Promise<BotResponse>;
 
 		/**
+		 * Skip test if extension is not installed (present) on the Wikibase server
+		 */
+		skipIfExtensionNotPresent: ( test: Context, extension: string ) => Promise<void>;
+
+		/**
 		 * Creates or edits a page with content
 		 */
 		editPage: (
 			host: string,
 			title: string,
 			content: Buffer | string,
-			captcha?: string,
+			captcha?: string,	
 		) => Promise<string>;
 
 		/**
@@ -39,11 +45,6 @@ declare namespace WebdriverIO {
 			host: string,
 			expectedChange: ExternalChange,
 		) => Promise<ExternalChange | null>;
-
-		/**
-		 * Get installed extensions on wiki
-		 */
-		getInstalledExtensions: ( server: string ) => Promise<string[] | undefined>;
 
 		/**
 		 * Makes a request to a page and returns the lua cpu profiling data

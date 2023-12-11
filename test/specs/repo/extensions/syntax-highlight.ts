@@ -1,12 +1,11 @@
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'SyntaxHighlight', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
-		await skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
+		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
+		await browser.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 	} );
 
 	it( 'Should highlight lua script', async () => {

@@ -1,11 +1,10 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'Babel', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Babel' );
+		await browser.skipIfExtensionNotPresent( this, 'Babel' );
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {

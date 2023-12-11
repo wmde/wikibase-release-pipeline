@@ -1,10 +1,9 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'VisualEditor' );
+		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
 	} );
 
 	it( 'Should be able to edit a page using the editor', async () => {

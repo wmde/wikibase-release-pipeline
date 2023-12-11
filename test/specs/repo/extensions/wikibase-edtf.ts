@@ -1,11 +1,10 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import envVars from '../../../setup/envVars.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+		await browser.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 	} );
 
 	it( 'Should allow to create and use the EDTF property', async () => {

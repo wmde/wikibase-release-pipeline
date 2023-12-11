@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import envVars from '../../../setup/envVars.js';
 
@@ -9,7 +8,7 @@ describe( 'EntitySchema', function () {
 	const testDescription = 'A description';
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'EntitySchema' );
+		await browser.skipIfExtensionNotPresent( this, 'EntitySchema' );
 	} );
 
 	it( 'Should be able to create an EntitySchema', async () => {

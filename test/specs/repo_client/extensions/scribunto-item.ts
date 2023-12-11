@@ -3,7 +3,6 @@ import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../helpers/types/external-change.js';
@@ -17,7 +16,7 @@ describe( 'Scribunto Item', function () {
 	const luaPageTitle = 'RepoClientLuaTest';
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
+		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
 	it( 'Should create an item on repo', async () => {

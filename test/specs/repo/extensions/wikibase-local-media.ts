@@ -1,6 +1,5 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import envVars from '../../../setup/envVars.js';
 
@@ -8,7 +7,7 @@ describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		await browser.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 	} );
 
 	it( 'Should allow to upload an image', async () => {

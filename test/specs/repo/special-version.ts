@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
 import envVars from '../../setup/envVars.js';
 
 describe( 'Special:Version', function () {
@@ -43,8 +42,7 @@ describe( 'Special:Version', function () {
 			const name = extension;
 
 			it( `Should contain ${name} extensions`, async function () {
-				await skipIfExtensionNotPresent( this, name );
-
+				await browser.skipIfExtensionNotPresent( this, name );
 				await browser.url( `${envVars.WIKIBASE_URL}/wiki/Special:Version` );
 
 				// /wiki/Special:Version generate these for each installed extension
