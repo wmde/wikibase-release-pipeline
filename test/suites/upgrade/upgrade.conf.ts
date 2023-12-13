@@ -5,7 +5,7 @@ import versions from './versions.js';
 
 // TODO: Explore what happened with WDQS in upgrade tests
 
-global.testEnv = TestEnv.createWithDefaults( {
+const testEnv = TestEnv.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
@@ -46,4 +46,4 @@ global.testEnv = TestEnv.createWithDefaults( {
 	}
 } );
 
-export const config = wdioConfig();
+export const config = wdioConfig( testEnv );

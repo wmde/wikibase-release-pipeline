@@ -1,7 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-global.testEnv = TestEnv.createAppendingToDefaults( {
+const testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'base__repo_client',
 	isBaseSuite: true,
 	specs: [
@@ -17,4 +17,4 @@ global.testEnv = TestEnv.createAppendingToDefaults( {
 	] )
 } );
 
-export const config = wdioConfig();
+export const config = wdioConfig( testEnv );

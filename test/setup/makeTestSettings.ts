@@ -94,10 +94,8 @@ export const defaultOnComplete = async (): Promise<void> => {
 };
 
 export const makeSettings = ( providedSettings: Partial<TestSettings> ): TestSettings => {
-	// NOTE: The values from the loaded env files are put on global.testEnv
-	// to better isolate the test-service testEnv from the parent process.
-	// To use these variables in spec files:
-	//   testEnv.vars.WIKIBASE_URL
+	// NOTE: The values from these env files are put in testEnv.vars
+	// to better isolate the test-service testEnv from the parent process
 	const testEnvVars = loadEnvFiles( providedSettings.envFiles || defaultEnvFiles );
 	const testSuiteSettings: TestSuiteSettings = {
 		name: providedSettings.name,

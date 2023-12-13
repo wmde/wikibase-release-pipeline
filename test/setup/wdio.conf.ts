@@ -9,11 +9,13 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import type { Capabilities } from '@wdio/types';
 import JsonReporter from '../helpers/json-reporter.js';
+import TestEnv from './TestEnv.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
-export function wdioConfig(): WebdriverIO.Config {
+export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
+	global.testEnv = providedTestEnv;
 	const settings = testEnv.settings;
 
 	return {

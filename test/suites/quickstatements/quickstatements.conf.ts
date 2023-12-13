@@ -1,7 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-global.testEnv = TestEnv.createAppendingToDefaults( {
+const testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'quickstatements',
 	specs: [
 		'specs/repo_client/interwiki-links.ts',
@@ -16,4 +16,4 @@ global.testEnv = TestEnv.createAppendingToDefaults( {
 	] )
 } );
 
-export const config = wdioConfig();
+export const config = wdioConfig( testEnv );
