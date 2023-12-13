@@ -23,11 +23,10 @@ export const defaultEnvFiles: string[] = [
 ];
 
 export const defaultWaitForURLs = (): string[] => {
-	const { vars } = testEnv;
 	return ( [
-		`${vars.WIKIBASE_URL}/wiki/Main_Page`,
-		`${vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
-		vars.WDQS_FRONTEND_URL
+		`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`,
+		`${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
+		testEnv.vars.WDQS_FRONTEND_URL
 	] );
 };
 
