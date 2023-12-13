@@ -5,7 +5,7 @@ import versions from './versions.js';
 
 // TODO: Explore what happened with WDQS in upgrade tests
 
-const testEnv = TestEnv.createWithDefaults( {
+export const testEnv = TestEnv.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',

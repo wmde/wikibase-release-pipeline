@@ -1,7 +1,7 @@
 import TestEnv from '../../setup/TestEnv.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-const testEnv = TestEnv.createAppendingToDefaults( {
+export const testEnv = TestEnv.createAppendingToDefaults( {
 	name: 'elasticsearch',
 	specs: [
 		'specs/elasticsearch/*.ts'
