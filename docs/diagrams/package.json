@@ -1,20 +1,20 @@
 {
-  "name": "wikibase-release-process-diagrams",
-  "version": "0.1.0",
-  "description": "TODO",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^10.6.1",
-    "eslint": "^8.55.0",
-    "eslint-config-wikimedia": "0.26.0",
-    "eslint-plugin-compat": "^4.2.0"
-  },
-  "dependencies": {
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21"
-  },
-  "scripts": {
-    "lint": "npx eslint .",
-    "fix": "npx eslint . --fix"
-  }
+	"name": "wikibase-release-process-diagrams",
+	"version": "0.1.0",
+	"description": "TODO",
+	"license": "BSD-3-Clause",
+	"devDependencies": {
+		"@mermaid-js/mermaid-cli": "^10.6.1",
+		"eslint": "^8.55.0",
+		"eslint-config-wikimedia": "0.26.0",
+		"eslint-plugin-compat": "^4.2.0"
+	},
+	"dependencies": {
+		"js-yaml": "^4.1.0",
+		"lodash": "^4.17.21"
+	},
+	"scripts": {
+		"lint": "npx eslint .",
+		"fix": "npx eslint . --fix"
+	}
 }

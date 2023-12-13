@@ -1,3 +1,4 @@
+/* eslint-disable es-x/no-array-prototype-with */
 'use strict';
 
 const fs = require( 'fs' );

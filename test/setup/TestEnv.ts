@@ -96,7 +96,7 @@ export default class TestEnv {
 			stdio: 'pipe',
 			shell: true,
 			encoding: 'utf-8',
-			env: { ...this.vars, OUTPUT_DIR: this.settings.outputDir }
+			env: { ...this.vars, OUTPUT_DIR: this.settings.outputDir, PATH: process.env.PATH }
 		} );
 
 		this.testLog.debug( result.stdout );
