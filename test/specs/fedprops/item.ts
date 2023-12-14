@@ -6,9 +6,10 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import { CreateItemRequestData } from '../../helpers/types/create-item-request-data.js';
 
+type TestProperty = { id: string; value: string };
+
 describe( 'Fed Props Item', function () {
-	const propertyId = 'P213';
-	const propertyValue = 'ISNI';
+	const testProperty: TestProperty = { id: 'P213', value: 'ISNI' };
 	let itemId: string;
 	const itemLabel = 'T267743-';
 
@@ -18,8 +19,8 @@ describe( 'Fed Props Item', function () {
 				{
 					mainsnak: {
 						snaktype: 'value',
-						property: `http://www.wikidata.org/entity/${propertyId}`,
-						datavalue: { value: propertyValue, type: 'string' }
+						property: `http://www.wikidata.org/entity/${testProperty.id}`,
+						datavalue: { value: testProperty.value, type: 'string' }
 					},
 					type: 'statement',
 					rank: 'normal'
@@ -31,7 +32,7 @@ describe( 'Fed Props Item', function () {
 
 	it( 'should search wikidata.org through wbsearchentities with no local properties', async () => {
 		const result = await browser.makeRequest(
-			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${propertyValue}&format=json&language=en&type=property`
+			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${testProperty.value}&format=json&language=en&type=property`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -46,7 +47,7 @@ describe( 'Fed Props Item', function () {
 		const actualPropertyValue = await $(
 			'.wikibase-statementgroupview-property'
 		).getText();
-		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
+		assert( actualPropertyValue.includes( testProperty.value ) ); // value is the label
 
 		await ItemPage.addStatementLink;
 	} );
@@ -87,7 +88,7 @@ describe( 'Fed Props Item', function () {
 
 	it( 'should NOT show property in queryservice ui after creation using prefixes', async () => {
 		const prefixes = [ 'prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ];
-		const query = `SELECT * WHERE{ ?s fpwdt:${propertyId} ?o }`;
+		const query = `SELECT * WHERE{ ?s fpwdt:${testProperty.id} ?o }`;
 
 		await QueryServiceUI.open( query, prefixes );
 
@@ -102,7 +103,7 @@ describe( 'Fed Props Item', function () {
 		assert(
 			!( await QueryServiceUI.resultIncludes(
 				`<${process.env.MW_SERVER}/entity/${itemId}>`,
-				propertyValue
+				testProperty.value
 			) )
 		);
 	} );
@@ -126,6 +127,6 @@ describe( 'Fed Props Item', function () {
 		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) ) );
 		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) ) );
 
-		assert( !( await QueryServiceUI.resultIncludes( `p:${propertyId}` ) ) );
+		assert( !( await QueryServiceUI.resultIncludes( `p:${testProperty.id}` ) ) );
 	} );
 } );
