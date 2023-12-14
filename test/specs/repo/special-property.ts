@@ -1,7 +1,7 @@
 import assert from 'assert';
 import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
-import WikibasePropertyType from '../../helpers/types/wikibase-property-type.js';
+import WikibasePropertyType from '../../types/wikibase-property-type.js';
 import {
 	wikibasePropertyItem,
 	wikibasePropertyString

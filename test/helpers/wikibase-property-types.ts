@@ -1,4 +1,4 @@
-import WikibasePropertyType from './types/wikibase-property-type.js';
+import WikibasePropertyType from '../types/wikibase-property-type.js';
 
 export const wikibasePropertyItem: WikibasePropertyType = {
 	name: 'Item',
