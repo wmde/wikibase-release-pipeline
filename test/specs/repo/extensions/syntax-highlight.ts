@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import { utf8 } from '../../../helpers/read-file-encoding.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'SyntaxHighlight', function () {
 	beforeEach( async function () {
