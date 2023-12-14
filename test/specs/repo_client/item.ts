@@ -3,7 +3,7 @@ import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ExternalChange from '../../helpers/types/external-change.js';
+import ExternalChange from '../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
 
