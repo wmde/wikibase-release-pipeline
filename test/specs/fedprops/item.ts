@@ -4,7 +4,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import { CreateItemRequestData } from '../../helpers/types/create-item-request-data.js';
+import { CreateItemRequestData } from '../../types/create-item-request-data.js';
 
 type TestProperty = { id: string; value: string };
 
