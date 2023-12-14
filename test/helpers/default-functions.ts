@@ -4,11 +4,11 @@ import { exec } from 'child_process';
 import lodash from 'lodash';
 import { Context } from 'mocha';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import DatabaseConfig from '../types/database-config.js';
+import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';
+import DatabaseConfig from '../types/database-config.js';
 import ExternalChange from '../types/external-change.js';
 import LuaCPUValue from '../types/lua-cpu-value.js';
-import Binding from '../types/binding.js';
 
 export function defaultFunctions(): void {
 	/**

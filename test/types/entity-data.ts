@@ -16,6 +16,6 @@ export type Claim = {
 type Entity = {
 	claims: Record<string, Claim[]>;
 };
-export type SpecialEntityData = {
+export type EntityData = {
 	entities: Record<string, Entity>;
 };

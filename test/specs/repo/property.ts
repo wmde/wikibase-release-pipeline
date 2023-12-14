@@ -2,15 +2,11 @@ import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Property from '../../helpers/pages/entity/property.page.js';
 import {
-	Claim,
-	Reference,
-	SpecialEntityData
-} from '../../types/special-entity-data.js';
-import WikibasePropertyType from '../../types/wikibase-property-type.js';
-import {
 	wikibasePropertyItem,
 	wikibasePropertyString
 } from '../../helpers/wikibase-property-types.js';
+import { Claim, EntityData, Reference } from '../../types/entity-data.js';
+import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
@@ -84,7 +80,7 @@ describe( 'Property', () => {
 				const response = await browser.makeRequest(
 					`${process.env.MW_SERVER}/wiki/Special:EntityData/${propertyId}.json`
 				);
-				const body: SpecialEntityData = response.data;
+				const body: EntityData = response.data;
 				const claim: Claim =
 					body.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
 				const reference: Reference =

@@ -1,8 +1,8 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import WikibasePropertyType from '../../types/wikibase-property-type.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
+import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyString ];
 
