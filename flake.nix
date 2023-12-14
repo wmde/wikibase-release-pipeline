@@ -37,7 +37,7 @@
             echo "$ ./test.sh"
             echo "$ ./test.sh repo"
             echo "$ ./test.sh repo --spec special-item"
-            echo "$ make test-upgrade VERSION=wmde.9"
+            echo "$ ./test.sh upgrade WMDE9"
             echo
             echo "Example Instance Commands:"
             echo "$ docker compose \\"

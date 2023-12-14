@@ -8,7 +8,7 @@ It contains a set of build targets defined in the [Makefile](./Makefile) which c
 
 When [building](docs/topics/pipeline.md), use the [build.sh](build.sh) script.
 
-For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targets.
+For [testing](docs/topics/testing.md), you can use `./test.sh <test-suite-name>`, and `./test.sh all`. Type simply `./test.sh` to get help for other CLI options.
 
 ## Quick reference
 
@@ -37,7 +37,7 @@ $ ./build.sh --no-cache wdqs
 $ ./test.sh
 $ ./test.sh repo
 $ ./test.sh repo --spec special-item
-$ make test-upgrade VERSION=wmde.9
+$ ./test.sh upgrade WMDE9
 ```
 
 ### Example Instance Commands

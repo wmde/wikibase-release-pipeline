@@ -25,21 +25,19 @@ In order to test your own instances of the services, make sure to set the follow
 
 ## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/suites/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/suites/upgrade/versions.ts` and the newly built base version. Runs the `upgrade` suite.
 
 ```
-make test-upgrade VERSION=wmde.0
+./test.sh upgrade WMDE0
 ```
-
-To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE` variable.
-
+or
 ```
-make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE=wikibase-bundle
+./test.sh upgrade WMDE0_BUNDLE
 ```
 
 ## Test the example
 
-Tests the example configuration by running the `example` suite against it.
+Tests the example configuration by running the `example` test suite.
 
 ```
 ./test.sh example
