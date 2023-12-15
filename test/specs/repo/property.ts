@@ -25,25 +25,25 @@ describe( 'Property', () => {
 				stringPropertyId = await WikibaseApi.createProperty(
 					wikibasePropertyString.urlName
 				);
-			} );
-
-			beforeEach( async () => {
 				await browser.waitForJobs();
-				await Property.open( propertyId );
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
+				await Property.open( propertyId );
 				await Property.addStatement.click();
 				// fill out property id for statement
 				await browser.keys( stringPropertyId );
-				await browser.waitForJobs();
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'STATEMENT' );
-				await Property.save.click();
+				await Property.saveStatement.click();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
-				await $( '=STATEMENT' );
+				// Reloads page every ~1 sec until value is found or timeout is reached
+				await browser.waitUntil( async () => {
+					await Property.open( propertyId );
+					return $( '=STATEMENT' );
+				} );
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
 				).getText();
@@ -51,16 +51,22 @@ describe( 'Property', () => {
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
+				await Property.open( propertyId );
 				await Property.addReference.click();
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE' );
-				await Property.save.click();
+				await Property.saveStatement.click();
 			} );
 
 			it( 'Should be able to see added reference', async () => {
+				// Reloads page every ~1 sec until value is found or timeout is reached
+				await browser.waitUntil( async () => {
+					await Property.open( propertyId );
+					return $( '=1 reference' );
+				} );
 				await $( '=1 reference' ).click();
 				await $( '=REFERENCE' );
 			} );
