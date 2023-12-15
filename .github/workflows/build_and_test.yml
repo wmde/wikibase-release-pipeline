@@ -164,10 +164,6 @@ jobs:
         timeout-minutes: 10
         run: ./test.sh upgrade ${{ matrix.version }}
 
-      - name: Show Docker Logs
-        if: always()
-        run: test/scripts/docker_logs.sh
-
       # TODO: DRY
       - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
