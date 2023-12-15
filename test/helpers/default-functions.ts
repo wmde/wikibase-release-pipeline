@@ -289,7 +289,7 @@ export function defaultFunctions(): void {
 						{}
 					);
 					jobsInQueue = result.data.query.statistics.jobs;
-
+					testEnv.testLog.info( `waitForJobs: ${jobsInQueue} currently in queue}` );
 					return jobsInQueue === 0;
 				},
 				{
