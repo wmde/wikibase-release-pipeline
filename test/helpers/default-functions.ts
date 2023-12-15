@@ -26,12 +26,17 @@ export function defaultFunctions(): void {
 	 */
 	browser.addCommand(
 		'makeRequest',
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		( url: string, params?: any, postData?: any ): Promise<AxiosResponse> => {
+		async (
+			url: string,
+			params?: Record<string, unknown>,
+			postData?: Record<string, unknown>
+		): Promise<Partial<AxiosResponse>> => {
 			if ( postData ) {
-				return axios.post( url, postData, params );
+				const { data, status } = await axios.post( url, postData, params );
+				return { data, status };
 			} else {
-				return axios.get( url, params );
+				const { data, status } = await axios.get( url, params );
+				return { data, status };
 			}
 		}
 	);
