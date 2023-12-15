@@ -48,7 +48,6 @@ describe( 'Property', () => {
 
 			it( 'Should be able to see added statement', async () => {
 				await $( '=STATEMENT' );
-
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
 				).getText();
@@ -65,7 +64,7 @@ describe( 'Property', () => {
 				await browser.keys( 'REFERENCE'.split( '' ) );
 
 				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
+				await browser.pause( 2000 * 1 );
 				await Property.save.click();
 
 				await browser.waitForJobs();
@@ -78,7 +77,7 @@ describe( 'Property', () => {
 
 			it( 'Should contain statement and reference in EntityData', async () => {
 				const response = await browser.makeRequest(
-					`${process.env.MW_SERVER}/wiki/Special:EntityData/${propertyId}.json`
+					`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
 				);
 				const body: EntityData = response.data;
 				const claim: Claim =
