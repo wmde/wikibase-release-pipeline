@@ -37,7 +37,7 @@ describe( 'Property', () => {
 				// see: https://phabricator.wikimedia.org/T353520
 				// eslint-disable-next-line wdio/no-pause
 				await browser.pause( 2000 * 1 );
-			});
+			} );
 
 			it( 'Should be able to add statement to property', async () => {
 				await Property.addStatement.click();
