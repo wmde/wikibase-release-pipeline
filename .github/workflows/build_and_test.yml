@@ -195,13 +195,13 @@ jobs:
       matrix:
         docker_image:
           [
-            "wikibase",
-            "wikibase-bundle",
-            "elasticsearch",
-            "wdqs",
-            "wdqs-frontend",
-            "wdqs-proxy",
-            "quickstatements",
+            "wikibase/wikibase",
+            "wikibase/wikibase-bundle",
+            "wikibase/elasticsearch",
+            "wikibase/wdqs",
+            "wikibase/wdqs-frontend",
+            "wikibase/wdqs-proxy",
+            "wikibase/quickstatements",
           ]
 
     steps:
