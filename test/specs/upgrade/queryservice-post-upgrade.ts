@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { getElementByURI } from '../../helpers/blazegraph.js';
-import Binding from '../../helpers/types/binding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { getElementByURI } from '../../helpers/blazegraph.js';
+import Binding from '../../types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
