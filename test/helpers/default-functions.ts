@@ -2,7 +2,7 @@ import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
-import { TestSettings } from './types/TestSettings.js';
+import { TestSettings } from '../types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';

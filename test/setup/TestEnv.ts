@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync } from 'fs';
 import { spawnSync } from 'child_process';
 import { SevereServiceError } from 'webdriverio';
-import TestSettings from '../helpers/types/TestSettings.js';
+import TestSettings from '../types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
 import logger, { Logger } from '@wdio/logger';
 import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';

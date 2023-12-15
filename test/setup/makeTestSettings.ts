@@ -10,7 +10,7 @@ import TestSettings, {
 	TestHooks,
 	TestRunnerSettings,
 	TestSuiteSettings
-} from '../helpers/types/TestSettings.js';
+} from '../types/TestSettings.js';
 
 export const defaultComposeFiles = [
 	'suites/docker-compose.yml'
