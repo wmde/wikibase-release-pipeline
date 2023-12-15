@@ -106,19 +106,19 @@ jobs:
       - name: Test ${{ matrix.suite }}
         run: ./test.sh ${{ matrix.suite }}
 
-      - name: Report Selenium
-        if: always()
-        run: |
-          cd .github/reporter
-          npm install
-          node report.js ${{ matrix.suite }}
+      # - name: Report Selenium
+      #   if: always()
+      #   run: |
+      #     cd .github/reporter
+      #     npm install
+      #     node report.js ${{ matrix.suite }}
 
-      - name: Show Logs
-        if: always()
-        continue-on-error: true
-        run: |
-          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+      # - name: Show Logs
+      #   if: always()
+      #   continue-on-error: true
+      #   run: |
+      #     ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+      #     tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
 
       - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
@@ -164,9 +164,9 @@ jobs:
         timeout-minutes: 10
         run: ./test.sh upgrade ${{ matrix.version }}
 
-      - name: Show Docker Logs
-        if: always()
-        run: test/scripts/docker_logs.sh
+      # - name: Show Docker Logs
+      #   if: always()
+      #   run: test/scripts/docker_logs.sh
 
       # TODO: DRY
       - name: Archive Docker test artifacts
