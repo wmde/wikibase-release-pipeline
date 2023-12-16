@@ -7,12 +7,12 @@ You can run the tests in the docker container locally. Testing locally requires 
 
 ## To run all
 ```
-make test
+./test.sh
 ```
 
 ## To only run a single suite
 ```
-make test SUITE=repo
+./test.sh repo
 ```
 
 In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested. 
@@ -20,40 +20,38 @@ In order to test your own instances of the services, make sure to set the follow
 
 ## To only run a specific file in the repo tests
 ```
-make test SUITE=repo FILTER=babel*
+./test.sh repo --spec babel*
 ```
 
 ## Test upgrading between base/bundle images
 
-Tests upgrading between a previous release defined in `test/suites/upgrade/old-versions/` and the newly built base version. Runs the `upgrade` suite.
+Tests upgrading between a previous release defined in `test/suites/upgrade/versions.ts` and the newly built base version. Runs the `upgrade` suite.
 
 ```
-make test-upgrade VERSION=wmde.0
+./test.sh upgrade WMDE0
 ```
-
-To test upgrading the wikibase-bundle version the following command can be run by changing the `TARGET_WIKIBASE_UPGRADE_IMAGE_NAME` variable.
-
+or
 ```
-make test-upgrade VERSION=wmde.1-bundle TARGET_WIKIBASE_UPGRADE_IMAGE_NAME=wikibase-bundle
+./test.sh upgrade WMDE0_BUNDLE
 ```
 
 ## Test the example
 
-Tests the example configuration by running the `example` suite against it.
+Tests the example configuration by running the `example` test suite.
 
 ```
-make test-example SUITE=example
+./test.sh example
 ```
 
 ##  Variables for testing some other instance
 ```
-MW_SERVER=http://wikibase.svc
-MW_CLIENT_SERVER=http://wikibase-client.svc
-QS_SERVER=http://quickstatements.svc:80
-WDQS_FRONTEND_SERVER=wdqs-frontend.svc:80
-WDQS_SERVER=wdqs.svc:9999
+WIKIBASE_URL=http://wikibase.svc
+WIKIBASE_CLIENT_URL=http://wikibase-client.svc
+QUICKSTATEMENTS_URL=http://quickstatements.svc:80
+WDQS_FRONTEND_URL=http://wdqs-frontend.svc:80
+WDQS_URL=http://wdqs.svc:9999
 PINGBACK_BEACON_SERVER=http://mediawiki.svc
-WDQS_PROXY_SERVER=http://wdqs-proxy.svc:80
+WDQS_PROXY_URL=http://wdqs-proxy.svc:80
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w
@@ -64,7 +62,7 @@ MW_SCRIPT_PATH=/w
 Create a `test/wbaas.minikube.repo.env` file with the following contents
 
 ```
-MW_SERVER=http://minikube.wbaas.localhost
+WIKIBASE_URL=http://minikube.wbaas.localhost
 
 MW_ADMIN_NAME=Minikube
 MW_ADMIN_PASS=superpassword
