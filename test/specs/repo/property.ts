@@ -25,30 +25,30 @@ describe( 'Property', () => {
 				stringPropertyId = await WikibaseApi.createProperty(
 					wikibasePropertyString.urlName
 				);
+				await browser.waitForJobs();
 			} );
 
 			beforeEach( async () => {
 				await Property.open( propertyId );
+				await browser.setupInterceptor();
+			} );
+
+			afterEach( async () => {
+				await browser.waitForPendingRequests();
+				await browser.waitForJobs();
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
 				await Property.addStatement.click();
-
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'STATEMENT'.split( '' ) );
-
-				// wait for save button to re-enable
-				await browser.waitForJobs();
 				await Property.save.click();
-
-				await browser.waitForJobs();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
 				await $( '=STATEMENT' );
-
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
 				).getText();
@@ -57,18 +57,12 @@ describe( 'Property', () => {
 
 			it( 'Should be able to add reference to property', async () => {
 				await Property.addReference.click();
-
-				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
+				// fill out property id for reference
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
-
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
 				await Property.save.click();
-
-				await browser.waitForJobs();
 			} );
 
 			it( 'Should be able to see added reference', async () => {
