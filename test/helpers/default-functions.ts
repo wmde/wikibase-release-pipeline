@@ -315,6 +315,17 @@ export function defaultFunctions(): void {
 			);
 		}
 	);
+
+	browser.addCommand(
+		'waitForPendingRequests',
+		async (): Promise<boolean> => {
+			return browser.waitUntil(
+				async () => {
+					return !!browser.hasPendingRequests();
+				}
+			);
+		}
+	);
 }
 
 export async function skipIfExtensionNotPresent(
