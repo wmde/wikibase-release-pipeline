@@ -3,7 +3,12 @@
 		"esModuleInterop": true,
 		"module": "Node16",
 		"target": "es2019",
-		"types": [ "node", "@wdio/globals/types", "@wdio/mocha-framework" ]
+		"types": [
+			"node",
+			"@wdio/globals/types",
+			"@wdio/mocha-framework",
+			"wdio-intercept-service"
+		]
 	},
 	"ts-node": {
 		"files": true

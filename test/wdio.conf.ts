@@ -76,6 +76,10 @@ export const config: WebdriverIO.Config = {
 		]
 	],
 
+	services: [
+		'intercept'
+	],
+
 	// See also: http://mochajs.org
 	mochaOpts: {
 		ui: 'bdd',

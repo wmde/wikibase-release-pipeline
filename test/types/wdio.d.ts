@@ -81,6 +81,8 @@ declare namespace WebdriverIO {
 			timeout?: number,
 			timeoutMsg?: string,
 		) => Promise<boolean>;
+
+		waitForPendingRequests: () => Promise<boolean>;
 	}
 
 	interface Element {
