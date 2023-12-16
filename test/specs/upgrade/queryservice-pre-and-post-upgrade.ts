@@ -7,14 +7,14 @@ describe( 'Wikibase post upgrade', function () {
 	let oldPropertyID: string;
 
 	beforeEach( function () {
-		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
+		if ( testEnv.vars.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
 			this.skip();
 		}
 	} );
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			process.env.MW_SERVER +
+			testEnv.vars.WIKIBASE_URL +
         '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
 		);
 		const success = result.data.success;
@@ -27,12 +27,12 @@ describe( 'Wikibase post upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + oldItemID );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + oldItemID );
 	} );
 
 	it( 'Should show up in Special:EntityData with json', async () => {
 		const response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/wiki/Special:EntityData/${oldItemID}.json`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
 		);
 
 		const body = response.data;
@@ -61,11 +61,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			process.env.MW_SERVER + '/prop/' + oldPropertyID,
+			testEnv.vars.WIKIBASE_URL + '/prop/' + oldPropertyID,
 			bindings
 		);
 		const property = getElementByURI(
-			process.env.MW_SERVER + '/prop/direct/' + oldPropertyID,
+			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + oldPropertyID,
 			bindings
 		);
 

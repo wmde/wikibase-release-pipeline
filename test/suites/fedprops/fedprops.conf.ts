@@ -1,6 +1,14 @@
-import { config as wdioConf } from '../../wdio.conf.js';
+import TestEnv from '../../setup/TestEnv.js';
+import wdioConfig from '../../setup/wdio.conf.js';
 
-export const config: WebdriverIO.Config = {
-	...wdioConf,
-	specs: [ '../../specs/fedprops/*.ts' ]
-};
+export const testEnv = TestEnv.createAppendingToDefaults( {
+	name: 'fedprops',
+	specs: [
+		'specs/fedprops/*.ts'
+	],
+	composeFiles: [
+		'suites/fedprops/docker-compose.override.yml'
+	]
+} );
+
+export const config = wdioConfig( testEnv );

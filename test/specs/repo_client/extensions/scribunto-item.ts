@@ -3,7 +3,6 @@ import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../types/external-change.js';
@@ -16,7 +15,7 @@ describe( 'Scribunto Item', function () {
 	const luaPageTitle = 'RepoClientLuaTest';
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
+		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
 	it( 'Should create an item on repo', async () => {
@@ -37,7 +36,7 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -55,13 +54,13 @@ describe( 'Scribunto Item', function () {
 			.replace( '<LANG>', 'en' );
 
 		await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -72,7 +71,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -82,7 +81,7 @@ describe( 'Scribunto Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
@@ -97,7 +96,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			expectedDeletionChange
 		);
 
