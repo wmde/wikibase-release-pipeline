@@ -24,7 +24,7 @@ export type TestHooks = {
 	beforeServices?(): Promise<void>;
 	// Runs after services are started
 	afterServices?(): Promise<void>;
-	// Runs after services are started and available (waitForItURLs all respond true)
+	// Runs after services are started and available (waitForItUrls all respond true)
 	afterServicesAvailable?(): Promise<void>;
 	// Runs once at the beginning of each spec file (before each WDIO runner)
 	before?(): Promise<void>;
@@ -44,7 +44,7 @@ export type TestHooks = {
 
 export type TestEnvSettings = {
 	composeFiles?: string[];
-	waitForURLs?(): string[];
+	waitForUrls?(): string[];
 	envFiles?: string[];
 	vars: Record<string, string>;
 };

@@ -1,5 +1,5 @@
 import TestEnv from '../../setup/TestEnv.js';
-import { defaultBeforeServices, defaultEnvFiles } from '../../setup/makeTestSettings.js';
+import { defaultTestSettings } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 import versions from './versions.js';
 
@@ -19,10 +19,10 @@ export const testEnv = TestEnv.createWithDefaults( {
 		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
-		...defaultEnvFiles,
+		...defaultTestSettings.envFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForURLs: () => ( [
+	waitForUrls: () => ( [
 		`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`
 	] ),
 	beforeServices: async () => {
@@ -42,7 +42,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts#before where toVersion is used
-		await defaultBeforeServices();
+		await defaultTestSettings.beforeServices();
 	}
 } );
 

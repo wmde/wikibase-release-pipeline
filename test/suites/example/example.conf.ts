@@ -19,7 +19,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'../local.env'
 	],
 	beforeServices: async (): Promise<void> => {
-		// Here to bypass default local image loading
+		// bypass default local image loading
 	}
 } );
 

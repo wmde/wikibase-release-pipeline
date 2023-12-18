@@ -1,13 +1,15 @@
 import TestEnv from '../../setup/TestEnv.js';
+import { defaultTestSettings } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createAppendingToDefaults( {
+export const testEnv = TestEnv.createWithDefaults( {
 	name: 'repo',
 	specs: [
 		'specs/repo/*.ts',
 		'specs/repo/extensions/*.ts'
 	],
 	composeFiles: [
+		...defaultTestSettings.composeFiles,
 		'suites/repo/docker-compose.override.yml'
 	]
 } );

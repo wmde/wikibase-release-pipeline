@@ -1,7 +1,8 @@
 import TestEnv from '../../setup/TestEnv.js';
+import { defaultTestSettings } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createAppendingToDefaults( {
+export const testEnv = TestEnv.createWithDefaults( {
 	name: 'base__repo',
 	isBaseSuite: true,
 	specs: [
@@ -12,6 +13,7 @@ export const testEnv = TestEnv.createAppendingToDefaults( {
 		'specs/repo/queryservice.ts'
 	],
 	composeFiles: [
+		...defaultTestSettings.composeFiles,
 		'suites/repo/docker-compose.override.yml'
 	]
 } );

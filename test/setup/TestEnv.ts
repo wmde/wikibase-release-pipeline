@@ -4,7 +4,7 @@ import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
 import logger, { Logger } from '@wdio/logger';
-import { makeSettings, makeSettingsAppendingToDefaults } from './makeTestSettings.js';
+import { makeTestSettings } from './makeTestSettings.js';
 
 declare global {
 	// eslint-disable-next-line no-var, no-use-before-define
@@ -16,17 +16,10 @@ export default class TestEnv {
 	public testLog: Logger;
 	public baseDockerComposeCmd: string;
 
-	public static createAppendingToDefaults(
-		providedSettings: Partial<TestSettings>
-	): TestEnv {
-		const settings = makeSettingsAppendingToDefaults( providedSettings );
-		return new this( settings );
-	}
-
 	public static createWithDefaults(
 		providedSettings: Partial<TestSettings>
 	): TestEnv {
-		const settings = makeSettings( providedSettings );
+		const settings = makeTestSettings( providedSettings );
 		return new this( settings );
 	}
 
@@ -79,7 +72,7 @@ export default class TestEnv {
 	}
 
 	public async waitForServices(): Promise<void[]> {
-		return Promise.all( this.settings.waitForURLs().map(
+		return Promise.all( this.settings.waitForUrls().map(
 			async ( waitForURL: string ): Promise<void> => {
 				await checkIfUp( waitForURL, this.settings.testTimeout );
 				this.testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
@@ -114,7 +107,7 @@ export default class TestEnv {
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			mkdirSync( this.settings.outputDir, { recursive: true } );
 		} catch ( e ) {
-			this.testLog.error( '❌ Error occurred in setting-up logs:', e );
+			this.testLog.error( '❌ Error occurred in setting-up outuput directory:', e );
 		}
 	}
 
