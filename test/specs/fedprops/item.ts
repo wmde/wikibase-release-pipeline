@@ -5,8 +5,14 @@ import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import { CreateItemRequestData } from '../../types/create-item-request-data.js';
+import { EntityData } from '../../types/entity-data.js';
 
 type TestProperty = { id: string; value: string };
+
+type WBSearchEntitiesResult = {
+	search: { id: string }[];
+	success: number;
+};
 
 describe( 'Fed Props Item', function () {
 	const testProperty: TestProperty = { id: 'P213', value: 'ISNI' };
@@ -34,11 +40,9 @@ describe( 'Fed Props Item', function () {
 		const result = await browser.makeRequest(
 			`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=${testProperty.value}&format=json&language=en&type=property`
 		);
-		const success = result.data.success;
-		const searchResults = result.data.search;
-
-		assert.strictEqual( success, 1 );
-		assert( searchResults.length > 0 );
+		const resultData: WBSearchEntitiesResult = result.data;
+		assert.strictEqual( resultData.success, 1 );
+		assert( resultData.search.length > 0 );
 	} );
 
 	it( 'Should show an added federated property in the ui', async () => {
@@ -67,7 +71,7 @@ describe( 'Fed Props Item', function () {
 		const response = await browser.makeRequest(
 			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
 		);
-		const body = response.data;
+		const body: EntityData = response.data;
 
 		assert.notEqual(
 			body.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
