@@ -5,21 +5,24 @@ function loadEnvFile(
 	envFilePath: string,
 	providedEnvvars: Record<string, string> = {}
 ): Record<string, string> {
-	const result = dotenv.config( {
+	const { parsed: envVarsFromFile, error } = dotenv.config( {
 		override: true,
 		path: envFilePath,
-		processEnv: providedEnvvars
+		// Ignore process.env values, and don't set them
+		processEnv: {}
 	} );
 
-	if ( result.error ) {
-		throw result.error;
+	if ( error ) {
+		throw error;
 	}
 
-	const envVarsResult = dotenvExpand.expand( {
-		parsed: providedEnvvars, ignoreProcessEnv: true
+	const envVars = { ...providedEnvvars, ...envVarsFromFile };
+	const { parsed: expandedEnvVars } = dotenvExpand.expand( {
+		parsed: envVars,
+		ignoreProcessEnv: true
 	} );
 
-	return envVarsResult.parsed;
+	return expandedEnvVars;
 }
 
 export default function loadEnvFiles(

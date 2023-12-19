@@ -38,8 +38,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 						// different screen sizes. Bootstrap considers widths between 1200 and 1400
 						// as XL, let's use that.
 						// https://getbootstrap.com/docs/5.0/layout/breakpoints/#available-breakpoints
-						...[ '--window-size=1280,800' ],
-						...( settings.runHeaded ? [] : [ '--headless' ] ),
+						'--window-size=1280,800',
+						// https://www.selenium.dev/blog/2023/headless-is-going-away
+						...( settings.runHeaded ? [] : [ '--headless=new' ] ),
 						// Chrome sandbox does not work in Docker
 						...( existsSync( '/.dockerenv' ) ? [ '--no-sandbox' ] : [] )
 					]

@@ -20,7 +20,7 @@ In order to test your own instances of the services, make sure to set the follow
 
 ## To only run a specific file in the repo tests
 ```
-./test.sh repo --spec babel*
+./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
 ## Test upgrading between base/bundle images

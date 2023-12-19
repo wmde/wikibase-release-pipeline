@@ -34,10 +34,23 @@ $ ./build.sh --no-cache wdqs
 ### Test Commands
 
 ```
+# Show help for the Test CLI, including various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
 $ ./test.sh
+
+# Runs all test suites (defined in `test/suites`)
+$ ./test.sh all
+
+# Runs the `repo` test suite
 $ ./test.sh repo
-$ ./test.sh repo --spec special-item
+
+# Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
+$ ./test.sh repo --spec specs/repo/special-item.ts
+
+# Runs the upgrade test suite from WMDE9 to the currently built version locally
 $ ./test.sh upgrade WMDE9
+
+# Start and leave up the test environment for a given test suite without running tests
+$ ./test.sh repo --setup
 ```
 
 ### Example Instance Commands
