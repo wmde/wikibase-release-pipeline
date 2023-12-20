@@ -1,8 +1,8 @@
 import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
-import { exec } from 'child_process';
 import lodash from 'lodash';
 import { Context } from 'mocha';
+import { TestSettings } from '../types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';
@@ -11,32 +11,27 @@ import ExternalChange from '../types/external-change.js';
 import LuaCPUValue from '../types/lua-cpu-value.js';
 
 export function defaultFunctions(): void {
-	/**
-	 * Make a get request to get full request response
-	 */
-	browser.addCommand(
-		'makeRequest',
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		( url: string, params?: any, postData?: any ): Promise<AxiosResponse> => {
-			if ( postData ) {
-				return axios.post( url, postData, params );
-			} else {
-				return axios.get( url, params );
-			}
-		}
-	);
+	const settings: TestSettings = testEnv.settings;
+
+	// ======
+	// Custom WDIO config specific to MediaWiki
+	// ======
+	// Use in a test as `browser.options.<key>`.
+
+	// Base for browser.url() and Page#openTitle()
+	browser.options.baseUrl = testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
 
 	/**
 	 * Execute query on database
 	 */
 	browser.addCommand(
 		'dbQuery',
-		async ( query: string, config?: DatabaseConfig ) => {
+		async ( query: string, config?: DatabaseConfig ): Promise<string> => {
 			if ( !config ) {
 				config = {
-					user: process.env.DB_USER,
-					pass: process.env.DB_PASS,
-					database: process.env.DB_NAME
+					user: testEnv.vars.DB_USER,
+					pass: testEnv.vars.DB_PASS,
+					database: testEnv.vars.DB_NAME
 				};
 			}
 
@@ -46,10 +41,13 @@ export function defaultFunctions(): void {
 				);
 			}
 
-			return await browser.dockerExecute(
-				process.env.DOCKER_MYSQL_NAME,
-				`mysql --user "${config.user}" --password="${config.pass}" "${config.database}" -e '${query}'`
+			const result = await testEnv.runDockerComposeCmd(
+				`exec mysql mysql --user ${config.user} --password=${config.pass} ${config.database} -e '${query}'`
 			);
+
+			testEnv.testLog.debug( result );
+
+			return result;
 		}
 	);
 
@@ -65,56 +63,6 @@ export function defaultFunctions(): void {
 				action: 'wbremoveclaims',
 				claim: claimGuid,
 				token: bot.editToken
-			} );
-		}
-	);
-
-	/**
-	 * Get installed extensions on wiki
-	 */
-	browser.addCommand(
-		'getInstalledExtensions',
-		async ( server: string ): Promise<string[] | undefined> => {
-			const result = await browser.makeRequest(
-				`${server}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
-			);
-			return lodash.map( result.data.query.extensions, 'name' );
-		}
-	);
-
-	/**
-	 * Execute docker command on container and get output
-	 */
-	browser.addCommand(
-		'dockerExecute',
-		(
-			container: string,
-			command: string,
-			opts?: string,
-			shouldLog?: boolean
-		): Promise<unknown> => {
-			if ( !container ) {
-				throw new Error( 'dockerExecute: Container not specified!' );
-			}
-
-			if ( !opts ) {
-				opts = '';
-			}
-
-			const fullCommand = `docker exec ${opts} ${container} ${command}`;
-			if ( shouldLog ) {
-				console.log( `executing: ${fullCommand}` );
-			}
-
-			return new Promise( ( resolve ) => {
-				// eslint-disable-next-line security/detect-child-process
-				exec( fullCommand, ( error, stdout, stderr ) => {
-					if ( error ) {
-						console.warn( error );
-					}
-
-					resolve( stdout || stderr );
-				} );
 			} );
 		}
 	);
@@ -166,63 +114,12 @@ export function defaultFunctions(): void {
 	);
 
 	/**
-	 * Moves browser to recent changes then asserts that a change is in the api result
-	 */
-	browser.addCommand(
-		'getDispatchedExternalChange',
-		async (
-			host: string,
-			expectedChange: ExternalChange
-		): Promise<ExternalChange | null> => {
-			// to get a screenshot
-			await browser.url(
-				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
-			);
-
-			// get all external changes
-			const apiURL = `${host}/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
-			const result = await browser.makeRequest( apiURL );
-			const changes = result.data.query.recentchanges;
-			const foundResult = lodash.find( changes, expectedChange );
-
-			assert.strictEqual( result.status, 200 );
-
-			if ( !foundResult ) {
-				console.error( 'Could not find:' );
-				console.log( expectedChange );
-				console.error( 'Response: ' );
-				console.log( changes );
-			}
-
-			return foundResult;
-		}
-	);
-
-	/**
-	 * Makes a request to a page and returns the lua cpu profiling data
-	 */
-	browser.addCommand(
-		'getLuaCpuTime',
-		async ( host: string, page: string ): Promise<LuaCPUValue> => {
-			const response = await browser.makeRequest( `${host}/wiki/${page}` );
-
-			const cpuMatches = response.data.match(
-				/(CPU time usage:) ([-.0-9]+) (\w+)/
-			);
-			const cpuTime = parseFloat( cpuMatches[ 2 ] );
-			const cpuTimeScale = cpuMatches[ 3 ];
-
-			return { value: cpuTime, scale: cpuTimeScale };
-		}
-	);
-
-	/**
 	 * Execute quickstatements query
 	 */
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${process.env.QS_SERVER}/#/batch` );
+			await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -259,12 +156,83 @@ export function defaultFunctions(): void {
 	);
 
 	/**
+	 * Moves browser to recent changes then asserts that a change is in the api result
+	 */
+	browser.addCommand(
+		'getDispatchedExternalChange',
+		async (
+			host: string,
+			expectedChange: ExternalChange
+		): Promise<ExternalChange | null> => {
+			// to get a screenshot
+			await browser.url(
+				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
+			);
+
+			// get all external changes
+			const apiURL = `${host}/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
+			const result = await browser.makeRequest( apiURL );
+			const changes = result.data.query.recentchanges;
+			const foundResult = lodash.find( changes, expectedChange );
+
+			assert.strictEqual( result.status, 200 );
+
+			if ( !foundResult ) {
+				testEnv.testLog.error( 'Could not find:' );
+				testEnv.testLog.error( expectedChange );
+				testEnv.testLog.error( 'Response: ' );
+				testEnv.testLog.error( changes );
+			}
+
+			return foundResult;
+		}
+	);
+
+	/**
+	 * Makes a request to a page and returns the lua cpu profiling data
+	 */
+	browser.addCommand(
+		'getLuaCpuTime',
+		async ( host: string, page: string ): Promise<LuaCPUValue> => {
+			const response = await browser.makeRequest( `${host}/wiki/${page}` );
+
+			const cpuMatches = response.data.match(
+				/(CPU time usage:) ([-.0-9]+) (\w+)/
+			);
+			const cpuTime = parseFloat( cpuMatches[ 2 ] );
+			const cpuTimeScale = cpuMatches[ 3 ];
+
+			return { value: cpuTime, scale: cpuTimeScale };
+		}
+	);
+
+	/**
+	 * Make a get request to get full request response
+	 */
+	browser.addCommand(
+		'makeRequest',
+		async (
+			url: string,
+			params?: Record<string, unknown>,
+			postData?: Record<string, unknown>
+		): Promise<Partial<AxiosResponse>> => {
+			if ( postData ) {
+				const { data, status } = await axios.post( url, postData, params );
+				return { data, status };
+			} else {
+				const { data, status } = await axios.get( url, params );
+				return { data, status };
+			}
+		}
+	);
+
+	/**
 	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 	 */
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `http://${process.env.WDQS_SERVER}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
@@ -282,13 +250,37 @@ export function defaultFunctions(): void {
 		}
 	);
 
+	/**
+	 * Skip test if extension is not installed (present) on the Wikibase server
+	 */
+	browser.addCommand(
+		'skipIfExtensionNotPresent',
+		async (
+			test: Context,
+			extension: string
+		): Promise<void> => {
+			const installedExtensions = await getInstalledExtensions(
+				testEnv.vars.WIKIBASE_URL
+			);
+			if ( !installedExtensions || installedExtensions.length === 0 ) {
+				return;
+			} else if (
+				installedExtensions &&
+					installedExtensions.includes( 'WikibaseRepository' ) &&
+					installedExtensions.includes( extension )
+			) {
+				return;
+			} else {
+				test.skip();
+			}
+		}
+	);
+
 	browser.addCommand(
 		'waitForJobs',
 		async (
-			serverURL: string = process.env.MW_SERVER,
-			// default timeout is 1 second less than default Mocha test timeout
-			timeout: number = ( Number.parseInt( process.env.MOCHA_OPTS_TIMEOUT ) ||
-				90 * 1000 ) - 1000,
+			serverURL: string = testEnv.vars.WIKIBASE_URL,
+			timeout: number = settings.testTimeout - 1000,
 			timeoutMsg: string = null
 		): Promise<boolean> => {
 			let jobsInQueue: number;
@@ -301,7 +293,7 @@ export function defaultFunctions(): void {
 						{}
 					);
 					jobsInQueue = result.data.query.statistics.jobs;
-
+					testEnv.testLog.info( `waitForJobs: ${jobsInQueue} currently in queue}` );
 					return jobsInQueue === 0;
 				},
 				{
@@ -317,22 +309,14 @@ export function defaultFunctions(): void {
 	);
 }
 
-export async function skipIfExtensionNotPresent(
-	test: Context,
-	extension: string
-): Promise<void> {
-	const installedExtensions = await browser.getInstalledExtensions(
-		process.env.MW_SERVER
+/**
+ * Get installed extensions on wiki (for given server URL)
+ *
+ * @param {string} serverUrl
+ */
+export async function getInstalledExtensions( serverUrl: string ): Promise<string[] | undefined> {
+	const result = await browser.makeRequest(
+		`${serverUrl}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 	);
-	if ( !installedExtensions || installedExtensions.length === 0 ) {
-		return;
-	} else if (
-		installedExtensions &&
-		installedExtensions.includes( 'WikibaseRepository' ) &&
-		installedExtensions.includes( extension )
-	) {
-		return;
-	} else {
-		test.skip();
-	}
+	return lodash.map( result.data.query.extensions, 'name' );
 }

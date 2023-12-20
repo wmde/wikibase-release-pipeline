@@ -1,6 +1,5 @@
 import assert from 'assert';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
 describe( 'EntitySchema', function () {
@@ -8,11 +7,11 @@ describe( 'EntitySchema', function () {
 	const testDescription = 'A description';
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'EntitySchema' );
+		await browser.skipIfExtensionNotPresent( this, 'EntitySchema' );
 	} );
 
 	it( 'Should be able to create an EntitySchema', async () => {
-		await browser.url( process.env.MW_SERVER + '/wiki/EntitySchema:test' );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();

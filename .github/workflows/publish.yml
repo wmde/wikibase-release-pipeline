@@ -17,6 +17,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
   WORKFLOW_RUN_NUMBER: ${{ github.event.inputs.workflow_run_number }}
+
 jobs:
   publish_docker:
     runs-on: ubuntu-latest

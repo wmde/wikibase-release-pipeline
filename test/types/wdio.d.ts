@@ -2,6 +2,7 @@ declare namespace WebdriverIO {
 	type AxiosResponse = import( 'axios' ).AxiosResponse;
 	type Binding = import( './binding.js' ).default;
 	type BotResponse = import( './bot-response.js' ).default;
+	type Context = import( 'mocha' ).Context;
 	type DatabaseConfig = import( './database-config.js' ).default;
 	type ExternalChange = import( './external-change.js' ).default;
 	type LuaCPUValue = import( './lua-cpu-value.js' ).default;
@@ -16,16 +17,6 @@ declare namespace WebdriverIO {
 		 * Delete a claim by guid or pipe-separated list of guids
 		 */
 		deleteClaim: ( claimGuid: string ) => Promise<BotResponse>;
-
-		/**
-		 * Execute docker command on container and get output
-		 */
-		dockerExecute: (
-			container: string,
-			command: string,
-			opts?: string,
-			shouldLog?: boolean,
-		) => Promise<unknown>;
 
 		/**
 		 * Creates or edits a page with content
@@ -51,11 +42,6 @@ declare namespace WebdriverIO {
 		) => Promise<ExternalChange | null>;
 
 		/**
-		 * Get installed extensions on wiki
-		 */
-		getInstalledExtensions: ( server: string ) => Promise<string[] | undefined>;
-
-		/**
 		 * Makes a request to a page and returns the lua cpu profiling data
 		 */
 		getLuaCpuTime: ( host: string, page: string ) => Promise<LuaCPUValue>;
@@ -75,6 +61,11 @@ declare namespace WebdriverIO {
 		 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 		 */
 		queryBlazeGraphItem: ( itemId: string ) => Promise<Binding[]>;
+
+		/**
+		 * Skip test if extension is not installed (present) on the Wikibase server
+		 */
+		skipIfExtensionNotPresent: ( test: Context, extension: string ) => Promise<void>;
 
 		waitForJobs: (
 			serverURL?: string,
