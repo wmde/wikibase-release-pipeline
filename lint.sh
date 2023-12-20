@@ -32,6 +32,10 @@ if ! [[ -f "local.env" ]]; then
 	touch local.env
 fi
 
+# Explicitly adds the Docker network wikibase-suite-test to shared by both
+# test-runner and test-services
+docker network create wikibase-suite-test > /dev/null 2>&1 || true
+
 TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml --env-file ./test/test-runner.env --env-file ./local.env --progress quiet"
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
