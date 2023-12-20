@@ -1,7 +1,7 @@
-version: '3.4'
+version: '3.5'
 
 services:
 
   wikibase:
     volumes:
-      - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./fedprops/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.fedprops.php

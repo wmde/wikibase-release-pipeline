@@ -1,14 +1,13 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'VisualEditor' );
+		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
 	} );
 
 	it( 'Should be able to edit a page using the editor', async () => {
 		await browser.url(
-			process.env.MW_SERVER + '/wiki/TestVisualEditor?veaction=edit'
+			testEnv.vars.WIKIBASE_URL + '/wiki/TestVisualEditor?veaction=edit'
 		);
 
 		// start editing

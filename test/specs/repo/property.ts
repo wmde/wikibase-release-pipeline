@@ -25,30 +25,32 @@ describe( 'Property', () => {
 				stringPropertyId = await WikibaseApi.createProperty(
 					wikibasePropertyString.urlName
 				);
+				await browser.waitForJobs();
 			} );
 
 			beforeEach( async () => {
 				await Property.open( propertyId );
 			} );
 
+			afterEach( async () => {
+				// Extra pause to make sure AJAX requests complete before navigating away,
+				// see: https://phabricator.wikimedia.org/T353520
+				// eslint-disable-next-line wdio/no-pause
+				await browser.pause( 2000 * 1 );
+			} );
+
 			it( 'Should be able to add statement to property', async () => {
 				await Property.addStatement.click();
-
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'STATEMENT'.split( '' ) );
-
 				// wait for save button to re-enable
-				await browser.waitForJobs();
-				await Property.save.click();
-
-				await browser.waitForJobs();
+				await Property.saveStatement.click();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
 				await $( '=STATEMENT' );
-
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
 				).getText();
@@ -57,18 +59,12 @@ describe( 'Property', () => {
 
 			it( 'Should be able to add reference to property', async () => {
 				await Property.addReference.click();
-
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
-
-				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 1000 * 1 );
-				await Property.save.click();
-
-				await browser.waitForJobs();
+				await Property.saveStatement.click();
 			} );
 
 			it( 'Should be able to see added reference', async () => {
@@ -78,7 +74,7 @@ describe( 'Property', () => {
 
 			it( 'Should contain statement and reference in EntityData', async () => {
 				const response = await browser.makeRequest(
-					`${process.env.MW_SERVER}/wiki/Special:EntityData/${propertyId}.json`
+					`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
 				);
 				const body: EntityData = response.data;
 				const claim: Claim =
