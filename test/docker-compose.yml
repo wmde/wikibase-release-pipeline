@@ -22,7 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
-      - HOST_PWD=${PWD}
+      - HOST_PWD=${PWD}/test
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment

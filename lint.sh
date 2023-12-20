@@ -20,25 +20,9 @@ else
   PYTHON_FLAGS=""
 fi
 
-# ℹ️ Linting Dockerfiles (**/Dockerfile)
-# https://github.com/hadolint/hadolint
-docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint"
-
-# ℹ️ Linting Shell Scripts (**/*.sh)
-# https://github.com/koalaman/shellcheck#from-your-terminal
-find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
-
-if ! [[ -f "local.env" ]]; then
-	touch local.env
-fi
-
-# Explicitly adds the Docker network wikibase-suite-test to shared by both
-# test-runner and test-services
-docker network create wikibase-suite-test > /dev/null 2>&1 || true
-
-TEST_RUNNER_COMPOSE="docker compose -f test/docker-compose.yml --env-file ./test/test-runner.env --env-file ./local.env --progress quiet"
-
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
+source ./test/scripts/testRunnerSetup.sh
+
 $TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
   npm ci --progress=false > /dev/null &&
   $NPM_LINT_COMMAND &&
@@ -52,3 +36,11 @@ MY_FILES="$(git ls-files)"
 $TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd):/tmp" test-runner -c "
   python3 scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
 "
+
+# ℹ️ Linting Dockerfiles (**/Dockerfile)
+# https://github.com/hadolint/hadolint
+docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint"
+
+# ℹ️ Linting Shell Scripts (**/*.sh)
+# https://github.com/koalaman/shellcheck#from-your-terminal
+find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
