@@ -36,7 +36,7 @@
             echo "Test Commands:"
             echo "$ ./test.sh"
             echo "$ ./test.sh repo"
-            echo "$ ./test.sh repo --spec special-item"
+            echo "$ ./test.sh repo --spec specs/repo/special-item.ts"
             echo "$ ./test.sh upgrade WMDE9"
             echo
             echo "Example Instance Commands:"

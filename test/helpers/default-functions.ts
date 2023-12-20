@@ -22,31 +22,11 @@ export function defaultFunctions(): void {
 	browser.options.baseUrl = testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
 
 	/**
-	 * Make a get request to get full request response
-	 */
-	browser.addCommand(
-		'makeRequest',
-		async (
-			url: string,
-			params?: Record<string, unknown>,
-			postData?: Record<string, unknown>
-		): Promise<Partial<AxiosResponse>> => {
-			if ( postData ) {
-				const { data, status } = await axios.post( url, postData, params );
-				return { data, status };
-			} else {
-				const { data, status } = await axios.get( url, params );
-				return { data, status };
-			}
-		}
-	);
-
-	/**
 	 * Execute query on database
 	 */
 	browser.addCommand(
 		'dbQuery',
-		( query: string, config?: DatabaseConfig ): string => {
+		async ( query: string, config?: DatabaseConfig ): Promise<string> => {
 			if ( !config ) {
 				config = {
 					user: testEnv.vars.DB_USER,
@@ -61,9 +41,13 @@ export function defaultFunctions(): void {
 				);
 			}
 
-			return testEnv.runDockerComposeCmd(
+			const result = await testEnv.runDockerComposeCmd(
 				`exec mysql mysql --user ${config.user} --password=${config.pass} ${config.database} -e '${query}'`
 			);
+
+			testEnv.testLog.debug( result );
+
+			return result;
 		}
 	);
 
@@ -80,32 +64,6 @@ export function defaultFunctions(): void {
 				claim: claimGuid,
 				token: bot.editToken
 			} );
-		}
-	);
-
-	/**
-	 * Skip test if extension is not installed (present) on the Wikibase server
-	 */
-	browser.addCommand(
-		'skipIfExtensionNotPresent',
-		async (
-			test: Context,
-			extension: string
-		): Promise<void> => {
-			const installedExtensions = await getInstalledExtensions(
-				testEnv.vars.WIKIBASE_URL
-			);
-			if ( !installedExtensions || installedExtensions.length === 0 ) {
-				return;
-			} else if (
-				installedExtensions &&
-				installedExtensions.includes( 'WikibaseRepository' ) &&
-				installedExtensions.includes( extension )
-			) {
-				return;
-			} else {
-				test.skip();
-			}
 		}
 	);
 
@@ -152,6 +110,48 @@ export function defaultFunctions(): void {
 			await browser.pause( 2 * 1000 );
 
 			return await $( '#mw-content-text' ).getText();
+		}
+	);
+
+	/**
+	 * Execute quickstatements query
+	 */
+	browser.addCommand(
+		'executeQuickStatement',
+		async ( theQuery: string ): Promise<void> => {
+			await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+
+			// create a batch
+			await $( '.create_batch_box textarea' ).setValue( theQuery );
+
+			// eslint-disable-next-line wdio/no-pause
+			await browser.pause( 1000 );
+
+			// click import
+			await $( "button[tt='dialog_import_v1']" ).click();
+
+			// eslint-disable-next-line wdio/no-pause
+			await browser.pause( 1000 );
+
+			// click run
+			await $( "button[tt='run']" ).click();
+
+			const commands = await $$( '.command_status' );
+
+			await browser.waitUntil(
+				async () => {
+					const commandTextArray = await Promise.all(
+						commands.map( async ( command ) => command.getText() )
+					);
+					return commandTextArray.every(
+						( commandText ) => commandText === 'done'
+					);
+				},
+				{
+					timeout: 10000,
+					timeoutMsg: 'Expected to be done after 10 seconds'
+				}
+			);
 		}
 	);
 
@@ -207,44 +207,22 @@ export function defaultFunctions(): void {
 	);
 
 	/**
-	 * Execute quickstatements query
+	 * Make a get request to get full request response
 	 */
 	browser.addCommand(
-		'executeQuickStatement',
-		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
-
-			// create a batch
-			await $( '.create_batch_box textarea' ).setValue( theQuery );
-
-			// eslint-disable-next-line wdio/no-pause
-			await browser.pause( 1000 );
-
-			// click import
-			await $( "button[tt='dialog_import_v1']" ).click();
-
-			// eslint-disable-next-line wdio/no-pause
-			await browser.pause( 1000 );
-
-			// click run
-			await $( "button[tt='run']" ).click();
-
-			const commands = await $$( '.command_status' );
-
-			await browser.waitUntil(
-				async () => {
-					const commandTextArray = await Promise.all(
-						commands.map( async ( command ) => command.getText() )
-					);
-					return commandTextArray.every(
-						( commandText ) => commandText === 'done'
-					);
-				},
-				{
-					timeout: 10000,
-					timeoutMsg: 'Expected to be done after 10 seconds'
-				}
-			);
+		'makeRequest',
+		async (
+			url: string,
+			params?: Record<string, unknown>,
+			postData?: Record<string, unknown>
+		): Promise<Partial<AxiosResponse>> => {
+			if ( postData ) {
+				const { data, status } = await axios.post( url, postData, params );
+				return { data, status };
+			} else {
+				const { data, status } = await axios.get( url, params );
+				return { data, status };
+			}
 		}
 	);
 
@@ -269,6 +247,32 @@ export function defaultFunctions(): void {
 				queryString
 			);
 			return response.data.results.bindings;
+		}
+	);
+
+	/**
+	 * Skip test if extension is not installed (present) on the Wikibase server
+	 */
+	browser.addCommand(
+		'skipIfExtensionNotPresent',
+		async (
+			test: Context,
+			extension: string
+		): Promise<void> => {
+			const installedExtensions = await getInstalledExtensions(
+				testEnv.vars.WIKIBASE_URL
+			);
+			if ( !installedExtensions || installedExtensions.length === 0 ) {
+				return;
+			} else if (
+				installedExtensions &&
+					installedExtensions.includes( 'WikibaseRepository' ) &&
+					installedExtensions.includes( extension )
+			) {
+				return;
+			} else {
+				test.skip();
+			}
 		}
 	);
 

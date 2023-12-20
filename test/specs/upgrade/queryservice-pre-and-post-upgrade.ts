@@ -1,3 +1,9 @@
+/*
+NOTE: The upgrade test suite doesn't include WDQS/QueryService nor test its upgrade
+for unknown reasons. This spec existed but was skipped in the code the Wikibase Suite
+team inherited.
+*/
+
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import Binding from '../../types/binding.js';

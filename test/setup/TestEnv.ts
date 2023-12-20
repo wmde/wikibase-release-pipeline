@@ -53,8 +53,8 @@ export default class TestEnv {
 
 			console.log( '▶️  Bringing up the test environment' );
 
-			this.stopServices();
-			this.startServices();
+			await this.stopServices();
+			await this.startServices();
 			await this.waitForServices();
 
 			if ( this.settings.runHeaded ) {
@@ -68,7 +68,7 @@ export default class TestEnv {
 	}
 
 	public async down(): Promise<void> {
-		this.stopServices();
+		await this.stopServices();
 	}
 
 	public async waitForServices(): Promise<void[]> {
@@ -80,7 +80,9 @@ export default class TestEnv {
 		) );
 	}
 
-	public runDockerComposeCmd( dockerComposeOptionsCommandAndArgs: string ): string {
+	public async runDockerComposeCmd(
+		dockerComposeOptionsCommandAndArgs: string
+	): Promise<string> {
 		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
 
 		this.testLog.debug( 'Running: ', dockerComposeCmd );
@@ -92,13 +94,15 @@ export default class TestEnv {
 			env: { ...this.vars, OUTPUT_DIR: this.settings.outputDir, PATH: process.env.PATH }
 		} );
 
-		this.testLog.debug( result.stdout );
-
-		if ( result.stderr ) {
-			this.testLog.error( result.stderr );
+		// Docker Compose puts all status logging stderr so we instead use
+		// the exit code (status) to catch any actual critical failures, ref:
+		// https://github.com/docker/compose/issues/7346
+		if ( result.status !== 0 ) {
+			this.testLog.debug( result.stderr );
+			throw new SevereServiceError( result.stderr );
 		}
 
-		return result.stdout || result.stderr;
+		return result.stdout;
 	}
 
 	protected resetOutputDir(): void {
@@ -125,13 +129,15 @@ export default class TestEnv {
 		return dockerComposeCmdArray.join( ' ' );
 	}
 
-	protected startServices(): void {
+	protected async startServices(): Promise<void> {
 		this.testLog.info( '▶️  Starting Wikibase Suite services' );
-		this.runDockerComposeCmd( 'up -d' );
+		await this.runDockerComposeCmd( 'up -d' );
 	}
 
-	protected stopServices( removeVolumes: boolean = true ): void {
+	protected async stopServices( removeVolumes: boolean = true ): Promise<void> {
 		this.testLog.info( '▶️  Stopping Wikibase Suite services' );
-		this.runDockerComposeCmd( `down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1` );
+		await this.runDockerComposeCmd(
+			`down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1`
+		);
 	}
 }

@@ -1,5 +1,6 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
+
 describe( 'Babel', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Babel' );
