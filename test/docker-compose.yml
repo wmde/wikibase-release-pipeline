@@ -5,7 +5,8 @@ name: wikibase-suite-test-runner
 
 networks:
   default:
-    name: wikibase-suite-test-services_default
+    name: wikibase-suite-test
+    external: true
 
 services:
   test-runner:
