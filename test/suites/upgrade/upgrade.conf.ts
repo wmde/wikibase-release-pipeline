@@ -3,20 +3,14 @@ import { defaultTestSettings } from '../../setup/makeTestSettings.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 import versions from './versions.js';
 
-// TODO: Explore what happened with WDQS in upgrade tests
-
 export const testEnv = TestEnv.createWithDefaults( {
 	name: 'upgrade',
 	specs: [
 		'specs/upgrade/pre-upgrade.ts',
-		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
 		'specs/upgrade/upgrade.ts'
-		// 'specs/upgrade/queryservice-pre-and-post-upgrade.ts',
-		// 'specs/upgrade/queryservice-post-upgrade.ts'
 	],
 	composeFiles: [
 		'suites/upgrade/docker-compose.yml'
-		// 'suites/upgrade/docker-compose.wdqs.yml'
 	],
 	envFiles: [
 		...defaultTestSettings.envFiles,
@@ -41,7 +35,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 			`LOCAL_BUILD${testEnv.settings.isBaseSuite ? '' : '_BUNDLE'}`;
 
 		// Still load the default images as the local wikibase image will
-		// be used in specs/upgrade/upgrade.ts#before where toVersion is used
+		// be used in specs/upgrade/upgrade.ts#before where `toVersion` is used
 		await defaultTestSettings.beforeServices();
 	}
 } );

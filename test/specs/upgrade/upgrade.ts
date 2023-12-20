@@ -19,12 +19,12 @@ describe( 'Wikibase upgrade', function () {
 		);
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
-		testEnv.runDockerComposeCmd( '--progress quiet down' );
-		testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
+		await testEnv.runDockerComposeCmd( '--progress quiet down' );
+		await testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
 		await testEnv.waitForServices();
 
 		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
-		testEnv.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
+		await testEnv.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
 		// Make sure services are settled and available again
 		await testEnv.waitForServices();
 		// Repeat WDIO initialization with new services up

@@ -11,17 +11,12 @@ declare namespace WebdriverIO {
 		/**
 		 * Execute query on database
 		 */
-		dbQuery: ( query: string, config?: DatabaseConfig ) => string;
+		dbQuery: ( query: string, config?: DatabaseConfig ) => Promise<string>;
 
 		/**
 		 * Delete a claim by guid or pipe-separated list of guids
 		 */
 		deleteClaim: ( claimGuid: string ) => Promise<BotResponse>;
-
-		/**
-		 * Skip test if extension is not installed (present) on the Wikibase server
-		 */
-		skipIfExtensionNotPresent: ( test: Context, extension: string ) => Promise<void>;
 
 		/**
 		 * Creates or edits a page with content
@@ -66,6 +61,11 @@ declare namespace WebdriverIO {
 		 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
 		 */
 		queryBlazeGraphItem: ( itemId: string ) => Promise<Binding[]>;
+
+		/**
+		 * Skip test if extension is not installed (present) on the Wikibase server
+		 */
+		skipIfExtensionNotPresent: ( test: Context, extension: string ) => Promise<void>;
 
 		waitForJobs: (
 			serverURL?: string,

@@ -20,7 +20,7 @@ In order to test your own instances of the services, make sure to set the follow
 
 ## To only run a specific file in the repo tests
 ```
-./test.sh repo --spec babel*
+./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
 ## Test upgrading between base/bundle images
@@ -50,7 +50,6 @@ WIKIBASE_CLIENT_URL=http://wikibase-client.svc
 QUICKSTATEMENTS_URL=http://quickstatements.svc:80
 WDQS_FRONTEND_URL=http://wdqs-frontend.svc:80
 WDQS_URL=http://wdqs.svc:9999
-PINGBACK_BEACON_SERVER=http://mediawiki.svc
 WDQS_PROXY_URL=http://wdqs-proxy.svc:80
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=

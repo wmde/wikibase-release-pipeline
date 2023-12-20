@@ -7,13 +7,13 @@ export type TestSuiteSettings = {
 };
 
 export type TestRunnerSettings = {
-	runHeaded?: boolean;
-	logLevel?: string;
-	testTimeout?: number;
-	waitForTimeout?: number;
+	logLevel: string;
+	testTimeout: number;
+	waitForTimeout: number;
 	maxInstances: number;
 	pwd: string;
 	outputDir: string;
+	runHeaded?: boolean;
 };
 
 export type TestHooks = {

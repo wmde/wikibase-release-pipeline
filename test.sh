@@ -25,4 +25,4 @@ fi
 stop_test_runner
 
 $TEST_RUNNER_COMPOSE up -d --build > /dev/null 2>&1
-$TEST_RUNNER_COMPOSE run --rm test-runner -c "npx ts-node cli.js ${*:1}"
+$TEST_RUNNER_COMPOSE run --rm test-runner -c "npx ts-node cli.ts ${*:1}"

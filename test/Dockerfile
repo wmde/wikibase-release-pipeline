@@ -23,4 +23,4 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint global ignore=DL3059
 RUN curl -fsSL https://get.docker.com -o get-docker.sh | bash
 RUN sh get-docker.sh
-RUN npm ci
+RUN npm ci --no-update-notifier

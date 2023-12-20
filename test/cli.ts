@@ -1,4 +1,5 @@
-import { Launcher } from '@wdio/cli';
+/* eslint-disable no-use-before-define */
+import { Launcher, RunCommandArguments } from '@wdio/cli';
 import lodash from 'lodash';
 import chalk from 'chalk';
 import yargs from 'yargs';
@@ -22,24 +23,28 @@ export const allSuiteNames = [
 
 const y = yargs( hideBin( process.argv ) );
 
-const runCLI = async () => {
-	y.command( {
-		command: '*<suiteName>',
-		description: 'Run a test suite',
-		builder: ( yy ) => {
-			yy.positional('suiteName', {
+const runCLI = async (): Promise<{
+	[x: string]: unknown;
+	_: ( string | number )[];
+	$0: string;
+}> => {
+	y.command(
+		'*<suiteName>',
+		'Run a test suite',
+		( yy ) => {
+			yy.positional( 'suiteName', {
 				describe: 'Name of the test suite to run or setup',
 				type: 'string',
 				choices: allSuiteNames
-			})
+			} );
 		},
-		handler: commandHandler
-	} );
+		commandHandler
+	);
 
-	y.command( {
-		command: 'upgrade <fromVersion> [toVersion]',
-		description: 'run upgrade test',
-		builder: ( yy ) => { 
+	y.command(
+		'upgrade <fromVersion> [toVersion]',
+		'run upgrade test',
+		( yy ) => {
 			yy.positional( 'fromVersion', {
 				describe: 'Version to upgrade FROM in the upgrade test',
 				type: 'string',
@@ -53,16 +58,15 @@ const runCLI = async () => {
 				requiresArg: true
 			} );
 		},
-		handler: commandHandler
-	} );
+		commandHandler
+	);
 
-	y.command( {
-		command: 'all',
-		description: 'Run all test suites',
-		handler: async ( argv ) => {
-			await commandHandler( argv );
-		}
-	} );
+	y.command(
+		'all',
+		'Run all test suites',
+		{},
+		commandHandler
+	);
 
 	y.options( {
 		setup: {
@@ -98,35 +102,35 @@ const runCLI = async () => {
 	y.help();
 
 	return y.argv;
-}
+};
 
-function getOptions( argv ) {
+function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 	const options = Object.assign( {}, argv );
 	delete options._;
 	delete options.$0;
-	return options;
-}
 
-const commandHandler = async ( argv ) => {
-	if ( argv._.length < 1 ) {
-		y.showHelp();
-		return;
-	}
-	const options = getOptions( argv );
-
-	for (let [ key, value ] of Object.entries( options ) ) {
+	for ( const [ key, value ] of Object.entries( options ) ) {
 		if ( [ 'fromVersion', 'toVersion', 'headedTests' ].includes( key ) ) {
 			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] = value.toString();
 			delete options[ key ];
 		}
 	}
 
-	const wdioCommandArguments = options;
+	return options;
+}
+
+const commandHandler = async ( argv ): Promise<void> => {
+	if ( argv._.length < 1 ) {
+		y.showHelp();
+		return;
+	}
+	const wdioRunCommandOptions = prepareWdioRunCommandOptions( argv );
 	const suiteNames = argv._[ 0 ] === 'all' ? allSuiteNames : argv._.map( ( suiteName ) => suiteName.toString() );
 	let exitCode;
 
 	if ( argv.setup ) {
-		const { testEnv } = await import( `./suites/${suiteNames[0]}/${suiteNames[0]}.conf.ts` );
+		// eslint-disable-next-line es-x/no-dynamic-import
+		const { testEnv } = await import( `./suites/${suiteNames[ 0 ]}/${suiteNames[ 0 ]}.conf.ts` );
 		await testEnv.up();
 		exitCode = 0;
 	} else {
@@ -134,7 +138,7 @@ const commandHandler = async ( argv ) => {
 			console.log(
 				chalk.whiteBright.bold( `\n🎡 Running ${suiteNames.length} test suites:` ),
 				chalk.whiteBright( suiteNames.join( ', ' )
-			) );
+				) );
 		}
 		for ( const suiteName of suiteNames ) {
 			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
@@ -143,17 +147,20 @@ const commandHandler = async ( argv ) => {
 					`\n"${suiteName}" test suite ${' '.repeat( 96 - suiteName.length )}`
 				)
 			);
-			exitCode = await runWdio( configFilePath, wdioCommandArguments );
+			exitCode = await runWdio( configFilePath, wdioRunCommandOptions );
 		}
 	}
 	// eslint-disable-next-line no-process-exit
 	process.exit( exitCode );
-}
+};
 
-async function runWdio( configFile, wdioOpts ) {
+export async function runWdio(
+	configFilePath: string,
+	wdioOpts: Partial<RunCommandArguments>
+): Promise<number> {
 	try {
 		const wdio = new Launcher(
-			configFile,
+			configFilePath,
 			wdioOpts
 		);
 		return wdio.run();
@@ -162,4 +169,5 @@ async function runWdio( configFile, wdioOpts ) {
 	}
 }
 
+// eslint-disable-next-line es-x/no-top-level-await
 await ( async () => await runCLI() )();
