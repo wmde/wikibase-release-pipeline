@@ -50,6 +50,13 @@ services:
     image: "${WDQS_IMAGE_NAME}"
     restart: unless-stopped
     command: /runBlazegraph.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
     volumes:
       - query-service-data:/wdqs/data
     networks:
@@ -79,6 +86,13 @@ services:
     image: "${WDQS_IMAGE_NAME}"
     restart: unless-stopped
     command: /runUpdate.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
     depends_on:
     - wdqs
     - wikibase
