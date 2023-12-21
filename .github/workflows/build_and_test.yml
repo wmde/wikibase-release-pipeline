@@ -139,12 +139,12 @@ jobs:
           # Latest 1.37
           'WMDE9',
           'WMDE9_BUNDLE',
+          # Earlier 1.39
+          'WMDE11',
+          'WMDE11_BUNDLE',
           # Latest 1.38
           'WMDE12',
-          'WMDE12_BUNDLE',
-          # Latest 1.39
-          'WMDE13',
-          'WMDE13_BUNDLE'
+          'WMDE12_BUNDLE'
         ]
     needs:
       - build
