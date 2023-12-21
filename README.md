@@ -6,26 +6,51 @@ The wikibase release pipeline contains scripts used for building, testing and pu
 
 It contains a set of build targets defined in the [Makefile](./Makefile) which can be executed in two different ways.
 
-When [building](docs/topics/pipeline.md), use the [build.sh](build.sh) wrapper script to do the building inside a docker-container, this way files aren't littered around the repository but only in the `artifacts/` directory.
+When [building](docs/topics/pipeline.md), use the [build.sh](build.sh) script.
 
-For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targets.
+For [testing](docs/topics/testing.md), you can use `./test.sh <test-suite-name>`, and `./test.sh all`. Type simply `./test.sh` to get help for other CLI options.
 
 ## Quick reference
 
 ### Build Commands
 
 ```
-$ ./build.sh all
+# Build all wikibase suite components docker images
+$ ./build.sh
+
+# Build only the mediawiki/wikibase containers
 $ ./build.sh wikibase
+
+# Build only the query service container and save the docker image to a tarball
+$ ./build.sh --save-image wdqs
+
+# Build the wdqs-frontend container and extract a standalone tarball from the webroot
+$ ./build.sh --extract-tarball wdqs-frontend
+
+# Build the wdqs container without using Dockers cache
+$ ./build.sh --no-cache wdqs
 ```
 
 ### Test Commands
 
 ```
-$ make test
-$ make test SUITE=repo
-$ make test SUITE=repo FILTER=special-item
-$ make test-upgrade VERSION=wmde.9
+# Show help for the Test CLI, including various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
+$ ./test.sh
+
+# Runs all test suites (defined in `test/suites`)
+$ ./test.sh all
+
+# Runs the `repo` test suite
+$ ./test.sh repo
+
+# Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
+$ ./test.sh repo --spec specs/repo/special-item.ts
+
+# Runs the upgrade test suite from WMDE9 to the currently built version locally
+$ ./test.sh upgrade WMDE9
+
+# Start and leave up the test environment for a given test suite without running tests
+$ ./test.sh repo --setup
 ```
 
 ### Example Instance Commands

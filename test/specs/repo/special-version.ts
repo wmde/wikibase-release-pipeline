@@ -1,14 +1,11 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../helpers/default-functions.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
-		const softwareEl = await awaitDisplayed( '#sv-software' );
-		const text = await softwareEl.getText();
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Version` );
+		const text = await $( '#sv-software' ).getText();
 		assert.strictEqual(
-			text.includes( `MediaWiki ${process.env.MEDIAWIKI_VERSION}` ),
+			text.includes( `MediaWiki ${testEnv.vars.MEDIAWIKI_VERSION}` ),
 			true
 		);
 	} );
@@ -44,12 +41,11 @@ describe( 'Special:Version', function () {
 			const name = extension;
 
 			it( `Should contain ${name} extensions`, async function () {
-				await skipIfExtensionNotPresent( this, name );
-
-				await browser.url( `${process.env.MW_SERVER}/wiki/Special:Version` );
+				await browser.skipIfExtensionNotPresent( this, name );
+				await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Version` );
 
 				// /wiki/Special:Version generate these for each installed extension
-				const elementSelector = await awaitDisplayed(
+				const elementSelector = await $(
 					`#mw-version-ext-${extensionPackage}-${extension.replace( / /g, '_' )}`
 				);
 				await elementSelector.scrollIntoView();

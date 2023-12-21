@@ -1,7 +1,13 @@
+/*
+NOTE: The upgrade test suite doesn't include WDQS/QueryService nor test its upgrade
+for unknown reasons. This spec existed but was skipped in the code the Wikibase Suite
+team inherited.
+*/
+
 import assert from 'assert';
-import { getElementByURI } from '../../helpers/blazegraph.js';
-import Binding from '../../helpers/types/binding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { getElementByURI } from '../../helpers/blazegraph.js';
+import Binding from '../../types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
 	const itemLabel = 'NewUpgradeItem';
@@ -10,7 +16,7 @@ describe( 'Wikibase post upgrade', function () {
 	let newPropertyId: string;
 
 	beforeEach( function () {
-		if ( process.env.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
+		if ( testEnv.vars.RUN_QUERYSERVICE_POST_UPGRADE_TEST !== 'true' ) {
 			this.skip();
 		}
 	} );
@@ -54,11 +60,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			process.env.MW_SERVER + '/prop/' + newPropertyId,
+			testEnv.vars.WIKIBASE_URL + '/prop/' + newPropertyId,
 			bindings
 		);
 		const property = getElementByURI(
-			process.env.MW_SERVER + '/prop/direct/' + newPropertyId,
+			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + newPropertyId,
 			bindings
 		);
 

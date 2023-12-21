@@ -1,6 +1,6 @@
-version: '3.4'
+version: '3.5'
 
 services:
   wikibase:
     volumes:
-      - ${TMP_LOCALSETTINGS}:/var/www/html/LocalSettings.php
+      - ./upgrade/tmp_LocalSettings.php:/var/www/html/LocalSettings.php
