@@ -6,7 +6,8 @@ fi
 
 # Explicitly adds the Docker network wikibase-suite-test which is shared by both
 # test runner and test services
-docker network create wikibase-suite-test > /dev/null || true
+docker network inspect wikibase-suite-test > /dev/null 2>&1 || \
+  docker network create wikibase-suite-test
 
 # on `test-runner` `node_modules`` is set to persist in a bind-mounted volume
 # pointing to `test/node_modules`. This allows visibility of the modules in the
