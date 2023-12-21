@@ -3,16 +3,18 @@ const { extractModuleLineAndColumn } = require('mocha-json-streamier-reporter/li
 var core = require('@actions/core');
 var { issueCommand } = require('@actions/core/lib/command');
 
-if( !process.env.SUITE ) {
+const suiteName = process.argv[2];
+
+if( suiteName ) {
     return;
 }
 
-const filePath = `../../test/suites/${process.env.SUITE}/results/result.json`;
+const filePath = `../../test/suites/${suiteName}/results/result.json`;
 
 var resultObject = {};
 
 if (fs.existsSync(filePath)) {
-    resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'))[process.env.SUITE];
+    resultObject = JSON.parse(fs.readFileSync(filePath, 'utf8'))[suiteName];
 
     if (resultObject.fail.length != 0) {
 

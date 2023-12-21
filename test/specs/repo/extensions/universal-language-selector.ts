@@ -1,22 +1,16 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
+		await browser.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
 	} );
 
 	it( 'Should be able to see the language selector menu', async () => {
-		await browser.url( process.env.MW_SERVER );
-		const searchInputEl = await awaitDisplayed( '#searchInput' );
-		await searchInputEl.click();
+		await browser.url( testEnv.vars.WIKIBASE_URL );
+		await $( '#searchInput' ).click();
+		await $( '.imeselector' ).click();
 
-		const selectorEl = await awaitDisplayed( '.imeselector' );
-		await selectorEl.click();
-
-		const firstLangEl = await awaitDisplayed( '.imeselector-menu h3' );
-		const firstLang = await firstLangEl.getText();
+		const firstLang = await $( '.imeselector-menu h3' ).getText();
 
 		assert.strictEqual( firstLang, 'English' );
 	} );

@@ -1,30 +1,20 @@
-version: '3.4'
+version: '3.5'
 
 services:
 
-  test-runner:
-    environment:
-      - MW_SERVER
-      - QS_SERVER
-      - WDQS_FRONTEND_SERVER
-      - WDQS_SERVER
-      - WDQS_PROXY_SERVER
-      - MW_SCRIPT_PATH
-
   wikibase:
     volumes:
-      - ./suites/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
-      - ./suites/${SUITE}/results:/var/log/mediawiki
-      - ../example/extra-install.sh:/extra-install.sh
+      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
+      - ./example/results:/var/log/mediawiki
+      - ../../example/extra-install.sh:/extra-install.sh
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
 
   wikibase-jobrunner:
     volumes:
-      - ../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
+      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
 
   quickstatements:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-

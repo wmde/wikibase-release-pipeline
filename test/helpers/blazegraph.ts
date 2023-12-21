@@ -1,4 +1,4 @@
-import Binding from './types/binding.js';
+import Binding from '../types/binding.js';
 
 export function getElementByURI(
 	uri: string,

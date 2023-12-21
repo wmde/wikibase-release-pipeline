@@ -1,18 +1,17 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 
 describe( 'Babel', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Babel' );
+		await browser.skipIfExtensionNotPresent( this, 'Babel' );
 	} );
 
 	it( 'Should be able to update the user page with language skills', async () => {
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
 		const executionContent = await browser.editPage(
-			process.env.MW_SERVER,
-			'User:' + process.env.MW_ADMIN_NAME,
+			testEnv.vars.WIKIBASE_URL,
+			'User:' + testEnv.vars.MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);
 

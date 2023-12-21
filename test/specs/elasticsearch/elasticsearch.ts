@@ -1,8 +1,7 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import SearchResult from '../../helpers/types/search-result.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
+import SearchResult from '../../types/search-result.js';
 
 const itemAlias: string = getTestString( 'alias' );
 const itemLabel: string = getTestString( 'testItem' );
@@ -13,31 +12,25 @@ describe( 'ElasticSearch', function () {
 	it( 'Should create an item', async () => {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		await awaitDisplayed(
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:SetAliases/' );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
 
 		// input id
-		const inputIdEl = await awaitDisplayed( '#wb-modifyentity-id input' );
-		await inputIdEl.setValue( itemId );
+		await $( '#wb-modifyentity-id input' ).setValue( itemId );
 
 		// input alias term and submit
-		const inputValueEl = await awaitDisplayed( '#wb-modifyterm-value input' );
-		await inputValueEl.setValue( itemAlias );
+		await $( '#wb-modifyterm-value input' ).setValue( itemAlias );
 
-		const inputWidgetEl = await $( 'button.oo-ui-inputWidget-input' );
-		await inputWidgetEl.click();
+		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const aliasesViewEl = await awaitDisplayed(
-			'.wikibase-aliasesview-list-item'
-		);
-		const alias = await aliasesViewEl.getText();
+		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
 		assert.strictEqual( alias, itemAlias );
 	} );
 
@@ -47,7 +40,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -65,9 +58,9 @@ describe( 'ElasticSearch', function () {
 		);
 		assert(
 			searchResult.length === 1 &&
-			searchResult[ 0 ].id === itemId &&
-			searchResult[ 0 ].match.type === 'label' &&
-			searchResult[ 0 ].match.text === itemLabel
+				searchResult[ 0 ].id === itemId &&
+				searchResult[ 0 ].match.type === 'label' &&
+				searchResult[ 0 ].match.text === itemLabel
 		);
 	} );
 
@@ -77,7 +70,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${process.env.MW_SERVER}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -96,9 +89,9 @@ describe( 'ElasticSearch', function () {
 
 		assert(
 			searchResult.length === 1 &&
-			searchResult[ 0 ].id === itemId &&
-			searchResult[ 0 ].match.type === 'alias' &&
-			searchResult[ 0 ].match.text === itemAlias
+				searchResult[ 0 ].id === itemId &&
+				searchResult[ 0 ].match.type === 'alias' &&
+				searchResult[ 0 ].match.text === itemAlias
 		);
 	} );
 } );

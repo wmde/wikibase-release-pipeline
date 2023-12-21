@@ -1,54 +1,46 @@
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async function () {
+		await browser.skipIfExtensionNotPresent( this, 'Nuke' );
 		await browser.waitForJobs();
-		await skipIfExtensionNotPresent( this, 'Nuke' );
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async function () {
 		await browser.editPage(
-			process.env.MW_SERVER,
+			testEnv.vars.WIKIBASE_URL,
 			'Vandalism',
 			'Vandals In Motion'
 		);
 
 		const pageExistsResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			testEnv.vars.WIKIBASE_URL + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await SuiteLoginPage.loginAdmin();
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Nuke' );
 
-		const buttonEl = await awaitDisplayed( 'button.oo-ui-inputWidget-input' );
-		await buttonEl.click();
+		await $( 'button.oo-ui-inputWidget-input' ).click();
 
-		await awaitDisplayed( 'form li' );
+		await $( 'form li' );
 
-		const checkboxEl = await awaitDisplayed( '.mw-checkbox-none' );
-		await checkboxEl.click();
-
-		const vandalismCheckEl = await awaitDisplayed( 'input[value="Vandalism"]' );
-		await vandalismCheckEl.click();
-
-		const submitButtonEl = await awaitDisplayed( 'input[type="submit"]' );
-		await submitButtonEl.click();
+		await $( '.mw-checkbox-none' ).click();
+		await $( 'input[value="Vandalism"]' ).click();
+		await $( 'input[type="submit"]' ).click();
 
 		await browser.acceptAlert();
 
-		await awaitDisplayed( 'li*=has been queued for deletion' );
+		await $( 'li*=has been queued for deletion' );
 
 		await browser.waitForJobs();
 
 		const pageIsGoneResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			testEnv.vars.WIKIBASE_URL + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);

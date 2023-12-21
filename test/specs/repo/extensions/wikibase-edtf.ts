@@ -1,10 +1,9 @@
 import assert from 'assert';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
+		await browser.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 	} );
 
 	it( 'Should allow to create and use the EDTF property', async () => {
@@ -32,7 +31,7 @@ describe( 'WikibaseEdtf', function () {
 
 		// go look at wikibase
 		const response = await browser.makeRequest(
-			`${process.env.MW_SERVER}/wiki/Special:EntityData/${itemId}.json`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
 		);
 		const responseSnak =
       response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
@@ -41,6 +40,6 @@ describe( 'WikibaseEdtf', function () {
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
 	} );
 } );

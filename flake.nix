@@ -22,14 +22,22 @@
             echo
 
             echo "Build Commands:"
-            echo "$ ./build.sh all"
+            echo "# Build all wikibase suite components docker images"
+            echo "$ ./build.sh"
+            echo "# Build only the mediawiki/wikibase containers"
             echo "$ ./build.sh wikibase"
+            echo "# Build only the query service container and save the docker image to a tarball"
+            echo "$ ./build.sh --save-image wdqs"
+            echo "# Build the wdqs-frontend container and extract a standalone tarball from the webroot"
+            echo "$ ./build.sh --extract-tarball wdqs-frontend"
+            echo "# Build the wdqs container without using Dockers cache"
+            echo "$ ./build.sh --no-cache wdqs"
             echo
             echo "Test Commands:"
-            echo "$ make test"
-            echo "$ make test SUITE=repo"
-            echo "$ make test SUITE=repo FILTER=special-item"
-            echo "$ make test-upgrade VERSION=wmde.9"
+            echo "$ ./test.sh"
+            echo "$ ./test.sh repo"
+            echo "$ ./test.sh repo --spec specs/repo/special-item.ts"
+            echo "$ ./test.sh upgrade WMDE9"
             echo
             echo "Example Instance Commands:"
             echo "$ docker compose \\"
