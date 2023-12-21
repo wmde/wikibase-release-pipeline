@@ -13,11 +13,11 @@ done
 
 if $SHOULD_FIX
 then
-  echo "Fixing Errors"
-  NPM_LINT_COMMAND="npm run fix --silent"
+  echo "Fixing Linting issues in Typescript"
+  NPM_LINT_COMMAND="npm run lint:fix --silent"
   PYTHON_FLAGS="--fix"
 else
-  NPM_LINT_COMMAND="npm run lint:fix --silent"
+  NPM_LINT_COMMAND="npm run lint --silent"
   PYTHON_FLAGS=""
 fi
 
@@ -30,7 +30,8 @@ $TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" te
 "
 
 # ℹ️ Linting Shell Scripts (**/*.sh) - https://github.com/koalaman/shellcheck#from-your-terminal
-find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
+find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \
+  | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
 
 # ℹ️ Linting Dockerfiles (**/Dockerfile) - https://github.com/hadolint/hadolint
 docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "
