@@ -22,12 +22,12 @@ class QueryServiceUI extends SubmittablePage {
 	}
 
 	public async resultIncludes( prop: string, value?: string ): Promise<boolean> {
-		const resultTable = await this.resultTable;
-		const text = await resultTable.getText();
+		const text = await this.resultTable.getText();
 		if ( !value ) {
 			return text.includes( prop );
 		}
 
+		// eslint-disable-next-line security/detect-non-literal-regexp
 		const regexp = new RegExp( `(${prop})(\\s+)(${value})` );
 		const matches = text.match( regexp );
 		return matches !== null;

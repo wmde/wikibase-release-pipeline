@@ -1,7 +1,6 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import awaitDisplayed from '../../helpers/await-displayed.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -12,7 +11,7 @@ describe( 'Property Prefetching', function () {
 		await browser.url(
 			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
 		);
-		await awaitDisplayed( 'ol.special li a' );
+		await $( 'ol.special li a' );
 
 		const links = ( await $$( 'ol.special li a' ) ).slice( 0, NUM_PROPERTIES );
 
@@ -39,8 +38,8 @@ describe( 'Property Prefetching', function () {
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${process.env.MW_SERVER}/wiki/Item:${itemId}` );
-		await awaitDisplayed(
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
@@ -59,14 +58,15 @@ describe( 'Property Prefetching', function () {
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 2000 );
 	} );
 
 	it( 'Should render history page list within threshold', async () => {
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Item:${itemId}?action=history`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}?action=history`
 		);
-		await awaitDisplayed( '#pagehistory', { timeout: 2000 } );
+		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
 		assert.strictEqual(
@@ -77,9 +77,9 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render recent changes list within threshold', async () => {
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
-		await awaitDisplayed( 'ul.special', { timeout: 2000 } );
+		await $( 'ul.special' );
 
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?

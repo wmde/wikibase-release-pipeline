@@ -1,21 +1,25 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
-import { ResultType, TestResult } from './types/test-results.js';
+import { ResultType, TestResult } from '../types/test-results.js';
 import { utf8 } from './readFileEncoding.js';
 
+type JsonReporterOptions = {
+	suiteName: string;
+	resultsFilePath: string;
+};
+
 class JsonReporter extends WDIOReporter {
-	private resultFilePath: string | URL;
 	private failedTests: TestResult[];
 	private successfulTests: TestResult[];
 	private skippedTests: TestResult[];
 
-	public constructor( options: Partial<Reporters.Options> ) {
+	public constructor( options: Partial<Reporters.Options> & JsonReporterOptions ) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
+
 		super( options );
 
-		this.resultFilePath = options.resultFilePath;
 		this.suites = {};
 		this.failedTests = [];
 		this.successfulTests = [];
@@ -35,7 +39,7 @@ class JsonReporter extends WDIOReporter {
 	}
 
 	public onSuiteEnd( suiteStats: SuiteStats ): void {
-		const suite = process.env.SUITE;
+		const suite = this.options.suiteName;
 
 		const result: ResultType = {
 			[ suite ]: {
@@ -45,9 +49,11 @@ class JsonReporter extends WDIOReporter {
 			}
 		};
 
-		if ( existsSync( this.resultFilePath ) ) {
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
+		if ( existsSync( this.options.resultFilePath ) ) {
 			const existing: ResultType = JSON.parse(
-				readFileSync( this.resultFilePath, 'utf8' )
+				// eslint-disable-next-line security/detect-non-literal-fs-filename
+				readFileSync( this.options.resultFilePath, 'utf8' )
 			);
 
 			result.start = suiteStats.start;
@@ -60,8 +66,9 @@ class JsonReporter extends WDIOReporter {
 			}
 		}
 
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		writeFileSync(
-			this.resultFilePath,
+			this.options.resultFilePath,
 			JSON.stringify( result, null, 2 ),
 			utf8.encoding
 		);
