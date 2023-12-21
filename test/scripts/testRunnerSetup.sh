@@ -6,7 +6,7 @@ fi
 
 # Explicitly adds the Docker network wikibase-suite-test which is shared by both
 # test runner and test services
-docker network create wikibase-suite-test > /dev/null 2>&1 || true
+docker network create wikibase-suite-test > /dev/null || true
 
 # on `test-runner` `node_modules`` is set to persist in a bind-mounted volume
 # pointing to `test/node_modules`. This allows visibility of the modules in the
@@ -18,8 +18,8 @@ mkdir -p test/node_modules
 
 # The test runner is currently configured and ran through `test/docker-compose.yml
 # this is the set of docker compose CLI params that should always be used when
-# running it. Note that this compose command command assumes it is ran from the
-# root directory of the project, not from within the `test`` directory 
+# running it. Note that this compose command assumes it is ran from the root
+# directory of the project, not from within the `test` directory.
 export TEST_RUNNER_COMPOSE="docker compose \
 -f test/docker-compose.yml \
 --env-file test/test-runner.env \
@@ -28,12 +28,11 @@ export TEST_RUNNER_COMPOSE="docker compose \
 
 # Run as "DEBUG=true <script>" to see logging of Docker operations
 if [ -z "$DEBUG" ]; then
-  TEST_RUNNER_COMPOSE="$TEST_RUNNER_COMPOSE --progress quiet"
+	TEST_RUNNER_COMPOSE="$TEST_RUNNER_COMPOSE --progress quiet"
 fi
 
 # Run as ",/<script>.sh --shell" to break out into a shell on the `test-runner`
 # container. Exits cancelling any further shell commands.
-# shell script commands.
 if [ "$1" = "--shell" ]; then
 	$TEST_RUNNER_COMPOSE run --rm test-runner -c "bash"
 	exit 0

@@ -1,8 +1,8 @@
 # Testing
 
-The tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs/tests in the `test/specs` directory and are specified in the `.confg.ts` file in the each suite directory. 
+he tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs/tests in the `test/specs` directory and are specified in the `.config.ts` file in each suite directory.
 
-All test suites except `example` and `upgrade` are ran against the most recently built local Docker images. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory. The `upgrade` suite runs the remote Docker images from the specified previous version, and tests upgrading to the latest local build.
+All test suites except `example` and `upgrade` are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory. The `upgrade` suite runs the remote Docker images from the specified previous version, and tests upgrading to the latest local build.
 
 You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
 
