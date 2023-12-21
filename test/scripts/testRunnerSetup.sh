@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 if ! [[ -f "local.env" ]]; then
 	touch local.env
 fi

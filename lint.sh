@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+source ./test/scripts/testRunnerSetup.sh
 
 SHOULD_FIX=false
 while getopts f flag
@@ -21,8 +22,6 @@ else
 fi
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-source ./test/scripts/testRunnerSetup.sh
-
 $TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
   npm ci --progress=false > /dev/null &&
   $NPM_LINT_COMMAND &&

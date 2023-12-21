@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -e
 source ./test/scripts/testRunnerSetup.sh
 
 # Run as DEBUG=true ./test.sh <suiteName> to see logging of the Docker run
