@@ -1,50 +1,45 @@
 # Testing
 
+You can run the tests in the docker container locally as they are ran in CI using `test.sh`. Testing locally requires the built images. Some examples:
 
-## Testing Locally
+```bash
+# See all`./test.sh` CLI options:
+./test.sh --help
 
-You can run the tests in the docker container locally. Testing locally requires the built images.
+# To run all test suites:
+./test.sh all
 
-## To run all
-```
-./test.sh
-```
-
-## To only run a single suite
-```
+# To only run a single suite (e.g. repo):
 ./test.sh repo
-```
 
-In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested. 
+# To run upgrade tests
+# Previous releases Docker Image URLs are defined in `test/suites/upgrade/versions.ts`:
+./test.sh upgrade WMDE9_BUNDLE
 
-
-## To only run a specific file in the repo tests
-```
+# To only run a specific file within the setup for any test suite (e.g. repo and the babel extension):
 ./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
-## Test upgrading between base/bundle images
+There are also a few special options which are useful when writing tests, or in setting-up and debugging the test runner:
 
-Tests upgrading between a previous release defined in `test/suites/upgrade/versions.ts` and the newly built base version. Runs the `upgrade` suite.
+```bash
+# '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
+./test.sh repo --setup
 
-```
-./test.sh upgrade WMDE0
-```
-or
-```
-./test.sh upgrade WMDE0_BUNDLE
+# `--shell`: Redirects to a bash session on the test-runner and doesn't execute any further commands
+./test.sh --shell
+
+# `DEBUG`: Shows full Docker compose up/down progress logs
+DEBUG=true ./test.sh repo --setup
 ```
 
-## Test the example
-
-Tests the example configuration by running the `example` test suite.
-
-```
-./test.sh example
-```
+WDIO Testrunner CLI options are also supported. See https://webdriver.io/docs/testrunner.
 
 ##  Variables for testing some other instance
-```
+
+In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested:
+
+```bash
 WIKIBASE_URL=http://wikibase.svc
 WIKIBASE_CLIENT_URL=http://wikibase-client.svc
 QUICKSTATEMENTS_URL=http://quickstatements.svc:80
@@ -56,26 +51,4 @@ MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w
 ```
 
-## Variables for running the a specific test file against a wikibase.cloud/localhost instance
-
-Create a `test/wbaas.minikube.repo.env` file with the following contents
-
-```
-WIKIBASE_URL=http://minikube.wbaas.localhost
-
-MW_ADMIN_NAME=Minikube
-MW_ADMIN_PASS=superpassword
-
-MW_SCRIPT_PATH=/w
-
-FILTER=api.ts
-MOCHA_OPTS_TIMEOUT=3600000000
-```
-
-Source the file on each run and execute the `test:run-filter` target on the selenium package in `test`.
-
-```bash
-set -o allexport; source wbaas.minikube.repo.env; set +o allexport && npm run test:run-filter
-```
-
-For more information on selenium testing see the [README](../../test/selenium/README.md) file in the selenium folder.
+For more information on testing see the [README](../../test/README.md).
