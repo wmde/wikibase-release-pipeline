@@ -15,6 +15,6 @@
   },
   "scripts": {
     "lint": "npx eslint .",
-    "fix": "npx eslint . --fix"
+    "lint:fix": "npx eslint . --fix"
   }
 }
