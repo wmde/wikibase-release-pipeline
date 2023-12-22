@@ -31,7 +31,7 @@ fi
 
 # Standard way to run commmands on the test runner. Always builds, and removes the
 # test-runner container after use.
-export RUN_TEST_RUNNER_CMD="$TEST_COMPOSE run -rm --build test-runner -c"
+export RUN_TEST_RUNNER_CMD="$TEST_COMPOSE run --rm --build test-runner -c"
 
 # `--command`, `-c`: Run as ``,/<script>.sh --command <command>` to run a command
 # on the `test-runner` container. Alias `-c`. Exits without running any subsequent
