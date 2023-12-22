@@ -20,8 +20,13 @@ class SpecialNewProperty extends SubmittablePage {
 	public async open( dataType?: string ): Promise<void> {
 		dataType = dataType ? '?datatype=' + dataType : '';
 		await browser.url(
-			`${process.env.MW_SERVER}/wiki/Special:NewProperty${dataType}`
+			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:NewProperty${dataType}`
 		);
+		await this.labelInput;
+		await this.descriptionInput;
+		await this.aliasesInput;
+		await this.datatypeInput;
+		await this.submitBtn;
 	}
 }
 

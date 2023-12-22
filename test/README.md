@@ -36,29 +36,21 @@
 - [X] Create item with an alias and search by item alias
 - [X] Case-insensitive search should work through Wikibase
 
-
-# Selenium tests
-
-source the `.env` file in the root directory
-
-Please see tests/selenium/README.md file in mediawiki repository.
 ## Environment
 
 The behavior of the tests can be modified with several environment variables.
 
-* `MW_SERVER`: protocol, host name and port of the MediaWiki installation.
+* `WIKIBASE_URL`: protocol, host name and port of the MediaWiki installation.
   Defaults to `http://127.0.0.1:8080` (Vagrant).
-* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `MW_SERVER`.
+* `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_URL`.
   Defaults to `/w`.
-* `RESULTS_DIR`: Directory to leave logs and screenshots in.
-  Defaults to `suites/SUITE/results` within this directory.
 * `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.:
   Property ID of a property with datatype `string`, `url`, etc. –
   if not set, a new property of this type will be created each time the tests are run.
   (This will fail unless anonymous users are allowed to create properties on the wiki,
   so setting `WIKIBASE_PROPERTY_STRING` correctly is recommended.)
 * `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test
-  execution on http://localhost:7900/?autoconnect=1&resize=scale&password=secret
+  execution on http://localhost:7900/?autoconnect=1&resize=scale
 
 ## Write more tests
 

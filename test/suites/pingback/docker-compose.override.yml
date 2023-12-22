@@ -1,10 +1,10 @@
-version: '3.4'
+version: '3.5'
 
 services:
 
   wikibase:
     volumes:
-      - ./suites/${SUITE_CONFIG_NAME}/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.${SUITE_CONFIG_NAME}.php
+      - ./pingback/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.pingback.php
     environment: 
       - WIKIBASE_PINGBACK=true
 
@@ -14,7 +14,7 @@ services:
     working_dir: /home/node/app
     restart: always
     volumes:
-      - ./suites/${SUITE_CONFIG_NAME}/beacon.mjs:/home/node/app/beacon.mjs
+      - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
     command: "node beacon.mjs"
     ports:
       - "7171:80"

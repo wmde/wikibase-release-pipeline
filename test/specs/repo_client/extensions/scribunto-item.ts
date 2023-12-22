@@ -1,13 +1,11 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import SuiteLoginPage from '../../../helpers/pages/SuiteLoginPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ExternalChange from '../../../helpers/types/external-change.js';
-import awaitDisplayed from '../../../helpers/await-displayed.js';
+import ExternalChange from '../../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -17,7 +15,7 @@ describe( 'Scribunto Item', function () {
 	const luaPageTitle = 'RepoClientLuaTest';
 
 	beforeEach( async function () {
-		await skipIfExtensionNotPresent( this, 'Scribunto' );
+		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
 	it( 'Should create an item on repo', async () => {
@@ -38,13 +36,14 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
-		await awaitDisplayed(
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async () => {
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const template = await readFile(
 			new URL( 'repo-client.lua', import.meta.url ),
 			utf8
@@ -55,13 +54,13 @@ describe( 'Scribunto Item', function () {
 			.replace( '<LANG>', 'en' );
 
 		await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			'Module:RepoClient',
 			luaScript
 		);
 
 		const executionContent = await browser.editPage(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			luaPageTitle,
 			'{{#invoke:RepoClient|testLuaExecution}}'
 		);
@@ -72,7 +71,7 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await SuiteLoginPage.loginAdmin();
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -80,15 +79,13 @@ describe( 'Scribunto Item', function () {
 			browser.options.baseUrl + '/index.php?' + stringify( query )
 		);
 
-		const destructiveButtonEl = await awaitDisplayed(
-			'.oo-ui-flaggedElement-destructive button'
-		);
-		await destructiveButtonEl.click();
+		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( process.env.MW_SERVER + '/wiki/Item:' + itemId );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
+		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
 		const expectedDeletionChange: ExternalChange = {
@@ -99,7 +96,7 @@ describe( 'Scribunto Item', function () {
 		};
 
 		const actualChange = await browser.getDispatchedExternalChange(
-			process.env.MW_CLIENT_SERVER,
+			testEnv.vars.WIKIBASE_CLIENT_URL,
 			expectedDeletionChange
 		);
 

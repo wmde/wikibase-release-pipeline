@@ -1,5 +1,9 @@
+# NOTE: The upgrade test suite doesn't include WDQS/QueryService nor test its upgrade
+# for unknown reasons. This compose file existed but was skipped in the code the Wikibase
+# Suite team inherited.
+
 # WDQS and WDQS-updater for testing when upgrading
-version: '3.4'
+version: '3.5'
 
 services:
 
