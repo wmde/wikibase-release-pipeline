@@ -1,4 +1,4 @@
-import Page from '../page.js';
+import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
 
 class SpecialListProperties extends Page {
