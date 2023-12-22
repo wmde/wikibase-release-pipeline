@@ -1,6 +1,11 @@
 # Wikibase and Database for testing when upgrading
 version: '3.5'
 
+networks:
+  default:
+    name: wikibase-suite-test
+    external: true
+
 services:
 
   wikibase:
