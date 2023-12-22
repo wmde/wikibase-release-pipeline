@@ -1,6 +1,6 @@
 export class Page {
 	public async open( path: string ): Promise<void> {
-		await browser.url( `${process.env.MW_SERVER}${path}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}${path}` );
 	}
 }
 

@@ -1,30 +1,29 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { skipIfExtensionNotPresent } from '../../../helpers/default-functions.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async function () {
+		await browser.skipIfExtensionNotPresent( this, 'Nuke' );
 		await browser.waitForJobs();
-		await skipIfExtensionNotPresent( this, 'Nuke' );
 	} );
 
 	it( 'Should be able to delete a page through Special:Nuke', async function () {
 		await browser.editPage(
-			process.env.MW_SERVER,
+			testEnv.vars.WIKIBASE_URL,
 			'Vandalism',
 			'Vandals In Motion'
 		);
 
 		const pageExistsResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			testEnv.vars.WIKIBASE_URL + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await LoginPage.login( process.env.MW_ADMIN_NAME, process.env.MW_ADMIN_PASS );
-		await browser.url( process.env.MW_SERVER + '/wiki/Special:Nuke' );
+		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Nuke' );
 
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
@@ -41,7 +40,7 @@ describe( 'Nuke', function () {
 		await browser.waitForJobs();
 
 		const pageIsGoneResult = await browser.makeRequest(
-			process.env.MW_SERVER + '/wiki/Vandalism',
+			testEnv.vars.WIKIBASE_URL + '/wiki/Vandalism',
 			{ validateStatus: false },
 			{}
 		);

@@ -1,8 +1,9 @@
 import { Page } from '../page.js';
 
 class Property extends Page {
-	public get save(): ChainablePromiseElement {
-		return $( '=save' );
+	public get saveStatement(): ChainablePromiseElement {
+		// Only return save button if enabled
+		return $( '.wikibase-toolbar-button-save[aria-disabled="false"]' ).$( '=save' );
 	}
 	public get addStatement(): ChainablePromiseElement {
 		return $( '=add statement' );
@@ -12,7 +13,7 @@ class Property extends Page {
 	}
 
 	public async open( id: string ): Promise<void> {
-		await browser.url( `${process.env.MW_SERVER}/wiki/Property:${id}` );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Property:${id}` );
 	}
 }
 
