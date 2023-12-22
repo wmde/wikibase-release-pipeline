@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-source ./test/scripts/testRunnerSetup.sh
+source ./test/scripts/test_runner_setup.sh
 
 SHOULD_FIX=false
 while getopts f flag
@@ -22,7 +22,7 @@ else
 fi
 
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-$TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+$TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
   $NPM_LINT_COMMAND &&
   cd /tmp/diagrams &&
   npm ci --progress=false > /dev/null &&
@@ -40,6 +40,6 @@ docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadol
 
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
-$TEST_RUNNER_COMPOSE run --rm --build -v "$(pwd):/tmp" test-runner -c "
+$TEST_COMPOSE run --rm --build -v "$(pwd):/tmp" test-runner -c "
   python3 scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
 "

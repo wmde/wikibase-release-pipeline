@@ -1,28 +1,28 @@
 # Testing
 
-he tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs/tests in the `test/specs` directory and are specified in the `.config.ts` file in each suite directory.
+Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs  run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
 All test suites except `example` and `upgrade` are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory. The `upgrade` suite runs the remote Docker images from the specified previous version, and tests upgrading to the latest local build.
 
 You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
 
-Some examples of using `./test.sh`:
+## Examples usage of `./test.sh`:
 
 ```bash
-# See all`./test.sh` CLI options:
+# See all`./test.sh` CLI options
 ./test.sh --help
 
-# To run all test suites:
+# To run all test suites
 ./test.sh all
 
-# To only run a single suite (e.g. repo):
+# To only run a single suite (e.g. repo)
 ./test.sh repo
 
 # To run upgrade tests
-# Previous releases Docker Image URLs are defined in `test/suites/upgrade/versions.ts`:
+# Previous releases Docker Image URLs are defined in `test/suites/upgrade/versions.ts`
 ./test.sh upgrade WMDE9_BUNDLE
 
-# To only run a specific file within the setup for any test suite (e.g. repo and the babel extension):
+# To only run a specific file within the setup for any test suite (e.g. repo and the babel extension)
 ./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
@@ -32,8 +32,8 @@ There are also a few special options which are useful when writing tests, or in 
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
 ./test.sh repo --setup
 
-# `--shell`: Redirects to a bash session on the test-runner and doesn't execute any further commands
-./test.sh --shell
+# `--command`, `--c`: Runs the given command on the test-runner and doesn't execute any further commands
+./test.sh --command npm install
 
 # `DEBUG`: Shows full Docker compose up/down progress logs
 DEBUG=true ./test.sh repo --setup
