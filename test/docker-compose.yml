@@ -5,7 +5,8 @@ name: wikibase-suite-test-runner
 
 networks:
   default:
-    name: wikibase-suite-test-services_default
+    name: wikibase-suite-test
+    external: true
 
 services:
   test-runner:
@@ -21,7 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
-      - HOST_PWD=${PWD}
+      - HOST_PWD=${PWD}/test
 
   browser:
     # use a fixed selenium chrome version for stability in our testing environment
@@ -40,3 +41,8 @@ services:
 
 volumes:
   node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./node_modules
