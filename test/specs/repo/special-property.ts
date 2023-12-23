@@ -38,9 +38,7 @@ describe( 'Special:NewProperty', function () {
 		} );
 	} );
 
-	it( 'Should be able to see newly created properties in list of properties special page', async function () {
-		this.retries( 4 )
-
+	it( 'Should be able to see newly created properties in list of properties special page', async () => {
 		await SpecialListProperties.openParams( {
 			dataType: wikibasePropertyString.urlName,
 			limit: 1000
@@ -57,18 +55,20 @@ describe( 'Special:NewProperty', function () {
 		);
 		await SpecialNewProperty.submit();
 
-		// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
-		// timeout, so the list of properties reflects the change
-		// eslint-disable-next-line wdio/no-pause
-		// await browser.pause( 2000 );
-
-		await SpecialListProperties.openParams( {
-			dataType: wikibasePropertyString.urlName,
-			limit: 1000
+		let numberOfPropertiesAfter;
+		await browser.waitUntil( async () => {
+			await SpecialListProperties.openParams( {
+				dataType: wikibasePropertyString.urlName,
+				limit: 1000
+			} );
+			numberOfPropertiesAfter = await SpecialListProperties.properties.length;
+			return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
+		}, {
+			// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
+			// timeout, so the list of properties reflects the change
+			interval: 1000,
+			timeout: 10000,
+			timeoutMsg: 'expected total number of reflect new property in list within 10 seconds'
 		} );
-		const numberOfPropertiesAfter =
-			await SpecialListProperties.properties.length;
-
-		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
 	} );
 } );
