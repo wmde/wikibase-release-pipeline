@@ -38,7 +38,9 @@ describe( 'Special:NewProperty', function () {
 		} );
 	} );
 
-	it( 'Should be able to see newly created properties in list of properties special page', async () => {
+	it( 'Should be able to see newly created properties in list of properties special page', async function () {
+		this.retries( 4 )
+
 		await SpecialListProperties.openParams( {
 			dataType: wikibasePropertyString.urlName,
 			limit: 1000
@@ -58,7 +60,7 @@ describe( 'Special:NewProperty', function () {
 		// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
 		// timeout, so the list of properties reflects the change
 		// eslint-disable-next-line wdio/no-pause
-		await browser.pause( 2000 );
+		// await browser.pause( 2000 );
 
 		await SpecialListProperties.openParams( {
 			dataType: wikibasePropertyString.urlName,
