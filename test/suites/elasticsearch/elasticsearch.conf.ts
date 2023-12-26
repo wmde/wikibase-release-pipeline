@@ -10,11 +10,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/elasticsearch/docker-compose.override.yml'
-	],
-	waitForUrls: () => ( [
-		...defaultTestSettings.waitForUrls(),
-		`http://${testEnv.vars.ELASTICSEARCH_URL}`
-	] )
+	]
 } );
 
 export const config = wdioConfig( testEnv );
