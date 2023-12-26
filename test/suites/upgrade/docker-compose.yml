@@ -32,6 +32,12 @@ services:
       - DB_PASS
       - DB_NAME
       - WIKIBASE_HOST
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   mysql:
     image: "${MARIADB_IMAGE_URL}"

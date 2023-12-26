@@ -21,9 +21,7 @@ export const defaultTestSettings = {
 	composeFiles: [
 		'suites/docker-compose.yml'
 	],
-	waitForUrls: (): string[] => {
-		return ( [] );
-	},
+	waitForUrls: (): string[] => ( [] ),
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},

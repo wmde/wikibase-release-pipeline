@@ -43,6 +43,12 @@ services:
       - DB_USER
       - DB_PASS
       - DB_NAME=client_wiki
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${WIKIBASE_CLIENT_URL}" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   quickstatements:
     image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
@@ -65,6 +71,12 @@ services:
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${QUICKSTATEMENTS_URL}" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
 volumes:
   quickstatements-data:

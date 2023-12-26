@@ -15,11 +15,38 @@ services:
       - ../../example/extra-install.sh:/extra-install.sh
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   wikibase-jobrunner:
     volumes:
       - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
 
+  wdqs-frontend:
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", $WDQS_FRONTEND_URL ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
+  wdqs:
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
+
   quickstatements:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${QUICKSTATEMENTS_URL}" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
