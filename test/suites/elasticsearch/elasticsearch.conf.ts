@@ -13,7 +13,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	],
 	waitForUrls: () => ( [
 		...defaultTestSettings.waitForUrls(),
-		`http://${testEnv.vars.MW_ELASTIC_HOST}:${testEnv.vars.MW_ELASTIC_PORT}`
+		`http://${testEnv.vars.ELASTICSEARCH_URL}`
 	] )
 } );
 
