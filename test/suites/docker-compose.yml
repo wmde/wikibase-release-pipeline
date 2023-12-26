@@ -39,6 +39,12 @@ services:
          - ${WIKIBASE_HOST}
     environment:
       <<: *wikibase_variables
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
@@ -69,7 +75,6 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: 'toor'
-
     networks:
       default:
         aliases:
@@ -92,6 +97,12 @@ services:
     environment:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", $WDQS_FRONTEND_URL ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   wdqs:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
@@ -114,6 +125,12 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   wdqs-proxy:
     image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
