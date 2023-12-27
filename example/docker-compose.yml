@@ -39,6 +39,12 @@ services:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 1s
+      retries: 100
+      start_period: 20s
+      timeout: 120s
 
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
@@ -78,6 +84,13 @@ services:
       default:
         aliases:
          - mysql.svc
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
 
 volumes:
   shared:
