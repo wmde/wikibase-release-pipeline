@@ -40,8 +40,6 @@ services:
       - DB_PASS
       - DB_NAME=client_wiki
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "${WIKIBASE_CLIENT_URL}" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "${WIKIBASE_CLIENT_URL}" ]
+      interval: 10s
+      start_period: 2m

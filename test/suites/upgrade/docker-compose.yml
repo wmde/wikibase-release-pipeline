@@ -33,11 +33,9 @@ services:
       - DB_NAME
       - WIKIBASE_HOST
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   mysql:
     image: "${MARIADB_IMAGE_URL}"
@@ -56,10 +54,8 @@ services:
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 1m
-      start_interval: 10s
-      interval: 1m
+      interval: 20s
       timeout: 5s
-      retries: 3
 
 volumes:
   mediawiki-mysql-data:

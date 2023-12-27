@@ -40,11 +40,9 @@ services:
     environment:
       <<: *wikibase_variables
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
@@ -84,10 +82,8 @@ services:
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 1m
-      start_interval: 10s
-      interval: 1m
+      interval: 20s
       timeout: 5s
-      retries: 3
 
   wdqs-frontend:
     image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
@@ -105,11 +101,9 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ "CMD", "curl", "--fail", $WDQS_FRONTEND_URL ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", $WDQS_FRONTEND_URL ]
+      interval: 10s
+      start_period: 2m
 
   wdqs:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
@@ -133,11 +127,9 @@ services:
     expose:
       - 9999
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
+      interval: 10s
+      start_period: 2m
 
   wdqs-proxy:
     image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
