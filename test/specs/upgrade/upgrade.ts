@@ -20,7 +20,7 @@ describe( 'Wikibase upgrade', function () {
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
 		await testEnv.runDockerComposeCmd( '--progress quiet down' );
-		await testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d' );
+		await testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d --wait' );
 		await testEnv.waitForServices();
 
 		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
@@ -55,7 +55,7 @@ describe( 'Wikibase upgrade', function () {
 				getTestString( itemLabel ),
 				data
 			);
-
+``
 			assert.strictEqual( itemId.startsWith( 'Q' ), true );
 			assert.strictEqual( propertyId.startsWith( 'P' ), true );
 		}
