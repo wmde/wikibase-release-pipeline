@@ -47,11 +47,10 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://${WDQS_FRONTEND_HOST}" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WDQS_FRONTEND_HOST}" ]
+      interval: 10s
+      retries: 3
+      start_period: 2m
 
   wdqs:
     image: "${WDQS_IMAGE_NAME}"
@@ -130,7 +129,7 @@ services:
       - QUICKSTATEMENTS_HOST
       - QS_PUBLIC_SCHEME_HOST_AND_PORT
       - WIKIBASE_SCHEME_AND_HOST=http://wikibase-docker.svc
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:${QUICKSTATEMENTS_PORT}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:80
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
@@ -138,11 +137,9 @@ services:
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://${QUICKSTATEMENTS_HOST}" ]
-      interval: 1s
-      retries: 100
-      start_period: 20s
-      timeout: 120s
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${QUICKSTATEMENTS_HOST}" ]
+      interval: 10s
+      start_period: 2m
 
 volumes:
   LocalSettings:
