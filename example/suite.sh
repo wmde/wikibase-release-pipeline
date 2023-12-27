@@ -20,7 +20,7 @@ function example__stop {
 	local running
 	running=$($EXAMPLE_COMPOSE ps --quiet)
 	if [ -n "$running" ]; then
-    echo "Stopping the currently running Wikibase Suite"
+		echo "Stopping the currently running Wikibase Suite"
 		$EXAMPLE_COMPOSE_DOWN
 	fi
 }
@@ -57,18 +57,18 @@ if [[ "$1" = "--command" ]] || [[ "$1" = "-c" ]]; then
 fi
 
 if [[ "$1" = "reset" ]] || [[ "$1" = "-c" ]]; then
-  example__reset
-  exit 0
+	example__reset
+	exit 0
 fi
 
 if [[ "$1" = "stop" ]] || [[ "$1" = "-c" ]]; then
-  example__stop
-  exit 0
+	example__stop
+	exit 0
 fi
 
 if [[ "$1" = "start" ]] || [[ "$1" = "-c" ]]; then
-  example__start
-  exit 0
+	example__start
+	exit 0
 fi
 
 example__start
