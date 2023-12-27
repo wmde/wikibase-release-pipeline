@@ -13,7 +13,7 @@ fi
 
 export EXAMPLE_COMPOSE_UP="$EXAMPLE_COMPOSE up -d --wait"
 export EXAMPLE_COMPOSE_DOWN="$EXAMPLE_COMPOSE down"
-export EXAMPLE_COMPOSE_RESET="$EXAMPLE_COMPOSE down --volumes"
+export EXAMPLE_COMPOSE_RESET="$EXAMPLE_COMPOSE down --volumes --timeout 1"
 
 function example__stop {
 	local running
