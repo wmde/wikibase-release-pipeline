@@ -81,6 +81,13 @@ services:
          - mysql.svc
     volumes: 
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
 
   wdqs-frontend:
     image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
