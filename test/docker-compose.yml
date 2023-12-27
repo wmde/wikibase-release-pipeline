@@ -16,12 +16,15 @@ services:
       dockerfile: Dockerfile
     stop_grace_period: 1s
     entrypoint: /bin/bash
+    ports:
+      - "9229:9229"
     volumes:
       - ..:/usr/src
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
+      - DEBUG
       - HOST_PWD=${PWD}/test
 
   browser:

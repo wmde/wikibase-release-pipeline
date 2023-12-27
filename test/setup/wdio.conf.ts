@@ -46,6 +46,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 			} as Capabilities.ChromeCapabilities
 		],
 
+		// Experimental: Turns-on Node debugging (for VS Code debugger, etc)
+		execArgv: [ ...( process.env.DEBUG ? [ '--inspect=0.0.0.0' ] : [] ) ],
+
 		// ===================
 		// Test Configurations
 		// ===================
