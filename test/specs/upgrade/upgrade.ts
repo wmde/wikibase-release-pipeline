@@ -55,7 +55,6 @@ describe( 'Wikibase upgrade', function () {
 				getTestString( itemLabel ),
 				data
 			);
-``
 			assert.strictEqual( itemId.startsWith( 'Q' ), true );
 			assert.strictEqual( propertyId.startsWith( 'P' ), true );
 		}
