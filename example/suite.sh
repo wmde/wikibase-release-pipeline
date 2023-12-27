@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# For real life replace "--env-file ../local.env"" with "--env-file ./.env"
 export EXAMPLE_COMPOSE="docker compose \
 --file docker-compose.yml \
 --file docker-compose.extra.yml \
@@ -25,8 +26,12 @@ function example__stop {
 }
 
 function example__reset {
-	echo "Bringing down Wikibase Suite and removing data"
-	$EXAMPLE_COMPOSE_RESET
+	read -p "This will destroy all data. Are you sure? (N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Bringing down Wikibase Suite and removing data"
+		$EXAMPLE_COMPOSE_RESET
+	fi
 }
 
 function example__start {
