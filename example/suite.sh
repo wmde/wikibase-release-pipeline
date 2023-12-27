@@ -56,19 +56,16 @@ if [[ "$1" = "--command" ]] || [[ "$1" = "-c" ]]; then
 	exit 0
 fi
 
-if [[ "$1" = "reset" ]] || [[ "$1" = "-c" ]]; then
+if [[ "$1" = "reset" ]] || [[ "$1" = "--reset" ]] || [[ "$2" = "--reset" ]]; then
 	example__reset
-	exit 0
 fi
 
-if [[ "$1" = "stop" ]] || [[ "$1" = "-c" ]]; then
+if [[ "$1" = "stop" ]]; then
 	example__stop
 	exit 0
 fi
 
-if [[ "$1" = "start" ]] || [[ "$1" = "-c" ]]; then
+if [[ "$1" = "start" ]]; then
 	example__start
 	exit 0
 fi
-
-example__start
