@@ -27,6 +27,6 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     healthcheck:
-      test: [ "CMD", "--silent", "curl", "--fail", "${ELASTICSEARCH_URL}" ]
+      test: [ "CMD", "curl", "--silent", "--fail", "${ELASTICSEARCH_URL}" ]
       interval: 10s
       start_period: 2m
