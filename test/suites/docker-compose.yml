@@ -13,6 +13,11 @@ x-common-variables: &wikibase_variables
     MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
     MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
+networks:
+  default:
+    name: wikibase-suite-test
+    external: true
+
 services:
 
   wikibase:
@@ -92,6 +97,13 @@ services:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
     restart: always
     command: /runBlazegraph.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
     networks:
       default:
         aliases:
@@ -121,6 +133,13 @@ services:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
     restart: unless-stopped
     command: /runUpdate.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
     depends_on:
     - wdqs
     - wikibase
