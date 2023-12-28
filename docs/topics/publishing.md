@@ -44,7 +44,7 @@ Some of the prerequisutes can be used between publications, others needs to be s
 We will download artifacts that were created by a Github Action run (compressed releases, docker images, meta data) locally ready for publishing.
 
 ```
-$ make download
+$ publish/download.sh
 ...
 Getting artifacts for run 1157808966
 ...
@@ -82,7 +82,7 @@ To test the downloaded artifacts you can either load the images manually and use
 Remove locally created artifacts and use the downloaded ones
 
 ```
-$ make clean
+$ ./clean.sh
 $ cp artifacts/WORKFLOW_RUN_NUMBER/DockerImages/* artifacts/
 $ ./test.sh <suite-name>
 ```
