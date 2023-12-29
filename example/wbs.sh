@@ -34,7 +34,7 @@ function welcome_setup {
 	fi
 }
 
-welcome_setup $1
+welcome_setup "$1"
 
 export EXAMPLE_COMPOSE="docker compose \
 --file docker-compose.yml \
