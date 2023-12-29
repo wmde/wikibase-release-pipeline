@@ -24,7 +24,7 @@ export TEST_COMPOSE="docker compose \
 --env-file local.env \
 --project-directory test"
 
-# `DEBUG=true <script>` make Docker operations visible
+# `DEBUG=true <script>` makes Docker operations visible
 if [ -z "$DEBUG" ]; then
 	TEST_COMPOSE="$TEST_COMPOSE --progress quiet"
 fi
