@@ -33,22 +33,14 @@ File                      | Description
 `/templates/oauth.ini`    | Template for Quickstatements' oauth.ini (substituted to `/var/www/html/quickstatements/oauth.ini` at runtime)                            
 `/templates/php.ini`      | php config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` at runtime)
 
-
 ### Set up quickstatements
-In order for quickstatements to communicate with wikibase it needs to know where your instance is and how it can find it.
-This must be done by setting the ENV variable `WIKIBASE_SCHEME_AND_HOST`. n.b. This should reflect how this container when running
-sees the wikibase container. For example the example docker container alias like `wikibase.svc`.
+In order for quickstatements to communicate with wikibase it needs to know where your instance is and how it can find it. This must be done by setting the ENV variable `WIKIBASE_SCHEME_AND_HOST`. n.b. This should reflect how this container when running sees the wikibase container. For example the example docker container alias like `wikibase.svc`.
 
-The user's browser will also be redirected to the Wikibase instance and finally back to quickstatements. The address
-the user sees for the Wikibase may be different from how the running container sees it. For example: it may be running
-on localhost on a specific port. e.g. http://localhost:8181. This should be passed to the quickstatements container as
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`.
+The user's browser will also be redirected to the Wikibase instance and finally back to quickstatements. The address the user sees for the Wikibase may be different from how the running container sees it. For example: it may be running on localhost on a specific port. e.g. http://localhost:8181. This should be passed to the quickstatements container as `WB_PUBLIC_SCHEME_HOST_AND_PORT`.
 
-One must also know how this container will be visible to the user as well so it can ask the wikibase to redirect the
-user back here. This should be passed as `QS_PUBLIC_SCHEME_HOST_AND_PORT`.
+One must also know how this container will be visible to the user as well so it can ask the wikibase to redirect the user back here. This should be passed as `QS_PUBLIC_SCHEME_HOST_AND_PORT`.
 
-You can pass the consumer and secret token you got from the wikibase to this container as the environment variables
- `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handle this.
+You can pass the consumer and secret token you got from the wikibase to this container as the environment variables `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handle this.
 
 You can now test that it works by navigating to `QS_PUBLIC_SCHEME_HOST_AND_PORT` and logging in.
 
@@ -59,8 +51,6 @@ Finally you should be redirected back to Quickstatements and you should appear l
 Use Quickstatements as normal with the Run button. Currently "Run in background" is not supported by this image.
 
 #### Troubleshooting
-If you see an error such as mw-oauth exception when trying to log in check that you have passed the right consumer token
-and secret token to quickstatements.
+If you see an error such as mw-oauth exception when trying to log in check that you have passed the right consumer token and secret token to quickstatements.
 
-If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made the consumer you'll need to make another new consumer or
-reissue the secret token for the old one.
+If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made the consumer you'll need to make another new consumer or reissue the secret token for the old one.
