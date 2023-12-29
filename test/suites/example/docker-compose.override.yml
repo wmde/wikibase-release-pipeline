@@ -13,13 +13,7 @@ services:
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
       - ./example/results:/var/log/mediawiki
       - ../../example/extra-install.sh:/extra-install.sh
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
 
   wikibase-jobrunner:
     volumes:
       - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-
-  quickstatements:
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80

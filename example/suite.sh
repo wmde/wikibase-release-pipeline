@@ -4,6 +4,7 @@
 export EXAMPLE_COMPOSE="docker compose \
 --file docker-compose.yml \
 --file docker-compose.extra.yml \
+--file docker-compose.nginx-proxy.yml \
 --env-file template.env \
 --env-file ../local.env"
 
@@ -14,7 +15,7 @@ fi
 
 export EXAMPLE_COMPOSE_UP="$EXAMPLE_COMPOSE up -d --wait"
 export EXAMPLE_COMPOSE_DOWN="$EXAMPLE_COMPOSE down"
-export EXAMPLE_COMPOSE_RESET="$EXAMPLE_COMPOSE down --volumes --timeout 1"
+export EXAMPLE_COMPOSE_RESET="$EXAMPLE_COMPOSE down --volumes --remove-orphans"
 
 function example__stop {
 	local running
@@ -29,7 +30,7 @@ function example__reset {
 	read -p "This will destroy all data. Are you sure? (N) " -n 1 -r
 	echo    # (optional) move to a new line
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		echo "Bringing down Wikibase Suite and removing data"
+		echo "Stopping the currently running Wikibase Suite and removing data"
 		$EXAMPLE_COMPOSE_RESET
 	fi
 }
@@ -52,6 +53,7 @@ export EXAMPLE_EXEC_CMD="$TEST_COMPOSE exec test-runner -c"
 # code. Examples and common usage:
 # `./suite.sh -c wikibase bash`
 if [[ "$1" = "--command" ]] || [[ "$1" = "-c" ]]; then
+	trap example__stop SIGINT
 	$EXAMPLE_COMPOSE exec "$2" "${*:3}"
 	exit 0
 fi
@@ -67,5 +69,6 @@ fi
 
 if [[ "$1" = "start" ]]; then
 	example__start
+	trap example__stop SIGINT
 	exit 0
 fi

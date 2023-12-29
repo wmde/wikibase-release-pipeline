@@ -1,0 +1,14 @@
+# Example Wikibase docker compose setup
+version: '3.5'
+
+services:
+
+  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  
