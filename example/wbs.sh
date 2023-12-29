@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# there should always be a `.env` file present or the Docker compose run will bail
 function welcome_setup {
 	if ! [[ -f ".env" ]]; then
 		# Green text
@@ -11,6 +10,7 @@ function welcome_setup {
 		echo "A new default configuration has been copied from \`template.env\` to \`.env\`"
 		echo
 
+		# there should always be a `.env` file present or the Docker compose run will bail
 		cp template.env .env
 		
 		echo "Next steps:"
