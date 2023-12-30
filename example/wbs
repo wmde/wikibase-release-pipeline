@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+
+clred=$(tput setaf 1)
+clgreen=$(tput setaf 2)
+clblue=$(tput setaf 4)
+clyellow=$(tput setaf 11)
+clwhite=$(tput setaf 7)
+clreset=$(tput sgr0)
+
+function welcome_setup {
+	if ! [[ -f ".env" ]]; then
+		# Green text
+		echo "$clgreen"
+		echo "Welcome to the Wikibase Suite (WBS)!"
+		echo "$clwhite"
+		echo "A new default configuration has been copied from \`template.env\` to \`.env\`"
+		echo
+
+		# there should always be a `.env` file present or the Docker compose run will bail
+		cp template.env .env
+		
+		echo "Next steps:"
+		echo
+		echo "1. Open \`.env\` in an editor, set your own passwords and confirm the configuration"
+
+		if [[ "$1" = "start" ]]; then
+			echo "2. Run \`./wbs start\` again to launch WBS"
+		else
+			echo "2. Run \`./wbs start\` to launch WBS"
+		fi
+		
+		echo "3. Once you see \"READY\", navigate to http://wikibase.berlinresidency.art and begin testing!"
+		# Yellow text
+		echo "$clyellow"
+		echo "DISCLAIMER: This WBS configuration is an example how to use the WBS Docker images together."
+		echo "It is a good starting place, but is not production ready."
+		echo "$clreset"
+
+		exit 0
+	fi
+}
+
+welcome_setup "$1"
+
+export EXAMPLE_COMPOSE="docker compose \
+--file docker-compose.yml \
+--file docker-compose.extra.yml \
+--file docker-compose.nginx-proxy.yml \
+--env-file .env \
+--env-file ../local.env"
+
+# `DEBUG=true wbs` makes Docker operations visible
+if [ -z "$DEBUG" ]; then
+	EXAMPLE_COMPOSE="$EXAMPLE_COMPOSE --progress quiet"
+fi
+function cancel {
+	stop
+	exit 1
+}
+
+function running {
+	is_running=$($EXAMPLE_COMPOSE ps --quiet)
+
+	if [ -n "$is_running" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function stop {
+	if running ; then
+		trap "exit 1" SIGINT
+		echo "${clwhite}Stopping currently running Wikibase Suite... "
+		$EXAMPLE_COMPOSE down
+		echo "${clblue}DONE${clreset}"
+		echo
+	fi
+}
+
+function start {
+	if running; then
+		read -p "${clyellow}Wikibase Suite is currently running, want to restart it? (No) ${clreset}" -n 1 -r
+		echo
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			stop
+		else
+			echo
+			exit 0
+		fi
+	fi
+	echo "${clwhite}Waiting for Wikibase Suite containers to start...${clreset} "
+	trap cancel SIGINT
+	$EXAMPLE_COMPOSE up -d --wait
+	echo "${clgreen}READY${clreset}"
+	echo
+	echo "${clred}./wbs stop${clwhite}    stops the running WBS"
+	echo "${clred}./wbs reset${clwhite}   stops the running WBS, optionally resetting the configuration and/or data"
+	echo "$clreset"
+}
+
+function reset_data {
+	read -p "${clred}Erase Wikibase Suite data for all services? This can't be undone. (No) ${clreset}" -n 1 -r
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo
+		echo -n "${clwhite}Stopping Wikibase Suite and erasing data...${clreset} "
+		$EXAMPLE_COMPOSE down --volumes --remove-orphans
+		echo -n "${clblue}DONE${clreset}"
+	fi
+}
+
+function backup_and_reset_config {
+	read -p "${clred}Backup \`.env\`, if it already exists, and replace it with \`template.env\`? (No) ${clreset}" -n 1 -r
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		if [[ -f ".env" ]]; then
+			echo
+			# TODO: Save existing backup config, renaming existing `.env_backup` to `.env_backup_1` or similar.
+			echo "${clwhite}Existing \`.env\` was saved to \`.env_backup\`${clreset}"
+			cp .env .env_backup
+		fi
+		cp template.env .env
+		echo "${clblue}DONE${clreset}"
+	fi
+	echo
+}
+
+# `exec` command, e.g. `./wbs exec <dockerContainerName> <command>`
+# Runs a command in a WBS container.
+# Example usage: `./wbs exec wikibase bash`
+if [[ "$1" = "exec" ]]; then
+	trap stop SIGINT
+	$EXAMPLE_COMPOSE exec "$2" "${*:3}"
+	exit 0
+fi
+
+# `reset` command or `--reset` flag
+# Prompts user about resetting data and/or configuration
+if [[ "$1" = "reset" ]] || [[ "$1" = "--reset" ]] || [[ "$2" = "--reset" ]]; then
+	echo
+	backup_and_reset_config
+	reset_data
+	echo
+	if [[ "$1" = "reset" ]]; then
+		echo
+		exit 0
+	fi
+fi
+
+# `stop` command
+# Stops all running WBS services.
+# Accepts `--reset` flag.
+if [[ "$1" = "stop" ]]; then
+	echo
+	stop
+	exit 0
+fi
+
+# `start` command, e.g `./wbs start`
+# Starts (or restarts if already running) all WBS services.
+# Accepts `--reset` flag.
+if [[ "$1" = "start" ]]; then
+	echo
+	start
+	exit 0
+fi
+
+# default / fallback command
+echo
+start
