@@ -53,6 +53,7 @@ export EXAMPLE_COMPOSE="docker compose \
 if [ -z "$DEBUG" ]; then
 	EXAMPLE_COMPOSE="$EXAMPLE_COMPOSE --progress quiet"
 fi
+
 function cancel {
 	stop
 	exit 1
@@ -60,7 +61,6 @@ function cancel {
 
 function running {
 	is_running=$($EXAMPLE_COMPOSE ps --quiet)
-
 	if [ -n "$is_running" ]; then
 		return 0
 	else
@@ -103,7 +103,7 @@ function reset_data {
 	read -p "${clred}Erase Wikibase Suite data for all services? This can't be undone. (No) ${clreset}" -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		echo
-		echo -n "${clwhite}Stopping Wikibase Suite and erasing data...${clreset} "
+		echo "${clwhite}Stopping Wikibase Suite and erasing data...${clreset} "
 		$EXAMPLE_COMPOSE down --volumes --remove-orphans
 		echo -n "${clblue}DONE${clreset}"
 	fi
@@ -133,10 +133,11 @@ if [[ "$1" = "exec" ]]; then
 	exit 0
 fi
 
+echo
+
 # `reset` command or `--reset` flag
 # Prompts user about resetting data and/or configuration
 if [[ "$1" = "reset" ]] || [[ "$1" = "--reset" ]] || [[ "$2" = "--reset" ]]; then
-	echo
 	backup_and_reset_config
 	reset_data
 	echo
@@ -150,7 +151,6 @@ fi
 # Stops all running WBS services.
 # Accepts `--reset` flag.
 if [[ "$1" = "stop" ]]; then
-	echo
 	stop
 	exit 0
 fi
@@ -159,11 +159,9 @@ fi
 # Starts (or restarts if already running) all WBS services.
 # Accepts `--reset` flag.
 if [[ "$1" = "start" ]]; then
-	echo
 	start
 	exit 0
 fi
 
 # default / fallback command
-echo
 start
