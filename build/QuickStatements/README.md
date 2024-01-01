@@ -6,7 +6,6 @@ Quickstatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 Variable                             | Default                  | Description
 -------------------------------------|--------------------------|------------
-`WIKIBASE_SCHEME_AND_HOST`           | NONE                     | Host and port of Wikibase instance as seen by Quick Statements
 `WB_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE                     | Host and port of Wikibase as seen by the user's browser
 `QS_PUBLIC_SCHEME_HOST_AND_PORT`     | NONE                     | Host and port of Quick Statements as seen by the user's browser
 `OAUTH_CONSUMER_KEY`                 | NONE                     | OAuth consumer key (obtained from Wikibase)
@@ -34,18 +33,12 @@ File                      | Description
 `/templates/php.ini`      | php config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` at runtime)
 
 
-### Set up quickstatements
-In order for quickstatements to communicate with wikibase it needs to know where your instance is and how it can find it.
-This must be done by setting the ENV variable `WIKIBASE_SCHEME_AND_HOST`. n.b. This should reflect how this container when running
-sees the wikibase container. For example the example docker container alias like `wikibase.svc`.
+### Set up Quickstatements
+Due to requirements of the process of authorizing Quickstatments against Wikibase via OAuth this container must be available on an address on the host machine which can also be seen within the Docker network. Set `QS_PUBLIC_SCHEME_HOST_AND_PORT` to this address. 
 
-The user's browser will also be redirected to the Wikibase instance and finally back to quickstatements. The address
-the user sees for the Wikibase may be different from how the running container sees it. For example: it may be running
-on localhost on a specific port. e.g. http://localhost:8181. This should be passed to the quickstatements container as
-`WB_PUBLIC_SCHEME_HOST_AND_PORT`.
+Likewise, Wikibase needs to be able to access Quickstatements for the OAuth callback on a host recognizable address which is set on `WB_PUBLIC_SCHEME_HOST_AND_PORT`. 
 
-One must also know how this container will be visible to the user as well so it can ask the wikibase to redirect the
-user back here. This should be passed as `QS_PUBLIC_SCHEME_HOST_AND_PORT`.
+Note that Docker Engine doesn't provide such addresses so setting-up a reverse proxy such as nginx or haproxy (et al), alongside either public DNS entry or a local DNS server with entries that route to these container. See the Wikibase Suite example configuration for a working configuration which uses a provided localhost route "wikibase" and "quickstatements" subdomain for local testing.
 
 You can pass the consumer and secret token you got from the wikibase to this container as the environment variables
  `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handle this.
