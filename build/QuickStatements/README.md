@@ -38,7 +38,7 @@ Due to requirements of the process of authorizing Quickstatments against Wikibas
 
 Likewise, Wikibase needs to be able to access Quickstatements for the OAuth callback on a host recognizable address which is set on `WB_PUBLIC_SCHEME_HOST_AND_PORT`. 
 
-Note that Docker Engine doesn't provide such addresses so setting-up a reverse proxy such as nginx or haproxy (et al), alongside either public DNS entry or a local DNS server with entries that route to these container. See the Wikibase Suite example configuration for a working configuration which uses a provided localhost route "wikibase" and "quickstatements" subdomain for local testing.
+Note that Docker Engine doesn't provide such addresses so it likely you will need to set-up a reverse proxy such as nginx or haproxy (et al), alongside either public DNS entries or a local DNS server with entries that route to these container. See the Wikibase Suite example configuration for more guidance on how to set that up.
 
 You can pass the consumer and secret token you got from the wikibase to this container as the environment variables
  `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. If you don't, there are [extra-install scripts](../WikibaseBundle/extra-install/QuickStatements.sh) supplied in the Wikibase bundle that can automatically handle this.
