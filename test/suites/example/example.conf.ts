@@ -14,7 +14,8 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'suites/example/docker-compose.override.yml'
 	],
 	envFiles: [
-		'../example/template.env',
+		'../example/.env.defaults',
+		'../example/.env.template',
 		'suites/example/example.env',
 		'../local.env'
 	],
