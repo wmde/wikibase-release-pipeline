@@ -1,5 +1,5 @@
 # Example Wikibase docker compose setup
-version: '3.4'
+version: '3.5'
 
 x-common-variables: &wikibase_variables
   DB_SERVER: mysql.svc:3306
@@ -16,7 +16,7 @@ x-common-variables: &wikibase_variables
 
 services:
   wikibase:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     links:
       - mysql
     depends_on:
@@ -39,9 +39,13 @@ services:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     entrypoint: /bin/bash
     command:  /jobrunner-entrypoint.sh
     links:
@@ -64,7 +68,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MYSQL_IMAGE_NAME}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql
@@ -78,6 +82,12 @@ services:
       default:
         aliases:
          - mysql.svc
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 20s
+      timeout: 5s
 
 volumes:
   shared:
