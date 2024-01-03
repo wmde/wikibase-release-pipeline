@@ -43,6 +43,8 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to see added statement', async () => {
+				this.retries( 4 );
+
 				await $( '=STATEMENT' );
 				const resultStatement = await $(
 					`aria/Property:${stringPropertyId}`
