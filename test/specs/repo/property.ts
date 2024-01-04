@@ -84,6 +84,20 @@ describe( 'Property', function () {
 				assert.strictEqual( claim.mainsnak.datavalue.value, 'STATEMENT' );
 				assert.strictEqual( reference.datavalue.value, 'REFERENCE' );
 			} );
+
+			it( 'Should show changes in "View history" tab', async () => {
+				await $( '=View history' ).click();
+				await expect( $( '.comment*=Created claim' ) ).toExist();
+				await expect( $( '.comment*=Changed claim' ) ).toExist();
+				await expect( $( '.comment*=Created a new Property' ) ).toExist();
+			} );
+
+			it( 'Should display the added properties on the "Recent changes" page', async () => {
+				await browser.waitForJobs();
+				await $( '=Recent changes' ).click();
+				await expect( $( `=(${propertyId})` ) ).toExist();
+				await expect( $( `=(${stringPropertyId})` ) ).toExist();
+			} );
 		} );
 	} );
 } );
