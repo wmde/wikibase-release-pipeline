@@ -36,17 +36,16 @@ describe( 'Property', () => {
 				// Extra pause to make sure AJAX requests complete before navigating away,
 				// see: https://phabricator.wikimedia.org/T353520
 				// eslint-disable-next-line wdio/no-pause
-				await browser.pause( 2000 * 1 );
+				await browser.pause( 2000 );
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
-				await Property.addStatement.click();
+				await Property.addStatementLink.click();
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'STATEMENT'.split( '' ) );
-				// wait for save button to re-enable
-				await Property.saveStatement.click();
+				await Property.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
@@ -58,13 +57,13 @@ describe( 'Property', () => {
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
-				await Property.addReference.click();
+				await Property.addReferenceLink.click();
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
 				await $( propertyIdSelector( stringPropertyId ) ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
-				await Property.saveStatement.click();
+				await Property.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added reference', async () => {
@@ -84,6 +83,20 @@ describe( 'Property', () => {
 
 				assert.strictEqual( claim.mainsnak.datavalue.value, 'STATEMENT' );
 				assert.strictEqual( reference.datavalue.value, 'REFERENCE' );
+			} );
+
+			it( 'Should show changes in "View history" tab', async () => {
+				await $( '=View history' ).click();
+				await expect( $( '.comment*=Created claim' ) ).toExist();
+				await expect( $( '.comment*=Changed claim' ) ).toExist();
+				await expect( $( '.comment*=Created a new Property' ) ).toExist();
+			} );
+
+			it( 'Should display the added properties on the "Recent changes" page', async () => {
+				await browser.waitForJobs();
+				await $( '=Recent changes' ).click();
+				await expect( $( `=(${propertyId})` ) ).toExist();
+				await expect( $( `=(${stringPropertyId})` ) ).toExist();
 			} );
 		} );
 	} );
