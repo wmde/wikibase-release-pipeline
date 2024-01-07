@@ -69,7 +69,7 @@ describe( 'Property', () => {
 
 			it( 'Should be able to see added reference', async () => {
 				await $( '=1 reference' ).click();
-				await $( '=REFERENCE' );
+				await expect( $( 'div=REFERENCE' ) ).toExist();
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async () => {

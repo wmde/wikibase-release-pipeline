@@ -47,7 +47,7 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 		],
 
 		// Experimental: Turns-on Node debugging (for VS Code debugger, etc)
-		execArgv: [ ...( process.env.DEBUG ? [ '--inspect=0.0.0.0' ] : [] ) ],
+		execArgv: [ ...( settings.debugNode ? [ '--inspect=0.0.0.0' ] : [] ) ],
 
 		// ===================
 		// Test Configurations
@@ -132,9 +132,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 			}
 		},
 
-		onComplete: async () => {
+		onComplete: async ( exitCode ) => {
 			if ( settings.onComplete ) {
-				await settings.onComplete();
+				await settings.onComplete( exitCode );
 			}
 		}
 	};

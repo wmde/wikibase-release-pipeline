@@ -1,5 +1,7 @@
 import { mkdirSync, rmSync } from 'fs';
 import { spawnSync } from 'child_process';
+import * as readline from 'readline';
+import chalk from 'chalk';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
@@ -42,16 +44,13 @@ export default class TestEnv {
 
 	public async up(): Promise<void> {
 		try {
-			process.once( 'SIGINT', async () => {
-				await this.down();
-				// eslint-disable-next-line no-process-exit
-				process.exit( 1 );
-			} );
-
+			await this.setupExitListener();
 			this.resetOutputDir();
 			await this.settings.beforeServices();
 
-			console.log( '▶️  Bringing up the test environment' );
+			console.log(
+				`▶️  Bringing up the test environment ${this.settings.debug ? '(DEBUG)' : ''}`
+			);
 
 			await this.stopServices();
 			await this.startServices();
@@ -103,6 +102,60 @@ export default class TestEnv {
 		}
 
 		return result.stdout;
+	}
+
+	public async exitPrompt(): Promise<void> {
+		console.log( chalk.yellow( `\nExiting and taking "${this.settings.name}" test environment DOWN in 5 seconds...` ) );
+		console.log( chalk.yellow(
+			`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${this.settings.name}" test environment UP`
+		) );
+
+		const takeDown = async (): Promise<void> => {
+			console.log( chalk.red( `Exiting. Taking "${this.settings.name}" test environment DOWN` ) );
+			await this.down();
+			process.stdin.setEncoding( null );
+			// eslint-disable-next-line no-use-before-define
+			process.stdin.removeListener( 'keypress', onKeyPress );
+			// eslint-disable-next-line no-process-exit
+			process.exit( 1 );
+		};
+
+		const leaveUp = (): void => {
+			console.log( chalk.green( `Exiting. Leaving ${this.settings.name}" test environment UP` ) );
+			process.stdin.setEncoding( null );
+			// eslint-disable-next-line no-use-before-define
+			process.stdin.removeListener( 'keypress', onKeyPress );
+			// eslint-disable-next-line no-process-exit
+			process.exit( 1 );
+		};
+
+		const onKeyPress = async ( _, key ): Promise<void> => {
+			if ( key && key.ctrl && key.name === 'c' ) {
+				await takeDown();
+			}
+			if ( key && key.name === 'return' ) {
+				leaveUp();
+			}
+		};
+
+		readline.emitKeypressEvents( process.stdin );
+		process.stdin.setEncoding( 'utf8' ).setRawMode( true ).resume();
+		process.stdin.on( 'keypress', onKeyPress );
+
+		setTimeout( takeDown, 5000 );
+	}
+
+	protected async setupExitListener(): Promise<void> {
+		const onKeyPress = async ( _, key ): Promise<void> => {
+			if ( key.ctrl && key.name === 'c' ) {
+				process.stdin.removeListener( 'keypress', onKeyPress );
+				await this.exitPrompt();
+			}
+		};
+
+		readline.emitKeypressEvents( process.stdin );
+		process.stdin.setEncoding( 'utf8' ).setRawMode( true ).resume();
+		process.stdin.on( 'keypress', onKeyPress );
 	}
 
 	protected resetOutputDir(): void {

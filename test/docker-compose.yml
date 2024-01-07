@@ -24,11 +24,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
-      - DEBUG
       - HOST_PWD=${PWD}/test
 
   browser:
-    # use a fixed selenium chrome version for stability in our testing environment
     image: ${TEST_BROWSER_IMAGE_URL}
     stop_grace_period: 1s
     ports:
