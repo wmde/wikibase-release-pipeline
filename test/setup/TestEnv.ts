@@ -55,13 +55,15 @@ export default class TestEnv {
 
 			await this.stopServices();
 			await this.startServices();
-			await this.waitForServices();
 
 			if ( this.settings.runHeaded ) {
 				console.log(
 					'💻 Open http://localhost:7900/?autoconnect=1&resize=scale to observe headed tests.\n'
 				);
 			}
+
+			await this.waitForServices();
+
 		} catch ( e ) {
 			throw new SevereServiceError( e );
 		}

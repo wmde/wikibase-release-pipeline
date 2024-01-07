@@ -6,7 +6,7 @@ Wikibase specific Blazegraph image.
 
 [WDQS](https://gerrit.wikimedia.org/r/admin/repos/wikidata/query/rdf) exposes by default some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. With the example docker configuration we are using the [WDQS-proxy](../WDQS-proxy/README.md) which filters out all long-running or unwanted requests.
 
-When running WDQS in a setup without WDQS-proxy **please consider disabling these endpoints in some other way**. For more information on how this is tested in this pipeline see the test-cases in [queryservice.ts](../../../test/specs/repo/queryservice.ts)
+When running WDQS in a setup without WDQS-proxy **please consider disabling these endpoints in some other way**. For more information on how this is tested in this pipeline see the test-cases in [queryservice.ts](../../test/specs/repo/queryservice.ts)
 
 ### Upgrading
 

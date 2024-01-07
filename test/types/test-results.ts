@@ -1,5 +1,6 @@
 export type TestResult = {
 	fullTitle: string;
+	retries?: number;
 	error?: Error;
 };
 
