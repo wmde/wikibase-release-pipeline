@@ -133,7 +133,7 @@ export default class TestEnv {
 
 	protected async startServices(): Promise<void> {
 		this.testLog.info( '▶️  Starting Wikibase Suite services' );
-		await this.runDockerComposeCmd( 'up -d' );
+		await this.runDockerComposeCmd( 'up -d --wait' );
 	}
 
 	protected async stopServices( removeVolumes: boolean = true ): Promise<void> {
