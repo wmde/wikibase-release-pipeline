@@ -117,7 +117,7 @@ function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 	delete options.$0;
 
 	for ( const [ key, value ] of Object.entries( options ) ) {
-		if ( [ 'fromVersion', 'toVersion', 'headedTests', 'debug', 'debugNode' ].includes( key ) ) {
+		if ( [ 'fromVersion', 'toVersion', 'headedTests', 'debug' ].includes( key ) ) {
 			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] = value.toString();
 			delete options[ key ];
 		}
