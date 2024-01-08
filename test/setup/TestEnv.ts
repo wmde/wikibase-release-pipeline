@@ -107,7 +107,7 @@ export default class TestEnv {
 	}
 
 	public async exitPrompt(): Promise<void> {
-		if ( process.env.CI ) {
+		if ( !process.stdout.isTTY ) {
 			return null;
 		}
 
@@ -152,7 +152,7 @@ export default class TestEnv {
 	}
 
 	protected async setupExitListener(): Promise<void> {
-		if ( process.env.CI ) {
+		if ( !process.stdout.isTTY ) {
 			return null;
 		}
 
