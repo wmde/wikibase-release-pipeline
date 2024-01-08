@@ -105,6 +105,10 @@ export default class TestEnv {
 	}
 
 	public async exitPrompt(): Promise<void> {
+		if ( process.env.CI ) {
+			return null;
+		}
+
 		console.log( chalk.yellow( `\nExiting and taking "${this.settings.name}" test environment DOWN in 5 seconds...` ) );
 		console.log( chalk.yellow(
 			`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${this.settings.name}" test environment UP`
@@ -146,6 +150,10 @@ export default class TestEnv {
 	}
 
 	protected async setupExitListener(): Promise<void> {
+		if ( process.env.CI ) {
+			return null;
+		}
+
 		const onKeyPress = async ( _, key ): Promise<void> => {
 			if ( key.ctrl && key.name === 'c' ) {
 				process.stdin.removeListener( 'keypress', onKeyPress );
