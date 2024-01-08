@@ -66,7 +66,7 @@ describe( 'Property', function () {
 				this.retries( 4 );
 
 				await $( '=1 reference' ).click();
-				await $( '=REFERENCE' );
+				await expect( $( 'div=REFERENCE' ) ).toExist();
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async function () {

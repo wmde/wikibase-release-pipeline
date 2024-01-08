@@ -35,8 +35,14 @@ There are also a few special options which are useful when writing tests, or in 
 # `--command`, `--c`: Runs the given command on the test-runner and doesn't execute any further commands
 ./test.sh --command npm install
 
-# `DEBUG`: Shows full Docker compose up/down progress logs
-DEBUG=true ./test.sh repo --setup
+# Sets test timeouts to 1 day so they don't timeout while debugging with `await browser.debug()` calls
+# This however can have undesirable effects during normal test runs so only use for actual debugging
+# purposes. 
+./test.sh repo --debug
+
+# `DEBUG`: Shows full Docker compose up/down progress logs for the Test Runner
+# Note that the Test Service Docker logs can always be found in `test/suites/<suite>/results/wdio.log`
+DEBUG=true ./test.sh repo
 ```
 
 WDIO Testrunner CLI options are also supported. See https://webdriver.io/docs/testrunner.
