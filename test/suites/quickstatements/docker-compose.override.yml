@@ -64,7 +64,6 @@ services:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
