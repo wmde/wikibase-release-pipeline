@@ -14,6 +14,8 @@ export type TestRunnerSettings = {
 	pwd: string;
 	outputDir: string;
 	runHeaded?: boolean;
+	debug?: boolean;
+	debugNode?: boolean;
 };
 
 export type TestHooks = {
@@ -39,7 +41,7 @@ export type TestHooks = {
 	// Runs once at the end of each spec file (after each WDIO runner)
 	after?(): Promise<void>;
 	// Executed after all workers have shut down and the process is about to exit
-	onComplete?(): Promise<void>;
+	onComplete?( exitCode?: number ): Promise<void>;
 };
 
 export type TestEnvSettings = {
