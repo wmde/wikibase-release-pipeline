@@ -122,7 +122,6 @@ services:
     environment:
       - QUICKSTATEMENTS_HOST
       - QS_PUBLIC_SCHEME_HOST_AND_PORT
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase-docker.svc
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
@@ -130,6 +129,8 @@ services:
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
+      # This can be removed on release of WMDE15 to example
+      - WIKIBASE_SCHEME_AND_HOST=http://${WIKIBASE_HOST}
 
 volumes:
   LocalSettings:
