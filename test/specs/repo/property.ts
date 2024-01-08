@@ -45,11 +45,8 @@ describe( 'Property', function () {
 			it( 'Should be able to see added statement', async () => {
 				this.retries( 4 );
 
-				await $( '=STATEMENT' );
-				const resultStatement = await $(
-					`aria/Property:${stringPropertyId}`
-				).getText();
-				assert.equal( resultStatement, stringPropertyId );
+				await expect( $( 'div=STATEMENT' ) ).toExist();
+				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText( stringPropertyId );
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
