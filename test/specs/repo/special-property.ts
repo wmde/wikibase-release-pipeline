@@ -29,12 +29,13 @@ describe( 'Special:NewProperty', function () {
 			await $( 'oo-ui-menuSelectWidget' );
 			await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
 
-			await SpecialNewProperty.submit();
+			await SpecialNewProperty.submitBtn.click();
 
 			const dataTypeText = await $(
 				'.wikibase-propertyview-datatype-value'
 			).getText();
-			assert.strictEqual( dataTypeText, dataType.name );
+
+			expect( dataTypeText ).toEqual( dataType.name );
 		} );
 	} );
 
@@ -53,7 +54,7 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.descriptionInput.setValue(
 			`A ${wikibasePropertyString.urlName} property`
 		);
-		await SpecialNewProperty.submit();
+		await SpecialNewProperty.submitBtn.click();
 
 		let numberOfPropertiesAfter;
 		await browser.waitUntil( async () => {
@@ -64,11 +65,11 @@ describe( 'Special:NewProperty', function () {
 			numberOfPropertiesAfter = await SpecialListProperties.properties.length;
 			return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
 		}, {
+			timeoutMsg: 'expected total number of reflect new property in list within 10 seconds',
 			// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
 			// timeout, so the list of properties reflects the change
 			interval: 1000,
-			timeout: 10000,
-			timeoutMsg: 'expected total number of reflect new property in list within 10 seconds'
+			timeout: 10000
 		} );
 	} );
 } );
