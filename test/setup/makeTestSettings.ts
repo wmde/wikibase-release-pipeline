@@ -23,13 +23,7 @@ export const defaultTestSettings = {
 	composeFiles: [
 		'suites/docker-compose.yml'
 	],
-	waitForUrls: (): string[] => {
-		return ( [
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`,
-			`${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
-			testEnv.vars.WDQS_FRONTEND_URL
-		] );
-	},
+	waitForUrls: (): string[] => ( [] ),
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},

@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Launcher, RunCommandArguments } from '@wdio/cli';
+import logger from '@wdio/logger';
 import lodash from 'lodash';
 import chalk from 'chalk';
 import yargs from 'yargs';
@@ -166,10 +167,16 @@ export async function runWdio(
 	wdioOpts: Partial<RunCommandArguments>
 ): Promise<number> {
 	try {
+		// `logger` is a singleton and without this line the `<suiteName>/results/wdio.log` of the
+		// first suite in a multiple suite test ran (e.g. `./test.sh all`) is appended for all the
+		// suites in the run
+		logger.clearLogger();
+
 		const wdio = new Launcher(
 			configFilePath,
 			wdioOpts
 		);
+
 		return wdio.run();
 	} catch ( e ) {
 		throw new Error( 'Failed to start the test suite: ' + e.stacktrace );
