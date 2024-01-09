@@ -1,4 +1,3 @@
-import assert from 'assert';
 import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
 import {
