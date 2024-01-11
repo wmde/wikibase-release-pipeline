@@ -12,6 +12,8 @@ import TestSettings, {
 	TestSuiteSettings
 } from '../types/TestSettings.js';
 
+export const ONE_DAY_IN_MS = 86400000;
+
 export const defaultTestSettings = {
 	envFiles: [
 		'../variables.env',
@@ -21,13 +23,7 @@ export const defaultTestSettings = {
 	composeFiles: [
 		'suites/docker-compose.yml'
 	],
-	waitForUrls: (): string[] => {
-		return ( [
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`,
-			`${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`,
-			testEnv.vars.WDQS_FRONTEND_URL
-		] );
-	},
+	waitForUrls: (): string[] => ( [] ),
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},
@@ -77,8 +73,12 @@ export const defaultTestSettings = {
 			console.error( error );
 		}
 	},
-	onComplete: async (): Promise<void> => {
-		await testEnv.down();
+	onComplete: async ( exitCode?: number ): Promise<void> => {
+		// Prompts to exit and keep Test Services up if there were failures
+		if ( exitCode === 1 ) {
+			return testEnv.exitPrompt();
+		}
+		return testEnv.down();
 	}
 };
 
@@ -91,15 +91,19 @@ export const makeTestSettings = ( settings: Partial<TestSettings> ): TestSetting
 		isBaseSuite: settings.isBaseSuite,
 		specs: settings.specs
 	};
+	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';
+	const debugNode = process.env.DEBUG === 'node';
 	const outputDir = `suites/${settings.name}/results`;
 	const testRunnerSettings: TestRunnerSettings = {
+		debug,
+		debugNode,
+		outputDir,
 		runHeaded: process.env.HEADED_TESTS === 'true',
 		logLevel: process.env.TEST_LOG_LEVEL,
-		testTimeout: parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
-		waitForTimeout: parseInt( process.env.WAIT_FOR_TIMEOUT ),
+		testTimeout: debug ? ONE_DAY_IN_MS : parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
+		waitForTimeout: debug ? ONE_DAY_IN_MS : parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		pwd: process.env.HOST_PWD || process.cwd(),
-		outputDir
+		pwd: process.env.HOST_PWD || process.cwd()
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || defaultTestSettings.composeFiles,

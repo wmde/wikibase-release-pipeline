@@ -16,9 +16,6 @@ export const testEnv = TestEnv.createWithDefaults( {
 		...defaultTestSettings.envFiles,
 		'suites/upgrade/upgrade.env'
 	],
-	waitForUrls: () => ( [
-		`${testEnv.vars.WIKIBASE_URL}/wiki/Main_Page`
-	] ),
 	beforeServices: async () => {
 		const fromVersion = process.env.FROM_VERSION;
 		const toVersion = process.env.TO_VERSION;
