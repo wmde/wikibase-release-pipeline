@@ -1,0 +1,17 @@
+# Example Wikibase docker compose setup
+version: '3.5'
+
+services:
+
+  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      # For HTTPS support in production map this volume to where your SSL certificates are stored
+      # and review the nginx and nginx-proxy documentation for the appropriate configurations, or
+      # add the "acme-companion" container at https://github.com/nginx-proxy/acme-companion and 
+      # follow the instructions there to auto-generate ACME SSL certificates.
+      # - path/to/certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock:ro

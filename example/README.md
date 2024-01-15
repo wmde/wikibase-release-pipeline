@@ -1,9 +1,14 @@
 # Wikibase Suite (WBS) docker compose example configuration
 
-The example docker compose configuration consists of two files:
+The example docker compose configuration consists of three files:
 
-* `docker-compose.yml` contains two services: wikibase and mysql
-* `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements
+* `docker-compose.yml` wikibase and mysql
+* `docker-compose.extra.yml` wdqs, wdqs-frontend, elasticsearch and quickstatements
+* `docker-compose.nginx-proxy.yml` contains the nginx-proxy service for mapping subdomains to applications and services. This works as-is for local testing and with careful review, could be used in production. This can also be replaced by any other reverse proxy service configured appropriately. 
+
+**We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
+
+**This configuration serves as an example of how the images could be used together and isn't production ready**
 
 ## Configure your installation
 
@@ -41,18 +46,5 @@ After you've completed those initial setup steps, start WBS:
 ```
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml) and [docker-compose.yml](docker-compose.extra.yml).
-
-## Misc: Job runner note
-
-The example `docker-compose.yml` sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
-
-If you run large batches of edits, this job runner may not be able to keep up with edits.
-
-You can speed it up by setting the `MAX_JOBS` variable in `.env` to run more jobs between restarts (default is 1), if you’re okay with configuration changes not taking effect in the job runner immediately.
-Alternatively, you can run several job runners in parallel by using the `--scale` option.
-
-```sh
-./wbs compose up -d --wait --scale wikibase-jobrunner=8
-```
 
 **DISCLAIMER: This configuration serves as an example of how the images could be used together but isn't production ready**
