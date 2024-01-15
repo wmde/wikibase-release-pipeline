@@ -80,6 +80,10 @@ function start {
 		echo "${clgreen}READY${clreset}"
 	fi
 	echo
+	echo "${clblue}http://${WIKIBASE_HOST}${clwhite}"
+	echo "${clblue}http://${WDQS_FRONTEND_HOST}${clwhite}"
+	echo "${clblue}http://${QUICKSTATEMENTS_HOST}${clwhite}"
+	echo "$clreset"
 	echo "${clyellow}./wbs stop${clwhite}              Stop WBS"
 	echo "${clyellow}./wbs stop --reset${clwhite}      Stop WBS and optionally reset the data"
 	echo "${clyellow}./wbs reset${clwhite}             Stop WBS and optionally reset the data AND configuration"
@@ -109,11 +113,11 @@ function update_mw_secret_key {
 function create_env_from_template {
 	if [[ -f ".env" ]]; then
 		mv .env .env.backup
-		echo "Current .env moved to .env_backup."
+		echo "Current ${clblue}.env${clreset} moved to ${clblue}.env_backup${clreset}"
 	fi
 	cp .env.template .env
 	update_mw_secret_key
-	echo "A new default configuration has been copied from .env.template to .env"
+	echo "A new default configuration has been copied from ${clblue}.env.template${clreset} to ${clblue}.env${clreset}"
 }
 
 # Reset WBS configuration and data (prompts user)
