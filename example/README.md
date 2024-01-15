@@ -4,11 +4,9 @@ The example docker compose configuration consists of three files:
 
 * `docker-compose.yml` wikibase and mysql
 * `docker-compose.extra.yml` wdqs, wdqs-frontend, elasticsearch and quickstatements
-* `docker-compose.nginx-proxy.yml` contains the nginx-proxy service for mapping subdomains to applications and services. This works as-is for local testing and with careful review, could be used in production. This can also be replaced by any other reverse proxy service configured appropriately. 
+* `docker-compose.nginx-proxy.yml` contains the nginx-proxy service for mapping subdomains to applications and services. This works as-is for local testing and with careful review, could be used in production. This can also be replaced by any other reverse proxy service configured appropriately.
 
-**We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
-
-**This configuration serves as an example of how the images could be used together and isn't production ready**
+We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.
 
 ## Configure your installation
 
