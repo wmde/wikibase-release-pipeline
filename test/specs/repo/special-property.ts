@@ -56,6 +56,9 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewProperty.submitBtn.click();
 
 		let numberOfPropertiesAfter;
+
+		// Depends on $wgWBRepoSettings['sharedCacheDuration'] being set to 1 second
+		// from the the MediaWiki default of 30 mins
 		await browser.waitUntil( async () => {
 			await SpecialListProperties.openParams( {
 				dataType: wikibasePropertyString.urlName,
@@ -64,9 +67,7 @@ describe( 'Special:NewProperty', function () {
 			numberOfPropertiesAfter = await SpecialListProperties.properties.length;
 			return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
 		}, {
-			timeoutMsg: 'expected total number of reflect new property in list within 10 seconds',
-			// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
-			// timeout, so the list of properties reflects the change
+			timeoutMsg: 'expected new property to be included in list within 10 seconds',
 			interval: 1000,
 			timeout: 10000
 		} );
