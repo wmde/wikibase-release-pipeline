@@ -101,6 +101,7 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
+			testEnv.testLog.info( `================= TEST: ${mochaSuite.title}` );
 			testEnv.testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
 			if ( settings.beforeMochaSuite ) {
 				await settings.beforeMochaSuite( mochaSuite );
@@ -108,7 +109,7 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 		},
 
 		beforeTest: async function ( mochaTest ) {
-			testEnv.testLog.info( `▶️ SPEC: ${mochaTest.title.toUpperCase()}` );
+			testEnv.testLog.info( `================= SPEC: ${mochaTest.title}` );
 			if ( settings.beforeTest ) {
 				await settings.beforeTest( mochaTest );
 			}
