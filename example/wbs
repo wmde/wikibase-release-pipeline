@@ -118,14 +118,13 @@ function create_env_from_template {
 
 # Reset WBS configuration and data (prompts user)
 function reset {
+	reset_data
+	echo
 	read -p "${clred}Reset the configuration in .env back to the template? (No) ${clreset}" -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		create_env_from_template
-		echo "${clblue}DONE${clreset}"
+		welcome_setup
 	fi
-	echo
-	reset_data
 	echo
 }
 
