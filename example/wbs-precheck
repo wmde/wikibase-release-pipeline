@@ -1,13 +1,10 @@
 #!/bin/bash
 
 # Minimum versions
-MIN_DOCKER_VERSION="24.0.1"
-MIN_DOCKER_COMPOSE_VERSION="2.20"
+MIN_DOCKER_VERSION="22.0"
+MIN_DOCKER_COMPOSE_VERSION="2.10"
 
-# Function to check if a command is available
-check_command() {
-    command -v "$1" >/dev/null 2>&1
-}
+source .env.template
 
 # Function to compare version numbers using semver
 semver_compare() {
@@ -32,44 +29,40 @@ check_version() {
     min_version="$2"
     command_name="$3"
     
-    if check_command "$command_name"; then
-        # Extract version for Docker Compose
-        if [ "$command_name" == "docker compose" ]; then
-            version=$("$command_name" version --short | awk -F. '{print $1"."$2"."$3}')
-        else
-            version=$("$command_name" --version | awk '{print $3}' | sed 's/,//' | awk -F. '{print $1"."$2"."$3}')
-        fi
+    if [ "$command_name" == "docker compose" ]; then
+        version="$($command_name version --short)"
+    else
+        version="$("$command_name" --version | awk '{print $3}' | sed 's/,//' | awk -F. '{print $1"."$2"."$3}')"
+    fi
 
-        # Check if the version is numeric
-        if [ -n "$version" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            semver_compare "$version" "$min_version"
-            result=$?
+    # Check if the version is numeric
+    if [ -n "$version" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        semver_compare "$version" "$min_version"
+        result=$?
 
-            if [ "$result" -eq 0 ]; then
-                RESULTS+="PASS: $software version is $version (equal to $min_version)"$'\n'
-            elif [ "$result" -eq 2 ]; then
-                RESULTS+="FAIL: $software version is $version (below $min_version)"$'\n'
-            else
-                RESULTS+="PASS: $software version is $version (above $min_version)"$'\n'
-            fi
+        if [ "$result" -eq 0 ]; then
+            RESULTS+="✅ PASS: $software version is $version (equal to $min_version)"$'\n'
+        elif [ "$result" -eq 2 ]; then
+            RESULTS+="❌ FAIL: $software version is $version (below $min_version)"$'\n'
         else
-            RESULTS+="FAIL: Unable to determine $software version"$'\n'
+            RESULTS+="✅ PASS: $software version is $version (above $min_version)"$'\n'
         fi
     else
-        RESULTS+="FAIL: $software is not installed"$'\n'
+        RESULTS+="❌ FAIL: Unable to determine $software version or not installed"$'\n'
     fi
 }
 
-# Function to check if the machine can resolve a domain name
+# Function to check if the domain name can be resolved
 check_domain_resolution() {
     domain="$1"
-    ip_address="127.0.0.1"
     
-    # Use ping as an alternative method to check domain resolution
-    if ping -c 1 "$domain" &>/dev/null; then
-        RESULTS+="PASS: Machine can resolve $domain to $ip_address"$'\n'
+    # Use dig to obtain the resolved IP address
+    ip_address=$(dig +short "$domain")
+
+    if [ -n "$ip_address" ]; then
+        RESULTS+="✅ PASS: $domain found (resolves to $ip_address)"$'\n'
     else
-        RESULTS+="FAIL: Machine cannot resolve $domain to $ip_address"$'\n'
+        RESULTS+="❌ FAIL: $domain not found"$'\n'
     fi
 }
 
@@ -78,31 +71,24 @@ RESULTS=""
 
 # Check Docker version
 check_version "Docker" "$MIN_DOCKER_VERSION" "docker"
+check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker compose"
 
-# Check if Docker Compose is installed
-if check_command "docker compose"; then
-    # Check Docker Compose version
-    check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker compose"
-else
-    RESULTS+="FAIL: Docker Compose is not installed"$'\n'
-fi
+# Check domain resolution
+check_domain_resolution "$WIKIBASE_HOST"
 
 # Check architecture
 if [ "$(uname -m)" == "x86_64" ] || [ "$(uname -m)" == "amd64" ]; then
-    RESULTS+="PASS: Computer architecture is AMD64"$'\n'
+    RESULTS+="✅ PASS: Computer architecture is AMD64"$'\n'
 else
-    RESULTS+="FAIL: Computer architecture is not AMD64"$'\n'
+    RESULTS+="❌ FAIL: Computer architecture is not AMD64 (ARM not currently supported)"$'\n'
 fi
-
-# Check domain resolution
-check_domain_resolution "wikibase.local.gd"
 
 # Print results
 echo "$RESULTS"
 
 # Check if all requirements are met
 if grep -q "FAIL" <<< "$RESULTS"; then
-    echo "Not all requirements passed."
+    echo "Please review above and WBS documentation to resolve issues."
 else
-    echo "✅ All ready to run WBS! 🚀"
+    echo "✅ All ready to run WBS! Run \`./wbs\` 🚀"
 fi
