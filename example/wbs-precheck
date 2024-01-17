@@ -57,11 +57,11 @@ if check_command "docker"; then
     fi
 
     # Check if Docker Compose is installed
-    if check_command "docker" && check_command "docker-compose"; then
+    if check_command "docker" && check_command "docker compose"; then
         RESULTS+="PASS: Docker Compose is installed"$'\n'
 
         # Check Docker Compose version
-        compose_version=$(docker-compose version --short)
+        compose_version=$(docker compose version --short)
 
         semver_compare "$compose_version" "$MIN_DOCKER_COMPOSE_VERSION"
         result=$?
