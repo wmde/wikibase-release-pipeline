@@ -34,14 +34,14 @@ check_version() {
     
     if check_command "$command_name"; then
         # Extract version for Docker Compose
-        if [ "$command_name" == "docker-compose" ]; then
-            version=$("$command_name" version --short)
+        if [ "$command_name" == "docker compose" ]; then
+            version=$("$command_name" version --short | awk -F. '{print $1"."$2"."$3}')
         else
-            version=$("$command_name" --version | awk '{print $3}' | sed 's/,//')
+            version=$("$command_name" --version | awk '{print $3}' | sed 's/,//' | awk -F. '{print $1"."$2"."$3}')
         fi
 
         # Check if the version is numeric
-        if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        if [ -n "$version" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             semver_compare "$version" "$min_version"
             result=$?
 
@@ -76,13 +76,13 @@ check_domain_resolution() {
 # Store PASS/FAIL results
 RESULTS=""
 
-# Check Docker and Docker Compose versions
+# Check Docker version
 check_version "Docker" "$MIN_DOCKER_VERSION" "docker"
-check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker-compose"
 
 # Check if Docker Compose is installed
-if check_command "docker" && check_command "docker-compose"; then
-    RESULTS+="PASS: Docker Compose is installed"$'\n'
+if check_command "docker compose"; then
+    # Check Docker Compose version
+    check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker compose"
 else
     RESULTS+="FAIL: Docker Compose is not installed"$'\n'
 fi
