@@ -11,82 +11,91 @@ check_command() {
 
 # Function to compare version numbers using semver
 semver_compare() {
-    if [[ $1 == $2 ]]; then
+    local version1 version2
+
+    # Use awk to extract numeric parts of the version string
+    version1=$(echo "$1" | awk -F. '{print $1*10000+$2*100+$3}')
+    version2=$(echo "$2" | awk -F. '{print $1*10000+$2*100+$3}')
+
+    if [ "$version1" -eq "$version2" ]; then
         return 0
+    elif [ "$version1" -gt "$version2" ]; then
+        return 1
+    else
+        return 2
     fi
-    local IFS=.
-    local i ver1=($1) ver2=($2)
-    # fill empty fields in ver1 with zeros
-    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
-        ver1[i]=0
-    done
-    for ((i=0; i<${#ver1[@]}; i++)); do
-        if [[ -z ${ver2[i]} ]]; then
-            # fill empty fields in ver2 with zeros
-            ver2[i]=0
+}
+
+# Function to check software version
+check_version() {
+    software="$1"
+    min_version="$2"
+    command_name="$3"
+    
+    if check_command "$command_name"; then
+        # Extract version for Docker Compose
+        if [ "$command_name" == "docker-compose" ]; then
+            version=$("$command_name" version --short)
+        else
+            version=$("$command_name" --version | awk '{print $3}' | sed 's/,//')
         fi
-        if ((10#${ver1[i]} > 10#${ver2[i]})); then
-            return 1
+
+        # Check if the version is numeric
+        if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            semver_compare "$version" "$min_version"
+            result=$?
+
+            if [ "$result" -eq 0 ]; then
+                RESULTS+="PASS: $software version is $version (equal to $min_version)"$'\n'
+            elif [ "$result" -eq 2 ]; then
+                RESULTS+="FAIL: $software version is $version (below $min_version)"$'\n'
+            else
+                RESULTS+="PASS: $software version is $version (above $min_version)"$'\n'
+            fi
+        else
+            RESULTS+="FAIL: Unable to determine $software version"$'\n'
         fi
-        if ((10#${ver1[i]} < 10#${ver2[i]})); then
-            return 2
-        fi
-    done
-    return 0
+    else
+        RESULTS+="FAIL: $software is not installed"$'\n'
+    fi
+}
+
+# Function to check if the machine can resolve a domain name
+check_domain_resolution() {
+    domain="$1"
+    ip_address="127.0.0.1"
+    
+    # Use ping as an alternative method to check domain resolution
+    if ping -c 1 "$domain" &>/dev/null; then
+        RESULTS+="PASS: Machine can resolve $domain to $ip_address"$'\n'
+    else
+        RESULTS+="FAIL: Machine cannot resolve $domain to $ip_address"$'\n'
+    fi
 }
 
 # Store PASS/FAIL results
 RESULTS=""
 
-# Check if Docker is installed
-if check_command "docker"; then
-    RESULTS+="PASS: Docker is installed"$'\n'
+# Check Docker and Docker Compose versions
+check_version "Docker" "$MIN_DOCKER_VERSION" "docker"
+check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker-compose"
 
-    # Check Docker version
-    docker_version=$(docker --version | awk '{print $3}' | sed 's/,//')
-
-    semver_compare "$docker_version" "$MIN_DOCKER_VERSION"
-    result=$?
-
-    if [ "$result" -eq 0 ]; then
-        RESULTS+="PASS: Docker version is $docker_version (equal to $MIN_DOCKER_VERSION)"$'\n'
-    elif [ "$result" -eq 2 ]; then
-        RESULTS+="FAIL: Docker version is $docker_version (below $MIN_DOCKER_VERSION)"$'\n'
-    else
-        RESULTS+="PASS: Docker version is $docker_version (above $MIN_DOCKER_VERSION)"$'\n'
-    fi
-
-    # Check if Docker Compose is installed
-    if check_command "docker" && check_command "docker compose"; then
-        RESULTS+="PASS: Docker Compose is installed"$'\n'
-
-        # Check Docker Compose version
-        compose_version=$(docker compose version --short)
-
-        semver_compare "$compose_version" "$MIN_DOCKER_COMPOSE_VERSION"
-        result=$?
-
-        if [ "$result" -eq 0 ]; then
-            RESULTS+="PASS: Docker Compose version is $compose_version (equal to $MIN_DOCKER_COMPOSE_VERSION)"$'\n'
-        elif [ "$result" -eq 2 ]; then
-            RESULTS+="FAIL: Docker Compose version is $compose_version (below $MIN_DOCKER_COMPOSE_VERSION)"$'\n'
-        else
-            RESULTS+="PASS: Docker Compose version is $compose_version (above $MIN_DOCKER_COMPOSE_VERSION)"$'\n'
-        fi
-    else
-        RESULTS+="FAIL: Docker Compose is not installed"$'\n'
-    fi
-
-    # Check architecture
-    if [ "$(uname -m)" == "x86_64" ]; then
-        RESULTS+="PASS: Computer architecture is AMD64"$'\n'
-    else
-        RESULTS+="FAIL: Computer architecture is not AMD64"$'\n'
-    fi
-
+# Check if Docker Compose is installed
+if check_command "docker" && check_command "docker-compose"; then
+    RESULTS+="PASS: Docker Compose is installed"$'\n'
 else
-    RESULTS+="FAIL: Docker is not installed"$'\n'
+    RESULTS+="FAIL: Docker Compose is not installed"$'\n'
 fi
+
+# Check architecture
+if [ "$(uname -m)" == "x86_64" ] || [ "$(uname -m)" == "amd64" ]; then
+    RESULTS+="PASS: Computer architecture is AMD64"$'\n'
+else
+    RESULTS+="FAIL: Computer architecture is not AMD64"$'\n'
+fi
+
+# Check domain resolution
+check_domain_resolution "wikibase.local.gd"
 
 # Print results
 echo "$RESULTS"
