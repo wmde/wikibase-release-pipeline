@@ -103,10 +103,20 @@ function reset_data {
 }
 
 # Set MW_SECRET_KEY to a unique value in .env
-function update_mw_secret_key {
+function create_mw_secret_key {
 	local mw_secret_key
 	mw_secret_key=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 64 ; echo '')
 	sed -i~ "/^MW_SECRET_KEY=/s/=.*/=${mw_secret_key}/" .env
+}
+
+function create_mw_admin_pass {
+	mw_admin_pass=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 12 ; echo '')
+	sed -i~ "/^MW_ADMIN_PASS=/s/=.*/=${mw_admin_pass}/" .env
+}
+
+function create_db_pass {
+	db_pass=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 12 ; echo '')
+	sed -i~ "/^DB_PASS=/s/=.*/=${db_pass}/" .env
 }
 
 # Overwrites .env with a copy of .env.template, prompts user for confirmation
@@ -116,7 +126,9 @@ function create_env_from_template {
 		echo "Current ${clblue}.env${clreset} moved to ${clblue}.env_backup${clreset}"
 	fi
 	cp .env.template .env
-	update_mw_secret_key
+	create_mw_secret_key
+	create_mw_admin_pass
+	create_db_pass
 	echo "A new default configuration has been copied from ${clblue}.env.template${clreset} to ${clblue}.env${clreset}"
 }
 
@@ -162,7 +174,7 @@ function welcome_setup {
 	echo
 	echo "Next steps:"
 	echo
-	echo "1. Open the ${clblue}.env${clwhite} file just created, set passwords, your email, and confirm the configuration"
+	echo "1. Open the ${clblue}.env${clwhite} file to set your email address and confirm the configuration"
 	echo
 	if [[ "$1" = "start" ]]; then
 		echo "2. Run ${clblue}./wbs start${clwhite} again to start WBS"
