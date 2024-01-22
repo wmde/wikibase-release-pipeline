@@ -30,12 +30,12 @@ class JsonReporter extends WDIOReporter {
 		this.skippedTests.push( { fullTitle: test.fullTitle } );
 	}
 
-	public onTestPass( test: TestStats ): void {
-		this.successfulTests.push( { fullTitle: test.fullTitle } );
+	public onTestPass( { fullTitle, retries, error }: TestStats ): void {
+		this.successfulTests.push( { fullTitle, retries, error } );
 	}
 
-	public onTestFail( test: TestStats ): void {
-		this.failedTests.push( { fullTitle: test.fullTitle, error: test.error } );
+	public onTestFail( { fullTitle, retries, error }: TestStats ): void {
+		this.failedTests.push( { fullTitle, retries, error } );
 	}
 
 	public onSuiteEnd( suiteStats: SuiteStats ): void {

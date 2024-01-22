@@ -13,10 +13,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/repo_client/docker-compose.override.yml'
-	],
-	waitForUrls: () => ( [
-		testEnv.vars.WIKIBASE_CLIENT_URL
-	] )
+	]
 } );
 
 export const config = wdioConfig( testEnv );

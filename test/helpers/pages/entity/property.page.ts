@@ -1,14 +1,14 @@
 import { Page } from '../page.js';
 
 class Property extends Page {
-	public get saveStatement(): ChainablePromiseElement {
+	public get saveStatementLink(): ChainablePromiseElement {
 		// Only return save button if enabled
 		return $( '.wikibase-toolbar-button-save[aria-disabled="false"]' ).$( '=save' );
 	}
-	public get addStatement(): ChainablePromiseElement {
+	public get addStatementLink(): ChainablePromiseElement {
 		return $( '=add statement' );
 	}
-	public get addReference(): ChainablePromiseElement {
+	public get addReferenceLink(): ChainablePromiseElement {
 		return $( '=add reference' );
 	}
 
