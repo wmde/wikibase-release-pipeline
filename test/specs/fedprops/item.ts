@@ -3,8 +3,8 @@ import { AxiosError } from 'axios';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';

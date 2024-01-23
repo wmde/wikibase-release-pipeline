@@ -64,9 +64,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render history page list within threshold', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}?action=history`
-		);
+		await ItemPage.open( itemId, 'history' );
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
