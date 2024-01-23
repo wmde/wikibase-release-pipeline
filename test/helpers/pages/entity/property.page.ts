@@ -13,7 +13,7 @@ class PropertyPage extends Page {
 	}
 
 	public async open( id: string ): Promise<void> {
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Property:${id}` );
+		await super.open( `/wiki/Property:${id}` );
 	}
 }
 

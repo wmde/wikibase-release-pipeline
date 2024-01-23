@@ -15,7 +15,7 @@ class SpecialNewItemPage extends SubmittablePage {
 	}
 
 	public async open(): Promise<void> {
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:NewItem` );
+		return super.open( '/wiki/Special:NewItem' );
 	}
 }
 

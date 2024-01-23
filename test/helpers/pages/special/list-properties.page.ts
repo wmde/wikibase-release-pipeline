@@ -18,8 +18,8 @@ class SpecialListPropertiesPage extends Page {
 		const limit = 'limit=' + ( params.limit ?? 50 );
 		const offset = 'offset=' + ( params.offset ?? 0 );
 
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
+		await super.open(
+			`/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
 		);
 
 		await this.content;
