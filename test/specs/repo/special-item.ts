@@ -1,10 +1,9 @@
+import assert from 'assert';
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
-import assert from 'assert';
 
 describe( 'Special:NewItem', function () {
 	it( 'Should be able to create a new item', async () => {
-
 		const label = 'Cool label';
 		const description = 'Cool description';
 		const firstAlias = 'Great job';
@@ -14,7 +13,9 @@ describe( 'Special:NewItem', function () {
 
 		await SpecialNewItemPage.labelInput.setValue( label );
 		await SpecialNewItemPage.descriptionInput.setValue( description );
-		await SpecialNewItemPage.aliasesInput.setValue( firstAlias + '|' + secondAlias );
+		await SpecialNewItemPage.aliasesInput.setValue(
+			`${firstAlias}|${secondAlias}`
+		);
 		await SpecialNewItemPage.submit();
 
 		await ItemPage.addStatementLink;

@@ -9,7 +9,8 @@ import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
-const propertyIdSelector = ( id: string ): ChainablePromiseElement => $( `=${id} (${id})` ); // =P1 (P1)
+const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
+	$( `=${id} (${id})` ); // =P1 (P1)
 
 describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
@@ -43,7 +44,9 @@ describe( 'Property', function () {
 			it( 'Should be able to see added statement', async () => {
 				this.retries( 4 );
 				await expect( $( 'div=STATEMENT' ) ).toExist();
-				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText( stringPropertyId );
+				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
+					stringPropertyId
+				);
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
@@ -67,9 +70,10 @@ describe( 'Property', function () {
 				const response = await browser.makeRequest(
 					`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${propertyId}.json`
 				);
-				const claim: Claim = response.data.entities[ propertyId ]
-					.claims[ stringPropertyId ][ 0 ];
-				const reference: Reference = claim.references[ 0 ].snaks[ stringPropertyId ][ 0 ];
+				const claim: Claim =
+					response.data.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
+				const reference: Reference =
+					claim.references[ 0 ].snaks[ stringPropertyId ][ 0 ];
 				await expect( claim.mainsnak.datavalue.value ).toEqual( 'STATEMENT' );
 				await expect( reference.datavalue.value ).toEqual( 'REFERENCE' );
 			} );

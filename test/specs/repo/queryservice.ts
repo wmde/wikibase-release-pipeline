@@ -88,7 +88,9 @@ describe( 'QueryService', () => {
 		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) );
 
 		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' ) );
+		assert(
+			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		);
 
 		// property value is set with correct rdf
 		assert(
@@ -117,7 +119,10 @@ describe( 'QueryService', () => {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };

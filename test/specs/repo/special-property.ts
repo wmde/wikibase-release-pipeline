@@ -59,17 +59,22 @@ describe( 'Special:NewProperty', function () {
 
 		// Depends on $wgWBRepoSettings['sharedCacheDuration'] being set to 1 second
 		// from the the MediaWiki default of 30 mins
-		await browser.waitUntil( async () => {
-			await SpecialListPropertiesPage.openParams( {
-				dataType: wikibasePropertyString.urlName,
-				limit: 1000
-			} );
-			numberOfPropertiesAfter = await SpecialListPropertiesPage.properties.length;
-			return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
-		}, {
-			timeoutMsg: 'expected new property to be included in list within 10 seconds',
-			interval: 1000,
-			timeout: 10000
-		} );
+		await browser.waitUntil(
+			async () => {
+				await SpecialListPropertiesPage.openParams( {
+					dataType: wikibasePropertyString.urlName,
+					limit: 1000
+				} );
+				numberOfPropertiesAfter =
+					await SpecialListPropertiesPage.properties.length;
+				return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
+			},
+			{
+				timeoutMsg:
+					'expected new property to be included in list within 10 seconds',
+				interval: 1000,
+				timeout: 10000
+			}
+		);
 	} );
 } );

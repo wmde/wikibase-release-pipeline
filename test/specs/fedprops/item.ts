@@ -118,10 +118,16 @@ describe( 'Fed props Item', function () {
 
 		assert( !( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) ) );
 
-		assert( !( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) ) );
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) )
+		);
 
-		assert( !( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) ) );
-		assert( !( await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' ) ) );
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) )
+		);
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' ) )
+		);
 
 		assert( !( await QueryServiceUIPage.resultIncludes( 'p:P213' ) ) );
 	} );
