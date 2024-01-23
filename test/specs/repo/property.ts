@@ -11,6 +11,8 @@ const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
 const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
 	$( `=${id} (${id})` ); // =P1 (P1)
+const statementText = 'STATEMENT';
+const referenceText = 'REFERENCE';
 
 describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
@@ -37,13 +39,13 @@ describe( 'Property', function () {
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await propertyIdSelector( stringPropertyId ).click();
-				await browser.keys( 'STATEMENT'.split( '' ) );
+				await browser.keys( statementText.split( '' ) );
 				await PropertyPage.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
 				this.retries( 4 );
-				await expect( $( 'div=STATEMENT' ) ).toExist();
+				await expect( $( `div=${statementText}` ) ).toExist();
 				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
 					stringPropertyId
 				);
@@ -55,14 +57,14 @@ describe( 'Property', function () {
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
 				await propertyIdSelector( stringPropertyId ).click();
-				await browser.keys( 'REFERENCE'.split( '' ) );
+				await browser.keys( referenceText.split( '' ) );
 				await PropertyPage.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added reference', async function () {
 				this.retries( 4 );
 				await $( '=1 reference' ).click();
-				await expect( $( 'div=REFERENCE' ) ).toExist();
+				await expect( $( `div=${referenceText}` ) ).toExist();
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async function () {
@@ -74,8 +76,8 @@ describe( 'Property', function () {
 					response.data.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
 				const reference: Reference =
 					claim.references[ 0 ].snaks[ stringPropertyId ][ 0 ];
-				await expect( claim.mainsnak.datavalue.value ).toEqual( 'STATEMENT' );
-				await expect( reference.datavalue.value ).toEqual( 'REFERENCE' );
+				await expect( claim.mainsnak.datavalue.value ).toEqual( statementText );
+				await expect( reference.datavalue.value ).toEqual( referenceText );
 			} );
 
 			it( 'Should show changes in "View history" tab', async () => {
