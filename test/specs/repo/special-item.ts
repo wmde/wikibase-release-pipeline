@@ -1,5 +1,5 @@
 import assert from 'assert';
-import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
+import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
 describe( 'Special:NewItem', function () {
@@ -18,7 +18,7 @@ describe( 'Special:NewItem', function () {
 		);
 		await SpecialNewItemPage.submit();
 
-		await ItemPage.addStatementLink;
+		await SpecialEntityPage.addStatementLink;
 
 		const labelText = await $(
 			'.wikibase-entitytermsforlanguageview-label'
