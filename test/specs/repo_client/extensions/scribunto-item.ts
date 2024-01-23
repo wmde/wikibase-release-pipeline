@@ -6,6 +6,7 @@ import { readFile } from 'fs/promises';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ExternalChange from '../../../types/external-change.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -36,7 +37,7 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -81,7 +82,7 @@ describe( 'Scribunto Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {

@@ -1,6 +1,7 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
@@ -52,7 +53,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );

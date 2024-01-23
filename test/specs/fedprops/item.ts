@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { AxiosError } from 'axios';
 import { getTestString } from 'wdio-mediawiki/Util.js';
-import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
+import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -38,14 +39,14 @@ describe( 'Fed props Item', function () {
 		};
 		await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 
 		const actualPropertyValue = await $(
 			'.wikibase-statementgroupview-property'
 		).getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		await ItemPage.addStatementLink;
+		await SpecialEntityPage.addStatementLink;
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {

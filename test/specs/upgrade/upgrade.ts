@@ -1,30 +1,39 @@
-import { spawnSync } from 'child_process';
-import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { versions } from '../../suites/upgrade/versions.js';
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
+import { spawnSync } from 'child_process';
+import { getTestString } from 'wdio-mediawiki/Util.js';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import { versions } from '../../suites/upgrade/versions.js';
 
 describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
 	before( async () => {
 		// === Set image for current local build of wikibase
-		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ process.env.TO_VERSION ];
-		console.log( `ℹ️  Upgrading TO Wikibase Docker image: ${testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL}` );
+		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL =
+			versions[ process.env.TO_VERSION ];
+		console.log(
+			`ℹ️  Upgrading TO Wikibase Docker image: ${testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL}`
+		);
 
 		// === Fix for LocalSettings.php (see notes in the script)
-		spawnSync(
-			'specs/upgrade/recreateLocalSettings.sh',
-			{ shell: true, stdio: 'inherit', env: { ...testEnv.vars, PATH: process.env.PATH } }
-		);
+		spawnSync( 'specs/upgrade/recreateLocalSettings.sh', {
+			shell: true,
+			stdio: 'inherit',
+			env: { ...testEnv.vars, PATH: process.env.PATH }
+		} );
 
 		// === Take down and start with new wikibase version (without removing data / volumes)
 		await testEnv.runDockerComposeCmd( '--progress quiet down' );
-		await testEnv.runDockerComposeCmd( '-f suites/upgrade/docker-compose.override.yml --progress quiet up -d --wait' );
+		await testEnv.runDockerComposeCmd(
+			'-f suites/upgrade/docker-compose.override.yml --progress quiet up -d --wait'
+		);
 		await testEnv.waitForServices();
 
 		// === Run "php /var/www/html/maintenance/update.php" on the wikibase service
-		await testEnv.runDockerComposeCmd( 'exec wikibase php /var/www/html/maintenance/update.php --quick' );
+		await testEnv.runDockerComposeCmd(
+			'exec wikibase php /var/www/html/maintenance/update.php --quick'
+		);
 		// Make sure services are settled and available again
 		await testEnv.waitForServices();
 		// Repeat WDIO initialization with new services up
@@ -74,7 +83,7 @@ describe( 'Wikibase upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${oldItemID}` );
+		await ItemPage.open( oldItemID );
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {

@@ -1,5 +1,6 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {
@@ -40,6 +41,6 @@ describe( 'WikibaseEdtf', function () {
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await ItemPage.open( itemId );
 	} );
 } );
