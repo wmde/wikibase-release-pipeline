@@ -1,6 +1,6 @@
 import { Page } from '../page.js';
 
-class Property extends Page {
+class PropertyPage extends Page {
 	public get saveStatementLink(): ChainablePromiseElement {
 		// Only return save button if enabled
 		return $( '.wikibase-toolbar-button-save[aria-disabled="false"]' ).$( '=save' );
@@ -17,4 +17,4 @@ class Property extends Page {
 	}
 }
 
-export default new Property();
+export default new PropertyPage();

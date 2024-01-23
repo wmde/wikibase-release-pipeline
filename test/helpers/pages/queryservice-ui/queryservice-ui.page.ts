@@ -1,6 +1,6 @@
 import SubmittablePage from '../submittable.page.js';
 
-class QueryServiceUI extends SubmittablePage {
+class QueryServiceUIPage extends SubmittablePage {
 	public get queryEditor(): ChainablePromiseElement {
 		return $( '.queryEditor' );
 	}
@@ -34,4 +34,4 @@ class QueryServiceUI extends SubmittablePage {
 	}
 }
 
-export default new QueryServiceUI();
+export default new QueryServiceUIPage();

@@ -1,7 +1,7 @@
 import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
 
-class SpecialListProperties extends Page {
+class SpecialListPropertiesPage extends Page {
 	public get content(): ChainablePromiseElement {
 		return $( '.mw-spcontent' );
 	}
@@ -26,4 +26,4 @@ class SpecialListProperties extends Page {
 	}
 }
 
-export default new SpecialListProperties();
+export default new SpecialListPropertiesPage();

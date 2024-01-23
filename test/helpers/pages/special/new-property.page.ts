@@ -1,6 +1,6 @@
 import SubmittablePage from '../submittable.page.js';
 
-class SpecialNewProperty extends SubmittablePage {
+class SpecialNewPropertyPage extends SubmittablePage {
 	public get labelInput(): ChainablePromiseElement {
 		return $( 'input[name="label"]' );
 	}
@@ -30,4 +30,4 @@ class SpecialNewProperty extends SubmittablePage {
 	}
 }
 
-export default new SpecialNewProperty();
+export default new SpecialNewPropertyPage();

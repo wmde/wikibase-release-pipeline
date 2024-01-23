@@ -3,7 +3,7 @@ import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -68,45 +68,45 @@ describe( 'QueryService', () => {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 20 * 1000 );
 
-		await QueryServiceUI.submit();
-		await QueryServiceUI.resultTable;
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
 
-		assert( await QueryServiceUI.resultIncludes( 'schema:version' ) );
-		assert( await QueryServiceUI.resultIncludes( 'schema:dateModified' ) );
-		assert( await QueryServiceUI.resultIncludes( 'wikibase:timestamp' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'schema:version' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) );
 
 		// label should match on the prefix
-		assert( await QueryServiceUI.resultIncludes( 'rdfs:label', itemLabel ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) );
 
 		// should have one statement
-		assert( await QueryServiceUI.resultIncludes( 'wikibase:statements', '1' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) );
 
-		assert( await QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert( await QueryServiceUI.resultIncludes( 'wikibase:identifiers', '0' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) );
+		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' ) );
 
 		// property value is set with correct rdf
 		assert(
-			await QueryServiceUI.resultIncludes(
+			await QueryServiceUIPage.resultIncludes(
 				`<${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}>`,
 				propertyValue
 			)
 		);
 
 		// query the property using wdt: prefix
-		await QueryServiceUI.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
 
-		await QueryServiceUI.submit();
-		await QueryServiceUI.resultTable;
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
 
 		// should be set only to the item
 		assert(
-			await QueryServiceUI.resultIncludes(
+			await QueryServiceUIPage.resultIncludes(
 				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
 				propertyValue
 			)
@@ -126,15 +126,15 @@ describe( 'QueryService', () => {
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 20 * 1000 );
 
-		await QueryServiceUI.submit();
+		await QueryServiceUIPage.submit();
 
-		const resultText = await QueryServiceUI.resultTable.getText();
+		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
 		assert( !resultText.includes( 'schema:version' ) );

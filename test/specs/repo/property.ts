@@ -1,5 +1,5 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import Property from '../../helpers/pages/entity/property.page.js';
+import PropertyPage from '../../helpers/pages/entity/property.page.js';
 import {
 	wikibasePropertyItem,
 	wikibasePropertyString
@@ -28,16 +28,16 @@ describe( 'Property', function () {
 			} );
 
 			beforeEach( async () => {
-				await Property.open( propertyId );
+				await PropertyPage.open( propertyId );
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
-				await Property.addStatementLink.click();
+				await PropertyPage.addStatementLink.click();
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await propertyIdSelector( stringPropertyId ).click();
 				await browser.keys( 'STATEMENT'.split( '' ) );
-				await Property.saveStatementLink.click();
+				await PropertyPage.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added statement', async () => {
@@ -47,13 +47,13 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
-				await Property.addReferenceLink.click();
+				await PropertyPage.addReferenceLink.click();
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
 				await propertyIdSelector( stringPropertyId ).click();
 				await browser.keys( 'REFERENCE'.split( '' ) );
-				await Property.saveStatementLink.click();
+				await PropertyPage.saveStatementLink.click();
 			} );
 
 			it( 'Should be able to see added reference', async function () {

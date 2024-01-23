@@ -1,5 +1,5 @@
 import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
-import SpecialNewItem from '../../helpers/pages/special/new-item.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import assert from 'assert';
 
 describe( 'Special:NewItem', function () {
@@ -10,12 +10,12 @@ describe( 'Special:NewItem', function () {
 		const firstAlias = 'Great job';
 		const secondAlias = 'Bra Jobbat';
 
-		await SpecialNewItem.open();
+		await SpecialNewItemPage.open();
 
-		await SpecialNewItem.labelInput.setValue( label );
-		await SpecialNewItem.descriptionInput.setValue( description );
-		await SpecialNewItem.aliasesInput.setValue( firstAlias + '|' + secondAlias );
-		await SpecialNewItem.submit();
+		await SpecialNewItemPage.labelInput.setValue( label );
+		await SpecialNewItemPage.descriptionInput.setValue( description );
+		await SpecialNewItemPage.aliasesInput.setValue( firstAlias + '|' + secondAlias );
+		await SpecialNewItemPage.submit();
 
 		await ItemPage.addStatementLink;
 
