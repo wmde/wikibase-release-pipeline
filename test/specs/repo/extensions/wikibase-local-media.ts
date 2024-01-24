@@ -2,6 +2,7 @@ import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import PropertyPage from '../../../helpers/pages/entity/property.page.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
@@ -29,7 +30,7 @@ describe( 'WikibaseLocalMedia', function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Property:${propertyId}` );
+		await PropertyPage.open( propertyId );
 
 		const title = await $( '#firstHeading' ).getText();
 
