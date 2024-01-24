@@ -28,7 +28,7 @@ describe( 'Special:NewProperty', function () {
 			await $( 'oo-ui-menuSelectWidget' );
 			await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
 
-			await SpecialNewPropertyPage.submitBtn.click();
+			await SpecialNewPropertyPage.submit();
 
 			const dataTypeText = await $(
 				'.wikibase-propertyview-datatype-value'
@@ -53,7 +53,7 @@ describe( 'Special:NewProperty', function () {
 		await SpecialNewPropertyPage.descriptionInput.setValue(
 			`A ${wikibasePropertyString.urlName} property`
 		);
-		await SpecialNewPropertyPage.submitBtn.click();
+		await SpecialNewPropertyPage.submit();
 
 		let numberOfPropertiesAfter;
 
