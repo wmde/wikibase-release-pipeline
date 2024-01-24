@@ -9,12 +9,14 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'specs/elasticsearch/*.ts'
 	],
 	composeFiles: [
+		'../example/docker-compose.nginx-proxy.yml',
 		'../example/docker-compose.yml',
 		'../example/docker-compose.extra.yml',
 		'suites/example/docker-compose.override.yml'
 	],
 	envFiles: [
-		'../example/template.env',
+		'../example/.env.defaults',
+		'../example/.env.template',
 		'suites/example/example.env',
 		'../local.env'
 	],

@@ -1,0 +1,245 @@
+#!/usr/bin/env bash
+
+source .env.defaults
+
+if [[ -f ".env" ]]; then
+	source .env
+fi
+
+# === Flags
+for arg in "$@"; do
+		case $arg in
+				# ./wbs <command> --quiet, ./wbs <command> -q
+				# Quiets logging of Docker operations
+				--quiet|-q)
+					flag_quiet=true
+					;;
+				# ./wbs <start|stop> --reset
+				# Prompts user about resetting data before running start or stop
+				--reset)
+					flag_reset=true
+					;;
+		esac
+done
+
+# == Docker compose command setup
+export WBS_COMPOSE="docker compose \
+--file docker-compose.yml \
+--file docker-compose.extra.yml \
+--file docker-compose.nginx-proxy.yml \
+--env-file .env.defaults
+--env-file .env"
+if [ "$flag_quiet" = true ]; then
+	WBS_COMPOSE="$WBS_COMPOSE --progress quiet"
+fi
+export WBS_COMPOSE_UP="$WBS_COMPOSE up -d --wait"
+export WBS_COMPOSE_DOWN="$WBS_COMPOSE down"
+export WBS_COMPOSE_DOWN_VOLUMES="$WBS_COMPOSE down --volumes --remove-orphans"
+
+# == ANSI colors for status messsages
+clred=$(tput setaf 1)
+clgreen=$(tput setaf 2)
+clblue=$(tput setaf 4)
+clyellow=$(tput setaf 11)
+clwhite=$(tput setaf 7)
+clreset=$(tput sgr0)
+
+# == Functions
+
+# Default Ctrl-C handler
+function cancel {
+	stop
+	exit 1
+}
+
+# Is WBS already running?
+function running {
+	local is_running
+	is_running=$($WBS_COMPOSE ps --quiet)
+	if [ -n "$is_running" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Starts WBS, if already running prompts user if they would like to restart WBS
+function start {
+	if running; then
+		echo "${clgreen}Wikibase Suite (WBS) is currently running${clreset} "
+		echo
+		$WBS_COMPOSE ps --format "table {{.Service}}\t{{.Image}}\t{{.Status}}"
+	else
+		echo "${clwhite}Waiting for Wikibase Suite containers to start...${clreset} "
+		trap cancel SIGINT
+		$WBS_COMPOSE_UP
+		if ! [ "$flag_quiet" = "true " ]; then 
+			echo
+		fi
+		echo "${clgreen}READY${clreset}"
+	fi
+	echo
+	echo "${clblue}http://${WIKIBASE_HOST}${clwhite}"
+	echo "${clblue}http://${WDQS_FRONTEND_HOST}${clwhite}"
+	echo "${clblue}http://${QUICKSTATEMENTS_HOST}${clwhite}"
+	echo "$clreset"
+	echo "${clyellow}./wbs stop${clwhite}              Stop WBS"
+	echo "${clyellow}./wbs stop --reset${clwhite}      Stop WBS and optionally reset the data"
+	echo "${clyellow}./wbs reset${clwhite}             Stop WBS and optionally reset the data AND configuration"
+	echo "${clyellow}./wbs compose logs -f${clwhite}   Show and follow WBS logs"
+	echo "$clreset"
+}
+
+# Stops WBS and removes docker volumes, prompts user for confirmation
+function reset_data {
+	read -p "${clred}Erase Wikibase Suite data for all services? This can't be undone. (No) ${clreset}" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "${clwhite}Stopping Wikibase Suite and erasing data...${clreset} "
+		$WBS_COMPOSE_DOWN_VOLUMES
+		echo "${clblue}DONE${clreset}"
+	fi
+}
+
+# Set MW_SECRET_KEY to a unique value in .env
+function create_mw_secret_key {
+	local mw_secret_key
+	mw_secret_key=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 64 ; echo '')
+	sed -i~ "/^MW_SECRET_KEY=/s/=.*/=${mw_secret_key}/" .env
+}
+
+function create_mw_admin_pass {
+	mw_admin_pass=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 12 ; echo '')
+	sed -i~ "/^MW_ADMIN_PASS=/s/=.*/=${mw_admin_pass}/" .env
+}
+
+function create_db_pass {
+	db_pass=$(LC_ALL=C tr -dc 'A-Za-z0-9@#%^+_-' </dev/urandom | head -c 12 ; echo '')
+	sed -i~ "/^DB_PASS=/s/=.*/=${db_pass}/" .env
+}
+
+# Overwrites .env with a copy of .env.template, prompts user for confirmation
+function create_env_from_template {
+	if [[ -f ".env" ]]; then
+		mv .env .env.backup
+		echo "Current ${clblue}.env${clreset} moved to ${clblue}.env_backup${clreset}"
+	fi
+	cp .env.template .env
+	create_mw_secret_key
+	create_mw_admin_pass
+	create_db_pass
+	echo "A new default configuration has been copied from ${clblue}.env.template${clreset} to ${clblue}.env${clreset}"
+}
+
+# Reset WBS configuration and data (prompts user)
+function reset {
+	reset_data
+	echo
+	read -p "${clred}Reset the configuration in .env back to the template? (No) ${clreset}" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		welcome_setup
+	fi
+	echo
+}
+
+# Stops WBS
+function stop {
+	if [ "$flag_reset" = true ]; then
+		reset_data
+	else
+		if running ; then
+			trap "exit 1" SIGINT
+			echo "${clwhite}Stopping currently running Wikibase Suite... "
+			$WBS_COMPOSE_DOWN
+			if [ "$flag_quiet" = "true " ]; then 
+				echo "${clblue}DONE${clreset}"
+			fi
+			echo
+		fi
+	fi
+}
+
+# Creates a new .env file and welcomes user with next steps
+function welcome_setup {
+	# Green text
+	echo "$clgreen"
+	echo "Welcome to the Wikibase Suite (WBS)"
+	echo "$clwhite"
+
+	create_env_from_template
+	source .env
+
+	echo
+	echo "Next steps:"
+	echo
+	echo "1. Open the ${clblue}.env${clwhite} file to set your email address and confirm the configuration"
+	echo
+	if [[ "$1" = "start" ]]; then
+		echo "2. Run ${clblue}./wbs start${clwhite} again to start WBS"
+	else
+		echo "2. Run ${clblue}./wbs start${clwhite} to start WBS"
+	fi
+	echo
+	echo "3. Once you see ${clgreen}READY${clwhite} navigate to ${clblue}http://${WIKIBASE_HOST}${clwhite} and begin testing!"
+	# Yellow text
+	echo "$clyellow"
+	echo "DISCLAIMER: This WBS configuration is an example of how to use the WBS Docker images together,"
+	echo "but not production-ready."
+	echo "$clreset"
+}
+
+# == Welcome and Setup - always runs when no `.env` file exists
+if ! [[ -f ".env" ]]; then
+	welcome_setup "$1"
+	exit 0
+fi
+
+echo
+
+# === Commands
+for arg in "$@"; do
+		case $arg in
+				# ./wbs reset
+				# Prompts user about resetting data AND configuration
+				reset)
+					reset
+					exit 0
+					;;
+				# ./wbs start
+				# Starts (or restarts if already running) all WBS services
+				# Accepts `--reset` flag e.g. `./wbs start --reset`
+				start)
+					start
+					exit 0
+					;;
+				# ./wbs stop
+				# Stops all running WBS services
+				# Accepts `--reset` flag e.g. `./wbs stop --reset`
+				stop)
+					stop
+					exit 0
+					;;
+				# ./wbs compose <compose-options-and-command>
+				# Runs `docker compose` with the WBS setup appending any arguments
+				# e.g. `./wbs compose logs`, `./wbs compose ps`, etc
+				compose)
+					$WBS_COMPOSE "${@:2}"
+					exit 0
+					;;
+				# ./wbs bash <service-name>
+				# Opens a bash shell on the specified WBS container
+				# e.g. `./wbs bash wikibase`
+				bash)
+					$WBS_COMPOSE exec "$2" bash
+					exit 0
+					;;
+				*)
+					echo "Unknown argument: $arg" > /dev/stderr
+					exit 1
+					;;
+		esac
+done
+
+# default command
+start
