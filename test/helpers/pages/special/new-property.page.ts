@@ -13,9 +13,6 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	public get datatypeInput(): ChainablePromiseElement {
 		return $( '#wb-newproperty-datatype' );
 	}
-	public get submitBtn(): ChainablePromiseElement {
-		return $( 'button[type="submit"]' );
-	}
 
 	public async open( dataType?: string ): Promise<void> {
 		dataType = dataType ? '?datatype=' + dataType : '';

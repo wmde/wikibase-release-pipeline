@@ -10,9 +10,6 @@ class SpecialNewItemPage extends SubmittablePage {
 	public get aliasesInput(): ChainablePromiseElement {
 		return $( 'input[name="aliases"]' );
 	}
-	public get submitBtn(): ChainablePromiseElement {
-		return $( 'button[type="submit"]' );
-	}
 
 	public async open(): Promise<void> {
 		return super.open( '/wiki/Special:NewItem' );
