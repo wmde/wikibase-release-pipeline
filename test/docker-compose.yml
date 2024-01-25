@@ -5,7 +5,8 @@ name: wikibase-suite-test-runner
 
 networks:
   default:
-    name: wikibase-suite-test-services_default
+    name: wikibase-suite-test
+    external: true
 
 services:
   test-runner:
@@ -15,16 +16,17 @@ services:
       dockerfile: Dockerfile
     stop_grace_period: 1s
     entrypoint: /bin/bash
+    ports:
+      - "9229:9229"
     volumes:
       - ..:/usr/src
       - node_modules:/usr/src/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
-      - HOST_PWD=${PWD}
+      - HOST_PWD=${PWD}/test
 
   browser:
-    # use a fixed selenium chrome version for stability in our testing environment
     image: ${TEST_BROWSER_IMAGE_URL}
     stop_grace_period: 1s
     ports:
@@ -40,3 +42,8 @@ services:
 
 volumes:
   node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./node_modules
