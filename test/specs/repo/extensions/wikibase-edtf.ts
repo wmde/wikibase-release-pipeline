@@ -1,6 +1,7 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import SpecialEntityData from '../../../helpers/pages/special/entity-data.page.js';
 
 describe( 'WikibaseEdtf', function () {
 	beforeEach( async function () {
@@ -31,11 +32,9 @@ describe( 'WikibaseEdtf', function () {
 		const itemId = await WikibaseApi.createItem( 'edtf-test', data );
 
 		// go look at wikibase
-		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
-		);
+		const responseData = await SpecialEntityData.getData( itemId );
 		const responseSnak =
-      response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
+      responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
 		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
 		assert.strictEqual( responseSnak.datatype, 'edtf' );

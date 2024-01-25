@@ -5,6 +5,7 @@ import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -51,9 +52,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
 		try {
-			await browser.makeRequest(
-				testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.ttl'
-			);
+			await SpecialEntityData.getData( 'Q1', 'ttl' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
 			assert.equal( error.request.res.statusCode, 500 );
@@ -61,22 +60,16 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
-		const response = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
-		const body = response.data;
-
+		const data = await SpecialEntityData.getData( 'Q1' );
 		assert.notEqual(
-			body.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
+			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
 			null
 		);
 	} );
 
 	it( 'should NOT show up in Special:EntityData with rdf', async () => {
 		try {
-			await browser.makeRequest(
-				testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.rdf'
-			);
+			await SpecialEntityData.getData( 'Q1', 'rdf' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
 			assert.equal( error.request.res.statusCode, 500 );

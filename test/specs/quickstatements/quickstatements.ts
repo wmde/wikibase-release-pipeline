@@ -2,6 +2,7 @@ import assert from 'assert';
 import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
 
 type ReferenceValue = {
 	id: string;
@@ -63,7 +64,9 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to log in', async () => {
-		await browser.url( testEnv.vars.QUICKSTATEMENTS_URL + '/api.php?action=oauth_redirect' );
+		await browser.url(
+			`${testEnv.vars.QUICKSTATEMENTS_URL}/api.php?action=oauth_redirect`
+		);
 
 		// login after redirect
 		const wpNameEl = await $( '#wpName1' );
@@ -95,15 +98,11 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
-		const responseQ2 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q2.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ2Data = await SpecialEntityData.getData( 'Q2' );
 
-		assert.strictEqual( responseQ1.data.entities.Q1.id, 'Q1' );
-		assert.strictEqual( responseQ2.data.entities.Q2.id, 'Q2' );
+		assert.strictEqual( responseQ1Data.entities.Q1.id, 'Q1' );
+		assert.strictEqual( responseQ2Data.entities.Q2.id, 'Q2' );
 	} );
 
 	it( 'Should be able to create item with label', async () => {
@@ -111,55 +110,48 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
-		const responseQ3 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q3.json'
-		);
+		const responseQ3Data = await SpecialEntityData.getData( 'Q3' );
 
-		assert.strictEqual( responseQ3.data.entities.Q3.labels.en.value, 'Best label' );
+		assert.strictEqual(
+			responseQ3Data.entities.Q3.labels.en.value,
+			'Best label'
+		);
 	} );
 
 	it( 'Should be able to add an alias to an item', async () => {
 		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.aliases ) !== true );
+		assert( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) !== true );
 	} );
 
 	it( 'Should be able to add a label to an item', async () => {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some label"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.labels ) !== true );
+		assert( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) !== true );
 	} );
 
 	it( 'Should be able to add a description to an item', async () => {
 		await browser.executeQuickStatement( 'Q1|DSv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.descriptions ) !== true );
+		assert( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) !== true );
 	} );
 
 	it.skip( 'Should be able to add a sitelink to an item', async () => {
 		await browser.executeQuickStatement( 'Q1|Sclient_wiki|"Main_Page"' );
 
 		// go look at wikibase
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1.data.entities.Q1.sitelinks ) !== true );
+		assert( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) !== true );
 	} );
 
 	it( 'Should be able to add a statement to an item', async () => {
@@ -167,15 +159,13 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( `Q1|${propertyId}|"Will it blend?"` );
 
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 		assert.strictEqual(
-			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
+			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
 			'statement'
 		);
 		assert.strictEqual(
-			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value,
+			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value,
 			'Will it blend?'
 		);
 	} );
@@ -216,11 +206,9 @@ describe( 'QuickStatements Service', function () {
 			`Q1|${propertyIdItem}|Q1|${propertyIdItem}|Q1`
 		);
 
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
 		assert.strictEqual(
-			responseQ1.data.entities.Q1.claims[ propertyId ][ 0 ].type,
+			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
 			'statement'
 		);
 	} );
@@ -286,21 +274,17 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( `${itemId}|${propertyIdItem}|Q1` );
 
-		let response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
-		);
+		let responseData = await SpecialEntityData.getData( itemId );
 		assert.strictEqual(
-			propertyIdItem in response.data.entities[ itemId ].claims,
+			propertyIdItem in responseData.entities[ itemId ].claims,
 			true
 		);
 
 		await browser.executeQuickStatement( `-${itemId}|${propertyIdItem}|Q1` );
 
-		response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
-		);
+		responseData = await SpecialEntityData.getData( itemId );
 		assert.strictEqual(
-			propertyIdItem in response.data.entities[ itemId ].claims,
+			propertyIdItem in responseData.entities[ itemId ].claims,
 			false
 		);
 	} );
@@ -308,10 +292,11 @@ describe( 'QuickStatements Service', function () {
 	it( 'Should be able to change label', async () => {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
-		const responseQ1 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
+		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		assert.strictEqual(
+			responseQ1Data.entities.Q1.labels.sv.value,
+			'Some other label'
 		);
-		assert.strictEqual( responseQ1.data.entities.Q1.labels.sv.value, 'Some other label' );
 	} );
 
 	it( 'Should be able to merge two items', async () => {
@@ -319,9 +304,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
-		const responseQ2 = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q2.json'
-		);
-		assert.strictEqual( responseQ2.data.entities.Q1.id, 'Q1' );
+		const responseQ2Data = await SpecialEntityData.getData( 'Q2' );
+		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
 	} );
 } );

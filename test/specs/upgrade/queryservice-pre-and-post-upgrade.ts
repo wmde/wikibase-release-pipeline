@@ -7,6 +7,7 @@ team inherited.
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
 import Binding from '../../types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
@@ -37,12 +38,8 @@ describe( 'Wikibase post upgrade', function () {
 	} );
 
 	it( 'Should show up in Special:EntityData with json', async () => {
-		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
-		);
-
-		const body = response.data;
-		const properties = Object.keys( body.entities[ oldItemID ].claims );
+		const data = await SpecialEntityData.getData( oldItemID );
+		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
 		assert.strictEqual( properties.length, 1 );
 
