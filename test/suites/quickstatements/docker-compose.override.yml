@@ -43,6 +43,10 @@ services:
       - DB_USER
       - DB_PASS
       - DB_NAME=client_wiki
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "${WIKIBASE_CLIENT_URL}" ]
+      interval: 10s
+      start_period: 2m
 
   quickstatements:
     image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
@@ -60,11 +64,14 @@ services:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "${QUICKSTATEMENTS_URL}" ]
+      interval: 10s
+      start_period: 2m
 
 volumes:
   quickstatements-data:

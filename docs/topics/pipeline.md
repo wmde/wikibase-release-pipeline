@@ -73,7 +73,7 @@ $ ./build.sh --no-cache
 To remove any locally produced artifacts you can run the following commands.
 
 ```sh
-make clean
+./clean.sh
 ```
 
 ### Downloaded artifacts
