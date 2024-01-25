@@ -3,7 +3,7 @@ import { spawnSync } from 'child_process';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
-import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import { versions } from '../../suites/upgrade/versions.js';
 
 describe( 'Wikibase upgrade', function () {
@@ -88,7 +88,7 @@ describe( 'Wikibase upgrade', function () {
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
-		const data = await SpecialEntityData.getData( oldItemID );
+		const data = await SpecialEntityDataPage.getData( oldItemID );
 		assert( data.entities[ oldItemID ].claims[ 0 ] !== null );
 	} );
 } );

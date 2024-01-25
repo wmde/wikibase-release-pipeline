@@ -1,6 +1,6 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
-import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import {
 	wikibasePropertyItem,
 	wikibasePropertyString
@@ -70,7 +70,7 @@ describe( 'Property', function () {
 
 			it( 'Should contain statement and reference in EntityData', async function () {
 				this.retries( 4 );
-				const responseData = await SpecialEntityData.getData( propertyId );
+				const responseData = await SpecialEntityDataPage.getData( propertyId );
 				const claim: Claim =
 					responseData.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
 				const reference: Reference =

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import SpecialEntityData from '../../helpers/pages/special/entity-data.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 
 type ReferenceValue = {
 	id: string;
@@ -98,8 +98,8 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
-		const responseQ2Data = await SpecialEntityData.getData( 'Q2' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
+		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 
 		assert.strictEqual( responseQ1Data.entities.Q1.id, 'Q1' );
 		assert.strictEqual( responseQ2Data.entities.Q2.id, 'Q2' );
@@ -110,7 +110,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
-		const responseQ3Data = await SpecialEntityData.getData( 'Q3' );
+		const responseQ3Data = await SpecialEntityDataPage.getData( 'Q3' );
 
 		assert.strictEqual(
 			responseQ3Data.entities.Q3.labels.en.value,
@@ -122,7 +122,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) !== true );
 	} );
@@ -131,7 +131,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some label"' );
 
 		// go look at wikibase
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) !== true );
 	} );
@@ -140,7 +140,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'Q1|DSv|"Kommer det funka?"' );
 
 		// go look at wikibase
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) !== true );
 	} );
@@ -149,7 +149,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'Q1|Sclient_wiki|"Main_Page"' );
 
 		// go look at wikibase
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) !== true );
 	} );
@@ -159,7 +159,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( `Q1|${propertyId}|"Will it blend?"` );
 
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 		assert.strictEqual(
 			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
 			'statement'
@@ -206,7 +206,7 @@ describe( 'QuickStatements Service', function () {
 			`Q1|${propertyIdItem}|Q1|${propertyIdItem}|Q1`
 		);
 
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 		assert.strictEqual(
 			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
 			'statement'
@@ -274,7 +274,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( `${itemId}|${propertyIdItem}|Q1` );
 
-		let responseData = await SpecialEntityData.getData( itemId );
+		let responseData = await SpecialEntityDataPage.getData( itemId );
 		assert.strictEqual(
 			propertyIdItem in responseData.entities[ itemId ].claims,
 			true
@@ -282,7 +282,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( `-${itemId}|${propertyIdItem}|Q1` );
 
-		responseData = await SpecialEntityData.getData( itemId );
+		responseData = await SpecialEntityDataPage.getData( itemId );
 		assert.strictEqual(
 			propertyIdItem in responseData.entities[ itemId ].claims,
 			false
@@ -292,7 +292,7 @@ describe( 'QuickStatements Service', function () {
 	it( 'Should be able to change label', async () => {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
-		const responseQ1Data = await SpecialEntityData.getData( 'Q1' );
+		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 		assert.strictEqual(
 			responseQ1Data.entities.Q1.labels.sv.value,
 			'Some other label'
@@ -304,7 +304,7 @@ describe( 'QuickStatements Service', function () {
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
-		const responseQ2Data = await SpecialEntityData.getData( 'Q2' );
+		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
 	} );
 } );

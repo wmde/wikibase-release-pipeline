@@ -1,7 +1,7 @@
 import { EntityData } from '../../../types/entity-data.js';
 
 /* eslint-disable jsdoc/require-returns-type */
-class SpecialEntityData {
+class SpecialEntityDataPage {
 	/**
 	 * `/wiki/Special:EntityData/${entityId}.${extension}`;
 	 *
@@ -18,4 +18,4 @@ class SpecialEntityData {
 	}
 }
 
-export default new SpecialEntityData();
+export default new SpecialEntityDataPage();
