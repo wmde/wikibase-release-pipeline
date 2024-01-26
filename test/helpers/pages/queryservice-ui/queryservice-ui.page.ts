@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-returns */
 import SubmittablePage from '../submittable.page.js';
 
 class QueryServiceUIPage extends SubmittablePage {
@@ -14,6 +15,12 @@ class QueryServiceUIPage extends SubmittablePage {
 		return $( '#query-result table.table.table-hover tr' );
 	}
 
+	/**
+	 * `${testEnv.vars.WDQS_FRONTEND_URL}/#${prefixes, query}`
+	 *
+	 * @param {string} query
+	 * @param {string[]} prefixes
+	 */
 	public open( query: string, prefixes?: string[] ): Promise<void> {
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );

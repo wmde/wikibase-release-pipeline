@@ -12,8 +12,13 @@ class PropertyPage extends Page {
 		return $( '=add reference' );
 	}
 
-	public async open( id: string ): Promise<void> {
-		await super.open( `/wiki/Property:${id}` );
+	/**
+	 * `/wiki/Property:${propertyId}
+	 *
+	 * @param {string} propertyId
+	 */
+	public async open( propertyId: string ): Promise<void> {
+		await super.open( `/wiki/Property:${propertyId}` );
 	}
 }
 

@@ -9,6 +9,14 @@ class SpecialListPropertiesPage extends Page {
 		return $$( '.mw-spcontent ol li' );
 	}
 
+	/**
+	 * `/wiki/Special:ListProperties`
+	 *
+	 * @param {Object} params
+	 * @param {string} params.dataType - Optional, default empty string
+	 * @param {number} params.limit - Optional, default `50`
+	 * @param {number} params.offset - Optional, default `0`
+	 */
 	public async openParams( params: {
 		dataType?: string;
 		limit?: number;

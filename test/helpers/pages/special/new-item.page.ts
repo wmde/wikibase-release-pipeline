@@ -11,6 +11,9 @@ class SpecialNewItemPage extends SubmittablePage {
 		return $( 'input[name="aliases"]' );
 	}
 
+	/**
+	 * `/wiki/Special:NewItem`
+	 */
 	public async open(): Promise<void> {
 		return super.open( '/wiki/Special:NewItem' );
 	}

@@ -14,6 +14,11 @@ class SpecialNewPropertyPage extends SubmittablePage {
 		return $( '#wb-newproperty-datatype' );
 	}
 
+	/**
+	 * `/wiki/Special:NewProperty`
+	 *
+	 * @param {string} dataType - Optional
+	 */
 	public async open( dataType?: string ): Promise<void> {
 		dataType = dataType ? '?datatype=' + dataType : '';
 		await super.open( `/wiki/Special:NewProperty${dataType}` );
