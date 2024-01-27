@@ -37,7 +37,7 @@ describe( 'Special:NewProperty', function () {
 	} );
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
-		await SpecialListPropertiesPage.openParams( {
+		await SpecialListPropertiesPage.open( {
 			dataType: wikibasePropertyString.urlName,
 			limit: 1000
 		} );
@@ -59,7 +59,7 @@ describe( 'Special:NewProperty', function () {
 		// from the the MediaWiki default of 30 mins
 		await browser.waitUntil(
 			async () => {
-				await SpecialListPropertiesPage.openParams( {
+				await SpecialListPropertiesPage.open( {
 					dataType: wikibasePropertyString.urlName,
 					limit: 1000
 				} );
