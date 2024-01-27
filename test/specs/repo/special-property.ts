@@ -25,14 +25,12 @@ describe( 'Special:NewProperty', function () {
 			);
 
 			await SpecialNewPropertyPage.datatypeInput.click();
-			await $( 'oo-ui-menuSelectWidget' );
-			await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
+			await SpecialNewPropertyPage.datatypeSelectDropdown;
+			await SpecialNewPropertyPage.datatypeOptionLabel( dataType.name ).click();
 
 			await SpecialNewPropertyPage.submit();
 
-			const dataTypeText = await $(
-				'.wikibase-propertyview-datatype-value'
-			).getText();
+			const dataTypeText = await SpecialNewPropertyPage.datatypeValue.getText();
 
 			expect( dataTypeText ).toEqual( dataType.name );
 		} );
