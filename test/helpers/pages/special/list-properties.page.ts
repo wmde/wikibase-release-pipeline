@@ -1,5 +1,6 @@
 import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
+import urlParameters from '../url-parameters.js';
 
 class SpecialListPropertiesPage extends Page {
 	public get content(): ChainablePromiseElement {
@@ -22,14 +23,13 @@ class SpecialListPropertiesPage extends Page {
 		limit?: number;
 		offset?: number;
 	} ): Promise<void> {
-		const dataType = 'datatype=' + ( params.dataType ?? '' );
-		const limit = 'limit=' + ( params.limit ?? 50 );
-		const offset = 'offset=' + ( params.offset ?? 0 );
+		const paramString = urlParameters( {
+			datatype: params.dataType ?? '',
+			limit: params.limit ?? 50,
+			offset: params.offset ?? 0
+		} );
 
-		await super.open(
-			`/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
-		);
-
+		await super.open( `/wiki/Special:ListProperties${paramString}` );
 		await this.content;
 	}
 }
