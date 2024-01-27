@@ -55,7 +55,7 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
+		const imageSource = await ItemPage.image.getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 	} );
