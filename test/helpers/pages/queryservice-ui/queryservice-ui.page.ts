@@ -19,9 +19,9 @@ class QueryServiceUIPage extends SubmittablePage {
 	 * `${testEnv.vars.WDQS_FRONTEND_URL}/#${prefixes, query}`
 	 *
 	 * @param {string} query
-	 * @param {string[]} prefixes
+	 * @param {string[]} prefixes - Optional
 	 */
-	public open( query: string, prefixes?: string[] ): Promise<void> {
+	public open( query: string, prefixes: string[] = [] ): Promise<void> {
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
