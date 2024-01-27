@@ -18,7 +18,7 @@ class PropertyPage extends Page {
 	 * @param {string} propertyId
 	 */
 	public async open( propertyId: string ): Promise<void> {
-		await super.open( `/wiki/Property:${propertyId}` );
+		return super.open( `/wiki/Property:${propertyId}` );
 	}
 }
 

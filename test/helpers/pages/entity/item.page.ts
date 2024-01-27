@@ -9,7 +9,7 @@ class ItemPage extends Page {
 	 * @param {string} action - Optional
 	 */
 	public async open( itemId: string, action: string = null ): Promise<void> {
-		await super.open( `/wiki/Item:${itemId}${urlParameters( { action } )}` );
+		return super.open( `/wiki/Item:${itemId}${urlParameters( { action } )}` );
 	}
 }
 
