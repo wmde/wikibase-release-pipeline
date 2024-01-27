@@ -4,6 +4,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import ExternalChange from '../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
@@ -20,18 +21,14 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
-		await browser.url(
-			testEnv.vars.WIKIBASE_CLIENT_URL + '/wiki/Special:NewItem?uselang=qqx'
-		);
-		const notFoundText = await $( 'h1#firstHeading' ).getText();
+		await SpecialNewItemPage.open( 'qqx' );
+		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async () => {
-		await browser.url(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:NewItem?uselang=qqx'
-		);
-		const createNewItem = await $( 'h1#firstHeading' ).getText();
+		await SpecialNewItemPage.open( 'qqx' );
+		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
