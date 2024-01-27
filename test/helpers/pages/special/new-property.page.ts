@@ -1,4 +1,5 @@
 import SubmittablePage from '../submittable.page.js';
+import urlParameters from '../url-parameters.js';
 
 class SpecialNewPropertyPage extends SubmittablePage {
 	public get labelInput(): ChainablePromiseElement {
@@ -20,8 +21,7 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	 * @param {string} dataType - Optional
 	 */
 	public async open( dataType?: string ): Promise<void> {
-		dataType = dataType ? '?datatype=' + dataType : '';
-		await super.open( `/wiki/Special:NewProperty${dataType}` );
+		await super.open( `/wiki/Special:NewProperty${urlParameters( { datatype: dataType } )}` );
 		await this.labelInput;
 		await this.descriptionInput;
 		await this.aliasesInput;
