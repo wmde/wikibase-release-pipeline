@@ -21,7 +21,10 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
-		await SpecialNewItemPage.open( 'qqx' );
+		// Cannot use SpecialNewItemPage due to using WIKIBASE_CLIENT_URL
+		await browser.url(
+			`${testEnv.vars.WIKIBASE_CLIENT_URL}/wiki/Special:NewItem?uselang=qqx`
+		);
 		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
