@@ -7,10 +7,13 @@ export type Reference = {
 };
 export type Claim = {
 	mainsnak: {
-		datatype: unknown;
+		datatype?: unknown;
 		datavalue: DataValue;
+		property: string;
+		snaktype: string;
 	};
-	references: {
+	rank: string;
+	references?: {
 		snaks: Record<string, Reference[]>;
 	}[];
 	type: unknown;
