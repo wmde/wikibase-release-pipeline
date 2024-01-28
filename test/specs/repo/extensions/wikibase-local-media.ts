@@ -3,6 +3,8 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import SpecialUploadPage from '../../../helpers/pages/special/upload.page.js';
+import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
@@ -14,14 +16,14 @@ describe( 'WikibaseLocalMedia', function () {
 	it( 'Should allow to upload an image', async () => {
 		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Upload/' );
+		await SpecialUploadPage.open();
 
 		const filePath = new URL( 'image.png', import.meta.url );
-		await $( '#wpUploadFile' ).setValue( filePath.pathname );
+		await SpecialUploadPage.uploadFileInput.setValue( filePath.pathname );
 
-		await $( 'input.mw-htmlform-submit' ).click();
+		await SpecialUploadPage.submit();
 
-		const title = await $( '#firstHeading' ).getText();
+		const title = await SpecialUploadPage.firstHeading.getText();
 
 		assert.strictEqual( title, 'File:Image.png' );
 	} );
@@ -32,13 +34,13 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await PropertyPage.open( propertyId );
 
-		const title = await $( '#firstHeading' ).getText();
+		const title = await PropertyPage.firstHeading.getText();
 
 		assert.strictEqual( title.includes( propertyId ), true );
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		const data = {
+		const data: {claims: Claim[]} = {
 			claims: [
 				{
 					mainsnak: {

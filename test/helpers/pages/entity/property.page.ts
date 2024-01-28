@@ -12,6 +12,10 @@ class PropertyPage extends Page {
 		return $( '=add reference' );
 	}
 
+	public get firstHeading(): ChainablePromiseElement {
+		return $( '#firstHeading' );
+	}
+
 	/**
 	 * `/wiki/Property:${propertyId}
 	 *
