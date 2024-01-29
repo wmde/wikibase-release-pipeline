@@ -17,10 +17,11 @@ class ItemPage extends Page {
 	 * `/wiki/Item:${itemId}
 	 *
 	 * @param {string} itemId
-	 * @param {string} action - Optional
+	 * @param {Object} params - Optional
+	 * @param {string} params.action - Optional
 	 */
-	public async open( itemId: string, action: string = null ): Promise<void> {
-		return super.open( `/wiki/Item:${itemId}${urlParameters( { action } )}` );
+	public async open( itemId: string, params: {action?: string} = {} ): Promise<void> {
+		return super.open( `/wiki/Item:${itemId}${urlParameters( params )}` );
 	}
 }
 

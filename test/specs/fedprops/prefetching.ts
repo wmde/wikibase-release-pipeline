@@ -64,7 +64,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render history page list within threshold', async () => {
-		await ItemPage.open( itemId, 'history' );
+		await ItemPage.open( itemId, { action: 'history' } );
 		await ItemPage.pageHistory;
 
 		// +1 for the initial item creation
