@@ -2,9 +2,7 @@ import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
 import urlParameters from '../url-parameters.js';
 
-class SpecialListPropertiesPage {
-	private internalPage: Page = new Page();
-
+class SpecialListPropertiesPage extends Page {
 	public get content(): ChainablePromiseElement {
 		return $( '.mw-spcontent' );
 	}
@@ -24,14 +22,17 @@ class SpecialListPropertiesPage {
 		dataType?: string;
 		limit?: number;
 		offset?: number;
-	} ): Promise<void> {
+	} | string ): Promise<void> {
+		if ( typeof params === 'string' ) {
+			throw new Error( 'Invalid parameter' );
+		}
 		const paramString = urlParameters( {
 			datatype: params.dataType ?? '',
 			limit: params.limit ?? 50,
 			offset: params.offset ?? 0
 		} );
 
-		await this.internalPage.open( `/wiki/Special:ListProperties${paramString}` );
+		await super.open( `/wiki/Special:ListProperties${paramString}` );
 		await this.content;
 	}
 }
