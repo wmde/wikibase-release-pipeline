@@ -3,7 +3,6 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
-import SpecialUploadPage from '../../../helpers/pages/special/upload.page.js';
 import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
@@ -16,14 +15,14 @@ describe( 'WikibaseLocalMedia', function () {
 	it( 'Should allow to upload an image', async () => {
 		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
 
-		await SpecialUploadPage.open();
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Upload/` );
 
 		const filePath = new URL( 'image.png', import.meta.url );
-		await SpecialUploadPage.uploadFileInput.setValue( filePath.pathname );
+		await $( '#wpUploadFile' ).setValue( filePath.pathname );
 
-		await SpecialUploadPage.submit();
+		await $( 'input.mw-htmlform-submit' ).click();
 
-		const title = await SpecialUploadPage.firstHeading.getText();
+		const title = await $( '#firstHeading' ).getText();
 
 		assert.strictEqual( title, 'File:Image.png' );
 	} );
