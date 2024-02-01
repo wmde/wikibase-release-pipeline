@@ -64,11 +64,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/' + oldPropertyID,
+			`${testEnv.vars.WIKIBASE_URL}/prop/${oldPropertyID}`,
 			bindings
 		);
 		const property = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + oldPropertyID,
+			`${testEnv.vars.WIKIBASE_URL}/prop/direct/${oldPropertyID}`,
 			bindings
 		);
 
