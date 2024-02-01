@@ -1,6 +1,12 @@
-import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
+import { Page } from '../page.js';
 import urlParameters from '../url-parameters.js';
+
+type SpecialListPropertiesPageParams = {
+	dataType?: string;
+	limit?: number;
+	offset?: number;
+};
 
 class SpecialListPropertiesPage extends Page {
 	public get properties(): ChainablePromiseArray<WebdriverIO.ElementArray> {
@@ -15,14 +21,13 @@ class SpecialListPropertiesPage extends Page {
 	 * @param {number} params.limit - Optional, default `50`
 	 * @param {number} params.offset - Optional, default `0`
 	 */
-	public async open( params: {
-		dataType?: string;
-		limit?: number;
-		offset?: number;
-	} | string ): Promise<void> {
+	public async open(
+		params: SpecialListPropertiesPageParams | string
+	): Promise<void> {
 		if ( typeof params === 'string' ) {
 			throw new Error( 'Invalid parameter' );
 		}
+
 		const paramString = urlParameters( {
 			datatype: params.dataType ?? '',
 			limit: params.limit ?? 50,

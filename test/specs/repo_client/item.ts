@@ -30,7 +30,7 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async () => {
-		await SpecialNewItemPage.open( 'qqx' );
+		await SpecialNewItemPage.open( { uselang: 'qqx' } );
 		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );

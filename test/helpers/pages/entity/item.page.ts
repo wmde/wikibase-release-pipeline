@@ -1,6 +1,10 @@
 import { Page } from '../page.js';
 import urlParameters from '../url-parameters.js';
 
+type ItemPageParams = {
+	action?: string;
+};
+
 class ItemPage extends Page {
 	/**
 	 * `/wiki/Item:${itemId}
@@ -9,7 +13,10 @@ class ItemPage extends Page {
 	 * @param {Object} params - Optional
 	 * @param {string} params.action - Optional
 	 */
-	public async open( itemId: string, params: {action?: string} = {} ): Promise<void> {
+	public async open(
+		itemId: string,
+		params: ItemPageParams = {}
+	): Promise<void> {
 		return super.open( `/wiki/Item:${itemId}${urlParameters( params )}` );
 	}
 }

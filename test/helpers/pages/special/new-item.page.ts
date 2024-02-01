@@ -1,6 +1,10 @@
 import SubmittablePage from '../submittable.page.js';
 import urlParameters from '../url-parameters.js';
 
+type SpecialNewItemPageParams = {
+	uselang?: string;
+};
+
 class SpecialNewItemPage extends SubmittablePage {
 	public get firstHeading(): ChainablePromiseElement {
 		return $( 'h1#firstHeading' );
@@ -9,10 +13,17 @@ class SpecialNewItemPage extends SubmittablePage {
 	/**
 	 * `/wiki/Special:NewItem`
 	 *
-	 * @param {string} uselang - Optional
+	 * @param {Object} params
+	 * @param {string} params.uselang - Optional
 	 */
-	public async open( uselang: string = null ): Promise<void> {
-		return super.open( `/wiki/Special:NewItem${urlParameters( { uselang } )}` );
+	public async open(
+		params: SpecialNewItemPageParams | string = {}
+	): Promise<void> {
+		if ( typeof params === 'string' ) {
+			throw new Error( 'Invalid parameter' );
+		}
+
+		return super.open( `/wiki/Special:NewItem${urlParameters( params )}` );
 	}
 }
 

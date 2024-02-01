@@ -46,7 +46,9 @@ describe( 'Special:NewProperty', function () {
 		const numberOfPropertiesBefore =
 			await SpecialListPropertiesPage.properties.length;
 
-		await SpecialNewPropertyPage.open( wikibasePropertyString.urlName );
+		await SpecialNewPropertyPage.open( {
+			datatype: wikibasePropertyString.urlName
+		} );
 		await SpecialNewPropertyPage.labelInput.setValue(
 			`Property type ${wikibasePropertyString.urlName}`
 		);
@@ -55,7 +57,7 @@ describe( 'Special:NewProperty', function () {
 		);
 		await SpecialNewPropertyPage.submit();
 
-		let numberOfPropertiesAfter;
+		let numberOfPropertiesAfter: number;
 
 		// Depends on $wgWBRepoSettings['sharedCacheDuration'] being set to 1 second
 		// from the the MediaWiki default of 30 mins

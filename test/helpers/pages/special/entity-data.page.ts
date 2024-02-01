@@ -9,12 +9,14 @@ class SpecialEntityDataPage {
 	 * @param {string} extension - Defaults to `json`
 	 * @return Fetched data
 	 */
-	public async getData( entityId: string, extension: string = 'json' ): Promise<EntityData> {
+	public async getData(
+		entityId: string,
+		extension: string = 'json'
+	): Promise<EntityData> {
 		const response = await browser.makeRequest(
 			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${entityId}.${extension}`
 		);
 		return response.data;
-
 	}
 }
 
