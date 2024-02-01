@@ -1,12 +1,12 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
 import assert from 'assert';
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import { stringify } from 'querystring';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ExternalChange from '../../../types/external-change.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import { utf8 } from '../../../helpers/readFileEncoding.js';
+import ExternalChange from '../../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
 
@@ -72,12 +72,15 @@ describe( 'Scribunto Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			`${browser.options.baseUrl}/index.php?${stringify( query )}`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();

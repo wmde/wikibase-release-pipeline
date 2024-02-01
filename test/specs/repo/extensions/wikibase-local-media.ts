@@ -13,7 +13,10 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to upload an image', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Upload/` );
 
@@ -39,7 +42,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		const data: {claims: Claim[]} = {
+		const data: { claims: Claim[] } = {
 			claims: [
 				{
 					mainsnak: {
@@ -56,7 +59,9 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
+		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute(
+			'src'
+		);
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 	} );

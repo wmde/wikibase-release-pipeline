@@ -94,7 +94,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create two items', async () => {
-		await browser.url( testEnv.vars.QUICKSTATEMENTS_URL + '/#/batch' );
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
@@ -106,7 +106,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create item with label', async () => {
-		await browser.url( testEnv.vars.QUICKSTATEMENTS_URL + '/#/batch' );
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
@@ -300,7 +300,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to merge two items', async () => {
-		await browser.url( testEnv.vars.QUICKSTATEMENTS_URL + '/#/batch' );
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 

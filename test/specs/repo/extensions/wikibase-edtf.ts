@@ -34,7 +34,7 @@ describe( 'WikibaseEdtf', function () {
 		// go look at wikibase
 		const responseData = await SpecialEntityDataPage.getData( itemId );
 		const responseSnak =
-      responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
+			responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
 		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
 		assert.strictEqual( responseSnak.datatype, 'edtf' );

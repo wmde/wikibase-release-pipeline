@@ -8,7 +8,7 @@ import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql',
+			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`,
 			{ validateStatus: false },
 			{}
 		);
@@ -17,14 +17,14 @@ describe( 'QueryService', () => {
 
 	it( 'Should be able to get sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WDQS_PROXY_URL + '/bigdata/namespace/wdq/sparql'
+			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`
 		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WDQS_PROXY_URL + '/bigdata/namespace/wdq/ldf',
+			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -32,7 +32,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WDQS_PROXY_URL + '/bigdata/namespace/wdq/assets',
+			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -40,7 +40,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph workbench', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WDQS_PROXY_URL + '/bigdata/#query',
+			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/#query`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -127,7 +127,7 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			`${browser.options.baseUrl}/index.php?${stringify( query )}`
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 

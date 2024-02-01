@@ -20,7 +20,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetAliases/` );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
