@@ -2,17 +2,11 @@
 import SubmittablePage from '../submittable.page.js';
 
 class QueryServiceUIPage extends SubmittablePage {
-	public get queryEditor(): ChainablePromiseElement {
-		return $( '.queryEditor' );
-	}
 	public get submitBtn(): ChainablePromiseElement {
 		return $( '#execute-button' );
 	}
 	public get resultTable(): ChainablePromiseElement {
 		return $( '#query-result table.table.table-hover' );
-	}
-	public get resultTableRows(): ChainablePromiseElement {
-		return $( '#query-result table.table.table-hover tr' );
 	}
 
 	/**
