@@ -3,9 +3,6 @@ import { ChainablePromiseArray } from 'webdriverio';
 import urlParameters from '../url-parameters.js';
 
 class SpecialListPropertiesPage extends Page {
-	public get content(): ChainablePromiseElement {
-		return $( '.mw-spcontent' );
-	}
 	public get properties(): ChainablePromiseArray<WebdriverIO.ElementArray> {
 		return $$( '.mw-spcontent ol li' );
 	}
@@ -33,7 +30,7 @@ class SpecialListPropertiesPage extends Page {
 		} );
 
 		await super.open( `/wiki/Special:ListProperties${paramString}` );
-		await this.content;
+		await $( '.mw-spcontent' );
 	}
 }
 

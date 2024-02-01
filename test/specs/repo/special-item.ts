@@ -11,11 +11,9 @@ describe( 'Special:NewItem', function () {
 
 		await SpecialNewItemPage.open();
 
-		await SpecialNewItemPage.labelInput.setValue( label );
-		await SpecialNewItemPage.descriptionInput.setValue( description );
-		await SpecialNewItemPage.aliasesInput.setValue(
-			`${firstAlias}|${secondAlias}`
-		);
+		await $( 'input[name="label"]' ).setValue( label );
+		await $( 'input[name="description"]' ).setValue( description );
+		await $( 'input[name="aliases"]' ).setValue( `${firstAlias}|${secondAlias}` );
 		await SpecialNewItemPage.submit();
 
 		await SpecialEntityPage.addStatementLink;

@@ -5,16 +5,6 @@ class PropertyPage extends Page {
 		// Only return save button if enabled
 		return $( '.wikibase-toolbar-button-save[aria-disabled="false"]' ).$( '=save' );
 	}
-	public get addStatementLink(): ChainablePromiseElement {
-		return $( '=add statement' );
-	}
-	public get addReferenceLink(): ChainablePromiseElement {
-		return $( '=add reference' );
-	}
-
-	public get firstHeading(): ChainablePromiseElement {
-		return $( '#firstHeading' );
-	}
 
 	/**
 	 * `/wiki/Property:${propertyId}

@@ -33,7 +33,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await PropertyPage.open( propertyId );
 
-		const title = await PropertyPage.firstHeading.getText();
+		const title = await $( '#firstHeading' ).getText();
 
 		assert.strictEqual( title.includes( propertyId ), true );
 	} );
@@ -56,7 +56,7 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		const imageSource = await ItemPage.image.getAttribute( 'src' );
+		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 	} );

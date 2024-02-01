@@ -8,15 +8,6 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	public get datatypeInput(): ChainablePromiseElement {
 		return $( '#wb-newproperty-datatype' );
 	}
-	public datatypeOptionLabel( dataType: string ): ChainablePromiseElement {
-		return $( `.oo-ui-labelElement-label=${dataType}` );
-	}
-	public get datatypeSelectDropdown(): ChainablePromiseElement {
-		return $( 'oo-ui-menuSelectWidget' );
-	}
-	public get datatypeValue(): ChainablePromiseElement {
-		return $( '.wikibase-propertyview-datatype-value' );
-	}
 	public get descriptionInput(): ChainablePromiseElement {
 		return $( 'input[name="description"]' );
 	}

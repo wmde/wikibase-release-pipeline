@@ -65,11 +65,11 @@ describe( 'Property Prefetching', function () {
 
 	it( 'Should render history page list within threshold', async () => {
 		await ItemPage.open( itemId, { action: 'history' } );
-		await ItemPage.pageHistory;
+		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
 		assert.strictEqual(
-			( await ItemPage.pageHistoryItems ).length,
+			( await $$( '#pagehistory li' ) ).length,
 			NUM_PROPERTIES + 1
 		);
 	} );

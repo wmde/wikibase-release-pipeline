@@ -36,7 +36,7 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to add statement to property', async () => {
-				await PropertyPage.addStatementLink.click();
+				await $( '=add statement' ).click();
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
 				await propertyIdSelector( stringPropertyId ).click();
@@ -53,7 +53,7 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to add reference to property', async () => {
-				await PropertyPage.addReferenceLink.click();
+				await $( '=add reference' ).click();
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
 				await browser.keys( stringPropertyId.split( '' ) );
