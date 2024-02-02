@@ -4,6 +4,8 @@ This file is only intended to serve the developers of this repository and of the
 
 This provides an overview of the releases that have been made using this release pipeline.
 
+## February 2024: Security releases for 1.40.2
+
 
 ## November 2023: First 1.40 release
 
