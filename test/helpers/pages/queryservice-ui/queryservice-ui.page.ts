@@ -1,24 +1,27 @@
+/* eslint-disable jsdoc/require-returns */
 import SubmittablePage from '../submittable.page.js';
 
-class QueryServiceUI extends SubmittablePage {
-	public get queryEditor(): ChainablePromiseElement {
-		return $( '.queryEditor' );
-	}
+class QueryServiceUIPage extends SubmittablePage {
 	public get submitBtn(): ChainablePromiseElement {
 		return $( '#execute-button' );
 	}
 	public get resultTable(): ChainablePromiseElement {
 		return $( '#query-result table.table.table-hover' );
 	}
-	public get resultTableRows(): ChainablePromiseElement {
-		return $( '#query-result table.table.table-hover tr' );
-	}
 
-	public open( query: string, prefixes?: string[] ): Promise<void> {
+	/**
+	 * `${testEnv.vars.WDQS_FRONTEND_URL}/#${prefixes, query}`
+	 *
+	 * @param {string} query
+	 * @param {string[]} prefixes - Optional
+	 */
+	public open( query: string, prefixes: string[] = [] ): Promise<void> {
 		if ( prefixes ) {
-			query = prefixes.join( '\n' ) + '\n' + query;
+			query = [ ...prefixes, query ].join( '\n' );
 		}
-		return browser.url( `${testEnv.vars.WDQS_FRONTEND_URL}${'/#' + encodeURI( query )}` );
+		return browser.url(
+			`${testEnv.vars.WDQS_FRONTEND_URL}/#${encodeURI( query )}`
+		);
 	}
 
 	public async resultIncludes( prop: string, value?: string ): Promise<boolean> {
@@ -34,4 +37,4 @@ class QueryServiceUI extends SubmittablePage {
 	}
 }
 
-export default new QueryServiceUI();
+export default new QueryServiceUIPage();
