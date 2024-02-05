@@ -1,6 +1,9 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
@@ -10,9 +13,12 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to upload an image', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Upload/' );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Upload/` );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );
@@ -28,7 +34,7 @@ describe( 'WikibaseLocalMedia', function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Property:${propertyId}` );
+		await PropertyPage.open( propertyId );
 
 		const title = await $( '#firstHeading' ).getText();
 
@@ -36,7 +42,7 @@ describe( 'WikibaseLocalMedia', function () {
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
-		const data = {
+		const data: { claims: Claim[] } = {
 			claims: [
 				{
 					mainsnak: {
@@ -52,8 +58,10 @@ describe( 'WikibaseLocalMedia', function () {
 
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
-		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute( 'src' );
+		await ItemPage.open( itemId );
+		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute(
+			'src'
+		);
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 	} );
