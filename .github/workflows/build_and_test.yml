@@ -189,6 +189,8 @@ jobs:
     # needs:
     #   - test
     #   - test_upgrade
+    needs:
+      - build
 
     strategy:
       fail-fast: false
