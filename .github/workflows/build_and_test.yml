@@ -238,7 +238,7 @@ jobs:
           set -x
 
           # get the docker tag name != latest of the image we are currently looking at, the version string that is
-          tag=$(docker image ls | grep '${{ matrix.docker_image }}' | grep -v latest | awk '{print $2}')
+          tag=$(docker image ls | grep -e '${{ matrix.docker_image }}\b' | grep -v latest | awk '{print $2}')
 
           # retag the image so that it is prefixed with the github container registry url
           docker tag ${{ matrix.docker_image }}:"$tag" ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$tag"
