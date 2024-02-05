@@ -5,7 +5,9 @@ This file is only intended to serve the developers of this repository and of the
 This provides an overview of the releases that have been made using this release pipeline.
 
 ## February 2024: Security releases for 1.40.2
-
+- [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
+- [Release task T354645](https://phabricator.wikimedia.org/T354645)
 
 ## November 2023: First 1.40 release
 
