@@ -1,23 +1,22 @@
-import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
-import SpecialNewItem from '../../helpers/pages/special/new-item.page.js';
 import assert from 'assert';
+import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
 describe( 'Special:NewItem', function () {
 	it( 'Should be able to create a new item', async () => {
-
 		const label = 'Cool label';
 		const description = 'Cool description';
 		const firstAlias = 'Great job';
 		const secondAlias = 'Bra Jobbat';
 
-		await SpecialNewItem.open();
+		await SpecialNewItemPage.open();
 
-		await SpecialNewItem.labelInput.setValue( label );
-		await SpecialNewItem.descriptionInput.setValue( description );
-		await SpecialNewItem.aliasesInput.setValue( firstAlias + '|' + secondAlias );
-		await SpecialNewItem.submit();
+		await $( 'input[name="label"]' ).setValue( label );
+		await $( 'input[name="description"]' ).setValue( description );
+		await $( 'input[name="aliases"]' ).setValue( `${firstAlias}|${secondAlias}` );
+		await SpecialNewItemPage.submit();
 
-		await ItemPage.addStatementLink;
+		await SpecialEntityPage.addStatementLink;
 
 		const labelText = await $(
 			'.wikibase-entitytermsforlanguageview-label'

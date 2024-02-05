@@ -1,9 +1,11 @@
 import assert from 'assert';
 import { AxiosError } from 'axios';
 import { getTestString } from 'wdio-mediawiki/Util.js';
-import ItemPage from 'wdio-wikibase/pageobjects/item.page.js';
+import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import QueryServiceUI from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 
 describe( 'Fed props Item', function () {
 	const propertyId = 'P213';
@@ -38,21 +40,19 @@ describe( 'Fed props Item', function () {
 		};
 		await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 
 		const actualPropertyValue = await $(
 			'.wikibase-statementgroupview-property'
 		).getText();
 		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
 
-		await ItemPage.addStatementLink;
+		await SpecialEntityPage.addStatementLink;
 	} );
 
 	it( 'should NOT show up in Special:EntityData with ttl', async () => {
 		try {
-			await browser.makeRequest(
-				testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.ttl'
-			);
+			await SpecialEntityDataPage.getData( 'Q1', 'ttl' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
 			assert.equal( error.request.res.statusCode, 500 );
@@ -60,22 +60,16 @@ describe( 'Fed props Item', function () {
 	} );
 
 	it( 'should show up in Special:EntityData with json', async () => {
-		const response = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.json'
-		);
-		const body = response.data;
-
+		const data = await SpecialEntityDataPage.getData( 'Q1' );
 		assert.notEqual(
-			body.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
+			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
 			null
 		);
 	} );
 
 	it( 'should NOT show up in Special:EntityData with rdf', async () => {
 		try {
-			await browser.makeRequest(
-				testEnv.vars.WIKIBASE_URL + '/wiki/Special:EntityData/Q1.rdf'
-			);
+			await SpecialEntityDataPage.getData( 'Q1', 'rdf' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
 			assert.equal( error.request.res.statusCode, 500 );
@@ -86,18 +80,18 @@ describe( 'Fed props Item', function () {
 		const prefixes = [ 'prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ];
 		const query = `SELECT * WHERE{ ?s fpwdt:${propertyId} ?o }`;
 
-		await QueryServiceUI.open( query, prefixes );
+		await QueryServiceUIPage.open( query, prefixes );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 11 * 1000 );
 
-		await QueryServiceUI.submit();
-		await QueryServiceUI.resultTable;
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
-			!( await QueryServiceUI.resultIncludes(
+			!( await QueryServiceUIPage.resultIncludes(
 				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
 				propertyValue
 			) )
@@ -106,23 +100,29 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in queryservice ui after creation', async () => {
 		// query the item using wd: prefix
-		await QueryServiceUI.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
 
-		await QueryServiceUI.submit();
-		await QueryServiceUI.resultTable;
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
-		assert( !( await QueryServiceUI.resultIncludes( 'schema:version' ) ) );
-		assert( !( await QueryServiceUI.resultIncludes( 'schema:dateModified' ) ) );
-		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:timestamp' ) ) );
+		assert( !( await QueryServiceUIPage.resultIncludes( 'schema:version' ) ) );
+		assert( !( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) ) );
+		assert( !( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) ) );
 
-		assert( !( await QueryServiceUI.resultIncludes( 'rdfs:label', itemLabel ) ) );
+		assert( !( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) ) );
 
-		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:statements', '1' ) ) );
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) )
+		);
 
-		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:sitelinks', '0' ) ) );
-		assert( !( await QueryServiceUI.resultIncludes( 'wikibase:identifiers', '1' ) ) );
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) )
+		);
+		assert(
+			!( await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' ) )
+		);
 
-		assert( !( await QueryServiceUI.resultIncludes( 'p:P213' ) ) );
+		assert( !( await QueryServiceUIPage.resultIncludes( 'p:P213' ) ) );
 	} );
 } );
