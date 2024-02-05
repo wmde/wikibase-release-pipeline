@@ -66,111 +66,112 @@ jobs:
         with:
           image_name: "${{ matrix.component }}-bundle"
 
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        suite:
-          [
-            repo,
-            fedprops,
-            repo_client,
-            quickstatements,
-            pingback,
-            confirm_edit,
-            elasticsearch,
-
-            base__repo,
-            base__repo_client,
-            base__pingback,
-            base__fedprops,
-
-            example
-          ]
-
-    needs:
-      - build
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get built Docker artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: DockerImages
-          path: artifacts/
-
-      - name: Test ${{ matrix.suite }}
-        run: ./test.sh ${{ matrix.suite }}
-
-      - name: Report Selenium
-        if: always()
-        run: |
-          cd .github/reporter
-          npm install
-          node report.js ${{ matrix.suite }}
-
-      - name: Show Logs
-        if: always()
-        continue-on-error: true
-        run: |
-          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
-
-      - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: TestResults
-          path: test/suites/**/results
-
-  test_upgrade:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
-        version: [
-          # Latest 1.37
-          'WMDE9',
-          'WMDE9_BUNDLE',
-          # Latest 1.38
-          'WMDE12',
-          'WMDE12_BUNDLE',
-          # Latest 1.39
-          'WMDE13',
-          'WMDE13_BUNDLE'
-        ]
-    needs:
-      - build
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Get built Docker artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: DockerImages
-          path: artifacts/
-
-      - name: Test upgrade from ${{ matrix.version }}
-        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
-        # Set a specific lower timeout to allow us to retry sooner
-        timeout-minutes: 10
-        run: ./test.sh upgrade ${{ matrix.version }}
-
-      # TODO: DRY
-      - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: TestResults
-          path: test/suites/**/results
+  # TODO: REENABLE THIS BLOCK, COMMENTED JUST FOR THIS PRs TESTING
+  # test:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       suite:
+  #         [
+  #           repo,
+  #           fedprops,
+  #           repo_client,
+  #           quickstatements,
+  #           pingback,
+  #           confirm_edit,
+  #           elasticsearch,
+  #
+  #           base__repo,
+  #           base__repo_client,
+  #           base__pingback,
+  #           base__fedprops,
+  #
+  #           example
+  #         ]
+  #
+  #   needs:
+  #     - build
+  #
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 20
+  #
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Get built Docker artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: DockerImages
+  #         path: artifacts/
+  #
+  #     - name: Test ${{ matrix.suite }}
+  #       run: ./test.sh ${{ matrix.suite }}
+  #
+  #     - name: Report Selenium
+  #       if: always()
+  #       run: |
+  #         cd .github/reporter
+  #         npm install
+  #         node report.js ${{ matrix.suite }}
+  #
+  #     - name: Show Logs
+  #       if: always()
+  #       continue-on-error: true
+  #       run: |
+  #         ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+  #         tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+  #
+  #     - name: Archive Docker test artifacts
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: TestResults
+  #         path: test/suites/**/results
+  #
+  # test_upgrade:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 20
+  #
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
+  #       version: [
+  #         # Latest 1.37
+  #         'WMDE9',
+  #         'WMDE9_BUNDLE',
+  #         # Latest 1.38
+  #         'WMDE12',
+  #         'WMDE12_BUNDLE',
+  #         # Latest 1.39
+  #         'WMDE13',
+  #         'WMDE13_BUNDLE'
+  #       ]
+  #   needs:
+  #     - build
+  #
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Get built Docker artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: DockerImages
+  #         path: artifacts/
+  #
+  #     - name: Test upgrade from ${{ matrix.version }}
+  #       # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+  #       # Set a specific lower timeout to allow us to retry sooner
+  #       timeout-minutes: 10
+  #       run: ./test.sh upgrade ${{ matrix.version }}
+  #
+  #     # TODO: DRY
+  #     - name: Archive Docker test artifacts
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: TestResults
+  #         path: test/suites/**/results
 
   upload_ghcr:
     runs-on: ubuntu-latest
@@ -180,11 +181,14 @@ jobs:
     # - from main branch builds
     # - from release branch builds and 
     # - builds from PRs going to a release branch
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
+    #
+    # TODO: REENABLE THIS LINE, COMMENTED JUST FOR THIS PRs TESTING
+    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
 
-    needs:
-      - test
-      - test_upgrade
+    # TODO: REENABLE THIS LINE, COMMENTED JUST FOR THIS PRs TESTING
+    # needs:
+    #   - test
+    #   - test_upgrade
 
     strategy:
       fail-fast: false
@@ -223,8 +227,15 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store built docker image on GHCR
-        uses: wmde/tag-push-ghcr-action@v3
-        with:
-          image_name: ${{ matrix.docker_image }}
-          tag: ${{ github.run_id }}
+      - name: Push docker image to GHCR
+        shell: bash
+        run: |
+          # get the docker tag name != latest of the image we are currently looking at, the version string that is
+          tag=$(docker image ls | grep '${{ matrix.docker_image }}' | grep -v latest | awk '{print $2}')
+
+          # retag the image so that it is prefixed with the github container registry url
+          docker tag ${{ matrix.docker_image }}:$tag ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:$tag
+
+          # push it to github container registry
+          docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:$tag
+
