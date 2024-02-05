@@ -229,6 +229,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # TODO: should we still put the pipeline run it in order to ease identification?
+      # or is it ok if prerelease tags overwrite each other?
+      # in case of release work it should be fine as there should be only one release prep branch open at a time
       - name: Push docker image to GHCR
         shell: bash
         run: |
