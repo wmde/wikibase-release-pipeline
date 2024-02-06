@@ -54,14 +54,14 @@ jobs:
           image_name="${{ matrix.component }}"
           tag="$WMDE_RELEASE_VERSION"
 
-          if [ "${{ matrix.component }}" -eq "wikibase" ]; then
+          if [ "${{ matrix.component }}" = "wikibase" ]; then
             image_name=wikibase-bundle
             tag="${MEDIAWIKI_VERSION}-${WMDE_RELEASE_VERSION}"
           fi
-          if [ "${{ matrix.component }}" -eq "wdqs" ]; then
+          if [ "${{ matrix.component }}" = "wdqs" ]; then
             tag="${WDQS_VERSION}-${WMDE_RELEASE_VERSION}"
           fi
-          if [ "${{ matrix.component }}" -eq "elasticsearch" ]; then
+          if [ "${{ matrix.component }}" = "elasticsearch" ]; then
             tag="${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
           fi
 
