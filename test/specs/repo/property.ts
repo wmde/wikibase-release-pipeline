@@ -10,8 +10,14 @@ import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
+/**
+ * `$( '=P1 (P1)' )`
+ *
+ * @param {string} id
+ * @return {Object}
+ */
 const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
-	$( `=${id} (${id})` ); // =P1 (P1)
+	$( `=${id} (${id})` );
 const statementText = 'STATEMENT';
 const referenceText = 'REFERENCE';
 
@@ -95,10 +101,21 @@ describe( 'Property', function () {
 
 			it( 'Should be able to revert a change', async () => {
 				await $( '=View history' ).click();
+				await expect(
+					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
+				).toBe( 3 );
 				await $( 'a=undo' ).click();
-				// await $( 'input#wpSummary' ).click();
-				// await browser.keys( 'Undo Change'.split( '' ) );
 				await $( 'button=Save page' ).click();
+			} );
+
+			it( 'Should be able to see reverted change', async () => {
+				await $( '=View history' ).click();
+				await expect(
+					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
+				).toBe( 4 );
+				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
+				await expect( $( '.comment*=Created claim' ) ).toExist();
+				await expect( $( '.comment*=Created a new Property' ) ).toExist();
 			} );
 		} );
 	} );
