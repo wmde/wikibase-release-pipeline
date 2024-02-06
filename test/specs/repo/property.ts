@@ -92,6 +92,14 @@ describe( 'Property', function () {
 				await expect( $( `=(${propertyId})` ) ).toExist();
 				await expect( $( `=(${stringPropertyId})` ) ).toExist();
 			} );
+
+			it( 'Should be able to revert a change', async () => {
+				await $( '=View history' ).click();
+				await $( 'a=undo' ).click();
+				// await $( 'input#wpSummary' ).click();
+				// await browser.keys( 'Undo Change'.split( '' ) );
+				await $( 'button=Save page' ).click();
+			} );
 		} );
 	} );
 } );
