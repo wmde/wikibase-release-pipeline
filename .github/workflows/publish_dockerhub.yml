@@ -74,4 +74,4 @@ jobs:
           docker tag ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$run_id_tag" wikibase/"$image_name":"$version_tag"
 
           # push the image to dockerhub
-          docker push wikibase/"$image_name":"$version_tag"
+          # docker push wikibase/"$image_name":"$version_tag"
