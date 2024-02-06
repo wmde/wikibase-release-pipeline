@@ -1,4 +1,4 @@
-name: 📦🛸 Publish to Dockerhub 🐳❤️
+name: 📦🛸 Publish to Dockerhub
 
 on:
   workflow_dispatch:
@@ -22,6 +22,7 @@ jobs:
       matrix:
         component:
           [
+            # TODO: remove one of them with https://phabricator.wikimedia.org/T347000
             "wikibase",
             "wikibase-bundle",
             "elasticsearch",
@@ -49,7 +50,28 @@ jobs:
           source ./variables.env
 
           image_name="${{ matrix.component }}"
-          tag="${{ inputs.workflow_run_id }}"
+          run_id_tag="${{ inputs.workflow_run_id }}"
+          version_tag="${WMDE_RELEASE_VERSION}"
 
-          docker pull ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$tag"
+          # TODO: cleanup with upcoming versioning scheme
+          if [ "${{ matrix.component }}" = "wikibase" ]; then
+            version_tag="${MEDIAWIKI_VERSION}-${WMDE_RELEASE_VERSION}"
+          fi
+          if [ "${{ matrix.component }}" = "wikibase-bundle" ]; then
+            version_tag="${MEDIAWIKI_VERSION}-${WMDE_RELEASE_VERSION}"
+          fi
+          if [ "${{ matrix.component }}" = "wdqs" ]; then
+            version_tag="${WDQS_VERSION}-${WMDE_RELEASE_VERSION}"
+          fi
+          if [ "${{ matrix.component }}" = "elasticsearch" ]; then
+            version_tag="${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
+          fi
 
+          # get the built image from GHCR for the given workflow id
+          docker pull ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$run_id_tag"
+
+          # retag the image with the version string for dockerhub
+          docker tag ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$run_id_tag" wikibase/"$image_name":"$version_tag"
+
+          # push the image to dockerhub
+          docker push wikibase/"$image_name":"$version_tag"
