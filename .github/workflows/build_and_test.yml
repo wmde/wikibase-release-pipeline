@@ -43,30 +43,6 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Pull earlier build for cache reuse
-        shell: bash
-        run: |
-          # TODO: cleanup with upcoming versioning scheme
-          set -x
-          
-          source ./variables.env
-
-          image_name="${{ matrix.component }}"
-          tag="$WMDE_RELEASE_VERSION"
-
-          if [ "${{ matrix.component }}" = "wikibase" ]; then
-            image_name=wikibase-bundle
-            tag="${MEDIAWIKI_VERSION}-${WMDE_RELEASE_VERSION}"
-          fi
-          if [ "${{ matrix.component }}" = "wdqs" ]; then
-            tag="${WDQS_VERSION}-${WMDE_RELEASE_VERSION}"
-          fi
-          if [ "${{ matrix.component }}" = "elasticsearch" ]; then
-            tag="${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
-          fi
-
-          docker pull ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$tag" || true
-
       - name: Build
         shell: bash
         run: ./build.sh --save-image --extract-tarball ${{ matrix.component }}
