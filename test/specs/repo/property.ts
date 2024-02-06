@@ -20,6 +20,7 @@ const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
 	$( `=${id} (${id})` );
 const statementText = 'STATEMENT';
 const referenceText = 'REFERENCE';
+const undoSummaryText = 'UNDO_SUMMARY';
 
 describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
@@ -104,7 +105,11 @@ describe( 'Property', function () {
 				await expect(
 					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
 				).toBe( 3 );
-				await $( 'a=undo' ).click();
+				await $( 'ul.mw-contributions-list' ).$( 'li.before' ).$( 'a=undo' ).click();
+				await $(
+					'label=Summary (will be appended to an automatically generated summary):'
+				).click();
+				await browser.keys( undoSummaryText.split( '' ) );
 				await $( 'button=Save page' ).click();
 			} );
 
@@ -114,6 +119,10 @@ describe( 'Property', function () {
 					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
 				).toBe( 4 );
 				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
+				const mostRecentRevisionText = await $( 'ul.mw-contributions-list' )
+					.$( 'li.before' )
+					.getText();
+				expect( mostRecentRevisionText.includes( undoSummaryText ) );
 				await expect( $( '.comment*=Created claim' ) ).toExist();
 				await expect( $( '.comment*=Created a new Property' ) ).toExist();
 			} );
