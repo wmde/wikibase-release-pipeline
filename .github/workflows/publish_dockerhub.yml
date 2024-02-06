@@ -38,13 +38,21 @@ jobs:
         run: |
           set -x
 
+          # Get the version strings from the variables file of this branch.
           source ./variables.env
 
           image_name="${{ matrix.component }}"
+
+          # The github actions run the image was built in. This id is also used
+          # to tag the built container, so will be used to reference the image
+          # when pulling it from GHCR.
           run_id_tag="${{ inputs.workflow_run_id }}"
+
+          # The version string used for the container upon push to dockerhub.
+          # This is the publicly visible version.
+          # TODO: cleanup with upcoming versioning scheme
           version_tag="${WMDE_RELEASE_VERSION}"
 
-          # TODO: cleanup with upcoming versioning scheme
           if [ "${{ matrix.component }}" = "wikibase" ]; then
             version_tag="${MEDIAWIKI_VERSION}-${WMDE_RELEASE_VERSION}"
           fi
@@ -58,11 +66,11 @@ jobs:
             version_tag="${ELASTICSEARCH_VERSION}-${WMDE_RELEASE_VERSION}"
           fi
 
-          # get the built image from GHCR for the given workflow id
+          # Get the built image from GHCR for the given workflow run_id.
           docker pull ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$run_id_tag"
 
-          # retag the image with the version string for dockerhub
+          # Retag the image with the final version string for dockerhub.
           docker tag ghcr.io/${{ github.repository_owner }}/wikibase/"$image_name":"$run_id_tag" wikibase/"$image_name":"$version_tag"
 
-          # push the image to dockerhub
+          # Push the image to dockerhub.
           docker push wikibase/"$image_name":"$version_tag"
