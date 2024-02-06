@@ -2,6 +2,7 @@ import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialRecentChangesPage from '../../helpers/pages/special/recent-changes.page.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -75,9 +76,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render recent changes list within threshold', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
-		);
+		await SpecialRecentChangesPage.open();
 		await $( 'ul.special' );
 
 		// +1 for the initial item creation
@@ -87,58 +86,34 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should be able to change limit', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
-		);
+		await SpecialRecentChangesPage.open();
 		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '50 changes' )
+			( await SpecialRecentChangesPage.changeLimitText ).includes( '50 changes' )
 		);
-		await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).click();
+		await SpecialRecentChangesPage.changeLimit.click();
 		await $( 'div.mw-rcfilters-ui-changesLimitPopupWidget' )
 			.$( 'span=100' )
 			.click();
 		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '100 changes' )
+			( await SpecialRecentChangesPage.changeLimitText ).includes( '100 changes' )
 		);
 	} );
 
 	it( 'Should be able to change time to 2 hours', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
-		);
-		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '7 days' )
-		);
-		await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).click();
+		await SpecialRecentChangesPage.open();
+		expect( ( await SpecialRecentChangesPage.changeLimitText ).includes( '7 days' ) );
+		await SpecialRecentChangesPage.changeLimit.click();
 		await $( 'div.mw-rcfilters-ui-datePopupWidget-hours' ).$( 'span=2' ).click();
 		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '2 hours' )
+			( await SpecialRecentChangesPage.changeLimitText ).includes( '2 hours' )
 		);
 	} );
 
 	it( 'Should be able to change time to 3 days', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
-		);
-		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '7 days' )
-		);
-		await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).click();
+		await SpecialRecentChangesPage.open();
+		expect( ( await SpecialRecentChangesPage.changeLimitText ).includes( '7 days' ) );
+		await SpecialRecentChangesPage.changeLimit.click();
 		await $( 'div.mw-rcfilters-ui-datePopupWidget-days' ).$( 'span=3' ).click();
-		expect(
-			(
-				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
-			).includes( '3 days' )
-		);
+		expect( ( await SpecialRecentChangesPage.changeLimitText ).includes( '3 days' ) );
 	} );
 } );
