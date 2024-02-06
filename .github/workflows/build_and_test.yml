@@ -242,7 +242,9 @@ jobs:
 
           # retag the image so that it is prefixed with the github container registry url
           docker tag ${{ matrix.docker_image }}:"$tag" ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$tag"
-
-          # push it to github container registry
           docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$tag"
+
+          # retag the image with the pipeline run number
+          docker tag ${{ matrix.docker_image }}:"$tag" ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
+          docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
 
