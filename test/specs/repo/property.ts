@@ -87,7 +87,7 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should show changes in "View history" tab', async () => {
-				await $( '=View history' ).click();
+				await PropertyPage.openHistoryTab();
 				await expect( $( '.comment*=Created claim' ) ).toExist();
 				await expect( $( '.comment*=Changed claim' ) ).toExist();
 				await expect( $( '.comment*=Created a new Property' ) ).toExist();
@@ -101,11 +101,9 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to revert a change', async () => {
-				await $( '=View history' ).click();
-				await expect(
-					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
-				).toBe( 3 );
-				await $( 'ul.mw-contributions-list' ).$( 'li.before' ).$( 'a=undo' ).click();
+				await PropertyPage.openHistoryTab();
+				await expect( ( await PropertyPage.changeHistoryItems ).length ).toBe( 3 );
+				await PropertyPage.mostRecentChange.$( 'a=undo' ).click();
 				await $(
 					'label=Summary (will be appended to an automatically generated summary):'
 				).click();
@@ -114,14 +112,11 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to see reverted change', async () => {
-				await $( '=View history' ).click();
-				await expect(
-					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
-				).toBe( 4 );
+				await PropertyPage.openHistoryTab();
+				await expect( ( await PropertyPage.changeHistoryItems ).length ).toBe( 4 );
 				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
-				const mostRecentRevisionText = await $( 'ul.mw-contributions-list' )
-					.$( 'li.before' )
-					.getText();
+				const mostRecentRevisionText =
+					await PropertyPage.mostRecentChange.getText();
 				expect( mostRecentRevisionText.includes( undoSummaryText ) );
 				await expect( $( '.comment*=Created claim' ) ).toExist();
 				await expect( $( '.comment*=Created a new Property' ) ).toExist();
