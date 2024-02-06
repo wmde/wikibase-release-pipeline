@@ -85,4 +85,18 @@ describe( 'Property Prefetching', function () {
 		// +1 for ?
 		assert.strictEqual( ( await $$( 'ul.special li' ) ).length, NUM_PROPERTIES + 3 );
 	} );
+
+	it( 'Should be able to change limit', async () => {
+		await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).click();
+
+		const setChangeNumber = 100;
+		await $( 'div.mw-rcfilters-ui-changesLimitPopupWidget' )
+			.$( `span=${setChangeNumber}` )
+			.click();
+		expect(
+			(
+				await $( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' ).getText()
+			).includes( `${setChangeNumber} changes` )
+		);
+	} );
 } );
