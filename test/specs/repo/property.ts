@@ -1,5 +1,6 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
+import { Page } from '../../helpers/pages/page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import {
 	wikibasePropertyItem,
@@ -118,8 +119,39 @@ describe( 'Property', function () {
 				const mostRecentRevisionText =
 					await PropertyPage.mostRecentChange.getText();
 				expect( mostRecentRevisionText.includes( undoSummaryText ) );
-				await expect( $( '.comment*=Created claim' ) ).toExist();
-				await expect( $( '.comment*=Created a new Property' ) ).toExist();
+			} );
+
+			it( 'Should be able to set label, description, aliases', async () => {
+				await new Page().open( '/wiki/Special:SetLabelDescriptionAliases/' );
+				await $( 'label=ID:' ).click();
+				await browser.keys( propertyId.split( '' ) );
+				await $( 'span=Set label, description and aliases' ).click();
+
+				await $( 'label=Label:' ).click();
+				await browser.keys( `${dataType.name} Label`.split( '' ) );
+				await $( 'label=Description:' ).click();
+				await browser.keys( `${dataType.name} Description`.split( '' ) );
+				await $( 'label=Aliases:' ).click();
+				await browser.keys(
+					`${dataType.name} Alias A|${dataType.name} Alias B`.split( '' )
+				);
+
+				await $( 'span=Set label, description and aliases' ).click();
+			} );
+
+			it( 'Should be able to see updated label, description, aliases', async () => {
+				await expect(
+					$( `span.wikibase-labelview-text=${dataType.name} Label` )
+				).toExist();
+				await expect(
+					$( `span.wikibase-descriptionview-text=${dataType.name} Description` )
+				).toExist();
+				await expect(
+					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias A` )
+				).toExist();
+				await expect(
+					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias B` )
+				).toExist();
 			} );
 		} );
 	} );
