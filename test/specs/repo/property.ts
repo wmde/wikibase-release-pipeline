@@ -2,6 +2,7 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
 import { Page } from '../../helpers/pages/page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
+import propertyIdSelector from '../../helpers/property-id-selector.js';
 import {
 	wikibasePropertyItem,
 	wikibasePropertyString
@@ -11,14 +12,6 @@ import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
-/**
- * `$( '=P1 (P1)' )`
- *
- * @param {string} id
- * @return {Object}
- */
-const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
-	$( `=${id} (${id})` );
 const statementText = 'STATEMENT';
 const referenceText = 'REFERENCE';
 const undoSummaryText = 'UNDO_SUMMARY';
