@@ -21,7 +21,7 @@ docker compose --env-file defaults.env --env-file .env up
 
 If you don't need Elasticsearch, WDQS, or QuickStatements you can remove those sections in `docker-compose.extra.yml`, or not use this file at all and use the basic Wikibase configuration below if you need none of them.
 
-QuickStatements will not be able to authorize without configuring both `QS_PUBLIC_SCHEME_HOST_AND_PORT` and `WB_PUBLIC_SCHEME_HOST_AND_PORT` to URLs which are accessible both within the Docker containers and on the host machine running Docker. An optional WBS provided nginx-proxy configuration is included in `docker-compose.nginx-proxy.yml` as one means for doing this in local testing. To add that service add it as the 3rd compose file when running, e.g.:
+QuickStatements will not be able to authorize without configuring both `QS_PUBLIC_SCHEME_HOST_AND_PORT` and `WB_PUBLIC_SCHEME_HOST_AND_PORT` to URLs which are accessible both within the Docker containers and on the host machine running Docker. An optional WBS provided nginx-proxy configuration is included in `docker-compose.nginx-proxy.yml` as one means for doing this in local testing. This service could also be configured in a production environment if another reverse proxy is not otherwise available. To add that service enable the `nginx-proxy` profile as follow:
 
 ```sh
 docker compose --env-file defaults.env --env-file .env --profile nginx-proxy up
@@ -52,12 +52,14 @@ Once successfully booted, the front-end services will be available at the follow
 
 ## Wikibase Suite (WBS) script
 
-In alternative to the somewhat verbose Docker compose commands above you can use the `wbs` shell script provided for convenience:
+In alternative to running the Docker compose commands above directly, you can use the provided `wbs` convenience shell script:
 
 - `./wbs-precheck` Check if you have a compatible version of Docker, Docker compose, etc to run WBS
 - `./wbs start` Starts WBS services including the nginx-proxy. If running it lists the status of currently running services as well as help.
 - `./wbs stop` Stops running WBS services
 - `./wbs reset` Reset configuration (.env) and persistent data volumes. Prompts with confirmation for each.
+
+Note that the `./wbs` script currently assumes the use of the `nginx-proxy` service.
 
 ## Notes
 
