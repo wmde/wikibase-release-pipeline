@@ -1,6 +1,6 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
-import { Page } from '../../helpers/pages/page.js';
+import page from '../../helpers/pages/page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import propertyIdSelector from '../../helpers/property-id-selector.js';
 import {
@@ -120,7 +120,7 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should be able to set label, description, aliases', async () => {
-				await new Page().open( '/wiki/Special:SetLabelDescriptionAliases/' );
+				await page.open( '/wiki/Special:SetLabelDescriptionAliases/' );
 				await $( 'label=ID:' ).click();
 				await browser.keys( propertyId.split( '' ) );
 				await $( 'span=Set label, description and aliases' ).click();
