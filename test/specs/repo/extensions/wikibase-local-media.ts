@@ -3,10 +3,12 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import propertyIdSelector from '../../../helpers/property-id-selector.js';
 import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;
+	let propertyLabel: string;
 
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
@@ -36,9 +38,9 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await PropertyPage.open( propertyId );
 
-		const title = await $( '#firstHeading' ).getText();
+		propertyLabel = await $( '#firstHeading' ).getText();
 
-		assert.strictEqual( title.includes( propertyId ), true );
+		assert.strictEqual( propertyLabel.includes( propertyId ), true );
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async () => {
@@ -64,5 +66,28 @@ describe( 'WikibaseLocalMedia', function () {
 		);
 
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
+	} );
+
+	it( 'Should allow to use uploaded image on statement in UI', async () => {
+		const itemId = await WikibaseApi.createItem( 'image-test-2' );
+		await ItemPage.open( itemId );
+
+		await $( '=add statement' ).click();
+
+		await browser.keys( propertyLabel.split( '' ) );
+		await propertyIdSelector( propertyId ).click();
+
+		await browser.keys( 'image.png'.split( '' ) );
+		await $( 'ul.ui-mediasuggester-list' )
+			.$( 'a' )
+			.$( 'span[title="Image.png"]' )
+			.click();
+
+		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
+			.$( '=save' )
+			.click();
+
+		const resultTitle = await $( 'div.commons-media-caption' ).$( 'a' ).getText();
+		expect( resultTitle ).toEqual( 'Image.png' );
 	} );
 } );
