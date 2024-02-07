@@ -11,10 +11,6 @@ class PropertyPage extends Page {
 	public get mostRecentChange(): ChainablePromiseElement {
 		return this.changeHistoryList.$( 'li.before' );
 	}
-	public get saveStatementLink(): ChainablePromiseElement {
-		// Only return save button if enabled
-		return $( '.wikibase-toolbar-button-save[aria-disabled="false"]' ).$( '=save' );
-	}
 
 	public async openHistoryTab(): Promise<void> {
 		return $( '=View history' ).click();
