@@ -4,7 +4,7 @@
 MIN_DOCKER_VERSION="22.0"
 MIN_DOCKER_COMPOSE_VERSION="2.10"
 
-source .env.template
+source template.env
 
 # Function to compare version numbers using semver
 semver_compare() {

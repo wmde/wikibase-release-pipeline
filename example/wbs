@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source .env.defaults
+source defaults.env
 
 if [[ -f ".env" ]]; then
 	source .env
@@ -24,14 +24,14 @@ done
 
 # == Docker compose command setup
 export WBS_COMPOSE="docker compose \
---file docker-compose.yml \
---file docker-compose.extra.yml \
---file docker-compose.nginx-proxy.yml \
---env-file .env.defaults
---env-file .env"
+--env-file defaults.env \
+--env-file .env \
+--profile nginx-proxy"
+
 if [ "$flag_quiet" = true ]; then
 	WBS_COMPOSE="$WBS_COMPOSE --progress quiet"
 fi
+
 export WBS_COMPOSE_UP="$WBS_COMPOSE up -d --wait"
 export WBS_COMPOSE_DOWN="$WBS_COMPOSE down"
 export WBS_COMPOSE_DOWN_VOLUMES="$WBS_COMPOSE down --volumes --remove-orphans"
@@ -118,17 +118,17 @@ function create_db_pass {
 	sed -i~ "/^DB_PASS=/s/=.*/=${db_pass}/" .env
 }
 
-# Overwrites .env with a copy of .env.template, prompts user for confirmation
+# Overwrites .env with a copy of template.env, prompts user for confirmation
 function create_env_from_template {
 	if [[ -f ".env" ]]; then
 		mv .env .env.backup
 		echo "Current ${clblue}.env${clreset} moved to ${clblue}.env_backup${clreset}"
 	fi
-	cp .env.template .env
+	cp template.env .env
 	create_mw_secret_key
 	create_mw_admin_pass
 	create_db_pass
-	echo "A new default configuration has been copied from ${clblue}.env.template${clreset} to ${clblue}.env${clreset}"
+	echo "A new default configuration has been copied from ${clblue}template.env${clreset} to ${clblue}.env${clreset}"
 }
 
 # Reset WBS configuration and data (prompts user)

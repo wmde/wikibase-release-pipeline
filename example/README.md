@@ -9,14 +9,14 @@ The essential parts of the example docker compose configuration is two docker co
 
 ## Configure your installation
 
-Copy `.env.template` to `.env` and replace the passwords and secrets with your own.
+Copy `template.env` to `.env` and replace the passwords and secrets with your own.
 
 ## Running Wikibase Suite
 
 To run the full Wikibase Suites of services run the following command:
 
 ```sh
-docker compose --env-file .env.defaults --env-file .env -f docker-compose.yml -f docker-compose.extra.yml up
+docker compose --env-file defaults.env --env-file .env up
 ```
 
 If you don't need Elasticsearch, WDQS, or QuickStatements you can remove those sections in `docker-compose.extra.yml`, or not use this file at all and use the basic Wikibase configuration below if you need none of them.
@@ -24,7 +24,7 @@ If you don't need Elasticsearch, WDQS, or QuickStatements you can remove those s
 QuickStatements will not be able to authorize without configuring both `QS_PUBLIC_SCHEME_HOST_AND_PORT` and `WB_PUBLIC_SCHEME_HOST_AND_PORT` to URLs which are accessible both within the Docker containers and on the host machine running Docker. An optional WBS provided nginx-proxy configuration is included in `docker-compose.nginx-proxy.yml` as one means for doing this in local testing. To add that service add it as the 3rd compose file when running, e.g.:
 
 ```sh
-docker compose --env-file .env.defaults --env-file .env -f docker-compose.nginx-proxy.yml -f docker-compose.yml -f docker-compose.extra.yml up
+docker compose --env-file defaults.env --env-file .env --profile nginx-proxy up
 ```
 Once successfully booted, the front-end services will be available at the following locations:
 
@@ -41,7 +41,7 @@ This service can be replaced by any other reverse proxy service configured appro
 Alternatively, if you don't need the full WBS set of services, you can run the Wikibase instance on port 8880 only with the following command:
 
 ```sh
-docker --env-file .env.defaults --env-file .env -f docker-compose.yml compose up
+docker compose --env-file defaults.env --env-file .env -f docker-compose.base.yml up
 ```
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), a Wikibase instance, database and a job runner.
