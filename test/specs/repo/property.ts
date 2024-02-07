@@ -1,5 +1,6 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
+import { Page } from '../../helpers/pages/page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import {
 	wikibasePropertyItem,
@@ -125,6 +126,13 @@ describe( 'Property', function () {
 				expect( mostRecentRevisionText.includes( undoSummaryText ) );
 				await expect( $( '.comment*=Created claim' ) ).toExist();
 				await expect( $( '.comment*=Created a new Property' ) ).toExist();
+			} );
+
+			it( 'Should be able to navigate to Set Label, Description, Aliases page', async () => {
+				await new Page().open( '/wiki/Special:SetLabelDescriptionAliases/' );
+				await $( 'label=ID:' ).click();
+				await browser.keys( propertyId.split( '' ) );
+				await $( 'span=Set label, description and aliases' ).click();
 			} );
 		} );
 	} );
