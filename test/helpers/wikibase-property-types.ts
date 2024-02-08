@@ -1,5 +1,9 @@
 import WikibasePropertyType from '../types/wikibase-property-type.js';
 
+export const wikibasePropertyDatetime: WikibasePropertyType = {
+	name: 'EDTF Date/Time',
+	urlName: 'edtf'
+};
 export const wikibasePropertyItem: WikibasePropertyType = {
 	name: 'Item',
 	urlName: 'wikibase-item'

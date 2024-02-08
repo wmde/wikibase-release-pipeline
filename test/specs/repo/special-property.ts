@@ -1,12 +1,17 @@
 import SpecialListPropertiesPage from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewPropertyPage from '../../helpers/pages/special/new-property.page.js';
 import {
+	wikibasePropertyDatetime,
 	wikibasePropertyItem,
 	wikibasePropertyString
 } from '../../helpers/wikibase-property-types.js';
 import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
-const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
+const dataTypes = [
+	wikibasePropertyItem,
+	wikibasePropertyString,
+	wikibasePropertyDatetime
+];
 
 describe( 'Special:NewProperty', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
