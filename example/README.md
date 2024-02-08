@@ -38,10 +38,10 @@ This service can be replaced by any other reverse proxy service configured appro
 
 ## Running basic Wikibase
 
-Alternatively, if you don't need the full WBS set of services, you can run the Wikibase instance on port 8880 only with the following command:
+Alternatively, if you don't need the full WBS set of services, you can run a Wikibase instance with only the basics with the following command:
 
 ```sh
-docker compose --env-file defaults.env --env-file .env -f docker-compose.base.yml up
+docker compose --env-file defaults.env --env-file .env -f docker-compose.basic.yml up
 ```
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), a Wikibase instance, database and a job runner.
