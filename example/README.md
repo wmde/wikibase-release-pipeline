@@ -43,7 +43,7 @@ For local testing you will need a domain name that routes to your computer's IP 
 - WDQS: http://wdqs-frontend.local.gd
 - QuickStatements: http://quickstatements.local.gd
 
-NOTE: In some cases, due to OS or Internet service provider security settings, these subdomains will not be allowed to route back to the localhost address. In such cases it is required to either disable the related security settings, or manually configure a DNS provider (e.g. CloudFlare `1.1.1.1` or Google `8.8.8.8`, etc) in the browser. Chrome provides an option for doing this.
+NOTE: In some cases, due to OS or Internet service provider security settings, these subdomains will not be allowed to route back to the localhost address. In such cases to use these provided URLs it is required to either disable the related security settings, or manually configure a DNS provider (e.g. CloudFlare `1.1.1.1` or Google `8.8.8.8`, etc) in the browser. Chrome provides an option for doing this.
 
 ### Selected services
 
