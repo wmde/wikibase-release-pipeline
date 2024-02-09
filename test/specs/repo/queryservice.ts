@@ -22,7 +22,7 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 200 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async () => {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
@@ -150,5 +150,13 @@ describe( 'QueryService', () => {
 
 		// timestamp always shows
 		assert( resultText.includes( 'wikibase:timestamp' ) );
+	} );
+
+	it( 'Should show results for a select query', async () => {
+		await QueryServiceUIPage.open( 'SELECT * where { ?a ?b ?c }' );
+		await QueryServiceUIPage.submit();
+		expect(
+			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
+		).toBeGreaterThan( 0 );
 	} );
 } );
