@@ -159,4 +159,31 @@ describe( 'QueryService', () => {
 			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
 		).toBeGreaterThan( 0 );
 	} );
+
+	it( 'Should show list of properties', async () => {
+		await QueryServiceUIPage.open( `SELECT ?property ?propertyType ?propertyLabel ?propertyDescription ?propertyAltLabel WHERE {
+			?property wikibase:propertyType ?propertyType .
+			SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+		  }
+		  ORDER BY ASC(xsd:integer(STRAFTER(STR(?property), 'P')))` );
+		await QueryServiceUIPage.submit();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="property"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyType"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyLabel"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyDescription"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyAltLabel"]' )
+		).toExist();
+		expect(
+			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
+		).toBeGreaterThan( 0 );
+	} );
 } );
