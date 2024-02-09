@@ -3,7 +3,6 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import SpecialEntityDataPage from '../../../helpers/pages/special/entity-data.page.js';
 import SpecialNewPropertyPage from '../../../helpers/pages/special/new-property.page.js';
-import propertyIdSelector from '../../../helpers/property-id-selector.js';
 
 describe( 'WikibaseEdtf', function () {
 	before( async function () {
@@ -57,16 +56,14 @@ describe( 'WikibaseEdtf', function () {
 		);
 		await SpecialNewPropertyPage.submit();
 
-		const propertyId = (
-			await $( 'h1#firstHeading' ).$( 'span.wikibase-title-id' ).getText()
-		).replace( /[()]/g, '' );
-
 		const itemId = await WikibaseApi.createItem( 'edtf-test' );
 
 		await ItemPage.open( itemId );
 		await $( '=add statement' ).click();
 		await browser.keys( 'Jurassic Park Release'.split( '' ) );
-		await propertyIdSelector( propertyId ).click();
+		await $(
+			'span.ui-entityselector-description=Date on which Jurassic Park was broadly released to theaters'
+		).click();
 		const timeValue = '1993-06-11T00:00:00';
 		await browser.keys( timeValue.split( '' ) );
 		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
