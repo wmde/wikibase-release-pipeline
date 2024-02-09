@@ -18,7 +18,7 @@ describe( 'Special:NewProperty', function () {
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		describe( `Should be able to work with datatype ${dataType.name}`, function () {
-			beforeEach( async function () {
+			before( async function () {
 				if ( dataType.extensionNeeded ) {
 					await browser.skipIfExtensionNotPresent(
 						this,
