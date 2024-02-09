@@ -47,24 +47,22 @@ describe( 'WikibaseEdtf', function () {
 	it( 'Should allow to create and use the EDTF property in UI', async () => {
 		// create the property
 		await SpecialNewPropertyPage.open( { datatype: 'edtf' } );
-		await SpecialNewPropertyPage.labelInput.setValue( 'Jurassic Park Release' );
+		await SpecialNewPropertyPage.labelInput.setValue( 'Groundhog Day Release' );
 		await SpecialNewPropertyPage.descriptionInput.setValue(
-			'Date on which Jurassic Park was broadly released to theaters'
+			'Date on which the film Groundhog Day was broadly released to theaters'
 		);
-		await SpecialNewPropertyPage.aliasesInput.setValue(
-			'Jurassic Park Day|Jurassic Park Opening'
-		);
+		await SpecialNewPropertyPage.aliasesInput.setValue( 'Groundhog Day Opening' );
 		await SpecialNewPropertyPage.submit();
 
 		const itemId = await WikibaseApi.createItem( 'edtf-test' );
 
 		await ItemPage.open( itemId );
 		await $( '=add statement' ).click();
-		await browser.keys( 'Jurassic Park Release'.split( '' ) );
+		await browser.keys( 'Groundhog Day Release'.split( '' ) );
 		await $(
-			'span.ui-entityselector-description=Date on which Jurassic Park was broadly released to theaters'
+			'span.ui-entityselector-description=Date on which the film Groundhog Day was broadly released to theaters'
 		).click();
-		const timeValue = '1993-06-11T00:00:00';
+		const timeValue = '1993-02-12T00:00:00';
 		await browser.keys( timeValue.split( '' ) );
 		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
 			.$( '=save' )
@@ -72,7 +70,7 @@ describe( 'WikibaseEdtf', function () {
 
 		expect( await $( 'span.edtf-plain' ).getText() ).toEqual( timeValue );
 		expect( await $( 'span.edtf-humanized' ).getText() ).toEqual(
-			'(00:00:00 (local time) June 11th, 1993)'
+			'(00:00:00 (local time) February 12th, 1993)'
 		);
 	} );
 } );
