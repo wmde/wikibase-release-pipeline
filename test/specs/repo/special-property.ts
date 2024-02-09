@@ -19,8 +19,7 @@ describe( 'Special:NewProperty', function () {
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		describe( `Should be able to work with datatype ${dataType.name}`, function () {
 			beforeEach( async function () {
-				if ( dataType.extensionNeeded ?? false ) {
-					console.log( 'Extension', dataType.extensionNeeded );
+				if ( dataType.extensionNeeded ) {
 					await browser.skipIfExtensionNotPresent(
 						this,
 						dataType.extensionNeeded
