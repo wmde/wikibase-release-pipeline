@@ -4,6 +4,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -182,6 +183,42 @@ describe( 'QueryService', () => {
 		await expect(
 			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyAltLabel"]' )
 		).toExist();
+		expect(
+			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
+		).toBeGreaterThan( 0 );
+	} );
+
+	it( 'Should show a property connected to item', async () => {
+		const propertyId = await WikibaseApi.createProperty(
+			wikibasePropertyString.urlName
+		);
+		const data = {
+			claims: [
+				{
+					mainsnak: {
+						snaktype: 'value',
+						property: propertyId,
+						datavalue: {
+							value: 'test-property',
+							type: wikibasePropertyString.urlName
+						}
+					},
+					type: 'statement',
+					rank: 'normal'
+				}
+			]
+		};
+
+		const itemId = await WikibaseApi.createItem(
+			getTestString( 'test-item-label' ),
+			data
+		);
+
+		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
+		WHERE {
+		  ?item <${testEnv.vars.WIKIBASE_HOST}/prop/direct/${propertyId}> <${testEnv.vars.WIKIBASE_HOST}/entity/${itemId}> .
+		}` );
+
 		expect(
 			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
 		).toBeGreaterThan( 0 );
