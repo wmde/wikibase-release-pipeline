@@ -45,6 +45,14 @@ describe( 'Property', function () {
 				await PropertyPage.saveStatementLink.click();
 			} );
 
+			it( 'Should be able to see added statement', async () => {
+				this.retries( 4 );
+				await expect( $( `div=${statementText}` ) ).toExist();
+				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
+					stringPropertyId
+				);
+			} );
+
 			it( 'Should be able to add reference to property', async () => {
 				await $( '=add reference' ).click();
 				// fill out property id for reference
@@ -53,14 +61,6 @@ describe( 'Property', function () {
 				await propertyIdSelector( stringPropertyId ).click();
 				await browser.keys( referenceText.split( '' ) );
 				await PropertyPage.saveStatementLink.click();
-			} );
-
-			it( 'Should be able to see added statement', async () => {
-				this.retries( 4 );
-				await expect( $( `div=${statementText}` ) ).toExist();
-				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
-					stringPropertyId
-				);
 			} );
 
 			it( 'Should be able to see added reference', async function () {
