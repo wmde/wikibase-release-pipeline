@@ -45,7 +45,7 @@ describe( 'Property', function () {
 				await PropertyPage.saveStatementLink.click();
 			} );
 
-			it( 'Should be able to see added statement', async () => {
+			it( 'Should be able to see added statement', async function () {
 				this.retries( 4 );
 				await expect( $( `div=${statementText}` ) ).toExist();
 				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
