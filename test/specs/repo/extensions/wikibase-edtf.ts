@@ -68,8 +68,8 @@ describe( 'WikibaseEdtf', function () {
 			.$( '=save' )
 			.click();
 
-		expect( await $( 'span.edtf-plain' ).getText() ).toEqual( timeValue );
-		expect( await $( 'span.edtf-humanized' ).getText() ).toEqual(
+		await expect( $( 'span.edtf-plain' ) ).toHaveText( timeValue );
+		await expect( $( 'span.edtf-humanized' ) ).toHaveText(
 			'(00:00:00 (local time) February 12th, 1993)'
 		);
 	} );
