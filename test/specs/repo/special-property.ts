@@ -46,7 +46,9 @@ describe( 'Special:NewProperty', function () {
 
 				await SpecialNewPropertyPage.submit();
 
-				await expect( $( `=${dataType.name}` ) ).toExist();
+				await expect( $( '.wikibase-propertyview-datatype-value' ) ).toHaveText(
+					dataType.name
+				);
 			} );
 		} );
 	} );
