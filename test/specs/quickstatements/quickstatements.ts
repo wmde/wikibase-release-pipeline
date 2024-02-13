@@ -93,6 +93,13 @@ describe( 'QuickStatements Service', function () {
 		assert( navbarText.includes( 'QuickStatements' ) );
 	} );
 
+	it( 'Should be able to click batch button and be taken to the next page', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#` );
+		await $( 'a[tt="new_batch"]=New batch' ).click();
+
+		await expect( $( 'span=Create new command batch for' ) ).toExist();
+	} );
+
 	it( 'Should be able to create two items', async () => {
 		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
 
