@@ -5,6 +5,13 @@ This file is only intended to serve the developers of this repository and of the
 This provides an overview of the releases that have been made using this release pipeline.
 
 
+## February 2024: Security releases for 1.39.6
+- [WMDE 15 spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.15/variables.env)
+- [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [Run number 7887239057](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7887239057/)
+- [Release task T354646](https://phabricator.wikimedia.org/T354646)
+
 ## November 2023: First 1.40 release
 
 - [MediaWiki release announcement 1.40](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/H46H5ZYZG2PYUQ5STK7NWKF7GXYW7H6B/)
