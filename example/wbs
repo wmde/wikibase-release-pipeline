@@ -152,7 +152,7 @@ function stop {
 			trap "exit 1" SIGINT
 			echo "${clwhite}Stopping currently running Wikibase Suite... "
 			$WBS_COMPOSE_DOWN
-			if [ "$flag_quiet" = "true " ]; then 
+			if [ "$flag_quiet" = true ]; then 
 				echo "${clblue}DONE${clreset}"
 			fi
 			echo
