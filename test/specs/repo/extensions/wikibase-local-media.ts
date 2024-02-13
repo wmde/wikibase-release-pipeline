@@ -27,9 +27,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await $( 'input.mw-htmlform-submit' ).click();
 
-		const title = await $( '#firstHeading' ).getText();
-
-		assert.strictEqual( title, 'File:Image.png' );
+		await expect( $( '#firstHeading' ) ).toHaveText( 'File:Image.png' );
 	} );
 
 	it( 'Should allow to create a property with localMedia datatype', async () => {
@@ -87,7 +85,6 @@ describe( 'WikibaseLocalMedia', function () {
 			.$( '=save' )
 			.click();
 
-		const resultTitle = await $( 'div.commons-media-caption' ).$( 'a' ).getText();
-		expect( resultTitle ).toEqual( 'Image.png' );
+		await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
 	} );
 } );

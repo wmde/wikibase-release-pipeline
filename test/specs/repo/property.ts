@@ -113,10 +113,9 @@ describe( 'Property', function () {
 					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
 				).toBe( 4 );
 				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
-				const mostRecentRevisionText = await $( 'ul.mw-contributions-list' )
-					.$( 'li.before' )
-					.getText();
-				expect( mostRecentRevisionText.includes( undoSummaryText ) );
+				await expect(
+					$( 'ul.mw-contributions-list' ).$( 'li.before' )
+				).toHaveTextContaining( undoSummaryText );
 			} );
 
 			it( 'Should be able to set label, description, aliases', async () => {

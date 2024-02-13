@@ -31,8 +31,7 @@ describe( 'ElasticSearch', function () {
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
-		assert.strictEqual( alias, itemAlias );
+		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
 	it( 'should be able to search case-insensitive', async () => {
