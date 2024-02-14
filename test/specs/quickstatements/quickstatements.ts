@@ -137,7 +137,7 @@ describe( 'QuickStatements Service', function () {
 		expect( responseQ4Data.entities.Q4.labels.en.value ).toBe( 'freshwater eel' );
 		expect(
 			responseQ4Data.entities.Q4.claims.P1[ 0 ].mainsnak.datavalue.value
-		).toBe( 'slippery eel' );
+		).toBe( 'slippery fish' );
 	} );
 
 	it( 'Should be able to add an alias to an item', async () => {
