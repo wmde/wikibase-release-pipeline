@@ -124,6 +124,22 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
+	it( 'Should be able to create an item with statement', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+
+		const stringPropertyId = await WikibaseApi.createProperty( 'string' );
+
+		await browser.executeQuickStatement(
+			`CREATE||LAST|Len|"freshwater eel"||LAST|${stringPropertyId}|"slippery fish"`
+		);
+
+		const responseQ4Data = await SpecialEntityDataPage.getData( 'Q4' );
+		expect( responseQ4Data.entities.Q4.labels.en.value ).toBe( 'freshwater eel' );
+		expect(
+			responseQ4Data.entities.Q4.claims.P1[ 0 ].mainsnak.datavalue.value
+		).toBe( 'slippery eel' );
+	} );
+
 	it( 'Should be able to add an alias to an item', async () => {
 		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
