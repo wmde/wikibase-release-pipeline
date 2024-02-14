@@ -180,8 +180,7 @@ jobs:
     # - from main branch builds
     # - from release branch builds and 
     # - builds from PRs going to a release branch
-    # TODO: reenable the line below when debugging is done
-    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
 
     needs:
       - test
