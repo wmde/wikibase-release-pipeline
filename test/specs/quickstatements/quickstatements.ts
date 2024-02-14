@@ -329,4 +329,12 @@ describe( 'QuickStatements Service', function () {
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
 	} );
+
+	it( 'Should have a Last Batches button', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+
+		await $( 'a[tt="show_your_last_batches"]=Your last batches' ).click();
+
+		await expect( $( 'span[tt="show_last_batches"]=Last batches' ) ).toExist();
+	} );
 } );
