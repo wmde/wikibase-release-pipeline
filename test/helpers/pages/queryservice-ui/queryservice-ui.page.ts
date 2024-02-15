@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-returns */
 import SubmittablePage from '../submittable.page.js';
 
 class QueryServiceUIPage extends SubmittablePage {
@@ -15,7 +14,8 @@ class QueryServiceUIPage extends SubmittablePage {
 	 * @param {string} query
 	 * @param {string[]} prefixes - Optional
 	 */
-	public open( query: string, prefixes: string[] = [] ): Promise<void> {
+	public async open( query: string, prefixes: string[] = [] ): Promise<void> {
+		await browser.url( testEnv.vars.WDQS_FRONTEND_URL );
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
