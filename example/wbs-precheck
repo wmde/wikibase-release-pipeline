@@ -6,64 +6,65 @@ MIN_DOCKER_COMPOSE_VERSION="2.10"
 
 source template.env
 
+# Adds result for final report
+add_result() {
+  if ! [ "$1" -eq 0 ]; then
+    RESULTS+="❌ FAIL: $2"$'\n'
+  fi
+}
+
 # Function to compare version numbers using semver
 semver_compare() {
-    local version1 version2
+  local version1 version2
 
-    # Use awk to extract numeric parts of the version string
-    version1=$(echo "$1" | awk -F. '{print $1*10000+$2*100+$3}')
-    version2=$(echo "$2" | awk -F. '{print $1*10000+$2*100+$3}')
+  # Use awk to extract numeric parts of the version string
+  version1=$(echo "$1" | awk -F. '{print $1*10000+$2*100+$3}')
+  version2=$(echo "$2" | awk -F. '{print $1*10000+$2*100+$3}')
 
-    if [ "$version1" -eq "$version2" ]; then
-        return 0
-    elif [ "$version1" -gt "$version2" ]; then
-        return 1
-    else
-        return 2
-    fi
+  if [ "$version1" -eq "$version2" ]; then
+    return 0
+  elif [ "$version1" -gt "$version2" ]; then
+    return 1
+  else
+    return 2
+  fi
 }
 
 # Function to check software version
 check_version() {
-    software="$1"
-    min_version="$2"
-    command_name="$3"
-    
-    if [ "$command_name" == "docker compose" ]; then
-        version="$($command_name version --short)"
-    else
-        version="$("$command_name" --version | awk '{print $3}' | sed 's/,//' | awk -F. '{print $1"."$2"."$3}')"
-    fi
+  software="$1"
+  min_version="$2"
+  command_name="$3"
+  
+  if [ "$command_name" == "docker compose" ]; then
+    version="$($command_name version --short)"
+  else
+    version="$("$command_name" --version | awk '{print $3}' | sed 's/,//' | awk -F. '{print $1"."$2"."$3}')"
+  fi
 
-    # Check if the version is numeric
-    if [ -n "$version" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        semver_compare "$version" "$min_version"
-        result=$?
+  # Check if the version is numeric
+  if [ -n "$version" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    semver_compare "$version" "$min_version"
+    result=$?
 
-        if [ "$result" -eq 0 ]; then
-            RESULTS+="✅ PASS: $software version is $version (equal to $min_version)"$'\n'
-        elif [ "$result" -eq 2 ]; then
-            RESULTS+="❌ FAIL: $software version is $version (below $min_version)"$'\n'
-        else
-            RESULTS+="✅ PASS: $software version is $version (above $min_version)"$'\n'
-        fi
-    else
-        RESULTS+="❌ FAIL: Unable to determine $software version or not installed"$'\n'
+    if [ "$result" -eq 2 ]; then
+      add_result 1 "$software version is $version (below $min_version)"
     fi
+  else
+    add_result 1 "Unable to determine $software version or not installed"
+  fi
 }
 
 # Function to check if the domain name can be resolved
 check_domain_resolution() {
-    domain="$1"
-    
-    # Use dig to obtain the resolved IP address
-    ip_address=$(dig +short "$domain")
+  domain="$1"
+  
+  # Use dig to obtain the resolved IP address
+  ip_address=$(dig +short "$domain")
 
-    if [ -n "$ip_address" ]; then
-        RESULTS+="✅ PASS: $domain found (resolves to $ip_address)"$'\n'
-    else
-        RESULTS+="❌ FAIL: $domain not found"$'\n'
-    fi
+  if [ -z "$ip_address" ]; then
+    add_result 1 "$domain not found"$'\n'
+  fi
 }
 
 # Store PASS/FAIL results
@@ -77,18 +78,19 @@ check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker compose"
 check_domain_resolution "$WIKIBASE_HOST"
 
 # Check architecture
-if [ "$(uname -m)" == "x86_64" ] || [ "$(uname -m)" == "amd64" ]; then
-    RESULTS+="✅ PASS: Computer architecture is AMD64"$'\n'
-else
-    RESULTS+="❌ FAIL: Computer architecture is not AMD64 (ARM not currently supported)"$'\n'
+if ! [ "$(uname -m)" == "x86_64" ] || [ "$(uname -m)" == "amd64" ]; then
+  add_result 1 "Computer architecture is not AMD64 (ARM not currently supported)"
 fi
 
-# Print results
-echo "$RESULTS"
+function print_report() {
+  if grep -q "FAIL" <<< "$RESULTS"; then
+    echo "Precheck failed with the followiing issue/s:"
+    echo
+    echo "$RESULTS"
+    echo "Please review the documentation to resolve the above issues."
+    echo
+    return 1
+  fi
+}
 
-# Check if all requirements are met
-if grep -q "FAIL" <<< "$RESULTS"; then
-    echo "Please review above and WBS documentation to resolve issues."
-else
-    echo "✅ All ready to run WBS! Run \`./wbs\` 🚀"
-fi
+print_report
