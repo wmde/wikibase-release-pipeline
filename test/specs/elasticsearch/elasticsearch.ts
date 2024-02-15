@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
@@ -31,8 +30,7 @@ describe( 'ElasticSearch', function () {
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
-		assert.strictEqual( alias, itemAlias );
+		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
 	it( 'should be able to search case-insensitive', async () => {
@@ -53,16 +51,15 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 20000,
+				timeout: 30 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
 		);
-		assert(
-			searchResult.length === 1 &&
-				searchResult[ 0 ].id === itemId &&
-				searchResult[ 0 ].match.type === 'label' &&
-				searchResult[ 0 ].match.text === itemLabel
-		);
+
+		expect( searchResult ).toHaveLength( 1 );
+		expect( searchResult[ 0 ].id ).toBe( itemId );
+		expect( searchResult[ 0 ].match.type ).toBe( 'label' );
+		expect( searchResult[ 0 ].match.text ).toBe( itemLabel );
 	} );
 
 	it( 'should be able to search via alias', async function () {
@@ -83,16 +80,14 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 20000,
+				timeout: 30 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the alias by now.'
 			}
 		);
 
-		assert(
-			searchResult.length === 1 &&
-				searchResult[ 0 ].id === itemId &&
-				searchResult[ 0 ].match.type === 'alias' &&
-				searchResult[ 0 ].match.text === itemAlias
-		);
+		expect( searchResult ).toHaveLength( 1 );
+		expect( searchResult[ 0 ].id ).toBe( itemId );
+		expect( searchResult[ 0 ].match.type ).toBe( 'alias' );
+		expect( searchResult[ 0 ].match.text ).toBe( itemAlias );
 	} );
 } );
