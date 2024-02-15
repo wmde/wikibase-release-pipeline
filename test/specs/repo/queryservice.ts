@@ -188,7 +188,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it.only( 'Should show a property connected to item', async () => {
+	it( 'Should show a property connected to item', async () => {
 		const propertyId = await WikibaseApi.createProperty(
 			wikibasePropertyString.urlName
 		);
@@ -218,6 +218,11 @@ describe( 'QueryService', () => {
 		WHERE {
 		  <${testEnv.vars.WIKIBASE_URL}/entity/${itemId}> <${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}> "test-property" .
 		}` );
+
+		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
+		await browser.pause( 20 * 1000 );
+
 		await QueryServiceUIPage.submit();
 
 		await expect(
