@@ -222,5 +222,10 @@ describe( 'QueryService', () => {
 		expect(
 			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
 		).toBeGreaterThan( 0 );
+		expect(
+			await QueryServiceUIPage.resultIncludes(
+				`&lt;http://wikibase.svc/entity/${propertyId}&gt;`
+			)
+		);
 	} );
 } );
