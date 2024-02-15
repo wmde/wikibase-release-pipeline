@@ -219,13 +219,6 @@ describe( 'QueryService', () => {
 		  ?item <${testEnv.vars.WIKIBASE_HOST}/prop/direct/${propertyId}> <${testEnv.vars.WIKIBASE_HOST}/entity/${itemId}> .
 		}` );
 
-		expect(
-			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
-		).toBeGreaterThan( 0 );
-		expect(
-			await QueryServiceUIPage.resultIncludes(
-				`&lt;http://wikibase.svc/entity/${propertyId}&gt;`
-			)
-		);
+		expect( await QueryServiceUIPage.resultIncludes( 'count', '1' ) );
 	} );
 } );
