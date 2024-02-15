@@ -188,7 +188,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it( 'Should show a property connected to item', async () => {
+	it.only( 'Should show a property connected to item', async () => {
 		const propertyId = await WikibaseApi.createProperty(
 			wikibasePropertyString.urlName
 		);
@@ -216,9 +216,18 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
 		WHERE {
-		  ?item <${testEnv.vars.WIKIBASE_HOST}/prop/direct/${propertyId}> <${testEnv.vars.WIKIBASE_HOST}/entity/${itemId}> .
+		  <${testEnv.vars.WIKIBASE_URL}/entity/${itemId}> <${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}> "test-property" .
 		}` );
+		await QueryServiceUIPage.submit();
 
-		expect( await QueryServiceUIPage.resultIncludes( 'count', '1' ) );
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="count"]' ).$( 'div' )
+		).toHaveText( 'count' );
+		await expect(
+			QueryServiceUIPage.resultTable
+				.$( 'tbody' )
+				.$( 'tr[data-index="0"]' )
+				.$( 'span' )
+		).toHaveText( '1' );
 	} );
 } );
