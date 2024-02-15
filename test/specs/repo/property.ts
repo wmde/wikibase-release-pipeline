@@ -105,9 +105,7 @@ describe( 'Property', function () {
 				).click();
 				await browser.keys( undoSummaryText.split( '' ) );
 				await $( 'button=Save page' ).click();
-			} );
 
-			it( 'Should be able to see reverted change', async () => {
 				await $( '=View history' ).click();
 				await expect(
 					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
@@ -134,9 +132,7 @@ describe( 'Property', function () {
 				);
 
 				await $( 'span=Set label, description and aliases' ).click();
-			} );
 
-			it( 'Should be able to see updated label, description, aliases', async () => {
 				await expect(
 					$( `span.wikibase-labelview-text=${dataType.name} Label` )
 				).toExist();
