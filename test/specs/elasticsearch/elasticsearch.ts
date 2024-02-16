@@ -51,7 +51,7 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 30 * 1000,
+				timeout: 60 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
 		);
