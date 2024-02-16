@@ -228,14 +228,18 @@ jobs:
         run: |
           set -x
 
-          # get the docker tag name != latest of the image we are currently looking at, the version string that is
-          tag=$(docker image ls | grep -e '^${{ matrix.docker_image }} ' | grep -v latest | awk '{print $2}' | head -n 1)
+          # Get the docker tag name != latest of the image we are currently looking at. (The version string that is)
+          version_tag=$(docker image ls | grep -e '^${{ matrix.docker_image }} ' | grep -v latest | awk '{print $2}' | head -n 1)
 
-          # retag the image so that it is prefixed with the github container registry url
-          docker tag ${{ matrix.docker_image }}:"$tag" ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$tag"
-          docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$tag"
+          # We need to retag the container for GHCR because the current tag is targetting docker hub.
+          # We will push two tags to GHCR, a version tag and a tag representing the current CI pipeline run id.
+          # Let's create "from" and "to" container URLs first.
+          from_url=${{ matrix.docker_image }}:"$version_tag"
+          to_url_version=ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$version_tag"
+          to_url_run_id=ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
 
-          # retag the image with the pipeline run number
-          docker tag ${{ matrix.docker_image }}:"$tag" ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
-          docker push ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
-
+          # Retag and push
+          docker tag "$from_url" "$to_url_version"
+          docker tag "$from_url" "$to_url_run_id"
+          docker push "$to_url_version"
+          docker push "$to_url_run_id"
