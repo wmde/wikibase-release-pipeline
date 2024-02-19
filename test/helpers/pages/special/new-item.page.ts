@@ -1,22 +1,30 @@
 import SubmittablePage from '../submittable.page.js';
+import urlParameters from '../url-parameters.js';
 
-class SpecialNewItem extends SubmittablePage {
-	public get labelInput(): ChainablePromiseElement {
-		return $( 'input[name="label"]' );
-	}
-	public get descriptionInput(): ChainablePromiseElement {
-		return $( 'input[name="description"]' );
-	}
-	public get aliasesInput(): ChainablePromiseElement {
-		return $( 'input[name="aliases"]' );
-	}
-	public get submitBtn(): ChainablePromiseElement {
-		return $( 'button[type="submit"]' );
+type SpecialNewItemPageParams = {
+	uselang?: string;
+};
+
+class SpecialNewItemPage extends SubmittablePage {
+	public get firstHeading(): ChainablePromiseElement {
+		return $( 'h1#firstHeading' );
 	}
 
-	public async open(): Promise<void> {
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:NewItem` );
+	/**
+	 * `/wiki/Special:NewItem`
+	 *
+	 * @param {Object} params
+	 * @param {string} params.uselang - Optional
+	 */
+	public async open(
+		params: SpecialNewItemPageParams | string = {}
+	): Promise<void> {
+		if ( typeof params === 'string' ) {
+			throw new Error( 'Invalid parameter' );
+		}
+
+		return super.open( `/wiki/Special:NewItem${urlParameters( params )}` );
 	}
 }
 
-export default new SpecialNewItem();
+export default new SpecialNewItemPage();

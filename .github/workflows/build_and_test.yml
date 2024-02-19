@@ -1,4 +1,4 @@
-name: Build and Test
+name: 🏗️🧪 Build and Test
 
 on:
   push:
@@ -44,13 +44,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: ./build.sh --save-image --extract-tarball ${{ matrix.component }}
         shell: bash
+        run: ./build.sh --save-image ${{ matrix.component }}
 
-      - name: Upload results
-        uses: ./.github/actions/upload-results
+      - name: Archive Docker artifact
+        uses: actions/upload-artifact@v3
         with:
-          component: ${{ matrix.component }}
+          name: DockerImages
+          path: artifacts/${{ matrix.component }}*.docker.tar.gz
+          if-no-files-found: error
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
@@ -223,8 +225,23 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Store built docker image on GHCR
-        uses: wmde/tag-push-ghcr-action@v3
-        with:
-          image_name: ${{ matrix.docker_image }}
-          tag: ${{ github.run_id }}
+      - name: Push docker image to GHCR
+        shell: bash
+        run: |
+          set -x
+
+          # Get the docker tag name != latest of the image we are currently looking at. (The version string that is)
+          version_tag=$(docker image ls | grep -e '^${{ matrix.docker_image }} ' | grep -v latest | awk '{print $2}' | head -n 1)
+
+          # We need to retag the container for GHCR because the current tag is targetting docker hub.
+          # We will push two tags to GHCR, a version tag and a tag representing the current CI pipeline run id.
+          # Let's create "from" and "to" container URLs first.
+          from_url=${{ matrix.docker_image }}:"$version_tag"
+          to_url_version=ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:"$version_tag"
+          to_url_run_id=ghcr.io/${{ github.repository_owner }}/${{ matrix.docker_image }}:${{ github.run_id }}
+
+          # Retag and push
+          docker tag "$from_url" "$to_url_version"
+          docker tag "$from_url" "$to_url_run_id"
+          docker push "$to_url_version"
+          docker push "$to_url_run_id"

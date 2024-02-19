@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
 import SearchResult from '../../types/search-result.js';
 
 const itemAlias: string = getTestString( 'alias' );
@@ -12,14 +13,14 @@ describe( 'ElasticSearch', function () {
 	it( 'Should create an item', async () => {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
+		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetAliases/` );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
