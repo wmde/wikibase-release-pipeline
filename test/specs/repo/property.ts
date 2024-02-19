@@ -1,6 +1,8 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
+import page from '../../helpers/pages/page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
+import propertyIdSelector from '../../helpers/property-id-selector.js';
 import {
 	wikibasePropertyItem,
 	wikibasePropertyString
@@ -10,10 +12,9 @@ import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
 const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
 
-const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
-	$( `=${id} (${id})` ); // =P1 (P1)
 const statementText = 'STATEMENT';
 const referenceText = 'REFERENCE';
+const undoSummaryText = 'UNDO_SUMMARY';
 
 describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
@@ -91,6 +92,59 @@ describe( 'Property', function () {
 				await $( '=Recent changes' ).click();
 				await expect( $( `=(${propertyId})` ) ).toExist();
 				await expect( $( `=(${stringPropertyId})` ) ).toExist();
+			} );
+
+			it( 'Should be able to revert a change', async () => {
+				await $( '=View history' ).click();
+				await expect(
+					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
+				).toBe( 3 );
+				await $( 'ul.mw-contributions-list' ).$( 'li.before' ).$( 'a=undo' ).click();
+				await $(
+					'label=Summary (will be appended to an automatically generated summary):'
+				).click();
+				await browser.keys( undoSummaryText.split( '' ) );
+				await $( 'button=Save page' ).click();
+
+				await $( '=View history' ).click();
+				await expect(
+					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
+				).toBe( 4 );
+				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
+				await expect(
+					$( 'ul.mw-contributions-list' ).$( 'li.before' )
+				).toHaveTextContaining( undoSummaryText );
+			} );
+
+			it( 'Should be able to set label, description, aliases', async () => {
+				await page.open( '/wiki/Special:SetLabelDescriptionAliases/' );
+				await $( 'label=ID:' ).click();
+				await browser.keys( propertyId.split( '' ) );
+				await $( 'span=Set label, description and aliases' ).click();
+
+				await $( 'label=Label:' ).click();
+				await browser.keys( `${dataType.name} Label`.split( '' ) );
+				await $( 'label=Description:' ).click();
+				await browser.keys( `${dataType.name} Description`.split( '' ) );
+				await $( 'label=Aliases:' ).click();
+				await browser.keys(
+					`${dataType.name} Alias A|${dataType.name} Alias B`.split( '' )
+				);
+
+				await $( 'span=Set label, description and aliases' ).click();
+
+				await expect(
+					$( `span.wikibase-labelview-text=${dataType.name} Label` )
+				).toExist();
+				await expect(
+					$( `span.wikibase-descriptionview-text=${dataType.name} Description` )
+				).toExist();
+				await expect(
+					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias A` )
+				).toExist();
+				await expect(
+					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias B` )
+				).toExist();
 			} );
 		} );
 	} );

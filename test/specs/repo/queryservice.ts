@@ -4,6 +4,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
@@ -22,7 +23,7 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 200 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf api thats not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async () => {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
@@ -150,5 +151,88 @@ describe( 'QueryService', () => {
 
 		// timestamp always shows
 		assert( resultText.includes( 'wikibase:timestamp' ) );
+	} );
+
+	it( 'Should show results for a select query', async () => {
+		await QueryServiceUIPage.open( 'SELECT * where { ?a ?b ?c }' );
+		await QueryServiceUIPage.submit();
+		expect(
+			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
+		).toBeGreaterThan( 0 );
+	} );
+
+	it( 'Should show list of properties', async () => {
+		await QueryServiceUIPage.open( `SELECT ?property ?propertyType ?propertyLabel ?propertyDescription ?propertyAltLabel WHERE {
+			?property wikibase:propertyType ?propertyType .
+			SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+		  }
+		  ORDER BY ASC(xsd:integer(STRAFTER(STR(?property), 'P')))` );
+		await QueryServiceUIPage.submit();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="property"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyType"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyLabel"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyDescription"]' )
+		).toExist();
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="propertyAltLabel"]' )
+		).toExist();
+		expect(
+			( await QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' ) ).length
+		).toBeGreaterThan( 0 );
+	} );
+
+	it( 'Should show a property connected to item', async () => {
+		const propertyId = await WikibaseApi.createProperty(
+			wikibasePropertyString.urlName
+		);
+		const data = {
+			claims: [
+				{
+					mainsnak: {
+						snaktype: 'value',
+						property: propertyId,
+						datavalue: {
+							value: 'test-property',
+							type: wikibasePropertyString.urlName
+						}
+					},
+					type: 'statement',
+					rank: 'normal'
+				}
+			]
+		};
+
+		const itemId = await WikibaseApi.createItem(
+			getTestString( 'test-item-label' ),
+			data
+		);
+
+		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
+		WHERE {
+		  <${testEnv.vars.WIKIBASE_URL}/entity/${itemId}> <${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}> "test-property" .
+		}` );
+
+		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
+		await browser.pause( 20 * 1000 );
+
+		await QueryServiceUIPage.submit();
+
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'th[data-field="count"]' ).$( 'div' )
+		).toHaveText( 'count' );
+		await expect(
+			QueryServiceUIPage.resultTable
+				.$( 'tbody' )
+				.$( 'tr[data-index="0"]' )
+				.$( 'span' )
+		).toHaveText( '1' );
 	} );
 } );
