@@ -14,7 +14,6 @@ set +o allexport
 
 
 SAVE_IMAGE=false
-EXTRACT_TARBALL=false
 DOCKER_BUILD_CACHE_OPT=""
 
 function save_image {
@@ -87,14 +86,6 @@ function build_wikibase {
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
-    if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm "$image_url_with_tag" \
-            tar cz -C /var/www --transform="s,^html,${image_name}," html \
-                > "artifacts/${image_name_with_tag//:/-}.tar.gz"
-        pushd artifacts
-        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
-        popd
-    fi
 
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
 
@@ -173,15 +164,6 @@ function build_wdqs-frontend {
         build/WDQS-frontend/ -t "$image_url_with_tag" -t "$image_url"
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
-
-    if $EXTRACT_TARBALL; then
-        docker run --entrypoint="" --rm "$image_url_with_tag" \
-            tar cz -C /usr/share/nginx --transform="s,^html,${image_name}," html \
-                > "artifacts/${image_name_with_tag//:/-}.tar.gz"
-        pushd artifacts
-        ln -sf "${image_name_with_tag//:/-}.tar.gz" "${image_name}.tar.gz"
-        popd
-    fi
 }
 
 
@@ -258,9 +240,6 @@ for arg in "$@"; do
             ;;
         -s|--save-image)
             SAVE_IMAGE=true
-            ;;
-        -t|--extract-tarball)
-            EXTRACT_TARBALL=true
             ;;
         -n|--no-cache)
             DOCKER_BUILD_CACHE_OPT="--no-cache"
