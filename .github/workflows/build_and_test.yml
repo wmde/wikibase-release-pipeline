@@ -44,13 +44,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: ./build.sh --save-image --extract-tarball ${{ matrix.component }}
         shell: bash
+        run: ./build.sh --save-image ${{ matrix.component }}
 
-      - name: Upload results
-        uses: ./.github/actions/upload-results
+      - name: Archive Docker artifact
+        uses: actions/upload-artifact@v3
         with:
-          component: ${{ matrix.component }}
+          name: DockerImages
+          path: artifacts/${{ matrix.component }}*.docker.tar.gz
+          if-no-files-found: error
 
       - name: Scan Image
         uses: ./.github/actions/scan-image
