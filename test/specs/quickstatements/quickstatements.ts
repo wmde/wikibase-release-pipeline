@@ -89,8 +89,14 @@ describe( 'QuickStatements Service', function () {
 		await browser.pause( 2 * 1000 );
 
 		// redirect back to app
-		const navbarText = await $( 'nav.navbar' ).getText();
-		assert( navbarText.includes( 'QuickStatements' ) );
+		await expect( $( 'nav.navbar' ) ).toHaveTextContaining( 'QuickStatements' );
+	} );
+
+	it( 'Should be able to click batch button and be taken to the next page', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#` );
+		await $( 'a[tt="new_batch"]=New batch' ).click();
+
+		await expect( $( 'span=Create new command batch for' ) ).toExist();
 	} );
 
 	it( 'Should be able to create two items', async () => {
@@ -116,6 +122,22 @@ describe( 'QuickStatements Service', function () {
 			responseQ3Data.entities.Q3.labels.en.value,
 			'Best label'
 		);
+	} );
+
+	it( 'Should be able to create an item with statement', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+
+		const stringPropertyId = await WikibaseApi.createProperty( 'string' );
+
+		await browser.executeQuickStatement(
+			`CREATE||LAST|Len|"freshwater eel"||LAST|${stringPropertyId}|"slippery fish"`
+		);
+
+		const responseQ4Data = await SpecialEntityDataPage.getData( 'Q4' );
+		expect( responseQ4Data.entities.Q4.labels.en.value ).toBe( 'freshwater eel' );
+		expect(
+			responseQ4Data.entities.Q4.claims.P1[ 0 ].mainsnak.datavalue.value
+		).toBe( 'slippery fish' );
 	} );
 
 	it( 'Should be able to add an alias to an item', async () => {
@@ -306,5 +328,13 @@ describe( 'QuickStatements Service', function () {
 
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
+	} );
+
+	it( 'Should have a Last Batches button', async () => {
+		await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+
+		await $( 'a[tt="show_your_last_batches"]=Your last batches' ).click();
+
+		await expect( $( 'span[tt="show_last_batches"]=Last batches' ) ).toExist();
 	} );
 } );
