@@ -39,7 +39,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Testitem&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -51,7 +51,7 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 30 * 1000,
+				timeout: 20 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
 		);
