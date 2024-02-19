@@ -123,7 +123,7 @@ jobs:
           tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
 
       - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: TestResults
@@ -168,7 +168,7 @@ jobs:
 
       # TODO: DRY
       - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: TestResults
