@@ -1,5 +1,6 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import Statement from '../../../helpers/pages/component/statement.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import SpecialEntityDataPage from '../../../helpers/pages/special/entity-data.page.js';
 import SpecialNewPropertyPage from '../../../helpers/pages/special/new-property.page.js';
@@ -57,7 +58,7 @@ describe( 'WikibaseEdtf', function () {
 		const itemId = await WikibaseApi.createItem( 'edtf-test' );
 
 		await ItemPage.open( itemId );
-		await $( '=add statement' ).click();
+		await Statement.addStatementLink.click();
 		await browser.keys( 'Groundhog Day Release'.split( '' ) );
 		await $(
 			'span.ui-entityselector-description=Date on which the film Groundhog Day was broadly released to theaters'

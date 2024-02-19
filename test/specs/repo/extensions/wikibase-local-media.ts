@@ -1,9 +1,9 @@
 import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import Statement from '../../../helpers/pages/component/statement.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
-import propertyIdSelector from '../../../helpers/property-id-selector.js';
 import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
@@ -69,11 +69,8 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test-2' );
 		await ItemPage.open( itemId );
 
-		await $( '=add statement' ).click();
-
-		await browser.keys( propertyLabel.split( '' ) );
-		await propertyIdSelector( propertyId ).click();
-
+		await Statement.addStatementLink.click();
+		await Statement.selectProperty( propertyId, propertyLabel );
 		await browser.keys( 'image.png'.split( '' ) );
 		await $( 'ul.ui-mediasuggester-list' )
 			.$( 'a' )
