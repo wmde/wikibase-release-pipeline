@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
 import { Launcher, RunCommandArguments } from '@wdio/cli';
 import logger from '@wdio/logger';
-import lodash from 'lodash';
 import chalk from 'chalk';
+import lodash from 'lodash';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { versions } from './suites/upgrade/versions.js';
@@ -62,24 +62,21 @@ const runCLI = async (): Promise<{
 		commandHandler
 	);
 
-	y.command(
-		'all',
-		'Run all test suites',
-		{},
-		commandHandler
-	);
+	y.command( 'all', 'Run all test suites', {}, commandHandler );
 
 	y.options( {
 		debug: {
 			boolean: true,
 			choices: [ true, 'node' ],
 			alias: 'd',
-			description: 'Run tests with long timeouts for debugging. Optionally set to "node" to also enable Node inspector.'
+			description:
+				'Run tests with long timeouts for debugging. Optionally set to "node" to also enable Node inspector.'
 		},
 
 		setup: {
 			boolean: true,
-			description: 'Start and leave-up the test environment without running tests'
+			description:
+				'Start and leave-up the test environment without running tests'
 		},
 
 		headedTests: {
@@ -90,14 +87,16 @@ const runCLI = async (): Promise<{
 
 		spec: {
 			array: true,
-			description: 'Run only this spec file(s) using the selected test suite setup (WDIO)',
+			description:
+				'Run only this spec file(s) using the selected test suite setup (WDIO)',
 			requiresArg: true,
 			conflicts: [ 'setup' ]
 		},
 
 		watch: {
 			boolean: true,
-			description: 'Automatically re-run tests when spec files in the suite change (WDIO)',
+			description:
+				'Automatically re-run tests when spec files in the suite change (WDIO)',
 			conflicts: [ 'setup' ]
 		}
 	} );
@@ -119,7 +118,8 @@ function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 
 	for ( const [ key, value ] of Object.entries( options ) ) {
 		if ( [ 'fromVersion', 'toVersion', 'headedTests', 'debug' ].includes( key ) ) {
-			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] = value.toString();
+			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] =
+				value.toString();
 			delete options[ key ];
 		}
 	}
@@ -133,20 +133,27 @@ const commandHandler = async ( argv ): Promise<void> => {
 		return;
 	}
 	const wdioRunCommandOptions = prepareWdioRunCommandOptions( argv );
-	const suiteNames = argv._[ 0 ] === 'all' ? allSuiteNames : argv._.map( ( suiteName ) => suiteName.toString() );
+	const suiteNames =
+		argv._[ 0 ] === 'all' ?
+			allSuiteNames :
+			argv._.map( ( suiteName ) => suiteName.toString() );
 	let exitCode;
 
 	if ( argv.setup ) {
 		// eslint-disable-next-line es-x/no-dynamic-import
-		const { testEnv } = await import( `./suites/${suiteNames[ 0 ]}/${suiteNames[ 0 ]}.conf.ts` );
+		const { testEnv } = await import(
+			`./suites/${suiteNames[ 0 ]}/${suiteNames[ 0 ]}.conf.ts`
+		);
 		await testEnv.up();
 		exitCode = 0;
 	} else {
 		if ( suiteNames.length > 1 ) {
 			console.log(
-				chalk.whiteBright.bold( `\n🎡 Running ${suiteNames.length} test suites:` ),
-				chalk.whiteBright( suiteNames.join( ', ' )
-				) );
+				chalk.whiteBright.bold(
+					`\n🎡 Running ${suiteNames.length} test suites:`
+				),
+				chalk.whiteBright( suiteNames.join( ', ' ) )
+			);
 		}
 		for ( const suiteName of suiteNames ) {
 			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
@@ -172,10 +179,7 @@ export async function runWdio(
 		// suites in the run
 		logger.clearLogger();
 
-		const wdio = new Launcher(
-			configFilePath,
-			wdioOpts
-		);
+		const wdio = new Launcher( configFilePath, wdioOpts );
 
 		return wdio.run();
 	} catch ( e ) {

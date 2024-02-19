@@ -2,8 +2,8 @@ import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
-import { TestSettings } from '../types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { TestSettings } from '../types/TestSettings.js';
 import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';
 import DatabaseConfig from '../types/database-config.js';
@@ -19,7 +19,8 @@ export function defaultFunctions(): void {
 	// Use in a test as `browser.options.<key>`.
 
 	// Base for browser.url() and Page#openTitle()
-	browser.options.baseUrl = testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
+	browser.options.baseUrl =
+		testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
 
 	/**
 	 * Execute query on database
@@ -255,10 +256,7 @@ export function defaultFunctions(): void {
 	 */
 	browser.addCommand(
 		'skipIfExtensionNotPresent',
-		async (
-			test: Context,
-			extension: string
-		): Promise<void> => {
+		async ( test: Context, extension: string ): Promise<void> => {
 			const installedExtensions = await getInstalledExtensions(
 				testEnv.vars.WIKIBASE_URL
 			);
@@ -266,8 +264,8 @@ export function defaultFunctions(): void {
 				return;
 			} else if (
 				installedExtensions &&
-					installedExtensions.includes( 'WikibaseRepository' ) &&
-					installedExtensions.includes( extension )
+				installedExtensions.includes( 'WikibaseRepository' ) &&
+				installedExtensions.includes( extension )
 			) {
 				return;
 			} else {
@@ -293,7 +291,9 @@ export function defaultFunctions(): void {
 						{}
 					);
 					jobsInQueue = result.data.query.statistics.jobs;
-					testEnv.testLog.info( `waitForJobs: ${jobsInQueue} currently in queue}` );
+					testEnv.testLog.info(
+						`waitForJobs: ${jobsInQueue} currently in queue}`
+					);
 					return jobsInQueue === 0;
 				},
 				{
@@ -314,7 +314,9 @@ export function defaultFunctions(): void {
  *
  * @param {string} serverUrl
  */
-export async function getInstalledExtensions( serverUrl: string ): Promise<string[] | undefined> {
+export async function getInstalledExtensions(
+	serverUrl: string
+): Promise<string[] | undefined> {
 	const result = await browser.makeRequest(
 		`${serverUrl}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 	);

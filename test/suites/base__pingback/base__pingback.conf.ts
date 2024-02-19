@@ -5,9 +5,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.createWithDefaults( {
 	name: 'base__pingback',
 	isBaseSuite: true,
-	specs: [
-		'specs/pingback/*.ts'
-	],
+	specs: [ 'specs/pingback/*.ts' ],
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/pingback/docker-compose.override.yml'

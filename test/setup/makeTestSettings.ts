@@ -1,29 +1,23 @@
-import { SevereServiceError } from 'webdriverio';
 import { Frameworks } from '@wdio/types';
-import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
-import loadEnvFiles from './loadEnvFiles.js';
-import loadLocalDockerImage from './loadLocalDockerImage.js';
 import { saveScreenshot } from 'wdio-mediawiki';
+import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { SevereServiceError } from 'webdriverio';
+import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import TestSettings, {
 	TestEnvSettings,
 	TestHooks,
 	TestRunnerSettings,
 	TestSuiteSettings
 } from '../types/TestSettings.js';
+import loadEnvFiles from './loadEnvFiles.js';
+import loadLocalDockerImage from './loadLocalDockerImage.js';
 
 export const ONE_DAY_IN_MS = 86400000;
 
 export const defaultTestSettings = {
-	envFiles: [
-		'../variables.env',
-		'./test-services.env',
-		'../local.env'
-	],
-	composeFiles: [
-		'suites/docker-compose.yml'
-	],
-	waitForUrls: (): string[] => ( [] ),
+	envFiles: [ '../variables.env', './test-services.env', '../local.env' ],
+	composeFiles: [ 'suites/docker-compose.yml' ],
+	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},
@@ -42,7 +36,8 @@ export const defaultTestSettings = {
 			testEnv.vars.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
 		];
 		defaultImageUrls.forEach( ( defaultImageUrl ) =>
-			loadLocalDockerImage( defaultImageUrl as string ) );
+			loadLocalDockerImage( defaultImageUrl as string )
+		);
 		if ( !testEnv.settings.isBaseSuite ) {
 			extraImageUrls.forEach( ( extraImageUrl ) =>
 				loadLocalDockerImage( extraImageUrl as string )
@@ -67,7 +62,10 @@ export const defaultTestSettings = {
 		);
 		const screenshotFilename = `${testFile}__${mochaTest.title}`;
 		try {
-			saveScreenshot( screenshotFilename, `${testEnv.settings.outputDir}/screenshots` );
+			saveScreenshot(
+				screenshotFilename,
+				`${testEnv.settings.outputDir}/screenshots`
+			);
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );
@@ -82,10 +80,14 @@ export const defaultTestSettings = {
 	}
 };
 
-export const makeTestSettings = ( settings: Partial<TestSettings> ): TestSettings => {
+export const makeTestSettings = (
+	settings: Partial<TestSettings>
+): TestSettings => {
 	// NOTE: The values from these env files are put in testEnv.vars
 	// to better isolate the test-service testEnv from the parent process
-	const testEnvVars = loadEnvFiles( settings.envFiles || defaultTestSettings.envFiles );
+	const testEnvVars = loadEnvFiles(
+		settings.envFiles || defaultTestSettings.envFiles
+	);
 	const testSuiteSettings: TestSuiteSettings = {
 		name: settings.name,
 		isBaseSuite: settings.isBaseSuite,
@@ -100,8 +102,12 @@ export const makeTestSettings = ( settings: Partial<TestSettings> ): TestSetting
 		outputDir,
 		runHeaded: process.env.HEADED_TESTS === 'true',
 		logLevel: process.env.TEST_LOG_LEVEL,
-		testTimeout: debug ? ONE_DAY_IN_MS : parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
-		waitForTimeout: debug ? ONE_DAY_IN_MS : parseInt( process.env.WAIT_FOR_TIMEOUT ),
+		testTimeout: debug ?
+			ONE_DAY_IN_MS :
+			parseInt( process.env.MOCHA_OPTS_TIMEOUT ),
+		waitForTimeout: debug ?
+			ONE_DAY_IN_MS :
+			parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
 		pwd: process.env.HOST_PWD || process.cwd()
 	};
@@ -113,7 +119,8 @@ export const makeTestSettings = ( settings: Partial<TestSettings> ): TestSetting
 	};
 	const testHooks: TestHooks = {
 		onPrepare: settings.onPrepare || defaultTestSettings.onPrepare,
-		beforeServices: settings.beforeServices || defaultTestSettings.beforeServices,
+		beforeServices:
+			settings.beforeServices || defaultTestSettings.beforeServices,
 		before: settings.before || defaultTestSettings.before,
 		afterTest: settings.afterTest || defaultTestSettings.afterTest,
 		onComplete: settings.onComplete || defaultTestSettings.onComplete

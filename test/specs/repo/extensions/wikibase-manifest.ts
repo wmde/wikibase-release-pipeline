@@ -13,8 +13,14 @@ describe( 'WikibaseManifest', function () {
 
 		assert.strictEqual( 'wikibase-docker', data.name );
 
-		assert.strictEqual( testEnv.vars.WIKIBASE_URL + '/w/api.php', data.api.action );
-		assert.strictEqual( testEnv.vars.WIKIBASE_URL + '/w/rest.php', data.api.rest );
+		assert.strictEqual(
+			testEnv.vars.WIKIBASE_URL + '/w/api.php',
+			data.api.action
+		);
+		assert.strictEqual(
+			testEnv.vars.WIKIBASE_URL + '/w/rest.php',
+			data.api.rest
+		);
 
 		assert.strictEqual(
 			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration',
