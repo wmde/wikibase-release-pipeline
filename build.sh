@@ -67,7 +67,7 @@ function setup_image_name_url_and_tag {
 
 
 function build_wikibase {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
@@ -86,13 +86,14 @@ function build_wikibase {
 
     save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$RELEASE_VERSION-$WMDE_RELEASE_VERSION"
+
+    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
 
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
-        --build-arg RELEASE_VERSION="$RELEASE_VERSION" \
+        --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
         --build-arg WIKIBASE_SUITE_WIKIBASE_IMAGE_URL="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
