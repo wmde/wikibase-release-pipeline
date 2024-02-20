@@ -23,15 +23,11 @@ After triggering the pipeline a set of jobs will start running, which after a su
 
 ![Queuing the pipeline](../diagrams/output/overview.svg "Queuing the pipeline")
 
-`DockerImages-lts`, `DockerImages-stable`, `DockerImages-next` - contains the release candidate docker images for each component that was built.
+`DockerImages` - contains the release candidate docker images for each component that was built.
 
-`TarBalls-lts`, `TarBalls-stable`, `TarBalls-next` - contains the release candidate tar archives for each component that was built.
+`TestResults` - contains logs and screenshots from testing.
 
-`Metadata-lts`, `Metadata-stable`, `Metadata-next` - contains artifacts describing what was built for each component that is included. Also contains the artifacts produced by the finishing `metadata` job that describe which versions were used when building / testing.
-
-`TestResults-lts`, `TestResults-stable`, `TestResults-next`  - contains logs and screenshots from testing.
-
-`ScanResults-lts`, `ScanResults-stable`, `ScanResults-next`  - contains logs from vulnerability testing.
+`ScanResults` - contains logs from vulnerability testing.
 
 
 ## Running the pipeline locally
@@ -55,12 +51,6 @@ When building locally the artifacts are only stored in the docker daemons image 
 $ ./build.sh --save-image
 ```
 
-If you want to also extract standalone tarballs, use the following command. This is basically also what the CI calls.
-
-```sh
-$ ./build.sh --save-image --extract-tarball
-```
-
 To rebuild without using Dockers cache, add the `--no-cache` option. Note that this will extend build times as all components need to be downloaded again (except Docker base images).
 
 ```sh
@@ -73,7 +63,7 @@ $ ./build.sh --no-cache
 To remove any locally produced artifacts you can run the following commands.
 
 ```sh
-make clean
+./clean.sh
 ```
 
 ### Downloaded artifacts
@@ -108,6 +98,3 @@ MOCHA_OPTS_TIMEOUT=90000
 ```
 WAIT_FOR_TIMEOUT=30000
 ```
-
-#### Settings related to tarball publishing
-See [publishing](publishing.md).

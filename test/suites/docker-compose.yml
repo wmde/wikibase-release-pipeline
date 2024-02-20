@@ -13,6 +13,11 @@ x-common-variables: &wikibase_variables
     MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
     MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
+networks:
+  default:
+    name: wikibase-suite-test
+    external: true
+
 services:
 
   wikibase:
@@ -34,6 +39,10 @@ services:
          - ${WIKIBASE_HOST}
     environment:
       <<: *wikibase_variables
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
@@ -64,13 +73,17 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: 'toor'
-
     networks:
       default:
         aliases:
          - mysql.svc
     volumes: 
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
 
   wdqs-frontend:
     image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
@@ -87,6 +100,10 @@ services:
     environment:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", $WDQS_FRONTEND_URL ]
+      interval: 10s
+      start_period: 2m
 
   wdqs:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
@@ -109,6 +126,10 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
+      interval: 10s
+      start_period: 2m
 
   wdqs-proxy:
     image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"

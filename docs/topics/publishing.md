@@ -44,7 +44,7 @@ Some of the prerequisutes can be used between publications, others needs to be s
 We will download artifacts that were created by a Github Action run (compressed releases, docker images, meta data) locally ready for publishing.
 
 ```
-$ make download
+$ publish/download.sh
 ...
 Getting artifacts for run 1157808966
 ...
@@ -82,7 +82,7 @@ To test the downloaded artifacts you can either load the images manually and use
 Remove locally created artifacts and use the downloaded ones
 
 ```
-$ make clean
+$ ./clean.sh
 $ cp artifacts/WORKFLOW_RUN_NUMBER/DockerImages/* artifacts/
 $ ./test.sh <suite-name>
 ```
@@ -91,12 +91,12 @@ After this you can follow the instructions as defined in [testing](testing.md) t
 
 ## Dry running
 
-Publishing docker images and tarballs can be a scary business. To do a test-run of the publish scripts you can set the env variable `DRY_RUN` variable in your local.env file to test the execution with applying or uploading any changes.
+Publishing docker images can be a scary business. To do a test-run of the publish scripts you can set the env variable `DRY_RUN` variable in your local.env file to test the execution with applying or uploading any changes.
 
 ```
 DRY_RUN=1
 ```
-This is supported by the tarball uploading and the dockerhub publishing scripts.
+This is supported by the dockerhub publishing scripts.
 
 After a first dry run you can issue the following to command to remove the variable.
 
@@ -123,52 +123,6 @@ set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source lo
 ```sh
 ./publish/dockerhub.sh
 ```
-
-## Publishing tarballs
-
-Publishing of tarballs is done by a [bash script](../../Docker/publish/upload_tar/publish.sh) thats can be run within a docker-container, or directly on your system.
-It creates a folder with the name of the `$RELEASE_MAJOR_VERSION` variable and uploads the tarballs created by the build.
-
-After successfully uploading the tarballs they should be accessible at https://releases.wikimedia.org/wikibase/
-
-### On your system
-
-You should be able to SSH to the host specificed in `RELEASE_HOST` with no issues.
-https://wikitech.wikimedia.org/wiki/SRE/Production_access#Setting_up_your_access
-
-```sh
-./publish/tar-nodocker.sh
-```
-
-### In docker
-
-Make sure the `~/.ssh/config` contains a bastion host section where the user is specified.
-
-```
-# Configure the initial connection to the bastion host, with the one
-# HostName closest to you
-Host bast
-    HostName bast3006.wikimedia.org
-    IdentityFile ~/.ssh/id_production
-    User <YourUsername>
-```
-
-
-Make sure you have the follow env variables set in your `local.env` file. Tarballs are to be hosted on releases.wikimedia.org. More information about this can be found [here](https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org).
-
-```
-RELEASE_USER=username # Name of the user on RELEASE_HOST to use
-RELEASE_SSH_IDENTITY=id_rsa # the production ssh identity filename to use
-```
-
-Run with in the terminal
-*(Will ask you for the password to the identity file once)*
-
-```
-set -o allexport; source variables.env; source versions/<RELEASE_ENV>; source local.env; set +o allexport
-./publish/tar.sh
-```
-
 ## Update the example docker-compose
 
 Once the release images are pushed to docker hub, and BEFORE tagging this repository the docker compose example should be updated to point to the new release on docker hub.

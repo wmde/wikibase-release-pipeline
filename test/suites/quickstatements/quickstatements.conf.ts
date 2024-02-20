@@ -11,12 +11,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/quickstatements/docker-compose.override.yml'
-	],
-	waitForUrls: () => ( [
-		...defaultTestSettings.waitForUrls(),
-		testEnv.vars.QUICKSTATEMENTS_URL,
-		testEnv.vars.WIKIBASE_CLIENT_URL
-	] )
+	]
 } );
 
 export const config = wdioConfig( testEnv );

@@ -2,7 +2,7 @@
 
 ## Repository overview
 
-The wikibase release pipeline contains scripts used for building, testing and publishing Wikibase docker images and tarballs.
+The wikibase release pipeline contains scripts used for building, testing and publishing Wikibase docker images.
 
 It contains a set of build targets defined in the [Makefile](./Makefile) which can be executed in two different ways.
 
@@ -23,9 +23,6 @@ $ ./build.sh wikibase
 
 # Build only the query service container and save the docker image to a tarball
 $ ./build.sh --save-image wdqs
-
-# Build the wdqs-frontend container and extract a standalone tarball from the webroot
-$ ./build.sh --extract-tarball wdqs-frontend
 
 # Build the wdqs container without using Dockers cache
 $ ./build.sh --no-cache wdqs

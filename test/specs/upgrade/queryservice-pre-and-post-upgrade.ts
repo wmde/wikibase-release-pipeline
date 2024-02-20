@@ -6,6 +6,8 @@ team inherited.
 
 import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import Binding from '../../types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
@@ -20,8 +22,7 @@ describe( 'Wikibase post upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL +
-        '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
+			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -33,16 +34,12 @@ describe( 'Wikibase post upgrade', function () {
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + oldItemID );
+		await ItemPage.open( oldItemID );
 	} );
 
 	it( 'Should show up in Special:EntityData with json', async () => {
-		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
-		);
-
-		const body = response.data;
-		const properties = Object.keys( body.entities[ oldItemID ].claims );
+		const data = await SpecialEntityDataPage.getData( oldItemID );
+		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
 		assert.strictEqual( properties.length, 1 );
 
@@ -67,11 +64,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/' + oldPropertyID,
+			`${testEnv.vars.WIKIBASE_URL}/prop/${oldPropertyID}`,
 			bindings
 		);
 		const property = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + oldPropertyID,
+			`${testEnv.vars.WIKIBASE_URL}/prop/direct/${oldPropertyID}`,
 			bindings
 		);
 
