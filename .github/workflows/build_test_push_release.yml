@@ -73,26 +73,10 @@ jobs:
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: ./test.sh ${{ matrix.suite }}
-
-      - name: Report Selenium
-        run: |
-          cd .github/reporter
-          npm install
-          node report.js ${{ matrix.suite }}
-
-      - name: Show Logs
-        continue-on-error: true
-        run: |
-          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
-
-      - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
+      - uses: ./.github/actions/test
         with:
-          name: TestResults
-          path: test/suites/**/results
+          suite: ${{ matrix.suite }}
+
 
   test_upgrade:
     runs-on: ubuntu-latest
@@ -122,16 +106,10 @@ jobs:
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Test upgrade from ${{ matrix.version }}
+      - uses: ./.github/actions/test-upgrade
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
-        run: ./test.sh upgrade ${{ matrix.version }}
-
-      - name: Archive Docker test artifacts
-        uses: actions/upload-artifact@v3
         with:
-          name: TestResults
-          path: test/suites/**/results
+          version: ${{ matrix.version }}
 

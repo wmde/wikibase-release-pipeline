@@ -1,0 +1,31 @@
+name: "test"
+description: "Test"
+inputs:
+  suite:
+    description: "name of the suite to test"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - shell: bash
+      run: ./test.sh ${{ inputs.suite }}
+
+    - shell: bash
+      run: |
+        cd .github/reporter
+        npm install
+        node report.js ${{ inputs.suite }}
+
+    - shell: bash
+      continue-on-error: true
+      run: |
+        ls -lahr test/suites/${{ inputs.suite }}/results test/suites/${{ inputs.suite }}/results/*
+        tail -n +1 test/suites/${{ inputs.suite }}/results/*.log
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: TestResults
+        path: test/suites/**/results
+
