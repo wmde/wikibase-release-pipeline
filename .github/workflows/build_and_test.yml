@@ -7,9 +7,9 @@ on:
       - "mw-*"
   pull_request:
     paths-ignore:
-      - 'docs/**'
-      - '**/*.md'
-      - '**/*.txt'
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.txt"
 
 jobs:
   lint:
@@ -65,7 +65,7 @@ jobs:
             base__pingback,
             base__fedprops,
 
-            example
+            example,
           ]
 
     needs:
@@ -76,15 +76,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Get built Docker artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: DockerImages
-          path: artifacts/
-
-      - name: Test ${{ matrix.suite }}
-        run: ./test.sh ${{ matrix.suite }}
+      - run: |
+          set -x
+          for image in "wikibase/wikibase wikibase/wikibase-bundle wikibase/elasticsearch wikibase/wdqs wikibase/wdqs-frontend wikibase/wdqs-proxy wikibase/quickstatements"; do
+            url_run_id="ghcr.io/${{ github.repository_owner }}/$image:${{ github.run_id }}"
+            docker pull $url_run_id
+            docker tag $url_run_id $image:latest
+          done
+      - run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
         if: always()
@@ -116,16 +115,16 @@ jobs:
       matrix:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version: [
-          # Latest 1.37
-          'WMDE9',
-          'WMDE9_BUNDLE',
-          # Latest 1.38
-          'WMDE12',
-          'WMDE12_BUNDLE',
-          # Latest 1.39
-          'WMDE13',
-          'WMDE13_BUNDLE'
-        ]
+            # Latest 1.37
+            "WMDE9",
+            "WMDE9_BUNDLE",
+            # Latest 1.38
+            "WMDE12",
+            "WMDE12_BUNDLE",
+            # Latest 1.39
+            "WMDE13",
+            "WMDE13_BUNDLE",
+          ]
     needs:
       - build
 
@@ -158,7 +157,7 @@ jobs:
 
     # we only upload builds to github container registry
     # - from main branch builds
-    # - from release branch builds and 
+    # - from release branch builds and
     # - builds from PRs going to a release branch
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-') || startsWith(github.base_ref, 'mw-')
 
