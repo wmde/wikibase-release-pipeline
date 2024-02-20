@@ -11,5 +11,5 @@ on:
       - "**/*.txt"
 
 jobs:
-  build-and-test:
-    uses: ./.github/workflows/build_test.yml
+  dev:
+    uses: ./.github/workflows/_build_test.yml

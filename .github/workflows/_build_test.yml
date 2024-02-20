@@ -1,9 +1,5 @@
-name: 🧩 Build and Test Reusable Workflow
-
 on:
   workflow_call:
-    
-
 
 jobs:
   lint:

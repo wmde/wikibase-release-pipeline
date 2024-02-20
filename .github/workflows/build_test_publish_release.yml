@@ -6,103 +6,8 @@ on:
       - "mw-*"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    strategy:
-      fail-fast: false
-      matrix:
-        component:
-          [
-            "wikibase",
-            "elasticsearch",
-            "wdqs",
-            "wdqs-frontend",
-            "wdqs-proxy",
-            "quickstatements",
-          ]
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/build
-        with:
-          component: ${{ matrix.component }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        suite:
-          [
-            repo,
-            fedprops,
-            repo_client,
-            quickstatements,
-            pingback,
-            confirm_edit,
-            elasticsearch,
-
-            base__repo,
-            base__repo_client,
-            base__pingback,
-            base__fedprops,
-
-            example,
-          ]
-
-    needs:
-      - build
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/pull-ghcr
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/test
-        with:
-          suite: ${{ matrix.suite }}
-
-
-  test_upgrade:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
-        version: [
-            # Latest 1.37
-            "WMDE9",
-            "WMDE9_BUNDLE",
-            # Latest 1.38
-            "WMDE12",
-            "WMDE12_BUNDLE",
-            # Latest 1.39
-            "WMDE13",
-            "WMDE13_BUNDLE",
-          ]
-
-    needs:
-      - build
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/pull-ghcr
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/test-upgrade
-        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
-        # Set a specific lower timeout to allow us to retry sooner
-        timeout-minutes: 10
-        with:
-          version: ${{ matrix.version }}
-
+  rel:
+    uses: ./.github/workflows/_build_test.yml
 
   publish-dockerhub:
     runs-on: ubuntu-latest
@@ -127,4 +32,7 @@ jobs:
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/push-dockerhub
+        with:
+          dockerhub_token: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
