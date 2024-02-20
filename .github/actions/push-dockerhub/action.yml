@@ -4,8 +4,8 @@ inputs:
   docker_image:
     description: "name of the docker image to push"
     required: true
-  github_token:
-    description: "token to access GHCR"
+  dockerhub_token:
+    description: "token to access dockerhub"
     required: true
 
 runs:
@@ -15,8 +15,8 @@ runs:
     - uses: docker/login-action@v3
       with:
         # implicitly docker hub
-        username: ${{ github.repository_owner }}
-        password: ${{ inputs.github_token }}
+        username: "roti4wmde" # TODO: get a bot user
+        password: ${{ inputs.dockerhub_token }}
 
     - shell: bash
       run: |
