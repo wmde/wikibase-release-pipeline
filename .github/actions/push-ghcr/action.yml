@@ -12,15 +12,13 @@ runs:
   using: "composite"
 
   steps:
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
+    - uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ inputs.github_token }}
 
-    - name: Push docker image to GHCR
-      shell: bash
+    - shell: bash
       run: |
         set -x
 
@@ -33,11 +31,14 @@ runs:
         # We will push two tags to GHCR, a version tag and a tag representing the current CI pipeline run id.
         # Let's create "from" and "to" container URLs first.
         from_url=${{ inputs.docker_image }}:"$version_tag"
-        to_url_version=ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:"$version_tag"
-        to_url_run_id=ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:${{ github.run_id }}
+        to_url_version="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${version_tag}"
+        to_url_run_id="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.run_id }}"
+        to_url_branch="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.ref_name }}"
 
         # Retag and push
         docker tag "$from_url" "$to_url_version"
         docker tag "$from_url" "$to_url_run_id"
+        docker tag "$from_url" "$to_url_branch"
         docker push "$to_url_version"
         docker push "$to_url_run_id"
+        docker push "$to_url_branch"

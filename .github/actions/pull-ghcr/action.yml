@@ -31,7 +31,7 @@ runs:
 
         for i in "${images[@]}"; do
           image="wikibase/${i}"
-          url_run_id="ghcr.io/${{ github.repository_owner }}/${image}:${{ github.run_id }}"
+          url_run_id="ghcr.io/${{ github.repository_owner }}/${image}:dev-${{ github.run_id }}"
           docker pull "$url_run_id"
           docker tag "$url_run_id" "${image}:latest"
         done

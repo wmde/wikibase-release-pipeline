@@ -1,10 +1,6 @@
-name: 🏗️🧪 Build and Test
+name: 🏗️🧪 Build and Test PR
 
 on:
-  push:
-    branches:
-      - "main"
-      - "mw-*"
   pull_request:
     paths-ignore:
       - "docs/**"
@@ -79,17 +75,16 @@ jobs:
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
-        if: always()
         run: |
           cd .github/reporter
           npm install
           node report.js ${{ matrix.suite }}
 
       - name: Show Logs
-        if: always()
         continue-on-error: true
         run: |
           ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
@@ -97,7 +92,6 @@ jobs:
 
       - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
-        if: always()
         with:
           name: TestResults
           path: test/suites/**/results
@@ -121,6 +115,7 @@ jobs:
             "WMDE13",
             "WMDE13_BUNDLE",
           ]
+
     needs:
       - build
 
@@ -136,10 +131,8 @@ jobs:
         timeout-minutes: 10
         run: ./test.sh upgrade ${{ matrix.version }}
 
-      # TODO: DRY
       - name: Archive Docker test artifacts
         uses: actions/upload-artifact@v3
-        if: always()
         with:
           name: TestResults
           path: test/suites/**/results
