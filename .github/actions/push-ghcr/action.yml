@@ -24,6 +24,8 @@ runs:
       run: |
         set -x
 
+        docker image ls
+
         # Get the docker tag name != latest of the image we are currently looking at. (The version string that is)
         version_tag=$(docker image ls | grep -e '^${{ inputs.docker_image }} ' | grep -v latest | awk '{print $2}' | head -n 1)
 
