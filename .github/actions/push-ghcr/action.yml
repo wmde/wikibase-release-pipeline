@@ -1,0 +1,38 @@
+name: "push-ghcr"
+description: "Push to GHCR"
+inputs:
+  docker_image:
+    description: "name of the docker image to push"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push docker image to GHCR
+      shell: bash
+      run: |
+        set -x
+
+        # Get the docker tag name != latest of the image we are currently looking at. (The version string that is)
+        version_tag=$(docker image ls | grep -e '^${{ inputs.docker_image }} ' | grep -v latest | awk '{print $2}' | head -n 1)
+
+        # We need to retag the container for GHCR because the current tag is targetting docker hub.
+        # We will push two tags to GHCR, a version tag and a tag representing the current CI pipeline run id.
+        # Let's create "from" and "to" container URLs first.
+        from_url=${{ inputs.docker_image }}:"$version_tag"
+        to_url_version=ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:"$version_tag"
+        to_url_run_id=ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:${{ github.run_id }}
+
+        # Retag and push
+        docker tag "$from_url" "$to_url_version"
+        docker tag "$from_url" "$to_url_run_id"
+        docker push "$to_url_version"
+        docker push "$to_url_run_id"

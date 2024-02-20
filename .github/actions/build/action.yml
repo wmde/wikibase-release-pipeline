@@ -13,12 +13,9 @@ runs:
       shell: bash
       run: ./build.sh --save-image ${{ inputs.component }}
 
-    - name: Archive Docker artifact
-      uses: actions/upload-artifact@v3
+    - uses: ./.github/actions/push-ghcr
       with:
-        name: DockerImages
-        path: artifacts/${{ inputs.component }}*.docker.tar.gz
-        if-no-files-found: error
+        component: ${{ inputs.component }}
 
     - name: Scan Image
       uses: ./.github/actions/scan-image
@@ -34,3 +31,12 @@ runs:
       with:
         image_name: "${{ inputs.component }}-bundle"
 
+    - uses: ./.github/actions/push-ghcr
+      with:
+        component: ${{ inputs.component }}
+
+    # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+    - uses: ./.github/actions/push-ghcr
+      if: inputs.component == 'wikibase'
+      with:
+        component: "${{ inputs.component }}-bundle"
