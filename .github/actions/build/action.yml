@@ -9,9 +9,6 @@ runs:
   using: "composite"
 
   steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v4
-
     - name: Build
       shell: bash
       run: ./build.sh --save-image ${{ inputs.component }}
