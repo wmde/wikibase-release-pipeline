@@ -44,6 +44,7 @@ jobs:
       - uses: ./.github/actions/build
         with:
           component: ${{ matrix.component }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     strategy:

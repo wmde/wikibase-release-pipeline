@@ -4,6 +4,9 @@ inputs:
   component:
     description: "name of the component to build"
     required: true
+  github_token:
+    description: "token to access GHCR"
+    required: true
 
 runs:
   using: "composite"
@@ -34,6 +37,7 @@ runs:
     - uses: ./.github/actions/push-ghcr
       with:
         component: ${{ inputs.component }}
+        github_token: ${{ inputs.github_token }}
 
     # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
     - uses: ./.github/actions/push-ghcr

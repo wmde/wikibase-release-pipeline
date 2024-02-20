@@ -4,6 +4,9 @@ inputs:
   docker_image:
     description: "name of the docker image to push"
     required: true
+  github_token:
+    description: "token to access GHCR"
+    required: true
 
 runs:
   using: "composite"
@@ -14,7 +17,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.github_token }}
 
     - name: Push docker image to GHCR
       shell: bash
