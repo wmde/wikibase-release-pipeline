@@ -77,6 +77,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/pull-ghcr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
