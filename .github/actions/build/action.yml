@@ -14,7 +14,7 @@ runs:
   steps:
     - name: Build
       shell: bash
-      run: ./build.sh --save-image ${{ inputs.component }}
+      run: ./build.sh ${{ inputs.component }}
 
     # TODO re-enable as soon as we make use of it
     # - name: Scan Image
