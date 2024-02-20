@@ -1,4 +1,3 @@
-import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 
 describe( 'Nuke', function () {
@@ -20,7 +19,7 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		assert.strictEqual( pageExistsResult.status, 200 );
+		expect( pageExistsResult.status ).toBe( 200 );
 
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
@@ -48,6 +47,6 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		assert.strictEqual( pageIsGoneResult.status, 404 );
+		expect( pageIsGoneResult.status ).toBe( 404 );
 	} );
 } );

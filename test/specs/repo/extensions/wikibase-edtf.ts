@@ -1,4 +1,3 @@
-import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Statement from '../../../helpers/pages/component/statement.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
@@ -13,7 +12,7 @@ describe( 'WikibaseEdtf', function () {
 	it( 'Should allow to create and use the EDTF property', async () => {
 		// create the property
 		const propertyId = await WikibaseApi.createProperty( 'edtf' );
-		assert.strictEqual( propertyId.startsWith( 'P' ), true );
+		expect( propertyId.startsWith( 'P' ) ).toBe( true );
 
 		const rawValue = '1985-04-12T23:20:30';
 
@@ -38,8 +37,8 @@ describe( 'WikibaseEdtf', function () {
 		const responseSnak =
 			responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
-		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
-		assert.strictEqual( responseSnak.datatype, 'edtf' );
+		expect( responseSnak.datavalue.value ).toBe( '1985-04-12T23:20:30' );
+		expect( responseSnak.datatype ).toBe( 'edtf' );
 
 		// for a pretty screenshot
 		await ItemPage.open( itemId );

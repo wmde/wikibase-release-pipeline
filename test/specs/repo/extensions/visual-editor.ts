@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
@@ -33,8 +31,6 @@ describe( 'VisualEditor', function () {
 
 		await $( '.oo-ui-processDialog-actions-primary a' ).click();
 
-		const contentBody = await $( '.mw-parser-output' ).getText();
-
-		assert.strictEqual( contentBody, 'TEST' );
+		await expect( $( '.mw-parser-output' ) ).toHaveText( 'TEST' );
 	} );
 } );

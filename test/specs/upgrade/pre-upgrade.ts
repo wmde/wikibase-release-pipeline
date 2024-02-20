@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
@@ -28,8 +27,8 @@ describe( 'Wikibase pre upgrade', function () {
 				data
 			);
 
-			assert.strictEqual( itemId.startsWith( 'Q' ), true );
-			assert.strictEqual( propertyId.startsWith( 'P' ), true );
+			expect( itemId.startsWith( 'Q' ) ).toBe( true );
+			expect( propertyId.startsWith( 'P' ) ).toBe( true );
 		}
 	} );
 
@@ -53,7 +52,7 @@ describe( 'Wikibase pre upgrade', function () {
 
 		const itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		assert.strictEqual( itemId.startsWith( 'Q' ), true );
-		assert.strictEqual( propertyId.startsWith( 'P' ), true );
+		expect( itemId.startsWith( 'Q' ) ).toBe( true );
+		expect( propertyId.startsWith( 'P' ) ).toBe( true );
 	} );
 } );

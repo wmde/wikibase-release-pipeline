@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'ConfirmEdit', function () {
 	it( 'Should allow to edit with captcha', async () => {
 		const executionResult = await browser.editPage(
@@ -9,6 +7,6 @@ describe( 'ConfirmEdit', function () {
 			'paris'
 		);
 
-		assert.strictEqual( executionResult, 'something great' );
+		expect( executionResult ).toBe( 'something great' );
 	} );
 } );

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Search', function () {
@@ -15,6 +14,6 @@ describe( 'Search', function () {
 			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
-		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );
+		expect( result.data.search[ 0 ].label ).toBe( itemLabel );
 	} );
 } );

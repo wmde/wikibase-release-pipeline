@@ -1,4 +1,3 @@
-import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 
 describe( 'Babel', function () {
@@ -18,17 +17,13 @@ describe( 'Babel', function () {
 			'{{#babel: sv | en }}'
 		);
 
-		assert.strictEqual(
-			executionContent.includes(
-				'Den här användaren har svenska som modersmål.'
-			),
-			true
-		);
-		assert.strictEqual(
+		expect(
+			executionContent.includes( 'Den här användaren har svenska som modersmål.' )
+		).toBe( true );
+		expect(
 			executionContent.includes(
 				'This user has a native understanding of English.'
-			),
-			true
-		);
+			)
+		).toBe( true );
 	} );
 } );

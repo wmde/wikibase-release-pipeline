@@ -1,4 +1,3 @@
-import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
@@ -176,7 +175,7 @@ export function defaultFunctions(): void {
 			const changes = result.data.query.recentchanges;
 			const foundResult = lodash.find( changes, expectedChange );
 
-			assert.strictEqual( result.status, 200 );
+			expect( result.status ).toBe( 200 );
 
 			if ( !foundResult ) {
 				testEnv.testLog.error( 'Could not find:' );
