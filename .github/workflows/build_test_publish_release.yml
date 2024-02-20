@@ -1,23 +1,11 @@
-name: 🏗️🧪 Build and Test PR
+name: 📦🛸 Build Test and Publish Release
 
 on:
-  pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
-      - "**/*.txt"
+  push:
+    branches:
+      - "mw-*"
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Lint
-        run: ./lint.sh
-
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -114,4 +102,29 @@ jobs:
         timeout-minutes: 10
         with:
           version: ${{ matrix.version }}
+
+
+  publish-dockerhub:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        docker_image:
+          [
+            "wikibase",
+            "wikibase-bundle",
+            "elasticsearch",
+            "wdqs",
+            "wdqs-frontend",
+            "wdqs-proxy",
+            "quickstatements",
+          ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pull-ghcr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 

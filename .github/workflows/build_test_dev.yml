@@ -1,0 +1,15 @@
+name: 🏗️🧪 Build and Test Dev Version
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.txt"
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build_test.yml

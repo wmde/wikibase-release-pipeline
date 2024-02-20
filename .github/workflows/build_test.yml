@@ -1,9 +1,9 @@
-name: 🏗️🧪 Build Test and Publish Release
+name: 🧩 Build and Test Reusable Workflow
 
 on:
-  push:
-    branches:
-      - "mw-*"
+  workflow_call:
+    
+
 
 jobs:
   lint:
@@ -112,4 +112,5 @@ jobs:
         timeout-minutes: 10
         with:
           version: ${{ matrix.version }}
+
 
