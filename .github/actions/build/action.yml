@@ -1,0 +1,39 @@
+name: "build"
+description: "Build"
+inputs:
+  component:
+    description: "name of the component to build"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v4
+
+    - name: Build
+      shell: bash
+      run: ./build.sh --save-image ${{ inputs.component }}
+
+    - name: Archive Docker artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: DockerImages
+        path: artifacts/${{ inputs.component }}*.docker.tar.gz
+        if-no-files-found: error
+
+    - name: Scan Image
+      uses: ./.github/actions/scan-image
+      continue-on-error: true
+      with:
+        image_name: ${{ inputs.component }}
+
+    # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+    - name: Scan additional bundle Image for wikibase builds
+      if: inputs.component == 'wikibase'
+      uses: ./.github/actions/scan-image
+      continue-on-error: true
+      with:
+        image_name: "${{ inputs.component }}-bundle"
+

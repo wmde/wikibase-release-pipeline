@@ -40,33 +40,10 @@ jobs:
           ]
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-
       - name: Build
-        shell: bash
-        run: ./build.sh --save-image ${{ matrix.component }}
-
-      - name: Archive Docker artifact
-        uses: actions/upload-artifact@v3
+        uses: ./.github/actions/build
         with:
-          name: DockerImages
-          path: artifacts/${{ matrix.component }}*.docker.tar.gz
-          if-no-files-found: error
-
-      - name: Scan Image
-        uses: ./.github/actions/scan-image
-        continue-on-error: true
-        with:
-          image_name: ${{ matrix.component }}
-
-      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      - name: Scan additional bundle Image for wikibase builds
-        if: matrix.component == 'wikibase'
-        uses: ./.github/actions/scan-image
-        continue-on-error: true
-        with:
-          image_name: "${{ matrix.component }}-bundle"
+          component: ${{ matrix.component }}
 
   test:
     strategy:
