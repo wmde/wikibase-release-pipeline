@@ -5,18 +5,18 @@ import { SpawnSyncReturns, spawnSync } from 'child_process';
 export const dockerImageUrlRegExp = /^(?<Name>(?<=^)(?:(?<Domain>(?:(?:localhost|[\w-]+(?:\.[\w-]+)+)(?::\d+)?)|[\w]+:\d+)\/)?\/?(?<Namespace>(?:(?:[a-z0-9]+(?:(?:[._]|__|[-]*)[a-z0-9]+)*)\/)*)(?<Repo>[a-z0-9-]+))[:@]?(?<Reference>(?<=:)(?<Tag>[\w][\w.-]{0,127})|(?<=@)(?<Digest>[A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,}))?/;
 
 export const loadLocalDockerImage = (
-	dockerImageURL: string,
+	dockerImageUrl: string,
 	reload: boolean = false
 ): SpawnSyncReturns<string> => {
 	try {
-		const dockerImageUrlMatch = dockerImageUrlRegExp.exec( dockerImageURL );
+		const dockerImageUrlMatch = dockerImageUrlRegExp.exec( dockerImageUrl );
 
 		if ( dockerImageUrlMatch.groups.Repo ) {
-			const imageName = dockerImageUrlMatch.groups.Repo;
 			const { stdout: alreadyLoaded } = spawnSync( 'docker',
-				[ 'images', '-q', imageName ], { encoding: 'utf-8' } );
+				[ 'images', '-q', dockerImageUrl ], { encoding: 'utf-8' } );
 
 			if ( !alreadyLoaded || reload ) {
+				const imageName = dockerImageUrlMatch.groups.Repo;
 				const result = spawnSync( 'docker', [ 'load', '-i', `../artifacts/${imageName}.docker.tar.gz` ],
 					{ stdio: 'pipe', encoding: 'utf8', shell: true } );
 

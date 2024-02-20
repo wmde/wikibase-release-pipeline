@@ -1,72 +1,97 @@
-import assert from 'assert';
-import SpecialListProperties from '../../helpers/pages/special/list-properties.page.js';
-import SpecialNewProperty from '../../helpers/pages/special/new-property.page.js';
+import SpecialListPropertiesPage from '../../helpers/pages/special/list-properties.page.js';
+import SpecialNewPropertyPage from '../../helpers/pages/special/new-property.page.js';
 import {
+	wikibasePropertyDatetime,
 	wikibasePropertyItem,
 	wikibasePropertyString
 } from '../../helpers/wikibase-property-types.js';
 import WikibasePropertyType from '../../types/wikibase-property-type.js';
 
-const dataTypes = [ wikibasePropertyItem, wikibasePropertyString ];
+const dataTypes = [
+	wikibasePropertyItem,
+	wikibasePropertyString,
+	wikibasePropertyDatetime
+];
 
 describe( 'Special:NewProperty', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
-		it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
-			await SpecialNewProperty.open();
+		// eslint-disable-next-line mocha/no-setup-in-describe
+		describe( `Should be able to work with datatype ${dataType.name}`, function () {
+			before( async function () {
+				if ( dataType.extensionNeeded ) {
+					await browser.skipIfExtensionNotPresent(
+						this,
+						dataType.extensionNeeded
+					);
+				}
+			} );
 
-			await SpecialNewProperty.labelInput.setValue(
-				`Cool ${dataType.name} label`
-			);
-			await SpecialNewProperty.descriptionInput.setValue(
-				`Cool ${dataType.name} description`
-			);
-			await SpecialNewProperty.aliasesInput.setValue(
-				`Great ${dataType.name}!|Greatest ${dataType.name}!`
-			);
+			it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
+				await SpecialNewPropertyPage.open();
 
-			await SpecialNewProperty.datatypeInput.click();
-			await $( 'oo-ui-menuSelectWidget' );
-			await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
+				await SpecialNewPropertyPage.labelInput.setValue(
+					`Cool ${dataType.name} label`
+				);
+				await SpecialNewPropertyPage.descriptionInput.setValue(
+					`Cool ${dataType.name} description`
+				);
+				await SpecialNewPropertyPage.aliasesInput.setValue(
+					`Great ${dataType.name}!|Greatest ${dataType.name}!`
+				);
 
-			await SpecialNewProperty.submit();
+				await SpecialNewPropertyPage.datatypeInput.click();
+				await $( 'oo-ui-menuSelectWidget' );
+				await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
 
-			const dataTypeText = await $(
-				'.wikibase-propertyview-datatype-value'
-			).getText();
-			assert.strictEqual( dataTypeText, dataType.name );
+				await SpecialNewPropertyPage.submit();
+
+				await expect( $( '.wikibase-propertyview-datatype-value' ) ).toHaveText(
+					dataType.name
+				);
+			} );
 		} );
 	} );
 
 	it( 'Should be able to see newly created properties in list of properties special page', async () => {
-		await SpecialListProperties.openParams( {
+		await SpecialListPropertiesPage.open( {
 			dataType: wikibasePropertyString.urlName,
 			limit: 1000
 		} );
 		const numberOfPropertiesBefore =
-			await SpecialListProperties.properties.length;
+			await SpecialListPropertiesPage.properties.length;
 
-		await SpecialNewProperty.open( wikibasePropertyString.urlName );
-		await SpecialNewProperty.labelInput.setValue(
+		await SpecialNewPropertyPage.open( {
+			datatype: wikibasePropertyString.urlName
+		} );
+		await SpecialNewPropertyPage.labelInput.setValue(
 			`Property type ${wikibasePropertyString.urlName}`
 		);
-		await SpecialNewProperty.descriptionInput.setValue(
+		await SpecialNewPropertyPage.descriptionInput.setValue(
 			`A ${wikibasePropertyString.urlName} property`
 		);
-		await SpecialNewProperty.submit();
+		await SpecialNewPropertyPage.submit();
 
-		// wait for the $wgWBRepoSettings['sharedCacheDuration'] cache to
-		// timeout, so the list of properties reflects the change
-		// eslint-disable-next-line wdio/no-pause
-		await browser.pause( 2000 );
+		let numberOfPropertiesAfter: number;
 
-		await SpecialListProperties.openParams( {
-			dataType: wikibasePropertyString.urlName,
-			limit: 1000
-		} );
-		const numberOfPropertiesAfter =
-			await SpecialListProperties.properties.length;
-
-		assert.strictEqual( numberOfPropertiesAfter, numberOfPropertiesBefore + 1 );
+		// Depends on $wgWBRepoSettings['sharedCacheDuration'] being set to 1 second
+		// from the the MediaWiki default of 30 mins
+		await browser.waitUntil(
+			async () => {
+				await SpecialListPropertiesPage.open( {
+					dataType: wikibasePropertyString.urlName,
+					limit: 1000
+				} );
+				numberOfPropertiesAfter =
+					await SpecialListPropertiesPage.properties.length;
+				return numberOfPropertiesAfter === numberOfPropertiesBefore + 1;
+			},
+			{
+				timeoutMsg:
+					'expected new property to be included in list within 10 seconds',
+				interval: 1000,
+				timeout: 10000
+			}
+		);
 	} );
 } );

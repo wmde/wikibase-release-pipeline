@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -38,7 +39,7 @@ describe( 'Property Prefetching', function () {
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -63,9 +64,7 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render history page list within threshold', async () => {
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}?action=history`
-		);
+		await ItemPage.open( itemId, { action: 'history' } );
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation

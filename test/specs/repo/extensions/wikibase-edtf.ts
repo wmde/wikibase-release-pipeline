@@ -1,8 +1,11 @@
 import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import SpecialEntityDataPage from '../../../helpers/pages/special/entity-data.page.js';
+import SpecialNewPropertyPage from '../../../helpers/pages/special/new-property.page.js';
 
 describe( 'WikibaseEdtf', function () {
-	beforeEach( async function () {
+	before( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 	} );
 
@@ -30,16 +33,44 @@ describe( 'WikibaseEdtf', function () {
 		const itemId = await WikibaseApi.createItem( 'edtf-test', data );
 
 		// go look at wikibase
-		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${itemId}.json`
-		);
+		const responseData = await SpecialEntityDataPage.getData( itemId );
 		const responseSnak =
-      response.data.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
+			responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
 		assert.strictEqual( responseSnak.datavalue.value, '1985-04-12T23:20:30' );
 		assert.strictEqual( responseSnak.datatype, 'edtf' );
 
 		// for a pretty screenshot
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await ItemPage.open( itemId );
+	} );
+
+	it( 'Should allow to create and use the EDTF property in UI', async () => {
+		// create the property
+		await SpecialNewPropertyPage.open( { datatype: 'edtf' } );
+		await SpecialNewPropertyPage.labelInput.setValue( 'Groundhog Day Release' );
+		await SpecialNewPropertyPage.descriptionInput.setValue(
+			'Date on which the film Groundhog Day was broadly released to theaters'
+		);
+		await SpecialNewPropertyPage.aliasesInput.setValue( 'Groundhog Day Opening' );
+		await SpecialNewPropertyPage.submit();
+
+		const itemId = await WikibaseApi.createItem( 'edtf-test' );
+
+		await ItemPage.open( itemId );
+		await $( '=add statement' ).click();
+		await browser.keys( 'Groundhog Day Release'.split( '' ) );
+		await $(
+			'span.ui-entityselector-description=Date on which the film Groundhog Day was broadly released to theaters'
+		).click();
+		const timeValue = '1993-02-12T00:00:00';
+		await browser.keys( timeValue.split( '' ) );
+		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
+			.$( '=save' )
+			.click();
+
+		await expect( $( 'span.edtf-plain' ) ).toHaveText( timeValue );
+		await expect( $( 'span.edtf-humanized' ) ).toHaveText(
+			'(00:00:00 (local time) February 12th, 1993)'
+		);
 	} );
 } );

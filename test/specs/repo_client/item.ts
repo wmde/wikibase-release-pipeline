@@ -3,6 +3,8 @@ import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import ExternalChange from '../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
@@ -19,18 +21,17 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Special:NewItem should not be accessible on client', async () => {
+		// Cannot use SpecialNewItemPage due to using WIKIBASE_CLIENT_URL
 		await browser.url(
-			testEnv.vars.WIKIBASE_CLIENT_URL + '/wiki/Special:NewItem?uselang=qqx'
+			`${testEnv.vars.WIKIBASE_CLIENT_URL}/wiki/Special:NewItem?uselang=qqx`
 		);
-		const notFoundText = await $( 'h1#firstHeading' ).getText();
+		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async () => {
-		await browser.url(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:NewItem?uselang=qqx'
-		);
-		const createNewItem = await $( 'h1#firstHeading' ).getText();
+		await SpecialNewItemPage.open( { uselang: 'qqx' } );
+		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
@@ -52,7 +53,7 @@ describe( 'Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
@@ -105,7 +106,10 @@ describe( 'Item', function () {
 
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
@@ -115,7 +119,7 @@ describe( 'Item', function () {
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 	} );
 
 	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
