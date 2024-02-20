@@ -126,12 +126,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Get built Docker artifacts
-        uses: actions/download-artifact@v3
+      - uses: ./.github/actions/pull-ghcr
         with:
-          name: DockerImages
-          path: artifacts/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test upgrade from ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
