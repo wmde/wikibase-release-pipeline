@@ -36,11 +36,12 @@ runs:
 
     - uses: ./.github/actions/push-ghcr
       with:
-        component: ${{ inputs.component }}
+        docker_image: ${{ inputs.component }}
         github_token: ${{ inputs.github_token }}
 
     # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
     - uses: ./.github/actions/push-ghcr
       if: inputs.component == 'wikibase'
       with:
-        component: "${{ inputs.component }}-bundle"
+        docker_image: "${{ inputs.component }}-bundle"
+        github_token: ${{ inputs.github_token }}
