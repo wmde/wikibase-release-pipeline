@@ -16,20 +16,21 @@ runs:
       shell: bash
       run: ./build.sh --save-image ${{ inputs.component }}
 
-    - name: Scan Image
-      uses: ./.github/actions/scan-image
-      continue-on-error: true
-      with:
-        image_name: ${{ inputs.component }}
-
-    # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-    - name: Scan additional bundle Image for wikibase builds
-      if: inputs.component == 'wikibase'
-      uses: ./.github/actions/scan-image
-      continue-on-error: true
-      with:
-        image_name: "${{ inputs.component }}-bundle"
-
+    # TODO re-enable as soon as we make use of it
+    # - name: Scan Image
+    #   uses: ./.github/actions/scan-image
+    #   continue-on-error: true
+    #   with:
+    #     image_name: ${{ inputs.component }}
+    #
+    # # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+    # - name: Scan additional bundle Image for wikibase builds
+    #   if: inputs.component == 'wikibase'
+    #   uses: ./.github/actions/scan-image
+    #   continue-on-error: true
+    #   with:
+    #     image_name: "${{ inputs.component }}-bundle"
+    #
     - uses: ./.github/actions/push-ghcr
       with:
         docker_image: "wikibase/${{ inputs.component }}"
