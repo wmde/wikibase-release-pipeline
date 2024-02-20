@@ -47,6 +47,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     strategy:
       fail-fast: false
       matrix:
@@ -71,18 +74,9 @@ jobs:
     needs:
       - build
 
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          set -x
-          for image in "wikibase/wikibase\nwikibase/wikibase-bundle\nwikibase/elasticsearch\nwikibase/wdqs\nwikibase/wdqs-frontend\nwikibase/wdqs-proxy\nwikibase/quickstatements"; do
-            url_run_id="ghcr.io/${{ github.repository_owner }}/$image:${{ github.run_id }}"
-            docker pull $url_run_id
-            docker tag $url_run_id $image:latest
-          done
+      - uses: ./.github/actions/pull-ghcr
       - run: ./test.sh ${{ matrix.suite }}
 
       - name: Report Selenium
