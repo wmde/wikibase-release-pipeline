@@ -33,7 +33,7 @@ runs:
         from_url=${{ inputs.docker_image }}:"$version_tag"
         to_url_version="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${version_tag}"
         to_url_run_id="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.run_id }}"
-        to_url_branch="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.ref_name }}"
+        to_url_branch="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.head_ref }}"
 
         # Retag and push
         docker tag "$from_url" "$to_url_version"
