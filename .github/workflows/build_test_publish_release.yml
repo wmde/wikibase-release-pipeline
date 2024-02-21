@@ -48,21 +48,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-
-    strategy:
-      fail-fast: false
-      matrix:
-        docker_image:
-          [
-            "wikibase",
-            "wikibase-bundle",
-            "elasticsearch",
-            "wdqs",
-            "wdqs-frontend",
-            "wdqs-proxy",
-            "quickstatements",
-          ]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -70,7 +55,34 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - uses: ./.github/actions/push-dockerhub
-      #   with:
-      #     dockerhub_token: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      #
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: "roti4wmde" # TODO: get a bot user
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - run: |
+          set -x
+
+          source ./variables.env
+          source ./versions.inc.sh
+
+          docker image ls
+
+          images=(
+            "wikibase" 
+            "wikibase-bundle" 
+            "elasticsearch" 
+            "wdqs" 
+            "wdqs-frontend" 
+            "wdqs-proxy" 
+            "quickstatements"
+          )
+
+          for image in "${images[@]}"; do
+            image_path="wikibase/${i}"
+            url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
+            version_tag="$(image_version $image)"
+            docker tag "$url_run_id" "${image_path}:${version_tag}"
+            docker push "${image_path}:${version_tag}"
+          done

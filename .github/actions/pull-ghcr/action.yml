@@ -19,6 +19,7 @@ runs:
     - shell: bash
       run: |
         set -x
+
         images=(
           "wikibase" 
           "wikibase-bundle" 
