@@ -52,7 +52,7 @@ jobs:
       - uses: ./.github/actions/push-ghcr
         with:
           docker_image: "wikibase/${{ matrix.component }}"
-          github_token: ${{ matrix.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
       - uses: ./.github/actions/push-ghcr
