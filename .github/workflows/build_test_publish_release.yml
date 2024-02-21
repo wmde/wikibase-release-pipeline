@@ -1,4 +1,4 @@
-name: 📦🛸 Build Test Tag and Publish Release
+name: 📦 Build Test Tag and Publish Release
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: 🏗️🧪 Build and Test PR
+name: 🏗️ Build and Test PR
 
 on:
   pull_request:
