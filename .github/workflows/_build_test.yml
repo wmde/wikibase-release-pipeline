@@ -62,8 +62,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
 
     strategy:
       fail-fast: false
@@ -85,9 +87,6 @@ jobs:
 
             example,
           ]
-
-    needs:
-      - build
 
     steps:
       - uses: actions/checkout@v4
@@ -114,7 +113,8 @@ jobs:
           path: test/suites/**/results
 
 
-  test_upgrade:
+  test-upgrade:
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -133,9 +133,6 @@ jobs:
             "WMDE13",
             "WMDE13_BUNDLE",
           ]
-
-    needs:
-      - build
 
     steps:
       - uses: actions/checkout@v4
