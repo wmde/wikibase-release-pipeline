@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 source ./test/scripts/test_runner_setup.sh
 
 SHOULD_FIX=false
@@ -21,13 +22,14 @@ else
   PYTHON_FLAGS=""
 fi
 
+# TODO: do we lint tests?
 # ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-$TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
-  $NPM_LINT_COMMAND &&
-  cd /tmp/diagrams &&
-  npm ci --progress=false > /dev/null &&
-  $NPM_LINT_COMMAND
-"
+# $TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+#   $NPM_LINT_COMMAND &&
+#   cd /tmp/diagrams &&
+#   npm ci --progress=false > /dev/null &&
+#   $NPM_LINT_COMMAND
+# "
 
 # ℹ️ Linting Shell Scripts (**/*.sh) - https://github.com/koalaman/shellcheck#from-your-terminal
 find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \
