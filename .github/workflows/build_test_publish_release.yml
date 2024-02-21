@@ -38,7 +38,7 @@ jobs:
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
             echo "Cannot tag $WMDE_RELEASE_VERSION, Most probably this tag is already given to another commit."
-            echo "Make sure to update the WMDE_RELEASE_VERSION varibable in variables.env to publish a new release."
+            echo "Make sure to update the WMDE_RELEASE_VERSION variable in variables.env to publish a new release."
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
           fi
 
@@ -80,7 +80,7 @@ jobs:
           )
 
           for image in "${images[@]}"; do
-            image_path="wikibase/${i}"
+            image_path="wikibase/${image}"
             url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
             version_tag="$(image_version $image)"
             docker tag "$url_run_id" "${image_path}:${version_tag}"
