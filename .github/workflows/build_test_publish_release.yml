@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "mw-*"
+      # TODO: remove debug hack
+      - "T351720-rework-github-actions-for-auto-upload"
 
 permissions:
   contents: write
