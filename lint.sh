@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-set -x
 source ./test/scripts/test_runner_setup.sh
 
 SHOULD_FIX=false
@@ -15,21 +14,20 @@ done
 if $SHOULD_FIX
 then
   echo "Fixing Linting issues in Typescript"
-  # NPM_LINT_COMMAND="npm run lint:fix --silent"
+  NPM_LINT_COMMAND="npm run lint:fix --silent"
   PYTHON_FLAGS="--fix"
 else
-  # NPM_LINT_COMMAND="npm run lint --silent"
+  NPM_LINT_COMMAND="npm run lint --silent"
   PYTHON_FLAGS=""
 fi
 
-# TODO: do we lint tests?
-# ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-# $TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
-#   $NPM_LINT_COMMAND &&
-#   cd /tmp/diagrams &&
-#   npm ci --progress=false > /dev/null &&
-#   $NPM_LINT_COMMAND
-# "
+# ℹ️ Linting Javascript test/**/*.ts
+$TEST_COMPOSE run --rm --build -v "$(pwd)/test:/tmp/test" test-runner -c "
+  $NPM_LINT_COMMAND &&
+  cd /tmp/test &&
+  npm ci --progress=false > /dev/null &&
+  $NPM_LINT_COMMAND
+"
 
 # ℹ️ Linting Shell Scripts (**/*.sh) - https://github.com/koalaman/shellcheck#from-your-terminal
 find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \
