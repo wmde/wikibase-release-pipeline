@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "mw-*"
-      # TODO: remove debug hack
-      - "T351720-rework-github-actions-for-auto-upload"
 
 permissions:
   contents: write
@@ -23,7 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: |
+      - name: Git tag release
+        run: |
           set -e # abort on error
           set -x # show commands
 
@@ -61,7 +60,8 @@ jobs:
           username: "roti4wmde" # TODO: get a bot user
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - run: |
+      - name: Push release to dockerhub
+        run: |
           set -x
 
           source ./variables.env

@@ -97,12 +97,14 @@ jobs:
 
       - run: ./test.sh ${{ matrix.suite }}
 
-      - run: |
+      - name: Reporter
+        run: |
           cd .github/reporter
           npm install
           node report.js ${{ matrix.suite }}
 
-      - run: |
+      - name: Show logs
+        run: |
           ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
           tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
         continue-on-error: true
