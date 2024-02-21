@@ -100,16 +100,14 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
-        -t "$ELASTICSEARCH_IMAGE_URL" \
-        -t "$ELASTICSEARCH_IMAGE_URL:$(elasticsearch_version)" \
+        -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$(elasticsearch_version)" \
         \
         build/Elasticsearch
 }
 
 
 function build_wdqs {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
