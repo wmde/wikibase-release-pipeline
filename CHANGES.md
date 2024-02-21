@@ -11,7 +11,7 @@ This provides an overview of the releases that have been made using this release
 
 | Suite Version | Version Info | Date available | Run number | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.16 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.16/variables.env)) | MediaWiki (1.40.2, PHP 8.1.25, debian/apache 2.4.57-2), WDQS (0.3.137)    | 21 February 2024 | [7976683909](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7976683909) | [T354645](https://phabricator.wikimedia.org/T354645) |
+| wmde.16 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.16/variables.env)) | MediaWiki (1.40.2, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137)    | 21 February 2024 | [7976683909](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7976683909) | [T354645](https://phabricator.wikimedia.org/T354645) |
 
 ## November 2023: First 1.40 release
 
