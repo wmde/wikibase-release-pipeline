@@ -1,5 +1,16 @@
 import re, requests, json
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
+
+
+def return_commit(commit: str, previous_commit: str) -> str | bool:
+    """Return commit if changed, otherwise False"""
+    if previous_commit != commit:
+        print(f"\tOld Commit:\t{previous_commit}")
+        print(f"\tNew Commit:\t{commit}")
+        return commit
+    else:
+        print(f"\tCommit:\t{commit}")
+        return False
 
 
 mediawiki_gerrit_pattern = re.compile(
@@ -17,13 +28,7 @@ def get_gerrit_commit(variable: str, url: str, previous_commit: str) -> str | bo
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "lxml")
     commit = soup.find("th", text="commit").next_sibling.text
-    if previous_commit != commit:
-        print(f"\tPrevious Commit:\t{previous_commit}")
-        print(f"\tUpdated Commit:\t{commit}")
-        return commit
-    else:
-        print(f"\tCommit:\t{commit}")
-        return False
+    return return_commit(commit, previous_commit)
 
 
 github_pattern = re.compile(
@@ -37,14 +42,7 @@ def get_github_commit(variable: str, url: str, previous_commit: str) -> str | bo
     print(f"\tURL:\t{url}")
     response = requests.get(url)
     data = json.loads(response.content)
-    commit = data["sha"]
-    if previous_commit != commit:
-        print(f"\tPrevious Commit:\t{previous_commit}")
-        print(f"\tUpdated Commit:\t{commit}")
-        return commit
-    else:
-        print(f"\tCommit:\t{commit}")
-        return False
+    return return_commit(data["sha"], previous_commit)
 
 
 bitbucket_pattern = re.compile(
@@ -58,14 +56,7 @@ def get_bitbucket_commit(variable: str, url: str, previous_commit: str) -> str |
     print(f"\tURL:\t{url}")
     response = requests.get(url)
     data = json.loads(response.content)
-    commit = data["values"][0]["hash"]
-    if previous_commit != commit:
-        print(f"\tPrevious Commit:\t{previous_commit}")
-        print(f"\tUpdated Commit:\t{commit}")
-        return commit
-    else:
-        print(f"\tCommit:\t{commit}")
-        return False
+    return return_commit(data["values"][0]["hash"], previous_commit)
 
 
 def run():
