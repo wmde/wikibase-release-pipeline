@@ -46,9 +46,7 @@ jobs:
           fi
 
   publish-dockerhub:
-    needs: 
-      - _
-      - tag-release
+    needs: tag-release
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
