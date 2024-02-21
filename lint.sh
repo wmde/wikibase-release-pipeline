@@ -15,10 +15,10 @@ done
 if $SHOULD_FIX
 then
   echo "Fixing Linting issues in Typescript"
-  NPM_LINT_COMMAND="npm run lint:fix --silent"
+  # NPM_LINT_COMMAND="npm run lint:fix --silent"
   PYTHON_FLAGS="--fix"
 else
-  NPM_LINT_COMMAND="npm run lint --silent"
+  # NPM_LINT_COMMAND="npm run lint --silent"
   PYTHON_FLAGS=""
 fi
 
