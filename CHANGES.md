@@ -9,6 +9,10 @@ This provides an overview of the releases that have been made using this release
 - [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
 - [Release task T354645](https://phabricator.wikimedia.org/T354645)
 
+| Suite Version | Version Info | Date available | Run number | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.16 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.16/variables.env)) | MediaWiki (1.40.2, PHP 8.1.25, debian/apache 2.4.57-2), WDQS (0.3.137)    | 21 February 2024 | [7976683909](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7976683909) | [T354645](https://phabricator.wikimedia.org/T354645) |
+
 ## November 2023: First 1.40 release
 
 - [MediaWiki release announcement 1.40](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/H46H5ZYZG2PYUQ5STK7NWKF7GXYW7H6B/)
