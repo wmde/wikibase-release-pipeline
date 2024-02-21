@@ -6,7 +6,7 @@ on:
       - "mw-*"
 
 jobs:
-  rel:
+  _:
     uses: ./.github/workflows/_build_test.yml
 
   publish-dockerhub:

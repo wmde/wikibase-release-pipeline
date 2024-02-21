@@ -6,7 +6,9 @@ on:
       - "docs/**"
       - "**/*.md"
       - "**/*.txt"
+      - "*.md"
+      - "*.txt"
 
 jobs:
-  dev:
+  _:
     uses: ./.github/workflows/_build_test.yml
