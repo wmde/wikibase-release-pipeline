@@ -44,13 +44,6 @@ To build single artifacts locally, you can issue the following command.
 ./build.sh wikibase
 ```
 
-When building locally the artifacts are only stored in the docker daemons image storage. If you want to create files as well, use the `--save-image` option with `build.sh`.
-
-```sh
-# build and store results in artifacts folder
-$ ./build.sh --save-image
-```
-
 To rebuild without using Dockers cache, add the `--no-cache` option. Note that this will extend build times as all components need to be downloaded again (except Docker base images).
 
 ```sh

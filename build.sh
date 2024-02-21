@@ -13,23 +13,7 @@ fi
 set +o allexport
 
 
-SAVE_IMAGE=false
 DOCKER_BUILD_CACHE_OPT=""
-
-function save_image {
-    local image_name="$1"
-    local image_url="$2"
-    local image_name_with_tag="$3"
-    local image_url_with_tag="$4"
-
-    if $SAVE_IMAGE; then
-        docker save "$image_url" "$image_url_with_tag" | \
-            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${image_name_with_tag//:/-}.docker.tar.gz"
-        pushd artifacts
-        ln -sf "${image_name_with_tag//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
-        popd
-    fi
-}
 
 
 # wikibase/wdqs -> wdqs
@@ -84,8 +68,6 @@ function build_wikibase {
         \
         build/Wikibase -t "$image_url_with_tag" -t "$image_url"
 
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
-
 
     setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
 
@@ -116,8 +98,6 @@ function build_wikibase {
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
         build/WikibaseBundle -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -131,8 +111,6 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
         build/Elasticsearch/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -146,8 +124,6 @@ function build_wdqs {
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
         build/WDQS/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -162,8 +138,6 @@ function build_wdqs-frontend {
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
         build/WDQS-frontend/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -175,8 +149,6 @@ function build_wdqs-proxy {
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
         build/WDQS-proxy/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -191,8 +163,6 @@ function build_quickstatements {
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
         build/QuickStatements/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
 }
 
 
@@ -237,9 +207,6 @@ for arg in "$@"; do
         all)
             build_all
             build_target_set=true
-            ;;
-        -s|--save-image)
-            SAVE_IMAGE=true
             ;;
         -n|--no-cache)
             DOCKER_BUILD_CACHE_OPT="--no-cache"
