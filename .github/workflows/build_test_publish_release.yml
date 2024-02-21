@@ -30,9 +30,6 @@ jobs:
           set -o allexport
           source ./varibales.env
 
-          git tag "$WMDE_RELEASE_VERSION"
-
-
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
