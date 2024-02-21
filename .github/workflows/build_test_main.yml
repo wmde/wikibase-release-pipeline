@@ -1,0 +1,10 @@
+name: 🏗️🧪 Build and Test main
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  dev:
+    uses: ./.github/workflows/_build_test.yml

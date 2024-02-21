@@ -31,9 +31,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/build
+
+      - run: ./build.sh ${{ matrix.component }}
+
+      # TODO re-enable as soon as we make use of it
+      # - name: Scan Image
+      #   uses: ./.github/actions/scan-image
+      #   continue-on-error: true
+      #   with:
+      #     image_name: ${{ matrix.component }}
+      #
+      # # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+      # - name: Scan additional bundle Image for wikibase builds
+      #   if: matrix.component == 'wikibase'
+      #   uses: ./.github/actions/scan-image
+      #   continue-on-error: true
+      #   with:
+      #     image_name: "${{ matrix.component }}-bundle"
+
+      - uses: ./.github/actions/push-ghcr
         with:
-          component: ${{ matrix.component }}
+          docker_image: "wikibase/${{ matrix.component }}"
+          github_token: ${{ matrix.github_token }}
+
+      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+      - uses: ./.github/actions/push-ghcr
+        if: matrix.component == 'wikibase'
+        with:
+          docker_image: "wikibase/${{ matrix.component }}-bundle"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
@@ -66,12 +91,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/test
+
+      - run: ./test.sh ${{ matrix.suite }}
+
+      - run: |
+          cd .github/reporter
+          npm install
+          node report.js ${{ matrix.suite }}
+
+      - run: |
+          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v3
         with:
-          suite: ${{ matrix.suite }}
+          name: TestResults
+          path: test/suites/**/results
 
 
   test_upgrade:
@@ -99,14 +139,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/actions/test-upgrade
+
+      - run: ./test.sh upgrade ${{ matrix.version }}
         # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
         # Set a specific lower timeout to allow us to retry sooner
         timeout-minutes: 10
+
+      - uses: actions/upload-artifact@v3
         with:
-          version: ${{ matrix.version }}
-
-
+          name: TestResults
+          path: test/suites/**/results

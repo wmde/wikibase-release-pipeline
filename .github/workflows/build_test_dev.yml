@@ -1,9 +1,6 @@
-name: 🏗️🧪 Build and Test Dev Version
+name: 🏗️🧪 Build and Test PR
 
 on:
-  push:
-    branches:
-      - "main"
   pull_request:
     paths-ignore:
       - "docs/**"
