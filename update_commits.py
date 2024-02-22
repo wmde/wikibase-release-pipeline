@@ -25,10 +25,14 @@ def get_gerrit_commit(variable: str, url: str, previous_commit: str) -> str | bo
     """Parse webpage using BeautifulSoup"""
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, "lxml")
-    commit = soup.find("th", text="commit").next_sibling.text
-    return return_commit(commit, previous_commit)
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, "lxml")
+        commit = soup.find("th", text="commit").next_sibling.text
+        return return_commit(commit, previous_commit)
+    except Exception as exc:
+        print(f"\tError:\t{exc}")
+        return False
 
 
 github_pattern = re.compile(
@@ -40,9 +44,13 @@ def get_github_commit(variable: str, url: str, previous_commit: str) -> str | bo
     """Fetch from API"""
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
-    response = requests.get(url)
-    data = json.loads(response.content)
-    return return_commit(data["sha"], previous_commit)
+    try:
+        response = requests.get(url)
+        data = json.loads(response.content)
+        return return_commit(data["sha"], previous_commit)
+    except Exception as exc:
+        print(f"\tError:\t{exc}")
+        return False
 
 
 bitbucket_pattern = re.compile(
@@ -54,9 +62,13 @@ def get_bitbucket_commit(variable: str, url: str, previous_commit: str) -> str |
     """Fetch from API"""
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
-    response = requests.get(url)
-    data = json.loads(response.content)
-    return return_commit(data["values"][0]["hash"], previous_commit)
+    try:
+        response = requests.get(url)
+        data = json.loads(response.content)
+        return return_commit(data["values"][0]["hash"], previous_commit)
+    except Exception as exc:
+        print(f"\tError:\t{exc}")
+        return False
 
 
 def run():
