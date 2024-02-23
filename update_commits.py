@@ -2,14 +2,23 @@ import re, requests, json
 from bs4 import BeautifulSoup
 
 
-def return_commit(commit: str, previous_commit: str) -> str | bool:
-    """Return commit if changed, otherwise False"""
-    if previous_commit != commit:
-        print(f"\tOld Commit:\t{previous_commit}")
-        print(f"\tNew Commit:\t{commit}")
-        return commit
-    else:
-        print(f"\tCommit:\t{commit}")
+def get_commit(
+    variable: str, url: str, parse_commit: callable, previous_commit: str
+) -> str | bool:
+    print(f"Variable:\t{variable}")
+    print(f"\tURL:\t{url}")
+    try:
+        response = requests.get(url)
+        commit = parse_commit(response)
+        if previous_commit != commit:
+            print(f"\tOld Commit:\t{previous_commit}")
+            print(f"\tNew Commit:\t{commit}")
+            return commit
+        else:
+            print(f"\tCommit:\t{commit}")
+            return False
+    except Exception as exc:
+        print(f"\tError:\t{exc}")
         return False
 
 
@@ -21,18 +30,10 @@ not_mediawiki_gerrit_pattern = re.compile(
 )
 
 
-def get_gerrit_commit(variable: str, url: str, previous_commit: str) -> str | bool:
+def parse_gerrit_commit(response: requests.Response) -> str:
     """Parse webpage using BeautifulSoup"""
-    print(f"Variable:\t{variable}")
-    print(f"\tURL:\t{url}")
-    try:
-        response = requests.get(url)
-        soup = BeautifulSoup(response.content, "lxml")
-        commit = soup.find("th", text="commit").next_sibling.text
-        return return_commit(commit, previous_commit)
-    except Exception as exc:
-        print(f"\tError:\t{exc}")
-        return False
+    soup = BeautifulSoup(response.content, "lxml")
+    return soup.find("th", text="commit").next_sibling.text
 
 
 github_pattern = re.compile(
@@ -40,17 +41,10 @@ github_pattern = re.compile(
 )
 
 
-def get_github_commit(variable: str, url: str, previous_commit: str) -> str | bool:
+def parse_github_commit(response: requests.Response) -> str:
     """Fetch from API"""
-    print(f"Variable:\t{variable}")
-    print(f"\tURL:\t{url}")
-    try:
-        response = requests.get(url)
-        data = json.loads(response.content)
-        return return_commit(data["sha"], previous_commit)
-    except Exception as exc:
-        print(f"\tError:\t{exc}")
-        return False
+    data = json.loads(response.content)
+    return data["sha"]
 
 
 bitbucket_pattern = re.compile(
@@ -58,17 +52,10 @@ bitbucket_pattern = re.compile(
 )
 
 
-def get_bitbucket_commit(variable: str, url: str, previous_commit: str) -> str | bool:
+def parse_bitbucket_commit(response: requests.Response) -> str:
     """Fetch from API"""
-    print(f"Variable:\t{variable}")
-    print(f"\tURL:\t{url}")
-    try:
-        response = requests.get(url)
-        data = json.loads(response.content)
-        return return_commit(data["values"][0]["hash"], previous_commit)
-    except Exception as exc:
-        print(f"\tError:\t{exc}")
-        return False
+    data = json.loads(response.content)
+    return data["values"][0]["hash"]
 
 
 def run():
@@ -78,23 +65,21 @@ def run():
     mediawiki_match = re.search(r"MEDIAWIKI_VERSION=(\d+)\.(\d+)", variable_contents)
     rel = f"REL{mediawiki_match.group(1)}_{mediawiki_match.group(2)}"
 
-    mediawiki_gerrit_commits = re.findall(mediawiki_gerrit_pattern, variable_contents)
-    non_mediawiki_gerrit_commits = re.findall(
-        not_mediawiki_gerrit_pattern, variable_contents
-    )
-
-    for gerrit_commit in mediawiki_gerrit_commits:
-        if commit := get_gerrit_commit(
-            gerrit_commit[1], gerrit_commit[0] + rel, gerrit_commit[2]
+    for gerrit_commit in re.findall(mediawiki_gerrit_pattern, variable_contents):
+        if commit := get_commit(
+            gerrit_commit[1],
+            gerrit_commit[0] + rel,
+            parse_gerrit_commit,
+            gerrit_commit[2],
         ):
             variable_contents = re.sub(
                 f"{gerrit_commit[1]}=[0-9a-f]+",
                 f"{gerrit_commit[1]}={commit}",
                 variable_contents,
             )
-    for gerrit_commit in non_mediawiki_gerrit_commits:
-        if commit := get_gerrit_commit(
-            gerrit_commit[1], gerrit_commit[0], gerrit_commit[2]
+    for gerrit_commit in re.findall(not_mediawiki_gerrit_pattern, variable_contents):
+        if commit := get_commit(
+            gerrit_commit[1], gerrit_commit[0], parse_gerrit_commit, gerrit_commit[2]
         ):
             variable_contents = re.sub(
                 f"{gerrit_commit[1]}=[0-9a-f]+",
@@ -102,12 +87,11 @@ def run():
                 variable_contents,
             )
 
-    github_commits = re.findall(github_pattern, variable_contents)
-
-    for github_commit in github_commits:
-        if commit := get_github_commit(
+    for github_commit in re.findall(github_pattern, variable_contents):
+        if commit := get_commit(
             github_commit[2],
             f"https://api.github.com/repos/{github_commit[1]}",
+            parse_github_commit,
             github_commit[3],
         ):
             variable_contents = re.sub(
@@ -116,12 +100,11 @@ def run():
                 variable_contents,
             )
 
-    bitbucket_commits = re.findall(bitbucket_pattern, variable_contents)
-
-    for bitbucket_commit in bitbucket_commits:
-        if commit := get_bitbucket_commit(
+    for bitbucket_commit in re.findall(bitbucket_pattern, variable_contents):
+        if commit := get_commit(
             bitbucket_commit[2],
             f"https://bitbucket.org/!api/2.0/repositories/{bitbucket_commit[1]}",
+            parse_bitbucket_commit,
             bitbucket_commit[3],
         ):
             variable_contents = re.sub(
