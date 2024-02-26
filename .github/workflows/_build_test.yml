@@ -158,5 +158,4 @@ jobs:
       - test
       - test-upgrade
     steps:
-      - run: |
-          echo "hello world"
+      - run: echo "hello world"
