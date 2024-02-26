@@ -26,8 +26,6 @@
             echo "$ ./build.sh"
             echo "# Build only the mediawiki/wikibase containers"
             echo "$ ./build.sh wikibase"
-            echo "# Build only the query service container and save the docker image to a tarball"
-            echo "$ ./build.sh --save-image wdqs"
             echo "# Build the wdqs container without using Dockers cache"
             echo "$ ./build.sh --no-cache wdqs"
             echo

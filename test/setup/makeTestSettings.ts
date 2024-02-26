@@ -3,7 +3,6 @@ import { Frameworks } from '@wdio/types';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { defaultFunctions as defaultFunctionsInit } from '../helpers/default-functions.js';
 import loadEnvFiles from './loadEnvFiles.js';
-import loadLocalDockerImage from './loadLocalDockerImage.js';
 import { saveScreenshot } from 'wdio-mediawiki';
 import TestSettings, {
 	TestEnvSettings,
@@ -31,23 +30,6 @@ export const defaultTestSettings = {
 		testEnv.vars.WIKIBASE_TEST_IMAGE_URL = testEnv.settings.isBaseSuite ?
 			testEnv.vars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
 			testEnv.vars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
-		const defaultImageUrls = [
-			testEnv.vars.WIKIBASE_TEST_IMAGE_URL,
-			testEnv.vars.WIKIBASE_SUITE_WDQS_IMAGE_URL,
-			testEnv.vars.WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL,
-			testEnv.vars.WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL
-		];
-		const extraImageUrls = [
-			testEnv.vars.WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL,
-			testEnv.vars.WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL
-		];
-		defaultImageUrls.forEach( ( defaultImageUrl ) =>
-			loadLocalDockerImage( defaultImageUrl as string ) );
-		if ( !testEnv.settings.isBaseSuite ) {
-			extraImageUrls.forEach( ( extraImageUrl ) =>
-				loadLocalDockerImage( extraImageUrl as string )
-			);
-		}
 	},
 	before: async (): Promise<void> => {
 		try {

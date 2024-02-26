@@ -21,10 +21,10 @@ else
   PYTHON_FLAGS=""
 fi
 
-# ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-$TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
+# ℹ️ Linting Javascript test/**/*.ts
+$TEST_COMPOSE run --rm --build -v "$(pwd)/test:/tmp/test" test-runner -c "
   $NPM_LINT_COMMAND &&
-  cd /tmp/diagrams &&
+  cd /tmp/test &&
   npm ci --progress=false > /dev/null &&
   $NPM_LINT_COMMAND
 "
