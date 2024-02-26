@@ -1,5 +1,5 @@
 # Test runner
-version: '3.5'
+version: "3.5"
 
 name: wikibase-suite-test-runner
 
@@ -35,7 +35,7 @@ services:
       - "7900:7900"
     volumes:
       - .:/usr/src/test
-    shm_size: '2g'
+    shm_size: "2g"
     environment:
       - SE_NODE_MAX_SESSIONS=${MAX_INSTANCES}
       - SE_VNC_NO_PASSWORD=1

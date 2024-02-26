@@ -1,13 +1,12 @@
-version: '3.5'
+version: "3.5"
 
 services:
-
   mysql:
-    volumes:  
+    volumes:
       - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
-    environment: 
+    environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
       - quickstatements-data:/quickstatements/data
@@ -33,7 +32,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase-client.svc
+          - wikibase-client.svc
     environment:
       - DB_SERVER
       - MW_ADMIN_NAME
@@ -60,7 +59,7 @@ services:
     networks:
       default:
         aliases:
-         - quickstatements.svc
+          - quickstatements.svc
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80

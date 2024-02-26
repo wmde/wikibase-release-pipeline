@@ -1,9 +1,8 @@
-version: '3.5'
+version: "3.5"
 
 services:
-
   mysql:
-    volumes:  
+    volumes:
       - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
@@ -29,7 +28,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase-client.svc
+          - wikibase-client.svc
     environment:
       - DB_SERVER
       - MW_ADMIN_NAME

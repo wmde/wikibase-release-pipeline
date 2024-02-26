@@ -1,5 +1,5 @@
 # Wikibase and Database for testing when upgrading
-version: '3.5'
+version: "3.5"
 
 networks:
   default:
@@ -7,7 +7,6 @@ networks:
     external: true
 
 services:
-
   wikibase:
     image: "${WIKIBASE_UPGRADE_TEST_IMAGE_URL}"
     links:
@@ -20,7 +19,7 @@ services:
     networks:
       default:
         aliases:
-         - ${WIKIBASE_HOST}
+          - ${WIKIBASE_HOST}
     environment:
       - DB_SERVER
       - MW_WG_SECRET_KEY
@@ -33,7 +32,14 @@ services:
       - DB_NAME
       - WIKIBASE_HOST
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--fail",
+          "http://${WIKIBASE_HOST}/wiki/Main_Page"
+        ]
       interval: 10s
       start_period: 2m
 
@@ -46,11 +52,11 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     networks:
       default:
         aliases:
-         - mysql.svc
+          - mysql.svc
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 1m
