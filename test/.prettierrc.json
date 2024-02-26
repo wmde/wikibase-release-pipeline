@@ -3,5 +3,13 @@
     "useTabs": true,
     "plugins": [
         "prettier-plugin-organize-imports"
+    ],
+    "overrides": [
+        {
+            "files": ["*.mjs", "*.ts"],
+            "options": {
+                "singleQuote": true
+            }
+        }
     ]
 }
