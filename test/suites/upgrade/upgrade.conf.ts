@@ -19,12 +19,12 @@ export const testEnv = TestEnv.createWithDefaults( {
 
 		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL = versions[ fromVersion ];
 		console.log(
-			`ℹ️  Upgrading FROM Wikibase Docker image: ${versions[ fromVersion ]}`
+			`ℹ️  Upgrading FROM Wikibase Docker image: ${ versions[ fromVersion ] }`
 		);
 
 		process.env.TO_VERSION =
 			toVersion ||
-			`LOCAL_BUILD${testEnv.settings.isBaseSuite ? '' : '_BUNDLE'}`;
+			`LOCAL_BUILD${ testEnv.settings.isBaseSuite ? '' : '_BUNDLE' }`;
 
 		// Still load the default images as the local wikibase image will
 		// be used in specs/upgrade/upgrade.ts#before where `toVersion` is used

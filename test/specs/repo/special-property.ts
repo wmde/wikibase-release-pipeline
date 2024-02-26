@@ -17,7 +17,7 @@ describe( 'Special:NewProperty', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
-		describe( `Should be able to work with datatype ${dataType.name}`, function () {
+		describe( `Should be able to work with datatype ${ dataType.name }`, function () {
 			before( async function () {
 				if ( dataType.extensionNeeded ) {
 					await browser.skipIfExtensionNotPresent(
@@ -27,22 +27,22 @@ describe( 'Special:NewProperty', function () {
 				}
 			} );
 
-			it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
+			it( `Should be able to create a new property of datatype ${ dataType.name }`, async () => {
 				await SpecialNewPropertyPage.open();
 
 				await SpecialNewPropertyPage.labelInput.setValue(
-					`Cool ${dataType.name} label`
+					`Cool ${ dataType.name } label`
 				);
 				await SpecialNewPropertyPage.descriptionInput.setValue(
-					`Cool ${dataType.name} description`
+					`Cool ${ dataType.name } description`
 				);
 				await SpecialNewPropertyPage.aliasesInput.setValue(
-					`Great ${dataType.name}!|Greatest ${dataType.name}!`
+					`Great ${ dataType.name }!|Greatest ${ dataType.name }!`
 				);
 
 				await SpecialNewPropertyPage.datatypeInput.click();
 				await $( 'oo-ui-menuSelectWidget' );
-				await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
+				await $( `.oo-ui-labelElement-label=${ dataType.name }` ).click();
 
 				await SpecialNewPropertyPage.submit();
 
@@ -65,10 +65,10 @@ describe( 'Special:NewProperty', function () {
 			datatype: wikibasePropertyString.urlName
 		} );
 		await SpecialNewPropertyPage.labelInput.setValue(
-			`Property type ${wikibasePropertyString.urlName}`
+			`Property type ${ wikibasePropertyString.urlName }`
 		);
 		await SpecialNewPropertyPage.descriptionInput.setValue(
-			`A ${wikibasePropertyString.urlName} property`
+			`A ${ wikibasePropertyString.urlName } property`
 		);
 		await SpecialNewPropertyPage.submit();
 

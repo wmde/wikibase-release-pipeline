@@ -14,7 +14,7 @@ class SpecialEntityDataPage {
 		extension: string = 'json'
 	): Promise<EntityData> {
 		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${entityId}.${extension}`
+			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:EntityData/${ entityId }.${ extension }`
 		);
 		return response.data;
 	}

@@ -19,7 +19,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'Should be able to set alias', async () => {
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetAliases/` );
+		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetAliases/` );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -45,7 +45,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${testLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ testLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -74,7 +74,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 

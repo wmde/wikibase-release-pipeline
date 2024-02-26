@@ -5,6 +5,6 @@
  * @return {Object}
  */
 const propertyIdSelector = ( id: string ): ChainablePromiseElement =>
-	$( `=${id} (${id})` );
+	$( `=${ id } (${ id })` );
 
 export default propertyIdSelector;

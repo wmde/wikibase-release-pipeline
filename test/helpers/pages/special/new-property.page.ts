@@ -9,12 +9,15 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	public get aliasesInput(): ChainablePromiseElement {
 		return $( 'input[name="aliases"]' );
 	}
+
 	public get datatypeInput(): ChainablePromiseElement {
 		return $( '#wb-newproperty-datatype' );
 	}
+
 	public get descriptionInput(): ChainablePromiseElement {
 		return $( 'input[name="description"]' );
 	}
+
 	public get labelInput(): ChainablePromiseElement {
 		return $( 'input[name="label"]' );
 	}
@@ -32,7 +35,7 @@ class SpecialNewPropertyPage extends SubmittablePage {
 			throw new Error( 'Invalid parameter' );
 		}
 
-		await super.open( `/wiki/Special:NewProperty${urlParameters( params )}` );
+		await super.open( `/wiki/Special:NewProperty${ urlParameters( params ) }` );
 		await this.labelInput;
 		await this.descriptionInput;
 		await this.aliasesInput;

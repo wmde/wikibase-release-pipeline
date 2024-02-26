@@ -15,7 +15,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -78,7 +78,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show property in queryservice ui after creation using prefixes', async () => {
 		const prefixes = [ 'prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ];
-		const query = `SELECT * WHERE{ ?s fpwdt:${propertyId} ?o }`;
+		const query = `SELECT * WHERE{ ?s fpwdt:${ propertyId } ?o }`;
 
 		await QueryServiceUIPage.open( query, prefixes );
 
@@ -92,7 +92,7 @@ describe( 'Fed props Item', function () {
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
 			!( await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
+				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			) )
 		);
@@ -100,7 +100,7 @@ describe( 'Fed props Item', function () {
 
 	it( 'should NOT show up in queryservice ui after creation', async () => {
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;

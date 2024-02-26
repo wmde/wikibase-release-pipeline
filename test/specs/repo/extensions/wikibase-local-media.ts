@@ -20,7 +20,7 @@ describe( 'WikibaseLocalMedia', function () {
 			testEnv.vars.MW_ADMIN_PASS
 		);
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Upload/` );
+		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Upload/` );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );

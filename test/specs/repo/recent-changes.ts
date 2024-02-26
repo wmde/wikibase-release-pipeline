@@ -1,7 +1,7 @@
 describe( 'Special:RecentChanges', function () {
 	beforeEach( async () => {
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
 	} );
 

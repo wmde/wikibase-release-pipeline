@@ -41,11 +41,11 @@ export const defaultTestSettings = {
 		const testFile = encodeURIComponent(
 			mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 		);
-		const screenshotFilename = `${testFile}__${mochaTest.title}`;
+		const screenshotFilename = `${ testFile }__${ mochaTest.title }`;
 		try {
 			saveScreenshot(
 				screenshotFilename,
-				`${testEnv.settings.outputDir}/screenshots`
+				`${ testEnv.settings.outputDir }/screenshots`
 			);
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
@@ -76,7 +76,7 @@ export const makeTestSettings = (
 	};
 	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';
 	const debugNode = process.env.DEBUG === 'node';
-	const outputDir = `suites/${settings.name}/results`;
+	const outputDir = `suites/${ settings.name }/results`;
 	const testRunnerSettings: TestRunnerSettings = {
 		debug,
 		debugNode,

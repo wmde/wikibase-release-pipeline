@@ -12,7 +12,7 @@ describe( 'Search', function () {
 		await browser.pause( 2000 );
 
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${itemLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ itemLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
 		assert.strictEqual( result.data.search[ 0 ].label, itemLabel );

@@ -23,7 +23,7 @@ class SpecialNewItemPage extends SubmittablePage {
 			throw new Error( 'Invalid parameter' );
 		}
 
-		return super.open( `/wiki/Special:NewItem${urlParameters( params )}` );
+		return super.open( `/wiki/Special:NewItem${ urlParameters( params ) }` );
 	}
 }
 

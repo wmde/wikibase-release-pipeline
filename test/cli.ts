@@ -118,7 +118,7 @@ function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 
 	for ( const [ key, value ] of Object.entries( options ) ) {
 		if ( [ 'fromVersion', 'toVersion', 'headedTests', 'debug' ].includes( key ) ) {
-			process.env[ `${lodash.toUpper( lodash.snakeCase( key.toString() ) )}` ] =
+			process.env[ `${ lodash.toUpper( lodash.snakeCase( key.toString() ) ) }` ] =
 				value.toString();
 			delete options[ key ];
 		}
@@ -142,7 +142,7 @@ const commandHandler = async ( argv ): Promise<void> => {
 	if ( argv.setup ) {
 		// eslint-disable-next-line es-x/no-dynamic-import
 		const { testEnv } = await import(
-			`./suites/${suiteNames[ 0 ]}/${suiteNames[ 0 ]}.conf.ts`
+			`./suites/${ suiteNames[ 0 ] }/${ suiteNames[ 0 ] }.conf.ts`
 		);
 		await testEnv.up();
 		exitCode = 0;
@@ -150,22 +150,22 @@ const commandHandler = async ( argv ): Promise<void> => {
 		if ( suiteNames.length > 1 ) {
 			console.log(
 				chalk.whiteBright.bold(
-					`\n🎡 Running ${suiteNames.length} test suites:`
+					`\n🎡 Running ${ suiteNames.length } test suites:`
 				),
 				chalk.whiteBright( suiteNames.join( ', ' ) )
 			);
 		}
 		for ( const suiteName of suiteNames ) {
-			const configFilePath = `./suites/${suiteName}/${suiteName}.conf.ts`;
+			const configFilePath = `./suites/${ suiteName }/${ suiteName }.conf.ts`;
 			console.log(
 				chalk.bgWhiteBright.black.bold(
-					`\n"${suiteName}" test suite ${' '.repeat( 96 - suiteName.length )}`
+					`\n"${ suiteName }" test suite ${ ' '.repeat( 96 - suiteName.length ) }`
 				)
 			);
 			exitCode = await runWdio( configFilePath, wdioRunCommandOptions );
 		}
 	}
-	// eslint-disable-next-line no-process-exit
+	// eslint-disable-next-line n/no-process-exit
 	process.exit( exitCode );
 };
 

@@ -34,7 +34,7 @@ class SpecialListPropertiesPage extends Page {
 			offset: params.offset ?? 0
 		} );
 
-		await super.open( `/wiki/Special:ListProperties${paramString}` );
+		await super.open( `/wiki/Special:ListProperties${ paramString }` );
 		await $( '.mw-spcontent' );
 	}
 }

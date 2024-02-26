@@ -14,7 +14,7 @@ describe( 'Wikibase upgrade', function () {
 		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL =
 			versions[ process.env.TO_VERSION ];
 		console.log(
-			`ℹ️  Upgrading TO Wikibase Docker image: ${testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL}`
+			`ℹ️  Upgrading TO Wikibase Docker image: ${ testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL }`
 		);
 
 		// === Fix for LocalSettings.php (see notes in the script)
@@ -72,7 +72,7 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;

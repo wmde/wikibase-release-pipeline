@@ -9,7 +9,7 @@ import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js
 describe( 'QueryService', () => {
 	it( 'Should not be able to post to sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`,
 			{ validateStatus: false },
 			{}
 		);
@@ -18,14 +18,14 @@ describe( 'QueryService', () => {
 
 	it( 'Should be able to get sparql endpoint', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -33,7 +33,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/assets`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -41,7 +41,7 @@ describe( 'QueryService', () => {
 
 	it( 'Should not be possible to reach blazegraph workbench', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/#query`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
 		assert.strictEqual( result.status, 404 );
@@ -69,7 +69,7 @@ describe( 'QueryService', () => {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -96,13 +96,13 @@ describe( 'QueryService', () => {
 		// property value is set with correct rdf
 		assert(
 			await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}>`,
+				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
 		);
 
 		// query the property using wdt: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
@@ -110,7 +110,7 @@ describe( 'QueryService', () => {
 		// should be set only to the item
 		assert(
 			await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
+				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
 		);
@@ -128,11 +128,11 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -216,7 +216,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
 		WHERE {
-		  <${testEnv.vars.WIKIBASE_URL}/entity/${itemId}> <${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}> "test-property" .
+		  <${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }> <${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }> "test-property" .
 		}` );
 
 		// wait for WDQS-updater

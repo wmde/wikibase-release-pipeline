@@ -22,7 +22,7 @@ describe( 'Wikibase post upgrade', function () {
 
 	it( 'Should be able find the item after upgrade', async () => {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -64,11 +64,11 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( bindings.length, 9 );
 
 		const statement = getElementByURI(
-			`${testEnv.vars.WIKIBASE_URL}/prop/${oldPropertyID}`,
+			`${ testEnv.vars.WIKIBASE_URL }/prop/${ oldPropertyID }`,
 			bindings
 		);
 		const property = getElementByURI(
-			`${testEnv.vars.WIKIBASE_URL}/prop/direct/${oldPropertyID}`,
+			`${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ oldPropertyID }`,
 			bindings
 		);
 

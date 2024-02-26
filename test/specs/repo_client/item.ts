@@ -23,7 +23,7 @@ describe( 'Item', function () {
 	it( 'Special:NewItem should not be accessible on client', async () => {
 		// Cannot use SpecialNewItemPage due to using WIKIBASE_CLIENT_URL
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_CLIENT_URL}/wiki/Special:NewItem?uselang=qqx`
+			`${ testEnv.vars.WIKIBASE_CLIENT_URL }/wiki/Special:NewItem?uselang=qqx`
 		);
 		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
@@ -64,7 +64,7 @@ describe( 'Item', function () {
 		const bodyText = await browser.editPage(
 			testEnv.vars.WIKIBASE_CLIENT_URL,
 			pageTitle,
-			`{{#statements:${propertyId}|from=${itemId}}}`
+			`{{#statements:${ propertyId }|from=${ itemId }}}`
 		);
 		// label should come from repo property
 		assert.equal( bodyText, propertyValue );
@@ -75,7 +75,7 @@ describe( 'Item', function () {
 	it( 'Should be able to create site-links from item to client', async () => {
 		// Create a site-link on a the Main_Page
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
+			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${ pageTitle }`
 		);
 		await $( '#wb-setsitelink-submit button' ).click();
 
@@ -114,7 +114,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();

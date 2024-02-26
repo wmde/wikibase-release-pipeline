@@ -13,7 +13,7 @@ describe( 'Special:NewItem', function () {
 
 		await $( 'input[name="label"]' ).setValue( label );
 		await $( 'input[name="description"]' ).setValue( description );
-		await $( 'input[name="aliases"]' ).setValue( `${firstAlias}|${secondAlias}` );
+		await $( 'input[name="aliases"]' ).setValue( `${ firstAlias }|${ secondAlias }` );
 		await SpecialNewItemPage.submit();
 
 		await SpecialEntityPage.addStatementLink;

@@ -20,7 +20,7 @@ describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
-		describe( `Should be able to work with type ${dataType.name}`, () => {
+		describe( `Should be able to work with type ${ dataType.name }`, () => {
 			let propertyId: string = null;
 			let stringPropertyId: string = null;
 
@@ -47,8 +47,8 @@ describe( 'Property', function () {
 
 			it( 'Should be able to see added statement', async function () {
 				this.retries( 4 );
-				await expect( $( `div=${statementText}` ) ).toExist();
-				await expect( $( `aria/Property:${stringPropertyId}` ) ).toHaveText(
+				await expect( $( `div=${ statementText }` ) ).toExist();
+				await expect( $( `aria/Property:${ stringPropertyId }` ) ).toHaveText(
 					stringPropertyId
 				);
 			} );
@@ -66,7 +66,7 @@ describe( 'Property', function () {
 			it( 'Should be able to see added reference', async function () {
 				this.retries( 4 );
 				await $( '=1 reference' ).click();
-				await expect( $( `div=${referenceText}` ) ).toExist();
+				await expect( $( `div=${ referenceText }` ) ).toExist();
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async function () {
@@ -90,8 +90,8 @@ describe( 'Property', function () {
 			it( 'Should display the added properties on the "Recent changes" page', async () => {
 				await browser.waitForJobs();
 				await $( '=Recent changes' ).click();
-				await expect( $( `=(${propertyId})` ) ).toExist();
-				await expect( $( `=(${stringPropertyId})` ) ).toExist();
+				await expect( $( `=(${ propertyId })` ) ).toExist();
+				await expect( $( `=(${ stringPropertyId })` ) ).toExist();
 			} );
 
 			it( 'Should be able to revert a change', async () => {
@@ -123,27 +123,27 @@ describe( 'Property', function () {
 				await $( 'span=Set label, description and aliases' ).click();
 
 				await $( 'label=Label:' ).click();
-				await browser.keys( `${dataType.name} Label`.split( '' ) );
+				await browser.keys( `${ dataType.name } Label`.split( '' ) );
 				await $( 'label=Description:' ).click();
-				await browser.keys( `${dataType.name} Description`.split( '' ) );
+				await browser.keys( `${ dataType.name } Description`.split( '' ) );
 				await $( 'label=Aliases:' ).click();
 				await browser.keys(
-					`${dataType.name} Alias A|${dataType.name} Alias B`.split( '' )
+					`${ dataType.name } Alias A|${ dataType.name } Alias B`.split( '' )
 				);
 
 				await $( 'span=Set label, description and aliases' ).click();
 
 				await expect(
-					$( `span.wikibase-labelview-text=${dataType.name} Label` )
+					$( `span.wikibase-labelview-text=${ dataType.name } Label` )
 				).toExist();
 				await expect(
-					$( `span.wikibase-descriptionview-text=${dataType.name} Description` )
+					$( `span.wikibase-descriptionview-text=${ dataType.name } Description` )
 				).toExist();
 				await expect(
-					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias A` )
+					$( `li.wikibase-aliasesview-list-item=${ dataType.name } Alias A` )
 				).toExist();
 				await expect(
-					$( `li.wikibase-aliasesview-list-item=${dataType.name} Alias B` )
+					$( `li.wikibase-aliasesview-list-item=${ dataType.name } Alias B` )
 				).toExist();
 			} );
 		} );

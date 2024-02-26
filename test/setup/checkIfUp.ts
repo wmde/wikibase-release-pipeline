@@ -24,11 +24,11 @@ async function checkIfUp(
 			throw (
 				timeoutMsg ||
 				new Error(
-					`❌ Could not load ${serviceURL} after ${timeout / 1000} seconds.`
+					`❌ Could not load ${ serviceURL } after ${ timeout / 1000 } seconds.`
 				)
 			);
 		} else {
-			throw new Error( `❌ Could not load ${serviceURL} with error: ${e}` );
+			throw new Error( `❌ Could not load ${ serviceURL } with error: ${ e }` );
 		}
 	}
 }

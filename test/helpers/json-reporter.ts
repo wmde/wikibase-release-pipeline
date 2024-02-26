@@ -11,7 +11,9 @@ type JsonReporterOptions = {
 
 class JsonReporter extends WDIOReporter {
 	private failedTests: TestResult[];
+
 	private successfulTests: TestResult[];
+
 	private skippedTests: TestResult[];
 
 	public constructor(
