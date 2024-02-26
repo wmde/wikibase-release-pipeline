@@ -9,7 +9,6 @@ permissions:
   contents: write
   packages: write
 
-
 jobs:
   _:
     uses: ./.github/workflows/_build_test.yml

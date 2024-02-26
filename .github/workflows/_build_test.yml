@@ -26,7 +26,7 @@ jobs:
             "wdqs",
             "wdqs-frontend",
             "wdqs-proxy",
-            "quickstatements",
+            "quickstatements"
           ]
 
     steps:
@@ -66,7 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
-
     strategy:
       fail-fast: false
       matrix:
@@ -85,7 +84,7 @@ jobs:
             base__pingback,
             base__fedprops,
 
-            example,
+            example
           ]
 
     steps:
@@ -132,7 +131,7 @@ jobs:
             "WMDE12_BUNDLE",
             # Latest 1.39
             "WMDE13",
-            "WMDE13_BUNDLE",
+            "WMDE13_BUNDLE"
           ]
 
     steps:
