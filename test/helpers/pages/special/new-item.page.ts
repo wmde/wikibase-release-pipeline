@@ -15,6 +15,7 @@ class SpecialNewItemPage extends SubmittablePage {
 	 *
 	 * @param {Object} params
 	 * @param {string} params.uselang - Optional
+	 * @return {void}
 	 */
 	public async open(
 		params: SpecialNewItemPageParams | string = {}

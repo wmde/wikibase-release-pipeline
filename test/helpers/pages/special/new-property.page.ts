@@ -27,6 +27,7 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	 *
 	 * @param {Object} params
 	 * @param {string} params.datatype - Optional
+	 * @return {void}
 	 */
 	public async open(
 		params: SpecialNewPropertyPageParams | string = {}

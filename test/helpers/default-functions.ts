@@ -313,6 +313,7 @@ export function defaultFunctions(): void {
  * Get installed extensions on wiki (for given server URL)
  *
  * @param {string} serverUrl
+ * @return {Object}
  */
 export async function getInstalledExtensions(
 	serverUrl: string
