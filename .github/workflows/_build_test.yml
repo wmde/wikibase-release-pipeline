@@ -152,7 +152,7 @@ jobs:
           path: test/suites/**/results
 
   test-success:
-    # Post-test CI step
+    # Post-test CI step - to check all tests succeeded
     runs-on: ubuntu-latest
     needs:
       - test
