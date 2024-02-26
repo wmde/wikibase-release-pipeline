@@ -1,15 +1,13 @@
 {
-    "trailingComma": "none",
-    "useTabs": true,
-    "plugins": [
-        "prettier-plugin-organize-imports"
-    ],
-    "overrides": [
-        {
-            "files": ["*.mjs", "*.ts"],
-            "options": {
-                "singleQuote": true
-            }
-        }
-    ]
+	"trailingComma": "none",
+	"useTabs": true,
+	"plugins": [ "prettier-plugin-organize-imports" ],
+	"overrides": [
+		{
+			"files": [ "*.mjs", "*.ts" ],
+			"options": {
+				"singleQuote": true
+			}
+		}
+	]
 }
