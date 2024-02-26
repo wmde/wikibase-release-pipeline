@@ -1,8 +1,8 @@
+import type { Capabilities } from '@wdio/types';
 import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import type { Capabilities } from '@wdio/types';
 import JsonReporter from '../helpers/json-reporter.js';
 import TestEnv from './TestEnv.js';
 
@@ -17,7 +17,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 	const settings = testEnv.settings;
 
 	return {
-		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
+		specs: settings.specs.map(
+			( specFilepath ) => `${__dirname}/../${specFilepath}`
+		),
 
 		hostname: 'browser',
 		port: 4444,

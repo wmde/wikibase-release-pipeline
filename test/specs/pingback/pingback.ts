@@ -13,9 +13,7 @@ describe( 'Pingback', function () {
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
 
-		const result = await browser.makeRequest(
-			'http://mediawiki.svc'
-		);
+		const result = await browser.makeRequest( 'http://mediawiki.svc' );
 		assert.strictEqual( result.data.length, 2 );
 
 		const requestData = JSON.parse(

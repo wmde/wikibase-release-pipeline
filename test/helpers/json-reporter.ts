@@ -1,6 +1,6 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
 import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ResultType, TestResult } from '../types/test-results.js';
 import { utf8 } from './readFileEncoding.js';
 
@@ -14,7 +14,9 @@ class JsonReporter extends WDIOReporter {
 	private successfulTests: TestResult[];
 	private skippedTests: TestResult[];
 
-	public constructor( options: Partial<Reporters.Options> & JsonReporterOptions ) {
+	public constructor(
+		options: Partial<Reporters.Options> & JsonReporterOptions
+	) {
 		// make reporter to write to the output stream by default
 		options = Object.assign( options, { stdout: true } );
 

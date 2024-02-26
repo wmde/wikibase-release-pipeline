@@ -9,7 +9,10 @@ describe( 'SyntaxHighlight', function () {
 
 	it( 'Should highlight lua script', async () => {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
-		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
+		const fileContents = await readFile(
+			new URL( 'bananas.lua', import.meta.url ),
+			utf8
+		);
 
 		await browser.editPage(
 			testEnv.vars.WIKIBASE_URL,

@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises';
 import assert from 'assert';
+import { readFile } from 'fs/promises';
 import { utf8 } from '../../helpers/readFileEncoding.js';
 
 describe( 'Interwiki links', function () {

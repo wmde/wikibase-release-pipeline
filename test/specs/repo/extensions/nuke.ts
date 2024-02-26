@@ -22,7 +22,10 @@ describe( 'Nuke', function () {
 
 		assert.strictEqual( pageExistsResult.status, 200 );
 
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Nuke' );
 
 		await $( 'button.oo-ui-inputWidget-input' ).click();
