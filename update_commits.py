@@ -22,11 +22,8 @@ def get_commit(
         return False
 
 
-mediawiki_gerrit_pattern = re.compile(
-    r"# (https://gerrit.*/heads/)REL\d+_\d+[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
-)
-not_mediawiki_gerrit_pattern = re.compile(
-    r"# (https://gerrit.*/heads/master)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
+gerrit_pattern = re.compile(
+    r"# (https://gerrit.*)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
 )
 
 
@@ -64,22 +61,15 @@ def run():
 
     mediawiki_match = re.search(r"MEDIAWIKI_VERSION=(\d+)\.(\d+)", variable_contents)
     rel = f"REL{mediawiki_match.group(1)}_{mediawiki_match.group(2)}"
+    print(f"Mediawiki Version:\t{mediawiki_match.group(1)}.{mediawiki_match.group(2)}")
+    variable_contents = re.sub(r"\bREL\d+_\d+", rel, variable_contents)
 
-    for gerrit_commit in re.findall(mediawiki_gerrit_pattern, variable_contents):
+    for gerrit_commit in re.findall(gerrit_pattern, variable_contents):
         if commit := get_commit(
             gerrit_commit[1],
-            gerrit_commit[0] + rel,
+            gerrit_commit[0],
             parse_gerrit_commit,
             gerrit_commit[2],
-        ):
-            variable_contents = re.sub(
-                f"{gerrit_commit[1]}=[0-9a-f]+",
-                f"{gerrit_commit[1]}={commit}",
-                variable_contents,
-            )
-    for gerrit_commit in re.findall(not_mediawiki_gerrit_pattern, variable_contents):
-        if commit := get_commit(
-            gerrit_commit[1], gerrit_commit[0], parse_gerrit_commit, gerrit_commit[2]
         ):
             variable_contents = re.sub(
                 f"{gerrit_commit[1]}=[0-9a-f]+",
