@@ -80,7 +80,7 @@ describe( 'Scribunto Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();

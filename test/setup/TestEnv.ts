@@ -15,7 +15,9 @@ declare global {
 
 export default class TestEnv {
 	public settings: TestSettings;
+
 	public testLog: Logger;
+
 	public baseDockerComposeCmd: string;
 
 	public static createWithDefaults(
@@ -47,7 +49,7 @@ export default class TestEnv {
 			await this.settings.beforeServices();
 
 			console.log(
-				`▶️  Bringing up the test environment ${this.settings.debug ? '(DEBUG)' : ''}`
+				`▶️  Bringing up the test environment ${ this.settings.debug ? '(DEBUG)' : '' }`
 			);
 
 			await this.stopServices();
@@ -75,7 +77,7 @@ export default class TestEnv {
 				.waitForUrls()
 				.map( async ( waitForURL: string ): Promise<void> => {
 					await checkIfUp( waitForURL, this.settings.testTimeout );
-					this.testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
+					this.testLog.info( `ℹ️  Successfully loaded ${ waitForURL }` );
 				} )
 		);
 	}
@@ -83,7 +85,7 @@ export default class TestEnv {
 	public async runDockerComposeCmd(
 		dockerComposeOptionsCommandAndArgs: string
 	): Promise<string> {
-		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
+		const dockerComposeCmd = `${ this.baseDockerComposeCmd } ${ dockerComposeOptionsCommandAndArgs }`;
 
 		this.testLog.debug( 'Running: ', dockerComposeCmd );
 
@@ -116,39 +118,39 @@ export default class TestEnv {
 
 		console.log(
 			chalk.yellow(
-				`\nExiting and taking "${this.settings.name}" test environment DOWN in 5 seconds...`
+				`\nExiting and taking "${ this.settings.name }" test environment DOWN in 5 seconds...`
 			)
 		);
 		console.log(
 			chalk.yellow(
-				`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${this.settings.name}" test environment UP`
+				`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${ this.settings.name }" test environment UP`
 			)
 		);
 
 		const takeDown = async (): Promise<void> => {
 			console.log(
 				chalk.red(
-					`Exiting. Taking "${this.settings.name}" test environment DOWN`
+					`Exiting. Taking "${ this.settings.name }" test environment DOWN`
 				)
 			);
 			await this.down();
 			process.stdin.setEncoding( null );
 			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line no-process-exit
+			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
 		const leaveUp = (): void => {
 			console.log(
 				chalk.green(
-					`Exiting. Leaving ${this.settings.name}" test environment UP`
+					`Exiting. Leaving ${ this.settings.name }" test environment UP`
 				)
 			);
 			process.stdin.setEncoding( null );
 			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line no-process-exit
+			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
@@ -201,12 +203,12 @@ export default class TestEnv {
 	protected makeBaseDockerComposeCmd(): string {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
-			`--project-directory ${this.settings.pwd}/suites`,
+			`--project-directory ${ this.settings.pwd }/suites`,
 			'-p wikibase-suite-test-services'
 		];
 
 		this.settings.composeFiles.forEach( ( composeFile ) =>
-			dockerComposeCmdArray.push( `-f ${composeFile}` )
+			dockerComposeCmdArray.push( `-f ${ composeFile }` )
 		);
 
 		return dockerComposeCmdArray.join( ' ' );
@@ -220,7 +222,7 @@ export default class TestEnv {
 	protected async stopServices( removeVolumes: boolean = true ): Promise<void> {
 		this.testLog.info( '▶️  Stopping Wikibase Suite services' );
 		await this.runDockerComposeCmd(
-			`down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1`
+			`down ${ removeVolumes && '--volumes' } --remove-orphans --timeout 1`
 		);
 	}
 }

@@ -40,7 +40,7 @@
 		"ie 11"
 	],
 	"engines": {
-		"node": ">=10"
+		"node": ">=14.14"
 	},
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
