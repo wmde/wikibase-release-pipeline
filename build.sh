@@ -17,6 +17,17 @@ source ./versions.inc.sh
 
 DOCKER_BUILD_CACHE_OPT=""
 
+# ℹ️ Update Commit Hashes
+function update_commit_hashes {
+    docker compose \
+    --file test/docker-compose.yml \
+    --env-file test/test-runner.env \
+    run --rm --build test-runner -c "
+    cd ..
+    python3 -m pip install requests bs4 lxml
+    python3 update_commits.py
+    "
+}
 
 # wikibase/wdqs -> wdqs
 function image_url_to_image_name {
@@ -204,6 +215,9 @@ for arg in "$@"; do
         all)
             build_all
             build_target_set=true
+            ;;
+        update_hashes)
+            update_commit_hashes
             ;;
         -n|--no-cache)
             DOCKER_BUILD_CACHE_OPT="--no-cache"
