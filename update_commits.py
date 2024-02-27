@@ -2,9 +2,7 @@ import re, requests, json
 from bs4 import BeautifulSoup
 
 
-def get_commit(
-    variable: str, url: str, parse_commit: callable, previous_commit: str
-):
+def get_commit(variable: str, url: str, parse_commit: callable, previous_commit: str):
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
     try:
@@ -22,11 +20,8 @@ def get_commit(
         return False
 
 
-mediawiki_gerrit_pattern = re.compile(
-    r"# (https://gerrit.*/heads/REL\d+_\d+)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
-)
-not_mediawiki_gerrit_pattern = re.compile(
-    r"# (https://gerrit.*/heads/master)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
+gerrit_pattern = re.compile(
+    r"# (https://gerrit.*)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
 )
 
 
@@ -58,14 +53,6 @@ def parse_bitbucket_commit(response: requests.Response) -> str:
     return data["values"][0]["hash"]
 
 
-def user_approves() -> bool:
-    try:
-        return "y" in input("Update Commit? Y/n ").lower()
-    except Exception as exc:
-        print(f"\tError:\t{exc}")
-        return False
-
-
 def run():
     with open("variables.env", "r") as variable_file:
         variable_contents = variable_file.read()
@@ -75,7 +62,7 @@ def run():
     print(f"Mediawiki Version:\t{mediawiki_match.group(1)}.{mediawiki_match.group(2)}")
     variable_contents = re.sub(r"\bREL\d+_\d+", rel, variable_contents)
 
-    for gerrit_commit in re.findall(mediawiki_gerrit_pattern, variable_contents):
+    for gerrit_commit in re.findall(gerrit_pattern, variable_contents):
         if commit := get_commit(
             gerrit_commit[1],
             gerrit_commit[0],
@@ -87,30 +74,14 @@ def run():
                 f"{gerrit_commit[1]}={commit}",
                 variable_contents,
             )
-    for gerrit_commit in re.findall(not_mediawiki_gerrit_pattern, variable_contents):
-        if (
-            commit := get_commit(
-                gerrit_commit[1],
-                gerrit_commit[0],
-                parse_gerrit_commit,
-                gerrit_commit[2],
-            )
-        ) and user_approves():
-            variable_contents = re.sub(
-                f"{gerrit_commit[1]}=[0-9a-f]+",
-                f"{gerrit_commit[1]}={commit}",
-                variable_contents,
-            )
 
     for github_commit in re.findall(github_pattern, variable_contents):
-        if (
-            commit := get_commit(
-                github_commit[2],
-                f"https://api.github.com/repos/{github_commit[1]}",
-                parse_github_commit,
-                github_commit[3],
-            )
-        ) and user_approves():
+        if commit := get_commit(
+            github_commit[2],
+            f"https://api.github.com/repos/{github_commit[1]}",
+            parse_github_commit,
+            github_commit[3],
+        ):
             variable_contents = re.sub(
                 f"{github_commit[2]}=[0-9a-f]+",
                 f"{github_commit[2]}={commit}",
@@ -118,14 +89,12 @@ def run():
             )
 
     for bitbucket_commit in re.findall(bitbucket_pattern, variable_contents):
-        if (
-            commit := get_commit(
-                bitbucket_commit[2],
-                f"https://bitbucket.org/!api/2.0/repositories/{bitbucket_commit[1]}",
-                parse_bitbucket_commit,
-                bitbucket_commit[3],
-            )
-        ) and user_approves():
+        if commit := get_commit(
+            bitbucket_commit[2],
+            f"https://bitbucket.org/!api/2.0/repositories/{bitbucket_commit[1]}",
+            parse_bitbucket_commit,
+            bitbucket_commit[3],
+        ):
             variable_contents = re.sub(
                 f"{bitbucket_commit[2]}=[0-9a-f]+",
                 f"{bitbucket_commit[2]}={commit}",
