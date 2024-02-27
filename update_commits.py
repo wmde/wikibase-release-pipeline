@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def get_commit(
     variable: str, url: str, parse_commit: callable, previous_commit: str
-) -> str | bool:
+):
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
     try:
@@ -59,7 +59,11 @@ def parse_bitbucket_commit(response: requests.Response) -> str:
 
 
 def user_approves() -> bool:
-    return "y" in input("Update Commit? Y/n ").lower()
+    try:
+        return "y" in input("Update Commit? Y/n ").lower()
+    except Exception as exc:
+        print(f"\tError:\t{exc}")
+        return False
 
 
 def run():
