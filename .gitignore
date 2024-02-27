@@ -1,7 +1,6 @@
 *.swp
 .DS_Store
 .direnv
-artifacts/*
 docs/diagrams/node_modules/
 example/log
 local.env

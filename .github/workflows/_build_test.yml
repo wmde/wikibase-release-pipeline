@@ -1,0 +1,157 @@
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint
+        run: ./lint.sh
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          [
+            "wikibase",
+            "elasticsearch",
+            "wdqs",
+            "wdqs-frontend",
+            "wdqs-proxy",
+            "quickstatements",
+          ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: ./build.sh ${{ matrix.component }}
+
+      # TODO re-enable as soon as we make use of it
+      # - name: Scan Image
+      #   uses: ./.github/actions/scan-image
+      #   continue-on-error: true
+      #   with:
+      #     image_name: ${{ matrix.component }}
+      #
+      # # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+      # - name: Scan additional bundle Image for wikibase builds
+      #   if: matrix.component == 'wikibase'
+      #   uses: ./.github/actions/scan-image
+      #   continue-on-error: true
+      #   with:
+      #     image_name: "${{ matrix.component }}-bundle"
+
+      - uses: ./.github/actions/push-ghcr
+        with:
+          docker_image: "wikibase/${{ matrix.component }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
+      - uses: ./.github/actions/push-ghcr
+        if: matrix.component == 'wikibase'
+        with:
+          docker_image: "wikibase/${{ matrix.component }}-bundle"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          [
+            repo,
+            fedprops,
+            repo_client,
+            quickstatements,
+            pingback,
+            confirm_edit,
+            elasticsearch,
+
+            base__repo,
+            base__repo_client,
+            base__pingback,
+            base__fedprops,
+
+            example,
+          ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/pull-ghcr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: ./test.sh ${{ matrix.suite }}
+
+      - name: Reporter
+        run: |
+          cd .github/reporter
+          npm install
+          node report.js ${{ matrix.suite }}
+
+      - name: Show logs
+        run: |
+          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: test/suites/**/results
+
+
+  test-upgrade:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
+        version: [
+            # Latest 1.37
+            "WMDE9",
+            "WMDE9_BUNDLE",
+            # Latest 1.38
+            "WMDE12",
+            "WMDE12_BUNDLE",
+            # Latest 1.39
+            "WMDE15",
+            "WMDE15_BUNDLE",
+            # Previous 1.40
+            "WMDE14",
+            "WMDE14_BUNDLE",
+          ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/pull-ghcr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: ./test.sh upgrade ${{ matrix.version }}
+        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
+        # Set a specific lower timeout to allow us to retry sooner
+        timeout-minutes: 10
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: test/suites/**/results

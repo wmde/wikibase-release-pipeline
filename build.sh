@@ -12,24 +12,10 @@ if [ -f ./local.env ]; then
 fi
 set +o allexport
 
+source ./versions.inc.sh
 
-SAVE_IMAGE=false
+
 DOCKER_BUILD_CACHE_OPT=""
-
-function save_image {
-    local image_name="$1"
-    local image_url="$2"
-    local image_name_with_tag="$3"
-    local image_url_with_tag="$4"
-
-    if $SAVE_IMAGE; then
-        docker save "$image_url" "$image_url_with_tag" | \
-            gzip -"$GZIP_COMPRESSION_RATE" > "artifacts/${image_name_with_tag//:/-}.docker.tar.gz"
-        pushd artifacts
-        ln -sf "${image_name_with_tag//:/-}.docker.tar.gz" "${image_name}.docker.tar.gz"
-        popd
-    fi
-}
 
 
 # wikibase/wdqs -> wdqs
@@ -55,20 +41,7 @@ function image_url_to_image_name {
 }
 
 
-function setup_image_name_url_and_tag {
-    local version_string="$2"
-
-    # ‼️  HEADS UP! This will set the global vars 👿
-    image_url="$1"
-    image_name="$(image_url_to_image_name "$image_url")"
-    image_name_with_tag="${image_name}:${version_string}"
-    image_url_with_tag="${image_url}:${version_string}"
-}
-
-
 function build_wikibase {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -82,12 +55,10 @@ function build_wikibase {
         --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
-        build/Wikibase -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
-
-
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
+        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
+        \
+        build/Wikibase \
 
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
@@ -115,45 +86,42 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        build/WikibaseBundle -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL:$(wikibase_version)" \
+        \
+        build/WikibaseBundle
 }
 
 
 function build_elasticseach {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
-        build/Elasticsearch/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$(elasticsearch_version)" \
+        \
+        build/Elasticsearch
 }
 
 
 function build_wdqs {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
         --build-arg JDK_IMAGE_URL="$JDK_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
-        build/WDQS/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$(wdqs_version)" \
+        \
+        build/WDQS
 }
 
 
 function build_wdqs-frontend {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -161,28 +129,26 @@ function build_wdqs-frontend {
         --build-arg NODE_IMAGE_URL="$NODE_IMAGE_URL" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
-        build/WDQS-frontend/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$(wdqs_frontend_version)" \
+        \
+        build/WDQS-frontend
 }
 
 
 function build_wdqs-proxy {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
-        build/WDQS-proxy/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$(wdqs_proxy_version)" \
+        \
+        build/WDQS-proxy
 }
 
 
 function build_quickstatements {
-    setup_image_name_url_and_tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WMDE_RELEASE_VERSION"
-
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
@@ -190,9 +156,10 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        build/QuickStatements/ -t "$image_url_with_tag" -t "$image_url"
-
-    save_image "$image_name" "$image_url" "$image_name_with_tag" "$image_url_with_tag"
+        -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$(quickstatements_version)" \
+        \
+        build/QuickStatements
 }
 
 
@@ -237,9 +204,6 @@ for arg in "$@"; do
         all)
             build_all
             build_target_set=true
-            ;;
-        -s|--save-image)
-            SAVE_IMAGE=true
             ;;
         -n|--no-cache)
             DOCKER_BUILD_CACHE_OPT="--no-cache"
