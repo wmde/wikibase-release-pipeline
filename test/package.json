@@ -45,6 +45,6 @@
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
 		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts",
-		"lint:fix": "npx prettier *.{json,mjs,ts} */*.{json,mjs,ts} */*/*.{json,mjs,ts} */*/*/*.{json,mjs,ts} --write && npx eslint . --ext .json --ext .mjs --ext .ts --fix"
+		"lint:fix": "npx prettier *.{json,mjs,ts} */*.{json,mjs,ts} */*/*.{json,mjs,ts} */*/*/*.{json,mjs,ts} --write --log-level error && npx eslint . --ext .json --ext .mjs --ext .ts --fix"
 	}
 }
