@@ -159,6 +159,7 @@ jobs:
     # Github Branch Protection rules require this to pass to allow merging
     runs-on: ubuntu-latest
     needs:
+      - lint
       - test
       - test-upgrade
     steps:
