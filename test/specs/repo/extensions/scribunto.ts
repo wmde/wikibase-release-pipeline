@@ -7,7 +7,7 @@ describe( 'Scribunto', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
-	it( 'Should be able to execute lua module', async () => {
+	it( 'Should be able to execute lua module', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const fileContents = await readFile(
 			new URL( 'bananas.lua', import.meta.url ),
@@ -29,7 +29,7 @@ describe( 'Scribunto', function () {
 		assert( executionContent.includes( 'Hello, world!' ) );
 	} );
 
-	it( 'Should be able to execute lua module within 0.05 seconds', async () => {
+	it( 'Should be able to execute lua module within 0.05 seconds', async function () {
 		const cpuTime = await browser.getLuaCpuTime(
 			testEnv.vars.WIKIBASE_URL,
 			'LuaTest'

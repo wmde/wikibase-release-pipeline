@@ -9,7 +9,7 @@ import { versions } from '../../suites/upgrade/versions.js';
 describe( 'Wikibase upgrade', function () {
 	let oldItemID: string;
 
-	before( async () => {
+	before( async function () {
 		// === Set image for current local build of wikibase
 		testEnv.vars.WIKIBASE_UPGRADE_TEST_IMAGE_URL =
 			versions[ process.env.TO_VERSION ];
@@ -41,7 +41,7 @@ describe( 'Wikibase upgrade', function () {
 		await testEnv.settings.before();
 	} );
 
-	it( 'Should be able to create many properties and items', async () => {
+	it( 'Should be able to create many properties and items', async function () {
 		const numEntities = 100;
 		for ( let i = 0; i < numEntities; i++ ) {
 			const itemLabel = 'T267743-';
@@ -70,7 +70,7 @@ describe( 'Wikibase upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able find the item after upgrade', async () => {
+	it( 'Should be able find the item after upgrade', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
@@ -87,7 +87,7 @@ describe( 'Wikibase upgrade', function () {
 		await ItemPage.open( oldItemID );
 	} );
 
-	it( 'should show up in Special:EntityData with json', async () => {
+	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
 		assert( data.entities[ oldItemID ].claims[ 0 ] !== null );
 	} );

@@ -5,7 +5,7 @@ describe( 'WikibaseManifest', function () {
 		await browser.skipIfExtensionNotPresent( this, 'WikibaseManifest' );
 	} );
 
-	it( 'Should have rest endpoint and data', async () => {
+	it( 'Should have rest endpoint and data', async function () {
 		const result = await browser.makeRequest(
 			testEnv.vars.WIKIBASE_URL + '/w/rest.php/wikibase-manifest/v0/manifest'
 		);

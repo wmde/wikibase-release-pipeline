@@ -58,12 +58,12 @@ describe( 'QuickStatements Service', function () {
 	let propertyIdItem = null;
 	let propertyURL = null;
 
-	it( 'Should be able to load the start page', async () => {
+	it( 'Should be able to load the start page', async function () {
 		await browser.url( testEnv.vars.QUICKSTATEMENTS_URL );
 		await $( 'body' ).$( 'p*=QuickStatements is a tool' );
 	} );
 
-	it( 'Should be able to log in', async () => {
+	it( 'Should be able to log in', async function () {
 		await browser.url(
 			`${ testEnv.vars.QUICKSTATEMENTS_URL }/api.php?action=oauth_redirect`
 		);
@@ -92,14 +92,14 @@ describe( 'QuickStatements Service', function () {
 		await expect( $( 'nav.navbar' ) ).toHaveTextContaining( 'QuickStatements' );
 	} );
 
-	it( 'Should be able to click batch button and be taken to the next page', async () => {
+	it( 'Should be able to click batch button and be taken to the next page', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#` );
 		await $( 'a[tt="new_batch"]=New batch' ).click();
 
 		await expect( $( 'span=Create new command batch for' ) ).toExist();
 	} );
 
-	it( 'Should be able to create two items', async () => {
+	it( 'Should be able to create two items', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
@@ -111,7 +111,7 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( responseQ2Data.entities.Q2.id, 'Q2' );
 	} );
 
-	it( 'Should be able to create item with label', async () => {
+	it( 'Should be able to create item with label', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
@@ -124,7 +124,7 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
-	it( 'Should be able to create an item with statement', async () => {
+	it( 'Should be able to create an item with statement', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 		const stringPropertyId = await WikibaseApi.createProperty( 'string' );
@@ -140,7 +140,7 @@ describe( 'QuickStatements Service', function () {
 		).toBe( 'slippery fish' );
 	} );
 
-	it( 'Should be able to add an alias to an item', async () => {
+	it( 'Should be able to add an alias to an item', async function () {
 		await browser.executeQuickStatement( 'Q1|ASv|"Kommer det funka?"' );
 
 		// go look at wikibase
@@ -149,7 +149,7 @@ describe( 'QuickStatements Service', function () {
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) !== true );
 	} );
 
-	it( 'Should be able to add a label to an item', async () => {
+	it( 'Should be able to add a label to an item', async function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some label"' );
 
 		// go look at wikibase
@@ -158,7 +158,7 @@ describe( 'QuickStatements Service', function () {
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) !== true );
 	} );
 
-	it( 'Should be able to add a description to an item', async () => {
+	it( 'Should be able to add a description to an item', async function () {
 		await browser.executeQuickStatement( 'Q1|DSv|"Kommer det funka?"' );
 
 		// go look at wikibase
@@ -167,7 +167,7 @@ describe( 'QuickStatements Service', function () {
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) !== true );
 	} );
 
-	it.skip( 'Should be able to add a sitelink to an item', async () => {
+	it.skip( 'Should be able to add a sitelink to an item', async function () {
 		await browser.executeQuickStatement( 'Q1|Sclient_wiki|"Main_Page"' );
 
 		// go look at wikibase
@@ -176,7 +176,7 @@ describe( 'QuickStatements Service', function () {
 		assert( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) !== true );
 	} );
 
-	it( 'Should be able to add a statement to an item', async () => {
+	it( 'Should be able to add a statement to an item', async function () {
 		propertyId = await WikibaseApi.getProperty( 'string' );
 
 		await browser.executeQuickStatement( `Q1|${ propertyId }|"Will it blend?"` );
@@ -192,12 +192,12 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
-	describe( 'Should be able to add qualifiers to statements with a range of datatypes', () => {
+	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
 		// should be disabled for dynamic tests
 		// eslint-disable-next-line mocha/no-setup-in-describe
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
 			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
-				it( `Should be able to add a ${ mainSnakDataType } statement with a ${ qualifierSnakDataType } qualifier.`, async () => {
+				it( `Should be able to add a ${ mainSnakDataType } statement with a ${ qualifierSnakDataType } qualifier.`, async function () {
 					const itemId = await WikibaseApi.createItem( 'qualifier-item', {} );
 
 					const mainPropertyId =
@@ -221,7 +221,7 @@ describe( 'QuickStatements Service', function () {
 		} );
 	} );
 
-	it( 'Should be able to add statement with qualifiers', async () => {
+	it( 'Should be able to add statement with qualifiers', async function () {
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
 
 		await browser.executeQuickStatement(
@@ -235,7 +235,7 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
-	it( 'Should be able to add a property with "wikibase-item" reference', async () => {
+	it( 'Should be able to add a property with "wikibase-item" reference', async function () {
 		const itemId = await WikibaseApi.createItem( 'reference-item', {} );
 
 		propertyIdItem = await WikibaseApi.getProperty( 'wikibase-item' );
@@ -257,7 +257,7 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( refValue.id, 'Q2' );
 	} );
 
-	it( 'Should be able to add a property with "url" reference', async () => {
+	it( 'Should be able to add a property with "url" reference', async function () {
 		const itemId = await WikibaseApi.createItem( 'reference-url', {} );
 		propertyURL = await WikibaseApi.getProperty( 'url' );
 		const url = '"https://www.wikidata.org"';
@@ -275,7 +275,7 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( refValue, 'https://www.wikidata.org' );
 	} );
 
-	it( 'Should be able to add a property with "string" reference', async () => {
+	it( 'Should be able to add a property with "string" reference', async function () {
 		const itemId = await WikibaseApi.createItem( 'reference-string', {} );
 		const stringValue = '"some string"';
 		const propertyNumber = propertyId.replace( 'P', '' );
@@ -291,7 +291,7 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( refValue, 'some string' );
 	} );
 
-	it( 'Should be able to add and remove a property on an item', async () => {
+	it( 'Should be able to add and remove a property on an item', async function () {
 		const itemId = await WikibaseApi.createItem( 'add-remove', {} );
 
 		await browser.executeQuickStatement( `${ itemId }|${ propertyIdItem }|Q1` );
@@ -311,7 +311,7 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
-	it( 'Should be able to change label', async () => {
+	it( 'Should be able to change label', async function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
@@ -321,7 +321,7 @@ describe( 'QuickStatements Service', function () {
 		);
 	} );
 
-	it( 'Should be able to merge two items', async () => {
+	it( 'Should be able to merge two items', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
@@ -330,7 +330,7 @@ describe( 'QuickStatements Service', function () {
 		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
 	} );
 
-	it( 'Should have a Last Batches button', async () => {
+	it( 'Should have a Last Batches button', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 		await $( 'a[tt="show_your_last_batches"]=Your last batches' ).click();

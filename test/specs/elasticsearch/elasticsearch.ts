@@ -9,7 +9,7 @@ const itemLabel: string = getTestString( 'testItem' );
 describe( 'ElasticSearch', function () {
 	let itemId: string;
 
-	it( 'Should create an item', async () => {
+	it( 'Should create an item', async function () {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
 		await ItemPage.open( itemId );
@@ -18,7 +18,7 @@ describe( 'ElasticSearch', function () {
 		);
 	} );
 
-	it( 'Should be able to set alias', async () => {
+	it( 'Should be able to set alias', async function () {
 		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetAliases/` );
 
 		// input id
@@ -33,7 +33,7 @@ describe( 'ElasticSearch', function () {
 		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
-	it( 'should be able to search case-insensitive', async () => {
+	it( 'should be able to search case-insensitive', async function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';

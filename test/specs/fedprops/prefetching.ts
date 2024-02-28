@@ -8,7 +8,7 @@ describe( 'Property Prefetching', function () {
 	const itemLabel = 'T267743-';
 	const NUM_PROPERTIES = 25;
 
-	it( 'can add many federated properties and it shows up in the ui', async () => {
+	it( 'can add many federated properties and it shows up in the ui', async function () {
 		await browser.url(
 			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
 		);
@@ -45,7 +45,7 @@ describe( 'Property Prefetching', function () {
 		);
 	} );
 
-	it( 'should delete all statements and generate individual changes', async () => {
+	it( 'should delete all statements and generate individual changes', async function () {
 		const statements = await $$( '.wikibase-statementview' );
 		const propertyGuids = await Promise.all(
 			statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
@@ -63,7 +63,7 @@ describe( 'Property Prefetching', function () {
 		await browser.pause( 2000 );
 	} );
 
-	it( 'Should render history page list within threshold', async () => {
+	it( 'Should render history page list within threshold', async function () {
 		await ItemPage.open( itemId, { action: 'history' } );
 		await $( '#pagehistory' );
 
@@ -74,7 +74,7 @@ describe( 'Property Prefetching', function () {
 		);
 	} );
 
-	it( 'Should render recent changes list within threshold', async () => {
+	it( 'Should render recent changes list within threshold', async function () {
 		await browser.url(
 			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);

@@ -2,7 +2,7 @@ import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Search', function () {
-	it( 'Should be able to create an item and search for it', async () => {
+	it( 'Should be able to create an item and search for it', async function () {
 		const itemLabel = 'something';
 		await WikibaseApi.createItem( itemLabel, {} );
 

@@ -1,11 +1,11 @@
 describe( 'Special:RecentChanges', function () {
-	beforeEach( async () => {
+	beforeEach( async function () {
 		await browser.url(
 			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
 	} );
 
-	it( 'Should be able to change limit', async () => {
+	it( 'Should be able to change limit', async function () {
 		await expect(
 			$( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' )
 		).toHaveTextContaining( '50 changes' );
@@ -18,7 +18,7 @@ describe( 'Special:RecentChanges', function () {
 		).toHaveTextContaining( '100 changes' );
 	} );
 
-	it( 'Should be able to change time to 2 hours', async () => {
+	it( 'Should be able to change time to 2 hours', async function () {
 		await expect(
 			$( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' )
 		).toHaveTextContaining( '7 days' );
@@ -29,7 +29,7 @@ describe( 'Special:RecentChanges', function () {
 		).toHaveTextContaining( '2 hours' );
 	} );
 
-	it( 'Should be able to change time to 3 days', async () => {
+	it( 'Should be able to change time to 3 days', async function () {
 		await expect(
 			$( 'div.mw-rcfilters-ui-changesLimitAndDateButtonWidget' )
 		).toHaveTextContaining( '7 days' );

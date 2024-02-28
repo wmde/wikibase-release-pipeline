@@ -20,7 +20,7 @@ describe( 'Wikibase post upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able find the item after upgrade', async () => {
+	it( 'Should be able find the item after upgrade', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
@@ -37,7 +37,7 @@ describe( 'Wikibase post upgrade', function () {
 		await ItemPage.open( oldItemID );
 	} );
 
-	it( 'Should show up in Special:EntityData with json', async () => {
+	it( 'Should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
 		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
@@ -46,7 +46,7 @@ describe( 'Wikibase post upgrade', function () {
 		oldPropertyID = properties[ 0 ];
 	} );
 
-	it( 'Should show up in the Queryservice', async () => {
+	it( 'Should show up in the Queryservice', async function () {
 		let bindings: Binding[];
 
 		await browser.waitUntil(

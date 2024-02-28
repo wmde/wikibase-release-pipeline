@@ -15,12 +15,12 @@ describe( 'Item', function () {
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
 
-	beforeEach( async () => {
+	beforeEach( async function () {
 		await browser.waitForJobs();
 		await browser.waitForJobs( testEnv.vars.WIKIBASE_CLIENT_URL );
 	} );
 
-	it( 'Special:NewItem should not be accessible on client', async () => {
+	it( 'Special:NewItem should not be accessible on client', async function () {
 		// Cannot use SpecialNewItemPage due to using WIKIBASE_CLIENT_URL
 		await browser.url(
 			`${ testEnv.vars.WIKIBASE_CLIENT_URL }/wiki/Special:NewItem?uselang=qqx`
@@ -29,13 +29,13 @@ describe( 'Item', function () {
 		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
 	} );
 
-	it( 'Special:NewItem should be visible on repo', async () => {
+	it( 'Special:NewItem should be visible on repo', async function () {
 		await SpecialNewItemPage.open( { uselang: 'qqx' } );
 		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
 		assert.strictEqual( createNewItem, '(special-newitem)' );
 	} );
 
-	it( 'Should create an item on repo', async () => {
+	it( 'Should create an item on repo', async function () {
 		propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -60,7 +60,7 @@ describe( 'Item', function () {
 	} );
 
 	// creates usage
-	it( 'Should be able to use the item on client with wikitext', async () => {
+	it( 'Should be able to use the item on client with wikitext', async function () {
 		const bodyText = await browser.editPage(
 			testEnv.vars.WIKIBASE_CLIENT_URL,
 			pageTitle,
@@ -72,7 +72,7 @@ describe( 'Item', function () {
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to create site-links from item to client', async () => {
+	it( 'Should be able to create site-links from item to client', async function () {
 		// Create a site-link on a the Main_Page
 		await browser.url(
 			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${ pageTitle }`
@@ -88,7 +88,7 @@ describe( 'Item', function () {
 		assert( siteLinkValue.includes( pageTitle ) );
 	} );
 
-	it( 'Should be able to see site-link change is dispatched to client', async () => {
+	it( 'Should be able to see site-link change is dispatched to client', async function () {
 		const expectedSiteLinkChange: ExternalChange = {
 			type: 'external',
 			ns: 0,
@@ -105,7 +105,7 @@ describe( 'Item', function () {
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to delete the item on repo', async () => {
+	it( 'Should be able to delete the item on repo', async function () {
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
@@ -122,7 +122,7 @@ describe( 'Item', function () {
 		await ItemPage.open( itemId );
 	} );
 
-	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
+	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async function () {
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
