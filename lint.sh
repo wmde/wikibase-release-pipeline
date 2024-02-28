@@ -13,8 +13,8 @@ done
 
 if $SHOULD_FIX
 then
-  echo "Fixing Linting issues in Typescript"
-  NPM_LINT_COMMAND="npm run lint:fix --silent"
+  echo "Fixing Linting and Formatting issues in Typescript"
+  NPM_LINT_COMMAND="npm run prettier --silent"
   PYTHON_FLAGS="--fix"
 else
   NPM_LINT_COMMAND="npm run lint --silent"
