@@ -25,11 +25,11 @@ services:
     ports:
       - "${WIKIBASE_PORT}:80"
     volumes:
-      ## This shares the configuration with jobrunner
+      # # This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase-jobrunner service!
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      # # Uncomment this next line to mount your own LocalSettings.php file
+      # # also uncomment the same line in the wikibase-jobrunner service!
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
@@ -52,9 +52,9 @@ services:
     volumes:
       - shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase service
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      # # Uncomment this next line to mount your own LocalSettings.php file
+      # # also uncomment the same line in the wikibase service
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
@@ -73,7 +73,7 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
     networks:
       default:
         aliases:

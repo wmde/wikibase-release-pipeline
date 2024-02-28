@@ -134,7 +134,7 @@ jobs:
             "WMDE15_BUNDLE",
             # Previous 1.40
             "WMDE14",
-            "WMDE14_BUNDLE",
+            "WMDE14_BUNDLE"
           ]
 
     steps:
