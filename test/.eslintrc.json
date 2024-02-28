@@ -29,7 +29,10 @@
 		},
 		{
 			"files": [ "*.yaml", "*.yml" ],
-			"parser": "yaml-eslint-parser"
+			"parser": "yaml-eslint-parser",
+			"rules": {
+				"yml/no-empty-mapping-value": 1
+			}
 		}
 	]
 }
