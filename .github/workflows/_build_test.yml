@@ -26,7 +26,7 @@ jobs:
             "wdqs",
             "wdqs-frontend",
             "wdqs-proxy",
-            "quickstatements",
+            "quickstatements"
           ]
 
     steps:
@@ -66,7 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
-
     strategy:
       fail-fast: false
       matrix:
@@ -85,7 +84,7 @@ jobs:
             base__pingback,
             base__fedprops,
 
-            example,
+            example
           ]
 
     steps:
@@ -113,7 +112,6 @@ jobs:
         with:
           name: TestResults
           path: test/suites/**/results
-
 
   test-upgrade:
     needs: build
@@ -155,3 +153,14 @@ jobs:
         with:
           name: TestResults
           path: test/suites/**/results
+
+  test-success:
+    # Post-test CI step - to check all tests succeeded
+    # Github Branch Protection rules require this to pass to allow merging
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - test
+      - test-upgrade
+    steps:
+      - run: true
