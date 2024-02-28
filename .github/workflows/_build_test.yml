@@ -132,8 +132,11 @@ jobs:
             "WMDE12",
             "WMDE12_BUNDLE",
             # Latest 1.39
-            "WMDE13",
-            "WMDE13_BUNDLE",
+            "WMDE15",
+            "WMDE15_BUNDLE",
+            # Previous 1.40
+            "WMDE14",
+            "WMDE14_BUNDLE",
           ]
 
     steps:
