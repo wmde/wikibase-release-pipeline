@@ -9,12 +9,12 @@ services:
 
   pingback_beacon:
     image: "node:lts-alpine"
-    user: "node"
+    user: node
     working_dir: /home/node/app
     restart: always
     volumes:
       - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
-    command: "node beacon.mjs"
+    command: node beacon.mjs
     ports:
       - "7171:80"
     depends_on:

@@ -40,13 +40,7 @@ services:
       <<: *wikibase_variables
     healthcheck:
       test:
-        [
-          "CMD",
-          "curl",
-          "--silent",
-          "--fail",
-          "http://${WIKIBASE_HOST}/wiki/Main_Page"
-        ]
+        [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
       interval: 10s
       start_period: 2m
 
@@ -78,7 +72,7 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: "toor"
+      MYSQL_ROOT_PASSWORD: toor
     networks:
       default:
         aliases:
@@ -86,7 +80,7 @@ services:
     volumes:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
     healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -107,7 +101,7 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", $WDQS_FRONTEND_URL ]
+      test: [ CMD, curl, --silent, --fail, $WDQS_FRONTEND_URL ]
       interval: 10s
       start_period: 2m
 
@@ -134,13 +128,11 @@ services:
       - 9999
     healthcheck:
       test:
-        [
-          "CMD",
-          "curl",
-          "--silent",
-          "--fail",
-          "${WDQS_URL}/bigdata/namespace/wdq/sparql"
-        ]
+        - CMD
+        - curl
+        - --silent
+        - --fail
+        - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
       interval: 10s
       start_period: 2m
 

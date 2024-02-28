@@ -26,6 +26,10 @@
 				"@typescript-eslint/semi": 0,
 				"no-unused-expressions": 0
 			}
+		},
+		{
+			"files": [ "*.yaml", "*.yml" ],
+			"parser": "yaml-eslint-parser"
 		}
 	]
 }

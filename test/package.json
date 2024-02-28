@@ -34,6 +34,7 @@
 		"typescript": "~5.2.2",
 		"wdio-mediawiki": "2.4.0",
 		"wdio-wikibase": "^6.0.1",
+		"yaml-eslint-parser": "^1.2.2",
 		"yargs": "^17.7.2"
 	},
 	"browserslist": [
@@ -44,7 +45,9 @@
 	},
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
-		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts",
-		"lint:fix": "npx prettier *.{json,mjs,ts} */*.{json,mjs,ts} */*/*.{json,mjs,ts} */*/*/*.{json,mjs,ts} --write --log-level error && npx eslint . --ext .json --ext .mjs --ext .ts --fix"
+		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml",
+		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
+		"lint:fix:format": "npx prettier *.{json,mjs,ts,yml} */*.{json,mjs,ts,yml} */*/*.{json,mjs,ts,yml} */*/*/*.{json,mjs,ts,yml} --write --log-level error",
+		"lint:fix:lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml --fix"
 	}
 }
