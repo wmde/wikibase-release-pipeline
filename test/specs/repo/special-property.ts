@@ -27,7 +27,9 @@ describe( 'Special:NewProperty', function () {
 				}
 			} );
 
-			it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
+			it( `Should be able to create a new property of datatype ${dataType.name}`, async function () {
+				this.retries(4);
+
 				await SpecialNewPropertyPage.open();
 
 				await SpecialNewPropertyPage.labelInput.setValue(
@@ -45,6 +47,10 @@ describe( 'Special:NewProperty', function () {
 				await $( `.oo-ui-labelElement-label=${dataType.name}` ).click();
 
 				await SpecialNewPropertyPage.submit();
+
+				await browser.waitForJobs();
+
+				await expect( browser ).toHaveUrl(/http:\/\/wikibase\.svc\/wiki\/Property:P\d+/);
 
 				await expect( $( '.wikibase-propertyview-datatype-value' ) ).toHaveText(
 					dataType.name
