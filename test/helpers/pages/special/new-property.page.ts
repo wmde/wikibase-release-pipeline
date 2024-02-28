@@ -21,6 +21,9 @@ class SpecialNewPropertyPage extends SubmittablePage {
 	public get labelInput(): ChainablePromiseElement {
 		return $( 'input[name="label"]' );
 	}
+	public get submitBtn(): ChainablePromiseElement {
+		return $( 'button[value="Create"]' );
+	}
 
 	/**
 	 * `/wiki/Special:NewProperty`
