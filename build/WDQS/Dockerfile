@@ -26,12 +26,15 @@ RUN set -x; \
 FROM ${JDK_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
-# Blazegraph scripts require bash
-# Install gettext for envsubst command, (it needs libintl package)
-# Install curl for the loadData.sh wdqs script (if someone needs it)
-RUN set -x ; \
-    apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2 && \
-    addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
+# # Blazegraph scripts require bash
+# # Install curl for the loadData.sh wdqs script (if someone needs it)
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends bash gettext curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN addgroup --system blazegraph && \
+    adduser --system --gid $(getent group blazegraph | cut -d: -f3) --shell /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
 
