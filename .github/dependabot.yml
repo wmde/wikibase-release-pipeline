@@ -17,5 +17,6 @@ updates:
       prefix: npm format
       include: scope
     groups:
-      patterns:
-        - "*"
+      lint:
+        patterns:
+          - "*"
