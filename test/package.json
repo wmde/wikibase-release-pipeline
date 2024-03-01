@@ -11,7 +11,7 @@
 		"@wdio/mocha-framework": "^8.18.2",
 		"@wdio/reporter": "^8.17.0",
 		"@wdio/spec-reporter": "^8.18.1",
-		"@wmde/eslint-config-wikimedia-typescript": "^0.2.6",
+		"@wmde/eslint-config-wikimedia-typescript": "^0.2.7",
 		"api-testing": "^1.6.0",
 		"apollo-boost": "^0.4.9",
 		"async-wait-until": "^2.0.12",
@@ -19,30 +19,35 @@
 		"cross-fetch": "^4.0.0",
 		"dotenv-expand": "^10.0.0",
 		"envsub": "^4.1.0",
-		"eslint": "^8.51.0",
-		"eslint-config-wikimedia": "0.25.1",
+		"eslint": "^8.57.0",
+		"eslint-config-wikimedia": "0.26.0",
 		"eslint-plugin-compat": "^4.2.0",
-		"eslint-plugin-unicorn": "^48.0.1",
+		"eslint-plugin-unicorn": "^51.0.1",
 		"lodash": "^4.17.21",
 		"mocha": "^10.2.0",
 		"npm-run-all": "^4.1.5",
+		"prettier": "^3.2.5",
+		"prettier-plugin-organize-imports": "^3.2.4",
 		"stylelint-config-wikimedia": "0.16.1",
 		"ts-node": "^10.9.1",
 		"tslib": "^2.6.2",
 		"typescript": "~5.2.2",
 		"wdio-mediawiki": "2.4.0",
 		"wdio-wikibase": "^6.0.1",
+		"yaml-eslint-parser": "^1.2.2",
 		"yargs": "^17.7.2"
 	},
 	"browserslist": [
 		"ie 11"
 	],
 	"engines": {
-		"node": ">=10"
+		"node": ">=14.14"
 	},
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
-		"lint": "npx eslint . --ext .ts",
-		"lint:fix": "npx eslint . --ext .ts --fix"
+		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml",
+		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
+		"lint:fix:format": "npx prettier *.{json,mjs,ts,yml} */*.{json,mjs,ts,yml} */*/*.{json,mjs,ts,yml} */*/*/*.{json,mjs,ts,yml} --write --log-level error",
+		"lint:fix:lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml --fix"
 	}
 }

@@ -9,10 +9,10 @@ const dataTypes = [ wikibasePropertyString ];
 describe( 'Wikibase API', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
-		it( `Should be able to create many properties and items of type ${dataType.name}`, async () => {
+		it( `Should be able to create many properties and items of type ${ dataType.name }`, async function () {
 			Array( 100 ).forEach( async () => {
 				const itemLabel = 'T267743-';
-				const propertyValue = `PropertyExample${dataType.name}Value`;
+				const propertyValue = `PropertyExample${ dataType.name }Value`;
 				const propertyId = await WikibaseApi.createProperty( dataType.urlName );
 				const data = {
 					claims: [

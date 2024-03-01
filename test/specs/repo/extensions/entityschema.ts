@@ -10,7 +10,7 @@ describe( 'EntitySchema', function () {
 		await browser.skipIfExtensionNotPresent( this, 'EntitySchema' );
 	} );
 
-	it( 'Should be able to create an EntitySchema', async () => {
+	it( 'Should be able to create an EntitySchema', async function () {
 		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
@@ -21,12 +21,11 @@ describe( 'EntitySchema', function () {
 		await $( 'input[name ="description"]' ).setValue( testDescription );
 
 		// set template
-		const shexTemplate = (
+		const shexTemplate =
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
-		)
-			.toString()
-			.trim();
+			( await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 ) )
+				.toString()
+				.trim();
 		await $( 'textarea[name ="schema-text"]' ).setValue( shexTemplate );
 
 		await $( 'button[name ="submit"]' ).click();
@@ -38,7 +37,9 @@ describe( 'EntitySchema', function () {
 		const actualTemplateHtml = ( await entitySchemaEl.getHTML() ).trim();
 		const actualLabel = ( await $( '.entityschema-title-label' ).getText() ).trim();
 		const actualId = ( await $( '.entityschema-title-id' ).getText() ).trim();
-		const actualDescription = ( await $( '.entityschema-description' ).getText() ).trim();
+		const actualDescription = (
+			await $( '.entityschema-description' ).getText()
+		).trim();
 
 		assert.strictEqual( actualDescription, testDescription );
 		assert.strictEqual( actualTemplate, shexTemplate );
@@ -49,7 +50,9 @@ describe( 'EntitySchema', function () {
 			'Should contain mw-highlight class in HTML'
 		);
 
-		const linkUrl = await $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
+		const linkUrl = await $( '.external.entityschema-check-schema' ).getAttribute(
+			'href'
+		);
 
 		assert( linkUrl.includes( 'http://validator.svc' ) );
 	} );

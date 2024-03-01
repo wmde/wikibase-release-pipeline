@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 describe( 'Pingback', function () {
-	it( 'Should ping on first page request', async () => {
+	it( 'Should ping on first page request', async function () {
 		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
@@ -13,9 +13,7 @@ describe( 'Pingback', function () {
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
 		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
 
-		const result = await browser.makeRequest(
-			'http://mediawiki.svc'
-		);
+		const result = await browser.makeRequest( 'http://mediawiki.svc' );
 		assert.strictEqual( result.data.length, 2 );
 
 		const requestData = JSON.parse(

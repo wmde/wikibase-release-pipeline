@@ -3,7 +3,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Wikibase pre upgrade', function () {
-	it( 'Should be able to create many properties and items', async () => {
+	it( 'Should be able to create many properties and items', async function () {
 		const numEntities = 100;
 		for ( let i = 0; i < numEntities; i++ ) {
 			const itemLabel = 'T267743-';
@@ -33,7 +33,7 @@ describe( 'Wikibase pre upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able to create a specific item', async () => {
+	it( 'Should be able to create a specific item', async function () {
 		const itemLabel = 'UpgradeItem';
 		const propertyValue = 'UpgradeItemStringValue';
 		const propertyId = await WikibaseApi.createProperty( 'string' );

@@ -6,8 +6,11 @@ describe( 'Babel', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Babel' );
 	} );
 
-	it( 'Should be able to update the user page with language skills', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+	it( 'Should be able to update the user page with language skills', async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		const executionContent = await browser.editPage(
 			testEnv.vars.WIKIBASE_URL,

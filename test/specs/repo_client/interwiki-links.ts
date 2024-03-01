@@ -1,9 +1,9 @@
-import { readFile } from 'fs/promises';
 import assert from 'assert';
+import { readFile } from 'fs/promises';
 import { utf8 } from '../../helpers/readFileEncoding.js';
 
 describe( 'Interwiki links', function () {
-	it( 'Should be able to insert interwiki links', async () => {
+	it( 'Should be able to insert interwiki links', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const repoLinkFile = await readFile(
 			new URL( 'interwiki-link.sql', import.meta.url ),

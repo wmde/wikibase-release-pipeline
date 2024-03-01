@@ -51,10 +51,9 @@ export type TestEnvSettings = {
 	vars: Record<string, string>;
 };
 
-export type TestSettings =
-	TestSuiteSettings &
-	TestRunnerSettings &
-	TestHooks &
-	TestEnvSettings;
+export type TestSettings = TestSuiteSettings &
+TestRunnerSettings &
+TestHooks &
+TestEnvSettings;
 
 export default TestSettings;

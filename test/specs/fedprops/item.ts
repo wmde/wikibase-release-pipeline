@@ -13,9 +13,9 @@ describe( 'Fed props Item', function () {
 	const itemId = 'Q1';
 	const itemLabel = 'T267743-';
 
-	it( 'Should search wikidata.org through wbsearchentities with no local properties', async () => {
+	it( 'Should search wikidata.org through wbsearchentities with no local properties', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
 		);
 		const success = result.data.success;
 		const searchResults = result.data.search;
@@ -24,7 +24,7 @@ describe( 'Fed props Item', function () {
 		assert( searchResults.length > 0 );
 	} );
 
-	it( 'can add a federated property and it shows up in the ui', async () => {
+	it( 'can add a federated property and it shows up in the ui', async function () {
 		const data = {
 			claims: [
 				{
@@ -50,7 +50,7 @@ describe( 'Fed props Item', function () {
 		await SpecialEntityPage.addStatementLink;
 	} );
 
-	it( 'should NOT show up in Special:EntityData with ttl', async () => {
+	it( 'should NOT show up in Special:EntityData with ttl', async function () {
 		try {
 			await SpecialEntityDataPage.getData( 'Q1', 'ttl' );
 		} catch ( error ) {
@@ -59,7 +59,7 @@ describe( 'Fed props Item', function () {
 		}
 	} );
 
-	it( 'should show up in Special:EntityData with json', async () => {
+	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( 'Q1' );
 		assert.notEqual(
 			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
@@ -67,7 +67,7 @@ describe( 'Fed props Item', function () {
 		);
 	} );
 
-	it( 'should NOT show up in Special:EntityData with rdf', async () => {
+	it( 'should NOT show up in Special:EntityData with rdf', async function () {
 		try {
 			await SpecialEntityDataPage.getData( 'Q1', 'rdf' );
 		} catch ( error ) {
@@ -76,9 +76,9 @@ describe( 'Fed props Item', function () {
 		}
 	} );
 
-	it( 'should NOT show property in queryservice ui after creation using prefixes', async () => {
+	it( 'should NOT show property in queryservice ui after creation using prefixes', async function () {
 		const prefixes = [ 'prefix fpwdt: <http://www.wikidata.org/prop/direct/>' ];
-		const query = `SELECT * WHERE{ ?s fpwdt:${propertyId} ?o }`;
+		const query = `SELECT * WHERE{ ?s fpwdt:${ propertyId } ?o }`;
 
 		await QueryServiceUIPage.open( query, prefixes );
 
@@ -92,15 +92,15 @@ describe( 'Fed props Item', function () {
 		// Item should never have made its way into the query service, as TTL doesnt work
 		assert(
 			!( await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
+				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			) )
 		);
 	} );
 
-	it( 'should NOT show up in queryservice ui after creation', async () => {
+	it( 'should NOT show up in queryservice ui after creation', async function () {
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;

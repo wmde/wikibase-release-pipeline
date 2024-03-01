@@ -1,5 +1,5 @@
 # Example Wikibase docker compose setup
-version: '3.4'
+version: "3.4"
 
 x-common-variables: &wikibase_variables
   DB_SERVER: mysql.svc:3306
@@ -25,16 +25,16 @@ services:
     ports:
       - "${WIKIBASE_PORT}:80"
     volumes:
-      ## This shares the configuration with jobrunner
+      # # This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase-jobrunner service!
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      # # Uncomment this next line to mount your own LocalSettings.php file
+      # # also uncomment the same line in the wikibase-jobrunner service!
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
-         - ${WIKIBASE_HOST}
-         - wikibase-docker.svc
+          - ${WIKIBASE_HOST}
+          - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
@@ -43,7 +43,7 @@ services:
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     entrypoint: /bin/bash
-    command:  /jobrunner-entrypoint.sh
+    command: /jobrunner-entrypoint.sh
     links:
       - mysql
     depends_on:
@@ -52,9 +52,9 @@ services:
     volumes:
       - shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase service
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      # # Uncomment this next line to mount your own LocalSettings.php file
+      # # also uncomment the same line in the wikibase service
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
@@ -73,11 +73,11 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
     networks:
       default:
         aliases:
-         - mysql.svc
+          - mysql.svc
 
 volumes:
   shared:

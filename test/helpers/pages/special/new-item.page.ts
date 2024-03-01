@@ -15,6 +15,7 @@ class SpecialNewItemPage extends SubmittablePage {
 	 *
 	 * @param {Object} params
 	 * @param {string} params.uselang - Optional
+	 * @return {void}
 	 */
 	public async open(
 		params: SpecialNewItemPageParams | string = {}
@@ -23,7 +24,7 @@ class SpecialNewItemPage extends SubmittablePage {
 			throw new Error( 'Invalid parameter' );
 		}
 
-		return super.open( `/wiki/Special:NewItem${urlParameters( params )}` );
+		return super.open( `/wiki/Special:NewItem${ urlParameters( params ) }` );
 	}
 }
 

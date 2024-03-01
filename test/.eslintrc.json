@@ -5,6 +5,7 @@
 		"wikimedia/language/es2019",
 		"@wmde/wikimedia-typescript"
 	],
+	"ignorePatterns": [ "**/results/result.json" ],
 	"parserOptions": {
 		"sourceType": "module",
 		"allowImportExportEverywhere": true,
@@ -17,5 +18,21 @@
 		"es-x/no-import-meta": "off",
 		"es-x/no-nullish-coalescing-operators": "off",
 		"es-x/no-class-fields": "off"
-	}
+	},
+	"overrides": [
+		{
+			"files": [ "*.json" ],
+			"rules": {
+				"@typescript-eslint/semi": 0,
+				"no-unused-expressions": 0
+			}
+		},
+		{
+			"files": [ "*.yaml", "*.yml" ],
+			"parser": "yaml-eslint-parser",
+			"rules": {
+				"yml/no-empty-mapping-value": 1
+			}
+		}
+	]
 }

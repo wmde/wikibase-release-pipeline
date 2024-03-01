@@ -14,13 +14,13 @@ describe( 'WikibaseLocalMedia', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
 	} );
 
-	it( 'Should allow to upload an image', async () => {
+	it( 'Should allow to upload an image', async function () {
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
 		);
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:Upload/` );
+		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Upload/` );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );
@@ -30,7 +30,7 @@ describe( 'WikibaseLocalMedia', function () {
 		await expect( $( '#firstHeading' ) ).toHaveText( 'File:Image.png' );
 	} );
 
-	it( 'Should allow to create a property with localMedia datatype', async () => {
+	it( 'Should allow to create a property with localMedia datatype', async function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
 
@@ -40,7 +40,7 @@ describe( 'WikibaseLocalMedia', function () {
 		await expect( $( '#firstHeading' ) ).toHaveTextContaining( propertyId );
 	} );
 
-	it( 'Should allow to use uploaded image on statement', async () => {
+	it( 'Should allow to use uploaded image on statement', async function () {
 		const data: { claims: Claim[] } = {
 			claims: [
 				{
@@ -65,7 +65,7 @@ describe( 'WikibaseLocalMedia', function () {
 		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
 	} );
 
-	it( 'Should allow to use uploaded image on statement in UI', async () => {
+	it( 'Should allow to use uploaded image on statement in UI', async function () {
 		const itemId = await WikibaseApi.createItem( 'image-test-2' );
 		await ItemPage.open( itemId );
 
