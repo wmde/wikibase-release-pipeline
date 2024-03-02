@@ -117,7 +117,6 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
 		const responseQ3Data = await SpecialEntityDataPage.getData( 'Q3' );
-
 		expect( responseQ3Data.entities.Q3.labels.en.value ).toBe( 'Best label' );
 	} );
 
@@ -142,7 +141,6 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-
 		expect( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) ).toBe( false );
 	} );
 
@@ -151,7 +149,6 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-
 		expect( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) ).toBe( false );
 	} );
 
@@ -160,7 +157,6 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-
 		expect( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) ).toBe( false );
 	} );
 
@@ -169,7 +165,6 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-
 		expect( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) ).toBe( false );
 	} );
 
@@ -263,9 +258,9 @@ describe( 'QuickStatements Service', function () {
 		const response = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbgetclaims&format=json&entity=${ itemId }`
 		);
-		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
-
-		expect( refValue ).toBe( 'https://www.wikidata.org' );
+		expect( getReferenceValue( response, propertyIdItem, propertyURL ) ).toBe(
+			'https://www.wikidata.org'
+		);
 	} );
 
 	it( 'Should be able to add a property with "string" reference', async function () {
@@ -279,9 +274,9 @@ describe( 'QuickStatements Service', function () {
 		const response = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbgetclaims&format=json&entity=${ itemId }`
 		);
-		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
-
-		expect( refValue ).toBe( 'some string' );
+		expect( getReferenceValue( response, propertyIdItem, propertyId ) ).toBe(
+			'some string'
+		);
 	} );
 
 	it( 'Should be able to add and remove a property on an item', async function () {
