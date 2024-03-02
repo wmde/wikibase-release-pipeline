@@ -41,10 +41,10 @@ describe( 'EntitySchema', function () {
 			await $( '.entityschema-description' ).getText()
 		).trim();
 
-		assert.strictEqual( actualDescription, testDescription );
-		assert.strictEqual( actualTemplate, shexTemplate );
-		assert.strictEqual( actualLabel, testLabel );
-		assert.strictEqual( actualId, '(E1)' );
+		expect( actualDescription ).toBe( testDescription );
+		expect( actualTemplate ).toBe( shexTemplate );
+		expect( actualLabel ).toBe( testLabel );
+		expect( actualId ).toBe( '(E1)' );
 		assert.ok(
 			actualTemplateHtml.includes( 'mw-highlight' ),
 			'Should contain mw-highlight class in HTML'

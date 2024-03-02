@@ -26,13 +26,13 @@ describe( 'Item', function () {
 			`${ testEnv.vars.WIKIBASE_CLIENT_URL }/wiki/Special:NewItem?uselang=qqx`
 		);
 		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
+		expect( notFoundText ).toBe( '(nosuchspecialpage)' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async function () {
 		await SpecialNewItemPage.open( { uselang: 'qqx' } );
 		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( createNewItem, '(special-newitem)' );
+		expect( createNewItem ).toBe( '(special-newitem)' );
 	} );
 
 	it( 'Should create an item on repo', async function () {

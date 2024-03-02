@@ -107,8 +107,8 @@ describe( 'QuickStatements Service', function () {
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 
-		assert.strictEqual( responseQ1Data.entities.Q1.id, 'Q1' );
-		assert.strictEqual( responseQ2Data.entities.Q2.id, 'Q2' );
+		expect( responseQ1Data.entities.Q1.id ).toBe( 'Q1' );
+		expect( responseQ2Data.entities.Q2.id ).toBe( 'Q2' );
 	} );
 
 	it( 'Should be able to create item with label', async function () {
@@ -118,10 +118,7 @@ describe( 'QuickStatements Service', function () {
 
 		const responseQ3Data = await SpecialEntityDataPage.getData( 'Q3' );
 
-		assert.strictEqual(
-			responseQ3Data.entities.Q3.labels.en.value,
-			'Best label'
-		);
+		expect( responseQ3Data.entities.Q3.labels.en.value ).toBe( 'Best label' );
 	} );
 
 	it( 'Should be able to create an item with statement', async function () {
@@ -182,14 +179,12 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `Q1|${ propertyId }|"Will it blend?"` );
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		assert.strictEqual(
-			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
+		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toBe(
 			'statement'
 		);
-		assert.strictEqual(
-			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value,
-			'Will it blend?'
-		);
+		expect(
+			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value
+		).toBe( 'Will it blend?' );
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
@@ -212,10 +207,9 @@ describe( 'QuickStatements Service', function () {
 					const responseQ1 = await browser.makeRequest(
 						`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbgetclaims&format=json&entity=${ itemId }`
 					);
-					assert.strictEqual(
-						getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId ),
-						qualifierSnakDataType
-					);
+					expect(
+						getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId )
+					).toBe( qualifierSnakDataType );
 				} );
 			} );
 		} );
@@ -229,8 +223,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		assert.strictEqual(
-			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type,
+		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toBe(
 			'statement'
 		);
 	} );
@@ -254,7 +247,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		assert( typeof refValue !== 'string' );
-		assert.strictEqual( refValue.id, 'Q2' );
+		expect( refValue.id ).toBe( 'Q2' );
 	} );
 
 	it( 'Should be able to add a property with "url" reference', async function () {
@@ -272,7 +265,7 @@ describe( 'QuickStatements Service', function () {
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyURL );
 
-		assert.strictEqual( refValue, 'https://www.wikidata.org' );
+		expect( refValue ).toBe( 'https://www.wikidata.org' );
 	} );
 
 	it( 'Should be able to add a property with "string" reference', async function () {
@@ -288,7 +281,7 @@ describe( 'QuickStatements Service', function () {
 		);
 		const refValue = getReferenceValue( response, propertyIdItem, propertyId );
 
-		assert.strictEqual( refValue, 'some string' );
+		expect( refValue ).toBe( 'some string' );
 	} );
 
 	it( 'Should be able to add and remove a property on an item', async function () {
@@ -297,28 +290,19 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `${ itemId }|${ propertyIdItem }|Q1` );
 
 		let responseData = await SpecialEntityDataPage.getData( itemId );
-		assert.strictEqual(
-			propertyIdItem in responseData.entities[ itemId ].claims,
-			true
-		);
+		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toBe( true );
 
 		await browser.executeQuickStatement( `-${ itemId }|${ propertyIdItem }|Q1` );
 
 		responseData = await SpecialEntityDataPage.getData( itemId );
-		assert.strictEqual(
-			propertyIdItem in responseData.entities[ itemId ].claims,
-			false
-		);
+		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toBe( false );
 	} );
 
 	it( 'Should be able to change label', async function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		assert.strictEqual(
-			responseQ1Data.entities.Q1.labels.sv.value,
-			'Some other label'
-		);
+		expect( responseQ1Data.entities.Q1.labels.sv.value ).toBe( 'Some other label' );
 	} );
 
 	it( 'Should be able to merge two items', async function () {
@@ -327,7 +311,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
-		assert.strictEqual( responseQ2Data.entities.Q1.id, 'Q1' );
+		expect( responseQ2Data.entities.Q1.id ).toBe( 'Q1' );
 	} );
 
 	it( 'Should have a Last Batches button', async function () {

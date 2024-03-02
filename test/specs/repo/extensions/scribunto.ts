@@ -36,6 +36,6 @@ describe( 'Scribunto', function () {
 		);
 
 		assert( cpuTime.value < 0.05 );
-		assert.strictEqual( cpuTime.scale, 'seconds' );
+		expect( cpuTime.scale ).toBe( 'seconds' );
 	} );
 } );

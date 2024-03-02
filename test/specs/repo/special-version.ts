@@ -4,8 +4,7 @@ describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
 		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
 		const text = await $( '#sv-software' ).getText();
-		assert.strictEqual(
-			text.includes( `MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }` ),
+		expect( text.includes( `MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }` ) ).toBe(
 			true
 		);
 	} );

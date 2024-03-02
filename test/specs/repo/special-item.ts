@@ -1,4 +1,3 @@
-import assert from 'assert';
 import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
@@ -21,21 +20,21 @@ describe( 'Special:NewItem', function () {
 		const labelText = await $(
 			'.wikibase-entitytermsforlanguageview-label'
 		).getText();
-		assert.strictEqual( labelText, label );
+		expect( labelText ).toBe( label );
 
 		const descriptionText = await $(
 			'.wikibase-entitytermsforlanguageview-description'
 		).getText();
-		assert.strictEqual( descriptionText, description );
+		expect( descriptionText ).toBe( description );
 
 		const firstAliasText = await $(
 			'.wikibase-entitytermsforlanguageview-aliases li:nth-child(1)'
 		).getText();
-		assert.strictEqual( firstAliasText, firstAlias );
+		expect( firstAliasText ).toBe( firstAlias );
 
 		const secondAliasText = await $(
 			'.wikibase-entitytermsforlanguageview-aliases li:nth-child(2)'
 		).getText();
-		assert.strictEqual( secondAliasText, secondAlias );
+		expect( secondAliasText ).toBe( secondAlias );
 	} );
 } );

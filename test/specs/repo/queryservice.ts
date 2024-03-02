@@ -13,14 +13,14 @@ describe( 'QueryService', function () {
 			{ validateStatus: false },
 			{}
 		);
-		assert.strictEqual( result.status, 405 );
+		expect( result.status ).toBe( 405 );
 	} );
 
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
-		assert.strictEqual( result.status, 200 );
+		expect( result.status ).toBe( 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
@@ -28,7 +28,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
@@ -36,7 +36,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph workbench', async function () {
@@ -44,7 +44,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should show up with property in queryservice ui after creation', async function () {

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
@@ -32,7 +31,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to create a property with localMedia datatype', async function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
-		assert.strictEqual( propertyId.startsWith( 'P' ), true );
+		expect( propertyId.startsWith( 'P' ) ).toBe( true );
 
 		await PropertyPage.open( propertyId );
 
@@ -62,7 +61,7 @@ describe( 'WikibaseLocalMedia', function () {
 			'src'
 		);
 
-		assert.strictEqual( imageSource.includes( 'Image.png' ), true );
+		expect( imageSource.includes( 'Image.png' ) ).toBe( true );
 	} );
 
 	it( 'Should allow to use uploaded image on statement in UI', async function () {

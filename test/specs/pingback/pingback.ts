@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async function () {
 		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Main_Page' );
@@ -10,16 +8,16 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
-		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
+		expect( sqlResult.includes( 'WikibasePingback\t' ) ).toBe( true );
+		expect( sqlResult.includes( 'WikibasePingback-1.' ) ).toBe( true );
 
 		const result = await browser.makeRequest( 'http://mediawiki.svc' );
-		assert.strictEqual( result.data.length, 2 );
+		expect( result.data.length ).toBe( 2 );
 
 		const requestData = JSON.parse(
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )
 		);
 
-		assert.strictEqual( requestData.schema, 'WikibasePingback' );
+		expect( requestData.schema ).toBe( 'WikibasePingback' );
 	} );
 } );

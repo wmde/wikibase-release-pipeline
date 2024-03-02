@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
@@ -34,7 +33,7 @@ describe( 'Property Prefetching', function () {
 				};
 			} )
 		);
-		assert.strictEqual( claims.length, NUM_PROPERTIES );
+		expect( claims.length ).toBe( NUM_PROPERTIES );
 
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
@@ -51,11 +50,11 @@ describe( 'Property Prefetching', function () {
 			statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
 		);
 
-		assert.strictEqual( propertyGuids.length, NUM_PROPERTIES );
+		expect( propertyGuids.length ).toBe( NUM_PROPERTIES );
 
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
-			assert.strictEqual( response.success, 1 );
+			expect( response.success ).toBe( 1 );
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run
@@ -68,10 +67,7 @@ describe( 'Property Prefetching', function () {
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
-		assert.strictEqual(
-			( await $$( '#pagehistory li' ) ).length,
-			NUM_PROPERTIES + 1
-		);
+		expect( ( await $$( '#pagehistory li' ) ).length ).toBe( NUM_PROPERTIES + 1 );
 	} );
 
 	it( 'Should render recent changes list within threshold', async function () {
@@ -83,6 +79,6 @@ describe( 'Property Prefetching', function () {
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
 		// +1 for ?
-		assert.strictEqual( ( await $$( 'ul.special li' ) ).length, NUM_PROPERTIES + 3 );
+		expect( ( await $$( 'ul.special li' ) ).length ).toBe( NUM_PROPERTIES + 3 );
 	} );
 } );

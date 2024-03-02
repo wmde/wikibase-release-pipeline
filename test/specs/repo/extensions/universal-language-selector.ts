@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
@@ -12,6 +10,6 @@ describe( 'UniversalLanguageSelector', function () {
 
 		const firstLang = await $( '.imeselector-menu h3' ).getText();
 
-		assert.strictEqual( firstLang, 'English' );
+		expect( firstLang ).toBe( 'English' );
 	} );
 } );

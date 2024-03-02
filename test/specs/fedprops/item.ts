@@ -20,7 +20,7 @@ describe( 'Fed props Item', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert.strictEqual( success, 1 );
+		expect( success ).toBe( 1 );
 		assert( searchResults.length > 0 );
 	} );
 

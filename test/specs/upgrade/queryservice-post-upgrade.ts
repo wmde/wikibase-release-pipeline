@@ -39,8 +39,8 @@ describe( 'Wikibase post upgrade', function () {
 
 		newItemId = await WikibaseApi.createItem( itemLabel, data );
 
-		assert.strictEqual( newItemId.startsWith( 'Q' ), true );
-		assert.strictEqual( newPropertyId.startsWith( 'P' ), true );
+		expect( newItemId.startsWith( 'Q' ) ).toBe( true );
+		expect( newPropertyId.startsWith( 'P' ) ).toBe( true );
 	} );
 
 	it( 'New item should show up in Queryservice', async function () {
@@ -57,7 +57,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert.strictEqual( bindings.length, 9 );
+		expect( bindings.length ).toBe( 9 );
 
 		const statement = getElementByURI(
 			testEnv.vars.WIKIBASE_URL + '/prop/' + newPropertyId,
@@ -100,7 +100,7 @@ describe( 'Wikibase post upgrade', function () {
 		assert( timestamp !== null );
 		assert( statement !== null );
 
-		assert.strictEqual( property.o.value, propertyValue );
-		assert.strictEqual( itemLabelValue.o.value, itemLabel );
+		expect( property.o.value ).toBe( propertyValue );
+		expect( itemLabelValue.o.value ).toBe( itemLabel );
 	} );
 } );

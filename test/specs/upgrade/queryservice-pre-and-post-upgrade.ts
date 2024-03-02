@@ -27,10 +27,10 @@ describe( 'Wikibase post upgrade', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert.strictEqual( success, 1 );
-		assert.strictEqual( searchResults.length, 1 );
-		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
-		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
+		expect( success ).toBe( 1 );
+		expect( searchResults.length ).toBe( 1 );
+		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
@@ -41,7 +41,7 @@ describe( 'Wikibase post upgrade', function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
 		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
-		assert.strictEqual( properties.length, 1 );
+		expect( properties.length ).toBe( 1 );
 
 		oldPropertyID = properties[ 0 ];
 	} );
@@ -61,7 +61,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert.strictEqual( bindings.length, 9 );
+		expect( bindings.length ).toBe( 9 );
 
 		const statement = getElementByURI(
 			`${ testEnv.vars.WIKIBASE_URL }/prop/${ oldPropertyID }`,
@@ -106,9 +106,9 @@ describe( 'Wikibase post upgrade', function () {
 		assert( statement !== null );
 
 		assert( property !== null );
-		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
+		expect( property.o.value ).toBe( 'UpgradeItemStringValue' );
 
 		assert( itemLabelValue !== null );
-		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
+		expect( itemLabelValue.o.value ).toBe( 'UpgradeItem' );
 	} );
 } );
