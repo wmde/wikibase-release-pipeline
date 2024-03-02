@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
@@ -26,7 +25,7 @@ describe( 'Scribunto', function () {
 		);
 
 		// should come from executed lua script
-		assert( executionContent.includes( 'Hello, world!' ) );
+		expect( executionContent.includes( 'Hello, world!' ) ).toBe( true );
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async function () {

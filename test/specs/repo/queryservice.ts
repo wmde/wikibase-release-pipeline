@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -78,28 +77,40 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
 
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:version' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) );
-
-		// label should match on the prefix
-		assert( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) );
-
-		// should have one statement
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) );
-
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		expect( await QueryServiceUIPage.resultIncludes( 'schema:version' ) ).toBe(
+			true
+		);
+		expect( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) ).toBe(
+			true
+		);
+		expect( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) ).toBe(
+			true
 		);
 
+		// label should match on the prefix
+		expect(
+			await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
+		).toBe( true );
+
+		// should have one statement
+		expect(
+			await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
+		).toBe( true );
+
+		expect(
+			await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
+		).toBe( true );
+		expect(
+			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		).toBe( true );
+
 		// property value is set with correct rdf
-		assert(
+		expect(
 			await QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		);
+		).toBe( true );
 
 		// query the property using wdt: prefix
 		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
@@ -108,12 +119,12 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.resultTable;
 
 		// should be set only to the item
-		assert(
+		expect(
 			await QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		);
+		).toBe( true );
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {
@@ -143,14 +154,14 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		assert( !resultText.includes( 'schema:version' ) );
-		assert( !resultText.includes( 'schema:dateModified' ) );
-		assert( !resultText.includes( 'wikibase:sitelinks' ) );
-		assert( !resultText.includes( 'wikibase:identifiers' ) );
-		assert( !resultText.includes( 'rdfs:label' ) );
+		expect( !resultText.includes( 'schema:version' ) ).toBe( true );
+		expect( !resultText.includes( 'schema:dateModified' ) ).toBe( true );
+		expect( !resultText.includes( 'wikibase:sitelinks' ) ).toBe( true );
+		expect( !resultText.includes( 'wikibase:identifiers' ) ).toBe( true );
+		expect( !resultText.includes( 'rdfs:label' ) ).toBe( true );
 
 		// timestamp always shows
-		assert( resultText.includes( 'wikibase:timestamp' ) );
+		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
 	} );
 
 	it( 'Should show results for a select query', async function () {

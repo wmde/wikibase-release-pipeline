@@ -143,7 +143,7 @@ describe( 'QuickStatements Service', function () {
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) !== true );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) ).toBe( false );
 	} );
 
 	it( 'Should be able to add a label to an item', async function () {
@@ -152,7 +152,7 @@ describe( 'QuickStatements Service', function () {
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) !== true );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) ).toBe( false );
 	} );
 
 	it( 'Should be able to add a description to an item', async function () {
@@ -161,7 +161,7 @@ describe( 'QuickStatements Service', function () {
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) !== true );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) ).toBe( false );
 	} );
 
 	it.skip( 'Should be able to add a sitelink to an item', async function () {
@@ -170,7 +170,7 @@ describe( 'QuickStatements Service', function () {
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 
-		assert( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) !== true );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) ).toBe( false );
 	} );
 
 	it( 'Should be able to add a statement to an item', async function () {

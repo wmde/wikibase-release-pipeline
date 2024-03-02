@@ -54,6 +54,6 @@ describe( 'EntitySchema', function () {
 			'href'
 		);
 
-		assert( linkUrl.includes( 'http://validator.svc' ) );
+		expect( linkUrl.includes( 'http://validator.svc' ) ).toBe( true );
 	} );
 } );
