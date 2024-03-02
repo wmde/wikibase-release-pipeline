@@ -28,7 +28,7 @@ describe( 'Wikibase post upgrade', function () {
 		const searchResults = result.data.search;
 
 		expect( success ).toBe( 1 );
-		expect( searchResults.length ).toBe( 1 );
+		expect( searchResults ).toHaveLength( 1 );
 		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
 		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
 
@@ -41,7 +41,7 @@ describe( 'Wikibase post upgrade', function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
 		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
-		expect( properties.length ).toBe( 1 );
+		expect( properties ).toHaveLength( 1 );
 
 		oldPropertyID = properties[ 0 ];
 	} );
@@ -61,7 +61,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		expect( bindings.length ).toBe( 9 );
+		expect( bindings ).toHaveLength( 9 );
 
 		const statement = getElementByURI(
 			`${ testEnv.vars.WIKIBASE_URL }/prop/${ oldPropertyID }`,

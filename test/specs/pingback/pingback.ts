@@ -12,7 +12,7 @@ describe( 'Pingback', function () {
 		expect( sqlResult.includes( 'WikibasePingback-1.' ) ).toBe( true );
 
 		const result = await browser.makeRequest( 'http://mediawiki.svc' );
-		expect( result.data.length ).toBe( 2 );
+		expect( result.data ).toHaveLength( 2 );
 
 		const requestData = JSON.parse(
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )

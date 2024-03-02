@@ -57,7 +57,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		expect( bindings.length ).toBe( 9 );
+		expect( bindings ).toHaveLength( 9 );
 
 		const statement = getElementByURI(
 			testEnv.vars.WIKIBASE_URL + '/prop/' + newPropertyId,

@@ -33,7 +33,7 @@ describe( 'Property Prefetching', function () {
 				};
 			} )
 		);
-		expect( claims.length ).toBe( NUM_PROPERTIES );
+		expect( claims ).toHaveLength( NUM_PROPERTIES );
 
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
@@ -50,7 +50,7 @@ describe( 'Property Prefetching', function () {
 			statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
 		);
 
-		expect( propertyGuids.length ).toBe( NUM_PROPERTIES );
+		expect( propertyGuids ).toHaveLength( NUM_PROPERTIES );
 
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
@@ -67,7 +67,7 @@ describe( 'Property Prefetching', function () {
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
-		expect( ( await $$( '#pagehistory li' ) ).length ).toBe( NUM_PROPERTIES + 1 );
+		expect( await $$( '#pagehistory li' ) ).toHaveLength( NUM_PROPERTIES + 1 );
 	} );
 
 	it( 'Should render recent changes list within threshold', async function () {
@@ -79,6 +79,6 @@ describe( 'Property Prefetching', function () {
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
 		// +1 for ?
-		expect( ( await $$( 'ul.special li' ) ).length ).toBe( NUM_PROPERTIES + 3 );
+		expect( await $$( 'ul.special li' ) ).toHaveLength( NUM_PROPERTIES + 3 );
 	} );
 } );

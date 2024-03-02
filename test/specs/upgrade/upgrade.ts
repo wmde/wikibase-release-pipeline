@@ -78,7 +78,7 @@ describe( 'Wikibase upgrade', function () {
 		const searchResults = result.data.search;
 
 		expect( success ).toBe( 1 );
-		expect( searchResults.length ).toBe( 1 );
+		expect( searchResults ).toHaveLength( 1 );
 		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
 		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
 
