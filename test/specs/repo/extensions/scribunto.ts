@@ -35,7 +35,7 @@ describe( 'Scribunto', function () {
 			'LuaTest'
 		);
 
-		assert( cpuTime.value < 0.05 );
+		expect( cpuTime.value ).toBeLessThan( 0.05 );
 		expect( cpuTime.scale ).toBe( 'seconds' );
 	} );
 } );

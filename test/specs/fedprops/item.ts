@@ -21,7 +21,7 @@ describe( 'Fed props Item', function () {
 		const searchResults = result.data.search;
 
 		expect( success ).toBe( 1 );
-		assert( searchResults.length > 0 );
+		expect( searchResults.length ).toBeGreaterThan( 0 );
 	} );
 
 	it( 'can add a federated property and it shows up in the ui', async function () {
