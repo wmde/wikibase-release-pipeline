@@ -57,11 +57,10 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		const imageSource = await $( '.wikibase-snakview-value img' ).getAttribute(
-			'src'
+		await expect( $( '.wikibase-snakview-value img' ) ).toHaveAttrContaining(
+			'src',
+			'Image.png'
 		);
-
-		expect( imageSource.includes( 'Image.png' ) ).toBe( true );
 	} );
 
 	it( 'Should allow to use uploaded image on statement in UI', async function () {

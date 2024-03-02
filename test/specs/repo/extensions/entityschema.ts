@@ -50,10 +50,9 @@ describe( 'EntitySchema', function () {
 			'Should contain mw-highlight class in HTML'
 		);
 
-		const linkUrl = await $( '.external.entityschema-check-schema' ).getAttribute(
-			'href'
+		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttrContaining(
+			'href',
+			'http://validator.svc'
 		);
-
-		expect( linkUrl.includes( 'http://validator.svc' ) ).toBe( true );
 	} );
 } );
