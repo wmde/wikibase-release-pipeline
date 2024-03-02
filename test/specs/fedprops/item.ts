@@ -42,10 +42,9 @@ describe( 'Fed props Item', function () {
 
 		await ItemPage.open( itemId );
 
-		const actualPropertyValue = await $(
-			'.wikibase-statementgroupview-property'
-		).getText();
-		assert( actualPropertyValue.includes( propertyValue ) ); // value is the label
+		await expect(
+			$( '.wikibase-statementgroupview-property' )
+		).toHaveTextContaining( propertyValue ); // value is the label
 
 		await SpecialEntityPage.addStatementLink;
 	} );

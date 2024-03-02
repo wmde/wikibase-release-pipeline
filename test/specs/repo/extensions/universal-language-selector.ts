@@ -8,8 +8,6 @@ describe( 'UniversalLanguageSelector', function () {
 		await $( '#searchInput' ).click();
 		await $( '.imeselector' ).click();
 
-		const firstLang = await $( '.imeselector-menu h3' ).getText();
-
-		expect( firstLang ).toBe( 'English' );
+		await expect( $( '.imeselector-menu h3' ) ).toHaveText( 'English' );
 	} );
 } );

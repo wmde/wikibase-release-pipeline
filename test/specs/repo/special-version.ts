@@ -1,9 +1,8 @@
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
 		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
-		const text = await $( '#sv-software' ).getText();
-		expect( text.includes( `MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }` ) ).toBe(
-			true
+		await expect( $( '#sv-software' ) ).toHaveTextContaining(
+			`MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }`
 		);
 	} );
 
@@ -47,7 +46,7 @@ describe( 'Special:Version', function () {
 				);
 				await elementSelector.scrollIntoView();
 
-				expect( await elementSelector.getText() ).not.toBeNull();
+				await expect( elementSelector ).toHaveText( /.+/ );
 			} );
 		} );
 	} );

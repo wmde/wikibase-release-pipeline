@@ -31,8 +31,6 @@ describe( 'VisualEditor', function () {
 
 		await $( '.oo-ui-processDialog-actions-primary a' ).click();
 
-		const contentBody = await $( '.mw-parser-output' ).getText();
-
-		expect( contentBody ).toBe( 'TEST' );
+		await expect( $( '.mw-parser-output' ) ).toHaveText( 'TEST' );
 	} );
 } );
