@@ -67,7 +67,7 @@ describe( 'Item', function () {
 			`{{#statements:${ propertyId }|from=${ itemId }}}`
 		);
 		// label should come from repo property
-		assert.equal( bodyText, propertyValue );
+		expect( bodyText ).toBe( propertyValue );
 		assert( bodyText.includes( propertyValue ) );
 	} );
 

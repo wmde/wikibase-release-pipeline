@@ -55,7 +55,7 @@ describe( 'Fed props Item', function () {
 			await SpecialEntityDataPage.getData( 'Q1', 'ttl' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
-			assert.equal( error.request.res.statusCode, 500 );
+			expect( error.request.res.statusCode ).toBe( 500 );
 		}
 	} );
 
@@ -72,7 +72,7 @@ describe( 'Fed props Item', function () {
 			await SpecialEntityDataPage.getData( 'Q1', 'rdf' );
 		} catch ( error ) {
 			assert( error instanceof AxiosError );
-			assert.equal( error.request.res.statusCode, 500 );
+			expect( error.request.res.statusCode ).toBe( 500 );
 		}
 	} );
 
