@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { AxiosError } from 'axios';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
@@ -60,10 +59,9 @@ describe( 'Fed props Item', function () {
 
 	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( 'Q1' );
-		assert.notEqual(
-			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ],
-			null
-		);
+		expect(
+			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ]
+		).not.toBeNull();
 	} );
 
 	it( 'should NOT show up in Special:EntityData with rdf', async function () {
