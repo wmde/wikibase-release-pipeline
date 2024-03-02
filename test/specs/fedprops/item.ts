@@ -16,11 +16,9 @@ describe( 'Fed props Item', function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
 		);
-		const success = result.data.success;
-		const searchResults = result.data.search;
 
-		expect( success ).toBe( 1 );
-		expect( searchResults.length ).toBeGreaterThan( 0 );
+		expect( result.data.success ).toBe( 1 );
+		expect( result.data.search.length ).toBeGreaterThan( 0 );
 	} );
 
 	it( 'can add a federated property and it shows up in the ui', async function () {
