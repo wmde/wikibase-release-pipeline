@@ -85,12 +85,12 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUIPage.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
-		expect(
-			await QueryServiceUIPage.resultIncludes(
+		await expect(
+			QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		).toBe( false );
+		).resolves.toBe( false );
 	} );
 
 	it( 'should NOT show up in queryservice ui after creation', async function () {
@@ -101,31 +101,33 @@ describe( 'Fed props Item', function () {
 		await QueryServiceUIPage.resultTable;
 
 		// Item should never have made its way into the query service, as TTL doesnt work
-		expect( await QueryServiceUIPage.resultIncludes( 'schema:version' ) ).toBe(
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( false );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
+		).resolves.toBe( false );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
+		).resolves.toBe( false );
+
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
+		).resolves.toBe( false );
+
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
+		).resolves.toBe( false );
+
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
+		).resolves.toBe( false );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' )
+		).resolves.toBe( false );
+
+		await expect( QueryServiceUIPage.resultIncludes( 'p:P213' ) ).resolves.toBe(
 			false
 		);
-		expect( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) ).toBe(
-			false
-		);
-		expect( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) ).toBe(
-			false
-		);
-
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
-		).toBe( false );
-
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
-		).toBe( false );
-
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
-		).toBe( false );
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' )
-		).toBe( false );
-
-		expect( await QueryServiceUIPage.resultIncludes( 'p:P213' ) ).toBe( false );
 	} );
 } );

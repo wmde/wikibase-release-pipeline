@@ -77,40 +77,40 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
 
-		expect( await QueryServiceUIPage.resultIncludes( 'schema:version' ) ).toBe(
-			true
-		);
-		expect( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) ).toBe(
-			true
-		);
-		expect( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) ).toBe(
-			true
-		);
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
+		).resolves.toBe( true );
 
 		// label should match on the prefix
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
-		).toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
+		).resolves.toBe( true );
 
 		// should have one statement
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
-		).toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
+		).resolves.toBe( true );
 
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
-		).toBe( true );
-		expect(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
-		).toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		).resolves.toBe( true );
 
 		// property value is set with correct rdf
-		expect(
-			await QueryServiceUIPage.resultIncludes(
+		await expect(
+			QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		).toBe( true );
+		).resolves.toBe( true );
 
 		// query the property using wdt: prefix
 		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
@@ -119,12 +119,12 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.resultTable;
 
 		// should be set only to the item
-		expect(
-			await QueryServiceUIPage.resultIncludes(
+		await expect(
+			QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		).toBe( true );
+		).resolves.toBe( true );
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {

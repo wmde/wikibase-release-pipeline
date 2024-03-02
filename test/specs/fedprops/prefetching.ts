@@ -67,7 +67,9 @@ describe( 'Property Prefetching', function () {
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
-		expect( await $$( '#pagehistory li' ) ).toHaveLength( NUM_PROPERTIES + 1 );
+		await expect( $$( '#pagehistory li' ) ).resolves.toHaveLength(
+			NUM_PROPERTIES + 1
+		);
 	} );
 
 	it( 'Should render recent changes list within threshold', async function () {
@@ -79,6 +81,6 @@ describe( 'Property Prefetching', function () {
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
 		// +1 for ?
-		expect( await $$( 'ul.special li' ) ).toHaveLength( NUM_PROPERTIES + 3 );
+		await expect( $$( 'ul.special li' ) ).resolves.toHaveLength( NUM_PROPERTIES + 3 );
 	} );
 } );
