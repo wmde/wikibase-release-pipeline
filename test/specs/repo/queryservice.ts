@@ -154,11 +154,11 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		expect( !resultText.includes( 'schema:version' ) ).toBe( true );
-		expect( !resultText.includes( 'schema:dateModified' ) ).toBe( true );
-		expect( !resultText.includes( 'wikibase:sitelinks' ) ).toBe( true );
-		expect( !resultText.includes( 'wikibase:identifiers' ) ).toBe( true );
-		expect( !resultText.includes( 'rdfs:label' ) ).toBe( true );
+		expect( resultText.includes( 'schema:version' ) ).toBe( false );
+		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
+		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
 
 		// timestamp always shows
 		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
