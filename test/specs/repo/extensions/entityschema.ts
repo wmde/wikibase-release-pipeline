@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { utf8 } from '../../../helpers/readFileEncoding.js';
 
@@ -32,17 +31,12 @@ describe( 'EntitySchema', function () {
 
 		await $( '#entityschema-schema-text' );
 
-		const entitySchemaEl = await $( '#entityschema-schema-text' );
-		const actualTemplateHtml = ( await entitySchemaEl.getHTML() ).trim();
-
+		const entitySchemaEl = $( '#entityschema-schema-text' );
 		await expect( $( '.entityschema-description' ) ).toHaveText( testDescription );
 		await expect( entitySchemaEl ).toHaveText( shexTemplate );
 		await expect( $( '.entityschema-title-label' ) ).toHaveText( testLabel );
 		await expect( $( '.entityschema-title-id' ) ).toHaveText( '(E1)' );
-		assert.ok(
-			actualTemplateHtml.includes( 'mw-highlight' ),
-			'Should contain mw-highlight class in HTML'
-		);
+		await expect( entitySchemaEl.$( 'div' ) ).toHaveElementClass( 'mw-highlight' );
 
 		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttrContaining(
 			'href',
