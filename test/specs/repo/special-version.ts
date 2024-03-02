@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
 		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
@@ -49,7 +47,7 @@ describe( 'Special:Version', function () {
 				);
 				await elementSelector.scrollIntoView();
 
-				assert( elementSelector.getText() !== null );
+				expect( await elementSelector.getText() ).not.toBeNull();
 			} );
 		} );
 	} );

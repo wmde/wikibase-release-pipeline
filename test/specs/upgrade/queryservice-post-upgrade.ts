@@ -4,7 +4,6 @@ for unknown reasons. This spec existed but was skipped in the code the Wikibase 
 team inherited.
 */
 
-import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import Binding from '../../types/binding.js';
@@ -93,12 +92,12 @@ describe( 'Wikibase post upgrade', function () {
 			bindings
 		);
 
-		assert( dateModified !== null );
-		assert( schemaVersion !== null );
-		assert( siteLinks !== null );
-		assert( identifiers !== null );
-		assert( timestamp !== null );
-		assert( statement !== null );
+		expect( dateModified ).not.toBeNull();
+		expect( schemaVersion ).not.toBeNull();
+		expect( siteLinks ).not.toBeNull();
+		expect( identifiers ).not.toBeNull();
+		expect( timestamp ).not.toBeNull();
+		expect( statement ).not.toBeNull();
 
 		expect( property.o.value ).toBe( propertyValue );
 		expect( itemLabelValue.o.value ).toBe( itemLabel );

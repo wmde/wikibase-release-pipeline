@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { spawnSync } from 'child_process';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
@@ -89,6 +88,6 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
-		assert( data.entities[ oldItemID ].claims[ 0 ] !== null );
+		expect( data.entities[ oldItemID ].claims[ 0 ] ).not.toBeNull();
 	} );
 } );
