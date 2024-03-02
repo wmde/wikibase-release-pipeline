@@ -17,7 +17,7 @@
 		"async-wait-until": "^2.0.12",
 		"axios": "^1.5.1",
 		"cross-fetch": "^4.0.0",
-		"dotenv-expand": "^10.0.0",
+		"dotenv-expand": "^11.0.6",
 		"envsub": "^4.1.0",
 		"eslint": "^8.57.0",
 		"eslint-config-wikimedia": "0.26.0",
