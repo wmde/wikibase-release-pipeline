@@ -70,7 +70,6 @@ describe( 'Item', function () {
 		);
 		// label should come from repo property
 		expect( bodyText ).toBe( propertyValue );
-		expect( bodyText.includes( propertyValue ) ).toBe( true );
 	} );
 
 	// This will generate a change that will dispatch
