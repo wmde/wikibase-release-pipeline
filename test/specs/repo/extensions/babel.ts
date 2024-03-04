@@ -17,13 +17,13 @@ describe( 'Babel', function () {
 			'{{#babel: sv | en }}'
 		);
 
-		expect(
-			executionContent.includes( 'Den här användaren har svenska som modersmål.' )
-		).toBe( true );
-		expect(
-			executionContent.includes(
+		expect( executionContent ).toEqual(
+			expect.stringContaining( 'Den här användaren har svenska som modersmål.' )
+		);
+		expect( executionContent ).toEqual(
+			expect.stringContaining(
 				'This user has a native understanding of English.'
 			)
-		).toBe( true );
+		);
 	} );
 } );

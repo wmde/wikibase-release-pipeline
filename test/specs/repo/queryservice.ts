@@ -154,14 +154,20 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		expect( resultText.includes( 'schema:version' ) ).toBe( false );
-		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
-		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
+		expect( resultText ).toEqual( expect.not.stringContaining( 'schema:version' ) );
+		expect( resultText ).toEqual(
+			expect.not.stringContaining( 'schema:dateModified' )
+		);
+		expect( resultText ).toEqual(
+			expect.not.stringContaining( 'wikibase:sitelinks' )
+		);
+		expect( resultText ).toEqual(
+			expect.not.stringContaining( 'wikibase:identifiers' )
+		);
+		expect( resultText ).toEqual( expect.not.stringContaining( 'rdfs:label' ) );
 
 		// timestamp always shows
-		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
+		expect( resultText ).toEqual( expect.stringContaining( 'wikibase:timestamp' ) );
 	} );
 
 	it( 'Should show results for a select query', async function () {
