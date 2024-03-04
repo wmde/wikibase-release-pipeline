@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { spawnSync } from 'child_process';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
@@ -65,8 +64,8 @@ describe( 'Wikibase upgrade', function () {
 				getTestString( itemLabel ),
 				data
 			);
-			assert.strictEqual( itemId.startsWith( 'Q' ), true );
-			assert.strictEqual( propertyId.startsWith( 'P' ), true );
+			expect( itemId.startsWith( 'Q' ) ).toBe( true );
+			expect( propertyId.startsWith( 'P' ) ).toBe( true );
 		}
 	} );
 
@@ -77,10 +76,10 @@ describe( 'Wikibase upgrade', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert.strictEqual( success, 1 );
-		assert.strictEqual( searchResults.length, 1 );
-		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
-		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
+		expect( success ).toBe( 1 );
+		expect( searchResults ).toHaveLength( 1 );
+		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
@@ -89,6 +88,11 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
-		assert( data.entities[ oldItemID ].claims[ 0 ] !== null );
+		expect( data.entities[ oldItemID ].claims ).toEqual( expect.anything() );
+		expect( Object.keys( data.entities[ oldItemID ].claims ) ).toHaveLength( 1 );
+		const oldPropertyId = Object.keys( data.entities[ oldItemID ].claims )[ 0 ];
+		expect( data.entities[ oldItemID ].claims[ oldPropertyId ] ).toEqual(
+			expect.anything()
+		);
 	} );
 } );

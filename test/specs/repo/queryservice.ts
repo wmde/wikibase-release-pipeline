@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -13,14 +12,14 @@ describe( 'QueryService', function () {
 			{ validateStatus: false },
 			{}
 		);
-		assert.strictEqual( result.status, 405 );
+		expect( result.status ).toBe( 405 );
 	} );
 
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
-		assert.strictEqual( result.status, 200 );
+		expect( result.status ).toBe( 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
@@ -28,7 +27,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
@@ -36,7 +35,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph workbench', async function () {
@@ -44,7 +43,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
 	it( 'Should show up with property in queryservice ui after creation', async function () {
@@ -78,28 +77,40 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
 
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:version' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
+		).resolves.toBe( true );
 
 		// label should match on the prefix
-		assert( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
+		).resolves.toBe( true );
 
 		// should have one statement
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
+		).resolves.toBe( true );
 
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
-		);
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		).resolves.toBe( true );
 
 		// property value is set with correct rdf
-		assert(
-			await QueryServiceUIPage.resultIncludes(
+		await expect(
+			QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		);
+		).resolves.toBe( true );
 
 		// query the property using wdt: prefix
 		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
@@ -108,12 +119,12 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.resultTable;
 
 		// should be set only to the item
-		assert(
-			await QueryServiceUIPage.resultIncludes(
+		await expect(
+			QueryServiceUIPage.resultIncludes(
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		);
+		).resolves.toBe( true );
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {
@@ -143,14 +154,14 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		assert( !resultText.includes( 'schema:version' ) );
-		assert( !resultText.includes( 'schema:dateModified' ) );
-		assert( !resultText.includes( 'wikibase:sitelinks' ) );
-		assert( !resultText.includes( 'wikibase:identifiers' ) );
-		assert( !resultText.includes( 'rdfs:label' ) );
+		expect( resultText.includes( 'schema:version' ) ).toBe( false );
+		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
+		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
 
 		// timestamp always shows
-		assert( resultText.includes( 'wikibase:timestamp' ) );
+		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
 	} );
 
 	it( 'Should show results for a select query', async function () {

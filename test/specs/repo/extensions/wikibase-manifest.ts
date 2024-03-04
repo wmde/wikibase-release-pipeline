@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 describe( 'WikibaseManifest', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'WikibaseManifest' );
@@ -11,20 +9,13 @@ describe( 'WikibaseManifest', function () {
 		);
 		const data = result.data;
 
-		assert.strictEqual( 'wikibase-docker', data.name );
+		expect( 'wikibase-docker' ).toBe( data.name );
 
-		assert.strictEqual(
-			testEnv.vars.WIKIBASE_URL + '/w/api.php',
-			data.api.action
-		);
-		assert.strictEqual(
-			testEnv.vars.WIKIBASE_URL + '/w/rest.php',
-			data.api.rest
-		);
+		expect( testEnv.vars.WIKIBASE_URL + '/w/api.php' ).toBe( data.api.action );
+		expect( testEnv.vars.WIKIBASE_URL + '/w/rest.php' ).toBe( data.api.rest );
 
-		assert.strictEqual(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration',
-			data.oauth.registration_page
-		);
+		expect(
+			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration'
+		).toBe( data.oauth.registration_page );
 	} );
 } );

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
@@ -67,7 +66,7 @@ describe( 'Scribunto Item', function () {
 		);
 
 		// should come from executed lua script
-		assert( executionContent.includes( itemLabel ) );
+		expect( executionContent.includes( itemLabel ) ).toBe( true );
 	} );
 
 	// This will generate a change that will dispatch
@@ -104,6 +103,6 @@ describe( 'Scribunto Item', function () {
 			expectedDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedDeletionChange );
+		expect( actualChange ).toEqual( expectedDeletionChange );
 	} );
 } );
