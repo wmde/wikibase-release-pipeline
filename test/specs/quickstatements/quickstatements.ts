@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
@@ -241,8 +240,10 @@ describe( 'QuickStatements Service', function () {
 			propertyIdItem
 		);
 
-		assert( typeof refValue !== 'string' );
-		expect( refValue.id ).toBe( 'Q2' );
+		expect( typeof refValue ).not.toBe( 'string' );
+		if ( typeof refValue !== 'string' ) {
+			expect( refValue.id ).toBe( 'Q2' );
+		}
 	} );
 
 	it( 'Should be able to add a property with "url" reference', async function () {
