@@ -97,17 +97,17 @@ describe( 'Wikibase post upgrade', function () {
 			bindings
 		);
 
-		expect( dateModified ).not.toBeNull();
-		expect( schemaVersion ).not.toBeNull();
-		expect( siteLinks ).not.toBeNull();
-		expect( identifiers ).not.toBeNull();
-		expect( timestamp ).not.toBeNull();
-		expect( statement ).not.toBeNull();
+		expect( dateModified ).toBe( expect.anything() );
+		expect( schemaVersion ).toBe( expect.anything() );
+		expect( siteLinks ).toBe( expect.anything() );
+		expect( identifiers ).toBe( expect.anything() );
+		expect( timestamp ).toBe( expect.anything() );
+		expect( statement ).toBe( expect.anything() );
 
-		expect( property ).not.toBeNull();
+		expect( property ).toBe( expect.anything() );
 		expect( property.o.value ).toBe( 'UpgradeItemStringValue' );
 
-		expect( itemLabelValue ).not.toBeNull();
+		expect( itemLabelValue ).toBe( expect.anything() );
 		expect( itemLabelValue.o.value ).toBe( 'UpgradeItem' );
 	} );
 } );

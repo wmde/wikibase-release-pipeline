@@ -88,6 +88,6 @@ describe( 'Wikibase upgrade', function () {
 
 	it( 'should show up in Special:EntityData with json', async function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
-		expect( data.entities[ oldItemID ].claims[ 0 ] ).not.toBeNull();
+		expect( data.entities[ oldItemID ].claims[ 0 ] ).toBe( expect.anything() );
 	} );
 } );
