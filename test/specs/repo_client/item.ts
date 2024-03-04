@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -102,7 +101,7 @@ describe( 'Item', function () {
 			expectedSiteLinkChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
+		expect( actualChange ).toEqual( expectedSiteLinkChange );
 	} );
 
 	// This will generate a change that will dispatch
@@ -139,6 +138,6 @@ describe( 'Item', function () {
 			expectedTestDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedTestDeletionChange );
+		expect( actualChange ).toEqual( expectedTestDeletionChange );
 	} );
 } );

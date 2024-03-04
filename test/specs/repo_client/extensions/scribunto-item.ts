@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
@@ -104,6 +103,6 @@ describe( 'Scribunto Item', function () {
 			expectedDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedDeletionChange );
+		expect( actualChange ).toEqual( expectedDeletionChange );
 	} );
 } );
