@@ -97,8 +97,8 @@ describe( 'Property', function () {
 			it( 'Should be able to revert a change', async function () {
 				await $( '=View history' ).click();
 				await expect(
-					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
-				).toBe( 3 );
+					$( 'ul.mw-contributions-list' ).$$( 'li' )
+				).resolves.toHaveLength( 3 );
 				await $( 'ul.mw-contributions-list' ).$( 'li.before' ).$( 'a=undo' ).click();
 				await $(
 					'label=Summary (will be appended to an automatically generated summary):'
@@ -108,8 +108,8 @@ describe( 'Property', function () {
 
 				await $( '=View history' ).click();
 				await expect(
-					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
-				).toBe( 4 );
+					$( 'ul.mw-contributions-list' ).$$( 'li' )
+				).resolves.toHaveLength( 4 );
 				await expect( $( 'span.mw-tag-marker-mw-undo' ) ).toExist();
 				await expect(
 					$( 'ul.mw-contributions-list' ).$( 'li.before' )

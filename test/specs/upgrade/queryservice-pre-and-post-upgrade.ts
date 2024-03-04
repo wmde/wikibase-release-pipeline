@@ -4,7 +4,6 @@ for unknown reasons. This spec existed but was skipped in the code the Wikibase 
 team inherited.
 */
 
-import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
 import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
@@ -27,10 +26,10 @@ describe( 'Wikibase post upgrade', function () {
 		const success = result.data.success;
 		const searchResults = result.data.search;
 
-		assert.strictEqual( success, 1 );
-		assert.strictEqual( searchResults.length, 1 );
-		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
-		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
+		expect( success ).toBe( 1 );
+		expect( searchResults ).toHaveLength( 1 );
+		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
@@ -41,7 +40,7 @@ describe( 'Wikibase post upgrade', function () {
 		const data = await SpecialEntityDataPage.getData( oldItemID );
 		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
-		assert.strictEqual( properties.length, 1 );
+		expect( properties ).toHaveLength( 1 );
 
 		oldPropertyID = properties[ 0 ];
 	} );
@@ -61,7 +60,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert.strictEqual( bindings.length, 9 );
+		expect( bindings ).toHaveLength( 9 );
 
 		const statement = getElementByURI(
 			`${ testEnv.vars.WIKIBASE_URL }/prop/${ oldPropertyID }`,
@@ -98,17 +97,17 @@ describe( 'Wikibase post upgrade', function () {
 			bindings
 		);
 
-		assert( dateModified !== null );
-		assert( schemaVersion !== null );
-		assert( siteLinks !== null );
-		assert( identifiers !== null );
-		assert( timestamp !== null );
-		assert( statement !== null );
+		expect( dateModified ).toEqual( expect.anything() );
+		expect( schemaVersion ).toEqual( expect.anything() );
+		expect( siteLinks ).toEqual( expect.anything() );
+		expect( identifiers ).toEqual( expect.anything() );
+		expect( timestamp ).toEqual( expect.anything() );
+		expect( statement ).toEqual( expect.anything() );
 
-		assert( property !== null );
-		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
+		expect( property ).toEqual( expect.anything() );
+		expect( property.o.value ).toBe( 'UpgradeItemStringValue' );
 
-		assert( itemLabelValue !== null );
-		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
+		expect( itemLabelValue ).toEqual( expect.anything() );
+		expect( itemLabelValue.o.value ).toBe( 'UpgradeItem' );
 	} );
 } );

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -25,14 +24,16 @@ describe( 'Item', function () {
 		await browser.url(
 			`${ testEnv.vars.WIKIBASE_CLIENT_URL }/wiki/Special:NewItem?uselang=qqx`
 		);
-		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
+		await expect( SpecialNewItemPage.firstHeading ).toHaveText(
+			'(nosuchspecialpage)'
+		);
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async function () {
 		await SpecialNewItemPage.open( { uselang: 'qqx' } );
-		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( createNewItem, '(special-newitem)' );
+		await expect( SpecialNewItemPage.firstHeading ).toHaveText(
+			'(special-newitem)'
+		);
 	} );
 
 	it( 'Should create an item on repo', async function () {
@@ -67,8 +68,7 @@ describe( 'Item', function () {
 			`{{#statements:${ propertyId }|from=${ itemId }}}`
 		);
 		// label should come from repo property
-		assert.equal( bodyText, propertyValue );
-		assert( bodyText.includes( propertyValue ) );
+		expect( bodyText ).toBe( propertyValue );
 	} );
 
 	// This will generate a change that will dispatch
@@ -79,13 +79,13 @@ describe( 'Item', function () {
 		);
 		await $( '#wb-setsitelink-submit button' ).click();
 
-		const siteLinkValue = await $(
-			'.wikibase-sitelinklistview-listview li'
-		).getText();
-
 		// label should come from repo property
-		assert( siteLinkValue.includes( 'client_wiki' ) );
-		assert( siteLinkValue.includes( pageTitle ) );
+		await expect(
+			$( '.wikibase-sitelinklistview-listview li' )
+		).toHaveTextContaining( 'client_wiki' );
+		await expect(
+			$( '.wikibase-sitelinklistview-listview li' )
+		).toHaveTextContaining( pageTitle );
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', async function () {
@@ -101,7 +101,7 @@ describe( 'Item', function () {
 			expectedSiteLinkChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
+		expect( actualChange ).toEqual( expectedSiteLinkChange );
 	} );
 
 	// This will generate a change that will dispatch
@@ -138,6 +138,6 @@ describe( 'Item', function () {
 			expectedTestDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedTestDeletionChange );
+		expect( actualChange ).toEqual( expectedTestDeletionChange );
 	} );
 } );
