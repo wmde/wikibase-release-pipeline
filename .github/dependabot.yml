@@ -13,10 +13,13 @@ updates:
     allow:
       - dependency-name: "*eslint*"
       - dependency-name: "prettier*"
+      - dependency-name: "stylelint*"
     commit-message:
       prefix: npm format
       include: scope
     groups:
       lint:
         patterns:
-          - "*"
+          - "*eslint*"
+          - "prettier*"
+          - "stylelint*"
