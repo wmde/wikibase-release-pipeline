@@ -1,7 +1,25 @@
 version: 2
 updates:
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: /test/
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-name: "*eslint*"
+      - dependency-name: "prettier*"
+      - dependency-name: "stylelint*"
+    commit-message:
+      prefix: npm format
+      include: scope
+    groups:
+      lint:
+        patterns:
+          - "*eslint*"
+          - "prettier*"
+          - "stylelint*"
