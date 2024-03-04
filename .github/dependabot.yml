@@ -1,7 +1,24 @@
 version: 2
 updates:
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+
+  - package-ecosystem: npm
+    directory: /test/
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: "@wdio/*"
+      - dependency-name: "wdio-mediawiki"
+    commit-message:
+      prefix: npm
+      include: scope
+    groups:
+      lint:
+        patterns:
+          - "*eslint*"
+          - "prettier*"
+          - "stylelint*"
