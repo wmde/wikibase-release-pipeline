@@ -3,7 +3,7 @@ ARG JRE_IMAGE_URL
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${JRE_IMAGE_URL} as jdk
+FROM ${JRE_IMAGE_URL} as jre
 
 
 # ###########################################################################
@@ -37,7 +37,7 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-
 # an eclipse-temurin ubuntu container.
 # https://github.com/docker-library/docs/blob/master/eclipse-temurin/README.md#using-a-different-base-image
 ENV JAVA_HOME=/opt/java/openjdk
-COPY --from=jdk $JAVA_HOME $JAVA_HOME
+COPY --from=jre $JAVA_HOME $JAVA_HOME
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Blazegraph scripts require bash
