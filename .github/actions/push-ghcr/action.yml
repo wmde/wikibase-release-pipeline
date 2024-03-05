@@ -1,15 +1,15 @@
-name: "push-ghcr"
-description: "Push to GHCR"
+name: push-ghcr
+description: Push to GHCR
 inputs:
   docker_image:
-    description: "name of the docker image to push"
+    description: name of the docker image to push
     required: true
   github_token:
-    description: "token to access GHCR"
+    description: token to access GHCR
     required: true
 
 runs:
-  using: "composite"
+  using: composite
 
   steps:
     - uses: docker/login-action@v3
