@@ -47,7 +47,7 @@
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
 		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml",
 		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
-		"lint:fix:format": "npx prettier *.{json,mjs,ts,yml} */*.{json,mjs,ts,yml} */*/*.{json,mjs,ts,yml} */*/*/*.{json,mjs,ts,yml} --write --log-level error",
+		"lint:fix:format": "npx prettier \"**/*.{json,mjs,ts,yml}\" --write --log-level error",
 		"lint:fix:lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml --fix"
 	}
 }
