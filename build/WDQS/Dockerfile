@@ -26,15 +26,17 @@ RUN set -x; \
 FROM ${JDK_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
-# # Blazegraph scripts require bash
-# # Install curl for the loadData.sh wdqs script (if someone needs it)
+# Blazegraph scripts require bash
+# Install curl for the loadData.sh wdqs script (if someone needs it)
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends bash gettext curl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN addgroup --system blazegraph && \
-    adduser --system --gid $(getent group blazegraph | cut -d: -f3) --shell /bin/bash blazegraph
+    rm -rf /var/lib/apt/lists/* && \
+    \
+    addgroup --system blazegraph && \
+    adduser --system \
+        --gid $(getent group blazegraph | cut -d: -f3) \
+        --shell /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
 
