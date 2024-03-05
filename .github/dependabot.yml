@@ -10,9 +10,6 @@ updates:
     directory: /test/
     schedule:
       interval: weekly
-    ignore:
-      - dependency-name: "@wdio/*"
-      - dependency-name: "wdio-mediawiki"
     commit-message:
       prefix: npm
       include: scope
@@ -22,3 +19,6 @@ updates:
           - "*eslint*"
           - "prettier*"
           - "stylelint*"
+      "@wdio":
+        patterns:
+          - "@wdio/*"
