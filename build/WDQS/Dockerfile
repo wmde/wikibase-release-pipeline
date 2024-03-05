@@ -1,5 +1,10 @@
 ARG DEBIAN_IMAGE_URL
-ARG JDK_IMAGE_URL
+ARG JRE_IMAGE_URL
+
+# ###########################################################################
+# hadolint ignore=DL3006
+FROM ${JRE_IMAGE_URL} as jdk
+
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -21,10 +26,16 @@ RUN set -x; \
     mkdir /tmp/wdqs-service; \
     tar zxvf $TARBALL -C /tmp/wdqs-service --strip-components=1
 
+
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${JDK_IMAGE_URL}
+FROM ${DEBIAN_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+
+# https://github.com/docker-library/docs/tree/master/eclipse-temurin/README.md#supported-tags-and-respective-dockerfile-links
+ENV JAVA_HOME=/opt/java/openjdk
+COPY --from=jdk $JAVA_HOME $JAVA_HOME
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Blazegraph scripts require bash
 # Install curl for the loadData.sh wdqs script (if someone needs it)
