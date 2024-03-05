@@ -25,4 +25,5 @@ if [ -d /wdqs/data/ ]; then
   chown blazegraph:blazegraph -R /wdqs/data/
 fi
 
-su --preserve-environment -g blazegraph - blazegraph "$@"
+# Start Blazegraph as the blazegraph user, forwardin the path so java is available
+su -g blazegraph blazegraph -l -c "export PATH=$PATH; /runBlazegraph.sh"
