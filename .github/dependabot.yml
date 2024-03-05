@@ -10,12 +10,8 @@ updates:
     directory: /test/
     schedule:
       interval: weekly
-    allow:
-      - dependency-name: "*eslint*"
-      - dependency-name: "prettier*"
-      - dependency-name: "stylelint*"
     commit-message:
-      prefix: npm format
+      prefix: npm
       include: scope
     groups:
       lint:
@@ -23,3 +19,6 @@ updates:
           - "*eslint*"
           - "prettier*"
           - "stylelint*"
+      "@wdio":
+        patterns:
+          - "@wdio/*"
