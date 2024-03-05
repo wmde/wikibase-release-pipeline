@@ -32,7 +32,10 @@ RUN set -x; \
 FROM ${DEBIAN_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
-# https://github.com/docker-library/docs/tree/master/eclipse-temurin/README.md#supported-tags-and-respective-dockerfile-links
+# Base as many images as possible on debian.
+# eclipse-temurin is not available for debian, so we copy the JRE over from
+# an eclipse-temurin ubuntu container.
+# https://github.com/docker-library/docs/blob/master/eclipse-temurin/README.md#using-a-different-base-image
 ENV JAVA_HOME=/opt/java/openjdk
 COPY --from=jdk $JAVA_HOME $JAVA_HOME
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
