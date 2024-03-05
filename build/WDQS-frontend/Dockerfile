@@ -1,34 +1,22 @@
-ARG COMPOSER_IMAGE_URL
 ARG NGINX_IMAGE_URL
 ARG NODE_IMAGE_URL
-
-# ###########################################################################
-# hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE_URL} as composer
 ARG WDQSQUERYGUI_COMMIT
-
-# TODO: are there submodules?
-RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
-    git -C /tmp/wikidata-query-gui checkout ${WDQSQUERYGUI_COMMIT} && \
-    git -C /tmp/wikidata-query-gui submodule update --init --recursive && \
-    rm -f /tmp/wikidata-query-gui/.travis.yml && \
-    find /tmp/wikidata-query-gui -name ".git*" -exec rm -rf {} +
 
 
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${NODE_IMAGE_URL} as builder
 
-COPY --from=composer /tmp/wikidata-query-gui /tmp/wikidata-query-gui
+RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
+    git -C /tmp/wikidata-query-gui checkout ${WDQSQUERYGUI_COMMIT} && \
+    find /tmp/wikidata-query-gui -name ".git*" -exec rm -rf {} +
 
 WORKDIR /tmp/wikidata-query-gui
 
 # don't install chromium, it is not used
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# install dependencies
-RUN apk --no-cache add --virtual build-dependencies ca-certificates git jq make g++
-
+# TODO: what if we use the package lock? #reprobuilds
 # we need dev dependencies to run 'npm run build'
 RUN sed -i "/npm: '--production --no-package-lock'/c\npm: '--no-package-lock'" Gruntfile.js && \
     npm install && \
