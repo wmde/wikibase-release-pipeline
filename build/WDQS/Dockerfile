@@ -42,6 +42,7 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Blazegraph scripts require bash
 # Install curl for the loadData.sh wdqs script (if someone needs it)
+SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends bash gettext curl && \
     apt-get clean && \
@@ -49,7 +50,7 @@ RUN apt-get update && \
     \
     addgroup --system blazegraph && \
     adduser --system \
-        --gid $(getent group blazegraph | cut -d: -f3) \
+        --gid "$(getent group blazegraph | cut -d: -f3)" \
         --shell /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
