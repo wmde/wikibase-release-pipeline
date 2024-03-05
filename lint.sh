@@ -16,9 +16,11 @@ then
   echo "Fixing Linting and Formatting Issues"
   NPM_LINT_COMMAND="npm run lint:fix --silent"
   PYTHON_FLAGS="--fix"
+  BLACK_FLAGS=""
 else
   NPM_LINT_COMMAND="npm run lint --silent"
   PYTHON_FLAGS=""
+  BLACK_FLAGS="--check"
 fi
 
 # ℹ️ Linting Javascript test/**/*.ts
@@ -36,6 +38,11 @@ find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \
 docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "
   find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint
 "
+
+# ℹ️ Formatting Python scripts
+$TEST_COMPOSE run --rm --build \
+  -v "$(pwd)":/usr/src/test/src \
+  test-runner -c "python3 -m black src/ $BLACK_FLAGS"
 
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
