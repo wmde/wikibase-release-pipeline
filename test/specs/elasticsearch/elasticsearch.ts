@@ -9,7 +9,7 @@ const itemLabel: string = getTestString( 'testItem' );
 describe( 'ElasticSearch', function () {
 	let itemId: string;
 
-	it( 'Should create an item', async () => {
+	it( 'Should create an item', async function () {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
 		await ItemPage.open( itemId );
@@ -18,8 +18,8 @@ describe( 'ElasticSearch', function () {
 		);
 	} );
 
-	it( 'Should be able to set alias', async () => {
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetAliases/` );
+	it( 'Should be able to set alias', async function () {
+		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetAliases/` );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -33,7 +33,7 @@ describe( 'ElasticSearch', function () {
 		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
-	it( 'should be able to search case-insensitive', async () => {
+	it( 'should be able to search case-insensitive', async function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';
@@ -45,7 +45,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=${testLabel}&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ testLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -74,7 +74,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 

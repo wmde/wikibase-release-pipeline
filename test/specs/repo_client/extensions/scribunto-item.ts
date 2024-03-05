@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
@@ -19,7 +18,7 @@ describe( 'Scribunto Item', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
-	it( 'Should create an item on repo', async () => {
+	it( 'Should create an item on repo', async function () {
 		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -43,7 +42,7 @@ describe( 'Scribunto Item', function () {
 		);
 	} );
 
-	it( 'Should be able to reference an item on client using Lua', async () => {
+	it( 'Should be able to reference an item on client using Lua', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const template = await readFile(
 			new URL( 'repo-client.lua', import.meta.url ),
@@ -67,11 +66,11 @@ describe( 'Scribunto Item', function () {
 		);
 
 		// should come from executed lua script
-		assert( executionContent.includes( itemLabel ) );
+		expect( executionContent.includes( itemLabel ) ).toBe( true );
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to delete the item on repo', async () => {
+	it( 'Should be able to delete the item on repo', async function () {
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
@@ -80,7 +79,7 @@ describe( 'Scribunto Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
@@ -88,7 +87,7 @@ describe( 'Scribunto Item', function () {
 		await ItemPage.open( itemId );
 	} );
 
-	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
+	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async function () {
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
@@ -104,6 +103,6 @@ describe( 'Scribunto Item', function () {
 			expectedDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedDeletionChange );
+		expect( actualChange ).toEqual( expectedDeletionChange );
 	} );
 } );

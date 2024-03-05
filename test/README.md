@@ -61,5 +61,5 @@ you’ll want to consult the documentation of the following libraries we use:
   (`browser`, `$`, `waitForVisible`, …)
 * [Mocha](https://mochajs.org/) as the general testing framework
   (`describe`, `it`, `before`, …)
-* [`assert`](https://nodejs.org/api/assert.html) for simple assertions
-  (`ok`, `strictEqual`, …)
+* [`expect`](https://webdriver.io/docs/api/expect-webdriverio/) for assertions
+  (`toBe`, `toEqual`, …)

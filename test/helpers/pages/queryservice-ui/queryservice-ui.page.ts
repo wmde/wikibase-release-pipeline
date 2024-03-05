@@ -4,6 +4,7 @@ class QueryServiceUIPage extends SubmittablePage {
 	public get submitBtn(): ChainablePromiseElement {
 		return $( '#execute-button' );
 	}
+
 	public get resultTable(): ChainablePromiseElement {
 		return $( '#query-result table.table.table-hover' );
 	}
@@ -13,6 +14,7 @@ class QueryServiceUIPage extends SubmittablePage {
 	 *
 	 * @param {string} query
 	 * @param {string[]} prefixes - Optional
+	 * @return {void}
 	 */
 	public async open( query: string, prefixes: string[] = [] ): Promise<void> {
 		await browser.url( testEnv.vars.WDQS_FRONTEND_URL );
@@ -20,7 +22,7 @@ class QueryServiceUIPage extends SubmittablePage {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
 		return browser.url(
-			`${testEnv.vars.WDQS_FRONTEND_URL}/#${encodeURI( query )}`
+			`${ testEnv.vars.WDQS_FRONTEND_URL }/#${ encodeURI( query ) }`
 		);
 	}
 
@@ -31,7 +33,7 @@ class QueryServiceUIPage extends SubmittablePage {
 		}
 
 		// eslint-disable-next-line security/detect-non-literal-regexp
-		const regexp = new RegExp( `(${prop})(\\s+)(${value})` );
+		const regexp = new RegExp( `(${ prop })(\\s+)(${ value })` );
 		const matches = text.match( regexp );
 		return matches !== null;
 	}

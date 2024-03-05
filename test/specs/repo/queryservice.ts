@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -6,48 +5,48 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
-describe( 'QueryService', () => {
-	it( 'Should not be able to post to sparql endpoint', async () => {
+describe( 'QueryService', function () {
+	it( 'Should not be able to post to sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`,
 			{ validateStatus: false },
 			{}
 		);
-		assert.strictEqual( result.status, 405 );
+		expect( result.status ).toBe( 405 );
 	} );
 
-	it( 'Should be able to get sparql endpoint', async () => {
+	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
-		assert.strictEqual( result.status, 200 );
+		expect( result.status ).toBe( 200 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/assets`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph workbench', async () => {
+	it( 'Should not be possible to reach blazegraph workbench', async function () {
 		const result = await browser.makeRequest(
-			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/#query`,
+			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
-		assert.strictEqual( result.status, 404 );
+		expect( result.status ).toBe( 404 );
 	} );
 
-	it( 'Should show up with property in queryservice ui after creation', async () => {
+	it( 'Should show up with property in queryservice ui after creation', async function () {
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
 
@@ -69,7 +68,7 @@ describe( 'QueryService', () => {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -78,45 +77,57 @@ describe( 'QueryService', () => {
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
 
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:version' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'schema:dateModified' ) );
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
+		).resolves.toBe( true );
 
 		// label should match on the prefix
-		assert( await QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
+		).resolves.toBe( true );
 
 		// should have one statement
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' ) );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
+		).resolves.toBe( true );
 
-		assert( await QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' ) );
-		assert(
-			await QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
-		);
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
+		).resolves.toBe( true );
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
+		).resolves.toBe( true );
 
 		// property value is set with correct rdf
-		assert(
-			await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}>`,
+		await expect(
+			QueryServiceUIPage.resultIncludes(
+				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		);
+		).resolves.toBe( true );
 
 		// query the property using wdt: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${propertyId} ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
 
 		// should be set only to the item
-		assert(
-			await QueryServiceUIPage.resultIncludes(
-				`<${testEnv.vars.WIKIBASE_URL}/entity/${itemId}>`,
+		await expect(
+			QueryServiceUIPage.resultIncludes(
+				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		);
+		).resolves.toBe( true );
 	} );
 
-	it( 'Should not show up in queryservice ui after deletion', async () => {
+	it( 'Should not show up in queryservice ui after deletion', async function () {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
@@ -128,11 +139,11 @@ describe( 'QueryService', () => {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${itemId} ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -143,17 +154,17 @@ describe( 'QueryService', () => {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		assert( !resultText.includes( 'schema:version' ) );
-		assert( !resultText.includes( 'schema:dateModified' ) );
-		assert( !resultText.includes( 'wikibase:sitelinks' ) );
-		assert( !resultText.includes( 'wikibase:identifiers' ) );
-		assert( !resultText.includes( 'rdfs:label' ) );
+		expect( resultText.includes( 'schema:version' ) ).toBe( false );
+		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
+		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
+		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
 
 		// timestamp always shows
-		assert( resultText.includes( 'wikibase:timestamp' ) );
+		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
 	} );
 
-	it( 'Should show results for a select query', async () => {
+	it( 'Should show results for a select query', async function () {
 		await QueryServiceUIPage.open( 'SELECT * where { ?a ?b ?c }' );
 		await QueryServiceUIPage.submit();
 		expect(
@@ -161,7 +172,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it( 'Should show list of properties', async () => {
+	it( 'Should show list of properties', async function () {
 		await QueryServiceUIPage.open( `SELECT ?property ?propertyType ?propertyLabel ?propertyDescription ?propertyAltLabel WHERE {
 			?property wikibase:propertyType ?propertyType .
 			SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
@@ -188,7 +199,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it( 'Should show a property connected to item', async () => {
+	it( 'Should show a property connected to item', async function () {
 		const propertyId = await WikibaseApi.createProperty(
 			wikibasePropertyString.urlName
 		);
@@ -216,7 +227,7 @@ describe( 'QueryService', () => {
 
 		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
 		WHERE {
-		  <${testEnv.vars.WIKIBASE_URL}/entity/${itemId}> <${testEnv.vars.WIKIBASE_URL}/prop/direct/${propertyId}> "test-property" .
+		  <${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }> <${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }> "test-property" .
 		}` );
 
 		// wait for WDQS-updater

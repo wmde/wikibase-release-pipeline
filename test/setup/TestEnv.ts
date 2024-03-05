@@ -1,11 +1,11 @@
-import { mkdirSync, rmSync } from 'fs';
-import { spawnSync } from 'child_process';
-import * as readline from 'readline';
+import logger, { Logger } from '@wdio/logger';
 import chalk from 'chalk';
+import { spawnSync } from 'child_process';
+import { mkdirSync, rmSync } from 'fs';
+import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/TestSettings.js';
 import checkIfUp from './checkIfUp.js';
-import logger, { Logger } from '@wdio/logger';
 import { makeTestSettings } from './makeTestSettings.js';
 
 declare global {
@@ -15,7 +15,9 @@ declare global {
 
 export default class TestEnv {
 	public settings: TestSettings;
+
 	public testLog: Logger;
+
 	public baseDockerComposeCmd: string;
 
 	public static createWithDefaults(
@@ -27,9 +29,7 @@ export default class TestEnv {
 
 	public constructor( settings?: TestSettings ) {
 		if ( !settings ) {
-			throw new Error(
-				'Settings are required to create a Test Environment'
-			);
+			throw new Error( 'Settings are required to create a Test Environment' );
 		}
 
 		this.settings = settings;
@@ -49,7 +49,7 @@ export default class TestEnv {
 			await this.settings.beforeServices();
 
 			console.log(
-				`▶️  Bringing up the test environment ${this.settings.debug ? '(DEBUG)' : ''}`
+				`▶️  Bringing up the test environment ${ this.settings.debug ? '(DEBUG)' : '' }`
 			);
 
 			await this.stopServices();
@@ -62,7 +62,6 @@ export default class TestEnv {
 			}
 
 			await this.waitForServices();
-
 		} catch ( e ) {
 			throw new SevereServiceError( e );
 		}
@@ -73,18 +72,20 @@ export default class TestEnv {
 	}
 
 	public async waitForServices(): Promise<void[]> {
-		return Promise.all( this.settings.waitForUrls().map(
-			async ( waitForURL: string ): Promise<void> => {
-				await checkIfUp( waitForURL, this.settings.testTimeout );
-				this.testLog.info( `ℹ️  Successfully loaded ${waitForURL}` );
-			}
-		) );
+		return Promise.all(
+			this.settings
+				.waitForUrls()
+				.map( async ( waitForURL: string ): Promise<void> => {
+					await checkIfUp( waitForURL, this.settings.testTimeout );
+					this.testLog.info( `ℹ️  Successfully loaded ${ waitForURL }` );
+				} )
+		);
 	}
 
 	public async runDockerComposeCmd(
 		dockerComposeOptionsCommandAndArgs: string
 	): Promise<string> {
-		const dockerComposeCmd = `${this.baseDockerComposeCmd} ${dockerComposeOptionsCommandAndArgs}`;
+		const dockerComposeCmd = `${ this.baseDockerComposeCmd } ${ dockerComposeOptionsCommandAndArgs }`;
 
 		this.testLog.debug( 'Running: ', dockerComposeCmd );
 
@@ -92,7 +93,11 @@ export default class TestEnv {
 			stdio: 'pipe',
 			shell: true,
 			encoding: 'utf-8',
-			env: { ...this.vars, OUTPUT_DIR: this.settings.outputDir, PATH: process.env.PATH }
+			env: {
+				...this.vars,
+				OUTPUT_DIR: this.settings.outputDir,
+				PATH: process.env.PATH
+			}
 		} );
 
 		// Docker Compose puts all status logging stderr so we instead use
@@ -111,27 +116,41 @@ export default class TestEnv {
 			return null;
 		}
 
-		console.log( chalk.yellow( `\nExiting and taking "${this.settings.name}" test environment DOWN in 5 seconds...` ) );
-		console.log( chalk.yellow(
-			`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${this.settings.name}" test environment UP`
-		) );
+		console.log(
+			chalk.yellow(
+				`\nExiting and taking "${ this.settings.name }" test environment DOWN in 5 seconds...`
+			)
+		);
+		console.log(
+			chalk.yellow(
+				`<Ctrl-C>  Do that now or <Enter> to exit and keep the "${ this.settings.name }" test environment UP`
+			)
+		);
 
 		const takeDown = async (): Promise<void> => {
-			console.log( chalk.red( `Exiting. Taking "${this.settings.name}" test environment DOWN` ) );
+			console.log(
+				chalk.red(
+					`Exiting. Taking "${ this.settings.name }" test environment DOWN`
+				)
+			);
 			await this.down();
 			process.stdin.setEncoding( null );
 			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line no-process-exit
+			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
 		const leaveUp = (): void => {
-			console.log( chalk.green( `Exiting. Leaving ${this.settings.name}" test environment UP` ) );
+			console.log(
+				chalk.green(
+					`Exiting. Leaving ${ this.settings.name }" test environment UP`
+				)
+			);
 			process.stdin.setEncoding( null );
 			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line no-process-exit
+			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
@@ -174,19 +193,22 @@ export default class TestEnv {
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			mkdirSync( this.settings.outputDir, { recursive: true } );
 		} catch ( e ) {
-			this.testLog.error( '❌ Error occurred in setting-up outuput directory:', e );
+			this.testLog.error(
+				'❌ Error occurred in setting-up outuput directory:',
+				e
+			);
 		}
 	}
 
 	protected makeBaseDockerComposeCmd(): string {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
-			`--project-directory ${this.settings.pwd}/suites`,
+			`--project-directory ${ this.settings.pwd }/suites`,
 			'-p wikibase-suite-test-services'
 		];
 
 		this.settings.composeFiles.forEach( ( composeFile ) =>
-			dockerComposeCmdArray.push( `-f ${composeFile}` )
+			dockerComposeCmdArray.push( `-f ${ composeFile }` )
 		);
 
 		return dockerComposeCmdArray.join( ' ' );
@@ -200,7 +222,7 @@ export default class TestEnv {
 	protected async stopServices( removeVolumes: boolean = true ): Promise<void> {
 		this.testLog.info( '▶️  Stopping Wikibase Suite services' );
 		await this.runDockerComposeCmd(
-			`down ${removeVolumes && '--volumes'} --remove-orphans --timeout 1`
+			`down ${ removeVolumes && '--volumes' } --remove-orphans --timeout 1`
 		);
 	}
 }
