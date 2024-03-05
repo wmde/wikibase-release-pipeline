@@ -7,6 +7,7 @@ ARG NODE_IMAGE_URL
 FROM ${COMPOSER_IMAGE_URL} as composer
 ARG WDQSQUERYGUI_COMMIT
 
+# TODO: are there submodules?
 RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
     git -C /tmp/wikidata-query-gui checkout ${WDQSQUERYGUI_COMMIT} && \
     git -C /tmp/wikidata-query-gui submodule update --init --recursive && \
@@ -28,12 +29,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 # install dependencies
 RUN apk --no-cache add --virtual build-dependencies ca-certificates git jq make g++
 
-# TODO do npm build instead of leaving any dev node modules hanging around
-RUN mv package.json package.json.orig \
-    && jq 'delpaths([["devDependencies","karma-qunit"],["devDependencies","sinon"]])' \
-        > package.json < package.json.orig \
-    && npm install \
-    && npm run build
+# we need dev dependencies to run 'npm run build'
+RUN sed -i "/npm: '--production --no-package-lock'/c\npm: '--no-package-lock'" Gruntfile.js && \
+    npm install && \
+    npm run build
 
 
 # ###########################################################################
