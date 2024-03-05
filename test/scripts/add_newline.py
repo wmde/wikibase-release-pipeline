@@ -50,7 +50,7 @@ if __name__ == "__main__":
     root = sys.argv[1]
     should_fix = False
     if len(sys.argv) > 3:
-        if sys.argv[3] == '--fix':
+        if sys.argv[3] == "--fix":
             should_fix = True
     found_errors = False
     for file in sys.argv[2].split("\n"):
