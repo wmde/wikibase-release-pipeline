@@ -48,6 +48,6 @@
 		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml",
 		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
 		"lint:fix:format": "npx prettier \"**/*.{json,md,mjs,ts,yml}\" --write --log-level error",
-		"lint:fix:lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml --fix"
+		"lint:fix:lint": "npx eslint . --ext .json,.mjs,.ts,.yml --fix"
 	}
 }
