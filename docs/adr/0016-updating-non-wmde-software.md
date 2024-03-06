@@ -14,8 +14,7 @@ Wikibase Suite includes a number of software components that are not maintained 
 - Broadly-used software which is maintained by non-Wikimedia parties, e.g. Elastic Search.
 - Wikibase/Wikidata-specific software which is maintained by Wikimedia community (volunteer) developers, e.g. Quick Statements.
 
-All these software components receive updates from their maintainers in a way which is not necessarily synchronized with the release cycle of Wikibase Suite.
-Users of Wikibase Suite might benefit from those changes, in particular from the updates which fix the incorrect functionality (bugs), and issues related to the software security.
+All these software components receive updates from their maintainers in a way which is not necessarily synchronized with the release cycle of Wikibase Suite. Users of Wikibase Suite might benefit from those changes, in particular from the updates which fix the incorrect functionality (bugs), and issues related to the software security.
 
 Offering updates to software components not maintained by the WMDE that are known to compatible with the rest of the Wikibase Suite would require applying updates to versions of the components included in the Wikibase Suite, possible changes to Wikibase Suite structure (e.g. configuration) when applicable, and necessary testing procedures to ensure continued functionality of the Wikibase Suite with the updated components.
 

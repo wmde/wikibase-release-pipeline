@@ -10,9 +10,7 @@ accepted
 
 During the first iteration of development on the wikibase release pipeline, one of the goals was to build and run it against the master branches of MediaWiki, Wikibase and other bundled extensions ([T270133](https://phabricator.wikimedia.org/T270133)).
 
-Because of the lack of such docker images at the time the team decided to create our own, inspired by the work of the official docker images.
-The benefits of this decision was seen when previously untested parts of Wikibase (Multi Wiki testing client/repo ) now had some coverage on the master branch.
-During the development of the pipeline several issues were detected by using these custom docker images, sometimes the pipeline would breakdown days before a bug report would appear on phabricator.
+Because of the lack of such docker images at the time the team decided to create our own, inspired by the work of the official docker images. The benefits of this decision was seen when previously untested parts of Wikibase (Multi Wiki testing client/repo ) now had some coverage on the master branch. During the development of the pipeline several issues were detected by using these custom docker images, sometimes the pipeline would breakdown days before a bug report would appear on phabricator.
 
 This can be useful but also comes with some additional drawbacks that can affect the maintainability and the quality of the releases WMDE will produce.
 

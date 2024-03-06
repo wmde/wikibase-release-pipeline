@@ -43,8 +43,7 @@ Primary key fingerprint: 1D98 867E 8298 2C8F E0AB  C25F 9B69 B310 9D3B B7B0
 
 Docker images can be signed with [DCT](https://docs.docker.com/engine/security/trust/) which allows you to sign tags associated with images.
 
-DCT works by using a set of keys to sign a specific tag in a docker repository.
-Using signatures is optional and only apply to a specific tag, there can be signed and unsigned tags within the same repository.
+DCT works by using a set of keys to sign a specific tag in a docker repository. Using signatures is optional and only apply to a specific tag, there can be signed and unsigned tags within the same repository.
 
 #### Root key
 

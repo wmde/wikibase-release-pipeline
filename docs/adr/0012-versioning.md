@@ -39,5 +39,4 @@ For this reason we probably want to adopt adopt another scheme in order to avoid
 - We will not create branches of every minor version number we release. Instead we will use tagging.
 - Releases in between new release branches being cut will be versioned by appending our own version number to the mediawiki version.
 
-Example: A Wikibase release based on 1.35.0 would be versioned as 1.35.0-wmde.0
-Example: A queryservice frontend release would be versioned wmde.0, wmde.1 etc.
+Example: A Wikibase release based on 1.35.0 would be versioned as 1.35.0-wmde.0 Example: A queryservice frontend release would be versioned wmde.0, wmde.1 etc.

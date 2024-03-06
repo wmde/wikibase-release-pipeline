@@ -8,8 +8,7 @@ accepted
 
 ## Context
 
-We need to determine a place to host our new release artifacts (tarballs).
-Currently releases are being served by the Extension Distributor and the release branches of the git repositories.
+We need to determine a place to host our new release artifacts (tarballs). Currently releases are being served by the Extension Distributor and the release branches of the git repositories.
 
 ## Github
 
@@ -63,12 +62,12 @@ Currently releases are being served by the Extension Distributor and the release
 
 ---
 
-| Repository    | Service provider | Free to WMDE                               | Self-Service (1)                                | Method of publishing                                               | Visibility/Current usage | Estimated effort | Documentation       | URL                              | Trusted |
-| ------------- | ---------------- | ------------------------------------------ | ----------------------------------------------- | ------------------------------------------------------------------ | ------------------------ | ---------------- | ------------------- | -------------------------------- | ------- |
-| Github        | Github/Microsoft | Currently, Might change in the future. (2) | Yes                                             | Github Releases / Github Action Artifact                           | -                        | Low              | Good                | github.com/wikimedia/            | no      |
-| WMF Releases  | WMF              | Yes                                        | No (negotiation needed - likely only initially) | FTP/SFTP/SCP                                                       | -                        | High             | Poor                | releases.wikimedia.org           | yes     |
-| Wikiba.se     | WMDE             | Yes                                        | Yes                                             | FTP or some kind of pulling by the server (TBD - not existing yet) | -                        | High             | Poor (non existent) | wikiba.se, or releases.wikiba.se | yes     |
-| ExtensionDist | WMF/Volunteers?  | Yes                                        | No (negotiation needed - likely only initially) | Undefined, would need adaptations                                  | Low (3)                  | Very High        | Poor                | extdist.wmflabs.org/dist/        | yes     |
+| Repository | Service provider | Free to WMDE | Self-Service (1) | Method of publishing | Visibility/Current usage | Estimated effort | Documentation | URL | Trusted |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Github | Github/Microsoft | Currently, Might change in the future. (2) | Yes | Github Releases / Github Action Artifact | - | Low | Good | github.com/wikimedia/ | no |
+| WMF Releases | WMF | Yes | No (negotiation needed - likely only initially) | FTP/SFTP/SCP | - | High | Poor | releases.wikimedia.org | yes |
+| Wikiba.se | WMDE | Yes | Yes | FTP or some kind of pulling by the server (TBD - not existing yet) | - | High | Poor (non existent) | wikiba.se, or releases.wikiba.se | yes |
+| ExtensionDist | WMF/Volunteers? | Yes | No (negotiation needed - likely only initially) | Undefined, would need adaptations | Low (3) | Very High | Poor | extdist.wmflabs.org/dist/ | yes |
 
 ---
 

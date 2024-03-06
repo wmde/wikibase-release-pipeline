@@ -47,26 +47,15 @@
 
 The behavior of the tests can be modified with several environment variables.
 
-- `WIKIBASE_URL`: protocol, host name and port of the MediaWiki installation.
-  Defaults to `http://127.0.0.1:8080` (Vagrant).
-- `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_URL`.
-  Defaults to `/w`.
-- `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.:
-  Property ID of a property with datatype `string`, `url`, etc. –
-  if not set, a new property of this type will be created each time the tests are run.
-  (This will fail unless anonymous users are allowed to create properties on the wiki,
-  so setting `WIKIBASE_PROPERTY_STRING` correctly is recommended.)
-- `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test
-  execution on http://localhost:7900/?autoconnect=1&resize=scale
+- `WIKIBASE_URL`: protocol, host name and port of the MediaWiki installation. Defaults to `http://127.0.0.1:8080` (Vagrant).
+- `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_URL`. Defaults to `/w`.
+- `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.: Property ID of a property with datatype `string`, `url`, etc. – if not set, a new property of this type will be created each time the tests are run. (This will fail unless anonymous users are allowed to create properties on the wiki, so setting `WIKIBASE_PROPERTY_STRING` correctly is recommended.)
+- `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test execution on http://localhost:7900/?autoconnect=1&resize=scale
 
 ## Write more tests
 
-When working on the browser tests,
-you’ll want to consult the documentation of the following libraries we use:
+When working on the browser tests, you’ll want to consult the documentation of the following libraries we use:
 
-- [WebdriverIO](https://webdriver.io/docs/api) for controlling the browser
-  (`browser`, `$`, `waitForVisible`, …)
-- [Mocha](https://mochajs.org/) as the general testing framework
-  (`describe`, `it`, `before`, …)
-- [`expect`](https://webdriver.io/docs/api/expect-webdriverio/) for assertions
-  (`toBe`, `toEqual`, …)
+- [WebdriverIO](https://webdriver.io/docs/api) for controlling the browser (`browser`, `$`, `waitForVisible`, …)
+- [Mocha](https://mochajs.org/) as the general testing framework (`describe`, `it`, `before`, …)
+- [`expect`](https://webdriver.io/docs/api/expect-webdriverio/) for assertions (`toBe`, `toEqual`, …)

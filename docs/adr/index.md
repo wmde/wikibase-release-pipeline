@@ -6,8 +6,7 @@ Architecture (understood widely) decisions should be documented in the ADR forma
 
 A template for this repository is provided here: @subpage adr_nnnn
 
-ADRs related to possible changed, superseded or any other outdated decisions should NOT be removed from the directory.
-Superseding decisions should reference ADRs they're changing or overriding.
+ADRs related to possible changed, superseded or any other outdated decisions should NOT be removed from the directory. Superseding decisions should reference ADRs they're changing or overriding.
 
 Current ADRs include:
 

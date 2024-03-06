@@ -10,14 +10,11 @@ accepted
 
 We intend to package and release software that is not maintained by WMDE. For example, the Wikidata Query Service (WDQS).
 
-This software comes from a variety of sources including software that is used and maintained by the WMF in Wikimedia
-production Wikis but also some from complete third parties.
+This software comes from a variety of sources including software that is used and maintained by the WMF in Wikimedia production Wikis but also some from complete third parties.
 
 Some of this software including ElasticSearch and WikibaseLocalMedia already have curated release notes for versions.
 
-Other software such as WDQS and Mediawiki extensions do not have release notes. They may have notable changes documented either
-in git commit messages or in phabricator tickets linked to those commits. It could be possible to computationally extract a compile these
-with some effort.
+Other software such as WDQS and Mediawiki extensions do not have release notes. They may have notable changes documented either in git commit messages or in phabricator tickets linked to those commits. It could be possible to computationally extract a compile these with some effort.
 
 Software such as QuickStatements may prove difficult to build release note from git. It may require inspecting the code changes by eye.
 

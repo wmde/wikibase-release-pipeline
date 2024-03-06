@@ -12,8 +12,7 @@ As we adopt the new release strategy we also want to determine a process for wri
 
 Our release process will still be closely bound to the release branches WMF are using it makes sense to inspect their process for producing and maintaining release notes within the source control system.
 
-For mediawiki/core the release notes are maintained and worked on within the source repository.
-Each release branch contains a RELEASE_NOTES-N.NN document describing changes that was made to the software up until the point the branch was cut from master. Any backports to these branches also comes with an update to the release notes document.
+For mediawiki/core the release notes are maintained and worked on within the source repository. Each release branch contains a RELEASE_NOTES-N.NN document describing changes that was made to the software up until the point the branch was cut from master. Any backports to these branches also comes with an update to the release notes document.
 
 As a new release branch is cut/created a new [template] release document is added to the master branch and any previous release notes are merged into a [HISTORY] document within the repository containing all previous release notes.
 

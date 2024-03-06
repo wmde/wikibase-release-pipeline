@@ -8,18 +8,17 @@ proposed
 
 ## Context
 
-The release pipeline of Wikibase will produce a tarball release package containing a tested version of the Wikibase extension.
-The package will normally include the necessary files to run the software and sometimes documentation of changes to the software and how to use them.
+The release pipeline of Wikibase will produce a tarball release package containing a tested version of the Wikibase extension. The package will normally include the necessary files to run the software and sometimes documentation of changes to the software and how to use them.
 
 In order to get a overview on the practices by the open-source php community a brief survey was done on the releases of some popular projects.
 
-| Name      | Release notes | Historic release notes | Installation instructions | Upgrade instructions | Hidden files | Vendor folder |
-| --------- | ------------- | ---------------------- | ------------------------- | -------------------- | ------------ | ------------- |
-| mediawiki | yes           | yes                    | yes                       | yes                  | no           | yes (9)       |
-| laravel   | no (1)        | no                     | no                        | no                   | some (6)     | no            |
-| nextcloud | no (2)        | no                     | no                        | no                   | some (7)     | yes           |
-| joomla    | no (3)        | no (3)                 | yes (3)                   | no (4)               | no           | yes           |
-| wordpress | no (5)        | no                     | yes (8)                   | no                   | no           | -             |
+| Name | Release notes | Historic release notes | Installation instructions | Upgrade instructions | Hidden files | Vendor folder |
+| --- | --- | --- | --- | --- | --- | --- |
+| mediawiki | yes | yes | yes | yes | no | yes (9) |
+| laravel | no (1) | no | no | no | some (6) | no |
+| nextcloud | no (2) | no | no | no | some (7) | yes |
+| joomla | no (3) | no (3) | yes (3) | no (4) | no | yes |
+| wordpress | no (5) | no | yes (8) | no | no | - |
 
 ---
 
@@ -37,8 +36,7 @@ In order to get a overview on the practices by the open-source php community a b
 
 MediaWiki sticks out from the crowd by including most of their release specific documentation in each of the tarball releases while all other projects in the survey do not. At first glance this feels like a undesirable pattern to adopt as it's uncommon among other projects. In reality this points out a tested and proven methodology for documenting changes and shipping release notes by the mediawiki community. Release notes are added to the release branch and refined throughout the release process and then used as a template for the documentation on mediawiki.org.
 
-The `vendor` folder comes populated in some of the release packages for the different projects and this is also the behavior of [Extension Distributor].
-The reasons given for this behavior dates back to a [request from 2014] to include the composer dependencies in tarballs as composer could for various reasons not be available on the system the software was supposed to be installed on.
+The `vendor` folder comes populated in some of the release packages for the different projects and this is also the behavior of [Extension Distributor]. The reasons given for this behavior dates back to a [request from 2014] to include the composer dependencies in tarballs as composer could for various reasons not be available on the system the software was supposed to be installed on.
 
 ## Decision
 
