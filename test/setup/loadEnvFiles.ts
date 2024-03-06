@@ -19,7 +19,7 @@ function loadEnvFile(
 	const envVars = { ...providedEnvvars, ...envVarsFromFile };
 	const { parsed: expandedEnvVars } = dotenvExpand.expand( {
 		parsed: envVars,
-		processEnv: {}
+		ignoreProcessEnv: true
 	} );
 
 	return expandedEnvVars;
