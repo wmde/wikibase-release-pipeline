@@ -14,7 +14,7 @@ Should these be bundled as separate tarballs? Or as a single one?
 
 [Query Service backend] releases is currently [built and published](https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/rdf/+/refs/heads/master/dist/) as a [service zip archive] which contains the necessary components including the built-in UI of blazegraph.
 
-The [Query Service UI] has at one point been part of this build process but the two components have recently been [separated](https://phabricator.wikimedia.org/T241291). 
+The [Query Service UI] has at one point been part of this build process but the two components have recently been [separated](https://phabricator.wikimedia.org/T241291).
 
 ## Decision
 
@@ -22,8 +22,8 @@ As the [Query Service backend] does not depend on the [Query Service UI] and the
 
 ## Consequences
 
-* The [Query Service backend] will be released as a standalone component as described by the [service zip archive].
-* The [Query Service UI] will be released as a standalone component.  
+- The [Query Service backend] will be released as a standalone component as described by the [service zip archive].
+- The [Query Service UI] will be released as a standalone component.
 
 [Query Service UI]: https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/gui
 [Query Service backend]: https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/rdf

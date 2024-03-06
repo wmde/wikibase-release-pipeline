@@ -2,8 +2,8 @@
 
 The example docker compose configuration consists of two files:
 
-* `docker-compose.yml` contains two services: wikibase and mysql
-* `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements 
+- `docker-compose.yml` contains two services: wikibase and mysql
+- `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements
 
 **We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
 
@@ -60,9 +60,9 @@ In the volumes section of the wikibase service in [docker-compose.extra.yml](doc
 
 Looking inside extra-install.sh, you see that it executes two scripts which set up an OAuth consumer for quickstatements and creates indices for Elasticsearch.
 
-
 There are also additional environment variables passed into Wikibase to configure the Elasticsearch host and port.
+
 ```yml
-  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
-  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 ```

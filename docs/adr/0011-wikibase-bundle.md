@@ -17,10 +17,9 @@ As we publish our releases we also need to make a decision if we want this bundl
 
 ## Decision
 
-The wikibase release pipeline will not produce a bundled tarball to be published. 
+The wikibase release pipeline will not produce a bundled tarball to be published.
 
 ## Consequences
 
 - No bundled tarball will be published
 - A bundled wikibase docker image and a base image will be produced
-

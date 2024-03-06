@@ -15,22 +15,22 @@ It can again be enabled in wmde.10/1.38
 
 **Default Wikibase**
 
-- Previous release (internal ports 82**)
+- Previous release (internal ports 82\*\*)
   - https://wikibase-product-testing-previous.wmcloud.org (8280 internal)
   - https://wikibase-query-testing-previous.wmcloud.org (8281 internal)
   - https://wikibase-qs-testing-previous.wmcloud.org (8282 internal)
-- Latest release (internal ports 83**)
+- Latest release (internal ports 83\*\*)
   - https://wikibase-product-testing.wmcloud.org (8380 internal)
   - https://wikibase-query-testing.wmcloud.org (8381 internal)
   - https://wikibase-qs-testing.wmcloud.org (8382 internal)
 
 **Federated Properties**
 
-- Previous release with fed props (internal ports 84**)
+- Previous release with fed props (internal ports 84\*\*)
   - https://wikibase-product-testing-fedprops-previous.wmcloud.org (8480 internal)
   - https://wikibase-query-testing-fedprops-previous.wmcloud.org (8481 internal)
   - https://wikibase-qs-testing-fedprops-previous.wmcloud.org (8482 internal)
-- Latest release with fed props (internal ports 85**)
+- Latest release with fed props (internal ports 85\*\*)
   - https://wikibase-product-testing-fedprops.wmcloud.org (8580 internal)
   - https://wikibase-query-testing-fedprops.wmcloud.org (8581 internal)
   - https://wikibase-qs-testing-fedprops.wmcloud.org (8582 internal)
@@ -54,13 +54,13 @@ sudo chown mediawiki:wikidev /opt/test-systems
 sudo chmod +775 /opt/test-systems
 ```
 
-You can create a test system using the `prepare-docker-compose-config` script from https://github.com/wmde/wikibase-suite-test-system-tools which generates the necessary docker compose configuration using parametrized input. 
+You can create a test system using the `prepare-docker-compose-config` script from https://github.com/wmde/wikibase-suite-test-system-tools which generates the necessary docker compose configuration using parametrized input.
 The input paremeters are:
 
- - IMAGE_PREFIX: Prefix of images to use. Use an empty string to use locally loaded images.
- - TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
- - EXAMPLE_HASH: Hash of the release pipeline repository to use the docker compose example from
- - BUILD_NUMBER: Build of images, or tag, to use for images of the test system
+- IMAGE_PREFIX: Prefix of images to use. Use an empty string to use locally loaded images.
+- TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
+- EXAMPLE_HASH: Hash of the release pipeline repository to use the docker compose example from
+- BUILD_NUMBER: Build of images, or tag, to use for images of the test system
 
 For example:
 

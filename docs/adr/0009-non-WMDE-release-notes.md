@@ -30,6 +30,7 @@ We will not write custom release notes for software that we do not maintain.
 We will attempt to forward already curated release notes from upstream maintainers.
 
 ## Consequences
+
 When adding components to the release pipeline that have curated release notes we should merge these release notes into the appropriate artifacts.
 
 If upstream components start providing release notes we should make changes to include them in the appropriate artifacts when possible.

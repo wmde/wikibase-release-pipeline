@@ -12,9 +12,9 @@ Docker allows tags to be defined for the images in a docker repository. The defa
 
 Previously the wikibase repository has shipped `wikibase/wikibase` images with three different latest tags depending on the flavor of wikibase.
 
-* latest-bundle
-* latest-base
-* latest (seems to be the base)
+- latest-bundle
+- latest-base
+- latest (seems to be the base)
 
 As we now have a separate image called `wikibase/wikibase-bundle` the need for latest-bundle / latest-base is gone and we need to decide if tagging each image with "latest" is something we still want to do for each of the images we are to publish.
 

@@ -8,7 +8,7 @@ accepted
 
 ## Context
 
-WMF does during their release process create a number of branches which are used during the release process to orchestrate the different tools to produce the correct artifacts and to support the continuous deployment to production. The release branches (ex. REL1_35) are cut for MediaWiki and every extension repository with the purpose of maintaining releases and the weekly deployment branches are (ex. wmf/1.36.0-wmf.13) are used to deployments to the different [deployment groups](https://versions.toolforge.org/). 
+WMF does during their release process create a number of branches which are used during the release process to orchestrate the different tools to produce the correct artifacts and to support the continuous deployment to production. The release branches (ex. REL1_35) are cut for MediaWiki and every extension repository with the purpose of maintaining releases and the weekly deployment branches are (ex. wmf/1.36.0-wmf.13) are used to deployments to the different [deployment groups](https://versions.toolforge.org/).
 
 Both of these types of branches are maintained by the WMF and will be used by the wikibase release strategy. However we need to decide how to maintain our own intermediate releases that will be published on releases.wikimedia.org, dockerhub and tagged on git.
 
@@ -27,7 +27,7 @@ Example:
 3. WMF releases a 1.35.1 security patch release of Mediawiki
 4. We release 1.35.2 which contains Mediawiki 1.35.1 (and the previous changes mentioned)
 
-For this reason we probably want to adopt adopt another scheme in order to avoid this confusion. Looking at the MediaWiki naming convention for release candidates (`1.35.0-rc.0`) something along these lines might be sufficient to prevent any confusion. 
+For this reason we probably want to adopt adopt another scheme in order to avoid this confusion. Looking at the MediaWiki naming convention for release candidates (`1.35.0-rc.0`) something along these lines might be sufficient to prevent any confusion.
 
 ## Decision
 
