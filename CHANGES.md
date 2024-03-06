@@ -3,6 +3,15 @@
 This file is only intended to serve the developers of this repository and of the releases.
 This provides an overview of the releases that have been made using this release pipeline.
 
+## March 2024: Mayor releases for 1.41.0
+- [MediaWiki release announcement: 1.41.0](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/OMDFHJ2SKKJH775RW4UTC754OY4TP7UU/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.41)
+- [Wikibase Suite Release task T354644](https://phabricator.wikimedia.org/T354644)
+
+| Suite Version | Version Info | Date available | Release task  |
+|---------------|----------------------|----------------|------------| --------------|
+| wmde.17 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.17/variables.env)) | MediaWiki (1.41.0, PHP 8.2.15, debian/apache 2.4.57-2), WDQS (0.3.137)    | 06 March 2024 | [T354644](https://phabricator.wikimedia.org/T354644) |
+
 ## February 2024: Security releases for 1.40.2
 - [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
 - [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
