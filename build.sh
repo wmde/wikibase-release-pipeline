@@ -119,7 +119,7 @@ function build_wdqs {
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
-        --build-arg JDK_IMAGE_URL="$JDK_IMAGE_URL" \
+        --build-arg JRE_IMAGE_URL="$JRE_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
         -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL" \
