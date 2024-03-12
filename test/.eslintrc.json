@@ -5,7 +5,7 @@
 		"wikimedia/language/es2019",
 		"@wmde/wikimedia-typescript"
 	],
-	"ignorePatterns": [ "**/results/result.json" ],
+	"ignorePatterns": [ "**/results/result.json", "!.github", "!example" ],
 	"parserOptions": {
 		"sourceType": "module",
 		"allowImportExportEverywhere": true,
@@ -31,6 +31,7 @@
 			"files": [ "*.yaml", "*.yml" ],
 			"parser": "yaml-eslint-parser",
 			"rules": {
+				"spaced-comment": 0,
 				"yml/no-empty-mapping-value": 1
 			}
 		}
