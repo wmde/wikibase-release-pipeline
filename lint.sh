@@ -15,11 +15,11 @@ if $SHOULD_FIX
 then
   echo "Fixing Linting and Formatting Issues"
   NPM_LINT_COMMAND="npm run lint:fix --silent"
-  PYTHON_FLAGS="--fix"
+  NEWLINE_FLAGS="--fix"
   BLACK_FLAGS=""
 else
   NPM_LINT_COMMAND="npm run lint --silent"
-  PYTHON_FLAGS=""
+  NEWLINE_FLAGS=""
   BLACK_FLAGS="--check"
 fi
 
@@ -45,5 +45,5 @@ $RUN_TEST_RUNNER_CMD "python3 -m black ../ $BLACK_FLAGS"
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
 $TEST_COMPOSE run --rm --build -v "$(pwd):/tmp" test-runner -c "
-  python3 scripts/add_newline.py /tmp '$MY_FILES' $PYTHON_FLAGS
+  python3 scripts/add_newline.py /tmp '$MY_FILES' $NEWLINE_FLAGS
 "
