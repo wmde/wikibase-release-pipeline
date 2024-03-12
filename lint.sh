@@ -40,7 +40,7 @@ docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadol
 "
 
 # ℹ️ Formatting Python scripts
-$TEST_COMPOSE run --rm --build test-runner -c "python3 -m black ../ $BLACK_FLAGS"
+$RUN_TEST_RUNNER_CMD "python3 -m black ../ $BLACK_FLAGS"
 
 # ℹ️ Linting newlines across the repo
 MY_FILES="$(git ls-files)"
