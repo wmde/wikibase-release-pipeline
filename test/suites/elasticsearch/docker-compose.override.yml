@@ -6,8 +6,6 @@ x-common-variables: &elastic_search
 
 services:
   wikibase:
-    volumes:
-      - ./elasticsearch/wikibase-extra-install.sh:/extra-install.sh
     environment:
       <<: *elastic_search
 
