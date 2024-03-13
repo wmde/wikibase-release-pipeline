@@ -10,10 +10,10 @@ export const testEnv = TestEnv.createWithDefaults( {
 	],
 	composeFiles: [
 		'../example/docker-compose.yml',
-		'../example/docker-compose.extra.yml',
 		'suites/example/docker-compose.override.yml'
 	],
 	envFiles: [
+		'../example/defaults.env',
 		'../example/template.env',
 		'suites/example/example.env',
 		'../local.env'

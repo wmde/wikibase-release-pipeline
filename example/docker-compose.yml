@@ -1,8 +1,8 @@
-# Example Wikibase docker compose setup
-version: "3.4"
+version: '3.5'
 
 x-common-variables: &wikibase_variables
-  DB_SERVER: mysql.svc:3306
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
+  DB_SERVER: ${DB_HOST}:${DB_PORT}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
@@ -12,11 +12,15 @@ x-common-variables: &wikibase_variables
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  WIKIBASE_HOST: ${WIKIBASE_HOST}
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+  QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_HOST}
+
+name: ${DOCKER_PROJECT_NAME}
 
 services:
   wikibase:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     links:
       - mysql
     depends_on:
@@ -25,7 +29,9 @@ services:
     ports:
       - "${WIKIBASE_PORT}:80"
     volumes:
-      # # This shares the configuration with jobrunner
+      - quickstatements-data:/quickstatements/data
+      - ./extra-install.sh:/extra-install.sh
+      ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase-jobrunner service!
@@ -34,14 +40,18 @@ services:
       default:
         aliases:
           - ${WIKIBASE_HOST}
-          - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
+      VIRTUAL_HOST: ${WIKIBASE_HOST}
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     entrypoint: /bin/bash
     command: /jobrunner-entrypoint.sh
     links:
@@ -52,33 +62,172 @@ services:
     volumes:
       - shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-      # # Uncomment this next line to mount your own LocalSettings.php file
-      # # also uncomment the same line in the wikibase service
-      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
-    networks:
-      default:
-        aliases:
-          - wikibase-jobrunner.svc
+      ## Uncomment this next line to mount your own LocalSettings.php file
+      ## also uncomment the same line in the wikibase service
+      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     environment:
       <<: *wikibase_variables
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MYSQL_IMAGE_NAME}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql
-    environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
     networks:
       default:
         aliases:
-          - mysql.svc
+          - ${DB_HOST}
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  elasticsearch:
+    image: "${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}"
+    restart: unless-stopped
+    ports:
+      - ${MW_ELASTIC_PORT}
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      default:
+        aliases:
+          - ${MW_ELASTIC_HOST}
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+
+  wdqs-frontend:
+    image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
+    restart: unless-stopped
+    ports:
+      - "${WDQS_FRONTEND_PORT}:80"
+    depends_on:
+      - wdqs-proxy
+    networks:
+      default:
+        aliases:
+          - ${WDQS_FRONTEND_HOST}
+    environment:
+      - VIRTUAL_HOST=${WDQS_FRONTEND_HOST}
+      - WDQS_HOST=${WDQS_PROXY_HOST}
+      - WIKIBASE_HOST
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${WDQS_FRONTEND_HOST}" ]
+      interval: 10s
+      retries: 3
+      start_period: 2m
+
+  wdqs:
+    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    restart: unless-stopped
+    command: /runBlazegraph.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    volumes:
+      - query-service-data:/wdqs/data
+    networks:
+      default:
+        aliases:
+          - ${WDQS_HOST}
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST
+      - WDQS_PORT
+
+  wdqs-proxy:
+    image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
+    restart: unless-stopped
+    depends_on:
+      - wdqs
+    networks:
+      default:
+        aliases:
+          - ${WDQS_PROXY_HOST}
+    environment:
+      - PROXY_PASS_HOST=${WDQS_HOST}:${WDQS_PORT}
+
+  wdqs-updater:
+    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    restart: unless-stopped
+    command: /runUpdate.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    depends_on:
+      - wdqs
+      - wikibase
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST
+      - WDQS_PORT
+      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
+
+  quickstatements:
+    image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    ports:
+      - "${QUICKSTATEMENTS_PORT}:80"
+    depends_on:
+      - wikibase
+    networks:
+      default:
+        aliases:
+          - ${QUICKSTATEMENTS_HOST}
+    environment:
+      - VIRTUAL_HOST=${QUICKSTATEMENTS_HOST}
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_HOST}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}
+      - WB_PROPERTY_NAMESPACE=122
+      - "WB_PROPERTY_PREFIX=Property:"
+      - WB_ITEM_NAMESPACE=120
+      - "WB_ITEM_PREFIX=Item:"
+      - OAUTH_CONSUMER_KEY
+      - OAUTH_CONSUMER_SECRET
+      # This can be removed on release of WMDE15 to example
+      - WIKIBASE_SCHEME_AND_HOST=http://${WIKIBASE_HOST}
+    healthcheck:
+      test: [ "CMD", "curl", "--silent", "--fail", "http://${QUICKSTATEMENTS_HOST}" ]
+      interval: 10s
+      start_period: 2m
+
+  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    profiles:
+      - nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      # For HTTPS support in production map this volume to where your SSL certificates are stored
+      # and review the nginx and nginx-proxy documentation for the appropriate configurations, or
+      # add the "acme-companion" container at https://github.com/nginx-proxy/acme-companion and 
+      # follow the instructions there to auto-generate ACME SSL certificates.
+      # - path/to/certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
 volumes:
   shared:
+  LocalSettings:
+  query-service-data:
+  elasticsearch-data:
+  quickstatements-data:
   mediawiki-mysql-data:
