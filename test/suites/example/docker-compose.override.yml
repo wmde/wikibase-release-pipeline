@@ -11,7 +11,6 @@ services:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
       - ./example/results:/var/log/mediawiki
-      - ../../example/extra-install.sh:/extra-install.sh
 
   wikibase-jobrunner:
     volumes:

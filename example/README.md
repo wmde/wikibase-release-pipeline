@@ -52,14 +52,6 @@ After this is done the next `docker compose` run will again use the settings in 
 
 ## Notes
 
-### Extra install
-
-Looking inside `extra-install.sh`, you see that it executes two scripts which set up an OAuth consumer for quickstatements and creates indices for Elasticsearch. In the volumes section of the wikibase service in [docker-compose.extra.yml](docker-compose.extra.yml), there is one additional script inside the container that automatically sets up the extensions needed for the additional services:
-
-  ```yml
-  - ./extra-install.sh:/extra-install.sh
-  ```
-
 ### Job runner
 
 The example `docker-compose.yml` sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
