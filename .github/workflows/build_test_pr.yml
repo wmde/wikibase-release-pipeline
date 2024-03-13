@@ -1,0 +1,14 @@
+name: 🏗️ Build and Test PR
+
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.txt"
+      - "*.md"
+      - "*.txt"
+
+jobs:
+  _:
+    uses: ./.github/workflows/_build_test.yml

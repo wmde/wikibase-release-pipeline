@@ -1,12 +1,12 @@
-import axios from 'axios';
 import asyncWaitUntil from 'async-wait-until';
+import axios from 'axios';
 
 const { waitUntil, TimeoutError } = asyncWaitUntil;
 
 async function checkIfUp(
 	serviceURL: string,
 	// default timeout is 1 second less than default Mocha test timeout
-	timeout: number = ( 90 * 1000 ) - 1000,
+	timeout: number = 90 * 1000 - 1000,
 	timeoutMsg: string = null
 ): Promise<void> {
 	try {
@@ -23,12 +23,12 @@ async function checkIfUp(
 		if ( e instanceof TimeoutError ) {
 			throw (
 				timeoutMsg ||
-					new Error( `❌ Could not load ${serviceURL} after ${timeout / 1000} seconds.` )
+				new Error(
+					`❌ Could not load ${ serviceURL } after ${ timeout / 1000 } seconds.`
+				)
 			);
 		} else {
-			throw (
-				new Error( `❌ Could not load ${serviceURL} with error: ${e}` )
-			);
+			throw new Error( `❌ Could not load ${ serviceURL } with error: ${ e }` );
 		}
 	}
 }

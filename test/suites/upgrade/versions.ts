@@ -14,6 +14,15 @@ export const versions = {
 	WMDE13: 'wikibase/wikibase:1.39.5-wmde.13',
 	WMDE13_BUNDLE: 'wikibase/wikibase-bundle:1.39.5-wmde.13',
 
+	WMDE14: 'wikibase/wikibase:1.40.1-wmde.14',
+	WMDE14_BUNDLE: 'wikibase/wikibase-bundle:1.40.1-wmde.14',
+
+	WMDE15: 'wikibase/wikibase:1.39.6-wmde.15',
+	WMDE15_BUNDLE: 'wikibase/wikibase-bundle:1.39.6-wmde.15',
+
+	WMDE16: 'wikibase/wikibase:1.40.2-wmde.16',
+	WMDE16_BUNDLE: 'wikibase/wikibase-bundle:1.40.2-wmde.16',
+
 	LOCAL_BUILD: 'wikibase/wikibase',
 	LOCAL_BUILD_BUNDLE: 'wikibase/wikibase-bundle'
 };

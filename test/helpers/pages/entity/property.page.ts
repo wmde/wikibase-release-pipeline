@@ -10,9 +10,10 @@ class PropertyPage extends Page {
 	 * `/wiki/Property:${propertyId}
 	 *
 	 * @param {string} propertyId
+	 * @return {void}
 	 */
 	public async open( propertyId: string ): Promise<void> {
-		return super.open( `/wiki/Property:${propertyId}` );
+		return super.open( `/wiki/Property:${ propertyId }` );
 	}
 }
 

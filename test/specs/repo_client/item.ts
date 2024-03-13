@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
@@ -15,27 +14,29 @@ describe( 'Item', function () {
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
 
-	beforeEach( async () => {
+	beforeEach( async function () {
 		await browser.waitForJobs();
 		await browser.waitForJobs( testEnv.vars.WIKIBASE_CLIENT_URL );
 	} );
 
-	it( 'Special:NewItem should not be accessible on client', async () => {
+	it( 'Special:NewItem should not be accessible on client', async function () {
 		// Cannot use SpecialNewItemPage due to using WIKIBASE_CLIENT_URL
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_CLIENT_URL}/wiki/Special:NewItem?uselang=qqx`
+			`${ testEnv.vars.WIKIBASE_CLIENT_URL }/wiki/Special:NewItem?uselang=qqx`
 		);
-		const notFoundText = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( notFoundText, '(nosuchspecialpage)' );
+		await expect( SpecialNewItemPage.firstHeading ).toHaveText(
+			'(nosuchspecialpage)'
+		);
 	} );
 
-	it( 'Special:NewItem should be visible on repo', async () => {
+	it( 'Special:NewItem should be visible on repo', async function () {
 		await SpecialNewItemPage.open( { uselang: 'qqx' } );
-		const createNewItem = await SpecialNewItemPage.firstHeading.getText();
-		assert.strictEqual( createNewItem, '(special-newitem)' );
+		await expect( SpecialNewItemPage.firstHeading ).toHaveText(
+			'(special-newitem)'
+		);
 	} );
 
-	it( 'Should create an item on repo', async () => {
+	it( 'Should create an item on repo', async function () {
 		propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -60,35 +61,34 @@ describe( 'Item', function () {
 	} );
 
 	// creates usage
-	it( 'Should be able to use the item on client with wikitext', async () => {
+	it( 'Should be able to use the item on client with wikitext', async function () {
 		const bodyText = await browser.editPage(
 			testEnv.vars.WIKIBASE_CLIENT_URL,
 			pageTitle,
-			`{{#statements:${propertyId}|from=${itemId}}}`
+			`{{#statements:${ propertyId }|from=${ itemId }}}`
 		);
 		// label should come from repo property
-		assert.equal( bodyText, propertyValue );
-		assert( bodyText.includes( propertyValue ) );
+		expect( bodyText ).toBe( propertyValue );
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to create site-links from item to client', async () => {
+	it( 'Should be able to create site-links from item to client', async function () {
 		// Create a site-link on a the Main_Page
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${pageTitle}`
+			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${ pageTitle }`
 		);
 		await $( '#wb-setsitelink-submit button' ).click();
 
-		const siteLinkValue = await $(
-			'.wikibase-sitelinklistview-listview li'
-		).getText();
-
 		// label should come from repo property
-		assert( siteLinkValue.includes( 'client_wiki' ) );
-		assert( siteLinkValue.includes( pageTitle ) );
+		await expect(
+			$( '.wikibase-sitelinklistview-listview li' )
+		).toHaveTextContaining( 'client_wiki' );
+		await expect(
+			$( '.wikibase-sitelinklistview-listview li' )
+		).toHaveTextContaining( pageTitle );
 	} );
 
-	it( 'Should be able to see site-link change is dispatched to client', async () => {
+	it( 'Should be able to see site-link change is dispatched to client', async function () {
 		const expectedSiteLinkChange: ExternalChange = {
 			type: 'external',
 			ns: 0,
@@ -101,11 +101,11 @@ describe( 'Item', function () {
 			expectedSiteLinkChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedSiteLinkChange );
+		expect( actualChange ).toEqual( expectedSiteLinkChange );
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to delete the item on repo', async () => {
+	it( 'Should be able to delete the item on repo', async function () {
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
@@ -114,7 +114,7 @@ describe( 'Item', function () {
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			`${browser.options.baseUrl}/index.php?${stringify( query )}`
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
@@ -122,7 +122,7 @@ describe( 'Item', function () {
 		await ItemPage.open( itemId );
 	} );
 
-	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async () => {
+	it.skip( 'Should be able to see delete changes is dispatched to client for test page', async function () {
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
@@ -138,6 +138,6 @@ describe( 'Item', function () {
 			expectedTestDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedTestDeletionChange );
+		expect( actualChange ).toEqual( expectedTestDeletionChange );
 	} );
 } );

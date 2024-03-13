@@ -25,7 +25,7 @@ declare namespace WebdriverIO {
 			host: string,
 			title: string,
 			content: Buffer | string,
-			captcha?: string,
+			captcha?: string
 		) => Promise<string>;
 
 		/**
@@ -38,7 +38,7 @@ declare namespace WebdriverIO {
 		 */
 		getDispatchedExternalChange: (
 			host: string,
-			expectedChange: ExternalChange,
+			expectedChange: ExternalChange
 		) => Promise<ExternalChange | null>;
 
 		/**
@@ -51,10 +51,10 @@ declare namespace WebdriverIO {
 		 */
 		makeRequest: (
 			url: string,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			params?: any,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			postData?: any,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			postData?: any
 		) => Promise<AxiosResponse>;
 
 		/**
@@ -65,12 +65,15 @@ declare namespace WebdriverIO {
 		/**
 		 * Skip test if extension is not installed (present) on the Wikibase server
 		 */
-		skipIfExtensionNotPresent: ( test: Context, extension: string ) => Promise<void>;
+		skipIfExtensionNotPresent: (
+			test: Context,
+			extension: string
+		) => Promise<void>;
 
 		waitForJobs: (
 			serverURL?: string,
 			timeout?: number,
-			timeoutMsg?: string,
+			timeoutMsg?: string
 		) => Promise<boolean>;
 	}
 

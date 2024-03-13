@@ -20,6 +20,7 @@ class SpecialListPropertiesPage extends Page {
 	 * @param {string} params.dataType - Optional, default empty string
 	 * @param {number} params.limit - Optional, default `50`
 	 * @param {number} params.offset - Optional, default `0`
+	 * @return {void}
 	 */
 	public async open(
 		params: SpecialListPropertiesPageParams | string
@@ -34,7 +35,7 @@ class SpecialListPropertiesPage extends Page {
 			offset: params.offset ?? 0
 		} );
 
-		await super.open( `/wiki/Special:ListProperties${paramString}` );
+		await super.open( `/wiki/Special:ListProperties${ paramString }` );
 		await $( '.mw-spcontent' );
 	}
 }

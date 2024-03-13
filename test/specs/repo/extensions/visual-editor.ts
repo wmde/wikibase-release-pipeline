@@ -1,11 +1,9 @@
-import assert from 'assert';
-
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
 	} );
 
-	it( 'Should be able to edit a page using the editor', async () => {
+	it( 'Should be able to edit a page using the editor', async function () {
 		await browser.url(
 			testEnv.vars.WIKIBASE_URL + '/wiki/TestVisualEditor?veaction=edit'
 		);
@@ -33,8 +31,6 @@ describe( 'VisualEditor', function () {
 
 		await $( '.oo-ui-processDialog-actions-primary a' ).click();
 
-		const contentBody = await $( '.mw-parser-output' ).getText();
-
-		assert.strictEqual( contentBody, 'TEST' );
+		await expect( $( '.mw-parser-output' ) ).toHaveText( 'TEST' );
 	} );
 } );

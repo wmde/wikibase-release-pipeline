@@ -1,13 +1,12 @@
-version: '3.5'
+version: "3.5"
 
 services:
-
   mysql:
-    volumes:  
+    volumes:
       - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
-    environment: 
+    environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
     volumes:
       - quickstatements-data:/quickstatements/data
@@ -33,7 +32,7 @@ services:
     networks:
       default:
         aliases:
-         - wikibase-client.svc
+          - wikibase-client.svc
     environment:
       - DB_SERVER
       - MW_ADMIN_NAME
@@ -44,7 +43,7 @@ services:
       - DB_PASS
       - DB_NAME=client_wiki
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "${WIKIBASE_CLIENT_URL}" ]
+      test: [ CMD, curl, --silent, --fail, "${WIKIBASE_CLIENT_URL}" ]
       interval: 10s
       start_period: 2m
 
@@ -60,7 +59,7 @@ services:
     networks:
       default:
         aliases:
-         - quickstatements.svc
+          - quickstatements.svc
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
       - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
@@ -69,7 +68,7 @@ services:
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "${QUICKSTATEMENTS_URL}" ]
+      test: [ CMD, curl, --silent, --fail, "${QUICKSTATEMENTS_URL}" ]
       interval: 10s
       start_period: 2m
 

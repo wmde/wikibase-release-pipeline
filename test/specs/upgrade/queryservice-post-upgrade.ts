@@ -4,7 +4,6 @@ for unknown reasons. This spec existed but was skipped in the code the Wikibase 
 team inherited.
 */
 
-import assert from 'assert';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { getElementByURI } from '../../helpers/blazegraph.js';
 import Binding from '../../types/binding.js';
@@ -21,7 +20,7 @@ describe( 'Wikibase post upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able to create a new specific item', async () => {
+	it( 'Should be able to create a new specific item', async function () {
 		newPropertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -39,11 +38,11 @@ describe( 'Wikibase post upgrade', function () {
 
 		newItemId = await WikibaseApi.createItem( itemLabel, data );
 
-		assert.strictEqual( newItemId.startsWith( 'Q' ), true );
-		assert.strictEqual( newPropertyId.startsWith( 'P' ), true );
+		expect( newItemId.startsWith( 'Q' ) ).toBe( true );
+		expect( newPropertyId.startsWith( 'P' ) ).toBe( true );
 	} );
 
-	it( 'New item should show up in Queryservice', async () => {
+	it( 'New item should show up in Queryservice', async function () {
 		let bindings: Binding[];
 
 		await browser.waitUntil(
@@ -57,7 +56,7 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert.strictEqual( bindings.length, 9 );
+		expect( bindings ).toHaveLength( 9 );
 
 		const statement = getElementByURI(
 			testEnv.vars.WIKIBASE_URL + '/prop/' + newPropertyId,
@@ -93,14 +92,14 @@ describe( 'Wikibase post upgrade', function () {
 			bindings
 		);
 
-		assert( dateModified !== null );
-		assert( schemaVersion !== null );
-		assert( siteLinks !== null );
-		assert( identifiers !== null );
-		assert( timestamp !== null );
-		assert( statement !== null );
+		expect( dateModified ).toEqual( expect.anything() );
+		expect( schemaVersion ).toEqual( expect.anything() );
+		expect( siteLinks ).toEqual( expect.anything() );
+		expect( identifiers ).toEqual( expect.anything() );
+		expect( timestamp ).toEqual( expect.anything() );
+		expect( statement ).toEqual( expect.anything() );
 
-		assert.strictEqual( property.o.value, propertyValue );
-		assert.strictEqual( itemLabelValue.o.value, itemLabel );
+		expect( property.o.value ).toBe( propertyValue );
+		expect( itemLabelValue.o.value ).toBe( itemLabel );
 	} );
 } );

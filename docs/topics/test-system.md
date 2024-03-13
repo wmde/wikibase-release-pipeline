@@ -129,28 +129,3 @@ sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs
 ```
 
 The service should now be up and running!
-
-## Using images from built artifacts
-
-You load images from tar files that are in `DockerImages` for any Github run.
-
-Firstly, find the run summary that you want to load, such as https://github.com/wmde/wikibase-release-pipeline/actions/runs/3446873839.
-
-When authenticated using the `gh` CLI tool, you can download `DockerImages` of any run using the run ID.
-
-```sh
-gh run download 3446873839 -n DockerImages -R wmde/wikibase-release-pipeline
-```
-
-Once downloaded you can load the compressed images and delete the artifacts from disk in a quick loop.
-
-```sh
-for file in *.docker.tar.gz; do     sudo docker load -i "$file"; rm "$file"; done
-```
-
-You can then follow the "Updating" section of this documentation, using `latest` as the `BUILD_NUMBER` environment variable and setting `IMAGE_PREFIX` to be empty. 
-
-```sh
-BUILD_NUMBER="latest"
-IMAGE_PREFIX=""
-```

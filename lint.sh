@@ -13,7 +13,7 @@ done
 
 if $SHOULD_FIX
 then
-  echo "Fixing Linting issues in Typescript"
+  echo "Fixing Linting and Formatting issues in Typescript"
   NPM_LINT_COMMAND="npm run lint:fix --silent"
   PYTHON_FLAGS="--fix"
 else
@@ -21,13 +21,8 @@ else
   PYTHON_FLAGS=""
 fi
 
-# ℹ️ Linting Javascript (test/**/*.ts and docs/diagrams/**/*.js)
-$TEST_COMPOSE run --rm --build -v "$(pwd)/docs/diagrams:/tmp/diagrams" test-runner -c "
-  $NPM_LINT_COMMAND &&
-  cd /tmp/diagrams &&
-  npm ci --progress=false > /dev/null &&
-  $NPM_LINT_COMMAND
-"
+# ℹ️ Linting Javascript test/**/*.ts
+$TEST_COMPOSE run --rm --build test-runner -c "$NPM_LINT_COMMAND"
 
 # ℹ️ Linting Shell Scripts (**/*.sh) - https://github.com/koalaman/shellcheck#from-your-terminal
 find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \

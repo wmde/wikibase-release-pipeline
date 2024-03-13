@@ -21,9 +21,6 @@ $ ./build.sh
 # Build only the mediawiki/wikibase containers
 $ ./build.sh wikibase
 
-# Build only the query service container and save the docker image to a tarball
-$ ./build.sh --save-image wdqs
-
 # Build the wdqs container without using Dockers cache
 $ ./build.sh --no-cache wdqs
 ```

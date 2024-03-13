@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
@@ -8,7 +7,7 @@ describe( 'Property Prefetching', function () {
 	const itemLabel = 'T267743-';
 	const NUM_PROPERTIES = 25;
 
-	it( 'can add many federated properties and it shows up in the ui', async () => {
+	it( 'can add many federated properties and it shows up in the ui', async function () {
 		await browser.url(
 			'https://www.wikidata.org/wiki/Special:ListProperties?datatype=string'
 		);
@@ -19,10 +18,10 @@ describe( 'Property Prefetching', function () {
 		const claims = await Promise.all(
 			links.map( async ( link ) => {
 				const linkHref = await link.getAttribute( 'href' );
-				const prop = `http://www.wikidata.org/entity/${linkHref.replace(
+				const prop = `http://www.wikidata.org/entity/${ linkHref.replace(
 					'/wiki/Property:',
 					''
-				)}`;
+				) }`;
 				return {
 					mainsnak: {
 						snaktype: 'value',
@@ -34,7 +33,7 @@ describe( 'Property Prefetching', function () {
 				};
 			} )
 		);
-		assert.strictEqual( claims.length, NUM_PROPERTIES );
+		expect( claims ).toHaveLength( NUM_PROPERTIES );
 
 		const data = { claims: claims };
 		itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
@@ -45,17 +44,17 @@ describe( 'Property Prefetching', function () {
 		);
 	} );
 
-	it( 'should delete all statements and generate individual changes', async () => {
+	it( 'should delete all statements and generate individual changes', async function () {
 		const statements = await $$( '.wikibase-statementview' );
 		const propertyGuids = await Promise.all(
 			statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
 		);
 
-		assert.strictEqual( propertyGuids.length, NUM_PROPERTIES );
+		expect( propertyGuids ).toHaveLength( NUM_PROPERTIES );
 
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
-			assert.strictEqual( response.success, 1 );
+			expect( response.success ).toBe( 1 );
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run
@@ -63,26 +62,25 @@ describe( 'Property Prefetching', function () {
 		await browser.pause( 2000 );
 	} );
 
-	it( 'Should render history page list within threshold', async () => {
+	it( 'Should render history page list within threshold', async function () {
 		await ItemPage.open( itemId, { action: 'history' } );
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
-		assert.strictEqual(
-			( await $$( '#pagehistory li' ) ).length,
+		await expect( $$( '#pagehistory li' ) ).resolves.toHaveLength(
 			NUM_PROPERTIES + 1
 		);
 	} );
 
-	it( 'Should render recent changes list within threshold', async () => {
+	it( 'Should render recent changes list within threshold', async function () {
 		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
 		);
 		await $( 'ul.special' );
 
 		// +1 for the initial item creation
 		// +1 for the Main Page creation?
 		// +1 for ?
-		assert.strictEqual( ( await $$( 'ul.special li' ) ).length, NUM_PROPERTIES + 3 );
+		await expect( $$( 'ul.special li' ) ).resolves.toHaveLength( NUM_PROPERTIES + 3 );
 	} );
 } );

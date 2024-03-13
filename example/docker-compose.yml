@@ -33,9 +33,9 @@ services:
       - ./extra-install.sh:/extra-install.sh
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
-      ## Uncomment this next line to mount your own LocalSettings.php file
-      ## also uncomment the same line in the wikibase-jobrunner service!
-      #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      # # Uncomment this next line to mount your own LocalSettings.php file
+      # # also uncomment the same line in the wikibase-jobrunner service!
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
     networks:
       default:
         aliases:
@@ -53,7 +53,7 @@ services:
   wikibase-jobrunner:
     image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     entrypoint: /bin/bash
-    command:  /jobrunner-entrypoint.sh
+    command: /jobrunner-entrypoint.sh
     links:
       - mysql
     depends_on:

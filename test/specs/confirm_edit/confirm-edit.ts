@@ -1,7 +1,5 @@
-import assert from 'assert';
-
 describe( 'ConfirmEdit', function () {
-	it( 'Should allow to edit with captcha', async () => {
+	it( 'Should allow to edit with captcha', async function () {
 		const executionResult = await browser.editPage(
 			testEnv.vars.WIKIBASE_URL,
 			'ConfirmEditTest',
@@ -9,6 +7,6 @@ describe( 'ConfirmEdit', function () {
 			'paris'
 		);
 
-		assert.strictEqual( executionResult, 'something great' );
+		expect( executionResult ).toBe( 'something great' );
 	} );
 } );
