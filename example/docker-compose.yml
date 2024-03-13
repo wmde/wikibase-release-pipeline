@@ -1,7 +1,6 @@
 version: '3.5'
 
 x-common-variables: &wikibase_variables
-  WIKIBASE_HOST: ${WIKIBASE_HOST}
   DB_SERVER: ${DB_HOST}:${DB_PORT}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
@@ -30,7 +29,6 @@ services:
       - "${WIKIBASE_PORT}:80"
     volumes:
       - quickstatements-data:/quickstatements/data
-      - ./extra-install.sh:/extra-install.sh
       ## This shares the configuration with jobrunner
       - shared:/var/www/html/:rw
       # # Uncomment this next line to mount your own LocalSettings.php file
@@ -61,7 +59,6 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       ## Uncomment this next line to mount your own LocalSettings.php file
       ## also uncomment the same line in the wikibase service
       #- ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
