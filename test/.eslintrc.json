@@ -17,7 +17,10 @@
 		"wdio/no-pause": "warn",
 		"es-x/no-import-meta": "off",
 		"es-x/no-nullish-coalescing-operators": "off",
-		"es-x/no-class-fields": "off"
+		"es-x/no-class-fields": "off",
+		"yml/block-sequence": 1,
+		"yml/no-empty-mapping-value": 1,
+		"yml/plain-scalar": 1
 	},
 	"overrides": [
 		{
@@ -31,8 +34,7 @@
 			"files": [ "*.yaml", "*.yml" ],
 			"parser": "yaml-eslint-parser",
 			"rules": {
-				"spaced-comment": 0,
-				"yml/no-empty-mapping-value": 1
+				"spaced-comment": 0
 			}
 		}
 	]
