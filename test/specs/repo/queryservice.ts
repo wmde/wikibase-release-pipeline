@@ -131,6 +131,21 @@ describe( 'QueryService', function () {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
+		// Check it shows up after creation
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+
+		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
+		await browser.pause( 20 * 1000 );
+
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
+
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( true );
+
+		// Attempt to delete
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
