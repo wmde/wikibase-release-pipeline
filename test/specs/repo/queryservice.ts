@@ -3,6 +3,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', function () {
@@ -128,8 +129,21 @@ describe( 'QueryService', function () {
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {
-		// TODO make an item using the UI
-		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
+		await SpecialNewItemPage.open();
+
+		await $( 'input[name="label"]' ).setValue( getTestString( 'T267743-' ) );
+		await $( 'input[name="description"]' ).setValue( getTestString( 'Description' ) );
+		await $( 'input[name="aliases"]' ).setValue(
+			`${ getTestString( 'A' ) }|${ getTestString( 'B' ) }`
+		);
+		await SpecialNewItemPage.submit();
+
+		await expect( $( 'h1#firstHeading' ).$( 'span.wikibase-title-id' ) ).toHaveText(
+			/\(Q\d+\)/
+		);
+		const itemId = (
+			await $( 'h1#firstHeading' ).$( 'span.wikibase-title-id' ).getText()
+		).replace( /[()]/g, '' );
 
 		// Check it shows up after creation
 		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
