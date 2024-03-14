@@ -31,12 +31,10 @@ def file_should_be_run(file: str) -> bool:
 
 def file_exists(file: str, root_dir: str) -> bool:
     file_path = os.path.join(root_dir, file)
-    try:
-        with open(file_path, mode="r"):
-            return True
-    except FileNotFoundError:
-        print(f"Missing File: {file_path}")
-        return False
+    result = os.path.isfile(file_path)
+    if not result:
+        print(f"Missing file: {file_path}")
+    return result
 
 
 def add_newline(file: str, root_dir: str, should_fix: bool) -> bool:
