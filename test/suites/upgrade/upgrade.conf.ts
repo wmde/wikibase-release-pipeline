@@ -1,5 +1,5 @@
-import TestEnv from '../../setup/TestEnv.js';
 import { defaultTestSettings } from '../../setup/makeTestSettings.js';
+import TestEnv from '../../setup/test-env.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 import versions from './versions.js';
 
