@@ -2,7 +2,7 @@ import SubmittablePage from '../submittable.page.js';
 
 class QueryServiceUIPage extends SubmittablePage {
 	public get submitBtn(): ChainablePromiseElement {
-		return $( '#execute-button' );
+		return $( 'button#execute-button' );
 	}
 
 	public get resultTable(): ChainablePromiseElement {
