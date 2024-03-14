@@ -6,7 +6,7 @@ import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/TestSettings.js';
 import checkIfUp from './check-if-up.js';
-import { makeTestSettings } from './makeTestSettings.js';
+import { makeTestSettings } from './make-test-settings.js';
 
 declare global {
 	// eslint-disable-next-line no-var, no-use-before-define
