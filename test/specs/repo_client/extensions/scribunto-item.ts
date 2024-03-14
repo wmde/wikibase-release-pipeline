@@ -4,7 +4,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 import ExternalChange from '../../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
