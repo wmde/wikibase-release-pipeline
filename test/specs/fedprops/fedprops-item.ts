@@ -40,7 +40,7 @@ describe( 'Fed props Item', function () {
 		await ItemPage.open( itemId );
 
 		await expect( $( '.wikibase-statementgroupview-property' ) ).toHaveText(
-			/propertyValue/
+			new RegExp( propertyValue )
 		); // value is the label
 
 		await SpecialEntityPage.addStatementLink;
