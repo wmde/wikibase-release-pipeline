@@ -58,9 +58,9 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		await expect( $( '.wikibase-snakview-value img' ) ).toHaveAttrContaining(
+		await expect( $( '.wikibase-snakview-value img' ) ).toHaveAttr(
 			'src',
-			'Image.png'
+			/Image\.png/
 		);
 	} );
 

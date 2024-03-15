@@ -38,9 +38,9 @@ describe( 'EntitySchema', function () {
 		await expect( $( '.entityschema-title-id' ) ).toHaveText( '(E1)' );
 		await expect( entitySchemaEl.$( 'div' ) ).toHaveElementClass( 'mw-highlight' );
 
-		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttrContaining(
+		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttr(
 			'href',
-			'http://validator.svc'
+			/http:\/\/validator\.svc/
 		);
 	} );
 } );
