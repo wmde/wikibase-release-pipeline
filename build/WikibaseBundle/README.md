@@ -2,6 +2,16 @@
 
 Wikibase running on Mediawiki bundled with other extensions.
 
+### Environment variables
+
+In addition to the environment variables specified for the Wikibase Base image, the follow optional variables are available in this image:
+
+Variable                           | Default                  | Description
+-----------------------------------|--------------------------| ----------
+`MW_ELASTIC_HOST`                  | "false"                  | Hostname to an Elasticsearch server with the Wikibase Extension installed, if used (Optional)
+`MW_ELASTIC_PORT`                  | "false"                  | Port which Elasticsearch run on on the specified `MW_ELASTIC_HOST` (Optional)
+`QS_PUBLIC_SCHEME_HOST_AND_PORT`   | "false"                  | Public URL of the Quickstatements server, if configured (Optional)
+
 ### Bundled extensions
 
 - [Babel](https://www.mediawiki.org/wiki/Extension:Babel)

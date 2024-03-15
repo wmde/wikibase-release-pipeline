@@ -124,8 +124,6 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
-    expose:
-      - 9999
     healthcheck:
       test:
         - CMD

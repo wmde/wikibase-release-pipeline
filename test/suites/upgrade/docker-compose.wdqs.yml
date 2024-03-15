@@ -22,8 +22,6 @@ services:
       - WDQS_PORT=9999
     ports:
       - 9999:9999
-    expose:
-      - 9999
 
   wdqs-updater:
     image: "${WDQS_TEST_IMAGE_NAME}"
