@@ -80,12 +80,12 @@ describe( 'Item', function () {
 		await $( '#wb-setsitelink-submit button' ).click();
 
 		// label should come from repo property
-		await expect(
-			$( '.wikibase-sitelinklistview-listview li' )
-		).toHaveTextContaining( 'client_wiki' );
-		await expect(
-			$( '.wikibase-sitelinklistview-listview li' )
-		).toHaveTextContaining( pageTitle );
+		await expect( $( '.wikibase-sitelinklistview-listview li' ) ).toHaveText(
+			/client_wiki/
+		);
+		await expect( $( '.wikibase-sitelinklistview-listview li' ) ).toHaveText(
+			new RegExp( pageTitle )
+		);
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', async function () {

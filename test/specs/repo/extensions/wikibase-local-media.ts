@@ -36,7 +36,8 @@ describe( 'WikibaseLocalMedia', function () {
 		await PropertyPage.open( propertyId );
 
 		propertyLabel = await $( '#firstHeading' ).getText();
-		await expect( $( '#firstHeading' ) ).toHaveTextContaining( propertyId );
+		// eslint-disable-next-line security/detect-non-literal-regexp
+		await expect( $( '#firstHeading' ) ).toHaveText( new RegExp( propertyId ) );
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async function () {

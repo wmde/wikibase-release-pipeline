@@ -1,8 +1,9 @@
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
 		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
-		await expect( $( '#sv-software' ) ).toHaveTextContaining(
-			`MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }`
+		await expect( $( '#sv-software' ) ).toHaveText(
+			// eslint-disable-next-line security/detect-non-literal-regexp
+			new RegExp( `MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }` )
 		);
 	} );
 

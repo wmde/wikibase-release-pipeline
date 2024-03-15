@@ -88,7 +88,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.pause( 2 * 1000 );
 
 		// redirect back to app
-		await expect( $( 'nav.navbar' ) ).toHaveTextContaining( 'QuickStatements' );
+		await expect( $( 'nav.navbar' ) ).toHaveText( /QuickStatements/ );
 	} );
 
 	it( 'Should be able to click batch button and be taken to the next page', async function () {
