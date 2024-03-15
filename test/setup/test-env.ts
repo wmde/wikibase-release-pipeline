@@ -4,7 +4,7 @@ import { spawnSync } from 'child_process';
 import { mkdirSync, rmSync } from 'fs';
 import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
-import TestSettings from '../types/TestSettings.js';
+import TestSettings from '../types/test-settings.js';
 import checkIfUp from './check-if-up.js';
 import { makeTestSettings } from './make-test-settings.js';
 
