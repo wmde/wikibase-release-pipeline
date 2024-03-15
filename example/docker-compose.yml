@@ -134,7 +134,7 @@ services:
         soft: 32768
         hard: 32768
     volumes:
-      - query-service-data:/wdqs/data
+      - wdqs-data:/wdqs/data
     networks:
       default:
         aliases:
@@ -224,7 +224,7 @@ services:
 volumes:
   shared:
   LocalSettings:
-  query-service-data:
+  wdqs-data:
   elasticsearch-data:
   quickstatements-data:
   mediawiki-mysql-data:
