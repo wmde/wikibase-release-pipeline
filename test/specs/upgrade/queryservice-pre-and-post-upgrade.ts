@@ -23,10 +23,10 @@ describe( 'Wikibase post upgrade', function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
-		const success = result.data.success;
-		const searchResults = result.data.search;
 
-		expect( success ).toBe( 1 );
+		expect( result.data.success ).toBe( 1 );
+
+		const searchResults = result.data.search;
 		expect( searchResults ).toHaveLength( 1 );
 		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
 		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
