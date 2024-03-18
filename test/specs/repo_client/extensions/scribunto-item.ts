@@ -66,7 +66,7 @@ describe( 'Scribunto Item', function () {
 		);
 
 		// should come from executed lua script
-		expect( executionContent.includes( itemLabel ) ).toEqual( true );
+		expect( executionContent ).toEqual( expect.stringContaining( itemLabel ) );
 	} );
 
 	// This will generate a change that will dispatch

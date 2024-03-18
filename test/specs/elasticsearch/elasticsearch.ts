@@ -37,9 +37,9 @@ describe( 'ElasticSearch', function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';
-		expect( itemLabel.includes( testLabel ) ).toEqual( false );
-		expect( itemLabel.toLowerCase().includes( testLabel.toLowerCase() ) ).toEqual(
-			true
+		expect( itemLabel ).not.toEqual( expect.stringContaining( testLabel ) );
+		expect( itemLabel.toLowerCase() ).toEqual(
+			expect.stringContaining( testLabel.toLowerCase() )
 		);
 
 		await browser.waitUntil(
