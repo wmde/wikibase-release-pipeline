@@ -19,7 +19,7 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		expect( pageExistsResult.status ).toBe( 200 );
+		expect( pageExistsResult.status ).toEqual( 200 );
 
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
@@ -47,6 +47,6 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		expect( pageIsGoneResult.status ).toBe( 404 );
+		expect( pageIsGoneResult.status ).toEqual( 404 );
 	} );
 } );

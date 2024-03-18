@@ -19,11 +19,11 @@ describe( 'Babel', function () {
 
 		expect(
 			executionContent.includes( 'Den här användaren har svenska som modersmål.' )
-		).toBe( true );
+		).toEqual( true );
 		expect(
 			executionContent.includes(
 				'This user has a native understanding of English.'
 			)
-		).toBe( true );
+		).toEqual( true );
 	} );
 } );

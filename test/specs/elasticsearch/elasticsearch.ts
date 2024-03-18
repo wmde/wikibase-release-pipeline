@@ -37,8 +37,8 @@ describe( 'ElasticSearch', function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';
-		expect( itemLabel.includes( testLabel ) ).toBe( false );
-		expect( itemLabel.toLowerCase().includes( testLabel.toLowerCase() ) ).toBe(
+		expect( itemLabel.includes( testLabel ) ).toEqual( false );
+		expect( itemLabel.toLowerCase().includes( testLabel.toLowerCase() ) ).toEqual(
 			true
 		);
 
@@ -63,9 +63,9 @@ describe( 'ElasticSearch', function () {
 		);
 
 		expect( searchResult ).toHaveLength( 1 );
-		expect( searchResult[ 0 ].id ).toBe( itemId );
-		expect( searchResult[ 0 ].match.type ).toBe( 'label' );
-		expect( searchResult[ 0 ].match.text ).toBe( itemLabel );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'label' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemLabel );
 	} );
 
 	it( 'should be able to search via alias', async function () {
@@ -92,8 +92,8 @@ describe( 'ElasticSearch', function () {
 		);
 
 		expect( searchResult ).toHaveLength( 1 );
-		expect( searchResult[ 0 ].id ).toBe( itemId );
-		expect( searchResult[ 0 ].match.type ).toBe( 'alias' );
-		expect( searchResult[ 0 ].match.text ).toBe( itemAlias );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'alias' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemAlias );
 	} );
 } );

@@ -18,7 +18,7 @@ describe( 'Interwiki links', function () {
 		);
 		expect(
 			clientWikiQueryResults.includes( testEnv.vars.WIKIBASE_CLIENT_URL )
-		).toBe( true );
+		).toEqual( true );
 
 		const config = {
 			user: testEnv.vars.DB_USER,
@@ -35,6 +35,8 @@ describe( 'Interwiki links', function () {
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"',
 			config
 		);
-		expect( myWikiQueryResults.includes( testEnv.vars.WIKIBASE_URL ) ).toBe( true );
+		expect( myWikiQueryResults.includes( testEnv.vars.WIKIBASE_URL ) ).toEqual(
+			true
+		);
 	} );
 } );

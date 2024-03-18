@@ -64,8 +64,8 @@ describe( 'Wikibase upgrade', function () {
 				getTestString( itemLabel ),
 				data
 			);
-			expect( itemId.startsWith( 'Q' ) ).toBe( true );
-			expect( propertyId.startsWith( 'P' ) ).toBe( true );
+			expect( itemId.startsWith( 'Q' ) ).toEqual( true );
+			expect( propertyId.startsWith( 'P' ) ).toEqual( true );
 		}
 	} );
 
@@ -74,12 +74,12 @@ describe( 'Wikibase upgrade', function () {
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 
-		expect( result.data.success ).toBe( 1 );
+		expect( result.data.success ).toEqual( 1 );
 
 		const searchResults = result.data.search;
 		expect( searchResults ).toHaveLength( 1 );
-		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
-		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
+		expect( searchResults[ 0 ].match.text ).toEqual( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toEqual( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 

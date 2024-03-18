@@ -8,8 +8,8 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		expect( sqlResult.includes( 'WikibasePingback\t' ) ).toBe( true );
-		expect( sqlResult.includes( 'WikibasePingback-1.' ) ).toBe( true );
+		expect( sqlResult.includes( 'WikibasePingback\t' ) ).toEqual( true );
+		expect( sqlResult.includes( 'WikibasePingback-1.' ) ).toEqual( true );
 
 		const result = await browser.makeRequest( 'http://mediawiki.svc' );
 		expect( result.data ).toHaveLength( 2 );
@@ -18,6 +18,6 @@ describe( 'Pingback', function () {
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )
 		);
 
-		expect( requestData.schema ).toBe( 'WikibasePingback' );
+		expect( requestData.schema ).toEqual( 'WikibasePingback' );
 	} );
 } );

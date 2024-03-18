@@ -32,8 +32,8 @@ describe( 'Wikibase API', function () {
 					data
 				);
 
-				expect( itemId.startsWith( 'Q' ) ).toBe( true );
-				expect( propertyId.startsWith( 'P' ) ).toBe( true );
+				expect( itemId.startsWith( 'Q' ) ).toEqual( true );
+				expect( propertyId.startsWith( 'P' ) ).toEqual( true );
 			} );
 		} );
 	} );

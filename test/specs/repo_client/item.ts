@@ -68,7 +68,7 @@ describe( 'Item', function () {
 			`{{#statements:${ propertyId }|from=${ itemId }}}`
 		);
 		// label should come from repo property
-		expect( bodyText ).toBe( propertyValue );
+		expect( bodyText ).toEqual( propertyValue );
 	} );
 
 	// This will generate a change that will dispatch

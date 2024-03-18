@@ -25,7 +25,7 @@ describe( 'Scribunto', function () {
 		);
 
 		// should come from executed lua script
-		expect( executionContent.includes( 'Hello, world!' ) ).toBe( true );
+		expect( executionContent.includes( 'Hello, world!' ) ).toEqual( true );
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async function () {
@@ -35,6 +35,6 @@ describe( 'Scribunto', function () {
 		);
 
 		expect( cpuTime.value ).toBeLessThan( 0.05 );
-		expect( cpuTime.scale ).toBe( 'seconds' );
+		expect( cpuTime.scale ).toEqual( 'seconds' );
 	} );
 } );

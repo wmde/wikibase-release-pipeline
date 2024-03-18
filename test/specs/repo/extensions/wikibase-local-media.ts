@@ -31,7 +31,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to create a property with localMedia datatype', async function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
-		expect( propertyId.startsWith( 'P' ) ).toBe( true );
+		expect( propertyId.startsWith( 'P' ) ).toEqual( true );
 
 		await PropertyPage.open( propertyId );
 

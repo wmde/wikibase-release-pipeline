@@ -175,7 +175,7 @@ export function defaultFunctions(): void {
 			const changes = result.data.query.recentchanges;
 			const foundResult = lodash.find( changes, expectedChange );
 
-			expect( result.status ).toBe( 200 );
+			expect( result.status ).toEqual( 200 );
 
 			if ( !foundResult ) {
 				testEnv.testLog.error( 'Could not find:' );

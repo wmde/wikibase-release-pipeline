@@ -106,8 +106,8 @@ describe( 'QuickStatements Service', function () {
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
 
-		expect( responseQ1Data.entities.Q1.id ).toBe( 'Q1' );
-		expect( responseQ2Data.entities.Q2.id ).toBe( 'Q2' );
+		expect( responseQ1Data.entities.Q1.id ).toEqual( 'Q1' );
+		expect( responseQ2Data.entities.Q2.id ).toEqual( 'Q2' );
 	} );
 
 	it( 'Should be able to create item with label', async function () {
@@ -116,7 +116,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
 		const responseQ3Data = await SpecialEntityDataPage.getData( 'Q3' );
-		expect( responseQ3Data.entities.Q3.labels.en.value ).toBe( 'Best label' );
+		expect( responseQ3Data.entities.Q3.labels.en.value ).toEqual( 'Best label' );
 	} );
 
 	it( 'Should be able to create an item with statement', async function () {
@@ -129,10 +129,12 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const responseQ4Data = await SpecialEntityDataPage.getData( 'Q4' );
-		expect( responseQ4Data.entities.Q4.labels.en.value ).toBe( 'freshwater eel' );
+		expect( responseQ4Data.entities.Q4.labels.en.value ).toEqual(
+			'freshwater eel'
+		);
 		expect(
 			responseQ4Data.entities.Q4.claims.P1[ 0 ].mainsnak.datavalue.value
-		).toBe( 'slippery fish' );
+		).toEqual( 'slippery fish' );
 	} );
 
 	it( 'Should be able to add an alias to an item', async function () {
@@ -140,7 +142,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) ).toBe( false );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.aliases ) ).toEqual( false );
 	} );
 
 	it( 'Should be able to add a label to an item', async function () {
@@ -148,7 +150,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) ).toBe( false );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.labels ) ).toEqual( false );
 	} );
 
 	it( 'Should be able to add a description to an item', async function () {
@@ -156,7 +158,9 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) ).toBe( false );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.descriptions ) ).toEqual(
+			false
+		);
 	} );
 
 	it.skip( 'Should be able to add a sitelink to an item', async function () {
@@ -164,7 +168,7 @@ describe( 'QuickStatements Service', function () {
 
 		// go look at wikibase
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) ).toBe( false );
+		expect( lodash.isEmpty( responseQ1Data.entities.Q1.sitelinks ) ).toEqual( false );
 	} );
 
 	it( 'Should be able to add a statement to an item', async function () {
@@ -173,12 +177,12 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `Q1|${ propertyId }|"Will it blend?"` );
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toBe(
+		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toEqual(
 			'statement'
 		);
 		expect(
 			responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].mainsnak.datavalue.value
-		).toBe( 'Will it blend?' );
+		).toEqual( 'Will it blend?' );
 	} );
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
@@ -203,7 +207,7 @@ describe( 'QuickStatements Service', function () {
 					);
 					expect(
 						getQualifierType( responseQ1, mainPropertyId, qualifierPropertyId )
-					).toBe( qualifierSnakDataType );
+					).toEqual( qualifierSnakDataType );
 				} );
 			} );
 		} );
@@ -217,7 +221,7 @@ describe( 'QuickStatements Service', function () {
 		);
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toBe(
+		expect( responseQ1Data.entities.Q1.claims[ propertyId ][ 0 ].type ).toEqual(
 			'statement'
 		);
 	} );
@@ -240,9 +244,9 @@ describe( 'QuickStatements Service', function () {
 			propertyIdItem
 		);
 
-		expect( typeof refValue ).not.toBe( 'string' );
+		expect( typeof refValue ).not.toEqual( 'string' );
 		if ( typeof refValue !== 'string' ) {
-			expect( refValue.id ).toBe( 'Q2' );
+			expect( refValue.id ).toEqual( 'Q2' );
 		}
 	} );
 
@@ -259,7 +263,7 @@ describe( 'QuickStatements Service', function () {
 		const response = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbgetclaims&format=json&entity=${ itemId }`
 		);
-		expect( getReferenceValue( response, propertyIdItem, propertyURL ) ).toBe(
+		expect( getReferenceValue( response, propertyIdItem, propertyURL ) ).toEqual(
 			'https://www.wikidata.org'
 		);
 	} );
@@ -275,7 +279,7 @@ describe( 'QuickStatements Service', function () {
 		const response = await browser.makeRequest(
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbgetclaims&format=json&entity=${ itemId }`
 		);
-		expect( getReferenceValue( response, propertyIdItem, propertyId ) ).toBe(
+		expect( getReferenceValue( response, propertyIdItem, propertyId ) ).toEqual(
 			'some string'
 		);
 	} );
@@ -286,19 +290,25 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( `${ itemId }|${ propertyIdItem }|Q1` );
 
 		let responseData = await SpecialEntityDataPage.getData( itemId );
-		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toBe( true );
+		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toEqual(
+			true
+		);
 
 		await browser.executeQuickStatement( `-${ itemId }|${ propertyIdItem }|Q1` );
 
 		responseData = await SpecialEntityDataPage.getData( itemId );
-		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toBe( false );
+		expect( propertyIdItem in responseData.entities[ itemId ].claims ).toEqual(
+			false
+		);
 	} );
 
 	it( 'Should be able to change label', async function () {
 		await browser.executeQuickStatement( 'Q1|LSv|"Some other label"' );
 
 		const responseQ1Data = await SpecialEntityDataPage.getData( 'Q1' );
-		expect( responseQ1Data.entities.Q1.labels.sv.value ).toBe( 'Some other label' );
+		expect( responseQ1Data.entities.Q1.labels.sv.value ).toEqual(
+			'Some other label'
+		);
 	} );
 
 	it( 'Should be able to merge two items', async function () {
@@ -307,7 +317,7 @@ describe( 'QuickStatements Service', function () {
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
 		const responseQ2Data = await SpecialEntityDataPage.getData( 'Q2' );
-		expect( responseQ2Data.entities.Q1.id ).toBe( 'Q1' );
+		expect( responseQ2Data.entities.Q1.id ).toEqual( 'Q1' );
 	} );
 
 	it( 'Should have a Last Batches button', async function () {

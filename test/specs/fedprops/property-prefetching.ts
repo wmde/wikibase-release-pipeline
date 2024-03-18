@@ -54,7 +54,7 @@ describe( 'Property Prefetching', function () {
 
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
-			expect( response.success ).toBe( 1 );
+			expect( response.success ).toEqual( 1 );
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run

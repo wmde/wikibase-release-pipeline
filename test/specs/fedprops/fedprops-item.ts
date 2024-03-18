@@ -17,7 +17,7 @@ describe( 'Fed props Item', function () {
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=ISNI&format=json&language=en&type=property`
 		);
 
-		expect( result.data.success ).toBe( 1 );
+		expect( result.data.success ).toEqual( 1 );
 		expect( result.data.search.length ).toBeGreaterThan( 0 );
 	} );
 
@@ -51,7 +51,7 @@ describe( 'Fed props Item', function () {
 			await SpecialEntityDataPage.getData( 'Q1', 'ttl' );
 		} catch ( error ) {
 			expect( error ).toBeInstanceOf( AxiosError );
-			expect( error.request.res.statusCode ).toBe( 500 );
+			expect( error.request.res.statusCode ).toEqual( 500 );
 		}
 	} );
 
@@ -67,7 +67,7 @@ describe( 'Fed props Item', function () {
 			await SpecialEntityDataPage.getData( 'Q1', 'rdf' );
 		} catch ( error ) {
 			expect( error ).toBeInstanceOf( AxiosError );
-			expect( error.request.res.statusCode ).toBe( 500 );
+			expect( error.request.res.statusCode ).toEqual( 500 );
 		}
 	} );
 
@@ -90,7 +90,7 @@ describe( 'Fed props Item', function () {
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 	} );
 
 	it( 'should NOT show up in queryservice ui after creation', async function () {
@@ -103,30 +103,30 @@ describe( 'Fed props Item', function () {
 		// Item should never have made its way into the query service, as TTL doesnt work
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:version' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '1' )
-		).resolves.toBe( false );
+		).resolves.toEqual( false );
 
-		await expect( QueryServiceUIPage.resultIncludes( 'p:P213' ) ).resolves.toBe(
+		await expect( QueryServiceUIPage.resultIncludes( 'p:P213' ) ).resolves.toEqual(
 			false
 		);
 	} );

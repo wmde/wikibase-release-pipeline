@@ -24,12 +24,12 @@ describe( 'Wikibase post upgrade', function () {
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
 
-		expect( result.data.success ).toBe( 1 );
+		expect( result.data.success ).toEqual( 1 );
 
 		const searchResults = result.data.search;
 		expect( searchResults ).toHaveLength( 1 );
-		expect( searchResults[ 0 ].match.text ).toBe( 'UpgradeItem' );
-		expect( searchResults[ 0 ].match.type ).toBe( 'label' );
+		expect( searchResults[ 0 ].match.text ).toEqual( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toEqual( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
@@ -105,9 +105,9 @@ describe( 'Wikibase post upgrade', function () {
 		expect( statement ).toEqual( expect.anything() );
 
 		expect( property ).toEqual( expect.anything() );
-		expect( property.o.value ).toBe( 'UpgradeItemStringValue' );
+		expect( property.o.value ).toEqual( 'UpgradeItemStringValue' );
 
 		expect( itemLabelValue ).toEqual( expect.anything() );
-		expect( itemLabelValue.o.value ).toBe( 'UpgradeItem' );
+		expect( itemLabelValue.o.value ).toEqual( 'UpgradeItem' );
 	} );
 } );
