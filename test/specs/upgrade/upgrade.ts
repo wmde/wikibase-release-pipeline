@@ -64,8 +64,8 @@ describe( 'Wikibase upgrade', function () {
 				getTestString( itemLabel ),
 				data
 			);
-			expect( itemId.startsWith( 'Q' ) ).toEqual( true );
-			expect( propertyId.startsWith( 'P' ) ).toEqual( true );
+			expect( itemId ).toEqual( expect.stringMatching( /^Q\d+$/ ) );
+			expect( propertyId ).toEqual( expect.stringMatching( /^P\d+$/ ) );
 		}
 	} );
 

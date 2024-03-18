@@ -27,8 +27,8 @@ describe( 'Wikibase pre upgrade', function () {
 				data
 			);
 
-			expect( itemId.startsWith( 'Q' ) ).toEqual( true );
-			expect( propertyId.startsWith( 'P' ) ).toEqual( true );
+			expect( itemId ).toEqual( expect.stringMatching( /^Q\d+$/ ) );
+			expect( propertyId ).toEqual( expect.stringMatching( /^P\d+$/ ) );
 		}
 	} );
 
@@ -52,7 +52,7 @@ describe( 'Wikibase pre upgrade', function () {
 
 		const itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		expect( itemId.startsWith( 'Q' ) ).toEqual( true );
-		expect( propertyId.startsWith( 'P' ) ).toEqual( true );
+		expect( itemId ).toEqual( expect.stringMatching( /^Q\d+$/ ) );
+		expect( propertyId ).toEqual( expect.stringMatching( /^P\d+$/ ) );
 	} );
 } );

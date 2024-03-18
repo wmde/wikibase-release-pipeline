@@ -38,8 +38,8 @@ describe( 'Wikibase post upgrade', function () {
 
 		newItemId = await WikibaseApi.createItem( itemLabel, data );
 
-		expect( newItemId.startsWith( 'Q' ) ).toEqual( true );
-		expect( newPropertyId.startsWith( 'P' ) ).toEqual( true );
+		expect( newItemId ).toEqual( expect.stringMatching( /^Q\d+$/ ) );
+		expect( newPropertyId ).toEqual( expect.stringMatching( /^P\d+$/ ) );
 	} );
 
 	it( 'New item should show up in Queryservice', async function () {

@@ -11,7 +11,7 @@ describe( 'WikibaseEdtf', function () {
 	it( 'Should allow to create and use the EDTF property', async function () {
 		// create the property
 		const propertyId = await WikibaseApi.createProperty( 'edtf' );
-		expect( propertyId.startsWith( 'P' ) ).toEqual( true );
+		expect( propertyId ).toEqual( expect.stringMatching( /^P/ ) );
 
 		const rawValue = '1985-04-12T23:20:30';
 
