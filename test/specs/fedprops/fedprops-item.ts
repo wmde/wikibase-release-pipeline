@@ -59,7 +59,7 @@ describe( 'Fed props Item', function () {
 		const data = await SpecialEntityDataPage.getData( 'Q1' );
 		expect(
 			data.entities.Q1.claims[ 'http://www.wikidata.org/entity/P213' ]
-		).not.toBeNull();
+		).toEqual( expect.anything() );
 	} );
 
 	it( 'should NOT show up in Special:EntityData with rdf', async function () {
