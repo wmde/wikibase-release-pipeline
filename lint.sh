@@ -14,23 +14,14 @@ done
 if $SHOULD_FIX
 then
   echo "Fixing Linting and Formatting Issues"
-  # NPM_LINT_COMMAND="npm run lint:fix --silent"
   ESLINT_FLAGS="--fix"
   NEWLINE_FLAGS="--fix"
   BLACK_FLAGS=""
 else
-  # NPM_LINT_COMMAND="npm run lint --silent"
   ESLINT_FLAGS=""
   NEWLINE_FLAGS=""
   BLACK_FLAGS="--check"
 fi
-
-# # ℹ️ Linting Javascript test/**/*.ts
-# $TEST_COMPOSE run --rm --build \
-#   -v "$(pwd)/.github":/usr/src/test/github \
-#   -v "$(pwd)/docs":/usr/src/test/docs \
-#   -v "$(pwd)/example":/usr/src/test/example \
-#   test-runner -c "$NPM_LINT_COMMAND"
 
 # ℹ️ Linting Javascript test/**/*.cjs,js,json,mjs,ts
 if $SHOULD_FIX
