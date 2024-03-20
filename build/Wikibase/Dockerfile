@@ -18,8 +18,8 @@ FROM ${MEDIAWIKI_IMAGE_URL} as collector
 COPY --from=git-checkout /tmp/wikibase /var/www/html/extensions/Wikibase
 
 COPY ./fix-do-not-add-stdport-in-detectServer.patch /tmp/fix-do-not-add-stdport-in-detectServer.patch
-RUN cd /var/www/html/ && \
-    patch -Np1 < /tmp/fix-do-not-add-stdport-in-detectServer.patch
+WORKDIR /var/www/html
+RUN patch -Np1 < /tmp/fix-do-not-add-stdport-in-detectServer.patch
 
 # ###########################################################################
 # hadolint ignore=DL3006
