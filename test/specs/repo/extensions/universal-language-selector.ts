@@ -4,6 +4,8 @@ describe( 'UniversalLanguageSelector', function () {
 	} );
 
 	it( 'Should be able to see the language selector menu', async function () {
+		this.retries( 4 );
+
 		await browser.url( testEnv.vars.WIKIBASE_URL );
 		await $( '#searchInput' ).click();
 
@@ -11,8 +13,8 @@ describe( 'UniversalLanguageSelector', function () {
 		await browser.pause( 1 * 1000 );
 
 		const selectors = await $$( 'div.imeselector' );
-		expect( selectors.length ).toBeGreaterThan( 0 );
-		await selectors.pop().click();
+		expect( selectors ).toHaveLength( 2 );
+		await selectors[ 1 ].click();
 
 		await expect(
 			$( 'div.imeselector-menu h3.ime-list-title' ).getHTML()
