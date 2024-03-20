@@ -1,6 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import page from '../../helpers/pages/page.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -73,8 +74,8 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render recent changes list within threshold', async function () {
-		await browser.url(
-			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+		await page.open(
+			'/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
 		);
 		await $( 'ul.special' );
 

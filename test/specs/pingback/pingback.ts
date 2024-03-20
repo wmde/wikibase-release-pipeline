@@ -1,6 +1,8 @@
+import page from '../../helpers/pages/page.js';
+
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async function () {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Main_Page' );
+		await page.open( '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );

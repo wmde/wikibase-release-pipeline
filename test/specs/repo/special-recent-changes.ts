@@ -1,7 +1,9 @@
+import page from '../../helpers/pages/page.js';
+
 describe( 'Special:RecentChanges', function () {
 	beforeEach( async function () {
-		await browser.url(
-			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+		await page.open(
+			'/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
 		);
 	} );
 

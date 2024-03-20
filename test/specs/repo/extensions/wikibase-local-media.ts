@@ -2,6 +2,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import page from '../../../helpers/pages/page.js';
 import propertyIdSelector from '../../../helpers/property-id-selector.js';
 import { Claim } from '../../../types/entity-data.js';
 
@@ -19,7 +20,7 @@ describe( 'WikibaseLocalMedia', function () {
 			testEnv.vars.MW_ADMIN_PASS
 		);
 
-		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Upload/` );
+		await page.open( '/wiki/Special:Upload/' );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );

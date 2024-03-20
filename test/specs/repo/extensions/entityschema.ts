@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import page from '../../../helpers/pages/page.js';
 import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 describe( 'EntitySchema', function () {
@@ -10,7 +11,7 @@ describe( 'EntitySchema', function () {
 	} );
 
 	it( 'Should be able to create an EntitySchema', async function () {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
+		await page.open( '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();

@@ -3,6 +3,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import page from '../../helpers/pages/page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import ExternalChange from '../../types/external-change.js';
 
@@ -74,8 +75,8 @@ describe( 'Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to create site-links from item to client', async function () {
 		// Create a site-link on a the Main_Page
-		await browser.url(
-			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${ pageTitle }`
+		await page.open(
+			`/wiki/Special:SetSiteLink/Q1?site=client_wiki&page=${ pageTitle }`
 		);
 		await $( '#wb-setsitelink-submit button' ).click();
 
