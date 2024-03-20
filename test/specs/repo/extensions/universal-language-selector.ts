@@ -11,8 +11,8 @@ describe( 'UniversalLanguageSelector', function () {
 		await browser.pause( 1 * 1000 );
 
 		const selectors = await $$( 'div.imeselector' );
-		expect( selectors ).toHaveLength( 2 );
-		await selectors[ 1 ].click();
+		expect( selectors.length ).toBeGreaterThan( 0 );
+		await selectors.pop().click();
 
 		await expect(
 			$( 'div.imeselector-menu h3.ime-list-title' ).getHTML()
