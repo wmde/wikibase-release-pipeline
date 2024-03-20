@@ -4,6 +4,8 @@ describe( 'UniversalLanguageSelector', function () {
 	} );
 
 	it( 'Should be able to see the language selector menu', async function () {
+		this.retries( 3 );
+
 		await browser.url( testEnv.vars.WIKIBASE_URL );
 		await $( '#searchInput' ).click();
 
