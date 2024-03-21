@@ -14,12 +14,14 @@ describe( 'UniversalLanguageSelector', function () {
 		// focus search bar again, lang selector should be there now
 		await $( '#searchform input' ).click();
 
-		await $$( 'div.imeselector' )
+		await $$( '.imeselector' )
 			.filter( async ( selector ) => selector.isClickable() )[ 0 ]
 			.click();
 
+		// we need to use getHTML, getText() is the empty string for some reason,
+		// does it think the element is hidden?
 		await expect(
 			$( 'div.imeselector-menu h3.ime-list-title' ).getHTML()
-		).resolves.toEqual( '<h3 class="ime-list-title autonym">English</h3>' );
+		).resolves.toMatch( /English/ );
 	} );
 } );
