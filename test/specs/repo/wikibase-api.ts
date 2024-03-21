@@ -32,8 +32,8 @@ describe( 'Wikibase API', function () {
 					data
 				);
 
-				expect( itemId ).toEqual( expect.stringMatching( /^Q\d+$/ ) );
-				expect( propertyId ).toEqual( expect.stringMatching( /^P\d+$/ ) );
+				expect( itemId ).toMatch( /^Q\d+$/ );
+				expect( propertyId ).toMatch( /^P\d+$/ );
 			}
 		} );
 	} );

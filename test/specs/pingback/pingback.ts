@@ -10,8 +10,8 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		expect( sqlResult ).toEqual( expect.stringContaining( 'WikibasePingback\t' ) );
-		expect( sqlResult ).toEqual( expect.stringContaining( 'WikibasePingback-1.' ) );
+		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
+		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
 		const result = await browser.makeRequest( 'http://mediawiki.svc' );
 		expect( result.data ).toHaveLength( 2 );

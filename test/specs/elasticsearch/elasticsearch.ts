@@ -38,10 +38,8 @@ describe( 'ElasticSearch', function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';
-		expect( itemLabel ).not.toEqual( expect.stringContaining( testLabel ) );
-		expect( itemLabel.toLowerCase() ).toEqual(
-			expect.stringContaining( testLabel.toLowerCase() )
-		);
+		expect( itemLabel ).not.toMatch( testLabel );
+		expect( itemLabel.toLowerCase() ).toMatch( testLabel.toLowerCase() );
 
 		await browser.waitUntil(
 			async () => {
