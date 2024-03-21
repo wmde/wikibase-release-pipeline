@@ -4,13 +4,15 @@ describe( 'UniversalLanguageSelector', function () {
 	} );
 
 	it( 'Should be able to see the language selector menu', async function () {
-		this.retries( 3 );
-
 		await browser.url( testEnv.vars.WIKIBASE_URL );
-		await $( '#searchInput' ).click();
 
-		// eslint-disable-next-line wdio/no-pause
-		await browser.pause( 1 * 1000 );
+		await $( '#searchform input' ).click();
+
+		// work around lang selector not showing up the first time
+		// blur the search bar
+		await $( '.page-Main_Page' ).click();
+		// focus search bar again, lang selector should be there now
+		await $( '#searchform input' ).click();
 
 		await $$( 'div.imeselector' )
 			.filter( async ( selector ) => selector.isClickable() )[ 0 ]
