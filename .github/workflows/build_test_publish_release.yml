@@ -1,7 +1,9 @@
 name: 📦 Build Test Tag and Publish Release
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - "mw-*"
 
