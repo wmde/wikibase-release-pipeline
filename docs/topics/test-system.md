@@ -2,35 +2,30 @@
 
 The test systems are located on a CloudVPS machine at `wikibase-product-testing-2022.wikidata-dev.eqiad1.wikimedia.cloud`.
 
-You can find all code for running test test systems in the `/opt/test-systems` directory.
-This directory is owned by the `mediawiki` user.
-Each test system is a copy of the `example` docker compose setup, with customized env vars and settings.
+You can find all code for running test test systems in the `/opt/test-systems` directory. This directory is owned by the `mediawiki` user. Each test system is a copy of the `example` docker compose setup, with customized env vars and settings.
 
-Four optional test systems are maintained.
-These may or may not be running at any given time, as they are only intended for use during product verification during the release process.
-Engineers can start and stop these
+Four optional test systems are maintained. These may or may not be running at any given time, as they are only intended for use during product verification during the release process. Engineers can start and stop these
 
-NOTE: Federated properties can not be enabled in wmde.9/1.37 releases. So that test system is not currently used / updated.
-It can again be enabled in wmde.10/1.38
+NOTE: Federated properties can not be enabled in wmde.9/1.37 releases. So that test system is not currently used / updated. It can again be enabled in wmde.10/1.38
 
 **Default Wikibase**
 
-- Previous release (internal ports 82**)
+- Previous release (internal ports 82\*\*)
   - https://wikibase-product-testing-previous.wmcloud.org (8280 internal)
   - https://wikibase-query-testing-previous.wmcloud.org (8281 internal)
   - https://wikibase-qs-testing-previous.wmcloud.org (8282 internal)
-- Latest release (internal ports 83**)
+- Latest release (internal ports 83\*\*)
   - https://wikibase-product-testing.wmcloud.org (8380 internal)
   - https://wikibase-query-testing.wmcloud.org (8381 internal)
   - https://wikibase-qs-testing.wmcloud.org (8382 internal)
 
 **Federated Properties**
 
-- Previous release with fed props (internal ports 84**)
+- Previous release with fed props (internal ports 84\*\*)
   - https://wikibase-product-testing-fedprops-previous.wmcloud.org (8480 internal)
   - https://wikibase-query-testing-fedprops-previous.wmcloud.org (8481 internal)
   - https://wikibase-qs-testing-fedprops-previous.wmcloud.org (8482 internal)
-- Latest release with fed props (internal ports 85**)
+- Latest release with fed props (internal ports 85\*\*)
   - https://wikibase-product-testing-fedprops.wmcloud.org (8580 internal)
   - https://wikibase-query-testing-fedprops.wmcloud.org (8581 internal)
   - https://wikibase-qs-testing-fedprops.wmcloud.org (8582 internal)
@@ -54,13 +49,12 @@ sudo chown mediawiki:wikidev /opt/test-systems
 sudo chmod +775 /opt/test-systems
 ```
 
-You can create a test system using the `prepare-docker-compose-config` script from https://github.com/wmde/wikibase-suite-test-system-tools which generates the necessary docker compose configuration using parametrized input. 
-The input paremeters are:
+You can create a test system using the `prepare-docker-compose-config` script from https://github.com/wmde/wikibase-suite-test-system-tools which generates the necessary docker compose configuration using parametrized input. The input paremeters are:
 
- - IMAGE_PREFIX: Prefix of images to use. Use an empty string to use locally loaded images.
- - TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
- - EXAMPLE_HASH: Hash of the release pipeline repository to use the docker compose example from
- - BUILD_NUMBER: Build of images, or tag, to use for images of the test system
+- IMAGE_PREFIX: Prefix of images to use. Use an empty string to use locally loaded images.
+- TEST_SYSTEM: The name of the test system to create, should be either "latest" or "previous"
+- EXAMPLE_HASH: Hash of the release pipeline repository to use the docker compose example from
+- BUILD_NUMBER: Build of images, or tag, to use for images of the test system
 
 For example:
 
@@ -79,14 +73,11 @@ To start the test system:
 sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
-TODO in order to keep the LocalSettings.php file between updates of the mediawiki container we want to copy it out, onto disk, and mount it in.
-However that is a little dificult right now due to https://phabricator.wikimedia.org/T298632
-So Adam will write these docs once that task is merged and resolved.
+TODO in order to keep the LocalSettings.php file between updates of the mediawiki container we want to copy it out, onto disk, and mount it in. However that is a little dificult right now due to https://phabricator.wikimedia.org/T298632 So Adam will write these docs once that task is merged and resolved.
 
 ## Updating
 
-All data is stored in volumes, so the easiest way to update a test system is to turn it off, recreate it using the steps above, just with different intputs, and then run `up` again.
-The one thing that needs copying over and mounting in the docker compose file is the LocalSetting.php file for MediaWiki which on initial setup is created by the wikibase container and stored in the container only.
+All data is stored in volumes, so the easiest way to update a test system is to turn it off, recreate it using the steps above, just with different intputs, and then run `up` again. The one thing that needs copying over and mounting in the docker compose file is the LocalSetting.php file for MediaWiki which on initial setup is created by the wikibase container and stored in the container only.
 
 That would look something like this...
 

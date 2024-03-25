@@ -1,12 +1,12 @@
-name: "pull-ghcr"
-description: "Pull all from GHCR"
+name: pull-ghcr
+description: Pull all from GHCR
 inputs:
   github_token:
-    description: "token to access GHCR"
+    description: token to access GHCR
     required: true
 
 runs:
-  using: "composite"
+  using: composite
 
   steps:
     - name: Login to GitHub Container Registry
@@ -21,12 +21,12 @@ runs:
         set -x
 
         images=(
-          "wikibase" 
-          "wikibase-bundle" 
-          "elasticsearch" 
-          "wdqs" 
-          "wdqs-frontend" 
-          "wdqs-proxy" 
+          "wikibase"
+          "wikibase-bundle"
+          "elasticsearch"
+          "wdqs"
+          "wdqs-frontend"
+          "wdqs-proxy"
           "quickstatements"
         )
 

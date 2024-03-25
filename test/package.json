@@ -5,7 +5,7 @@
 	"type": "module",
 	"devDependencies": {
 		"@types/mocha": "^10.0.6",
-		"@types/node": "^20.11.24",
+		"@types/node": "^20.11.28",
 		"@wdio/cli": "^8.18.2",
 		"@wdio/local-runner": "^8.18.2",
 		"@wdio/mocha-framework": "^8.18.2",
@@ -45,9 +45,14 @@
 	},
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
-		"lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml",
+		"lint": "npx eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml",
+		"lint-js": "npx eslint . --ext .cjs,.js,.json,.mjs,.ts",
+		"lint-yml": "npx eslint .. --ext .yml --config ./.eslintrc.json",
 		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
-		"lint:fix:format": "npx prettier *.{json,mjs,ts,yml} */*.{json,mjs,ts,yml} */*/*.{json,mjs,ts,yml} */*/*/*.{json,mjs,ts,yml} --write --log-level error",
-		"lint:fix:lint": "npx eslint . --ext .json --ext .mjs --ext .ts --ext .yml --fix"
+		"lint:fix:format": "npx prettier \"**/*.{cjs,js,mjs,ts,json,md,yml}\" --write --log-level error",
+		"lint:fix:lint": "npx eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml --fix",
+		"lint:fix-js": "npx prettier \"**/*.{cjs,js,json,mjs,ts}\" --write --log-level error && npx eslint . --ext .cjs,.js,.json,.mjs,.ts --fix",
+		"lint:fix-md": "npx prettier \"../**/*.md\" --write --log-level error --config ./.prettierrc.json",
+		"lint:fix-yml": "npx prettier \"../**/*.yml\" --write --log-level error --config ./.prettierrc.json && npx eslint .. --ext .yml --fix --config ./.eslintrc.json"
 	}
 }

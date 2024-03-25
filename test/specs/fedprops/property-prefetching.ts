@@ -1,6 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import page from '../../helpers/pages/page.js';
 
 describe( 'Property Prefetching', function () {
 	let itemId: string;
@@ -54,7 +55,7 @@ describe( 'Property Prefetching', function () {
 
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
-			expect( response.success ).toBe( 1 );
+			expect( response.success ).toEqual( 1 );
 		}
 
 		// Sleep for 2 seconds to ensure post edit things run
@@ -73,8 +74,8 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'Should render recent changes list within threshold', async function () {
-		await browser.url(
-			`${ testEnv.vars.WIKIBASE_URL }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0`
+		await page.open(
+			'/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
 		);
 		await $( 'ul.special' );
 

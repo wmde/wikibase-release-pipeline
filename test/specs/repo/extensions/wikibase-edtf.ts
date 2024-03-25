@@ -11,7 +11,7 @@ describe( 'WikibaseEdtf', function () {
 	it( 'Should allow to create and use the EDTF property', async function () {
 		// create the property
 		const propertyId = await WikibaseApi.createProperty( 'edtf' );
-		expect( propertyId.startsWith( 'P' ) ).toBe( true );
+		expect( propertyId ).toMatch( /^P/ );
 
 		const rawValue = '1985-04-12T23:20:30';
 
@@ -36,8 +36,8 @@ describe( 'WikibaseEdtf', function () {
 		const responseSnak =
 			responseData.entities[ itemId ].claims[ propertyId ][ 0 ].mainsnak;
 
-		expect( responseSnak.datavalue.value ).toBe( '1985-04-12T23:20:30' );
-		expect( responseSnak.datatype ).toBe( 'edtf' );
+		expect( responseSnak.datavalue.value ).toEqual( '1985-04-12T23:20:30' );
+		expect( responseSnak.datatype ).toEqual( 'edtf' );
 
 		// for a pretty screenshot
 		await ItemPage.open( itemId );

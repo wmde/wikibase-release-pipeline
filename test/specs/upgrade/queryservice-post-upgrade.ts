@@ -38,8 +38,8 @@ describe( 'Wikibase post upgrade', function () {
 
 		newItemId = await WikibaseApi.createItem( itemLabel, data );
 
-		expect( newItemId.startsWith( 'Q' ) ).toBe( true );
-		expect( newPropertyId.startsWith( 'P' ) ).toBe( true );
+		expect( newItemId ).toMatch( /^Q\d+$/ );
+		expect( newPropertyId ).toMatch( /^P\d+$/ );
 	} );
 
 	it( 'New item should show up in Queryservice', async function () {
@@ -99,7 +99,7 @@ describe( 'Wikibase post upgrade', function () {
 		expect( timestamp ).toEqual( expect.anything() );
 		expect( statement ).toEqual( expect.anything() );
 
-		expect( property.o.value ).toBe( propertyValue );
-		expect( itemLabelValue.o.value ).toBe( itemLabel );
+		expect( property.o.value ).toEqual( propertyValue );
+		expect( itemLabelValue.o.value ).toEqual( itemLabel );
 	} );
 } );

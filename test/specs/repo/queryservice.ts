@@ -3,6 +3,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', function () {
@@ -12,14 +13,14 @@ describe( 'QueryService', function () {
 			{ validateStatus: false },
 			{}
 		);
-		expect( result.status ).toBe( 405 );
+		expect( result.status ).toEqual( 405 );
 	} );
 
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
-		expect( result.status ).toBe( 200 );
+		expect( result.status ).toEqual( 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
@@ -27,7 +28,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
@@ -35,7 +36,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph workbench', async function () {
@@ -43,7 +44,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should show up with property in queryservice ui after creation', async function () {
@@ -79,30 +80,30 @@ describe( 'QueryService', function () {
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:version' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// label should match on the prefix
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// should have one statement
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// property value is set with correct rdf
 		await expect(
@@ -110,7 +111,7 @@ describe( 'QueryService', function () {
 				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// query the property using wdt: prefix
 		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
@@ -124,13 +125,41 @@ describe( 'QueryService', function () {
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {
-		// TODO make an item using the UI
-		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
+		await SpecialNewItemPage.open();
 
+		await $( 'input[name="label"]' ).setValue( getTestString( 'T267743-' ) );
+		await $( 'input[name="description"]' ).setValue( getTestString( 'Description' ) );
+		await $( 'input[name="aliases"]' ).setValue(
+			`${ getTestString( 'A' ) }|${ getTestString( 'B' ) }`
+		);
+		await SpecialNewItemPage.submit();
+
+		await expect( $( 'h1#firstHeading' ).$( 'span.wikibase-title-id' ) ).toHaveText(
+			/\(Q\d+\)/
+		);
+		const itemId = (
+			await $( 'h1#firstHeading' ).$( 'span.wikibase-title-id' ).getText()
+		).replace( /[()]/g, '' );
+
+		// Check it shows up after creation
+		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+
+		// wait for WDQS-updater
+		// eslint-disable-next-line wdio/no-pause
+		await browser.pause( 20 * 1000 );
+
+		await QueryServiceUIPage.submit();
+		await QueryServiceUIPage.resultTable;
+
+		await expect(
+			QueryServiceUIPage.resultIncludes( 'schema:version' )
+		).resolves.toBe( true );
+
+		// Attempt to delete
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
@@ -154,14 +183,14 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		expect( resultText.includes( 'schema:version' ) ).toBe( false );
-		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
-		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
+		expect( resultText ).not.toMatch( 'schema:version' );
+		expect( resultText ).not.toMatch( 'schema:dateModified' );
+		expect( resultText ).not.toMatch( 'wikibase:sitelinks' );
+		expect( resultText ).not.toMatch( 'wikibase:identifiers' );
+		expect( resultText ).not.toMatch( 'rdfs:label' );
 
 		// timestamp always shows
-		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
+		expect( resultText ).toMatch( 'wikibase:timestamp' );
 	} );
 
 	it( 'Should show results for a select query', async function () {

@@ -1,6 +1,7 @@
 ## Wikibase release pipeline
 
 ### Documentation
+
 - [Overview](topics/release-overview.md)
 - [Security Releases](topics/security-releases.md)
 - [Testing](topics/testing.md)

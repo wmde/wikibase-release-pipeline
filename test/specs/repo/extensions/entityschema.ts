@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import page from '../../../helpers/pages/page.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -10,7 +11,7 @@ describe( 'EntitySchema', function () {
 	} );
 
 	it( 'Should be able to create an EntitySchema', async function () {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
+		await page.open( '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();
@@ -38,9 +39,9 @@ describe( 'EntitySchema', function () {
 		await expect( $( '.entityschema-title-id' ) ).toHaveText( '(E1)' );
 		await expect( entitySchemaEl.$( 'div' ) ).toHaveElementClass( 'mw-highlight' );
 
-		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttrContaining(
+		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttr(
 			'href',
-			'http://validator.svc'
+			/http:\/\/validator\.svc/
 		);
 	} );
 } );

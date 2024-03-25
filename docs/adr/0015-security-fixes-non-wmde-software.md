@@ -27,6 +27,7 @@ Applying security fixes to the running Wikibase instance (or other Wikibase rela
 - Don't publish the fix before it's deployed in WMF production environment
 
 ### 3. Deploy fix to WMF production environment
+
 - [Follow deployment instructions from here](https://wikitech.wikimedia.org/wiki/How_to_deploy_code#Creating_a_Security_Patch)
 
 ### 4. Releasing
@@ -72,6 +73,5 @@ For other software without a constant release cycle or even explanation as to wh
 - ALL MediaWiki maintenance releases should generate a new Wikibase release.
 - Add some kind of mechanism that regularly checks what the latest stable MediaWiki version is. If the version has changed we should do a release.
 - Add a link to the [bug reporting documentation](https://www.mediawiki.org/wiki/Reporting_security_bugs) on the [Wikibase landing page on mediawiki.org](https://www.mediawiki.org/wiki/Wikibase)
-  
-## Consequences
 
+## Consequences
