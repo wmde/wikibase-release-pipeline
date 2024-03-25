@@ -18,8 +18,9 @@ describe( 'UniversalLanguageSelector', function () {
 			.filter( async ( selector ) => selector.isClickable() )[ 0 ]
 			.click();
 
-		// we need to use getHTML, getText() is the empty string for some reason,
-		// does it think the element is hidden?
+		// We need to use getHTML(). If an element isn't interactable
+		// getText() returns an empty string.
+		// https://webdriver.io/docs/api/element/getText/
 		await expect(
 			$( 'div.imeselector-menu h3.ime-list-title' ).getHTML()
 		).resolves.toMatch( /English/ );
