@@ -2,7 +2,6 @@
 
 This file is only intended to serve the developers of this repository and of the releases. This provides an overview of the releases that have been made using this release pipeline.
 
-
 ## March 2024: Mayor releases for 1.41.0
 
 - [MediaWiki release announcement: 1.41.0](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/OMDFHJ2SKKJH775RW4UTC754OY4TP7UU/)

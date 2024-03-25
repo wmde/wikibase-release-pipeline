@@ -3,7 +3,6 @@ set -euo pipefail
 IFS=$'\n\t'
 # set -x
 
-
 set -o allexport
 # shellcheck disable=SC1091
 source ./variables.env
