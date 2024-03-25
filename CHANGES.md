@@ -10,7 +10,7 @@ This provides an overview of the releases that have been made using this release
 
 | Suite Version | Version Info | Date available | Release task  |
 |---------------|----------------------|----------------|------------| --------------|
-| wmde.17 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.17/variables.env)) | MediaWiki (1.41.0, PHP 8.2.15, debian/apache 2.4.57-2), WDQS (0.3.137)    | 06 March 2024 | [T354644](https://phabricator.wikimedia.org/T354644) |
+| wmde.17 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.17/variables.env)) | MediaWiki (1.41.0, PHP 8.2.15, debian/apache 2.4.57-2), WDQS (0.3.137)    | XX March 2024 | [T354644](https://phabricator.wikimedia.org/T354644) |
 
 ## February 2024: Security releases for 1.40.2
 - [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
