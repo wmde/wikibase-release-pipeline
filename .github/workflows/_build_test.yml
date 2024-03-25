@@ -116,19 +116,17 @@ jobs:
       fail-fast: false
       matrix:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
-        version:
-          # Latest 1.37
-          - WMDE9
-          - WMDE9_BUNDLE
-          # Latest 1.38
-          - WMDE12
-          - WMDE12_BUNDLE
-          # Latest 1.39
-          - WMDE15
-          - WMDE15_BUNDLE
-          # Previous 1.40
-          - WMDE14
-          - WMDE14_BUNDLE
+        version: [
+            # Latest 1.38
+            "WMDE12",
+            "WMDE12_BUNDLE",
+            # Latest 1.39
+            "WMDE15",
+            "WMDE15_BUNDLE",
+            # Latest 1.40
+            "WMDE16",
+            "WMDE16_BUNDLE"
+          ]
 
     steps:
       - uses: actions/checkout@v4
