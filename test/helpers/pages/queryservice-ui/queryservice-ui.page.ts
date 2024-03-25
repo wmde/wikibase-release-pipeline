@@ -14,6 +14,7 @@ class QueryServiceUIPage extends SubmittablePage {
 	 *
 	 * @param {string} query
 	 * @param {string[]} prefixes - Optional
+	 * @return {void}
 	 */
 	public async open( query: string, prefixes: string[] = [] ): Promise<void> {
 		await browser.url( testEnv.vars.WDQS_FRONTEND_URL );
