@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../helpers/readFileEncoding.js';
+import { utf8 } from '../../helpers/read-file-encoding.js';
 
 describe( 'Interwiki links', function () {
 	it( 'Should be able to insert interwiki links', async function () {
@@ -16,9 +16,7 @@ describe( 'Interwiki links', function () {
 		const clientWikiQueryResults = await browser.dbQuery(
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"'
 		);
-		expect(
-			clientWikiQueryResults.includes( testEnv.vars.WIKIBASE_CLIENT_URL )
-		).toBe( true );
+		expect( clientWikiQueryResults ).toMatch( testEnv.vars.WIKIBASE_CLIENT_URL );
 
 		const config = {
 			user: testEnv.vars.DB_USER,
@@ -35,6 +33,6 @@ describe( 'Interwiki links', function () {
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"',
 			config
 		);
-		expect( myWikiQueryResults.includes( testEnv.vars.WIKIBASE_URL ) ).toBe( true );
+		expect( myWikiQueryResults ).toMatch( testEnv.vars.WIKIBASE_URL );
 	} );
 } );

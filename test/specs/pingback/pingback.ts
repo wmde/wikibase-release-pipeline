@@ -1,6 +1,8 @@
+import page from '../../helpers/pages/page.js';
+
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async function () {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Main_Page' );
+		await page.open( '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );
@@ -8,8 +10,8 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		expect( sqlResult.includes( 'WikibasePingback\t' ) ).toBe( true );
-		expect( sqlResult.includes( 'WikibasePingback-1.' ) ).toBe( true );
+		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
+		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
 		const result = await browser.makeRequest( 'http://mediawiki.svc' );
 		expect( result.data ).toHaveLength( 2 );
@@ -18,6 +20,6 @@ describe( 'Pingback', function () {
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )
 		);
 
-		expect( requestData.schema ).toBe( 'WikibasePingback' );
+		expect( requestData.schema ).toEqual( 'WikibasePingback' );
 	} );
 } );

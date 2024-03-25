@@ -7,6 +7,6 @@ describe( 'ConfirmEdit', function () {
 			'paris'
 		);
 
-		expect( executionResult ).toBe( 'something great' );
+		expect( executionResult ).toEqual( 'something great' );
 	} );
 } );

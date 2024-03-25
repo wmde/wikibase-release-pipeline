@@ -8,12 +8,11 @@ accepted
 
 ## Context
 
-We need to determine a place to host our new release artifacts (tarballs). 
-Currently releases are being served by the Extension Distributor and the release branches of the git repositories.
+We need to determine a place to host our new release artifacts (tarballs). Currently releases are being served by the Extension Distributor and the release branches of the git repositories.
 
 ## Github
 
-#### pros: 
+#### pros:
 
 - The same framework we use to produce the artifacts (in the current implementation of the release pipeline)
 - Minimal effort required.
@@ -25,7 +24,7 @@ Currently releases are being served by the Extension Distributor and the release
 
 ## releases.wikimedia.org
 
-#### pros: 
+#### pros:
 
 - Unified front for releases of the Wikimedia Foundation.
 
@@ -33,25 +32,25 @@ Currently releases are being served by the Extension Distributor and the release
 
 - Poor documentation (https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org) for what we are looking for.
 - Seemingly bound to puppet/modules/releases repository for configuration
-- No direct control, needs negotiation. 
+- No direct control, needs negotiation.
 - Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these). However, Mediawiki with bundled extensions is released there https://releases.wikimedia.org/mediawiki/1.35/
 
 ## Wikiba.se
 
-#### pros: 
+#### pros:
 
 - WMDE owned means direct control
 - The official site for Wikibase
 
 #### cons:
 
-- We would need to build something that either pulls the artifacts or gets them uploaded from the pipeline. 
+- We would need to build something that either pulls the artifacts or gets them uploaded from the pipeline.
 - Effort required is estimated to be high.
 - Meant to be a marketing website
 
 ## Extension Distributor
 
-#### pros: 
+#### pros:
 
 - Seems to be the "goto place" for MediaWiki extensions
 
@@ -63,12 +62,12 @@ Currently releases are being served by the Extension Distributor and the release
 
 ---
 
-| Repository    | Service provider   | Free to WMDE                   | Self-Service (1)       | Method of publishing                                 | Visibility/Current usage  | Estimated effort  | Documentation | URL                       | Trusted |
-| ------------- |------------------- | ------------------------------ | ---------------------- | ---------------------------------------------------- | -------------- | ----------------- | ------------- | --------------------------|---------|
-| Github        | Github/Microsoft          | Currently, Might change in the future. (2)                      | Yes                    | Github Releases / Github Action Artifact             | -	           | Low               | Good          | github.com/wikimedia/     |   no    |
-| WMF Releases  | WMF          | Yes                            | No (negotiation needed - likely only initially)         | FTP/SFTP/SCP                                                  | -              | High              | Poor          | releases.wikimedia.org    |   yes   |
-| Wikiba.se     | WMDE       | Yes                            | Yes                    | FTP or some kind of pulling by the server (TBD - not existing yet)           | -              | High              | Poor (non existent)         | wikiba.se, or releases.wikiba.se                 |   yes   |
-| ExtensionDist | WMF/Volunteers?          | Yes                            | No (negotiation needed - likely only initially)          | Undefined, would need adaptations                    | Low (3)        | Very High              | Poor          | extdist.wmflabs.org/dist/ |   yes   | 
+| Repository | Service provider | Free to WMDE | Self-Service (1) | Method of publishing | Visibility/Current usage | Estimated effort | Documentation | URL | Trusted |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Github | Github/Microsoft | Currently, Might change in the future. (2) | Yes | Github Releases / Github Action Artifact | - | Low | Good | github.com/wikimedia/ | no |
+| WMF Releases | WMF | Yes | No (negotiation needed - likely only initially) | FTP/SFTP/SCP | - | High | Poor | releases.wikimedia.org | yes |
+| Wikiba.se | WMDE | Yes | Yes | FTP or some kind of pulling by the server (TBD - not existing yet) | - | High | Poor (non existent) | wikiba.se, or releases.wikiba.se | yes |
+| ExtensionDist | WMF/Volunteers? | Yes | No (negotiation needed - likely only initially) | Undefined, would need adaptations | Low (3) | Very High | Poor | extdist.wmflabs.org/dist/ | yes |
 
 ---
 
@@ -78,12 +77,12 @@ Currently releases are being served by the Extension Distributor and the release
 
 ## Decision
 
-* Wikibase release artifacts will be hosted on the WMF-controlled domain https://releases.wikimedia.org/.
+- Wikibase release artifacts will be hosted on the WMF-controlled domain https://releases.wikimedia.org/.
 
 ## Consequences
 
-* A new release group called `releasers-wikibase` will be created for access to the repository
-* An [SRE-Access-Request] will be created, and the hike team members will be added as initial maintainers. The group will be later on expanded to cover other relevant WMDE staff.
-* Publishing step of Wikibase release pipeline will be adjusted to publish tarball release artifacts to https://releases.wikimedia.org/wikibase/ (or similar directory - final name to be defined during the implementation).
+- A new release group called `releasers-wikibase` will be created for access to the repository
+- An [SRE-Access-Request] will be created, and the hike team members will be added as initial maintainers. The group will be later on expanded to cover other relevant WMDE staff.
+- Publishing step of Wikibase release pipeline will be adjusted to publish tarball release artifacts to https://releases.wikimedia.org/wikibase/ (or similar directory - final name to be defined during the implementation).
 
 [SRE-Access-Request]: https://phabricator.wikimedia.org/T268818

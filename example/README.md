@@ -2,8 +2,8 @@
 
 The example docker compose configuration consists of two files:
 
-* `docker-compose.yml` contains two services: wikibase and mysql
-* `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements 
+- `docker-compose.yml` contains two services: wikibase and mysql
+- `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements
 
 **We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
 
@@ -29,8 +29,7 @@ The example docker-compose.yml sets up a dedicated job runner which restarts its
 
 If you run large batches of edits, this job runner may not be able to keep up with edits.
 
-You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately.
-Alternatively, you can run several job runners in parallel by using the `--scale` option.
+You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately. Alternatively, you can run several job runners in parallel by using the `--scale` option.
 
 ```sh
 docker compose up --scale wikibase-jobrunner=8
@@ -60,9 +59,9 @@ In the volumes section of the wikibase service in [docker-compose.extra.yml](doc
 
 Looking inside extra-install.sh, you see that it executes two scripts which set up an OAuth consumer for quickstatements and creates indices for Elasticsearch.
 
-
 There are also additional environment variables passed into Wikibase to configure the Elasticsearch host and port.
+
 ```yml
-  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
-  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 ```

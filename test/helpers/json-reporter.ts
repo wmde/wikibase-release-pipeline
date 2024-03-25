@@ -2,7 +2,7 @@ import WDIOReporter, { SuiteStats, TestStats } from '@wdio/reporter';
 import { Reporters } from '@wdio/types';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ResultType, TestResult } from '../types/test-results.js';
-import { utf8 } from './readFileEncoding.js';
+import { utf8 } from './read-file-encoding.js';
 
 type JsonReporterOptions = {
 	suiteName: string;

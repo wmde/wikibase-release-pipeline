@@ -1,6 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
+import page from '../../helpers/pages/page.js';
 import SearchResult from '../../types/search-result.js';
 
 const itemAlias: string = getTestString( 'alias' );
@@ -19,7 +20,7 @@ describe( 'ElasticSearch', function () {
 	} );
 
 	it( 'Should be able to set alias', async function () {
-		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:SetAliases/` );
+		await page.open( '/wiki/Special:SetAliases/' );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -37,10 +38,8 @@ describe( 'ElasticSearch', function () {
 		let searchResult: SearchResult[];
 
 		const testLabel = 'Testitem';
-		expect( itemLabel.includes( testLabel ) ).toBe( false );
-		expect( itemLabel.toLowerCase().includes( testLabel.toLowerCase() ) ).toBe(
-			true
-		);
+		expect( itemLabel ).not.toMatch( testLabel );
+		expect( itemLabel.toLowerCase() ).toMatch( testLabel.toLowerCase() );
 
 		await browser.waitUntil(
 			async () => {
@@ -63,9 +62,9 @@ describe( 'ElasticSearch', function () {
 		);
 
 		expect( searchResult ).toHaveLength( 1 );
-		expect( searchResult[ 0 ].id ).toBe( itemId );
-		expect( searchResult[ 0 ].match.type ).toBe( 'label' );
-		expect( searchResult[ 0 ].match.text ).toBe( itemLabel );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'label' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemLabel );
 	} );
 
 	it( 'should be able to search via alias', async function () {
@@ -92,8 +91,8 @@ describe( 'ElasticSearch', function () {
 		);
 
 		expect( searchResult ).toHaveLength( 1 );
-		expect( searchResult[ 0 ].id ).toBe( itemId );
-		expect( searchResult[ 0 ].match.type ).toBe( 'alias' );
-		expect( searchResult[ 0 ].match.text ).toBe( itemAlias );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'alias' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemAlias );
 	} );
 } );

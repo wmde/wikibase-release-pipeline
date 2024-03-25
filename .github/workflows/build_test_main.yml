@@ -3,7 +3,7 @@ name: 🧪 Build and Test main
 on:
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   _:

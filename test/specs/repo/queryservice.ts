@@ -13,14 +13,14 @@ describe( 'QueryService', function () {
 			{ validateStatus: false },
 			{}
 		);
-		expect( result.status ).toBe( 405 );
+		expect( result.status ).toEqual( 405 );
 	} );
 
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
 		);
-		expect( result.status ).toBe( 200 );
+		expect( result.status ).toEqual( 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
@@ -28,7 +28,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
@@ -36,7 +36,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph workbench', async function () {
@@ -44,7 +44,7 @@ describe( 'QueryService', function () {
 			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
-		expect( result.status ).toBe( 404 );
+		expect( result.status ).toEqual( 404 );
 	} );
 
 	it( 'Should show up with property in queryservice ui after creation', async function () {
@@ -80,30 +80,30 @@ describe( 'QueryService', function () {
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:version' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'schema:dateModified' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:timestamp' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// label should match on the prefix
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'rdfs:label', itemLabel )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// should have one statement
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:statements', '1' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:sitelinks', '0' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 		await expect(
 			QueryServiceUIPage.resultIncludes( 'wikibase:identifiers', '0' )
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// property value is set with correct rdf
 		await expect(
@@ -111,7 +111,7 @@ describe( 'QueryService', function () {
 				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 
 		// query the property using wdt: prefix
 		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
@@ -125,7 +125,7 @@ describe( 'QueryService', function () {
 				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
 				propertyValue
 			)
-		).resolves.toBe( true );
+		).resolves.toEqual( true );
 	} );
 
 	it( 'Should not show up in queryservice ui after deletion', async function () {
@@ -183,14 +183,14 @@ describe( 'QueryService', function () {
 		const resultText = await QueryServiceUIPage.resultTable.getText();
 
 		// item should not be included
-		expect( resultText.includes( 'schema:version' ) ).toBe( false );
-		expect( resultText.includes( 'schema:dateModified' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:sitelinks' ) ).toBe( false );
-		expect( resultText.includes( 'wikibase:identifiers' ) ).toBe( false );
-		expect( resultText.includes( 'rdfs:label' ) ).toBe( false );
+		expect( resultText ).not.toMatch( 'schema:version' );
+		expect( resultText ).not.toMatch( 'schema:dateModified' );
+		expect( resultText ).not.toMatch( 'wikibase:sitelinks' );
+		expect( resultText ).not.toMatch( 'wikibase:identifiers' );
+		expect( resultText ).not.toMatch( 'rdfs:label' );
 
 		// timestamp always shows
-		expect( resultText.includes( 'wikibase:timestamp' ) ).toBe( true );
+		expect( resultText ).toMatch( 'wikibase:timestamp' );
 	} );
 
 	it( 'Should show results for a select query', async function () {

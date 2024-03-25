@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import page from '../../../helpers/pages/page.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 describe( 'SyntaxHighlight', function () {
 	beforeEach( async function () {
@@ -20,7 +21,7 @@ describe( 'SyntaxHighlight', function () {
 			fileContents
 		);
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Module:Olives' );
+		await page.open( '/wiki/Module:Olives' );
 
 		// should come with highlighted lua script
 		await $( '.mw-highlight' );

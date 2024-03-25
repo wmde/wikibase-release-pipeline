@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 describe( 'Scribunto', function () {
 	beforeEach( async function () {
@@ -25,7 +25,7 @@ describe( 'Scribunto', function () {
 		);
 
 		// should come from executed lua script
-		expect( executionContent.includes( 'Hello, world!' ) ).toBe( true );
+		expect( executionContent ).toMatch( 'Hello, world!' );
 	} );
 
 	it( 'Should be able to execute lua module within 0.05 seconds', async function () {
@@ -35,6 +35,6 @@ describe( 'Scribunto', function () {
 		);
 
 		expect( cpuTime.value ).toBeLessThan( 0.05 );
-		expect( cpuTime.scale ).toBe( 'seconds' );
+		expect( cpuTime.scale ).toEqual( 'seconds' );
 	} );
 } );

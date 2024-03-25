@@ -2,6 +2,7 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import page from '../../../helpers/pages/page.js';
 import propertyIdSelector from '../../../helpers/property-id-selector.js';
 import { Claim } from '../../../types/entity-data.js';
 
@@ -19,7 +20,7 @@ describe( 'WikibaseLocalMedia', function () {
 			testEnv.vars.MW_ADMIN_PASS
 		);
 
-		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Upload/` );
+		await page.open( '/wiki/Special:Upload/' );
 
 		const filePath = new URL( 'image.png', import.meta.url );
 		await $( '#wpUploadFile' ).setValue( filePath.pathname );
@@ -31,12 +32,13 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to create a property with localMedia datatype', async function () {
 		propertyId = await WikibaseApi.createProperty( 'localMedia' );
-		expect( propertyId.startsWith( 'P' ) ).toBe( true );
+		expect( propertyId ).toMatch( /^P\d+$/ );
 
 		await PropertyPage.open( propertyId );
 
 		propertyLabel = await $( '#firstHeading' ).getText();
-		await expect( $( '#firstHeading' ) ).toHaveTextContaining( propertyId );
+		// eslint-disable-next-line security/detect-non-literal-regexp
+		await expect( $( '#firstHeading' ) ).toHaveText( new RegExp( propertyId ) );
 	} );
 
 	it( 'Should allow to use uploaded image on statement', async function () {
@@ -57,9 +59,9 @@ describe( 'WikibaseLocalMedia', function () {
 		const itemId = await WikibaseApi.createItem( 'image-test', data );
 
 		await ItemPage.open( itemId );
-		await expect( $( '.wikibase-snakview-value img' ) ).toHaveAttrContaining(
+		await expect( $( '.wikibase-snakview-value img' ) ).toHaveAttr(
 			'src',
-			'Image.png'
+			/Image\.png/
 		);
 	} );
 

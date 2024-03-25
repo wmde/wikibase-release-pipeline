@@ -1,6 +1,6 @@
 # Testing
 
-Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs  run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
+Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
 All test suites except `example` and `upgrade` are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory. The `upgrade` suite runs the remote Docker images from the specified previous version, and tests upgrading to the latest local build.
 
@@ -37,7 +37,7 @@ There are also a few special options which are useful when writing tests, or in 
 
 # Sets test timeouts to 1 day so they don't timeout while debugging with `await browser.debug()` calls
 # This however can have undesirable effects during normal test runs so only use for actual debugging
-# purposes. 
+# purposes.
 ./test.sh repo --debug
 
 # `DEBUG`: Shows full Docker compose up/down progress logs for the Test Runner
@@ -47,7 +47,7 @@ DEBUG=true ./test.sh repo
 
 WDIO Testrunner CLI options are also supported. See https://webdriver.io/docs/testrunner.
 
-##  Variables for testing some other instance
+## Variables for testing some other instance
 
 In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested:
 
