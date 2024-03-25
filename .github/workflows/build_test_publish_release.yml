@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   _:
+    if: github.event.pull_request.merged == 'true'
+
     uses: ./.github/workflows/_build_test.yml
 
   tag-release:
