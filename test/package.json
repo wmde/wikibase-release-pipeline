@@ -15,7 +15,7 @@
 		"api-testing": "^1.6.0",
 		"apollo-boost": "^0.4.9",
 		"async-wait-until": "^2.0.12",
-		"axios": "^1.6.7",
+		"axios": "^1.6.8",
 		"cross-fetch": "^4.0.0",
 		"dotenv-expand": "^11.0.6",
 		"envsub": "^4.1.0",
