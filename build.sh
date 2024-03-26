@@ -48,7 +48,6 @@ function image_url_to_image_name {
    echo "$image_url" | cut -d'/' -f 2
 }
 
-
 function build_wikibase {
     docker build \
         $DOCKER_BUILD_CACHE_OPT \
