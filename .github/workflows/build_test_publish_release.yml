@@ -14,12 +14,12 @@ permissions:
 
 jobs:
   _:
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
 
     uses: ./.github/workflows/_build_test.yml
 
   tag-release:
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
 
     needs: _
 
@@ -49,7 +49,7 @@ jobs:
           fi
 
   publish-dockerhub:
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
 
     needs: tag-release
 
