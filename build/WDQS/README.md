@@ -41,7 +41,7 @@ Note on `BLAZEGRAPH_EXTRA_OPTS`: These are options that are directly passed to t
 
 | File | Description |
 | --- | --- |
-| `/wdqs/allowlist.txt` | SPARQL endpoints that are allowed for federation |
+| `/wdqs/whitelist.txt` | SPARQL endpoints that are allowed for federation |
 | `/wdqs/RWStore.properties` | Properties for the service |
 | `/templates/mwservices.json` | Template for MediaWiki services (substituted to `/wdqs/mwservices.json` at runtime) |
 
