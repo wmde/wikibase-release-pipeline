@@ -277,7 +277,8 @@ describe( 'QueryService', function () {
 	} );
 
 	it( 'Should show results from a page in allowlist.txt', async function () {
-		await QueryServiceUIPage.open( `PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
+		await QueryServiceUIPage.open( `
+		PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
 		PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
 		
 		SELECT * WHERE {
@@ -297,5 +298,29 @@ describe( 'QueryService', function () {
 		await expect(
 			QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' )
 		).resolves.toHaveLength( 50 );
+	} );
+
+	it( 'Should show error from a page not in allowlist.txt', async function () {
+		// Returns results if you add https://wikibase.world/query/sparql to the allowlist.txt
+		await QueryServiceUIPage.open( `
+			PREFIX wdt: <https://wikibase.world/prop/direct/>
+			PREFIX wd: <https://wikibase.world/entity/>
+			
+			SELECT * WHERE {
+				service <https://wikibase.world/query/sparql> {
+					?item wdt:P3 wd:Q10 .
+					?item wdt:P1 ?url .
+					?item wdt:P13 wd:Q54 .
+				}
+			}
+
+			LIMIT 50
+		` );
+
+		await QueryServiceUIPage.submit();
+
+		await expect( $( 'div#query-error' ) ).toHaveText(
+			/Service URI https:\/\/wikibase\.world\/query\/sparql is not allowed/
+		);
 	} );
 } );
