@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 
-# ==== Load the Wikibase default env vars and create a new LocalSettings file 
+# ==== Load the Wikibase default env vars and create a new LocalSettings file
 # Entrypoint logic depends on LocalSettings.php to exist and it is mounted by
 # default and is removed when the container changes. Copy the one from the
 # pipeline and run envsubst in this shell.

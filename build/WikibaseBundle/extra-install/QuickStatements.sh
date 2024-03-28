@@ -10,7 +10,7 @@ php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
 if [[ -f /quickstatements/data/qs-oauth.json ]]; then
     OAUTH_CONSUMER_KEY=$(grep -o '"key":"[^"]*' /quickstatements/data/qs-oauth.json | grep -o '[^"]*$')
     OAUTH_CONSUMER_SECRET=$(grep -o '"secret":"[^"]*' /quickstatements/data/qs-oauth.json | grep -o '[^"]*$')
-	
+
     export OAUTH_CONSUMER_KEY
     export OAUTH_CONSUMER_SECRET
 
