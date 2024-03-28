@@ -71,7 +71,7 @@ WORKDIR /wdqs
 
 COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
-COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt logback.xml /wdqs/
+COPY --chown=blazegraph:blazegraph RWStore.properties allowlist.txt logback.xml /wdqs/
 
 # TODO this shouldn't be needed, but CI currently doesnt check for the +x bit, which is why this line is here
 RUN chmod +x /wdqs/runUpdate.sh
