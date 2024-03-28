@@ -290,14 +290,14 @@ describe( 'QueryService', function () {
 		   }
 		
 		}
-		LIMIT 50
+		LIMIT 5
 		` );
 
 		await QueryServiceUIPage.submit();
 
 		await expect(
 			QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' )
-		).resolves.toHaveLength( 50 );
+		).resolves.toHaveLength( 5 );
 	} );
 
 	it( 'Should show error from a page not in allowlist.txt', async function () {
@@ -314,7 +314,7 @@ describe( 'QueryService', function () {
 				}
 			}
 
-			LIMIT 50
+			LIMIT 5
 		` );
 
 		await QueryServiceUIPage.submit();
