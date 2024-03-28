@@ -278,19 +278,19 @@ describe( 'QueryService', function () {
 
 	it( 'Should show results from a page in allowlist.txt', async function () {
 		await QueryServiceUIPage.open( `
-		PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
-		PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
-		
-		SELECT * WHERE {
-			service <https://query.wikidata.org/sparql> {
-			  ?wd wikidata_wdt:P31 wikidata_wd:Q976981 .
-			  ?wd wikidata_wdt:P31 ?type .
-			  optional { ?wd rdfs:label ?label. filter(lang(?label) = "en") }
-			  optional { ?type rdfs:label ?typelabel. filter(lang(?typelabel) = "en") }
-		   }
-		
-		}
-		LIMIT 5
+			PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
+			PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
+			
+			SELECT * WHERE {
+				service <https://query.wikidata.org/sparql> {
+					?wd wikidata_wdt:P31 wikidata_wd:Q976981 .
+					?wd wikidata_wdt:P31 ?type .
+					optional { ?wd rdfs:label ?label. filter(lang(?label) = "en") }
+					optional { ?type rdfs:label ?typelabel. filter(lang(?typelabel) = "en") }
+				}
+			}
+			
+			LIMIT 5
 		` );
 
 		await QueryServiceUIPage.submit();
