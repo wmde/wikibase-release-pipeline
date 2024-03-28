@@ -1,6 +1,4 @@
 # Test runner
-version: "3.5"
-
 name: wikibase-suite-test-runner
 
 networks:

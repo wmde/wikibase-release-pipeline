@@ -3,8 +3,6 @@
 # Suite team inherited.
 
 # WDQS and WDQS-updater for testing when upgrading
-version: "3.5"
-
 services:
   wdqs:
     image: "${WDQS_TEST_IMAGE_NAME}"

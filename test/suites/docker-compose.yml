@@ -1,6 +1,4 @@
 # Wikibase Suite for testing
-version: "3.5"
-
 x-common-variables: &wikibase_variables
   DB_SERVER: ${DB_SERVER}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}

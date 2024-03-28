@@ -1,6 +1,4 @@
 # Example Wikibase docker compose setup
-version: "3.4"
-
 x-common-variables: &wikibase_variables
   DB_SERVER: mysql.svc:3306
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
