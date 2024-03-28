@@ -280,7 +280,7 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.open( `
 			PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
 			PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
-			
+
 			SELECT * WHERE {
 				service <https://query.wikidata.org/sparql> {
 					?wd wikidata_wdt:P31 wikidata_wd:Q976981 .
@@ -289,7 +289,7 @@ describe( 'QueryService', function () {
 					optional { ?type rdfs:label ?typelabel. filter(lang(?typelabel) = "en") }
 				}
 			}
-			
+
 			LIMIT 5
 		` );
 
@@ -305,7 +305,7 @@ describe( 'QueryService', function () {
 		await QueryServiceUIPage.open( `
 			PREFIX wdt: <https://wikibase.world/prop/direct/>
 			PREFIX wd: <https://wikibase.world/entity/>
-			
+
 			SELECT * WHERE {
 				service <https://wikibase.world/query/sparql> {
 					?item wdt:P3 wd:Q10 .
