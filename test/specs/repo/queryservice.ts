@@ -301,7 +301,7 @@ describe( 'QueryService', function () {
 	} );
 
 	it( 'Should show error from a page not in allowlist.txt', async function () {
-		// Returns results if you add https://wikibase.world/query/sparql to the allowlist.txt
+		// Returns results if https://wikibase.world/query/sparql added to allowlist.txt
 		await QueryServiceUIPage.open( `
 			PREFIX wdt: <https://wikibase.world/prop/direct/>
 			PREFIX wd: <https://wikibase.world/entity/>
