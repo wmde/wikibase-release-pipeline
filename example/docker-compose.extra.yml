@@ -1,6 +1,4 @@
 # Additional services example
-version: "3.4"
-
 x-common-variables: &wikibase_extra_variables
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
