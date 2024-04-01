@@ -20,7 +20,7 @@
 		"dotenv-expand": "^11.0.6",
 		"envsub": "^4.1.0",
 		"eslint": "^8.57.0",
-		"eslint-config-wikimedia": "0.26.0",
+		"eslint-config-wikimedia": "0.27.0",
 		"eslint-plugin-compat": "^4.2.0",
 		"eslint-plugin-unicorn": "^51.0.1",
 		"lodash": "^4.17.21",
