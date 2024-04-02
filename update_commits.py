@@ -21,7 +21,7 @@ def get_commit(variable: str, url: str, parse_commit: callable, previous_commit:
 
 
 gerrit_pattern = re.compile(
-    r"# (https://gerrit.*)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
+    r"# (https://gerrit.*)[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
 
 
@@ -32,7 +32,7 @@ def parse_gerrit_commit(response: requests.Response) -> str:
 
 
 github_pattern = re.compile(
-    r"# (https://github\.com/(.*/commits.*))[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
+    r"# (https://github\.com/(.*/commits.*))[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
 
 
@@ -43,7 +43,7 @@ def parse_github_commit(response: requests.Response) -> str:
 
 
 bitbucket_pattern = re.compile(
-    r"# (https://bitbucket\.org/(.*/commits)/branch/master)[ \t\r\n]*([A-Z]+_COMMIT)=([0-9a-f]+)"
+    r"# (https://bitbucket\.org/(.*/commits)/branch/master)[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
 
 
