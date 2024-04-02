@@ -278,7 +278,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should show results from a page in allowlist.txt', async function () {
 		// We don't currently have a way for the example suite to pass tests with breaking changes
-		// Please see T361245 for more info
+		// Please see T361575 for more info
 		if ( testEnv.settings.name === 'example' ) {
 			this.skip();
 		}
