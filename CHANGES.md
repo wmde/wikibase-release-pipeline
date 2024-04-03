@@ -12,6 +12,16 @@ This file is only intended to serve the developers of this repository and of the
 | --- | --- | --- | --- |
 | wmde.17 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.17/variables.env)) | MediaWiki (1.41.0, PHP 8.2.15, debian/apache 2.4.57-2), WDQS (0.3.137) | XX March 2024 | [T354644](https://phabricator.wikimedia.org/T354644) |
 
+## April 2024: Security releases for 1.40.3
+
+- [MediaWiki security and maintenance release announcement: 1.39.7 / 1.40.3](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/V3WXEPXV2DU6WTVEKK4XHW4QXD5OFKD7/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.40)
+- [Release task T361227](https://phabricator.wikimedia.org/T361227)
+
+| Suite Version | Version Info | Date available | Release task |
+| --- | --- | --- | --- |
+| wmde.19 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/variables.env)) | MediaWiki (1.40.3, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | XX April 2024 | [T361227](https://phabricator.wikimedia.org/T361227) |
+
 ## February 2024: Security releases for 1.40.2
 
 - [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
