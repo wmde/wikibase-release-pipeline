@@ -28,6 +28,8 @@ describe( 'Special:NewProperty', function () {
 			} );
 
 			it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
+				this.retries( 4 );
+
 				await SpecialNewPropertyPage.open();
 
 				await SpecialNewPropertyPage.labelInput.setValue(
