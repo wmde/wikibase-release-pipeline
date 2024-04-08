@@ -199,8 +199,6 @@ services:
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
-      # This can be removed on release of WMDE15 to example
-      - WIKIBASE_SCHEME_AND_HOST=http://${WIKIBASE_HOST}
     healthcheck:
       test: [ "CMD", "curl", "--silent", "--fail", "http://${QUICKSTATEMENTS_HOST}" ]
       interval: 10s
