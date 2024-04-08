@@ -32,6 +32,14 @@ This file is only intended to serve the developers of this repository and of the
 | --- | --- | --- | --- | --- |
 | wmde.16 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.16/variables.env)) | MediaWiki (1.40.2, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | 21 February 2024 | [7976683909](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7976683909) | [T354645](https://phabricator.wikimedia.org/T354645) |
 
+## February 2024: Security releases for 1.39.6
+
+- [WMDE 15 spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.15/variables.env)
+- [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [Run number 7887239057](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7887239057/)
+- [Release task T354646](https://phabricator.wikimedia.org/T354646)
+
 ## November 2023: First 1.40 release
 
 - [MediaWiki release announcement 1.40](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/H46H5ZYZG2PYUQ5STK7NWKF7GXYW7H6B/)
