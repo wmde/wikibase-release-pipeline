@@ -1,8 +1,11 @@
+import page from '../../helpers/pages/page.js';
+
 describe( 'Special:Version', function () {
 	it( 'Should contain the correct MediaWiki version', async function () {
-		await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
-		await expect( $( '#sv-software' ) ).toHaveTextContaining(
-			`MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }`
+		await page.open( '/wiki/Special:Version' );
+		await expect( $( '#sv-software' ) ).toHaveText(
+			// eslint-disable-next-line security/detect-non-literal-regexp
+			new RegExp( `MediaWiki ${ testEnv.vars.MEDIAWIKI_VERSION }` )
 		);
 	} );
 
@@ -38,7 +41,7 @@ describe( 'Special:Version', function () {
 
 			it( `Should contain ${ name } extensions`, async function () {
 				await browser.skipIfExtensionNotPresent( this, name );
-				await browser.url( `${ testEnv.vars.WIKIBASE_URL }/wiki/Special:Version` );
+				await page.open( '/wiki/Special:Version' );
 
 				// /wiki/Special:Version generate these for each installed extension
 				const elementSelector = await $(

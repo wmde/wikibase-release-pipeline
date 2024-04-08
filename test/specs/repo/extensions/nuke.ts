@@ -1,4 +1,5 @@
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import page from '../../../helpers/pages/page.js';
 
 describe( 'Nuke', function () {
 	beforeEach( async function () {
@@ -19,13 +20,13 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		expect( pageExistsResult.status ).toBe( 200 );
+		expect( pageExistsResult.status ).toEqual( 200 );
 
 		await LoginPage.login(
 			testEnv.vars.MW_ADMIN_NAME,
 			testEnv.vars.MW_ADMIN_PASS
 		);
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:Nuke' );
+		await page.open( '/wiki/Special:Nuke' );
 
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
@@ -47,6 +48,6 @@ describe( 'Nuke', function () {
 			{}
 		);
 
-		expect( pageIsGoneResult.status ).toBe( 404 );
+		expect( pageIsGoneResult.status ).toEqual( 404 );
 	} );
 } );

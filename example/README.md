@@ -58,8 +58,7 @@ The example `docker-compose.yml` sets up a dedicated job runner which restarts i
 
 If you run large batches of edits, this job runner may not be able to keep up with edits.
 
-You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately.
-Alternatively, you can run several job runners in parallel by using the `--scale` option.
+You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately. Alternatively, you can run several job runners in parallel by using the `--scale` option.
 
 ```sh
 docker compose up --scale wikibase-jobrunner=8

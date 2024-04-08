@@ -6,17 +6,17 @@ In order to change how this image is configured just mount over the wdqs.templat
 
 ## Environment variables
 
-Variable                 | Default                      | Description
--------------------------|  ----------------------------| ----------
-`PROXY_PASS_HOST`        | "wdqs.svc:9999"              | Where to forward the requests to
-`PROXY_MAX_QUERY_MILLIS` | 60000                        | Timeout in milliseconds
+| Variable | Default | Description |
+| --- | --- | --- |
+| `PROXY_PASS_HOST` | "wdqs.svc:9999" | Where to forward the requests to |
+| `PROXY_MAX_QUERY_MILLIS` | 60000 | Timeout in milliseconds |
 
 ### Filesystem layout
 
-File                               | Description
----------------------------------  | ------------------------------------------------------------------------------
-`/etc/nginx/conf.d/wdqs.template`  | Template for the nginx config (substituted to `/etc/nginx/conf.d/default.conf` at runtime)
-`/etc/nginx/conf.d/default.conf`   | nginx config. To override this you must also use a custom entrypoint to avoid the file being overwritten.
+| File | Description |
+| --- | --- |
+| `/etc/nginx/conf.d/wdqs.template` | Template for the nginx config (substituted to `/etc/nginx/conf.d/default.conf` at runtime) |
+| `/etc/nginx/conf.d/default.conf` | nginx config. To override this you must also use a custom entrypoint to avoid the file being overwritten. |
 
 ### Development
 

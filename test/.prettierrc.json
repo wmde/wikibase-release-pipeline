@@ -1,10 +1,11 @@
 {
+	"proseWrap": "never",
 	"trailingComma": "none",
 	"useTabs": true,
 	"plugins": [ "prettier-plugin-organize-imports" ],
 	"overrides": [
 		{
-			"files": [ "*.mjs", "*.ts" ],
+			"files": [ "*.cjs", "*.js", "*.mjs", "*.ts" ],
 			"options": {
 				"singleQuote": true
 			}

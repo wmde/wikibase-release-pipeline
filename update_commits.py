@@ -28,7 +28,7 @@ gerrit_pattern = re.compile(
 def parse_gerrit_commit(response: requests.Response) -> str:
     """Parse webpage using BeautifulSoup"""
     soup = BeautifulSoup(response.content, "lxml")
-    return soup.find("th", text="commit").next_sibling.text
+    return soup.find("th", string="commit").next_sibling.text
 
 
 github_pattern = re.compile(

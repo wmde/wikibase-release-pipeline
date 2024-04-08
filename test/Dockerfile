@@ -14,7 +14,8 @@ RUN apt-get update && \
         setuptools \
         requests \
         bs4 \
-        lxml
+        lxml \
+        black
 
 WORKDIR /usr/src/test/
 

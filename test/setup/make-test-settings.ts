@@ -8,8 +8,8 @@ import TestSettings, {
 	TestHooks,
 	TestRunnerSettings,
 	TestSuiteSettings
-} from '../types/TestSettings.js';
-import loadEnvFiles from './loadEnvFiles.js';
+} from '../types/test-settings.js';
+import loadEnvFiles from './load-env-files.js';
 
 export const ONE_DAY_IN_MS = 86400000;
 

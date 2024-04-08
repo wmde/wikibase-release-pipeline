@@ -14,6 +14,6 @@ describe( 'Search', function () {
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ itemLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
-		expect( result.data.search[ 0 ].label ).toBe( itemLabel );
+		expect( result.data.search[ 0 ].label ).toEqual( itemLabel );
 	} );
 } );

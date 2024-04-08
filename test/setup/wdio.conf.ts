@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import JsonReporter from '../helpers/json-reporter.js';
-import TestEnv from './TestEnv.js';
+import TestEnv from './test-env.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );

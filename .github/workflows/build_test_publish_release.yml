@@ -1,7 +1,9 @@
 name: 📦 Build Test Tag and Publish Release
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - "mw-*"
 
@@ -11,10 +13,15 @@ permissions:
 
 jobs:
   _:
+    if: github.event.pull_request.merged == true
+
     uses: ./.github/workflows/_build_test.yml
 
   tag-release:
+    if: github.event.pull_request.merged == true
+
     needs: _
+
     runs-on: ubuntu-latest
 
     steps:
@@ -41,9 +48,12 @@ jobs:
           fi
 
   publish-dockerhub:
+    if: github.event.pull_request.merged == true
+
     needs: tag-release
 
     runs-on: ubuntu-latest
+
     timeout-minutes: 30
 
     steps:
@@ -56,7 +66,7 @@ jobs:
       - uses: docker/login-action@v3
         with:
           # implicitly docker hub
-          username: "roti4wmde" # TODO: get a bot user
+          username: roti4wmde # TODO: get a bot user
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Push release to dockerhub
@@ -69,12 +79,12 @@ jobs:
           docker image ls
 
           images=(
-            "wikibase" 
-            "wikibase-bundle" 
-            "elasticsearch" 
-            "wdqs" 
-            "wdqs-frontend" 
-            "wdqs-proxy" 
+            "wikibase"
+            "wikibase-bundle"
+            "elasticsearch"
+            "wdqs"
+            "wdqs-frontend"
+            "wdqs-proxy"
             "quickstatements"
           )
 

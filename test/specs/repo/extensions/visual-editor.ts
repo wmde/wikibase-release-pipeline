@@ -1,12 +1,12 @@
+import page from '../../../helpers/pages/page.js';
+
 describe( 'VisualEditor', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
 	} );
 
 	it( 'Should be able to edit a page using the editor', async function () {
-		await browser.url(
-			testEnv.vars.WIKIBASE_URL + '/wiki/TestVisualEditor?veaction=edit'
-		);
+		await page.open( '/wiki/TestVisualEditor?veaction=edit' );
 
 		// start editing
 		await $( '.oo-ui-messageDialog-actions' ).waitForDisplayed();

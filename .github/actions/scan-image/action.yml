@@ -1,12 +1,12 @@
-name: "scan-image"
-description: "Scan image and upload results"
+name: scan-image
+description: Scan image and upload results
 inputs:
   image_name:
-    description: "name of the docker image to work with"
+    description: name of the docker image to work with
     required: true
 
 runs:
-  using: "composite"
+  using: composite
 
   steps:
     - uses: anchore/scan-action@v3
