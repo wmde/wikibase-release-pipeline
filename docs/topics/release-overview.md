@@ -2,16 +2,6 @@
 
 Wikibase and related software gets release through this repository. The process for releasing involves defining the release in this repository, testing all the components of the release together and finally publishing them.
 
-Find the checklist to go through for a release in the respective phabricator tasks. E.g. https://phabricator.wikimedia.org/T354644 for WMDE.17.
-
-== Wikibase Suite Release Task
-
-Task accompanying the process of releasing a new Wikibase Suite version.
-
-=== Branching Structure
-
-{F43516532}
-
 === Release Checklist
 
 [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a Mediawiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
