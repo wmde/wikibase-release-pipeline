@@ -4,12 +4,9 @@ Wikibase and related software gets release through this repository. The process 
 
 Find the checklist to go through for a release in the respective phabricator tasks. E.g. https://phabricator.wikimedia.org/T354644 for WMDE.17.
 
-
-
-
 == Wikibase Suite Release Task
 
-Task accompanying the process of releasing a new Wikibase Suite version. 
+Task accompanying the process of releasing a new Wikibase Suite version.
 
 === Branching Structure
 
@@ -20,12 +17,13 @@ Task accompanying the process of releasing a new Wikibase Suite version.
 [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a Mediawiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
 
 [ ] **Create branches**
- - **For bugfix releases**
-   - **Create a release preparation branch.** The release branch already exists.  E.g. `mw-1.40`. Create a release preparation branch off of the existing release branch. E.g. `releaseprep-1.40.2` off of `mw-1.40`. Do not name it `mw-*` as this is the reserved naming scheme for our release branches.
-   - **Backport changes from main if really needed.** Bugfix releases should contain as little changes as possible. Make sure that the `variables.env` file is not changed by incoming changes from main.
- - **For major releases**
-   - **Create a new release branch off of main.** E.g. `mw-1.44`. This branch is now equal to main. It will hold all bugfix releases for that major version in the future.
-   - **Create a release preparation branch off of that release branch.** E.g. `releaseprep-1.44.0`. This second branch is meant to prepare the first release on that release branch.
+
+- **For bugfix releases**
+  - **Create a release preparation branch.** The release branch already exists. E.g. `mw-1.40`. Create a release preparation branch off of the existing release branch. E.g. `releaseprep-1.40.2` off of `mw-1.40`. Do not name it `mw-*` as this is the reserved naming scheme for our release branches.
+  - **Backport changes from main if really needed.** Bugfix releases should contain as little changes as possible. Make sure that the `variables.env` file is not changed by incoming changes from main.
+- **For major releases**
+  - **Create a new release branch off of main.** E.g. `mw-1.44`. This branch is now equal to main. It will hold all bugfix releases for that major version in the future.
+  - **Create a release preparation branch off of that release branch.** E.g. `releaseprep-1.44.0`. This second branch is meant to prepare the first release on that release branch.
 
 [ ] **Update `variables.env`** on the release preparation branch. Find further instruction in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
 
@@ -45,7 +43,7 @@ Task accompanying the process of releasing a new Wikibase Suite version.
 
 [ ] **Agree with ComCom on a timing to publish the release**. Talk to ComCom and TechWriter about that.
 
-[ ] **Publish the release** by merging the release preparation branch into the release branch. ‼️ ‼️ ‼️  **This will automatically push docker images to docker hub and therefore release the new version!**
+[ ] **Publish the release** by merging the release preparation branch into the release branch. ‼️ ‼️ ‼️ **This will automatically push docker images to docker hub and therefore release the new version!**
 
 [ ] **Update the [docker install instructions](https://www.mediawiki.org/wiki/Wikibase/Docker)** to reflect the latest version. If you made a bugfix release for an older release, this can be skipped.
 
