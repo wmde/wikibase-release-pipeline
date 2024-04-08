@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 x-common-variables: &wikibase_variables
   DB_SERVER: ${DB_HOST}:${DB_PORT}
@@ -44,7 +44,13 @@ services:
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      test:
+          - CMD
+          - curl
+          - --silent
+          - --fail
+          - "http://${WIKIBASE_HOST}/wiki/Main_Page"
+
       interval: 10s
       start_period: 2m
 
@@ -79,9 +85,9 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
     healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -99,7 +105,7 @@ services:
           - ${MW_ELASTIC_HOST}
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
 
   wdqs-frontend:
     image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
@@ -117,7 +123,8 @@ services:
       - WDQS_HOST=${WDQS_PROXY_HOST}
       - WIKIBASE_HOST
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://${WDQS_FRONTEND_HOST}" ]
+      test:
+        [CMD, curl, --silent, --fail, "http://${WDQS_FRONTEND_HOST}"]
       interval: 10s
       retries: 3
       start_period: 2m
@@ -200,7 +207,8 @@ services:
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://${QUICKSTATEMENTS_HOST}" ]
+      test:
+        [CMD, curl, --silent, --fail, "http://${QUICKSTATEMENTS_HOST}"]
       interval: 10s
       start_period: 2m
 
@@ -214,7 +222,7 @@ services:
     volumes:
       # For HTTPS support in production map this volume to where your SSL certificates are stored
       # and review the nginx and nginx-proxy documentation for the appropriate configurations, or
-      # add the "acme-companion" container at https://github.com/nginx-proxy/acme-companion and 
+      # add the "acme-companion" container at https://github.com/nginx-proxy/acme-companion and
       # follow the instructions there to auto-generate ACME SSL certificates.
       # - path/to/certs:/etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro

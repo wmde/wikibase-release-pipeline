@@ -11,7 +11,7 @@ The core of this example are the following files:
 
 ## ⚙️ Configure
 
-The first step to running WBS is review and update the configuration to reflect the needs of your own production environment. 
+The first step to running WBS is review and update the configuration to reflect the needs of your own production environment.
 
 1. Copy `template.env` to `.env`
 2. Open `.env` in a text editor and create new passwords and a secret according to the guidance. Also read the notes there and review the other highlighted configuration options.
@@ -20,17 +20,17 @@ The first step to running WBS is review and update the configuration to reflect 
 
 After completing the configuration steps above, run the following command to start the full Wikibase Suite set of services:
 
- ```sh
- docker compose up -d --wait
- ```
+```sh
+docker compose up -d --wait
+```
 
- Once successfully booted, the front-end services will be available at the following locations:
+Once successfully booted, the front-end services will be available at the following locations:
 
- - Wikibase: http://localhost:8880
- - WDQS: http://localhost:8834
- - QuickStatements: http://localhost:8840
+- Wikibase: http://localhost:8880
+- WDQS: http://localhost:8834
+- QuickStatements: http://localhost:8840
 
-Note: QuickStatements will not be able to authorize without configuring both `QS_PUBLIC_SCHEME_HOST_AND_PORT` and `WB_PUBLIC_SCHEME_HOST_AND_PORT` to URLs which are accessible both from within the Docker network and on the host machine running Docker. A reverse-proxy service is used to route subdomain names to the related services ports such that you can access the services simply by a set of designated subdomains.  An optional reverse proxy service is included in this example as a means for handling this. This service is optional, and any other reverse proxy service can be used. To use the provided service enable the `nginx-proxy` Docker Compose profile:
+Note: QuickStatements will not be able to authorize without configuring both `QS_PUBLIC_SCHEME_HOST_AND_PORT` and `WB_PUBLIC_SCHEME_HOST_AND_PORT` to URLs which are accessible both from within the Docker network and on the host machine running Docker. A reverse-proxy service is used to route subdomain names to the related services ports such that you can access the services simply by a set of designated subdomains. An optional reverse proxy service is included in this example as a means for handling this. This service is optional, and any other reverse proxy service can be used. To use the provided service enable the `nginx-proxy` Docker Compose profile:
 
 ```sh
 docker compose --profile nginx-proxy up -d --wait
