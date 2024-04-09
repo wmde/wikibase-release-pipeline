@@ -32,9 +32,6 @@ jobs:
         run: |
           set -x
 
-          source ./variables.env
-          source ./versions.inc.sh
-
           docker image ls
 
           images=(
