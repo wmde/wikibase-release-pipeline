@@ -88,6 +88,8 @@ jobs:
             "quickstatements"
           )
 
+          echo "::debug::start listing images:"
           for image in "${images[@]}"; do
-            echo "wikibase/${image}"
+            echo "::debug::wikibase/${image}"
           done
+          echo "::debug::end images list"
