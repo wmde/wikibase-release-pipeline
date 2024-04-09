@@ -275,4 +275,58 @@ describe( 'QueryService', function () {
 				.$( 'span' )
 		).toHaveText( '1' );
 	} );
+
+	it( 'Should show results from a page in allowlist.txt', async function () {
+		// We don't currently have a way for the example suite to pass tests with breaking changes
+		// Please see T361575 for more info
+		if ( testEnv.settings.name === 'example' ) {
+			this.skip();
+		}
+
+		await QueryServiceUIPage.open( `
+			PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
+			PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
+
+			SELECT * WHERE {
+				service <https://query.wikidata.org/sparql> {
+					?wd wikidata_wdt:P31 wikidata_wd:Q976981 .
+					?wd wikidata_wdt:P31 ?type .
+					optional { ?wd rdfs:label ?label. filter(lang(?label) = "en") }
+					optional { ?type rdfs:label ?typelabel. filter(lang(?typelabel) = "en") }
+				}
+			}
+
+			LIMIT 5
+		` );
+
+		await QueryServiceUIPage.submit();
+
+		await expect(
+			QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' )
+		).resolves.toHaveLength( 5 );
+	} );
+
+	it( 'Should show error from a page not in allowlist.txt', async function () {
+		// Returns results if https://wikibase.world/query/sparql added to allowlist.txt
+		await QueryServiceUIPage.open( `
+			PREFIX wdt: <https://wikibase.world/prop/direct/>
+			PREFIX wd: <https://wikibase.world/entity/>
+
+			SELECT * WHERE {
+				service <https://wikibase.world/query/sparql> {
+					?item wdt:P3 wd:Q10 .
+					?item wdt:P1 ?url .
+					?item wdt:P13 wd:Q54 .
+				}
+			}
+
+			LIMIT 5
+		` );
+
+		await QueryServiceUIPage.submit();
+
+		await expect( $( 'div#query-error' ) ).toHaveText(
+			/Service URI https:\/\/wikibase\.world\/query\/sparql is not allowed/
+		);
+	} );
 } );
