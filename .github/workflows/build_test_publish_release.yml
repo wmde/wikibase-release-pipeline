@@ -89,9 +89,5 @@ jobs:
           )
 
           for image in "${images[@]}"; do
-            image_path="wikibase/${image}"
-            url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
-            version_tag="$(image_version $image)"
-            docker tag "$url_run_id" "${image_path}:${version_tag}"
-            docker push "${image_path}:${version_tag}"
+            echo "wikibase/${image}"
           done
