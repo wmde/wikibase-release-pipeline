@@ -55,7 +55,6 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
     networks:
       default:
         aliases:

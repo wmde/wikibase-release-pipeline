@@ -11,7 +11,3 @@ services:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
       - ./example/results:/var/log/mediawiki
-
-  wikibase-jobrunner:
-    volumes:
-      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
