@@ -23,6 +23,9 @@ export const versions = {
 	WMDE16: 'wikibase/wikibase:1.40.2-wmde.16',
 	WMDE16_BUNDLE: 'wikibase/wikibase-bundle:1.40.2-wmde.16',
 
+	WMDE19: 'wikibase/wikibase:1.40.3-wmde.19',
+	WMDE19_BUNDLE: 'wikibase/wikibase-bundle:1.40.3-wmde.19',
+
 	LOCAL_BUILD: 'wikibase/wikibase',
 	LOCAL_BUILD_BUNDLE: 'wikibase/wikibase-bundle'
 };

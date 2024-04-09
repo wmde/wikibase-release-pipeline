@@ -17,6 +17,14 @@ source ./versions.inc.sh
 
 DOCKER_BUILD_CACHE_OPT=""
 
+# ℹ️ Update Commit Hashes
+function update_commit_hashes {
+    docker build ./test -t wikibase-test-runner
+    docker run --rm -v "$(pwd)":/workspace wikibase-test-runner bash -c "
+        cd /workspace
+        python3 update_commits.py
+    "
+}
 
 # wikibase/wdqs -> wdqs
 function image_url_to_image_name {
@@ -204,6 +212,10 @@ for arg in "$@"; do
         all)
             build_all
             build_target_set=true
+            ;;
+        update_hashes)
+            update_commit_hashes
+            exit 0
             ;;
         -n|--no-cache)
             DOCKER_BUILD_CACHE_OPT="--no-cache"
