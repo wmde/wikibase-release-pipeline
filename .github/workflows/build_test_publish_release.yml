@@ -2,10 +2,8 @@ name: 📦 Build Test Tag and Publish Release
 
 on:
   pull_request:
-    types:
-      - closed
     branches:
-      - "mw-*"
+      - "T358475-*"
 
 permissions:
   contents: write
@@ -48,9 +46,6 @@ jobs:
           fi
 
   publish-dockerhub:
-    if: github.event.pull_request.merged == true
-
-    needs: tag-release
 
     runs-on: ubuntu-latest
 
@@ -73,23 +68,14 @@ jobs:
         run: |
           set -x
 
-          source ./variables.env
-          source ./versions.inc.sh
-
           docker image ls
 
           images=(
-            "wikibase"
-            "wikibase-bundle"
-            "elasticsearch"
-            "wdqs"
-            "wdqs-frontend"
             "wdqs-proxy"
-            "quickstatements"
           )
 
           for image in "${images[@]}"; do
-            image_path="wikibase/${image}"
+            image_path="wmdetravisbot/${image}"
             url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
             version_tag="$(image_version $image)"
             docker tag "$url_run_id" "${image_path}:${version_tag}"
