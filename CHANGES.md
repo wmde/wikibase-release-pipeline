@@ -20,7 +20,7 @@ This file is only intended to serve the developers of this repository and of the
 
 | Suite Version | Version Info | Date available | Release task |
 | --- | --- | --- | --- |
-| wmde.19 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/variables.env)) | MediaWiki (1.40.3, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | XX April 2024 | [T361227](https://phabricator.wikimedia.org/T361227) |
+| wmde.19 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/variables.env)) | MediaWiki (1.40.3, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | 09 April 2024 | [T361227](https://phabricator.wikimedia.org/T361227) |
 
 ## February 2024: Security releases for 1.40.2
 
