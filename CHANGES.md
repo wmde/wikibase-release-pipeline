@@ -11,7 +11,7 @@ This provides an overview of the releases that have been made using this release
 
 | Suite Version | Version Info | Date available | Release task |
 | --- | --- | --- | --- |
-| wmde.19 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/variables.env)) | MediaWiki (1.40.3, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | XX April 2024 | [T361227](https://phabricator.wikimedia.org/T361227) |
+| wmde.19 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/variables.env)) | MediaWiki (1.40.3, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.137) | 09 April 2024 | [T361227](https://phabricator.wikimedia.org/T361227) |
 
 ## March 2024: Mayor releases for 1.41.0
 - [MediaWiki release announcement: 1.41.0](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/OMDFHJ2SKKJH775RW4UTC754OY4TP7UU/)
