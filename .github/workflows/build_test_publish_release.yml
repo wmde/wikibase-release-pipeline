@@ -2,8 +2,6 @@ name: 📦 Build Test Tag and Publish Release
 
 on:
   pull_request:
-    branches:
-      - "T358475-*"
 
 permissions:
   contents: write
