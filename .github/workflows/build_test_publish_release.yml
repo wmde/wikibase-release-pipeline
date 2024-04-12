@@ -66,8 +66,8 @@ jobs:
       - uses: docker/login-action@v3
         with:
           # implicitly docker hub
-          username: roti4wmde # TODO: get a bot user
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Push release to dockerhub
         run: |
