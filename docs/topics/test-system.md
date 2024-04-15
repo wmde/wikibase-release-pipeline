@@ -70,7 +70,7 @@ export BUILD_NUMBER=latest
 To start the test system:
 
 ```sh
-sudo docker compose up -d
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 TODO in order to keep the LocalSettings.php file between updates of the mediawiki container we want to copy it out, onto disk, and mount it in. However that is a little dificult right now due to https://phabricator.wikimedia.org/T298632 So Adam will write these docs once that task is merged and resolved.
@@ -87,7 +87,7 @@ SCRIPT_RUN_DATE=$(date --iso)
 
 cd /opt/test-systems/$TEST_SYSTEM
 sudo docker cp ${TEST_SYSTEM}-wikibase-1:/var/www/html/LocalSettings.php /tmp/LocalSettings-${TEST_SYSTEM}-${SCRIPT_RUN_DATE}.php
-sudo docker compose down
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml down
 
 cd /opt/test-systems
 mv ./$TEST_SYSTEM ./${SCRIPT_RUN_DATE}-${TEST_SYSTEM}
@@ -96,27 +96,27 @@ mv ./$TEST_SYSTEM ./${SCRIPT_RUN_DATE}-${TEST_SYSTEM}
 
 cd /opt/test-systems/$TEST_SYSTEM
 sudo docker volume rm ${TEST_SYSTEM}_shared
-sudo docker compose up -d
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml up -d
 ```
 
 You should check that all services are up and running
 
 ```sh
-sudo docker compose ps
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml ps
 ```
 
 **If the query service updater is restarting**, it is likely due to updates not having happened in the past month.
 
 ```sh
-sudo docker compose stop wdqs-updater
-sudo docker compose run --rm wdqs-updater bash
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml stop wdqs-updater
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml run --rm wdqs-updater bash
 
 # Within the wdqs-updater shell run the following, with the current date (`20220908000000` in the example line below)
 /wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "120,122" --init --start 20221022000000
 # Then exit from the process and the bash shell once you see "Sleeping for 10 secs"
 
 # Restart the service
-sudo docker compose start wdqs-updater
+sudo docker compose -f docker-compose.yml -f docker-compose.extra.yml start wdqs-updater
 ```
 
 The service should now be up and running!
