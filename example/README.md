@@ -12,8 +12,6 @@ The example docker compose configuration consists of one file, `docker-compose.y
 - wdqs-updater
 - quickstatements
 
-Feel free to remove any unwanted or unneeded services from `docker-compose.yml`, but be advised this is the configuration we test.
-
 **This configuration serves as an example of how the images could be used together and isn't production ready**
 
 ## Configure your installation
@@ -28,9 +26,9 @@ To run a Wikibase instance on port 80 run the following command:
 docker compose up
 ```
 
-This will start up the services defined in [docker-compose.yml](docker-compose.yml), listed above.
+This will start up the services defined in [docker-compose.yml](docker-compose.yml), listed above. Feel free to remove any unwanted or unneeded services from `docker-compose.yml`, but be advised this is the configuration we test.
 
-In the volumes section of the wikibase service in [docker-compose.yml](docker-compose.yml), there is one additional script inside the container that automatically sets up the extensions needed for the services beyond wikibase, job runner, and database.
+In the volumes section of the wikibase service in [docker-compose.yml](docker-compose.yml), there is one additional script inside the container that automatically sets up the extensions needed for quickstatements and elasticsearch.
 
 ```yml
 - ./extra-install.sh:/extra-install.sh
