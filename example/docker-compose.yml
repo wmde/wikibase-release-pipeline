@@ -2,7 +2,7 @@
 version: "3.4"
 
 x-common-variables: &wikibase_variables
-  DB_SERVER: mysql.svc:3306
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
@@ -11,10 +11,10 @@ x-common-variables: &wikibase_variables
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
   # Disable jobs running after requests when wikibase-jobrunner is defined
   MW_WG_JOB_RUN_RATE: 0
+  DB_SERVER: mysql.svc:3306
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  WIKIBASE_HOST: ${WIKIBASE_HOST}
 
 services:
   wikibase:
