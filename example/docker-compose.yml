@@ -72,7 +72,7 @@ services:
     image: "${MYSQL_IMAGE_NAME}"
     restart: unless-stopped
     volumes:
-      - mediawiki-mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: ${DB_NAME}
@@ -109,7 +109,7 @@ services:
         soft: 32768
         hard: 32768
     volumes:
-      - query-service-data:/wdqs/data
+      - wdqs-data:/wdqs/data
     networks:
       default:
         aliases:
@@ -200,8 +200,8 @@ services:
 
 volumes:
   shared:
-  mediawiki-mysql-data:
   LocalSettings:
-  query-service-data:
+  mysql-data:
+  wdqs-data:
   elasticsearch-data:
   quickstatements-data:
