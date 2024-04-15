@@ -50,7 +50,7 @@ $ ./test.sh repo --setup
 ### Example Instance Commands
 
 ```
-$ docker compose --env-file ./example/template.env up
+$ docker compose --env-file ./example/template.env up --wait
 ```
 
 ## Development Setup

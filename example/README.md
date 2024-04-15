@@ -15,7 +15,7 @@ Copy `template.env` to `.env` and replace the passwords and secrets with your ow
 To run a Wikibase instance on port 80 run the following command:
 
 ```
-docker compose up
+docker compose up --wait
 ```
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), a Wikibase instance, database and a job runner.
