@@ -28,7 +28,7 @@ services:
       - "${WIKIBASE_PORT}:80"
     volumes:
       # # This shares the configuration with jobrunner
-      - shared:/var/www/html/:rw
+      - wikibase-shared:/var/www/html/:rw
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase-jobrunner service!
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
@@ -55,7 +55,7 @@ services:
       - mysql
     restart: always
     volumes:
-      - shared:/shared/:ro
+      - wikibase-shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase service
@@ -199,7 +199,7 @@ services:
       - WIKIBASE_SCHEME_AND_HOST=http://${WIKIBASE_HOST}
 
 volumes:
-  shared:
+  wikibase-shared:
   LocalSettings:
   mysql-data:
   wdqs-data:
