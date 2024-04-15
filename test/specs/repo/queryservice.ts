@@ -6,8 +6,8 @@ import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
-describe( 'QueryService', () => {
-	it( 'Should not be able to post to sparql endpoint', async () => {
+describe( 'QueryService', function () {
+	it( 'Should not be able to post to sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`,
 			{ validateStatus: false },
@@ -16,14 +16,14 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 405 );
 	} );
 
-	it( 'Should be able to get sparql endpoint', async () => {
+	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/sparql`
 		);
 		assert.strictEqual( result.status, 200 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
@@ -31,7 +31,7 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 404 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async () => {
+	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
@@ -39,7 +39,7 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 404 );
 	} );
 
-	it( 'Should not be possible to reach blazegraph workbench', async () => {
+	it( 'Should not be possible to reach blazegraph workbench', async function () {
 		const result = await browser.makeRequest(
 			`${testEnv.vars.WDQS_PROXY_URL}/bigdata/#query`,
 			{ validateStatus: false }
@@ -47,7 +47,7 @@ describe( 'QueryService', () => {
 		assert.strictEqual( result.status, 404 );
 	} );
 
-	it( 'Should show up with property in queryservice ui after creation', async () => {
+	it( 'Should show up with property in queryservice ui after creation', async function () {
 		const itemLabel = 'T267743-';
 		const propertyValue = 'PropertyExampleStringValue';
 
@@ -116,7 +116,7 @@ describe( 'QueryService', () => {
 		);
 	} );
 
-	it( 'Should not show up in queryservice ui after deletion', async () => {
+	it( 'Should not show up in queryservice ui after deletion', async function () {
 		// TODO make an item using the UI
 		const itemId = await WikibaseApi.createItem( getTestString( 'T267743-' ) );
 
@@ -153,7 +153,7 @@ describe( 'QueryService', () => {
 		assert( resultText.includes( 'wikibase:timestamp' ) );
 	} );
 
-	it( 'Should show results for a select query', async () => {
+	it( 'Should show results for a select query', async function () {
 		await QueryServiceUIPage.open( 'SELECT * where { ?a ?b ?c }' );
 		await QueryServiceUIPage.submit();
 		expect(
@@ -161,7 +161,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it( 'Should show list of properties', async () => {
+	it( 'Should show list of properties', async function () {
 		await QueryServiceUIPage.open( `SELECT ?property ?propertyType ?propertyLabel ?propertyDescription ?propertyAltLabel WHERE {
 			?property wikibase:propertyType ?propertyType .
 			SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
@@ -188,7 +188,7 @@ describe( 'QueryService', () => {
 		).toBeGreaterThan( 0 );
 	} );
 
-	it( 'Should show a property connected to item', async () => {
+	it( 'Should show a property connected to item', async function () {
 		const propertyId = await WikibaseApi.createProperty(
 			wikibasePropertyString.urlName
 		);

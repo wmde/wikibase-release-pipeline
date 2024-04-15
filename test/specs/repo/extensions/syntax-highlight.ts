@@ -7,7 +7,7 @@ describe( 'SyntaxHighlight', function () {
 		await browser.skipIfExtensionNotPresent( this, 'SyntaxHighlight' );
 	} );
 
-	it( 'Should highlight lua script', async () => {
+	it( 'Should highlight lua script', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const fileContents = await readFile( new URL( 'bananas.lua', import.meta.url ), utf8 );
 
