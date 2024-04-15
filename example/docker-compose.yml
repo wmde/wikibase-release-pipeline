@@ -76,7 +76,7 @@ services:
     image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
-      - mediawiki-mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
       default:
         aliases:
@@ -233,4 +233,4 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  mediawiki-mysql-data:
+  mysql-data:
