@@ -2,10 +2,7 @@
 
 The example docker compose configuration consists of two files:
 
-- `docker-compose.yml` contains two services: wikibase and mysql
-- `docker-compose.extra.yml` contains additional services such as wdqs, wdqs-frontend, elasticsearch and quickstatements
-
-**We recommend you go through `docker-compose.extra.yml` and remove any unwanted services.**
+- `docker-compose.yml` contains the services: wikibase, mysql, wdqs, wdqs-frontend, elasticsearch and quickstatements
 
 **This configuration serves as an example of how the images could be used together and isn't production ready**
 
@@ -48,10 +45,10 @@ The Wikibase bundle comes with some additional services that can be enabled.
 ### 1. Run with the extra configuration
 
 ```
-docker compose -f docker-compose.yml -f docker-compose.extra.yml up
+docker compose up
 ```
 
-In the volumes section of the wikibase service in [docker-compose.extra.yml](docker-compose.extra.yml), there is one additional script inside the container that automatically sets up the extensions needed for the additional services.
+In the volumes section of the wikibase service in [docker-compose.yml](docker-compose.yml), there is one additional script inside the container that automatically sets up the extensions needed for the additional services.
 
 ```yml
 - ./extra-install.sh:/extra-install.sh
