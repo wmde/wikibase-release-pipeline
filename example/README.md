@@ -12,6 +12,8 @@ The example docker compose configuration consists of one file, `docker-compose.y
 - wdqs-updater
 - quickstatements
 
+Feel free to remove any unwanted or unneeded services from `docker-compose.yml`, but be advised this is the configuration we test.
+
 **This configuration serves as an example of how the images could be used together and isn't production ready**
 
 ## Configure your installation
