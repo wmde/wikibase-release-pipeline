@@ -1,16 +1,18 @@
 # Example Wikibase docker compose setup
 x-common-variables: &wikibase_variables
-  DB_SERVER: mysql.svc:3306
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
   # Disable jobs running after requests when wikibase-jobrunner is defined
   MW_WG_JOB_RUN_RATE: 0
+  DB_SERVER: mysql.svc:3306
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  WIKIBASE_HOST: ${WIKIBASE_HOST}
 
 services:
   wikibase:
@@ -24,10 +26,12 @@ services:
       - "${WIKIBASE_PORT}:80"
     volumes:
       # # This shares the configuration with jobrunner
-      - shared:/var/www/html/:rw
+      - wikibase-shared:/var/www/html/:rw
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase-jobrunner service!
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      - quickstatements-data:/quickstatements/data
+      - ./extra-install.sh:/extra-install.sh
     networks:
       default:
         aliases:
@@ -37,6 +41,12 @@ services:
       <<: *wikibase_variables
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
+      QS_PUBLIC_SCHEME_HOST_AND_PORT:
+    healthcheck:
+      test:
+        [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
@@ -48,7 +58,7 @@ services:
       - mysql
     restart: always
     volumes:
-      - shared:/shared/:ro
+      - wikibase-shared:/shared/:ro
       - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase service
@@ -65,7 +75,7 @@ services:
     image: "${MYSQL_IMAGE_NAME}"
     restart: unless-stopped
     volumes:
-      - mediawiki-mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: ${DB_NAME}
@@ -76,7 +86,149 @@ services:
       default:
         aliases:
           - mysql.svc
+    healthcheck:
+      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  elasticsearch:
+    image: "${ELASTICSEARCH_IMAGE_NAME}"
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      default:
+        aliases:
+          - elasticsearch.svc
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}" ]
+      interval: 10s
+      start_period: 2m
+
+  wdqs:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runBlazegraph.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    volumes:
+      - wdqs-data:/wdqs/data
+    networks:
+      default:
+        aliases:
+          - wdqs.svc
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
+    expose:
+      - 9999
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --silent
+        - --fail
+        - http://localhost:9999/bigdata/namespace/wdq/sparql
+      interval: 10s
+      start_period: 2m
+
+  wdqs-frontend:
+    image: "${WDQS_FRONTEND_IMAGE_NAME}"
+    restart: unless-stopped
+    ports:
+      - "${WDQS_FRONTEND_PORT}:80"
+    depends_on:
+      - wdqs-proxy
+    networks:
+      default:
+        aliases:
+          - ${WDQS_FRONTEND_HOST}
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST=wdqs-proxy.svc
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      interval: 10s
+      start_period: 2m
+
+  wdqs-proxy:
+    image: "${WDQS_PROXY_IMAGE_NAME}"
+    restart: unless-stopped
+    environment:
+      - PROXY_PASS_HOST=wdqs.svc:9999
+    depends_on:
+      - wdqs
+    networks:
+      default:
+        aliases:
+          - wdqs-proxy.svc
+
+  wdqs-updater:
+    image: "${WDQS_IMAGE_NAME}"
+    restart: unless-stopped
+    command: /runUpdate.sh
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    depends_on:
+      - wdqs
+      - wikibase
+    networks:
+      default:
+        aliases:
+          - wdqs-updater.svc
+    environment:
+      - WIKIBASE_HOST
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
+      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
+
+  quickstatements:
+    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    ports:
+      - "${QUICKSTATEMENTS_PORT}:80"
+    depends_on:
+      - wikibase
+    networks:
+      default:
+        aliases:
+          - ${QUICKSTATEMENTS_HOST}
+    environment:
+      - QUICKSTATEMENTS_HOST
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
+      - WB_PROPERTY_NAMESPACE=122
+      - "WB_PROPERTY_PREFIX=Property:"
+      - WB_ITEM_NAMESPACE=120
+      - "WB_ITEM_PREFIX=Item:"
+      - OAUTH_CONSUMER_KEY
+      - OAUTH_CONSUMER_SECRET
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      interval: 10s
+      start_period: 2m
 
 volumes:
-  shared:
-  mediawiki-mysql-data:
+  wikibase-shared:
+  LocalSettings:
+  mysql-data:
+  wdqs-data:
+  elasticsearch-data:
+  quickstatements-data:
