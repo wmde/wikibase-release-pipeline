@@ -51,7 +51,6 @@ services:
 
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
-    entrypoint: /bin/bash
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
