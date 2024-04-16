@@ -3,7 +3,7 @@
 The example docker compose configuration consists of one file, `docker-compose.yml`, which contains the services:
 
 - wikibase
-- job runner
+- JobRunner
 - mysql (actually MariaDB)
 - elasticsearch
 - wdqs
@@ -36,13 +36,13 @@ In the volumes section of the wikibase service in [docker-compose.yml](docker-co
 
 Looking inside extra-install.sh, you see that it executes two scripts which set up an OAuth consumer for quickstatements and creates indices for Elasticsearch.
 
-## Job runner
+## JobRunner
 
-The example `docker-compose.yml` sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
+The example `docker-compose.yml` sets up a dedicated JobRunner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
 
-If you run large batches of edits, this job runner may not be able to keep up with edits.
+If you run large batches of edits, this JobRunner may not be able to keep up with edits.
 
-You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately. Alternatively, you can run several job runners in parallel by using the `--scale` option.
+You can speed it up by increasing the `MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the JobRunner immediately. Alternatively, you can run several JobRunners in parallel by using the `--scale` option.
 
 ```sh
 docker compose up --scale wikibase-jobrunner=8

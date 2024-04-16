@@ -1,4 +1,4 @@
-# 17) Using mediawiki docker image {#adr_0017}
+# 17) Using MediaWiki docker image {#adr_0017}
 
 Date: 2021-06-18
 
@@ -14,7 +14,7 @@ Because of the lack of such docker images at the time the team decided to create
 
 This can be useful but also comes with some additional drawbacks that can affect the maintainability and the quality of the releases WMDE will produce.
 
-- To offer the same quality and security as the official Mediawiki docker images we now also have to maintain our own rather than building upon what already exists.
+- To offer the same quality and security as the official MediaWiki docker images we now also have to maintain our own rather than building upon what already exists.
 - Any updates or security fixes to these images are probably also more likely to be identified and patched in the official MediaWiki docker images quicker than in any image maintained by WMDE.
 - The MediaWiki docker images are battle proven with 10+ Million downloads, our custom images are not.
 

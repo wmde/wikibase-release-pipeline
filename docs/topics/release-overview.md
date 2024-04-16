@@ -4,7 +4,7 @@ Wikibase and related software gets release through this repository. The process 
 
 === Release Checklist
 
-[ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a Mediawiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
+[ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a MediaWiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
 
 [ ] **Create branches**
 

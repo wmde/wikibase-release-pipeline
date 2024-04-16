@@ -14,7 +14,7 @@ When upgrading between WDQS versions the data stored in `/wdqs/data` may not be 
 
 If all changes are still in [RecentChanges] then simply removing `/wdqs/data` and restarting the service should reload all data.
 
-[RecentChanges] are however periodically purged with anything older determined by the mediawiki configuration [\$wgRCMaxAge](https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge).
+[RecentChanges] are however periodically purged with anything older determined by the MediaWiki configuration [\$wgRCMaxAge](https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge).
 
 If you can not use [RecentChanges] then you will need to reload from an RDF dump:
 

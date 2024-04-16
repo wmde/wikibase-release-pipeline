@@ -18,7 +18,7 @@ For [testing](docs/topics/testing.md), you can use `./test.sh <test-suite-name>`
 # Build all wikibase suite components docker images
 $ ./build.sh
 
-# Build only the mediawiki/wikibase containers
+# Build only the MediaWiki/wikibase containers
 $ ./build.sh wikibase
 
 # Build the wdqs container without using Dockers cache

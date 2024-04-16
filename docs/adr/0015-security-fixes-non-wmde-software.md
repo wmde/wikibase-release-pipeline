@@ -8,7 +8,7 @@ proposed
 
 ## Context
 
-WMDE needs to decide on a process for including security fixes of non-WMDE maintained software (e.g. Mediawiki, Elasticearch, WDQS) as well as WMDE maintained software (Wikibase, WDQS-frontend) and how to publish security fix releases of Wikibase suite in such cases.
+WMDE needs to decide on a process for including security fixes of non-WMDE maintained software (e.g. MediaWiki, Elasticearch, WDQS) as well as WMDE maintained software (Wikibase, WDQS-frontend) and how to publish security fix releases of Wikibase suite in such cases.
 
 Security fixes for WMDE maintained software will fall under the maintenance category and will most likely be worked on by campsite, however as the running of the pipeline and publishing of docker images requires special privileges it could make sense that this step is tasked to a certain group of people or that all engineers of WMDE are given the rights to publish releases.
 

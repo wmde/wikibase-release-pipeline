@@ -33,7 +33,7 @@ We need to determine a place to host our new release artifacts (tarballs). Curre
 - Poor documentation (https://wikitech.wikimedia.org/wiki/Releases.wikimedia.org) for what we are looking for.
 - Seemingly bound to puppet/modules/releases repository for configuration
 - No direct control, needs negotiation.
-- Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these). However, Mediawiki with bundled extensions is released there https://releases.wikimedia.org/mediawiki/1.35/
+- Does not seem to be hosting any other extensions (ExtensionDistributor seems to be the desired place for these). However, MediaWiki with bundled extensions is released there https://releases.wikimedia.org/mediawiki/1.35/
 
 ## Wikiba.se
 

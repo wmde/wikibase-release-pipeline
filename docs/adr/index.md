@@ -25,4 +25,4 @@ Current ADRs include:
 - [14 - signing release packages](0014-signing-release-packages.md)
 - [15 - security fixes non wmde software](0015-security-fixes-non-wmde-software.md)
 - [16 - updating non wmde software](0016-updating-non-wmde-software.md)
-- [17 - using mediawiki docker image](0017-using-mediawiki-docker-image.md)
+- [17 - using MediaWiki docker image](0017-using-mediawiki-docker-image.md)

@@ -10,7 +10,7 @@ accepted
 
 In [ADR0005] we are proposing a process for maintaining release notes within the Wikibase repository. The Wikibase repository and some additional WMDE owned repositories are bound to the release branches as a [compatibility policy](https://www.mediawiki.org/wiki/Compatibility#mediawiki_extensions).
 
-Currently only mediawiki related code (core, skins, extensions) is covered by this compatibility policy and could easily apply the same process for maintaining and publishing release notes as to that what has been proposed to be used by Wikibase ([ADR0005], [ADR0007]).
+Currently only MediaWiki related code (core, skins, extensions) is covered by this compatibility policy and could easily apply the same process for maintaining and publishing release notes as to that what has been proposed to be used by Wikibase ([ADR0005], [ADR0007]).
 
 ### WMDE owned repositories currently bound to release branches
 
