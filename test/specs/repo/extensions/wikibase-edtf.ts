@@ -9,7 +9,7 @@ describe( 'WikibaseEdtf', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Wikibase EDTF' );
 	} );
 
-	it( 'Should allow to create and use the EDTF property', async () => {
+	it( 'Should allow to create and use the EDTF property', async function () {
 		// create the property
 		const propertyId = await WikibaseApi.createProperty( 'edtf' );
 		assert.strictEqual( propertyId.startsWith( 'P' ), true );
@@ -44,7 +44,7 @@ describe( 'WikibaseEdtf', function () {
 		await ItemPage.open( itemId );
 	} );
 
-	it( 'Should allow to create and use the EDTF property in UI', async () => {
+	it( 'Should allow to create and use the EDTF property in UI', async function () {
 		// create the property
 		await SpecialNewPropertyPage.open( { datatype: 'edtf' } );
 		await SpecialNewPropertyPage.labelInput.setValue( 'Groundhog Day Release' );

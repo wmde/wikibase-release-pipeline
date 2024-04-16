@@ -20,11 +20,11 @@ describe( 'Property', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
-		describe( `Should be able to work with type ${dataType.name}`, () => {
+		describe( `Should be able to work with type ${dataType.name}`, function () {
 			let propertyId: string = null;
 			let stringPropertyId: string = null;
 
-			before( async () => {
+			before( async function () {
 				propertyId = await WikibaseApi.createProperty( dataType.urlName );
 				stringPropertyId = await WikibaseApi.createProperty(
 					wikibasePropertyString.urlName
@@ -32,11 +32,11 @@ describe( 'Property', function () {
 				await browser.waitForJobs();
 			} );
 
-			beforeEach( async () => {
+			beforeEach( async function () {
 				await PropertyPage.open( propertyId );
 			} );
 
-			it( 'Should be able to add statement to property', async () => {
+			it( 'Should be able to add statement to property', async function () {
 				await $( '=add statement' ).click();
 				// fill out property id for statement
 				await browser.keys( stringPropertyId.split( '' ) );
@@ -53,7 +53,7 @@ describe( 'Property', function () {
 				);
 			} );
 
-			it( 'Should be able to add reference to property', async () => {
+			it( 'Should be able to add reference to property', async function () {
 				await $( '=add reference' ).click();
 				// fill out property id for reference
 				await $( '.ui-entityselector-input' ).isFocused();
@@ -80,21 +80,21 @@ describe( 'Property', function () {
 				await expect( reference.datavalue.value ).toEqual( referenceText );
 			} );
 
-			it( 'Should show changes in "View history" tab', async () => {
+			it( 'Should show changes in "View history" tab', async function () {
 				await $( '=View history' ).click();
 				await expect( $( '.comment*=Created claim' ) ).toExist();
 				await expect( $( '.comment*=Changed claim' ) ).toExist();
 				await expect( $( '.comment*=Created a new Property' ) ).toExist();
 			} );
 
-			it( 'Should display the added properties on the "Recent changes" page', async () => {
+			it( 'Should display the added properties on the "Recent changes" page', async function () {
 				await browser.waitForJobs();
 				await $( '=Recent changes' ).click();
 				await expect( $( `=(${propertyId})` ) ).toExist();
 				await expect( $( `=(${stringPropertyId})` ) ).toExist();
 			} );
 
-			it( 'Should be able to revert a change', async () => {
+			it( 'Should be able to revert a change', async function () {
 				await $( '=View history' ).click();
 				await expect(
 					( await $( 'ul.mw-contributions-list' ).$$( 'li' ) ).length
@@ -116,7 +116,7 @@ describe( 'Property', function () {
 				).toHaveTextContaining( undoSummaryText );
 			} );
 
-			it( 'Should be able to set label, description, aliases', async () => {
+			it( 'Should be able to set label, description, aliases', async function () {
 				await page.open( '/wiki/Special:SetLabelDescriptionAliases/' );
 				await $( 'label=ID:' ).click();
 				await browser.keys( propertyId.split( '' ) );
