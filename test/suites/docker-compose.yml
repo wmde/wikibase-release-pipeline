@@ -46,7 +46,6 @@ services:
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
-    entrypoint: /bin/bash
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
@@ -55,7 +54,6 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
     networks:
       default:
         aliases:
