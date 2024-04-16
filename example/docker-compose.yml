@@ -43,6 +43,11 @@ services:
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
+    healthcheck:
+      test:
+        [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
+      interval: 10s
+      start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
@@ -82,6 +87,11 @@ services:
       default:
         aliases:
           - mysql.svc
+    healthcheck:
+      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
 
   elasticsearch:
     image: "${ELASTICSEARCH_IMAGE_NAME}"
@@ -95,6 +105,10 @@ services:
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}" ]
+      interval: 10s
+      start_period: 2m
 
   wdqs:
     image: "${WDQS_IMAGE_NAME}"
@@ -119,6 +133,15 @@ services:
       - WDQS_PORT=9999
     expose:
       - 9999
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --silent
+        - --fail
+        - http://localhost:9999/bigdata/namespace/wdq/sparql
+      interval: 10s
+      start_period: 2m
 
   wdqs-frontend:
     image: "${WDQS_FRONTEND_IMAGE_NAME}"
@@ -134,6 +157,10 @@ services:
     environment:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      interval: 10s
+      start_period: 2m
 
   wdqs-proxy:
     image: "${WDQS_PROXY_IMAGE_NAME}"
@@ -194,6 +221,10 @@ services:
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
+    healthcheck:
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      interval: 10s
+      start_period: 2m
 
 volumes:
   wikibase-shared:
