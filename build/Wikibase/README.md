@@ -1,12 +1,12 @@
 ## Wikibase Docker image
 
-Wikibase running on Mediawiki.
+Wikibase running on MediaWiki.
 
 ### Environment variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `DB_SERVER` | "mysql.svc:3306" | Hostname and port for the MySQL server to use for Mediawiki & Wikibase |
+| `DB_SERVER` | "mysql.svc:3306" | Hostname and port for the MySQL server to use for MediaWiki & Wikibase |
 | `DB_USER` | "wikiuser" | Username to use for the MySQL server |
 | `DB_PASS` | "sqlpass" | Password to use for the MySQL server |
 | `DB_NAME` | "my_wiki" | Database name to use for the MySQL server |
@@ -24,12 +24,16 @@ Wikibase running on Mediawiki.
 
 | Directory | Description |
 | --- | --- |
-| `/var/www/html` | Base Mediawiki directory |
-| `/var/www/html/skins` | Mediawiki skins directory |
-| `/var/www/html/extensions` | Mediawiki extensions directory |
+| `/var/www/html` | Base MediaWiki directory |
+| `/var/www/html/skins` | MediaWiki skins directory |
+| `/var/www/html/extensions` | MediaWiki extensions directory |
 | `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded at the end of the default `/LocalSettings.php.template` |
 
 | File | Description |
 | --- | --- |
-| `/LocalSettings.php.template` | Template for Mediawiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime) |
+| `/LocalSettings.php.template` | Template for MediaWiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime) |
 | `/var/www/html/LocalSettings.php` | LocalSettings.php location, when passed in `/LocalSettings.php.template` will not be used. install.php & update.php will also not be run. |
+
+### JobRunner
+
+This container doubles as MediaWiki JobRunner. To use the JobRunner, override the command to `/jobrunner-entrypoint.sh`.
