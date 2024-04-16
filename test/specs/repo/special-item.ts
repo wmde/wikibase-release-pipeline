@@ -3,7 +3,7 @@ import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
 describe( 'Special:NewItem', function () {
-	it( 'Should be able to create a new item', async () => {
+	it( 'Should be able to create a new item', async function () {
 		const label = 'Cool label';
 		const description = 'Cool description';
 		const firstAlias = 'Great job';

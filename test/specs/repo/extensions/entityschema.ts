@@ -10,7 +10,7 @@ describe( 'EntitySchema', function () {
 		await browser.skipIfExtensionNotPresent( this, 'EntitySchema' );
 	} );
 
-	it( 'Should be able to create an EntitySchema', async () => {
+	it( 'Should be able to create an EntitySchema', async function () {
 		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema

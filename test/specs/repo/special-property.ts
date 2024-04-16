@@ -27,7 +27,7 @@ describe( 'Special:NewProperty', function () {
 				}
 			} );
 
-			it( `Should be able to create a new property of datatype ${dataType.name}`, async () => {
+			it( `Should be able to create a new property of datatype ${dataType.name}`, async function () {
 				this.retries( 4 );
 
 				await SpecialNewPropertyPage.open();
@@ -55,7 +55,7 @@ describe( 'Special:NewProperty', function () {
 		} );
 	} );
 
-	it( 'Should be able to see newly created properties in list of properties special page', async () => {
+	it( 'Should be able to see newly created properties in list of properties special page', async function () {
 		await SpecialListPropertiesPage.open( {
 			dataType: wikibasePropertyString.urlName,
 			limit: 1000

@@ -21,7 +21,7 @@ describe( 'Wikibase post upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able to create a new specific item', async () => {
+	it( 'Should be able to create a new specific item', async function () {
 		newPropertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -43,7 +43,7 @@ describe( 'Wikibase post upgrade', function () {
 		assert.strictEqual( newPropertyId.startsWith( 'P' ), true );
 	} );
 
-	it( 'New item should show up in Queryservice', async () => {
+	it( 'New item should show up in Queryservice', async function () {
 		let bindings: Binding[];
 
 		await browser.waitUntil(
