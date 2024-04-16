@@ -31,12 +31,10 @@ see [base image](../Wikibase/README.md)
 | `/var/www/html/skins`           | Mediawiki skins directory                 |
 | `/var/www/html/extensions`      | Mediawiki extensions directory            |
 | `/var/www/html/LocalSettings.d` | Bundle extension configuration directory  |
-| `/extra-install`                | Extra install scripts for automatic setup |
 | `/templates/`                   | Directory containing templates            |
 
 | File | Description |
 | --- | --- |
 | `/LocalSettings.php.template` | Template for Mediawiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime) |
 | `/var/www/html/LocalSettings.php` | LocalSettings.php location, when passed in `/LocalSettings.php.template` will not be used. install.php & update.php will also not be run. |
-| `/extra-install/ElasticSearch.sh` | Script for automatically creating Elasticsearch indices |
-| `/extra-install/QuickStatements.sh` | Script for automatically creating OAuth consumer for Quick Statements |
+| `/default-extra-install.sh` | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements |

@@ -28,14 +28,6 @@ docker compose up --wait
 
 This will start up the services defined in [docker-compose.yml](docker-compose.yml), listed above. Feel free to remove any unwanted or unneeded services from `docker-compose.yml`, but be advised this is the configuration we test.
 
-In the volumes section of the wikibase service in [docker-compose.yml](docker-compose.yml), there is one additional script inside the container that automatically sets up the extensions needed for quickstatements and elasticsearch.
-
-```yml
-- ./extra-install.sh:/extra-install.sh
-```
-
-Looking inside extra-install.sh, you see that it executes two scripts which set up an OAuth consumer for quickstatements and creates indices for Elasticsearch.
-
 ## Job runner
 
 The example `docker-compose.yml` sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
