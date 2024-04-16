@@ -44,8 +44,7 @@ services:
       MW_WG_ENABLE_UPLOADS:
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
     healthcheck:
-      test:
-        [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
+      test: [CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page"]
       interval: 10s
       start_period: 2m
 
@@ -86,7 +85,7 @@ services:
         aliases:
           - mysql.svc
     healthcheck:
-      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -104,7 +103,7 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}" ]
+      test: [CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}"]
       interval: 10s
       start_period: 2m
 
@@ -156,7 +155,7 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      test: [CMD, curl, --silent, --fail, "http://localhost"]
       interval: 10s
       start_period: 2m
 
@@ -220,7 +219,7 @@ services:
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      test: [CMD, curl, --silent, --fail, "http://localhost"]
       interval: 10s
       start_period: 2m
 
