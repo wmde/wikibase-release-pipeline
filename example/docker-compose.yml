@@ -259,7 +259,7 @@ volumes:
   nginx-proxy-certs:
   nginx-proxy-vhost:
   nginx-proxy-html:
-  acme-compose-data:
+  acme-companion-data:
   wikibase-shared:
   LocalSettings:
   mysql-data:
