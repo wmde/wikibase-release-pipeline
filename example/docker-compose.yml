@@ -16,6 +16,21 @@ x-common-variables: &wikibase_variables
   DB_NAME: ${DB_NAME}
 
 services:
+  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    # profiles:
+    #   - nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      # For HTTPS support in production map this volume to where your SSL certificates are stored
+      # and review the nginx and nginx-proxy documentation for the appropriate configurations, or
+      # add the "acme-companion" container at https://github.com/nginx-proxy/acme-companion and
+      # follow the instructions there to auto-generate ACME SSL certificates.
+      # - path/to/certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
   wikibase:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     links:
@@ -42,6 +57,7 @@ services:
       WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
+      VIRTUAL_HOST: "${WIKIBASE_HOST}"
     healthcheck:
       test: [CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page"]
       interval: 10s
@@ -152,7 +168,9 @@ services:
           - ${WDQS_FRONTEND_HOST}
     environment:
       - WIKIBASE_HOST
+      # TODO: use var
       - WDQS_HOST=wdqs-proxy.svc
+      - VIRTUAL_HOST="${WDQS_FRONTEND_HOST}"
     healthcheck:
       test: [CMD, curl, --silent, --fail, "http://localhost"]
       interval: 10s
@@ -217,6 +235,7 @@ services:
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
+      - VIRTUAL_HOST="${QUICKSTATEMENTS_HOST}"
     healthcheck:
       test: [CMD, curl, --silent, --fail, "http://localhost"]
       interval: 10s
