@@ -1,5 +1,4 @@
 # Wikibase Suite for testing
-version: "3.5"
 
 x-common-variables: &wikibase_variables
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
@@ -39,8 +38,7 @@ services:
     environment:
       <<: *wikibase_variables
     healthcheck:
-      test:
-        [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      test: [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
       interval: 10s
       start_period: 2m
 
@@ -99,7 +97,7 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, $WDQS_FRONTEND_URL ]
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
       interval: 10s
       start_period: 2m
 
@@ -131,6 +129,7 @@ services:
         - --silent
         - --fail
         - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
+
       interval: 10s
       start_period: 2m
 

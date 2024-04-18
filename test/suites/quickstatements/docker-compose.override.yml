@@ -1,5 +1,3 @@
-version: "3.5"
-
 services:
   mysql:
     volumes:
@@ -42,7 +40,7 @@ services:
       - DB_PASS
       - DB_NAME=client_wiki
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "${WIKIBASE_CLIENT_URL}" ]
+      test: [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
       interval: 10s
       start_period: 2m
 
@@ -67,7 +65,7 @@ services:
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "${QUICKSTATEMENTS_URL}" ]
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
       interval: 10s
       start_period: 2m
 

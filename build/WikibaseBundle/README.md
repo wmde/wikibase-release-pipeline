@@ -25,13 +25,13 @@ see [base image](../Wikibase/README.md)
 
 ### Filesystem layout
 
-| Directory                       | Description                               |
-| ------------------------------- | ----------------------------------------- |
-| `/var/www/html`                 | Base Mediawiki directory                  |
-| `/var/www/html/skins`           | Mediawiki skins directory                 |
-| `/var/www/html/extensions`      | Mediawiki extensions directory            |
-| `/var/www/html/LocalSettings.d` | Bundle extension configuration directory  |
-| `/templates/`                   | Directory containing templates            |
+| Directory                       | Description                              |
+| ------------------------------- | ---------------------------------------- |
+| `/var/www/html`                 | Base Mediawiki directory                 |
+| `/var/www/html/skins`           | Mediawiki skins directory                |
+| `/var/www/html/extensions`      | Mediawiki extensions directory           |
+| `/var/www/html/LocalSettings.d` | Bundle extension configuration directory |
+| `/templates/`                   | Directory containing templates           |
 
 | File | Description |
 | --- | --- |
