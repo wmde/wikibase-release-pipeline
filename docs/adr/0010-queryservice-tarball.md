@@ -14,7 +14,7 @@ This package already contains all the required components to build the docker im
 
 ## Decision
 
-Do not produce a queryservice tarball to be published. 
+Do not produce a queryservice tarball to be published.
 
 ## Consequences
 

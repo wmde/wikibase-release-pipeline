@@ -1,17 +1,17 @@
 # Wikibase Suite for testing
-version: '3.5'
+version: "3.5"
 
 x-common-variables: &wikibase_variables
-    DB_SERVER: ${DB_SERVER}
-    MW_ADMIN_NAME: ${MW_ADMIN_NAME}
-    MW_ADMIN_PASS: ${MW_ADMIN_PASS}
-    MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-    MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
-    DB_USER: ${DB_USER}
-    DB_PASS: ${DB_PASS}
-    DB_NAME: ${DB_NAME}
-    MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
-    MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
+  DB_SERVER: ${DB_SERVER}
+  MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+  MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+  MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+  MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_NAME: ${DB_NAME}
+  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
 networks:
   default:
@@ -19,7 +19,6 @@ networks:
     external: true
 
 services:
-
   wikibase:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
     links:
@@ -36,18 +35,19 @@ services:
     networks:
       default:
         aliases:
-         - ${WIKIBASE_HOST}
+          - ${WIKIBASE_HOST}
     environment:
       <<: *wikibase_variables
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      test:
+        [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
       interval: 10s
       start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
     entrypoint: /bin/bash
-    command:  /jobrunner-entrypoint.sh
+    command: /jobrunner-entrypoint.sh
     links:
       - mysql
     depends_on:
@@ -72,15 +72,15 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: 'toor'
+      MYSQL_ROOT_PASSWORD: toor
     networks:
       default:
         aliases:
-         - mysql.svc
-    volumes: 
+          - mysql.svc
+    volumes:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
     healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -89,19 +89,19 @@ services:
     image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
     restart: unless-stopped
     ports:
-    # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
-     - "8282:80"
+      # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
+      - "8282:80"
     depends_on:
-    - wdqs-proxy
+      - wdqs-proxy
     networks:
       default:
         aliases:
-         - wdqs-frontend.svc
+          - wdqs-frontend.svc
     environment:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", $WDQS_FRONTEND_URL ]
+      test: [ CMD, curl, --silent, --fail, $WDQS_FRONTEND_URL ]
       interval: 10s
       start_period: 2m
 
@@ -119,7 +119,7 @@ services:
     networks:
       default:
         aliases:
-         - wdqs.svc
+          - wdqs.svc
     environment:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs.svc
@@ -127,7 +127,12 @@ services:
     expose:
       - 9999
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "${WDQS_URL}/bigdata/namespace/wdq/sparql" ]
+      test:
+        - CMD
+        - curl
+        - --silent
+        - --fail
+        - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
       interval: 10s
       start_period: 2m
 
@@ -137,13 +142,13 @@ services:
     environment:
       - PROXY_PASS_HOST=wdqs.svc:9999
     depends_on:
-    - wdqs
+      - wdqs
     ports:
-     - "8989:80"
+      - "8989:80"
     networks:
       default:
         aliases:
-         - wdqs-proxy.svc
+          - wdqs-proxy.svc
 
   wdqs-updater:
     image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
@@ -157,16 +162,16 @@ services:
         soft: 32768
         hard: 32768
     depends_on:
-    - wdqs
-    - wikibase
+      - wdqs
+      - wikibase
     networks:
       default:
         aliases:
-         - wdqs-updater.svc
+          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST
-     - WDQS_HOST=wdqs.svc
-     - WDQS_PORT=9999
+      - WIKIBASE_HOST
+      - WDQS_HOST=wdqs.svc
+      - WDQS_PORT=9999
 
 volumes:
   shared:

@@ -1,5 +1,10 @@
 ARG DEBIAN_IMAGE_URL
-ARG JDK_IMAGE_URL
+ARG JRE_IMAGE_URL
+
+# ###########################################################################
+# hadolint ignore=DL3006
+FROM ${JRE_IMAGE_URL} as jre
+
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -21,17 +26,32 @@ RUN set -x; \
     mkdir /tmp/wdqs-service; \
     tar zxvf $TARBALL -C /tmp/wdqs-service --strip-components=1
 
+
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${JDK_IMAGE_URL}
+FROM ${DEBIAN_IMAGE_URL}
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
+# Base as many images as possible on debian.
+# eclipse-temurin is not available for debian, so we copy the JRE over from
+# an eclipse-temurin ubuntu container.
+# https://github.com/docker-library/docs/blob/master/eclipse-temurin/README.md#using-a-different-base-image
+ENV JAVA_HOME=/opt/java/openjdk
+COPY --from=jre $JAVA_HOME $JAVA_HOME
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 # Blazegraph scripts require bash
-# Install gettext for envsubst command, (it needs libintl package)
 # Install curl for the loadData.sh wdqs script (if someone needs it)
-RUN set -x ; \
-    apk --no-cache add bash=\<4.5.0 gettext=\<0.19.8.2 libintl=\<0.19.8.2 curl=\<7.64.999 su-exec=\~0.2 && \
-    addgroup -g 66 -S blazegraph && adduser -S -G blazegraph -u 666 -s /bin/bash blazegraph
+SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends bash gettext curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    \
+    addgroup --system blazegraph && \
+    adduser --system \
+        --gid "$(getent group blazegraph | cut -d: -f3)" \
+        --shell /bin/bash blazegraph
 
 COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
 
@@ -51,7 +71,7 @@ WORKDIR /wdqs
 
 COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
-COPY --chown=blazegraph:blazegraph RWStore.properties whitelist.txt logback.xml /wdqs/
+COPY --chown=blazegraph:blazegraph RWStore.properties allowlist.txt logback.xml /wdqs/
 
 # TODO this shouldn't be needed, but CI currently doesnt check for the +x bit, which is why this line is here
 RUN chmod +x /wdqs/runUpdate.sh

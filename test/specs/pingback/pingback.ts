@@ -1,8 +1,8 @@
-import assert from 'assert';
+import page from '../../helpers/pages/page.js';
 
 describe( 'Pingback', function () {
-	it( 'Should ping on first page request', async () => {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Main_Page' );
+	it( 'Should ping on first page request', async function () {
+		await page.open( '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 5 * 1000 );
@@ -10,18 +10,16 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		assert.strictEqual( sqlResult.includes( 'WikibasePingback\t' ), true );
-		assert.strictEqual( sqlResult.includes( 'WikibasePingback-1.' ), true );
+		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
+		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
-		const result = await browser.makeRequest(
-			'http://mediawiki.svc'
-		);
-		assert.strictEqual( result.data.length, 2 );
+		const result = await browser.makeRequest( 'http://mediawiki.svc' );
+		expect( result.data ).toHaveLength( 2 );
 
 		const requestData = JSON.parse(
 			Object.keys( result.data[ 0 ] )[ 0 ].replace( ';', '' )
 		);
 
-		assert.strictEqual( requestData.schema, 'WikibasePingback' );
+		expect( requestData.schema ).toEqual( 'WikibasePingback' );
 	} );
 } );

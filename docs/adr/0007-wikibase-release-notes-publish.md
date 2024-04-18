@@ -14,7 +14,7 @@ As our process for maintaining release notes will be closely modeled after media
 
 As described in [ADR0005], mediawiki is maintaining release notes for each specific release within the corresponding release branch. During the preparation of creating a new release from the development branch, a new release branch is cut and the [template] that has been populated with the relevant changes from the ongoing development is to serve as the base for a richer curated version on mediawiki.org [(Example: 1.35)](https://www.mediawiki.org/wiki/Release_notes/1.35).
 
-The release notes document within the repository does not contain the full links to documentation or phabricator tickets but is supported by templates to generate these dynamically. 
+The release notes document within the repository does not contain the full links to documentation or phabricator tickets but is supported by templates to generate these dynamically.
 
 For links to phabricator the task number is used by the [PhabT] template which also supports linking to comments, this could easily be re-used by WMDE as we are also using phabricator.
 

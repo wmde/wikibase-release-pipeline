@@ -1,10 +1,10 @@
+import type { Capabilities } from '@wdio/types';
 import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import type { Capabilities } from '@wdio/types';
 import JsonReporter from '../helpers/json-reporter.js';
-import TestEnv from './TestEnv.js';
+import TestEnv from './test-env.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
@@ -17,7 +17,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 	const settings = testEnv.settings;
 
 	return {
-		specs: settings.specs.map( ( specFilepath ) => `${__dirname}/../${specFilepath}` ),
+		specs: settings.specs.map(
+			( specFilepath ) => `${ __dirname }/../${ specFilepath }`
+		),
 
 		hostname: 'browser',
 		port: 4444,
@@ -73,7 +75,7 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 				JsonReporter,
 				{
 					suiteName: settings.name,
-					resultFilePath: `${settings.outputDir}/result.json`
+					resultFilePath: `${ settings.outputDir }/result.json`
 				}
 			]
 		],
@@ -101,15 +103,15 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 		},
 
 		beforeSuite: async ( mochaSuite ) => {
-			testEnv.testLog.info( `================= TEST: ${mochaSuite.title}` );
-			testEnv.testLog.info( `📘 ${mochaSuite.title.toUpperCase()}` );
+			testEnv.testLog.info( `================= TEST: ${ mochaSuite.title }` );
+			testEnv.testLog.info( `📘 ${ mochaSuite.title.toUpperCase() }` );
 			if ( settings.beforeMochaSuite ) {
 				await settings.beforeMochaSuite( mochaSuite );
 			}
 		},
 
 		beforeTest: async function ( mochaTest ) {
-			testEnv.testLog.info( `================= SPEC: ${mochaTest.title}` );
+			testEnv.testLog.info( `================= SPEC: ${ mochaTest.title }` );
 			if ( settings.beforeTest ) {
 				await settings.beforeTest( mochaTest );
 			}

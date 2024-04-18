@@ -1,10 +1,10 @@
-import { getTestString } from 'wdio-mediawiki/Util.js';
-import assert from 'assert';
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
-import { stringify } from 'querystring';
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import { stringify } from 'querystring';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 import ExternalChange from '../../../types/external-change.js';
 
 const itemLabel = getTestString( 'The Item' );
@@ -18,7 +18,7 @@ describe( 'Scribunto Item', function () {
 		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
 	} );
 
-	it( 'Should create an item on repo', async () => {
+	it( 'Should create an item on repo', async function () {
 		const propertyId = await WikibaseApi.createProperty( 'string' );
 		const data = {
 			claims: [
@@ -36,13 +36,13 @@ describe( 'Scribunto Item', function () {
 
 		itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + itemId );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
-	it( 'Should be able to reference an item on client using Lua', async () => {
+	it( 'Should be able to reference an item on client using Lua', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const template = await readFile(
 			new URL( 'repo-client.lua', import.meta.url ),
@@ -66,25 +66,28 @@ describe( 'Scribunto Item', function () {
 		);
 
 		// should come from executed lua script
-		assert( executionContent.includes( itemLabel ) );
+		expect( executionContent ).toMatch( itemLabel );
 	} );
 
 	// This will generate a change that will dispatch
-	it( 'Should be able to delete the item on repo', async () => {
-		await LoginPage.login( testEnv.vars.MW_ADMIN_NAME, testEnv.vars.MW_ADMIN_PASS );
+	it( 'Should be able to delete the item on repo', async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 
 		// goto delete page
 		const query = { action: 'delete', title: 'Item:' + itemId };
 		await browser.url(
-			browser.options.baseUrl + '/index.php?' + stringify( query )
+			`${ browser.options.baseUrl }/index.php?${ stringify( query ) }`
 		);
 
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 	} );
 
-	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async () => {
+	it.skip( 'Should be able to see delete changes is dispatched to client for lua page', async function () {
 		// eslint-disable-next-line wdio/no-pause
 		await browser.pause( 30 * 1000 );
 
@@ -100,6 +103,6 @@ describe( 'Scribunto Item', function () {
 			expectedDeletionChange
 		);
 
-		assert.deepStrictEqual( actualChange, expectedDeletionChange );
+		expect( actualChange ).toEqual( expectedDeletionChange );
 	} );
 } );

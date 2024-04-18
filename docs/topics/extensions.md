@@ -5,9 +5,10 @@
 ### Creating an OAuth consumer
 
 To create an OAuth consumer
+
 ```
 # set these environment variables
-MW_ADMIN_NAME=WikibaseDockerAdmin 
+MW_ADMIN_NAME=WikibaseDockerAdmin
 QS_PUBLIC_SCHEME_HOST_AND_PORT=http://wdqs.svc:9999
 
 
@@ -39,7 +40,7 @@ A successful response should return with `"created": true` flag set.
 
 ### Configure OAuth
 
-Replace the <OAUTH_CONSUMER_KEY> and <OAUTH_CONSUMER_SECRET> with the key and secret that was generated when [Creating an OAuth consumer](#creating-an-oauth-consumer). 
+Replace the <OAUTH_CONSUMER_KEY> and <OAUTH_CONSUMER_SECRET> with the key and secret that was generated when [Creating an OAuth consumer](#creating-an-oauth-consumer).
 
 Create the following file and place it at `/quickstatements/data/oauth.ini` in the wikibase container.
 
@@ -50,5 +51,3 @@ agent = 'Wikibase Docker QuickStatements'
 consumerKey = '<OAUTH_CONSUMER_KEY>'
 consumerSecret = '<OAUTH_CONSUMER_SECRET>'
 ```
-
-
