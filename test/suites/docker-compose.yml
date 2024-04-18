@@ -42,7 +42,7 @@ services:
       test:
         [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
       interval: 10s
-      start_period: 2m
+      start_period: 6m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
