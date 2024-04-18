@@ -130,7 +130,13 @@ services:
     expose:
       - 9999
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost:9999/bigdata/namespace/wdq/sparql"]
+      test:
+          - CMD
+          - curl
+          - --silent
+          - --fail
+          - "http://localhost:9999/bigdata/namespace/wdq/sparql"
+
       interval: 10s
       start_period: 2m
 

@@ -67,7 +67,7 @@ services:
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost"]
+      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
       interval: 10s
       start_period: 2m
 
