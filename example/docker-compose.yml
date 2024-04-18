@@ -40,7 +40,6 @@ services:
     environment:
       DEFAULT_EMAIL: "${MW_ADMIN_EMAIL}"
 
-
   wikibase:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     links:
