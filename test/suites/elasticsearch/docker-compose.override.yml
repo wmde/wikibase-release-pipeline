@@ -1,4 +1,3 @@
-version: "3.5"
 
 x-common-variables: &elastic_search
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
