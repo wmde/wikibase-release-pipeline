@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-set -ex
-
+set -x
 
 # Enables and configures elasticsearch index
 if [ -z "$MW_ELASTIC_HOST" ] || [ -z "$MW_ELASTIC_PORT" ] ; then
