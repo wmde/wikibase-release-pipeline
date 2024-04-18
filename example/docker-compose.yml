@@ -16,30 +16,6 @@ x-common-variables: &wikibase_variables
   DB_NAME: ${DB_NAME}
 
 services:
-  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
-    # profiles:
-    #   - nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-proxy-certs:/etc/nginx/certs
-      - nginx-proxy-vhost:/etc/nginx/vhost.d
-      - nginx-proxy-html:/usr/share/nginx/html
-
-  acme-companion:
-    image: nginxproxy/acme-companion
-    volumes_from:
-      - nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - acme-companion-data:/etc/acme.sh
-    environment:
-      DEFAULT_EMAIL: "${MW_ADMIN_EMAIL}"
-
   wikibase:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     links:
@@ -254,6 +230,30 @@ services:
       test: [CMD, curl, --silent, --fail, "http://localhost"]
       interval: 10s
       start_period: 2m
+
+  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    # profiles:
+    #   - nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-proxy-certs:/etc/nginx/certs
+      - nginx-proxy-vhost:/etc/nginx/vhost.d
+      - nginx-proxy-html:/usr/share/nginx/html
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme-companion-data:/etc/acme.sh
+    environment:
+      DEFAULT_EMAIL: "${MW_ADMIN_EMAIL}"
 
 volumes:
   nginx-proxy-certs:
