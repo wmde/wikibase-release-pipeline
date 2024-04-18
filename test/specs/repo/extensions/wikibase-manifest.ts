@@ -9,13 +9,13 @@ describe( 'WikibaseManifest', function () {
 		);
 		const data = result.data;
 
-		expect( data.name ).toEqual( 'wikibase-docker' );
+		expect( 'wikibase-docker' ).toBe( data.name );
 
-		expect( data.api.action ).toEqual( testEnv.vars.WIKIBASE_URL + '/w/api.php' );
-		expect( data.api.rest ).toEqual( testEnv.vars.WIKIBASE_URL + '/w/rest.php' );
+		expect( testEnv.vars.WIKIBASE_URL + '/w/api.php' ).toBe( data.api.action );
+		expect( testEnv.vars.WIKIBASE_URL + '/w/rest.php' ).toBe( data.api.rest );
 
-		expect( data.oauth.registration_page ).toEqual(
+		expect(
 			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration'
-		);
+		).toBe( data.oauth.registration_page );
 	} );
 } );

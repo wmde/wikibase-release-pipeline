@@ -87,10 +87,6 @@ foreach (glob("LocalSettings.d/*.php") as ${DOLLAR}filename)
 		continue;
 	}
 
-	if (strpos(${DOLLAR}filename, 'EntitySchema') !== false) {
-		continue;
-	}
-
 	if (strpos(${DOLLAR}filename, 'Elastic') !== false) {
 		continue;
 	}

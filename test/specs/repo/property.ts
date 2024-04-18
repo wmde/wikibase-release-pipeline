@@ -89,7 +89,6 @@ describe( 'Property', function () {
 
 			it( 'Should display the added properties on the "Recent changes" page', async function () {
 				await browser.waitForJobs();
-				await $( '.vector-main-menu-dropdown' ).click();
 				await $( '=Recent changes' ).click();
 				await expect( $( `=(${ propertyId })` ) ).toExist();
 				await expect( $( `=(${ stringPropertyId })` ) ).toExist();
@@ -121,7 +120,7 @@ describe( 'Property', function () {
 				await page.open( '/wiki/Special:SetLabelDescriptionAliases/' );
 				await $( 'label=ID:' ).click();
 				await browser.keys( propertyId.split( '' ) );
-				await $( 'span=Continue' ).click();
+				await $( 'span=Set label, description and aliases' ).click();
 
 				await $( 'label=Label:' ).click();
 				await browser.keys( `${ dataType.name } Label`.split( '' ) );
@@ -132,7 +131,7 @@ describe( 'Property', function () {
 					`${ dataType.name } Alias A|${ dataType.name } Alias B`.split( '' )
 				);
 
-				await $( 'span=Save changes' ).click();
+				await $( 'span=Set label, description and aliases' ).click();
 
 				await expect(
 					$( `span.wikibase-labelview-text=${ dataType.name } Label` )
