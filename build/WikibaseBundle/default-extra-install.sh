@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -x
+set -ex
 
 # Enables and configures elasticsearch index
-if [ -z "$MW_ELASTIC_HOST" ] || [ -z "$MW_ELASTIC_PORT" ] ; then
+if [ -z "${MW_ELASTIC_HOST:-}" ] || [ -z "${MW_ELASTIC_PORT:-}" ] ; then
     echo "Skipping Elasticsearch setup ..."
 else
     /wait-for-it.sh "$MW_ELASTIC_HOST:$MW_ELASTIC_PORT" -t 300
@@ -13,7 +13,7 @@ fi
 
 
 # Creates an OAuth consumer for quickstatements
-if [ -z "$QS_PUBLIC_SCHEME_HOST_AND_PORT" ] ; then
+if [ -z "${QS_PUBLIC_SCHEME_HOST_AND_PORT:-}" ] ; then
     echo "Skipping QuickStatements setup ..."
 else
     php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
