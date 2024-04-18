@@ -1,5 +1,3 @@
-import page from '../../../helpers/pages/page.js';
-
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'UniversalLanguageSelector' );
