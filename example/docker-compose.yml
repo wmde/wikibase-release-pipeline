@@ -1,56 +1,51 @@
-# Example Wikibase docker compose setup
+name: wikibase-suite-example
 
 x-common-variables: &wikibase_variables
-  WIKIBASE_HOST: ${WIKIBASE_HOST}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  # Disable jobs running after requests when wikibase-jobrunner is defined
-  MW_WG_JOB_RUN_RATE: 0
-  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
-  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
-  DB_SERVER: mysql.svc:3306
+  # To disable Elasticsearch and use default MediaWiki search functionality:
+  # 1) Remove the elasticsearch service, and, 2) remove the MW_ELASTIC_* vars below
+  MW_ELASTIC_HOST: elasticsearch
+  MW_ELASTIC_PORT: 9200
+  DB_SERVER: mysql:3306
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
 
 services:
   wikibase:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     links:
       - mysql
     depends_on:
       - mysql
     restart: unless-stopped
     ports:
-      - "${WIKIBASE_PORT}:80"
+      - ${WIKIBASE_PORT}:80
     volumes:
-      # # This shares the configuration with jobrunner
+      # This shares the configuration with jobrunner
       - wikibase-shared:/var/www/html/:rw
-      # # Uncomment this next line to mount your own LocalSettings.php file
-      # # also uncomment the same line in the wikibase-jobrunner service!
+      # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
       - quickstatements-data:/quickstatements/data
-    networks:
-      default:
-        aliases:
-          - ${WIKIBASE_HOST}
-          - wikibase-docker.svc
     environment:
       <<: *wikibase_variables
-      WIKIBASE_PINGBACK:
       MW_WG_ENABLE_UPLOADS:
-      QS_PUBLIC_SCHEME_HOST_AND_PORT:
-      VIRTUAL_HOST: "${WIKIBASE_HOST}"
-      LETSENCRYPT_HOST: "${WIKIBASE_HOST}"
+      # Setting to 0 effectively disables jobs running after requests which is best when a jobrunner is used
+      MW_WG_JOB_RUN_RATE: 0
+      WIKIBASE_PINGBACK:
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      VIRTUAL_HOST: "${WIKIBASE_PUBLIC_HOST}"
+      LETSENCRYPT_HOST: "${WIKIBASE_PUBLIC_HOST}"
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page"]
+      test: [CMD, curl, --silent, --fail, http://localhost/wiki/Main_Page]
       interval: 10s
       start_period: 2m
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
@@ -59,32 +54,22 @@ services:
     restart: always
     volumes:
       - wikibase-shared:/shared/:ro
-      # # Uncomment this next line to mount your own LocalSettings.php file
-      # # also uncomment the same line in the wikibase service
+      # Uncomment the following line here and on wikibase to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
-    networks:
-      default:
-        aliases:
-          - wikibase-jobrunner.svc
     environment:
       <<: *wikibase_variables
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MYSQL_IMAGE_NAME}"
+    image: "${MARIADB_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
-    networks:
-      default:
-        aliases:
-          - mysql.svc
     healthcheck:
       test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
       start_period: 1m
@@ -92,24 +77,20 @@ services:
       timeout: 5s
 
   elasticsearch:
-    image: "${ELASTICSEARCH_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      default:
-        aliases:
-          - elasticsearch.svc
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}"]
+      test: [CMD, curl, --silent, --fail, "http://localhost:9200"]
       interval: 10s
       start_period: 2m
 
   wdqs:
-    image: "${WDQS_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
     restart: unless-stopped
     command: /runBlazegraph.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -121,16 +102,10 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
-    networks:
-      default:
-        aliases:
-          - wdqs.svc
     environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs.svc
+      - WIKIBASE_HOST=wikibase
+      - WDQS_HOST=wdqs
       - WDQS_PORT=9999
-    expose:
-      - 9999
     healthcheck:
       test:
         - CMD
@@ -138,46 +113,36 @@ services:
         - --silent
         - --fail
         - "http://localhost:9999/bigdata/namespace/wdq/sparql"
-
       interval: 10s
       start_period: 2m
 
   wdqs-frontend:
-    image: "${WDQS_FRONTEND_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
     restart: unless-stopped
     ports:
       - "${WDQS_FRONTEND_PORT}:80"
     depends_on:
       - wdqs-proxy
-    networks:
-      default:
-        aliases:
-          - ${WDQS_FRONTEND_HOST}
     environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs-proxy.svc
-      - VIRTUAL_HOST=${WDQS_FRONTEND_HOST}
-      - LETSENCRYPT_HOST=${WDQS_FRONTEND_HOST}
-
+      - WIKIBASE_HOST=wikibase
+      - WDQS_HOST=wdqs-proxy
+      - VIRTUAL_HOST=${WDQS_FRONTEND_PUBLIC_HOST}
+      - LETSENCRYPT_HOST=${WDQS_FRONTEND_PUBLIC_HOST}
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost"]
+      test: [CMD, curl, --silent, --fail, http://localhost]
       interval: 10s
       start_period: 2m
 
   wdqs-proxy:
-    image: "${WDQS_PROXY_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
     restart: unless-stopped
     environment:
-      - PROXY_PASS_HOST=wdqs.svc:9999
+      - PROXY_PASS_HOST=wdqs:9999
     depends_on:
       - wdqs
-    networks:
-      default:
-        aliases:
-          - wdqs-proxy.svc
 
   wdqs-updater:
-    image: "${WDQS_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
     restart: unless-stopped
     command: /runUpdate.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -190,18 +155,14 @@ services:
     depends_on:
       - wdqs
       - wikibase
-    networks:
-      default:
-        aliases:
-          - wdqs-updater.svc
     environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs.svc
+      - WIKIBASE_HOST=wikibase
+      - WDQS_HOST=wdqs
       - WDQS_PORT=9999
-      # CONFIG - WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
+      # WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
 
   quickstatements:
-    image: "${QUICKSTATEMENTS_IMAGE_NAME}"
+    image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
     restart: unless-stopped
     volumes:
       - quickstatements-data:/quickstatements/data
@@ -209,32 +170,28 @@ services:
       - "${QUICKSTATEMENTS_PORT}:80"
     depends_on:
       - wikibase
-    networks:
-      default:
-        aliases:
-          - ${QUICKSTATEMENTS_HOST}
     environment:
-      - QUICKSTATEMENTS_HOST
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
-      - VIRTUAL_HOST=${QUICKSTATEMENTS_HOST}
-      - LETSENCRYPT_HOST=${QUICKSTATEMENTS_HOST}
+      - QUICKSTATEMENTS_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_PUBLIC_HOST}
+      - VIRTUAL_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
+      - LETSENCRYPT_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost"]
+      test: [CMD, curl, --silent, --fail, http://localhost]
       interval: 10s
       start_period: 2m
+
+  # Reverse Proxy and SSL services
 
   # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
   nginx-proxy:
     image: nginxproxy/nginx-proxy
-    # profiles:
-    #   - nginx-proxy
     ports:
       - "80:80"
       - "443:443"
@@ -261,6 +218,7 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
+  # Reverse Proxy and SSL
   nginx-proxy-certs:
   nginx-proxy-vhost:
   nginx-proxy-html:
