@@ -155,7 +155,6 @@ services:
           - ${WDQS_FRONTEND_HOST}
     environment:
       - WIKIBASE_HOST
-      # TODO: use var
       - WDQS_HOST=wdqs-proxy.svc
       - VIRTUAL_HOST=${WDQS_FRONTEND_HOST}
       - LETSENCRYPT_HOST=${WDQS_FRONTEND_HOST}
@@ -217,7 +216,7 @@ services:
     environment:
       - QUICKSTATEMENTS_HOST
       - QS_PUBLIC_SCHEME_HOST_AND_PORT
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}:${WIKIBASE_PORT}
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_HOST}
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
@@ -256,13 +255,13 @@ services:
       DEFAULT_EMAIL: "${MW_ADMIN_EMAIL}"
 
 volumes:
-  nginx-proxy-certs:
-  nginx-proxy-vhost:
-  nginx-proxy-html:
-  acme-companion-data:
   wikibase-shared:
   LocalSettings:
   mysql-data:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
+  nginx-proxy-certs:
+  nginx-proxy-vhost:
+  nginx-proxy-html:
+  acme-companion-data:
