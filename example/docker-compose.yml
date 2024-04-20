@@ -77,7 +77,7 @@ services:
   # --------------------------------------------------
   # B. EXTRA WIKIBASE SUITE SERVICES
   # --------------------------------------------------
-  
+
   # To disable Elasticsearch and use default MediaWiki search functionality remove
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
@@ -166,9 +166,9 @@ services:
       WDQS_PORT: 9999
       # WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
 
-  # QuickStatmements requires public Internet accessible URLs which route to the server running
-  # this service to be set in QUICKSTATEMENTS_PUBLIC_HOST and WIKIBASE_PUBLIC_HOST in the .env file
-  # in this directory to authorize against the Wikibase instance.
+  # QuickStatmements requires publically accessible hostnames which route to the server running
+  # this service configured and set in QUICKSTATEMENTS_PUBLIC_HOST and WIKIBASE_PUBLIC_HOST
+  # (see .env) to enable authorization against the Wikibase instance.
   quickstatements:
     image: ${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}
     restart: unless-stopped
@@ -198,7 +198,7 @@ services:
   # --------------------------------------------------
   # C. OPTIONAL REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
-  
+
   # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
   nginx-proxy:
     image: nginxproxy/nginx-proxy
