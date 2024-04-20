@@ -5,8 +5,6 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  # To disable Elasticsearch and use default MediaWiki search functionality:
-  # 1) Remove the elasticsearch service, and, 2) remove the MW_ELASTIC_* vars below
   MW_ELASTIC_HOST: elasticsearch
   MW_ELASTIC_PORT: 9200
   DB_SERVER: mysql:3306
@@ -15,10 +13,12 @@ x-common-variables: &wikibase_variables
   DB_NAME: ${DB_NAME}
 
 services:
+  # --------------------------------------------------
+  # A. CORE WIKIBASE SUITE SERVICES
+  # --------------------------------------------------
+
   wikibase:
-    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
-    links:
-      - mysql
+    image: ${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}
     depends_on:
       - mysql
     restart: unless-stopped
@@ -47,8 +47,6 @@ services:
   wikibase-jobrunner:
     image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
     command: /jobrunner-entrypoint.sh
-    links:
-      - mysql
     depends_on:
       - mysql
     restart: always
@@ -61,7 +59,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MARIADB_IMAGE_URL}"
+    image: ${MARIADB_IMAGE_URL}
     restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql
@@ -76,8 +74,15 @@ services:
       interval: 20s
       timeout: 5s
 
+  # --------------------------------------------------
+  # B. EXTRA WIKIBASE SUITE SERVICES
+  # --------------------------------------------------
+  
+  # To disable Elasticsearch and use default MediaWiki search functionality remove
+  # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
+  # at the top of this file.
   elasticsearch:
-    image: "${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -85,12 +90,12 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: [CMD, curl, --silent, --fail, "http://localhost:9200"]
+      test: [CMD, curl, --silent, --fail, http://localhost:9200]
       interval: 10s
       start_period: 2m
 
   wdqs:
-    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
     restart: unless-stopped
     command: /runBlazegraph.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -103,9 +108,9 @@ services:
     volumes:
       - wdqs-data:/wdqs/data
     environment:
-      - WIKIBASE_HOST=wikibase
-      - WDQS_HOST=wdqs
-      - WDQS_PORT=9999
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs
+      WDQS_PORT: 9999
     healthcheck:
       test:
         - CMD
@@ -117,17 +122,17 @@ services:
       start_period: 2m
 
   wdqs-frontend:
-    image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
     restart: unless-stopped
     ports:
       - "${WDQS_FRONTEND_PORT}:80"
     depends_on:
       - wdqs-proxy
     environment:
-      - WIKIBASE_HOST=wikibase
-      - WDQS_HOST=wdqs-proxy
-      - VIRTUAL_HOST=${WDQS_FRONTEND_PUBLIC_HOST}
-      - LETSENCRYPT_HOST=${WDQS_FRONTEND_PUBLIC_HOST}
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs-proxy
+      VIRTUAL_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
+      LETSENCRYPT_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
     healthcheck:
       test: [CMD, curl, --silent, --fail, http://localhost]
       interval: 10s
@@ -142,7 +147,7 @@ services:
       - wdqs
 
   wdqs-updater:
-    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
     restart: unless-stopped
     command: /runUpdate.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -156,13 +161,16 @@ services:
       - wdqs
       - wikibase
     environment:
-      - WIKIBASE_HOST=wikibase
-      - WDQS_HOST=wdqs
-      - WDQS_PORT=9999
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs
+      WDQS_PORT: 9999
       # WIKIBASE_SCHEME can be set to 'https' if the updater should expect https concept uris
 
+  # QuickStatmements requires public Internet accessible URLs which route to the server running
+  # this service to be set in QUICKSTATEMENTS_PUBLIC_HOST and WIKIBASE_PUBLIC_HOST in the .env file
+  # in this directory to authorize against the Wikibase instance.
   quickstatements:
-    image: "${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}
     restart: unless-stopped
     volumes:
       - quickstatements-data:/quickstatements/data
@@ -171,30 +179,32 @@ services:
     depends_on:
       - wikibase
     environment:
-      - WB_PROPERTY_NAMESPACE=122
-      - "WB_PROPERTY_PREFIX=Property:"
-      - WB_ITEM_NAMESPACE=120
-      - "WB_ITEM_PREFIX=Item:"
-      - OAUTH_CONSUMER_KEY
-      - OAUTH_CONSUMER_SECRET
-      - QUICKSTATEMENTS_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://${QUICKSTATEMENTS_PUBLIC_HOST}
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://${WIKIBASE_PUBLIC_HOST}
-      - VIRTUAL_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
-      - LETSENCRYPT_HOST=${QUICKSTATEMENTS_PUBLIC_HOST}
+      WB_PROPERTY_NAMESPACE: 122
+      WB_PROPERTY_PREFIX: "Property:"
+      WB_ITEM_NAMESPACE: 120
+      WB_ITEM_PREFIX: "Item:"
+      OAUTH_CONSUMER_KEY:
+      OAUTH_CONSUMER_SECRET:
+      QUICKSTATEMENTS_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WB_PUBLIC_SCHEME_HOST_AND_PORT: http://${WIKIBASE_PUBLIC_HOST}
+      VIRTUAL_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
+      LETSENCRYPT_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
       test: [CMD, curl, --silent, --fail, http://localhost]
       interval: 10s
       start_period: 2m
 
-  # Reverse Proxy and SSL services
-
+  # --------------------------------------------------
+  # C. OPTIONAL REVERSE PROXY AND SSL SERVICES
+  # --------------------------------------------------
+  
   # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
   nginx-proxy:
     image: nginxproxy/nginx-proxy
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - nginx-proxy-certs:/etc/nginx/certs
@@ -209,16 +219,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme-companion-data:/etc/acme.sh
     environment:
-      DEFAULT_EMAIL: "${MW_ADMIN_EMAIL}"
+      DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
 
 volumes:
+  # A. CORE WIKIBASE SUITE SERVICES DATA
   wikibase-shared:
   LocalSettings:
   mysql-data:
+  # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  # Reverse Proxy and SSL
+  # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
   nginx-proxy-certs:
   nginx-proxy-vhost:
   nginx-proxy-html:
