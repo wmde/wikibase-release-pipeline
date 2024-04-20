@@ -37,15 +37,15 @@ services:
       MW_WG_JOB_RUN_RATE: 0
       WIKIBASE_PINGBACK:
       QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_PUBLIC_HOST}
-      VIRTUAL_HOST: "${WIKIBASE_PUBLIC_HOST}"
-      LETSENCRYPT_HOST: "${WIKIBASE_PUBLIC_HOST}"
+      VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
+      LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}
     command: /jobrunner-entrypoint.sh
     depends_on:
       - mysql
@@ -134,7 +134,7 @@ services:
       start_period: 2m
 
   wdqs-proxy:
-    image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
     depends_on:
       - wdqs
     restart: unless-stopped
