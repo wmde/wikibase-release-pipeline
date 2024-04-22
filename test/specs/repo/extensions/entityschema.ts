@@ -1,6 +1,6 @@
-import assert from 'assert';
 import { readFile } from 'fs/promises';
-import { utf8 } from '../../../helpers/readFileEncoding.js';
+import page from '../../../helpers/pages/page.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 describe( 'EntitySchema', function () {
 	const testLabel = 'A label';
@@ -10,8 +10,8 @@ describe( 'EntitySchema', function () {
 		await browser.skipIfExtensionNotPresent( this, 'EntitySchema' );
 	} );
 
-	it( 'Should be able to create an EntitySchema', async () => {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/EntitySchema:test' );
+	it( 'Should be able to create an EntitySchema', async function () {
+		await page.open( '/wiki/EntitySchema:test' );
 
 		// gives the link to Special:NewEntitySchema
 		await $( '.noarticletext a' ).click();
@@ -21,36 +21,27 @@ describe( 'EntitySchema', function () {
 		await $( 'input[name ="description"]' ).setValue( testDescription );
 
 		// set template
-		const shexTemplate = (
+		const shexTemplate =
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
-			await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 )
-		)
-			.toString()
-			.trim();
+			( await readFile( new URL( 'entityschema.sx', import.meta.url ), utf8 ) )
+				.toString()
+				.trim();
 		await $( 'textarea[name ="schema-text"]' ).setValue( shexTemplate );
 
 		await $( 'button[name ="submit"]' ).click();
 
 		await $( '#entityschema-schema-text' );
 
-		const entitySchemaEl = await $( '#entityschema-schema-text' );
-		const actualTemplate = ( await entitySchemaEl.getText() ).trim();
-		const actualTemplateHtml = ( await entitySchemaEl.getHTML() ).trim();
-		const actualLabel = ( await $( '.entityschema-title-label' ).getText() ).trim();
-		const actualId = ( await $( '.entityschema-title-id' ).getText() ).trim();
-		const actualDescription = ( await $( '.entityschema-description' ).getText() ).trim();
+		const entitySchemaEl = $( '#entityschema-schema-text' );
+		await expect( $( '.entityschema-description' ) ).toHaveText( testDescription );
+		await expect( entitySchemaEl ).toHaveText( shexTemplate );
+		await expect( $( '.entityschema-title-label' ) ).toHaveText( testLabel );
+		await expect( $( '.entityschema-title-id' ) ).toHaveText( '(E1)' );
+		await expect( entitySchemaEl.$( 'div' ) ).toHaveElementClass( 'mw-highlight' );
 
-		assert.strictEqual( actualDescription, testDescription );
-		assert.strictEqual( actualTemplate, shexTemplate );
-		assert.strictEqual( actualLabel, testLabel );
-		assert.strictEqual( actualId, '(E1)' );
-		assert.ok(
-			actualTemplateHtml.includes( 'mw-highlight' ),
-			'Should contain mw-highlight class in HTML'
+		await expect( $( '.external.entityschema-check-schema' ) ).toHaveAttr(
+			'href',
+			/http:\/\/validator\.svc/
 		);
-
-		const linkUrl = await $( '.external.entityschema-check-schema' ).getAttribute( 'href' );
-
-		assert( linkUrl.includes( 'http://validator.svc' ) );
 	} );
 } );

@@ -1,29 +1,43 @@
-import { Page } from '../page.js';
 import { ChainablePromiseArray } from 'webdriverio';
+import { Page } from '../page.js';
+import urlParameters from '../url-parameters.js';
 
-class SpecialListProperties extends Page {
-	public get content(): ChainablePromiseElement {
-		return $( '.mw-spcontent' );
-	}
+type SpecialListPropertiesPageParams = {
+	dataType?: string;
+	limit?: number;
+	offset?: number;
+};
+
+class SpecialListPropertiesPage extends Page {
 	public get properties(): ChainablePromiseArray<WebdriverIO.ElementArray> {
 		return $$( '.mw-spcontent ol li' );
 	}
 
-	public async openParams( params: {
-		dataType?: string;
-		limit?: number;
-		offset?: number;
-	} ): Promise<void> {
-		const dataType = 'datatype=' + ( params.dataType ?? '' );
-		const limit = 'limit=' + ( params.limit ?? 50 );
-		const offset = 'offset=' + ( params.offset ?? 0 );
+	/**
+	 * `/wiki/Special:ListProperties`
+	 *
+	 * @param {Object} params
+	 * @param {string} params.dataType - Optional, default empty string
+	 * @param {number} params.limit - Optional, default `50`
+	 * @param {number} params.offset - Optional, default `0`
+	 * @return {void}
+	 */
+	public async open(
+		params: SpecialListPropertiesPageParams | string
+	): Promise<void> {
+		if ( typeof params === 'string' ) {
+			throw new Error( 'Invalid parameter' );
+		}
 
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:ListProperties?${dataType}&${limit}&${offset}`
-		);
+		const paramString = urlParameters( {
+			datatype: params.dataType ?? '',
+			limit: params.limit ?? 50,
+			offset: params.offset ?? 0
+		} );
 
-		await this.content;
+		await super.open( `/wiki/Special:ListProperties${ paramString }` );
+		await $( '.mw-spcontent' );
 	}
 }
 
-export default new SpecialListProperties();
+export default new SpecialListPropertiesPage();

@@ -4,8 +4,9 @@ for unknown reasons. This spec existed but was skipped in the code the Wikibase 
 team inherited.
 */
 
-import assert from 'assert';
 import { getElementByURI } from '../../helpers/blazegraph.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
 import Binding from '../../types/binding.js';
 
 describe( 'Wikibase post upgrade', function () {
@@ -18,38 +19,33 @@ describe( 'Wikibase post upgrade', function () {
 		}
 	} );
 
-	it( 'Should be able find the item after upgrade', async () => {
+	it( 'Should be able find the item after upgrade', async function () {
 		const result = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL +
-        '/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item'
+			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=UpgradeItem&format=json&language=en&type=item`
 		);
-		const success = result.data.success;
-		const searchResults = result.data.search;
 
-		assert.strictEqual( success, 1 );
-		assert.strictEqual( searchResults.length, 1 );
-		assert.strictEqual( searchResults[ 0 ].match.text, 'UpgradeItem' );
-		assert.strictEqual( searchResults[ 0 ].match.type, 'label' );
+		expect( result.data.success ).toEqual( 1 );
+
+		const searchResults = result.data.search;
+		expect( searchResults ).toHaveLength( 1 );
+		expect( searchResults[ 0 ].match.text ).toEqual( 'UpgradeItem' );
+		expect( searchResults[ 0 ].match.type ).toEqual( 'label' );
 
 		oldItemID = searchResults[ 0 ].id;
 
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Item:' + oldItemID );
+		await ItemPage.open( oldItemID );
 	} );
 
-	it( 'Should show up in Special:EntityData with json', async () => {
-		const response = await browser.makeRequest(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:EntityData/${oldItemID}.json`
-		);
+	it( 'Should show up in Special:EntityData with json', async function () {
+		const data = await SpecialEntityDataPage.getData( oldItemID );
+		const properties = Object.keys( data.entities[ oldItemID ].claims );
 
-		const body = response.data;
-		const properties = Object.keys( body.entities[ oldItemID ].claims );
-
-		assert.strictEqual( properties.length, 1 );
+		expect( properties ).toHaveLength( 1 );
 
 		oldPropertyID = properties[ 0 ];
 	} );
 
-	it( 'Should show up in the Queryservice', async () => {
+	it( 'Should show up in the Queryservice', async function () {
 		let bindings: Binding[];
 
 		await browser.waitUntil(
@@ -64,14 +60,14 @@ describe( 'Wikibase post upgrade', function () {
 			}
 		);
 
-		assert.strictEqual( bindings.length, 9 );
+		expect( bindings ).toHaveLength( 9 );
 
 		const statement = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/' + oldPropertyID,
+			`${ testEnv.vars.WIKIBASE_URL }/prop/${ oldPropertyID }`,
 			bindings
 		);
 		const property = getElementByURI(
-			testEnv.vars.WIKIBASE_URL + '/prop/direct/' + oldPropertyID,
+			`${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ oldPropertyID }`,
 			bindings
 		);
 
@@ -101,17 +97,17 @@ describe( 'Wikibase post upgrade', function () {
 			bindings
 		);
 
-		assert( dateModified !== null );
-		assert( schemaVersion !== null );
-		assert( siteLinks !== null );
-		assert( identifiers !== null );
-		assert( timestamp !== null );
-		assert( statement !== null );
+		expect( dateModified ).toEqual( expect.anything() );
+		expect( schemaVersion ).toEqual( expect.anything() );
+		expect( siteLinks ).toEqual( expect.anything() );
+		expect( identifiers ).toEqual( expect.anything() );
+		expect( timestamp ).toEqual( expect.anything() );
+		expect( statement ).toEqual( expect.anything() );
 
-		assert( property !== null );
-		assert.strictEqual( property.o.value, 'UpgradeItemStringValue' );
+		expect( property ).toEqual( expect.anything() );
+		expect( property.o.value ).toEqual( 'UpgradeItemStringValue' );
 
-		assert( itemLabelValue !== null );
-		assert.strictEqual( itemLabelValue.o.value, 'UpgradeItem' );
+		expect( itemLabelValue ).toEqual( expect.anything() );
+		expect( itemLabelValue.o.value ).toEqual( 'UpgradeItem' );
 	} );
 } );

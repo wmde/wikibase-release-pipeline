@@ -1,14 +1,13 @@
-import assert from 'assert';
 import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
-import { TestSettings } from '../types/TestSettings.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';
 import DatabaseConfig from '../types/database-config.js';
 import ExternalChange from '../types/external-change.js';
 import LuaCPUValue from '../types/lua-cpu-value.js';
+import { TestSettings } from '../types/test-settings.js';
 
 export function defaultFunctions(): void {
 	const settings: TestSettings = testEnv.settings;
@@ -19,7 +18,8 @@ export function defaultFunctions(): void {
 	// Use in a test as `browser.options.<key>`.
 
 	// Base for browser.url() and Page#openTitle()
-	browser.options.baseUrl = testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
+	browser.options.baseUrl =
+		testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
 
 	/**
 	 * Execute query on database
@@ -37,12 +37,12 @@ export function defaultFunctions(): void {
 
 			if ( !config.user || !config.pass || !config.database ) {
 				throw new Error(
-					`dbQuery: Configuration error! ${JSON.stringify( config )}`
+					`dbQuery: Configuration error! ${ JSON.stringify( config ) }`
 				);
 			}
 
 			const result = await testEnv.runDockerComposeCmd(
-				`exec mysql mysql --user ${config.user} --password=${config.pass} ${config.database} -e '${query}'`
+				`exec mysql mysql --user ${ config.user } --password=${ config.pass } ${ config.database } -e '${ query }'`
 			);
 
 			testEnv.testLog.debug( result );
@@ -78,7 +78,7 @@ export function defaultFunctions(): void {
 			content: Buffer | string,
 			captcha: string = null
 		): Promise<string> => {
-			await browser.url( `${host}/wiki/${title}?action=edit` );
+			await browser.url( `${ host }/wiki/${ title }?action=edit` );
 
 			// wait for javascript to settle
 			// eslint-disable-next-line wdio/no-pause
@@ -119,7 +119,7 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${testEnv.vars.QUICKSTATEMENTS_URL}/#/batch` );
+			await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
 
 			// create a batch
 			await $( '.create_batch_box textarea' ).setValue( theQuery );
@@ -166,16 +166,16 @@ export function defaultFunctions(): void {
 		): Promise<ExternalChange | null> => {
 			// to get a screenshot
 			await browser.url(
-				`${host}/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
+				`${ host }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
 			);
 
 			// get all external changes
-			const apiURL = `${host}/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
+			const apiURL = `${ host }/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
 			const result = await browser.makeRequest( apiURL );
 			const changes = result.data.query.recentchanges;
 			const foundResult = lodash.find( changes, expectedChange );
 
-			assert.strictEqual( result.status, 200 );
+			expect( result.status ).toEqual( 200 );
 
 			if ( !foundResult ) {
 				testEnv.testLog.error( 'Could not find:' );
@@ -194,7 +194,7 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'getLuaCpuTime',
 		async ( host: string, page: string ): Promise<LuaCPUValue> => {
-			const response = await browser.makeRequest( `${host}/wiki/${page}` );
+			const response = await browser.makeRequest( `${ host }/wiki/${ page }` );
 
 			const cpuMatches = response.data.match(
 				/(CPU time usage:) ([-.0-9]+) (\w+)/
@@ -232,14 +232,14 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'queryBlazeGraphItem',
 		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `${testEnv.vars.WDQS_URL}/bigdata/namespace/wdq/sparql`;
+			const sparqlEndpoint = `${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/sparql`;
 			const params = {
 				headers: { Accept: 'application/sparql-results+json' },
 				validateStatus: false
 			};
 
 			// essentially 'SELECT * WHERE { <http://wikibase.svc/entity/Q101> ?p ?o }' but encoded with some special chars
-			const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F${itemId}%3E+%3Fp+%3Fo+%7D`;
+			const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F${ itemId }%3E+%3Fp+%3Fo+%7D`;
 
 			const response = await browser.makeRequest(
 				sparqlEndpoint,
@@ -255,10 +255,7 @@ export function defaultFunctions(): void {
 	 */
 	browser.addCommand(
 		'skipIfExtensionNotPresent',
-		async (
-			test: Context,
-			extension: string
-		): Promise<void> => {
+		async ( test: Context, extension: string ): Promise<void> => {
 			const installedExtensions = await getInstalledExtensions(
 				testEnv.vars.WIKIBASE_URL
 			);
@@ -266,8 +263,8 @@ export function defaultFunctions(): void {
 				return;
 			} else if (
 				installedExtensions &&
-					installedExtensions.includes( 'WikibaseRepository' ) &&
-					installedExtensions.includes( extension )
+				installedExtensions.includes( 'WikibaseRepository' ) &&
+				installedExtensions.includes( extension )
 			) {
 				return;
 			} else {
@@ -288,19 +285,21 @@ export function defaultFunctions(): void {
 			return browser.waitUntil(
 				async () => {
 					const result = await browser.makeRequest(
-						`${serverURL}/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`,
+						`${ serverURL }/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json`,
 						{ validateStatus: false },
 						{}
 					);
 					jobsInQueue = result.data.query.statistics.jobs;
-					testEnv.testLog.info( `waitForJobs: ${jobsInQueue} currently in queue}` );
+					testEnv.testLog.info(
+						`waitForJobs: ${ jobsInQueue } currently in queue}`
+					);
 					return jobsInQueue === 0;
 				},
 				{
 					timeout,
 					timeoutMsg:
 						timeoutMsg ||
-						`Timeout: Job queue on "${serverURL}" still contains ${jobsInQueue} jobs after waiting ${
+						`Timeout: Job queue on "${ serverURL }" still contains ${ jobsInQueue } jobs after waiting ${
 							timeout / 1000
 						} seconds.`
 				}
@@ -313,10 +312,13 @@ export function defaultFunctions(): void {
  * Get installed extensions on wiki (for given server URL)
  *
  * @param {string} serverUrl
+ * @return {Object}
  */
-export async function getInstalledExtensions( serverUrl: string ): Promise<string[] | undefined> {
+export async function getInstalledExtensions(
+	serverUrl: string
+): Promise<string[] | undefined> {
 	const result = await browser.makeRequest(
-		`${serverUrl}/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
+		`${ serverUrl }/w/api.php?action=query&meta=siteinfo&siprop=extensions&format=json`
 	);
 	return lodash.map( result.data.query.extensions, 'name' );
 }

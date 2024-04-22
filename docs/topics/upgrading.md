@@ -5,16 +5,17 @@ This document describes the process that can be applied when backing up and upgr
 # Back up your data
 
 Always back up your data before attempting an upgrade! Backing up the database is **NOT** sufficient to restore a failed upgrade. Remember that any content in the containers, in particular the `/var/www/html/LocalSettings.php` file is generated at startup and is at **risk of being lost once the old containers are removed!**
+
 ## Back up your database
 
 In all of our images we rely on a database to persist data. Normally these are stored in Docker volumes and can be seen in the mysql container in the Docker example as `mediawiki-mysql-data`.
 
 ```yml
-  mysql:
-    image: "${MARIADB_IMAGE_URL}"
-    restart: unless-stopped
-    volumes:
-      - mediawiki-mysql-data:/var/lib/mysql
+mysql:
+  image: "${MARIADB_IMAGE_URL}"
+  restart: unless-stopped
+  volumes:
+    - mediawiki-mysql-data:/var/lib/mysql
 ```
 
 Under ideal circumstances, a backup isn't necessary to upgrade to a new version; however, there is always the possibility of something going wrong, and having a backup is always a good idea.
@@ -60,6 +61,7 @@ docker run -v wikibase_mediawiki-mysql-data:/volume -v /tmp/wikibase-data:/backu
 ```
 
 ## Back up other data
+
 ### 1.1 Copy your LocalSettings.php file
 
 If you haven't mounted your own LocalSettings.php file, located in `/var/www/html/LocalSettings.php`, you run the risk of losing this important file when upgrading.
@@ -88,11 +90,13 @@ services:
     volumes:
       - /tmp/LocalSettings.php:/var/www/html/LocalSettings.php
 ```
+
 ### 2. Copy other data written inside container
 
 In some newer images, the default value of upload images is written inside the container at `/var/www/html/images`. Review your configuration and make backups of any logs or other data that you wish to save.
 
 # Do the upgrade
+
 ## Stop the running containers
 
 Before we do the actual upgrade, we need to stop the containers and remove the volume that is shared between the `wikibase` and `wikibase-jobrunner` containers.
@@ -153,6 +157,5 @@ docker exec <WIKIBASE_CONTAINER_NAME> php /var/www/html/maintenance/update.php
 ```
 
 Running this command will execute the MediaWiki Updater. After it has completed, your upgrade should be successful!
-
 
 For more information on upgrading, consult addshore's [blog post](https://addshore.com/2019/01/wikibase-docker-mediawiki-wikibase-update/) describing how it was done for the [wikibase registry](https://wikibase-registry.wmflabs.org) (which has custom extensions installed).

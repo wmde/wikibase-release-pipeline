@@ -1,6 +1,11 @@
 import { Page } from './page.js';
 
-class SubmittablePage extends Page {
+export interface Submittable {
+	submitBtn: ChainablePromiseElement;
+	submit: () => Promise<void>;
+}
+
+class SubmittablePage extends Page implements Submittable {
 	public get submitBtn(): ChainablePromiseElement {
 		return $( 'button[type="submit"]' );
 	}
