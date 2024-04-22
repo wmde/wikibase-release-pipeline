@@ -1,5 +1,3 @@
-version: "3.5"
-
 x-common-variables: &elastic_search
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
@@ -26,6 +24,6 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "${ELASTICSEARCH_URL}" ]
+      test: curl --silent --fail http://localhost:${MW_ELASTIC_PORT}
       interval: 10s
       start_period: 2m

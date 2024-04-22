@@ -1,5 +1,3 @@
-version: "3.5"
-
 networks:
   default:
     name: wikibase-suite-test
@@ -14,44 +12,7 @@ services:
       - ../../example/extra-install.sh:/extra-install.sh
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-    healthcheck:
-      test:
-        [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
-      interval: 10s
-      start_period: 2m
-
-  wikibase-jobrunner:
-    volumes:
-      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
-
-  mysql:
-    healthcheck:
-      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
-
-  wdqs-frontend:
-    healthcheck:
-      test: [ CMD, curl, --silent, --fail, $WDQS_FRONTEND_URL ]
-      interval: 10s
-      start_period: 2m
-
-  wdqs:
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - --silent
-        - --fail
-        - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
-      interval: 10s
-      start_period: 2m
 
   quickstatements:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-    healthcheck:
-      test: [ CMD, curl, --silent, --fail, "${QUICKSTATEMENTS_URL}" ]
-      interval: 10s
-      start_period: 2m
