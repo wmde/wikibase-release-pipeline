@@ -95,7 +95,7 @@ services:
           - wdqs-frontend.svc
     environment:
       - WIKIBASE_HOST
-      - WDQS_HOST=wdqs-proxy.svc
+      - WDQS_HOST=wdqs-proxy
     healthcheck:
       test: curl --silent --fail http://localhost
       interval: 10s
