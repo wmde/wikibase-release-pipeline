@@ -11,7 +11,6 @@ else
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
 fi
 
-
 # Creates an OAuth consumer for quickstatements
 if [ -z "${QS_PUBLIC_SCHEME_HOST_AND_PORT:-}" ] ; then
     echo "Skipping QuickStatements setup ..."

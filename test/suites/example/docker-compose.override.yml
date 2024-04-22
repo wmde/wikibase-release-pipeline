@@ -9,11 +9,10 @@ services:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
       - ./example/results:/var/log/mediawiki
-      - ../../example/extra-install.sh:/extra-install.sh
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
 
   quickstatements:
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase
