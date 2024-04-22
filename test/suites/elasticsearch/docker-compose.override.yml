@@ -24,6 +24,6 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}" ]
+      test: curl --silent --fail http://localhost:${MW_ELASTIC_PORT}
       interval: 10s
       start_period: 2m
