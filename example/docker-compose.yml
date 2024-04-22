@@ -99,6 +99,9 @@ services:
   wdqs:
     image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
     command: /runBlazegraph.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
     restart: unless-stopped
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
     # library initialization failed - unable to allocate file descriptor table - out of memory
@@ -118,6 +121,34 @@ services:
       interval: 10s
       start_period: 2m
 
+  wdqs-updater:
+    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    command: /runUpdate.sh
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # library initialization failed - unable to allocate file descriptor table - out of memory
+    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    environment:
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs
+      WDQS_PORT: 9999
+
+  wdqs-proxy:
+    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      PROXY_PASS_HOST: wdqs:9999
+
   wdqs-frontend:
     image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
     depends_on:
@@ -134,35 +165,6 @@ services:
       test: curl --silent --fail http://localhost
       interval: 10s
       start_period: 2m
-
-  wdqs-proxy:
-    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
-    depends_on:
-      - wdqs
-    restart: unless-stopped
-    environment:
-      PROXY_PASS_HOST: wdqs:9999
-
-  wdqs-updater:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
-    command: /runUpdate.sh
-    depends_on:
-      wdqs:
-        condition: service_healthy
-      wikibase:
-        condition: service_healthy
-    restart: unless-stopped
-    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
-    # library initialization failed - unable to allocate file descriptor table - out of memory
-    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
-    environment:
-      WIKIBASE_HOST: wikibase
-      WDQS_HOST: wdqs
-      WDQS_PORT: 9999
 
   # QuickStatmements requires publically accessible hostnames which route to the server running
   # this service configured and set in QUICKSTATEMENTS_PUBLIC_HOST and WIKIBASE_PUBLIC_HOST
