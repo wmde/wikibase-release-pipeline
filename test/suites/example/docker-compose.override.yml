@@ -16,3 +16,4 @@ services:
   quickstatements:
     environment:
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements.svc:80
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase.svc:80
