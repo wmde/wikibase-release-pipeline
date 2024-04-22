@@ -6,10 +6,10 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
-  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
   # Disable jobs running after requests when wikibase-jobrunner is defined
   MW_WG_JOB_RUN_RATE: 0
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
   DB_SERVER: mysql.svc:3306
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
@@ -32,7 +32,6 @@ services:
       # # also uncomment the same line in the wikibase-jobrunner service!
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
       - quickstatements-data:/quickstatements/data
-      - ./extra-install.sh:/extra-install.sh
     networks:
       default:
         aliases:
@@ -44,14 +43,12 @@ services:
       MW_WG_ENABLE_UPLOADS:
       QS_PUBLIC_SCHEME_HOST_AND_PORT:
     healthcheck:
-      test:
-        [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
+      test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
-    entrypoint: /bin/bash
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
@@ -60,7 +57,6 @@ services:
     restart: always
     volumes:
       - wikibase-shared:/shared/:ro
-      - ./jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
       # # Uncomment this next line to mount your own LocalSettings.php file
       # # also uncomment the same line in the wikibase service
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
@@ -88,7 +84,7 @@ services:
         aliases:
           - mysql.svc
     healthcheck:
-      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -106,7 +102,7 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost:${MW_ELASTIC_PORT}" ]
+      test: curl --silent --fail http://localhost:${MW_ELASTIC_PORT}
       interval: 10s
       start_period: 2m
 
@@ -134,12 +130,7 @@ services:
     expose:
       - 9999
     healthcheck:
-      test:
-        - CMD
-        - curl
-        - --silent
-        - --fail
-        - http://localhost:9999/bigdata/namespace/wdq/sparql
+      test: curl --silent --fail http://localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
 
@@ -158,7 +149,7 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      test: curl --silent --fail http://localhost
       interval: 10s
       start_period: 2m
 
@@ -222,7 +213,7 @@ services:
       - OAUTH_CONSUMER_KEY
       - OAUTH_CONSUMER_SECRET
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      test: curl --silent --fail http://localhost
       interval: 10s
       start_period: 2m
 

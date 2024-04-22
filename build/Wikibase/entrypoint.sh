@@ -34,6 +34,12 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
     php /var/www/html/maintenance/update.php --quick
 
     # Run extrascripts on first run
+    if [ -f /default-extra-install.sh ]; then
+        # shellcheck disable=SC1091
+        source /default-extra-install.sh
+    fi
+
+    # Run extrascripts on first run
     if [ -f /extra-install.sh ]; then
         # shellcheck disable=SC1091
         source /extra-install.sh
