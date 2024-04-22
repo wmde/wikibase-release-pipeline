@@ -38,7 +38,7 @@ services:
     environment:
       <<: *wikibase_variables
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost/wiki/Main_Page" ]
+      test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
@@ -76,7 +76,7 @@ services:
     volumes:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
     healthcheck:
-      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -97,7 +97,7 @@ services:
       - WIKIBASE_HOST
       - WDQS_HOST=wdqs-proxy.svc
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, "http://localhost" ]
+      test: curl --silent --fail http://localhost
       interval: 10s
       start_period: 2m
 
@@ -123,13 +123,7 @@ services:
     expose:
       - 9999
     healthcheck:
-      test:
-        - CMD
-        - curl
-        - --silent
-        - --fail
-        - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
-
+      test: curl --silent --fail ${WDQS_URL}/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
 
