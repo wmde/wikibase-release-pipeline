@@ -117,15 +117,15 @@ jobs:
       matrix:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version:
-          # Latest 1.39
-          - WMDE15
-          - WMDE15_BUNDLE
-          # Latest 1.40
-          - WMDE19
-          - WMDE19_BUNDLE
-          # Previous 1.41
-          - WMDE17
-          - WMDE17_BUNDLE
+          # Latest 1.37
+          - WMDE9
+          - WMDE9_BUNDLE
+          # Earlier 1.39
+          - WMDE11
+          - WMDE11_BUNDLE
+          # Latest 1.38
+          - WMDE12
+          - WMDE12_BUNDLE
 
     steps:
       - uses: actions/checkout@v4
