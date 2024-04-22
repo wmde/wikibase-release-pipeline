@@ -58,7 +58,7 @@ COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
 
-# Mediawiki build time configuration
+# MediaWiki build time configuration
 ARG MW_SITE_NAME
 ARG MW_SITE_LANG
 ARG MW_WG_JOB_RUN_RATE
