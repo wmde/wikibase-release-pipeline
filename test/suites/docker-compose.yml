@@ -1,13 +1,16 @@
 # Wikibase Suite for testing
 
 x-common-variables: &wikibase_variables
+  WIKIBASE_HOST: ${WIKIBASE_HOST}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-  MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
-  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+  MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
+  # Disable jobs running after requests when wikibase-jobrunner is defined
   MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
-  DB_SERVER: ${DB_SERVER}
+  MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
+  MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
+  DB_SERVER: mysql.svc:3306
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
