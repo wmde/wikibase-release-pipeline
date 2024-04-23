@@ -1,11 +1,6 @@
 <?php
 
 /*******************************/
-/* Enable Federated properties */
-/*******************************/
-#$wgWBRepoSettings['federatedPropertiesEnabled'] = true;
-
-/*******************************/
 /* Enables ConfirmEdit Captcha */
 /*******************************/
 #wfLoadExtension( 'ConfirmEdit/QuestyCaptcha' );
