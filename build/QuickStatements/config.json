@@ -15,6 +15,7 @@
 			"server": "${WB_PUBLIC_SCHEME_HOST_AND_PORT}",
 			"api": "${WB_PUBLIC_SCHEME_HOST_AND_PORT}/w/api.php",
 			"pageBase": "${WB_PUBLIC_SCHEME_HOST_AND_PORT}/wiki/",
+			"entityBase" : "${WB_PUBLIC_SCHEME_HOST_AND_PORT}/entity/",
 			"toolBase": "${QS_PUBLIC_SCHEME_HOST_AND_PORT}/",
 			"types": {
 				"P": {
