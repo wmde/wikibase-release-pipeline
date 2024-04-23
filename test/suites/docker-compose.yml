@@ -11,6 +11,7 @@ x-common-variables: &wikibase_variables
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
+  # Not found in example
   MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
   MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
