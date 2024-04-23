@@ -1,17 +1,16 @@
 # Wikibase Suite for testing
-version: "3.5"
 
 x-common-variables: &wikibase_variables
-  DB_SERVER: ${DB_SERVER}
   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
+  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
+  DB_SERVER: ${DB_SERVER}
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_NAME: ${DB_NAME}
-  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
-  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
 networks:
   default:
@@ -39,14 +38,12 @@ services:
     environment:
       <<: *wikibase_variables
     healthcheck:
-      test:
-        [ CMD, curl, --silent, --fail, "http://${WIKIBASE_HOST}/wiki/Main_Page" ]
+      test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
   wikibase-jobrunner:
     image: "${WIKIBASE_TEST_IMAGE_URL}"
-    entrypoint: /bin/bash
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
@@ -55,7 +52,6 @@ services:
     restart: always
     volumes:
       - shared:/shared/:ro
-      - ../../example/jobrunner-entrypoint.sh:/jobrunner-entrypoint.sh
     networks:
       default:
         aliases:
@@ -80,7 +76,7 @@ services:
     volumes:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
     healthcheck:
-      test: [ CMD, healthcheck.sh, --connect, --innodb_initialized ]
+      test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m
       interval: 20s
       timeout: 5s
@@ -99,9 +95,9 @@ services:
           - wdqs-frontend.svc
     environment:
       - WIKIBASE_HOST
-      - WDQS_HOST=wdqs-proxy.svc
+      - WDQS_HOST=wdqs-proxy
     healthcheck:
-      test: [ CMD, curl, --silent, --fail, $WDQS_FRONTEND_URL ]
+      test: curl --silent --fail http://localhost
       interval: 10s
       start_period: 2m
 
@@ -127,12 +123,7 @@ services:
     expose:
       - 9999
     healthcheck:
-      test:
-        - CMD
-        - curl
-        - --silent
-        - --fail
-        - "${WDQS_URL}/bigdata/namespace/wdq/sparql"
+      test: curl --silent --fail ${WDQS_URL}/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
 

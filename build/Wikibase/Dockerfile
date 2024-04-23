@@ -17,10 +17,6 @@ RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /tmp/
 FROM ${MEDIAWIKI_IMAGE_URL} as collector
 COPY --from=git-checkout /tmp/wikibase /var/www/html/extensions/Wikibase
 
-COPY ./fix-do-not-add-stdport-in-detectServer.patch /tmp/fix-do-not-add-stdport-in-detectServer.patch
-WORKDIR /var/www/html
-RUN patch -Np1 < /tmp/fix-do-not-add-stdport-in-detectServer.patch
-
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE_URL} as composer
@@ -55,13 +51,14 @@ RUN apt-get update && \
 COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
+COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 
 COPY LocalSettings.php.template /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
 
 RUN ln -s /var/www/html/ /var/www/html/w
 
-# Mediawiki build time configuration
+# MediaWiki build time configuration
 ARG MW_SITE_NAME
 ARG MW_SITE_LANG
 ARG MW_WG_JOB_RUN_RATE
