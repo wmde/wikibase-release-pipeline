@@ -16,7 +16,7 @@ services:
     stop_grace_period: 1s
     entrypoint: /bin/bash
     ports:
-      - "9229:9229"
+      - 9229:9229
     volumes:
       - ..:/usr/src
       - node_modules:/usr/src/test/node_modules
@@ -29,9 +29,9 @@ services:
     image: ${TEST_BROWSER_IMAGE_URL}
     stop_grace_period: 1s
     ports:
-      - "4444:4444"
-      - "5900:5900"
-      - "7900:7900"
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
     volumes:
       - .:/usr/src/test
     shm_size: 2g
