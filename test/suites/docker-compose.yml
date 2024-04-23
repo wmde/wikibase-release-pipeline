@@ -15,7 +15,6 @@ x-common-variables: &wikibase_variables
   MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
   MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
 
-
 networks:
   default:
     name: wikibase-suite-test
