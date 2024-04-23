@@ -121,8 +121,8 @@ jobs:
           - WMDE9
           - WMDE9_BUNDLE
           # Earlier 1.39
-          - WMDE11
-          - WMDE11_BUNDLE
+          - WMDE15
+          - WMDE15_BUNDLE
           # Latest 1.38
           - WMDE12
           - WMDE12_BUNDLE
