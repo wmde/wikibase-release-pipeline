@@ -31,10 +31,11 @@ services:
     ports:
       - ${WIKIBASE_PORT}:80
     volumes:
-      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - ../${OUTPUT_DIR}:/var/log/mediawiki
+      # This shares the configuration with jobrunner
       - wikibase-shared:/var/www/html/:rw
+      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - quickstatements-data:/quickstatements/data
+      - ../${OUTPUT_DIR}:/var/log/mediawiki
     networks:
       default:
         aliases:
@@ -68,6 +69,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+      - mysql-data:/var/lib/mysql
     networks:
       default:
         aliases:
@@ -178,5 +180,6 @@ services:
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
   wikibase-shared:
+  mysql-data:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   quickstatements-data:
