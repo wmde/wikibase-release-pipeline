@@ -51,6 +51,7 @@ function image_url_to_image_name {
 
 function build_wikibase {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
@@ -69,6 +70,7 @@ function build_wikibase {
         build/Wikibase \
 
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
@@ -103,6 +105,7 @@ function build_wikibase {
 
 function build_elasticseach {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
@@ -117,6 +120,7 @@ function build_elasticseach {
 
 function build_wdqs {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
         --build-arg JRE_IMAGE_URL="$JRE_IMAGE_URL" \
@@ -131,6 +135,7 @@ function build_wdqs {
 
 function build_wdqs-frontend {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
@@ -146,6 +151,7 @@ function build_wdqs-frontend {
 
 function build_wdqs-proxy {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
@@ -158,6 +164,7 @@ function build_wdqs-proxy {
 
 function build_quickstatements {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
@@ -172,12 +179,13 @@ function build_quickstatements {
 
 
 function build_all {
-    build_wikibase
-    build_elasticseach
-    build_wdqs
-    build_wdqs-frontend
-    build_wdqs-proxy
-    build_quickstatements
+    build_wikibase &
+    build_elasticseach &
+    build_wdqs &
+    build_wdqs-frontend &
+    build_wdqs-proxy &
+    build_quickstatements &
+    wait
 }
 
 
