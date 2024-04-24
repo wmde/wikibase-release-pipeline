@@ -52,3 +52,18 @@ $wgUploadDirectory = $_ENV['MW_WG_UPLOAD_DIRECTORY'];
 
 ## Pingback
 $wgWBRepoSettings['wikibasePingback'] = $_ENV['WIKIBASE_PINGBACK'];
+
+## Enables ConfirmEdit Captcha
+#wfLoadExtension( 'ConfirmEdit/QuestyCaptcha' );
+#$wgCaptchaQuestions = [
+#  'What animal' => 'dog',
+#];
+#$wgCaptchaTriggers['edit']          = true;
+#$wgCaptchaTriggers['create']        = true;
+#$wgCaptchaTriggers['createtalk']    = true;
+#$wgCaptchaTriggers['addurl']        = true;
+#$wgCaptchaTriggers['createaccount'] = true;
+#$wgCaptchaTriggers['badlogin']      = true;
+
+## Disable UI error-reporting
+#ini_set( 'display_errors', 0 );

@@ -58,7 +58,6 @@ $wgWBRepoSettings['wikibasePingback'] = $_ENV['WIKIBASE_PINGBACK'];
 #$wgCaptchaQuestions = [
 #  'What animal' => 'dog',
 #];
-
 #$wgCaptchaTriggers['edit']          = true;
 #$wgCaptchaTriggers['create']        = true;
 #$wgCaptchaTriggers['createtalk']    = true;
