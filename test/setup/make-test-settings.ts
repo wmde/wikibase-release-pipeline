@@ -15,7 +15,7 @@ export const ONE_DAY_IN_MS = 86400000;
 
 export const defaultTestSettings = {
 	envFiles: [ '../variables.env', '../example/template.env', './test-services.env', '../local.env' ],
-	composeFiles: [ 'suites/docker-compose.yml' ],
+	composeFiles: [ '../example/docker-compose.yml', 'suites/docker-compose.override.yml' ],
 	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
