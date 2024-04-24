@@ -32,7 +32,7 @@ services:
     volumes:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
-      - shared:/var/www/html/:rw
+      - wikibase-shared:/var/www/html/:rw
     ports:
       - 8181:80
     networks:
@@ -55,7 +55,7 @@ services:
       - mysql
     restart: always
     volumes:
-      - shared:/shared/:ro
+      - wikibase-shared:/shared/:ro
     networks:
       default:
         aliases:
@@ -173,4 +173,4 @@ services:
       start_period: 2m
 
 volumes:
-  shared:
+  wikibase-shared:
