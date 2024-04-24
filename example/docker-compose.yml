@@ -50,9 +50,9 @@ services:
       mysql:
         condition: service_healthy
     restart: always
-    volumes:
-      # Uncomment the following line here and on the wikibase service to mount your own LocalSettings.php file:
-      # - ./LocalSettings.php:/shared/LocalSettings.php
+    # volumes:
+    #   Uncomment the following line here and on the wikibase service to mount your own LocalSettings.php file:
+    #   - ./LocalSettings.php:/shared/LocalSettings.php
     environment:
       <<: *wikibase_variables
       MAX_JOBS: ${MAX_JOBS}
