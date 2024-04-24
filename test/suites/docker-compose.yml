@@ -23,7 +23,7 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: "${WIKIBASE_TEST_IMAGE_URL}"
+    image: ${WIKIBASE_TEST_IMAGE_URL}
     links:
       - mysql
     depends_on:
@@ -34,7 +34,7 @@ services:
       - ../${OUTPUT_DIR}:/var/log/mediawiki
       - shared:/var/www/html/:rw
     ports:
-      - "8181:80"
+      - 8181:80
     networks:
       default:
         aliases:
@@ -47,7 +47,7 @@ services:
       start_period: 2m
 
   wikibase-jobrunner:
-    image: "${WIKIBASE_TEST_IMAGE_URL}"
+    image: ${WIKIBASE_TEST_IMAGE_URL}
     command: /jobrunner-entrypoint.sh
     links:
       - mysql
@@ -65,7 +65,7 @@ services:
       MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: "${MARIADB_IMAGE_URL}"
+    image: ${MARIADB_IMAGE_URL}
     restart: unless-stopped
     environment:
       # CONFIG - Change the default values below (should match values passed to wikibase)
@@ -90,7 +90,7 @@ services:
   # --------------------------------------------------
 
   wdqs:
-    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
     restart: always
     command: /runBlazegraph.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -116,7 +116,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: "${WIKIBASE_SUITE_WDQS_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
     restart: unless-stopped
     command: /runUpdate.sh
     # Set number of files ulimit high enough, otherwise blazegraph will abort with:
@@ -139,25 +139,25 @@ services:
       - WDQS_PORT=9999
 
   wdqs-proxy:
-    image: "${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
     restart: unless-stopped
     environment:
       - PROXY_PASS_HOST=wdqs.svc:9999
     depends_on:
       - wdqs
     ports:
-      - "8989:80"
+      - 8989:80
     networks:
       default:
         aliases:
           - wdqs-proxy.svc
 
   wdqs-frontend:
-    image: "${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}"
+    image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
     restart: unless-stopped
     ports:
       # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
-      - "8282:80"
+      - 8282:80
     depends_on:
       - wdqs-proxy
     networks:
