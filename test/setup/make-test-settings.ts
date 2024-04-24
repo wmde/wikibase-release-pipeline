@@ -22,7 +22,7 @@ export const defaultTestSettings = {
 	],
 	composeFiles: [
 		'../example/docker-compose.yml',
-		// 'suites/docker-compose.override.yml'
+		'suites/docker-compose.override.yml'
 	],
 	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {

@@ -1,16 +1,16 @@
 # Wikibase Suite for testing
 
-x-common-variables: &wikibase_variables
-  MW_ADMIN_NAME: ${MW_ADMIN_NAME}
-  MW_ADMIN_PASS: ${MW_ADMIN_PASS}
-  MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-  MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
-  MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
-  MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
-  DB_SERVER: ${DB_SERVER}
-  DB_USER: ${DB_USER}
-  DB_PASS: ${DB_PASS}
-  DB_NAME: ${DB_NAME}
+# x-common-variables: &wikibase_variables
+#   MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+#   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+#   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+#   MW_WG_SECRET_KEY: ${MW_WG_SECRET_KEY}
+#   MW_WG_ENABLE_UPLOADS: ${MW_WG_ENABLE_UPLOADS}
+#   MW_WG_JOB_RUN_RATE: ${MW_WG_JOB_RUN_RATE}
+#   DB_SERVER: ${DB_SERVER}
+#   DB_USER: ${DB_USER}
+#   DB_PASS: ${DB_PASS}
+#   DB_NAME: ${DB_NAME}
 
 networks:
   default:
@@ -23,163 +23,162 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: ${WIKIBASE_TEST_IMAGE_URL}
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - ${WIKIBASE_PORT}:80
-    volumes:
-      # This shares the configuration with jobrunner
-      - wikibase-shared:/var/www/html/:rw
-      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
-      - quickstatements-data:/quickstatements/data
-      - ../${OUTPUT_DIR}:/var/log/mediawiki
+    # image: ${WIKIBASE_TEST_IMAGE_URL}
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
+    # restart: unless-stopped
+    # ports:
+    #   - ${WIKIBASE_PORT}:80
+    # volumes:
+    #   # This shares the configuration with jobrunner
+    #   - wikibase-shared:/var/www/html/:rw
+    #   - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+    #   - quickstatements-data:/quickstatements/data
+    #   - ../${OUTPUT_DIR}:/var/log/mediawiki
     networks:
       default:
         aliases:
           - ${WIKIBASE_HOST}
-    environment:
-      <<: *wikibase_variables
-    healthcheck:
-      test: curl --silent --fail http://localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 2m
+    # environment:
+    #   <<: *wikibase_variables
+    # healthcheck:
+    #   test: curl --silent --fail http://localhost/wiki/Main_Page
+    #   interval: 10s
+    #   start_period: 2m
 
   wikibase-jobrunner:
-    image: ${WIKIBASE_TEST_IMAGE_URL}
-    command: /jobrunner-entrypoint.sh
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: always
-    volumes:
-      - wikibase-shared:/shared/:ro
+    # image: ${WIKIBASE_TEST_IMAGE_URL}
+    # command: /jobrunner-entrypoint.sh
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
+    # restart: always
+    # volumes:
+    #   - wikibase-shared:/shared/:ro
     networks:
       default:
         aliases:
           - wikibase-jobrunner.svc
-    environment:
-      <<: *wikibase_variables
-      MAX_JOBS: ${MAX_JOBS}
+    # environment:
+    #   <<: *wikibase_variables
+    #   MAX_JOBS: ${MAX_JOBS}
 
   mysql:
-    image: ${MARIADB_IMAGE_URL}
-    restart: unless-stopped
-    volumes:
-      - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
-      - mysql-data:/var/lib/mysql
+    # image: ${MARIADB_IMAGE_URL}
+    # restart: unless-stopped
+    # volumes:
+    #   - ./wikibase-create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+    #   - mysql-data:/var/lib/mysql
     networks:
       default:
         aliases:
           - mysql.svc
-    environment:
-      # CONFIG - Change the default values below (should match values passed to wikibase)
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: toor
-    healthcheck:
-      test: healthcheck.sh --connect --innodb_initialized
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
+    # environment:
+    #   # CONFIG - Change the default values below (should match values passed to wikibase)
+    #   MYSQL_DATABASE: ${DB_NAME}
+    #   MYSQL_USER: ${DB_USER}
+    #   MYSQL_PASSWORD: ${DB_PASS}
+    #   MYSQL_ROOT_PASSWORD: toor
+    # healthcheck:
+    #   test: healthcheck.sh --connect --innodb_initialized
+    #   start_period: 1m
+    #   interval: 20s
+    #   timeout: 5s
 
   # --------------------------------------------------
   # B. EXTRA WIKIBASE SUITE SERVICES
   # --------------------------------------------------
 
   wdqs:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
-    command: /runBlazegraph.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: always
-    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
-    # library initialization failed - unable to allocate file descriptor table - out of memory
-    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
+    # image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # command: /runBlazegraph.sh
+    # depends_on:
+    #   wikibase:
+    #     condition: service_healthy
+    # restart: always
+    # # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # # library initialization failed - unable to allocate file descriptor table - out of memory
+    # # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    # ulimits:
+    #   nofile:
+    #     soft: 32768
+    #     hard: 32768
     networks:
       default:
         aliases:
           - wdqs.svc
-    environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs.svc
-      - WDQS_PORT=9999
-    expose:
-      - 9999
-    healthcheck:
-      test: curl --silent --fail ${WDQS_URL}/bigdata/namespace/wdq/sparql
-      interval: 10s
-      start_period: 2m
+    # environment:
+    #   - WIKIBASE_HOST
+    #   - WDQS_HOST=wdqs.svc
+    #   - WDQS_PORT=9999
+    # expose:
+    #   - 9999
+    # healthcheck:
+    #   test: curl --silent --fail ${WDQS_URL}/bigdata/namespace/wdq/sparql
+    #   interval: 10s
+    #   start_period: 2m
 
   wdqs-updater:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
-    command: /runUpdate.sh
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-    # Set number of files ulimit high enough, otherwise blazegraph will abort with:
-    # library initialization failed - unable to allocate file descriptor table - out of memory
-    # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
+    # image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # command: /runUpdate.sh
+    # depends_on:
+    #   wdqs:
+    #     condition: service_healthy
+    # restart: unless-stopped
+    # # Set number of files ulimit high enough, otherwise blazegraph will abort with:
+    # # library initialization failed - unable to allocate file descriptor table - out of memory
+    # # Appeared on Docker 24.0.5, containerd 1.7.9, Linux 6.6.6, NixOS 23.11
+    # ulimits:
+    #   nofile:
+    #     soft: 32768
+    #     hard: 32768
     networks:
       default:
         aliases:
           - wdqs-updater.svc
-    environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs.svc
-      - WDQS_PORT=9999
+    # environment:
+    #   - WIKIBASE_HOST
+    #   - WDQS_HOST=wdqs.svc
+    #   - WDQS_PORT=9999
 
   wdqs-proxy:
-    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - 8989:80
+    # image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
+    # depends_on:
+    #   wdqs:
+    #     condition: service_healthy
+    # restart: unless-stopped
+    # ports:
+    #   - 8989:80
     networks:
       default:
         aliases:
           - wdqs-proxy.svc
-    environment:
-      - PROXY_PASS_HOST=wdqs.svc:9999
+    # environment:
+    #   - PROXY_PASS_HOST=wdqs.svc:9999
 
   wdqs-frontend:
-    image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
-    depends_on:
-      - wdqs-proxy
-    restart: unless-stopped
-    ports:
-      # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
-      - 8282:80
+    # image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
+    # depends_on:
+    #   - wdqs-proxy
+    # restart: unless-stopped
+    # ports:
+    #   # CONFIG - Change the 8282 here to expose the Query Service UI on a different port
+    #   - 8282:80
     networks:
       default:
         aliases:
           - wdqs-frontend.svc
-    environment:
-      - WIKIBASE_HOST
-      - WDQS_HOST=wdqs-proxy
-    healthcheck:
-      test: curl --silent --fail http://localhost
-      interval: 10s
-      start_period: 2m
-
-volumes:
-  # A. CORE WIKIBASE SUITE SERVICES DATA
-  wikibase-shared:
-  mysql-data:
-  # B. EXTRA WIKIBASE SUITE SERVICES DATA
-  quickstatements-data:
+    # environment:
+    #   - WIKIBASE_HOST
+    #   - WDQS_HOST=wdqs-proxy
+    # healthcheck:
+    #   test: curl --silent --fail http://localhost
+    #   interval: 10s
+    #   start_period: 2m
+# volumes:
+#   # A. CORE WIKIBASE SUITE SERVICES DATA
+#   wikibase-shared:
+#   mysql-data:
+#   # B. EXTRA WIKIBASE SUITE SERVICES DATA
+#   quickstatements-data:
