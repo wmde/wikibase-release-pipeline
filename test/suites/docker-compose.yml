@@ -35,7 +35,7 @@ services:
       - wikibase-shared:/var/www/html/:rw
       - quickstatements-data:/quickstatements/data
     ports:
-      - 8181:80
+      - ${WIKIBASE_PORT}:80
     networks:
       default:
         aliases:
