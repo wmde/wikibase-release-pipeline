@@ -21,7 +21,7 @@ sleep 1
 
 # Run MediaWiki install script
 rm -f /var/www/html/LocalSettings.php
-rm -f /var/www/html/LocalSettings.generated/LocalSettings.ph
+rm -f /var/www/html/LocalSettings.generated/LocalSettings.php
 mkdir -p /var/www/html/LocalSettings.generated
 php /var/www/html/maintenance/run.php install \
     --confpath /var/www/html/LocalSettings.generated \
