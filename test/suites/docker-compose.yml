@@ -33,6 +33,7 @@ services:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
       - wikibase-shared:/var/www/html/:rw
+      - quickstatements-data:/quickstatements/data
     ports:
       - 8181:80
     networks:
@@ -173,4 +174,7 @@ services:
       start_period: 2m
 
 volumes:
+  # A. CORE WIKIBASE SUITE SERVICES DATA
   wikibase-shared:
+  # B. EXTRA WIKIBASE SUITE SERVICES DATA
+  quickstatements-data:
