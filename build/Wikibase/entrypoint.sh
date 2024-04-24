@@ -35,6 +35,7 @@ php /var/www/html/maintenance/run.php install \
     "$MW_ADMIN_NAME"
 
 mv -f /var/www/html/LocalSettings.generated/LocalSettings.php /var/www/html/LocalSettings.generated.php
+rm -rf /var/www/html/LocalSettings.generated
 mv -f /var/www/html/LocalSettings.root.php /var/www/html/LocalSettings.php 2>/dev/null; true
 
 # Update Admin User name ane email
@@ -52,8 +53,6 @@ if [ -f /extra-install.sh ]; then
     # shellcheck disable=SC1091
     bash /extra-install.sh
 fi
-
-# fi
 
 # Run the actual entry point
 docker-php-entrypoint apache2-foreground
