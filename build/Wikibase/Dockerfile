@@ -52,9 +52,8 @@ COPY --from=composer --chown=root:root /var/www/html /var/www/html
 COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
-
-COPY LocalSettings.php.template /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
+COPY LocalSettings.* /var/www/html
 
 RUN ln -s /var/www/html/ /var/www/html/w
 

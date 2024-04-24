@@ -13,47 +13,47 @@ done
 
 set -eu
 
-# Wait for the db to come up
+# Wait for the db to come up. Sometimes it appears to come up and then
+# goes back down meaning MW install fails, so wait for a second and double check:
 /wait-for-it.sh "$DB_SERVER" -t 300
-# Sometimes it appears to come up and then go back down meaning MW install fails
-# So wait for a second and double check!
 sleep 1
 /wait-for-it.sh "$DB_SERVER" -t 300
 
-# Do the mediawiki install (only if LocalSettings doesn't already exist)
-if [ ! -e "/var/www/html/LocalSettings.php" ]; then
-    php /var/www/html/maintenance/install.php --dbuser "$DB_USER" --dbpass "$DB_PASS" --dbname "$DB_NAME" --dbserver "$DB_SERVER" --lang "$MW_SITE_LANG" --pass "$MW_ADMIN_PASS" "$MW_SITE_NAME" "$MW_ADMIN_NAME"
-    php /var/www/html/maintenance/resetUserEmail.php --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
+# Run MediaWiki install script
+rm -f /var/www/html/LocalSettings.php
+rm -f /var/www/html/LocalSettings.generated/LocalSettings.ph
+mkdir -p /var/www/html/LocalSettings.generated
+php /var/www/html/maintenance/run.php install \
+    --confpath /var/www/html/LocalSettings.generated \
+    --dbuser "$DB_USER" \
+    --dbpass "$DB_PASS" \
+    --dbname "$DB_NAME" \
+    --dbserver "$DB_SERVER" \
+    --lang "$MW_SITE_LANG" \
+    --pass "$MW_ADMIN_PASS" \
+    "$MW_SITE_NAME" \
+    "$MW_ADMIN_NAME"
 
-    # Copy our LocalSettings into place after install from the template
-    # https://stackoverflow.com/a/24964089/4746236
-    export DOLLAR='$'
-    envsubst < /LocalSettings.php.template > /var/www/html/LocalSettings.php
+mv -f /var/www/html/LocalSettings.generated/LocalSettings.php /var/www/html/LocalSettings.generated.php
+mv -f /var/www/html/LocalSettings.root.php /var/www/html/LocalSettings.php 2>/dev/null; true
 
-    # Run update.php to install Wikibase
-    php /var/www/html/maintenance/update.php --quick
+# Update Admin User name ane email
+php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
 
-    # Run extrascripts on first run
-    if [ -f /default-extra-install.sh ]; then
-        # shellcheck disable=SC1091
-        source /default-extra-install.sh
-    fi
+# Run update.php to finish Wikibase install or upgrade
+php /var/www/html/maintenance/run.php update --quick
 
-    # Run extrascripts on first run
-    if [ -f /extra-install.sh ]; then
-        # shellcheck disable=SC1091
-        source /extra-install.sh
-    fi
+if [ -f /default-extra-install.sh ]; then
+    # shellcheck disable=SC1091
+    bash /default-extra-install.sh
 fi
 
-# Copy LocalSettings.php to a shared directory, if the image is being used with this shared directory existing
-# This is generally only done for the docker compose example which currently works out of the box
-# This is used to share a install generated LocalSettings.php with a job runner on first run for example
-if [[ -d "/var/shared-localsettings" ]] && [[ -e "/var/www/html/LocalSettings.php" ]]
-then
-    echo "/var/shared-localsettings & /var/www/html/LocalSettings.php found, so copying LocalSetting.php into shared directory"
-    cp /var/www/html/LocalSettings.php /var/shared-localsettings/LocalSettings.php
+if [ -f /extra-install.sh ]; then
+    # shellcheck disable=SC1091
+    bash /extra-install.sh
 fi
+
+# fi
 
 # Run the actual entry point
 docker-php-entrypoint apache2-foreground
