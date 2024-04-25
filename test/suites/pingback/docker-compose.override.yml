@@ -17,5 +17,5 @@ services:
       - 7171:80
     depends_on:
       - wikibase
-  environment:
-    VIRTUAL_HOST: pingback-beacon
+    environment:
+      VIRTUAL_HOST: pingback-beacon
