@@ -9,7 +9,7 @@ services:
       - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
-    image: "${WIKIBASE_TEST_IMAGE_URL}"
+    image: ${WIKIBASE_TEST_IMAGE_URL}
     links:
       - mysql
       - wikibase
@@ -22,7 +22,7 @@ services:
       - ./client-extra-install.sh:/extra-install.sh
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     ports:
-      - "80:80"
+      - 80:80
     networks:
       default:
         aliases:

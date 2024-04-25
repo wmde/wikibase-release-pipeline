@@ -7,14 +7,14 @@ networks:
 
 services:
   wikibase:
-    image: "${WIKIBASE_UPGRADE_TEST_IMAGE_URL}"
+    image: ${WIKIBASE_UPGRADE_TEST_IMAGE_URL}
     links:
       - mysql
     depends_on:
       - mysql
     restart: unless-stopped
     ports:
-      - "8181:80"
+      - 8181:80
     networks:
       default:
         aliases:
@@ -36,7 +36,7 @@ services:
       start_period: 2m
 
   mysql:
-    image: "${MARIADB_IMAGE_URL}"
+    image: ${MARIADB_IMAGE_URL}
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql

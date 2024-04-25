@@ -6,7 +6,7 @@ services:
       - WIKIBASE_PINGBACK=true
 
   pingback_beacon:
-    image: "node:lts-alpine"
+    image: node:lts-alpine
     user: node
     working_dir: /home/node/app
     restart: always
@@ -14,7 +14,7 @@ services:
       - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
     command: node beacon.mjs
     ports:
-      - "7171:80"
+      - 7171:80
     depends_on:
       - wikibase
     networks:
