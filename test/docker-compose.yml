@@ -23,7 +23,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:
-      - HOST_PWD=${PWD}/test
+      HOST_PWD: ${PWD}/test
 
   browser:
     image: ${TEST_BROWSER_IMAGE_URL}
@@ -36,8 +36,8 @@ services:
       - .:/usr/src/test
     shm_size: 2g
     environment:
-      - SE_NODE_MAX_SESSIONS=${MAX_INSTANCES}
-      - SE_VNC_NO_PASSWORD=1
+      SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
+      SE_VNC_NO_PASSWORD: 1
 
 volumes:
   node_modules:

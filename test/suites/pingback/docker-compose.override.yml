@@ -3,10 +3,10 @@ services:
     volumes:
       - ./pingback/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.pingback.php
     environment:
-      - WIKIBASE_PINGBACK=true
+      WIKIBASE_PINGBACK: true
 
-  pingback_beacon:
-    image: node:lts-alpine
+  pingback-beacon:
+    image: "node:lts-alpine"
     user: node
     working_dir: /home/node/app
     restart: always
@@ -17,7 +17,6 @@ services:
       - 7171:80
     depends_on:
       - wikibase
-    networks:
-      default:
-        aliases:
-          - mediawiki.svc
+  environment:
+    VIRTUAL_HOST: pingback-beacon
+  

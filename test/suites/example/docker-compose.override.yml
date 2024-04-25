@@ -10,9 +10,9 @@ services:
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
       - ./example/results:/var/log/mediawiki
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
 
   quickstatements:
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
+      WB_PUBLIC_SCHEME_HOST_AND_PORT: http://wikibase

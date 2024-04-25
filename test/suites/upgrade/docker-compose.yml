@@ -14,24 +14,19 @@ services:
       - mysql
     restart: unless-stopped
     ports:
-      - 8181:80
-    networks:
-      default:
-        aliases:
-          - ${WIKIBASE_HOST}
+      - 8880:80
     environment:
-      - DB_SERVER
-      - MW_WG_SECRET_KEY
-      - WIKIBASE_PINGBACK
-      - MW_ADMIN_NAME
-      - MW_ADMIN_PASS
-      - MW_ADMIN_EMAIL
-      - DB_USER
-      - DB_PASS
-      - DB_NAME
-      - WIKIBASE_HOST
+      DB_SERVER:
+      MW_WG_SECRET_KEY:
+      WIKIBASE_PINGBACK:
+      MW_ADMIN_NAME:
+      MW_ADMIN_PASS:
+      MW_ADMIN_EMAIL:
+      DB_USER:
+      DB_PASS:
+      DB_NAME:
     healthcheck:
-      test: curl --silent --fail http://${WIKIBASE_HOST}/wiki/Main_Page
+      test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
@@ -45,10 +40,6 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
-    networks:
-      default:
-        aliases:
-          - mysql.svc
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m
