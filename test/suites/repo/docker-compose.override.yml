@@ -2,3 +2,5 @@ services:
   wikibase:
     volumes:
       - ./repo/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.repo.php
+    environment:
+      MW_WG_JOB_RUN_RATE: $MW_WG_JOB_RUN_RATE
