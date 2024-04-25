@@ -55,27 +55,12 @@ check_version() {
   fi
 }
 
-# Function to check if the domain name can be resolved
-check_domain_resolution() {
-  domain="$1"
-  
-  # Use dig to obtain the resolved IP address
-  ip_address=$(dig +short "$domain")
-
-  if [ -z "$ip_address" ]; then
-    add_result 1 "$domain not found"$'\n'
-  fi
-}
-
 # Store PASS/FAIL results
 RESULTS=""
 
 # Check Docker version
 check_version "Docker" "$MIN_DOCKER_VERSION" "docker"
 check_version "Docker Compose" "$MIN_DOCKER_COMPOSE_VERSION" "docker compose"
-
-# Check domain resolution
-# check_domain_resolution "$WIKIBASE_HOST"
 
 # Check architecture
 if ! [ "$(uname -m)" == "x86_64" ] || [ "$(uname -m)" == "amd64" ]; then
