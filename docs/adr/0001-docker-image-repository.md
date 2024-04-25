@@ -14,14 +14,14 @@ There are a number of existing docker repositories we could consider to host our
 
 Some key properties of existing registries were considered in the table below:
 
-| Repository                | Free to WMDE                  | Self-Service (1)            | Tooling provided for a built-in pipeline                                                         | Visibility of built images  (2) | Possibility of replication to repository | Restrictions on use of non-Wikimedia images |
-| ------------------------- | ------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------- | -------------------------- | ---------------------------------------- |--------------------------------------------------|
-| Dockerhub                 | Currently (3)      | Yes                     | Static builds from dockerfile                                                                      | High                       | Yes                                                   | no |
-| Github Container registry | Currently                       | Yes                     | Github Actions                                                                                     | Medium                     | Yes                                      | no |
-| Google Container Registry | No (pay for storage and egress) | Yes                     | Google Cloud                                                                                       | Medium                     | Yes                                      | no |
-| AWS Container registry    | No (pay for storage and egress) | Yes                     | Amazon Cloud                                                                                       | Medium                     | Yes                                      | no |
-| Azure Container Registry  | No (some complex structure)     | Yes                     | Azure Container Registry Tasks                                                                     | Medium                     | Yes                                      | no |
-| WMF Docker Registry       | Yes                             | No (negotiation needed) | [https://wikitech.wikimedia.org/wiki/PipelineLib](https://wikitech.wikimedia.org/wiki/PipelineLib) | Low                        | No (probably not)                        | Yes (only audited versions of specific images are allowed) (4) |
+| Repository | Free to WMDE | Self-Service (1) | Tooling provided for a built-in pipeline | Visibility of built images (2) | Possibility of replication to repository | Restrictions on use of non-Wikimedia images |
+| --- | --- | --- | --- | --- | --- | --- |
+| Dockerhub | Currently (3) | Yes | Static builds from dockerfile | High | Yes | no |
+| Github Container registry | Currently | Yes | Github Actions | Medium | Yes | no |
+| Google Container Registry | No (pay for storage and egress) | Yes | Google Cloud | Medium | Yes | no |
+| AWS Container registry | No (pay for storage and egress) | Yes | Amazon Cloud | Medium | Yes | no |
+| Azure Container Registry | No (some complex structure) | Yes | Azure Container Registry Tasks | Medium | Yes | no |
+| WMF Docker Registry | Yes | No (negotiation needed) | [https://wikitech.wikimedia.org/wiki/PipelineLib](https://wikitech.wikimedia.org/wiki/PipelineLib) | Low | No (probably not) | Yes (only audited versions of specific images are allowed) (4) |
 
 1. We can create new images and names without filing a ticket for speaking to people
 2. Approximate fraction of the market of docker pulls that happens here
@@ -30,8 +30,7 @@ Some key properties of existing registries were considered in the table below:
 
 ## Decision
 
-We will publish Docker release images to Dockerhub. Dockerhub is the goto location for publishing Docker images.
-We do not consider publishing Wikibase Docker images to WMF Docker Registry yet, as its purpose is to hold images to be used in Wikimedia production infrastructure. This might change once Wikibase (i.e. MediaWiki and extensions) will be deployed using container images - not the case as of December 2020.
+We will publish Docker release images to Dockerhub. Dockerhub is the goto location for publishing Docker images. We do not consider publishing Wikibase Docker images to WMF Docker Registry yet, as its purpose is to hold images to be used in Wikimedia production infrastructure. This might change once Wikibase (i.e. MediaWiki and extensions) will be deployed using container images - not the case as of December 2020.
 
 ## Consequences
 

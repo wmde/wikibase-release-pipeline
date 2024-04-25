@@ -1,27 +1,46 @@
 import SubmittablePage from '../submittable.page.js';
+import urlParameters from '../url-parameters.js';
 
-class SpecialNewProperty extends SubmittablePage {
-	public get labelInput(): ChainablePromiseElement {
-		return $( 'input[name="label"]' );
-	}
-	public get descriptionInput(): ChainablePromiseElement {
-		return $( 'input[name="description"]' );
-	}
+type SpecialNewPropertyPageParams = {
+	datatype?: string;
+};
+
+class SpecialNewPropertyPage extends SubmittablePage {
 	public get aliasesInput(): ChainablePromiseElement {
 		return $( 'input[name="aliases"]' );
 	}
+
 	public get datatypeInput(): ChainablePromiseElement {
 		return $( '#wb-newproperty-datatype' );
 	}
-	public get submitBtn(): ChainablePromiseElement {
-		return $( 'button[type="submit"]' );
+
+	public get descriptionInput(): ChainablePromiseElement {
+		return $( 'input[name="description"]' );
 	}
 
-	public async open( dataType?: string ): Promise<void> {
-		dataType = dataType ? '?datatype=' + dataType : '';
-		await browser.url(
-			`${testEnv.vars.WIKIBASE_URL}/wiki/Special:NewProperty${dataType}`
-		);
+	public get labelInput(): ChainablePromiseElement {
+		return $( 'input[name="label"]' );
+	}
+
+	public get submitBtn(): ChainablePromiseElement {
+		return $( 'button[value="Create"]' );
+	}
+
+	/**
+	 * `/wiki/Special:NewProperty`
+	 *
+	 * @param {Object} params
+	 * @param {string} params.datatype - Optional
+	 * @return {void}
+	 */
+	public async open(
+		params: SpecialNewPropertyPageParams | string = {}
+	): Promise<void> {
+		if ( typeof params === 'string' ) {
+			throw new Error( 'Invalid parameter' );
+		}
+
+		await super.open( `/wiki/Special:NewProperty${ urlParameters( params ) }` );
 		await this.labelInput;
 		await this.descriptionInput;
 		await this.aliasesInput;
@@ -30,4 +49,4 @@ class SpecialNewProperty extends SubmittablePage {
 	}
 }
 
-export default new SpecialNewProperty();
+export default new SpecialNewPropertyPage();

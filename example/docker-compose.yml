@@ -43,7 +43,7 @@ services:
   wikibase-jobrunner:
     image: "${WIKIBASE_BUNDLE_IMAGE_NAME}"
     entrypoint: /bin/bash
-    command:  /jobrunner-entrypoint.sh
+    command: /jobrunner-entrypoint.sh
     links:
       - mysql
     depends_on:

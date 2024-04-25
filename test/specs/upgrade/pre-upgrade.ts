@@ -1,9 +1,8 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Wikibase pre upgrade', function () {
-	it( 'Should be able to create many properties and items', async () => {
+	it( 'Should be able to create many properties and items', async function () {
 		const numEntities = 100;
 		for ( let i = 0; i < numEntities; i++ ) {
 			const itemLabel = 'T267743-';
@@ -28,12 +27,12 @@ describe( 'Wikibase pre upgrade', function () {
 				data
 			);
 
-			assert.strictEqual( itemId.startsWith( 'Q' ), true );
-			assert.strictEqual( propertyId.startsWith( 'P' ), true );
+			expect( itemId ).toMatch( /^Q\d+$/ );
+			expect( propertyId ).toMatch( /^P\d+$/ );
 		}
 	} );
 
-	it( 'Should be able to create a specific item', async () => {
+	it( 'Should be able to create a specific item', async function () {
 		const itemLabel = 'UpgradeItem';
 		const propertyValue = 'UpgradeItemStringValue';
 		const propertyId = await WikibaseApi.createProperty( 'string' );
@@ -53,7 +52,7 @@ describe( 'Wikibase pre upgrade', function () {
 
 		const itemId = await WikibaseApi.createItem( itemLabel, data );
 
-		assert.strictEqual( itemId.startsWith( 'Q' ), true );
-		assert.strictEqual( propertyId.startsWith( 'P' ), true );
+		expect( itemId ).toMatch( /^Q\d+$/ );
+		expect( propertyId ).toMatch( /^P\d+$/ );
 	} );
 } );

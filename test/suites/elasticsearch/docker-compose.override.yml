@@ -1,15 +1,14 @@
-version: '3.5'
+version: "3.5"
 
 x-common-variables: &elastic_search
   MW_ELASTIC_HOST: ${MW_ELASTIC_HOST}
   MW_ELASTIC_PORT: ${MW_ELASTIC_PORT}
 
 services:
-
   wikibase:
     volumes:
       - ./elasticsearch/wikibase-extra-install.sh:/extra-install.sh
-    environment: 
+    environment:
       <<: *elastic_search
 
   wikibase-jobrunner:
@@ -22,11 +21,11 @@ services:
     networks:
       default:
         aliases:
-         - elasticsearch.svc
+          - elasticsearch.svc
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "${ELASTICSEARCH_URL}" ]
+      test: [ CMD, curl, --silent, --fail, "${ELASTICSEARCH_URL}" ]
       interval: 10s
       start_period: 2m

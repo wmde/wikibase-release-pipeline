@@ -1,6 +1,7 @@
-import assert from 'assert';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import ItemPage from '../../helpers/pages/entity/item.page.js';
+import page from '../../helpers/pages/page.js';
 import SearchResult from '../../types/search-result.js';
 
 const itemAlias: string = getTestString( 'alias' );
@@ -9,17 +10,17 @@ const itemLabel: string = getTestString( 'testItem' );
 describe( 'ElasticSearch', function () {
 	let itemId: string;
 
-	it( 'Should create an item', async () => {
+	it( 'Should create an item', async function () {
 		itemId = await WikibaseApi.createItem( itemLabel );
 
-		await browser.url( `${testEnv.vars.WIKIBASE_URL}/wiki/Item:${itemId}` );
+		await ItemPage.open( itemId );
 		await $(
 			'.wikibase-toolbarbutton.wikibase-toolbar-item.wikibase-toolbar-button.wikibase-toolbar-button-add'
 		);
 	} );
 
-	it( 'Should be able to set alias', async () => {
-		await browser.url( testEnv.vars.WIKIBASE_URL + '/wiki/Special:SetAliases/' );
+	it( 'Should be able to set alias', async function () {
+		await page.open( '/wiki/Special:SetAliases/' );
 
 		// input id
 		await $( '#wb-modifyentity-id input' ).setValue( itemId );
@@ -30,17 +31,20 @@ describe( 'ElasticSearch', function () {
 		await $( 'button.oo-ui-inputWidget-input' ).click();
 
 		// alias should be visible on item page
-		const alias = await $( '.wikibase-aliasesview-list-item' ).getText();
-		assert.strictEqual( alias, itemAlias );
+		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
-	it( 'should be able to search case-insensitive', async () => {
+	it( 'should be able to search case-insensitive', async function () {
 		let searchResult: SearchResult[];
+
+		const testLabel = 'Testitem';
+		expect( itemLabel ).not.toMatch( testLabel );
+		expect( itemLabel.toLowerCase() ).toMatch( testLabel.toLowerCase() );
 
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=Test&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ testLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -52,16 +56,15 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 20000,
+				timeout: 20 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the label by now.'
 			}
 		);
-		assert(
-			searchResult.length === 1 &&
-				searchResult[ 0 ].id === itemId &&
-				searchResult[ 0 ].match.type === 'label' &&
-				searchResult[ 0 ].match.text === itemLabel
-		);
+
+		expect( searchResult ).toHaveLength( 1 );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'label' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemLabel );
 	} );
 
 	it( 'should be able to search via alias', async function () {
@@ -70,7 +73,7 @@ describe( 'ElasticSearch', function () {
 		await browser.waitUntil(
 			async () => {
 				const resp = await browser.makeRequest(
-					`${testEnv.vars.WIKIBASE_URL}/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
+					`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=alias&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 				);
 				searchResult = resp.data.search;
 
@@ -82,16 +85,14 @@ describe( 'ElasticSearch', function () {
 				);
 			},
 			{
-				timeout: 20000,
+				timeout: 20 * 1000,
 				timeoutMsg: 'Elasticsearch should have updated the alias by now.'
 			}
 		);
 
-		assert(
-			searchResult.length === 1 &&
-				searchResult[ 0 ].id === itemId &&
-				searchResult[ 0 ].match.type === 'alias' &&
-				searchResult[ 0 ].match.text === itemAlias
-		);
+		expect( searchResult ).toHaveLength( 1 );
+		expect( searchResult[ 0 ].id ).toEqual( itemId );
+		expect( searchResult[ 0 ].match.type ).toEqual( 'alias' );
+		expect( searchResult[ 0 ].match.text ).toEqual( itemAlias );
 	} );
 } );

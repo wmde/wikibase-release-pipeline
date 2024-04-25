@@ -1,9 +1,8 @@
 import { readFile } from 'fs/promises';
-import assert from 'assert';
-import { utf8 } from '../../helpers/readFileEncoding.js';
+import { utf8 } from '../../helpers/read-file-encoding.js';
 
 describe( 'Interwiki links', function () {
-	it( 'Should be able to insert interwiki links', async () => {
+	it( 'Should be able to insert interwiki links', async function () {
 		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const repoLinkFile = await readFile(
 			new URL( 'interwiki-link.sql', import.meta.url ),
@@ -17,7 +16,7 @@ describe( 'Interwiki links', function () {
 		const clientWikiQueryResults = await browser.dbQuery(
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "client_wiki"'
 		);
-		assert( clientWikiQueryResults.includes( testEnv.vars.WIKIBASE_CLIENT_URL ) );
+		expect( clientWikiQueryResults ).toMatch( testEnv.vars.WIKIBASE_CLIENT_URL );
 
 		const config = {
 			user: testEnv.vars.DB_USER,
@@ -34,6 +33,6 @@ describe( 'Interwiki links', function () {
 			'SELECT iw_url FROM interwiki WHERE iw_prefix = "my_wiki"',
 			config
 		);
-		assert( myWikiQueryResults.includes( testEnv.vars.WIKIBASE_URL ) );
+		expect( myWikiQueryResults ).toMatch( testEnv.vars.WIKIBASE_URL );
 	} );
 } );

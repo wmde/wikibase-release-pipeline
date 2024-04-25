@@ -1,0 +1,97 @@
+name: 📦 Build Test Tag and Publish Release
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "mw-*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  _:
+    if: github.event.pull_request.merged == true
+
+    uses: ./.github/workflows/_build_test.yml
+
+  tag-release:
+    if: github.event.pull_request.merged == true
+
+    needs: _
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Git tag release
+        run: |
+          set -e # abort on error
+          set -x # show commands
+
+          set -o allexport
+          source ./variables.env
+
+          git config --global user.name 'wikibase suite github actions bot'
+          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
+
+          if git tag "$WMDE_RELEASE_VERSION"; then
+            git push --tags origin "$WMDE_RELEASE_VERSION"
+          else
+            echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
+            echo "Cannot tag $WMDE_RELEASE_VERSION, Most probably this tag is already given to another commit."
+            echo "Make sure to update the WMDE_RELEASE_VERSION variable in variables.env to publish a new release."
+            echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
+          fi
+
+  publish-dockerhub:
+    if: github.event.pull_request.merged == true
+
+    needs: tag-release
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/pull-ghcr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Push release to dockerhub
+        run: |
+          set -x
+
+          source ./variables.env
+          source ./versions.inc.sh
+
+          docker image ls
+
+          images=(
+            "wikibase"
+            "wikibase-bundle"
+            "elasticsearch"
+            "wdqs"
+            "wdqs-frontend"
+            "wdqs-proxy"
+            "quickstatements"
+          )
+
+          for image in "${images[@]}"; do
+            image_path="wikibase/${image}"
+            url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
+            version_tag="$(image_version $image)"
+            docker tag "$url_run_id" "${image_path}:${version_tag}"
+            docker push "${image_path}:${version_tag}"
+          done
