@@ -5,6 +5,7 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
+  MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
   MW_ELASTIC_HOST: elasticsearch
   MW_ELASTIC_PORT: 9200
   DB_SERVER: mysql:3306
@@ -29,6 +30,7 @@ services:
       # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/00-LocalSettings.php
       - wikibase-images:/var/www/html/images
+      - wikibase-localsettings:/var/www/html/LocalSettings.shared
       - quickstatements-data:/quickstatements/data
     environment:
       <<: *wikibase_variables
@@ -57,6 +59,7 @@ services:
       # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/00-LocalSettings.php
       - wikibase-images:/var/www/html/images
+      - wikibase-localsettings:/var/www/html/LocalSettings.shared
     environment:
       <<: *wikibase_variables
       MAX_JOBS: ${MAX_JOBS}
@@ -232,6 +235,7 @@ services:
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
   wikibase-images:
+  wikibase-localsettings:
   mysql-data:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:

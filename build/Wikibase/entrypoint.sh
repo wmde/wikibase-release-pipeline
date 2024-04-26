@@ -2,7 +2,7 @@
 # This file is provided by the wikibase/wikibase docker image.
 
 # Test if required environment variables have been set
-REQUIRED_VARIABLES=(MW_ADMIN_NAME MW_ADMIN_PASS MW_ADMIN_EMAIL MW_WG_SECRET_KEY DB_SERVER DB_USER DB_PASS DB_NAME)
+REQUIRED_VARIABLES=(MW_ADMIN_NAME MW_ADMIN_PASS MW_ADMIN_EMAIL MW_WG_SECRET_KEY DB_SERVER DB_USER DB_PASS DB_NAME MW_WG_SERVER)
 for i in "${REQUIRED_VARIABLES[@]}"; do
     eval THISSHOULDBESET=\$"$i"
     if [ -z "$THISSHOULDBESET" ]; then
@@ -21,10 +21,12 @@ sleep 1
 
 # Run MediaWiki install script
 rm -f /var/www/html/LocalSettings.php
-rm -f /var/www/html/LocalSettings.generated/LocalSettings.php
-mkdir -p /var/www/html/LocalSettings.generated
+# TODO: put this into a better spot. /var/lib/mediawiki ?
+rm -f /var/www/html/LocalSettings.shared/LocalSettings.php
+mkdir -p /var/www/html/LocalSettings.shared
 php /var/www/html/maintenance/run.php install \
-    --confpath /var/www/html/LocalSettings.generated \
+    --confpath /var/www/html/LocalSettings.shared \
+    --server "$MW_WG_SERVER" \
     --dbuser "$DB_USER" \
     --dbpass "$DB_PASS" \
     --dbname "$DB_NAME" \
@@ -34,9 +36,11 @@ php /var/www/html/maintenance/run.php install \
     "$MW_SITE_NAME" \
     "$MW_ADMIN_NAME"
 
-mv -f /var/www/html/LocalSettings.generated/LocalSettings.php /var/www/html/LocalSettings.generated.php
-rm -rf /var/www/html/LocalSettings.generated
-mv -f /var/www/html/LocalSettings.root.php /var/www/html/LocalSettings.php 2>/dev/null; true
+
+cat /var/www/html/LocalSettings.wbs.php >> /var/www/html/LocalSettings.shared/LocalSettings.php
+
+# Copy the LocalSettings to be used as the actual LocalSettings root
+cp /var/www/html/LocalSettings.shared/LocalSettings.php /var/www/html/LocalSettings.php
 
 # Update Admin User name ane email
 php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
