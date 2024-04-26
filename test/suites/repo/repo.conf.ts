@@ -8,8 +8,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/repo/docker-compose.override.yml'
-	],
-	envFiles: [ ...defaultTestSettings.envFiles, 'suites/repo/repo.env' ]
+	]
 } );
 
 export const config = wdioConfig( testEnv );
