@@ -5,7 +5,7 @@ x-common-variables: &wikibase_variables
   MW_ADMIN_PASS: ${MW_ADMIN_PASS}
   MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
   MW_WG_SECRET_KEY: ${MW_SECRET_KEY}
-  MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+  MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
   MW_ELASTIC_HOST: elasticsearch
   MW_ELASTIC_PORT: 9200
   DB_SERVER: mysql:3306
@@ -35,8 +35,6 @@ services:
     environment:
       <<: *wikibase_variables
       MW_WG_ENABLE_UPLOADS:
-      # Setting to 0 effectively disables jobs running after requests which is best when a jobrunner is used
-      # MW_WG_JOB_RUN_RATE: 0
       WIKIBASE_PINGBACK:
       QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
@@ -50,12 +48,10 @@ services:
     image: ${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}
     command: /jobrunner-entrypoint.sh
     depends_on:
-      mysql:
+      wikibase:
         condition: service_healthy
     restart: always
     volumes:
-    #   Uncomment the following line here and on the wikibase service to mount your own LocalSettings.php file:
-    #   - ./LocalSettings.php:/shared/LocalSettings.php
       # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/00-LocalSettings.php
       - wikibase-images:/var/www/html/images
