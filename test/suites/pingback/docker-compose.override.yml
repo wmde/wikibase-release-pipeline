@@ -16,6 +16,7 @@ services:
     ports:
       - 7171:80
     depends_on:
-      - wikibase
+      wikibase:
+        condition: service_healthy
     environment:
       VIRTUAL_HOST: pingback-beacon

@@ -15,8 +15,8 @@ services:
       - mysql
       - wikibase
     depends_on:
-      - mysql
-      - wikibase
+      mysql:
+        condition: service_healthy
     restart: always
     volumes:
       - ./client-LocalSettings.php.template:/LocalSettings.php.template
