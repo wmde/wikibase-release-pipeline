@@ -16,7 +16,7 @@ services:
     ports:
       - 8880:80
     environment:
-      DB_SERVER:
+      DB_SERVER: mysql:3306
       MW_WG_SECRET_KEY:
       WIKIBASE_PINGBACK:
       MW_ADMIN_NAME:

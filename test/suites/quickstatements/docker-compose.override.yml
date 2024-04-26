@@ -24,11 +24,11 @@ services:
     ports:
       - 8383:80
     environment:
-      DB_SERVER:
       MW_ADMIN_NAME:
       MW_ADMIN_PASS:
       MW_ADMIN_EMAIL:
       MW_WG_SECRET_KEY:
+      DB_SERVER: mysql:3306
       DB_USER:
       DB_PASS:
       DB_NAME: client_wiki
