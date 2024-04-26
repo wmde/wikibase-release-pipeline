@@ -16,7 +16,6 @@ Wikibase running on MediaWiki.
 | `MW_ADMIN_PASS` | "WikibaseDockerAdminPass" | Admin password to use for admin account on first install |
 | `MW_WG_SECRET_KEY` | "secretkey" | Used as source of entropy for persistent login/Oauth etc.. |
 | `MW_WG_ENABLE_UPLOADS` | "false" | $wgEnableUploads to use for MediaWiki |
-| `MW_WG_UPLOAD_DIRECTORY` | "/var/www/html/images" | $wgUploadDirectory to use for MediaWiki |
 | `MW_WG_JOB_RUN_RATE` | "2" | $wgJobRunRate to use for MediaWiki |
 | `WIKIBASE_PINGBACK` | "false" | boolean for [WikibasePingback](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_pingback.html) |
 

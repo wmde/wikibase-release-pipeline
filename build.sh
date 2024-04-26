@@ -61,7 +61,6 @@ function build_wikibase {
         --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
         --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \
         --build-arg MW_WG_ENABLE_UPLOADS="$MW_WG_ENABLE_UPLOADS" \
-        --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
         --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \

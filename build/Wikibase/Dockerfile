@@ -48,7 +48,11 @@ RUN apt-get update && \
     install -d /var/log/mediawiki -o www-data && \
     docker-php-ext-install calendar bz2
 
-COPY --from=composer --chown=root:root /var/www/html /var/www/html
+COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
+
+# Make upload path writable for the webserver user
+RUN chown www-data /var/www/html/images -R
+
 COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
@@ -62,19 +66,13 @@ ARG MW_SITE_NAME
 ARG MW_SITE_LANG
 ARG MW_WG_JOB_RUN_RATE
 ARG MW_WG_ENABLE_UPLOADS
-ARG MW_WG_UPLOAD_DIRECTORY
 ARG WIKIBASE_PINGBACK
 
 ENV MW_SITE_NAME=${MW_SITE_NAME}\
     MW_SITE_LANG=${MW_SITE_LANG}\
     MW_WG_JOB_RUN_RATE=${MW_WG_JOB_RUN_RATE}\
     MW_WG_ENABLE_UPLOADS=${MW_WG_ENABLE_UPLOADS}\
-    MW_WG_UPLOAD_DIRECTORY=${MW_WG_UPLOAD_DIRECTORY}\
     WIKIBASE_PINGBACK=${WIKIBASE_PINGBACK}
-
-RUN mkdir /var/www/html/uploads && \
-    chown www-data /var/www/html/uploads -R && \
-    chmod o-w /var/www/html
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]

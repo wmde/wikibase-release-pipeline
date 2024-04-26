@@ -73,8 +73,9 @@ RUN apt-get update && \
     \
     rm -rf /var/www/html
 COPY --from=composer /var/www/html /var/www/html
+
+# Make upload path writable for the webserver user
+RUN chown www-data /var/www/html/images -R
+
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
-
-# MW_WG_UPLOAD_DIRECTORY set in original wikibase image
-RUN chown www-data ${MW_WG_UPLOAD_DIRECTORY} -R

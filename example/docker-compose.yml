@@ -28,6 +28,7 @@ services:
     volumes:
       # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
       # - ./LocalSettings.php:/var/www/html/LocalSettings.d/00-LocalSettings.php
+      - wikibase-images:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
       <<: *wikibase_variables
@@ -50,9 +51,12 @@ services:
       mysql:
         condition: service_healthy
     restart: always
-    # volumes:
+    volumes:
     #   Uncomment the following line here and on the wikibase service to mount your own LocalSettings.php file:
     #   - ./LocalSettings.php:/shared/LocalSettings.php
+      # Uncomment the following line here and on the wikibase-jobrunner service below to mount your own LocalSettings.php file:
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.d/00-LocalSettings.php
+      - wikibase-images:/var/www/html/images
     environment:
       <<: *wikibase_variables
       MAX_JOBS: ${MAX_JOBS}
@@ -211,6 +215,7 @@ services:
     environment:
       DEFAULT_HOST: ${WIKIBASE_PUBLIC_HOST}
 
+  # See https://github.com/nginx-proxy/acme-companion for setup and options
   acme-companion:
     image: nginxproxy/acme-companion
     volumes_from:
@@ -223,6 +228,7 @@ services:
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
+  wikibase-images:
   mysql-data:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:

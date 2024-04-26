@@ -48,7 +48,6 @@ wfLoadSkin( 'Vector' );
 
 $wgJobRunRate = $_ENV['MW_WG_JOB_RUN_RATE'];
 $wgEnableUploads = $_ENV['MW_WG_ENABLE_UPLOADS'];
-$wgUploadDirectory = $_ENV['MW_WG_UPLOAD_DIRECTORY'];
 
 ## Pingback
 $wgWBRepoSettings['wikibasePingback'] = $_ENV['WIKIBASE_PINGBACK'];
