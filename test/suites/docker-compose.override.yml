@@ -6,15 +6,16 @@ networks:
     external: true
 
 services:
-  wikibase:
-    environment:
-      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
+  # wikibase:
+  #   environment:
+  #     QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
 
   wikibase-jobrunner:
     environment:
-      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
+      # QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://${QUICKSTATEMENTS_PUBLIC_HOST}
 
-  quickstatements:
-    environment:
-      QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
-      WB_PUBLIC_SCHEME_HOST_AND_PORT: http://wikibase
+  # quickstatements:
+  #   environment:
+  #     QS_PUBLIC_SCHEME_HOST_AND_PORT: http://quickstatements
+  #     WB_PUBLIC_SCHEME_HOST_AND_PORT: http://wikibase
