@@ -8,20 +8,21 @@ networks:
 services:
   wikibase:
     image: ${WIKIBASE_UPGRADE_TEST_IMAGE_URL}
-    links:
-      - mysql
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
     ports:
       - 8880:80
     environment:
-      DB_SERVER: mysql:3306
+      MW_WG_JOB_RUN_RATE: 4
+      MW_WG_ENABLE_UPLOADS: false
       MW_WG_SECRET_KEY:
       WIKIBASE_PINGBACK:
       MW_ADMIN_NAME:
       MW_ADMIN_PASS:
       MW_ADMIN_EMAIL:
+      DB_SERVER: mysql:3306
       DB_USER:
       DB_PASS:
       DB_NAME:

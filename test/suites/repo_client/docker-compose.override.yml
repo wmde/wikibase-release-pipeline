@@ -10,9 +10,6 @@ services:
 
   wikibase-client:
     image: ${WIKIBASE_TEST_IMAGE_URL}
-    links:
-      - mysql
-      - wikibase
     depends_on:
       mysql:
         condition: service_healthy

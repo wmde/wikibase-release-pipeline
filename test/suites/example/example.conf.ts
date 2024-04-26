@@ -12,10 +12,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
 		'suites/example/docker-compose.override.yml'
-	],
-	beforeServices: async (): Promise<void> => {
-		// bypass default local image loading
-	}
+	]
 } );
 
 export const config = wdioConfig( testEnv );
