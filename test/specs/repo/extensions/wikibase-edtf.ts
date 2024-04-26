@@ -53,6 +53,8 @@ describe( 'WikibaseEdtf', function () {
 		await SpecialNewPropertyPage.aliasesInput.setValue( 'Groundhog Day Opening' );
 		await SpecialNewPropertyPage.submit();
 
+		await browser.waitForJobs();
+
 		const itemId = await WikibaseApi.createItem( 'edtf-test' );
 
 		await ItemPage.open( itemId );
