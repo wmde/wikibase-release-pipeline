@@ -71,6 +71,9 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
+      # Enable the following to automatically migrate MariaDB system tables on base image updates
+      # https://mariadb.com/kb/en/mariadb-server-docker-official-image-environment-variables/
+      # MARIADB_AUTO_UPGRADE: yes
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m
