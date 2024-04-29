@@ -20,19 +20,23 @@ set -eu
 sleep 1
 /wait-for-it.sh "$SETUP_DB_SERVER" -t 300
 
-# Create wikibase-config directory if it doesn't exists
-# TODO: Should we just exit early with feedback about creating the `wikibase-config` volume if the directory doesn't exist?
-mkdir -p /wikibase-config
+# /config is a required volume
+if [ ! -d "/config" ]; then
+    echo "You must mount a volume at /config for LocalSettings.php"
+    exit 1
+fi
 
-# Sync LocalSettings.php, prefer /wikibase-config/LocalSettings.php if it exists
-if [ -e "/wikibase-config/LocalSettings.php" ]; then
-    cp /wikibase-config/LocalSettings.php /var/www/html/LocalSettings.php
+# Sync LocalSettings.php, prefer /config/LocalSettings.php if it exists
+if [ -e "/config/LocalSettings.php" ]; then
+    cp /config/LocalSettings.php /var/www/html/LocalSettings.php
 elif [ -e "/var/www/html/LocalSettings.php" ]; then
-    cp /var/www/html/LocalSettings.php /wikibase-config/LocalSettings.php
+    # This fallback will copy the generated + appended LocalSettings.php
+    # if the copy in /config is missing
+    cp /var/www/html/LocalSettings.php /config/LocalSettings.php
 fi
 
 if [ ! -e "/var/www/html/LocalSettings.php" ]; then
-    echo "LocalSettings.php not found in /wikibase-config or /var/www/html, running MediaWiki install."
+    echo "LocalSettings.php not found in /config or /var/www/html, running MediaWiki install."
     # Run MediaWiki install script
     php /var/www/html/maintenance/run.php install \
         --dbuser "$SETUP_DB_USER" \
@@ -48,8 +52,8 @@ if [ ! -e "/var/www/html/LocalSettings.php" ]; then
     # Add WBS customizations to generated LocalSettings.php
     cat /var/www/html/LocalSettings.additions.php >> /var/www/html/LocalSettings.php
 
-    # Replace /wikibase-config/LocalSettings.php with newly generated LocalSettings.php
-    cp /var/www/html/LocalSettings.php /wikibase-config/LocalSettings.php
+    # Replace /config/LocalSettings.php with newly generated LocalSettings.php
+    cp /var/www/html/LocalSettings.php /config/LocalSettings.php
 
     # Update the MW Admin email address:
     # If $SETUP_MW_ADMIN_NAME doesn't already exist, a new admin user will be created

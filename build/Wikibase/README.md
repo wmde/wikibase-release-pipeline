@@ -26,11 +26,11 @@ Wikibase running on MediaWiki.
 | `/var/www/html` | Base MediaWiki directory |
 | `/var/www/html/skins` | MediaWiki skins directory |
 | `/var/www/html/extensions` | MediaWiki extensions directory |
-| `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded at the end of other install generated settings, but before the settings in `/wikibase-config/LocalSettings.override.php`
+| `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded at the end of other install generated settings, but before the settings in `/config/LocalSettings.override.php`
 
 | File | Description |
 | --- | --- |
-| `/LocalSettings.additions.php` | Loads the MediaWiki install generated `LocalSettings.php`, as well as all `*.php` files found in `LocalSettings.d`, and at the end a user-provided `/wikibase-config/LocalSettings.php` if one is found volume mapped into that location. This file is copied to `/var/www/html/LocalSettings.php` after the initial MediaWiki installation has ran.
+| `/LocalSettings.additions.php` | Loads the MediaWiki install generated `LocalSettings.php`, as well as all `*.php` files found in `LocalSettings.d`, and at the end a user-provided `/config/LocalSettings.php` if one is found volume mapped into that location. This file is copied to `/var/www/html/LocalSettings.php` after the initial MediaWiki installation has ran.
 
 ### JobRunner
 
