@@ -2,3 +2,5 @@ services:
   wikibase:
     volumes:
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
+    environment:
+      MW_ELASTIC_HOST: elasticsearch

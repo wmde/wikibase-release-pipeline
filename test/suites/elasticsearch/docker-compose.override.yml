@@ -1,0 +1,4 @@
+services:
+  wikibase:
+    environment:
+      MW_ELASTIC_HOST: elasticsearch
