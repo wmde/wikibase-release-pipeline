@@ -23,8 +23,8 @@ describe( 'Nuke', function () {
 		expect( pageExistsResult.status ).toEqual( 200 );
 
 		await LoginPage.login(
-			testEnv.vars.MW_ADMIN_NAME,
-			testEnv.vars.MW_ADMIN_PASS
+			testEnv.vars.SETUP_MW_ADMIN_NAME,
+			testEnv.vars.SETUP_MW_ADMIN_PASS
 		);
 		await page.open( '/wiki/Special:Nuke' );
 

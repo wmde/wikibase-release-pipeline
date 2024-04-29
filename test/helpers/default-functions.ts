@@ -29,9 +29,9 @@ export function defaultFunctions(): void {
 		async ( query: string, config?: DatabaseConfig ): Promise<string> => {
 			if ( !config ) {
 				config = {
-					user: testEnv.vars.DB_USER,
-					pass: testEnv.vars.DB_PASS,
-					database: testEnv.vars.DB_NAME
+					user: testEnv.vars.SETUP_DB_USER,
+					pass: testEnv.vars.SETUP_DB_PASS,
+					database: testEnv.vars.SETUP_DB_NAME
 				};
 			}
 

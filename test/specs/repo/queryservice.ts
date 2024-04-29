@@ -161,8 +161,8 @@ describe( 'QueryService', function () {
 
 		// Attempt to delete
 		await LoginPage.login(
-			testEnv.vars.MW_ADMIN_NAME,
-			testEnv.vars.MW_ADMIN_PASS
+			testEnv.vars.SETUP_MW_ADMIN_NAME,
+			testEnv.vars.SETUP_MW_ADMIN_PASS
 		);
 
 		// goto delete page

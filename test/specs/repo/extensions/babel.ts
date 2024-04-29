@@ -7,13 +7,13 @@ describe( 'Babel', function () {
 
 	it( 'Should be able to update the user page with language skills', async function () {
 		await LoginPage.login(
-			testEnv.vars.MW_ADMIN_NAME,
-			testEnv.vars.MW_ADMIN_PASS
+			testEnv.vars.SETUP_MW_ADMIN_NAME,
+			testEnv.vars.SETUP_MW_ADMIN_PASS
 		);
 
 		const executionContent = await browser.editPage(
 			testEnv.vars.WIKIBASE_URL,
-			'User:' + testEnv.vars.MW_ADMIN_NAME,
+			'User:' + testEnv.vars.SETUP_MW_ADMIN_NAME,
 			'{{#babel: sv | en }}'
 		);
 
