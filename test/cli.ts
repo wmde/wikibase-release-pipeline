@@ -5,7 +5,6 @@ import chalk from 'chalk';
 import lodash from 'lodash';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { versions } from './suites/upgrade/versions.js';
 
 export const allSuiteNames = [
 	'repo',
@@ -37,26 +36,6 @@ const runCLI = async (): Promise<{
 				describe: 'Name of the test suite to run or setup',
 				type: 'string',
 				choices: allSuiteNames
-			} );
-		},
-		commandHandler
-	);
-
-	y.command(
-		'upgrade <fromVersion> [toVersion]',
-		'run upgrade test',
-		( yy ) => {
-			yy.positional( 'fromVersion', {
-				describe: 'Version to upgrade FROM in the upgrade test',
-				type: 'string',
-				choices: Object.keys( versions ),
-				requiresArg: true
-			} );
-			yy.positional( 'toVersion', {
-				describe: 'Version to upgrade TO in the upgrade test',
-				type: 'string',
-				choices: Object.keys( versions ),
-				requiresArg: true
 			} );
 		},
 		commandHandler
@@ -117,7 +96,7 @@ function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 	delete options.$0;
 
 	for ( const [ key, value ] of Object.entries( options ) ) {
-		if ( [ 'fromVersion', 'toVersion', 'headedTests', 'debug' ].includes( key ) ) {
+		if ( [ 'headedTests', 'debug' ].includes( key ) ) {
 			process.env[ `${ lodash.toUpper( lodash.snakeCase( key.toString() ) ) }` ] =
 				value.toString();
 			delete options[ key ];

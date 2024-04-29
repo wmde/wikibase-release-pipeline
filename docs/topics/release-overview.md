@@ -19,8 +19,6 @@ Wikibase and related software gets release through this repository. The process 
 
 [ ] **Update `CHANGES.md`** on the release preparation branch. Add a section following the example of previous releases, update the different values. The spec will eventually point to the release tags variables.env once the release is published.
 
-[ ] **Adjust upgrade test paths**. Review all versions [here](https://github.com/wmde/wikibase-release-pipeline/blob/main/.github/workflows/_build_test.yml#L127) and [here](https://github.com/wmde/wikibase-release-pipeline/blob/main/test/suites/upgrade/versions.ts) to make the upgrade test work for relevant older versions to your new version.
-
 [ ] **Create a release PR** that merges the release preparation branch e.g. `releaseprep-1.44.0` into release branch e.g. `mw-1.44`.
 
 [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Bugfix releases are likely to pass without any adjustments.

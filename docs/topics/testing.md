@@ -2,7 +2,7 @@
 
 Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
-All test suites except `example` and `upgrade` are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory. The `upgrade` suite runs the remote Docker images from the specified previous version, and tests upgrading to the latest local build.
+All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory.
 
 You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
 
@@ -17,10 +17,6 @@ You can run the tests in the docker container locally as they are ran in CI usin
 
 # To only run a single suite (e.g. repo)
 ./test.sh repo
-
-# To run upgrade tests
-# Previous releases Docker Image URLs are defined in `test/suites/upgrade/versions.ts`
-./test.sh upgrade WMDE9_BUNDLE
 
 # To only run a specific file within the setup for any test suite (e.g. repo and the babel extension)
 ./test.sh repo --spec specs/repo/extensions/babel.ts
