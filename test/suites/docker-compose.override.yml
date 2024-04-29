@@ -8,9 +8,3 @@ services:
     volumes:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/ZZ-LocalSettings.test.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
-    environment:
-      # Elasticsearch initial index setup takes a long time in MediaWiki
-      # Setting this effectively disabled Elasticsearch use in Wikibase.
-      # It is re-enabled in the ElasticSearch (and Example) test suites
-      # where it is tested. Currently all servives are still loded.
-      MW_ELASTIC_HOST: ""
