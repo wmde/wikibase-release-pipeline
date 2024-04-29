@@ -41,7 +41,6 @@ elif [ -e "/var/www/html/LocalSettings.php" ]; then
         --lang "$MW_WG_LANGUAGE_CODE" \
         "$MW_WG_SITENAME" \
         "$SETUP_MW_ADMIN_NAME"
-
     # Add WBS customizations to generated LocalSettings.php
     echo 'include "/var/www/html/LocalSettings.wikibase.php";' >> /var/www/html/LocalSettings.php
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php

@@ -16,7 +16,7 @@ kill_runner() {
 trap kill_runner SIGTERM
 
 while true; do
-	php maintenance/runJobs.php --wait --maxjobs="${JOBRUNNER_MAX_JOBS:5}" --conf /config/LocalSettings.php &
+	php maintenance/runJobs.php --wait --maxjobs="${JOBRUNNER_MAX_JOBS:-2}" --conf /config/LocalSettings.php &
 	PID=$!
 	wait "$PID"
 done
