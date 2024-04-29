@@ -30,7 +30,7 @@ Wikibase running on MediaWiki.
 
 | File | Description |
 | --- | --- |
-| `/LocalSettings.additions.php` | Loads the MediaWiki install generated `LocalSettings.php`, as well as all `*.php` files found in `LocalSettings.d`, and at the end a user-provided `/config/LocalSettings.php` if one is found volume mapped into that location. This file is copied to `/var/www/html/LocalSettings.php` after the initial MediaWiki installation has ran.
+| `/var/www/html/LocalSettings.wikibase.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`
 
 ### JobRunner
 
