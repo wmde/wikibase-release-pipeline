@@ -6,11 +6,12 @@ $wgArticlePath = "/wiki/$1";
 # Logs
 # TODO: Explore simply logging to stdout/stderr so these appear in Docker logs
 $wgDebugLogGroups = array(
-	'resourceloader' => '/var/log/mediawiki/resourceloader.log',
-	'exception' => '/var/log/mediawiki/exception.log',
-	'error' => '/var/log/mediawiki/error.log',
-	'fatal' => '/var/log/mediawiki/fatal.log',
+	'resourceloader' => '/var/log/mediawiki/mw.resourceloader.log',
+	'exception' => '/var/log/mediawiki/mw.exception.log',
+	'error' => '/var/log/mediawiki/mw.error.log',
+	'fatal' => '/var/log/mediawiki/mw.fatal.log',
 );
+$wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
 
 # Number of jobs run on request, 0 with job runner, above 0 without job runner
 $wgJobRunRate = $_ENV['MW_WG_JOB_RUN_RATE'];
