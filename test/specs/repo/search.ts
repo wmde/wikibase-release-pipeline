@@ -14,14 +14,6 @@ describe( 'Search', function () {
 			`${ testEnv.vars.WIKIBASE_URL }/w/api.php?action=wbsearchentities&search=${ itemLabel }&format=json&errorformat=plaintext&language=en&uselang=en&type=item`
 		);
 
-		// TODO: Currently fails, but result is maybe correct with this response:
-		// {
-		// 	data: { searchinfo: { search: 'something' }, search: [], success: 1 },
-		// 	status: 200
-		// }
-		// Look into why this is different from the previously expected result.
-		// Something changed in the configuration on this branch which
-		// caused this.
 		expect( result.data.search[ 0 ].label ).toEqual( itemLabel );
 	} );
 } );
