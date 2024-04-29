@@ -12,6 +12,7 @@ describe( 'WikibaseLocalMedia', function () {
 
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Wikibase Local Media' );
+		await browser.waitForJobs();
 	} );
 
 	it( 'Should allow to upload an image', async function () {

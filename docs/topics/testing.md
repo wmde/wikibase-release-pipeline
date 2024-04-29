@@ -52,12 +52,12 @@ WDIO Testrunner CLI options are also supported. See https://webdriver.io/docs/te
 In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested:
 
 ```bash
-WIKIBASE_URL=http://wikibase.svc
-WIKIBASE_CLIENT_URL=http://wikibase-client.svc
-QUICKSTATEMENTS_URL=http://quickstatements.svc:80
-WDQS_FRONTEND_URL=http://wdqs-frontend.svc:80
-WDQS_URL=http://wdqs.svc:9999
-WDQS_PROXY_URL=http://wdqs-proxy.svc:80
+WIKIBASE_URL=http://wikibase
+WIKIBASE_CLIENT_URL=http://wikibase-client
+QUICKSTATEMENTS_URL=http://quickstatements
+WDQS_FRONTEND_URL=http://wdqs-frontend
+WDQS_URL=http://wdqs:9999
+WDQS_PROXY_URL=http://wdqs-proxy
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w

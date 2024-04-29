@@ -170,10 +170,10 @@ services:
       wikibase:
         condition: service_healthy
     restart: unless-stopped
-    volumes:
-      - quickstatements-config:/quickstatements/data
     ports:
       - ${QUICKSTATEMENTS_PORT}:80
+    volumes:
+      - quickstatements-config:/quickstatements/data
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"

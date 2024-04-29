@@ -13,7 +13,7 @@ describe( 'Pingback', function () {
 		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
 		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
-		const result = await browser.makeRequest( 'http://mediawiki.svc' );
+		const result = await browser.makeRequest( 'http://pingback-beacon' );
 		expect( result.data ).toHaveLength( 2 );
 
 		const requestData = JSON.parse(

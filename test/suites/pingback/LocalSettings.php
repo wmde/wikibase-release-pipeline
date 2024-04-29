@@ -1,3 +1,3 @@
 <?php
 
-$wgWBRepoSettings['pingbackHost'] = 'http://mediawiki.svc';
+$wgWBRepoSettings['pingbackHost'] = 'http://pingback-beacon';

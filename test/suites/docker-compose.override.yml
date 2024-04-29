@@ -1,0 +1,10 @@
+networks:
+  default:
+    name: wikibase-suite-test
+    external: true
+
+services:
+  wikibase:
+    volumes:
+      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ../${OUTPUT_DIR}:/var/log/mediawiki

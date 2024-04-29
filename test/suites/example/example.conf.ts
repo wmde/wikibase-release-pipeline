@@ -1,3 +1,4 @@
+import { defaultTestSettings } from '../../setup/make-test-settings.js';
 import TestEnv from '../../setup/test-env.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
@@ -9,17 +10,9 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'specs/elasticsearch/*.ts'
 	],
 	composeFiles: [
-		'../example/docker-compose.yml',
+		...defaultTestSettings.composeFiles,
 		'suites/example/docker-compose.override.yml'
-	],
-	envFiles: [
-		'../example/template.env',
-		'suites/example/example.env',
-		'../local.env'
-	],
-	beforeServices: async (): Promise<void> => {
-		// bypass default local image loading
-	}
+	]
 } );
 
 export const config = wdioConfig( testEnv );
