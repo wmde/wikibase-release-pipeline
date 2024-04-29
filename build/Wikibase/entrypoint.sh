@@ -30,13 +30,7 @@ fi
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
 elif [ -e "/var/www/html/LocalSettings.php" ]; then
-    # This fallback will copy the generated + appended LocalSettings.php
-    # if the copy in /config is missing
-    cp /var/www/html/LocalSettings.php /config/LocalSettings.php
-fi
-
-if [ ! -e "/var/www/html/LocalSettings.php" ]; then
-    echo "LocalSettings.php not found in /config or /var/www/html, running MediaWiki install."
+    echo "LocalSettings.php not found in /config, running MediaWiki install."
     # Run MediaWiki install script
     php /var/www/html/maintenance/run.php install \
         --dbuser "$SETUP_DB_USER" \
