@@ -28,8 +28,8 @@ fi
 # Sync LocalSettings.php, prefer /config/LocalSettings.php if it exists
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
-elif [ -e "/var/www/html/LocalSettings.php" ]; then
-    echo "LocalSettings.php not found in /config, running MediaWiki install."
+else
+    echo "/config/LocalSettings.php not found, running MediaWiki install."
     # Run MediaWiki install script
     php /var/www/html/maintenance/run.php install \
         --dbuser "$SETUP_DB_USER" \

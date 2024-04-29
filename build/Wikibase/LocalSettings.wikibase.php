@@ -1,3 +1,5 @@
+<?php
+
 # NOTE: This should already be the default, but wasn't in testing. Perhaps the official MediaWiki base we
 # base WBS Wikibase off of changes this.
 $wgScriptPath = "/w";
