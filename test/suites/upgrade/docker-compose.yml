@@ -7,36 +7,32 @@ networks:
 
 services:
   wikibase:
-    image: "${WIKIBASE_UPGRADE_TEST_IMAGE_URL}"
-    links:
-      - mysql
+    image: ${WIKIBASE_UPGRADE_TEST_IMAGE_URL}
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
     ports:
-      - "8181:80"
-    networks:
-      default:
-        aliases:
-          - ${WIKIBASE_HOST}
+      - 8880:80
     environment:
-      - DB_SERVER
-      - MW_WG_SECRET_KEY
-      - WIKIBASE_PINGBACK
-      - MW_ADMIN_NAME
-      - MW_ADMIN_PASS
-      - MW_ADMIN_EMAIL
-      - DB_USER
-      - DB_PASS
-      - DB_NAME
-      - WIKIBASE_HOST
+      MW_WG_JOB_RUN_RATE: 4
+      MW_WG_ENABLE_UPLOADS: false
+      MW_WG_SECRET_KEY:
+      WIKIBASE_PINGBACK:
+      MW_ADMIN_NAME:
+      MW_ADMIN_PASS:
+      MW_ADMIN_EMAIL:
+      DB_SERVER: mysql:3306
+      DB_USER:
+      DB_PASS:
+      DB_NAME:
     healthcheck:
-      test: curl --silent --fail http://${WIKIBASE_HOST}/wiki/Main_Page
+      test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
 
   mysql:
-    image: "${MARIADB_IMAGE_URL}"
+    image: ${MARIADB_IMAGE_URL}
     restart: unless-stopped
     volumes:
       - mediawiki-mysql-data:/var/lib/mysql
@@ -45,10 +41,6 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
-    networks:
-      default:
-        aliases:
-          - mysql.svc
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
       start_period: 1m

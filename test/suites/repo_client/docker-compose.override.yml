@@ -9,33 +9,27 @@ services:
       - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
-    image: "${WIKIBASE_TEST_IMAGE_URL}"
-    links:
-      - mysql
-      - wikibase
+    image: ${WIKIBASE_TEST_IMAGE_URL}
     depends_on:
-      - mysql
-      - wikibase
+      mysql:
+        condition: service_healthy
     restart: always
     volumes:
       - ./client-LocalSettings.php.template:/LocalSettings.php.template
       - ./client-extra-install.sh:/extra-install.sh
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     ports:
-      - "80:80"
-    networks:
-      default:
-        aliases:
-          - wikibase-client.svc
+      - 8383:80
     environment:
-      - DB_SERVER
-      - MW_ADMIN_NAME
-      - MW_ADMIN_PASS
-      - MW_ADMIN_EMAIL
-      - MW_WG_SECRET_KEY
-      - DB_USER
-      - DB_PASS
-      - DB_NAME=client_wiki
+      MW_ADMIN_NAME:
+      MW_ADMIN_PASS:
+      MW_ADMIN_EMAIL:
+      MW_WG_SECRET_KEY:
+      DB_SERVER: mysql:3306
+      DB_USER:
+      DB_PASS:
+      DB_NAME: client_wiki
+      VIRTUAL_HOST: wikibase-client
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s

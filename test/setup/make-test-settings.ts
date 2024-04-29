@@ -14,8 +14,16 @@ import loadEnvFiles from './load-env-files.js';
 export const ONE_DAY_IN_MS = 86400000;
 
 export const defaultTestSettings = {
-	envFiles: [ '../variables.env', './test-services.env', '../local.env' ],
-	composeFiles: [ 'suites/docker-compose.yml' ],
+	envFiles: [
+		'../example/template.env',
+		'../variables.env',
+		'./test-services.env',
+		'../local.env'
+	],
+	composeFiles: [
+		'../example/docker-compose.yml',
+		'suites/docker-compose.override.yml'
+	],
 	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();

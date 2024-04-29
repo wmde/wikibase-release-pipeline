@@ -238,8 +238,8 @@ export function defaultFunctions(): void {
 				validateStatus: false
 			};
 
-			// essentially 'SELECT * WHERE { <http://wikibase.svc/entity/Q101> ?p ?o }' but encoded with some special chars
-			const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase.svc%2Fentity%2F${ itemId }%3E+%3Fp+%3Fo+%7D`;
+			// essentially 'SELECT * WHERE { <http://wikibase/entity/Q101> ?p ?o }' but encoded with some special chars
+			const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase%2Fentity%2F${ itemId }%3E+%3Fp+%3Fo+%7D`;
 
 			const response = await browser.makeRequest(
 				sparqlEndpoint,

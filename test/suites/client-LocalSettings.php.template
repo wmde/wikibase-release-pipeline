@@ -59,7 +59,7 @@ ${DOLLAR}entitySources = [
     'repo' => [
         'entityNamespaces' => [ 'item' => 120, 'property' => 122 ],
         'repoDatabase' => 'my_wiki',
-        'baseUri' => 'http://wikibase.svc/entity/',
+        'baseUri' => 'http://wikibase/entity/',
         'interwikiPrefix' => 'my_wiki',
         'rdfNodeNamespacePrefix' => 'wd',
         'rdfPredicateNamespacePrefix' => '',
@@ -69,7 +69,7 @@ ${DOLLAR}entitySources = [
 ${DOLLAR}wgWBClientSettings['entitySources'] = ${DOLLAR}entitySources;
 ${DOLLAR}wgWBClientSettings['itemAndPropertySourceName'] = 'repo';
 
-${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase.svc:80';
+${DOLLAR}wgWBClientSettings['repoUrl'] = 'http://wikibase';
 ${DOLLAR}wgWBClientSettings['repoScriptPath'] = '/w';
 ${DOLLAR}wgWBClientSettings['repoArticlePath'] = '/wiki/${DOLLAR}1';
 ${DOLLAR}wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];

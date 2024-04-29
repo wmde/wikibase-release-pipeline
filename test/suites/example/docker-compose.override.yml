@@ -1,18 +1,4 @@
-networks:
-  default:
-    name: wikibase-suite-test
-    external: true
-
 services:
   wikibase:
     volumes:
-      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
       - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
-      - ./example/results:/var/log/mediawiki
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
-
-  quickstatements:
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://quickstatements
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://wikibase

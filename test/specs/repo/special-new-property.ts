@@ -51,7 +51,7 @@ describe( 'Special:NewProperty', function () {
 				await browser.waitForJobs();
 
 				await expect( browser ).toHaveUrl(
-					/http:\/\/wikibase\.svc\/wiki\/Property:P\d+/
+					/http:\/\/wikibase\/wiki\/Property:P\d+/
 				);
 
 				await expect( $( '.wikibase-propertyview-datatype-value' ) ).toHaveText(

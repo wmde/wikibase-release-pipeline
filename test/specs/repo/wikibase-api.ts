@@ -6,6 +6,10 @@ import WikibasePropertyType from '../../types/wikibase-property-type.js';
 const dataTypes = [ wikibasePropertyString ];
 
 describe( 'Wikibase API', function () {
+	afterEach( async function () {
+		await browser.waitForJobs();
+	} );
+
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		it( `Should be able to create many properties and items of type ${ dataType.name }`, async function () {
