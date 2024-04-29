@@ -8,14 +8,13 @@ To create an OAuth consumer
 
 ```
 # set these environment variables
-MW_ADMIN_NAME=WikibaseDockerAdmin
-QS_PUBLIC_SCHEME_HOST_AND_PORT=http://wdqs.svc:9999
-
+SETUP_MW_ADMIN_NAME=WikibaseDockerAdmin
+QUICKSTATEMENTS_PUBLIC_URL=http://quickstatements.mydomain.net
 
 # execute this inside the container
 php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
     --approve \
-    --callbackUrl $QS_PUBLIC_SCHEME_HOST_AND_PORT/api.php \
+    --callbackUrl $QUICKSTATEMENTS_PUBLIC_URL/api.php \
     --callbackIsPrefix true \
     --user $MW_ADMIN_NAME \
     --name QuickStatements \

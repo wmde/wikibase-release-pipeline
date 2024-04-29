@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+
 # This file is provided by the wikibase/wikibase docker image.
 
 # Test if required environment variables have been set
-REQUIRED_VARIABLES=(MW_ADMIN_NAME MW_ADMIN_PASS MW_ADMIN_EMAIL MW_WG_SECRET_KEY DB_SERVER DB_USER DB_PASS DB_NAME MW_WG_SERVER)
+REQUIRED_VARIABLES=(SETUP_MW_ADMIN_NAME SETUP_MW_ADMIN_PASS SETUP_MW_ADMIN_EMAIL SETUP_DB_SERVER SETUP_DB_USER SETUP_DB_PASS SETUP_DB_NAME SETUP_MW_WG_SERVER)
 for i in "${REQUIRED_VARIABLES[@]}"; do
     eval THISSHOULDBESET=\$"$i"
     if [ -z "$THISSHOULDBESET" ]; then
@@ -15,38 +16,50 @@ set -eu
 
 # Wait for the db to come up. Sometimes it appears to come up and then
 # goes back down meaning MW install fails, so wait for a second and double check:
-/wait-for-it.sh "$DB_SERVER" -t 300
+/wait-for-it.sh "$SETUP_DB_SERVER" -t 300
 sleep 1
-/wait-for-it.sh "$DB_SERVER" -t 300
+/wait-for-it.sh "$SETUP_DB_SERVER" -t 300
 
-# Run MediaWiki install script
-rm -f /var/www/html/LocalSettings.php
-# TODO: put this into a better spot. /var/lib/mediawiki ?
-rm -f /var/www/html/LocalSettings.shared/LocalSettings.php
-mkdir -p /var/www/html/LocalSettings.shared
-php /var/www/html/maintenance/run.php install \
-    --confpath /var/www/html/LocalSettings.shared \
-    --server "$MW_WG_SERVER" \
-    --dbuser "$DB_USER" \
-    --dbpass "$DB_PASS" \
-    --dbname "$DB_NAME" \
-    --dbserver "$DB_SERVER" \
-    --lang "$MW_SITE_LANG" \
-    --pass "$MW_ADMIN_PASS" \
-    "$MW_SITE_NAME" \
-    "$MW_ADMIN_NAME"
+# Create wikibase-config directory if it doesn't exists
+# TODO: Should we just exit early with feedback about creating the `wikibase-config` volume if the directory doesn't exist?
+mkdir -p /wikibase-config
 
+# Sync LocalSettings.php, prefer /wikibase-config/LocalSettings.php if it exists
+if [ -e "/wikibase-config/LocalSettings.php" ]; then
+    cp /wikibase-config/LocalSettings.php /var/www/html/LocalSettings.php
+elif [ -e "/var/www/html/LocalSettings.php" ]; then
+    cp /var/www/html/LocalSettings.php /wikibase-config/LocalSettings.php
+fi
 
-cat /var/www/html/LocalSettings.wbs.php >> /var/www/html/LocalSettings.shared/LocalSettings.php
+if [ ! -e "/var/www/html/LocalSettings.php" ]; then
+    echo "LocalSettings.php not found in /wikibase-config or /var/www/html, running MediaWiki install."
+    # Run MediaWiki install script
+    php /var/www/html/maintenance/run.php install \
+        --dbuser "$SETUP_DB_USER" \
+        --dbpass "$SETUP_DB_PASS" \
+        --dbname "$SETUP_DB_NAME" \
+        --dbserver "$SETUP_DB_SERVER" \
+        --server "$SETUP_MW_WG_SERVER" \
+        --lang "$MW_WG_LANGUAGE_CODE" \
+        --pass "$SETUP_MW_ADMIN_PASS" \
+        "$MW_WG_SITENAME" \
+        "$SETUP_MW_ADMIN_NAME"
 
-# Copy the LocalSettings to be used as the actual LocalSettings root
-cp /var/www/html/LocalSettings.shared/LocalSettings.php /var/www/html/LocalSettings.php
+    # Add WBS customizations to generated LocalSettings.php
+    cat /var/www/html/LocalSettings.additions.php >> /var/www/html/LocalSettings.php
 
-# Update Admin User name ane email
-php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
+    # Replace /wikibase-config/LocalSettings.php with newly generated LocalSettings.php
+    cp /var/www/html/LocalSettings.php /wikibase-config/LocalSettings.php
 
-# Run update.php to finish Wikibase install or upgrade
-php /var/www/html/maintenance/run.php update --quick
+    # Update the MW Admin email address:
+    # If $SETUP_MW_ADMIN_NAME doesn't already exist, a new admin user will be created
+    php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$SETUP_MW_ADMIN_NAME" "$SETUP_MW_ADMIN_EMAIL"
+    # Update Admin password
+    php /var/www/html/maintenance/run.php changePassword.php --user="$SETUP_MW_ADMIN_NAME" --password="$SETUP_MW_ADMIN_PASS"
+
+    # Run update.php to finish Wikibase install or upgrade
+    php /var/www/html/maintenance/run.php update --quick
+fi
 
 if [ -f /default-extra-install.sh ]; then
     # shellcheck disable=SC1091

@@ -6,13 +6,13 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `WB_PUBLIC_SCHEME_HOST_AND_PORT` | NONE | Host and port of Wikibase as seen by the user's browser |
-| `QS_PUBLIC_SCHEME_HOST_AND_PORT` | NONE | Host and port of QuickStatements as seen by the user's browser |
+| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase as seen by the user's browser |
+| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements as seen by the user's browser |
 | `OAUTH_CONSUMER_KEY` | NONE | OAuth consumer key (obtained from Wikibase) |
 | `OAUTH_CONSUMER_SECRET` | NONE | OAuth consumer secret (obtained from wikibase) |
 | `PHP_TIMEZONE` | UTC | setting of php.ini date.timezone |
-| `MW_SITE_LANG` | "en" | Site language |
-| `MW_SITE_NAME` | "wikibase-docker" | Site name |
+| `MW_WG_LANGUAGE_CODE` | "en" | Site language |
+| `MW_WG_SITENAME` | "wikibase-docker" | Site name |
 | `WB_PROPERTY_NAMESPACE` | NONE | Wikibase Property namespace |
 | `WB_ITEM_NAMESPACE` | NONE | Wikibase Item namespace |
 | `WB_PROPERTY_PREFIX` | NONE | Wikibase Property prefix |
@@ -34,15 +34,15 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 ### Set up QuickStatements
 
-In order to authorize QuickStatements against Wikibase via OAuth, this container must be available on an address on the host machine that is also visible within the Docker network. Set `QS_PUBLIC_SCHEME_HOST_AND_PORT` to this address.
+In order to authorize QuickStatements against Wikibase via OAuth, this container must be available on an address on the host machine that is also visible within the Docker network. Set `QUICKSTATEMENTS_PUBLIC_URL` to this address.
 
-Likewise, Wikibase needs to be able to access QuickStatements for the OAuth callback on a host-recognizable address, set using `WB_PUBLIC_SCHEME_HOST_AND_PORT`.
+Likewise, Wikibase needs to be able to access QuickStatements for the OAuth callback on a host-recognizable address, set using `WIKIBASE_PUBLIC_URL`.
 
 Note that Docker Engine doesn't provide such addresses, so you will likely need to set up a reverse proxy (such as nginx or haproxy) alongside either public DNS entries or a local DNS server using entries that route to these container. See the Wikibase Suite example configuration for more guidance on how to set that up.
 
 You can pass the consumer and secret token you got from your Wikibase instance to this container using the environment variables `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. Alternatively you can let the [default-extra-install script](../WikibaseBundle/default-extra-install.sh) supplied in the Wikibase bundle handle this for you.
 
-Test whether it works by navigating to `QS_PUBLIC_SCHEME_HOST_AND_PORT` and logging in.
+Test whether it works by navigating to `QUICKSTATEMENTS_PUBLIC_URL` and logging in.
 
 You should be redirected to the wiki, where you can authorize this QuickStatements to act on your behalf.
 
