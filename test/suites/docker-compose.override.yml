@@ -6,5 +6,5 @@ networks:
 services:
   wikibase:
     volumes:
-      - ./LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.test.php
+      - ./LocalSettings.php:/var/www/html/LocalSettings.d/ZZ-LocalSettings.test.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
