@@ -46,6 +46,11 @@ services:
     restart: always
     volumes_from:
       - wikibase
+    environment:
+      MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
+      MW_WG_ENABLE_UPLOADS: false
+      WIKIBASE_PINGBACK: false
+      MW_ELASTIC_HOST: elasticsearch
 
   mysql:
     image: ${MARIADB_IMAGE_URL}
