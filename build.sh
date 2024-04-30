@@ -59,9 +59,6 @@ function build_wikibase {
         \
         --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
         --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
-        --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \
-        --build-arg MW_WG_ENABLE_UPLOADS="$MW_WG_ENABLE_UPLOADS" \
-        --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
