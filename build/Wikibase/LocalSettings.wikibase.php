@@ -32,7 +32,7 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
-# Load extensions if present
+# Load extensions if present, alphabetically ordered by filename  
 foreach (glob("LocalSettings.d/*.php") as $filename)
 {
     include $filename;
