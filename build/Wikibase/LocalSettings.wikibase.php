@@ -30,7 +30,6 @@ if (isset($_ENV['MW_WG_ENABLE_UPLOADS'])) {
 if (isset($_ENV['MW_WG_ENABLE_UPLOADS'])) {
 	$wgJobRunRate = $_ENV['MW_WG_JOB_RUN_RATE'];
 }
-
 if (isset($_ENV['WIKIBASE_PINGBACK'])) {
 	$wgWBRepoSettings['wikibasePingback'] = $_ENV['WIKIBASE_PINGBACK'];
 }
