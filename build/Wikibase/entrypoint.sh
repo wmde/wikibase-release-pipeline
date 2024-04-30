@@ -19,14 +19,13 @@ else
     # Check for required SETUP_ env vars
     set +u
     required_vars=(
-        SETUP_MW_ADMIN_NAME
-        SETUP_MW_ADMIN_PASS
-        SETUP_MW_ADMIN_EMAIL
         SETUP_DB_SERVER
         SETUP_DB_USER
         SETUP_DB_PASS
         SETUP_DB_NAME
-        SETUP_MW_WG_SERVER
+        SETUP_MW_ADMIN_NAME
+        SETUP_MW_ADMIN_PASS
+        SETUP_MW_ADMIN_EMAIL
     )
     for var in "${required_vars[@]}"; do
         if [ -z "${!var}" ]; then
@@ -42,7 +41,6 @@ else
         --dbpass "$SETUP_DB_PASS" \
         --dbname "$SETUP_DB_NAME" \
         --dbserver "$SETUP_DB_SERVER" \
-        --server "$SETUP_MW_WG_SERVER" \
         --pass "$SETUP_MW_ADMIN_PASS" \
         --lang "$MW_WG_LANGUAGE_CODE" \
         "$MW_WG_SITENAME" \

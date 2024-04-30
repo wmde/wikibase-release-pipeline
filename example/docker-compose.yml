@@ -18,7 +18,6 @@ services:
       - wikibase-images:/var/www/html/images
       - quickstatements-config:/quickstatements/data
     environment:
-      SETUP_MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
       SETUP_MW_ADMIN_NAME: ${SETUP_MW_ADMIN_NAME}
       SETUP_MW_ADMIN_PASS: ${SETUP_MW_ADMIN_PASS}
       SETUP_MW_ADMIN_EMAIL: ${SETUP_MW_ADMIN_EMAIL}
@@ -26,10 +25,11 @@ services:
       SETUP_DB_USER: ${SETUP_DB_USER}
       SETUP_DB_PASS: ${SETUP_DB_PASS}
       SETUP_DB_NAME: ${SETUP_DB_NAME}
-      MW_ELASTIC_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
       MW_WG_ENABLE_UPLOADS: false
       WIKIBASE_PINGBACK: false
+      MW_ELASTIC_HOST: elasticsearch
+      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
     healthcheck:

@@ -15,6 +15,7 @@ $wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
 $wgScriptPath = "/w";
 $wgArticlePath = "/wiki/$1";
 
+$wgServer = $_ENV['MW_WG_SERVER'];
 $wgSiteName = $_ENV['MW_WG_SITENAME'];
 $wgLanguageCode = $_ENV['MW_WG_LANGUAGE_CODE'];
 $wgEnableUploads = $_ENV['MW_WG_ENABLE_UPLOADS'];
