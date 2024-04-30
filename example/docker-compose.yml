@@ -35,7 +35,7 @@ services:
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
-      start_period: 2m
+      start_period: 5m
 
   wikibase-jobrunner:
     image: ${WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL}
