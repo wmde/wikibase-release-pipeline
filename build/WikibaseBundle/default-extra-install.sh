@@ -5,7 +5,7 @@ set -x
 if [ -z "${MW_ELASTIC_HOST:-}" ] ; then
     echo "Skipping Elasticsearch setup ..."
 else
-    /wait-for-it.sh "$MW_ELASTIC_HOST:${MW_ELASTIC_PORT:-9200}" -t 300
+    /wait-for-it.sh "$MW_ELASTIC_HOST:${MW_ELASTIC_PORT}" -t 300
     php /var/www/html/extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
