@@ -53,7 +53,7 @@ else
     php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$SETUP_MW_ADMIN_NAME" "$SETUP_MW_ADMIN_EMAIL"
 fi
 
-# Always run update
+# Always run update (this might be the first run off of a new image version on existing config and data)
 php /var/www/html/maintenance/run.php update --quick
 
 if [ -f /default-extra-install.sh ]; then
