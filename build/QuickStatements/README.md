@@ -6,8 +6,8 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase as seen by the user's browser |
-| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements as seen by the user's browser |
+| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase as seen by the user's browser (required) |
+| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements as seen by the user's browser (required) |
 | `OAUTH_CONSUMER_KEY` | NONE | OAuth consumer key (obtained from Wikibase) |
 | `OAUTH_CONSUMER_SECRET` | NONE | OAuth consumer secret (obtained from wikibase) |
 | `PHP_TIMEZONE` | UTC | setting of php.ini date.timezone |

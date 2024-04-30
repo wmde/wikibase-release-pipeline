@@ -61,8 +61,10 @@ RUN mkdir /var/log/wdqs && chown blazegraph /var/log/wdqs
 ENV MEMORY=""\
     HEAP_SIZE="1g"\
     HOST="0.0.0.0"\
+    WDQS_HOST="wdqs"\
     WDQS_ENTITY_NAMESPACES="120,122"\
     WIKIBASE_SCHEME="http"\
+    WIKIBASE_HOST="wikibase"\
     WIKIBASE_MAX_DAYS_BACK="90"\
     BLAZEGRAPH_EXTRA_OPTS=""\
     LOG_CONFIG="/wdqs/logback.xml"

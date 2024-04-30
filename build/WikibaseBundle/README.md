@@ -25,9 +25,9 @@ In addition to the environment variables specified for the [Wikibase Base image]
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `MW_ELASTIC_HOST` | "false" | Hostname to an Elasticsearch server with the Wikibase Extension installed, if used (Optional) *|
-| `MW_ELASTIC_PORT` | 9200 | Port which Elasticsearch run on on the specified `MW_ELASTIC_PORT` (Optional) * |
-| `QUICKSTATEMENTS_PUBLIC_URL` | "false" | Public URL of the Quickstatements server, if configured (Optional) * |
+| `MW_ELASTIC_HOST` | undefined | Hostname to an Elasticsearch server with the Wikibase Extension installed, if used |
+| `MW_ELASTIC_PORT` | 9200 | Port which Elasticsearch is avaible on|
+| `QUICKSTATEMENTS_PUBLIC_URL` | undefined | Public URL of the Quickstatements server, if configured |
 
 \* _Note: Additional functionality is installed based upon the existence of values on these variables. Do not pass values into these variables if the related services are not available._
 

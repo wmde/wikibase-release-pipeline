@@ -38,6 +38,8 @@ COPY default.conf /templates/default.conf
 
 ENV LANGUAGE=en\
     BRAND_TITLE=DockerWikibaseQueryService\
+    WIKIBASE_HOST="wikibase"\
+    WDQS_HOST="wdqs"\
     COPYRIGHT_URL=undefined
 
 ENTRYPOINT ["/entrypoint.sh"]
