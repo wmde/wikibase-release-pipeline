@@ -28,24 +28,24 @@ function update_commit_hashes {
 
 # wikibase/wdqs -> wdqs
 function image_url_to_image_name {
-   local image_url="$1"
+    local image_url="$1"
 
-   # this will complain about image urls with tags in the end, e.g. foo:latest
-   colon_count=$(grep -o ":" <<< "$image_url" | wc -l)
-   if [[ $colon_count -gt 0 ]]; then
-       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
-       exit 1
-   fi
+    # this will complain about image urls with tags in the end, e.g. foo:latest
+    colon_count=$(grep -o ":" <<< "$image_url" | wc -l)
+    if [[ $colon_count -gt 0 ]]; then
+        echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+        exit 1
+    fi
 
-   # this will complain about image urls with hostnames, e.g. ghcr.io/foo/bar
-   slash_count=$(grep -o "/" <<< "$image_url" | wc -l)
-   if [[ $slash_count -gt 1 ]]; then
-       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
-       exit 1
-   fi
+    # this will complain about image urls with hostnames, e.g. ghcr.io/foo/bar
+    slash_count=$(grep -o "/" <<< "$image_url" | wc -l)
+    if [[ $slash_count -gt 1 ]]; then
+        echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+        exit 1
+    fi
 
-   # only take the second half of the url, the name after the slash
-   echo "$image_url" | cut -d'/' -f 2
+    # only take the second half of the url, the name after the slash
+    echo "$image_url" | cut -d'/' -f 2
 }
 
 
