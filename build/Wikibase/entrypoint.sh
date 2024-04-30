@@ -8,15 +8,6 @@ if [ ! -d "/config" ]; then
     exit 1
 fi
 
-# If SETUP_DB_SERVER is provided, wait for database connection
-if [ -n "${SETUP_DB_SERVER}" ]; then
-    # Sometimes it appears to come up and then goes back down
-    # meaning MW install fails, so wait for a second and double check:
-    /wait-for-it.sh "$SETUP_DB_SERVER" -t 300
-    sleep 1
-    /wait-for-it.sh "$SETUP_DB_SERVER" -t 300
-fi
-
 # Exit immediate on errors or unset variables from here onwards
 set -eu
 
@@ -62,8 +53,6 @@ else
     cp /var/www/html/LocalSettings.php /config/LocalSettings.php
     # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)
     php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$SETUP_MW_ADMIN_NAME" "$SETUP_MW_ADMIN_EMAIL"
-    # Update Admin password
-    php /var/www/html/maintenance/run.php changePassword.php --user="$SETUP_MW_ADMIN_NAME" --password="$SETUP_MW_ADMIN_PASS"
 fi
 
 # Always run update
