@@ -14,8 +14,8 @@ services:
     ports:
       - ${WIKIBASE_PORT:-8880}:80
     volumes:
-      - wikibase-images:/var/www/html/images
       - wikibase-config:/config
+      - wikibase-images:/var/www/html/images
       - quickstatements-config:/quickstatements/data
     environment:
       SETUP_MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
