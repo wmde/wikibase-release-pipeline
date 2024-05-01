@@ -24,7 +24,7 @@ if (isset($_ENV['MW_WG_LANGUAGE_CODE'])) {
 if (isset($_ENV['MW_WG_ENABLE_UPLOADS'])) {
 	$wgEnableUploads = $_ENV['MW_WG_ENABLE_UPLOADS'];
 }
-if (isset($_ENV['MW_WG_ENABLE_UPLOADS'])) {
+if (isset($_ENV['MW_WG_JOB_RUN_RATE'])) {
 	$wgJobRunRate = $_ENV['MW_WG_JOB_RUN_RATE'];
 }
 if (isset($_ENV['WIKIBASE_PINGBACK'])) {
