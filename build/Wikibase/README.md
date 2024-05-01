@@ -29,11 +29,11 @@ Wikibase running on MediaWiki.
 | `/var/www/html` | Base MediaWiki directory |
 | `/var/www/html/skins` | MediaWiki skins directory |
 | `/var/www/html/extensions` | MediaWiki extensions directory |
-| `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded at the end of other install generated settings, but before the settings in `/config/LocalSettings.override.php`
+| `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded in alphabetical order at the end of other install generated settings |
 
 | File | Description |
 | --- | --- |
-| `/var/www/html/LocalSettings.wikibase.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`
+| `/var/www/html/LocalSettings.wbs-extensions.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions.
 
 ### JobRunner
 

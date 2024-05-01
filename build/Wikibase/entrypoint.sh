@@ -37,6 +37,8 @@ else
 
     # Run MediaWiki install script, and update values
     php /var/www/html/maintenance/run.php install \
+        --server "$MW_WG_SERVER" \
+        --scriptpath "/w" \
         --dbuser "$SETUP_DB_USER" \
         --dbpass "$SETUP_DB_PASS" \
         --dbname "$SETUP_DB_NAME" \
@@ -45,8 +47,16 @@ else
         --lang "$MW_WG_LANGUAGE_CODE" \
         "$MW_WG_SITENAME" \
         "$SETUP_MW_ADMIN_NAME"
+
     # Include WBS customizations to generated LocalSettings.php
-    echo 'include "/var/www/html/LocalSettings.wikibase.php";' >> /var/www/html/LocalSettings.php
+    {
+        echo '# Insert any custom settings which should be run BEFORE extensions are loaded here'
+        echo
+        echo 'include "/var/www/html/LocalSettings.wbs-extensions.php";'
+        echo
+        echo '# Insert any custom settings which should be run AFTER extensions are loaded here'
+    } >> /var/www/html/LocalSettings.php
+
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php
     cp /var/www/html/LocalSettings.php /config/LocalSettings.php
     # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)

@@ -10,9 +10,6 @@ $wgDebugLogGroups = array(
 );
 $wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
 
-# NOTE: These should already be the default, but wasn't in testing. Perhaps the official MediaWiki base we
-# base WBS Wikibase off of changes this.
-$wgScriptPath = "/w";
 $wgArticlePath = "/wiki/$1";
 
 if (isset($_ENV['MW_WG_SERVER'])) {

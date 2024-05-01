@@ -5,7 +5,7 @@ services:
 
   wikibase:
     volumes:
-      - ./repo-LocalSettings.php:/var/www/html/LocalSettings.wikibase.php
+      - ./repo-LocalSettings.php:/var/www/html/LocalSettings.wbs-extensions.php
       - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
@@ -16,7 +16,7 @@ services:
     restart: always
     volumes:
       - wikibase-client-config:/config
-      - ./client-LocalSettings.php:/var/www/html/LocalSettings.wikibase.php
+      - ./client-LocalSettings.php:/var/www/html/LocalSettings.wbs-extensions.php
       - ./client-extra-install.sh:/extra-install.sh
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     ports:
