@@ -26,6 +26,9 @@ else
         SETUP_MW_ADMIN_NAME
         SETUP_MW_ADMIN_PASS
         SETUP_MW_ADMIN_EMAIL
+        MW_WG_SERVER
+        MW_WG_SITENAME
+        MW_WG_LANGUAGE_CODE
     )
     for var in "${required_vars[@]}"; do
         if [ -z "${!var}" ]; then
@@ -50,11 +53,11 @@ else
 
     # Include WBS customizations to generated LocalSettings.php
     {
-        echo '# Insert any custom settings which should be run BEFORE extensions are loaded here'
+        echo '# Insert any custom settings which should be ran BEFORE extensions here'
         echo
         echo 'include "/var/www/html/LocalSettings.wbs-extensions.php";'
         echo
-        echo '# Insert any custom settings which should be run AFTER extensions are loaded here'
+        echo '# Insert any custom settings which should be ran AFTER extensions here'
     } >> /var/www/html/LocalSettings.php
 
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php

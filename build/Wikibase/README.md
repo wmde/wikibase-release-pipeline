@@ -19,7 +19,6 @@ Wikibase running on MediaWiki.
 | `MW_WG_SITENAME` | "wikibase-docker" | $wgSitename to use for MediaWiki |
 | `MW_WG_LANGUAGE_CODE` | "en" | $wgLanguageCode to use for MediaWiki |
 | `MW_WG_ENABLE_UPLOADS` | "false" | $wgEnableUploads to use for MediaWiki |
-| `MW_WG_JOB_RUN_RATE` | "0" | $wgJobRunRate to use for MediaWiki. Defaults to 0 as a Job Runner instance is assumed. Set this to > 0 if a Job Runner is not in use|
 | `WIKIBASE_PINGBACK` | "false" | boolean for [WikibasePingback](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_pingback.html) |
 
 ### Filesystem layout

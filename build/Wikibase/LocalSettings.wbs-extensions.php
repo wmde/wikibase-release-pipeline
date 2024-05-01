@@ -24,9 +24,7 @@ if (isset($_ENV['MW_WG_LANGUAGE_CODE'])) {
 if (isset($_ENV['MW_WG_ENABLE_UPLOADS'])) {
 	$wgEnableUploads = $_ENV['MW_WG_ENABLE_UPLOADS'];
 }
-if (isset($_ENV['MW_WG_JOB_RUN_RATE'])) {
-	$wgJobRunRate = $_ENV['MW_WG_JOB_RUN_RATE'];
-}
+
 if (isset($_ENV['WIKIBASE_PINGBACK'])) {
 	$wgWBRepoSettings['wikibasePingback'] = $_ENV['WIKIBASE_PINGBACK'];
 }
@@ -43,4 +41,10 @@ require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 foreach (glob("LocalSettings.d/*.php") as $filename)
 {
     include $filename;
+}
+
+# An optional LocalSettings.override.php
+$localSettingsOverrideFile = "/config/LocalSettings.override.php";
+if (file_exists($localSettingsOverrideFile)) {
+	include $localSettingsOverrideFile;
 }
