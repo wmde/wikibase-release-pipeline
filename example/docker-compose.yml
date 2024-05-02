@@ -207,8 +207,6 @@ services:
       - nginx-proxy-certs:/etc/nginx/certs
       - nginx-proxy-vhost:/etc/nginx/vhost.d
       - nginx-proxy-html:/usr/share/nginx/html
-    environment:
-      DEFAULT_HOST: ${WIKIBASE_PUBLIC_HOST}
 
   # See https://github.com/nginx-proxy/acme-companion for setup and options
   acme-companion:
