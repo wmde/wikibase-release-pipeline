@@ -28,7 +28,6 @@ services:
       MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
       MW_WG_ENABLE_UPLOADS: false
       WIKIBASE_PINGBACK: false
-      MW_ELASTIC_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
@@ -54,7 +53,6 @@ services:
       # TODO: Make LocalSettings.wbs-extensions.php a template
       # (as was done before) so that /config/LocalSettings.php
       # is static for JobRunner use and otherwise migrations.
-      MW_ELASTIC_HOST: elasticsearch
       MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
       MW_WG_ENABLE_UPLOADS: false
       WIKIBASE_PINGBACK: false
