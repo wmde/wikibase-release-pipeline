@@ -5,6 +5,7 @@ set -x
 if [ -z "${MW_ELASTIC_HOST:-}" ] ; then
     echo "Skipping Elasticsearch setup ..."
 else
+    # shellcheck disable=2153 # do not warn about unused variables
     /wait-for-it.sh "$MW_ELASTIC_HOST:$MW_ELASTIC_PORT" -t 300
     php /var/www/html/extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse
