@@ -12,7 +12,7 @@ $wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
 
 $wgArticlePath = "/wiki/$1";
 
-if (getenv('MW_WG_SERVER'))) {
+if (getenv('MW_WG_SERVER')) {
 	$wgServer = getenv('MW_WG_SERVER');
 }
 if (getenv('MW_WG_SITENAME')) {
