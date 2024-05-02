@@ -1,6 +1,6 @@
 <?php
 
-if ( getenv('MW_ELASTIC_HOST') !== false ) {
+if (getenv('MW_ELASTIC_HOST')) {
   // https://www.mediawiki.org/wiki/Extension:CirrusSearch
   wfLoadExtension( 'CirrusSearch' );
 

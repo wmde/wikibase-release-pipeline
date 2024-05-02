@@ -13,6 +13,8 @@ set -eu
 
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
+    # Always run update (this might be the first run off of a new image version on existing config and data)
+    php /var/www/html/maintenance/run.php update --quick
 else
     echo "/config/LocalSettings.php not found, running MediaWiki install."
 
@@ -64,19 +66,18 @@ else
     cp /var/www/html/LocalSettings.php /config/LocalSettings.php
     # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)
     php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$SETUP_MW_ADMIN_NAME" "$SETUP_MW_ADMIN_EMAIL"
-fi
 
-# Always run update (this might be the first run off of a new image version on existing config and data)
-php /var/www/html/maintenance/run.php update --quick
+    php /var/www/html/maintenance/run.php update --quick
+    
+    if [ -f /default-extra-install.sh ]; then
+        # shellcheck disable=SC1091
+        bash /default-extra-install.sh
+    fi
 
-if [ -f /default-extra-install.sh ]; then
-    # shellcheck disable=SC1091
-    bash /default-extra-install.sh
-fi
-
-if [ -f /extra-install.sh ]; then
-    # shellcheck disable=SC1091
-    bash /extra-install.sh
+    if [ -f /extra-install.sh ]; then
+        # shellcheck disable=SC1091
+        bash /extra-install.sh
+    fi
 fi
 
 # Run the actual entry point
