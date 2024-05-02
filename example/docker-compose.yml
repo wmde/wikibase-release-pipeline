@@ -51,7 +51,7 @@ services:
       # only essential one is `MW_ELASTIC_HOST` as without that
       # flagged on the related extensions won't be ran in the
       # WikibaseBundle instance.
-      # TODO: Make LocalSettings.wbs-extensions.php a template 
+      # TODO: Make LocalSettings.wbs-extensions.php a template
       # (as was done before) so that /config/LocalSettings.php
       # is static for JobRunner use and otherwise migrations.
       MW_ELASTIC_HOST: elasticsearch
