@@ -15,7 +15,7 @@ Wikibase running on MediaWiki.
 
 ### Environment variables
 
-| `MW_WG_SERVERNAME` | undefined | $wgSitename to use for MediaWiki. A value matching how this site is accessed from the user's browser is required. |
+| `MW_WG_SERVER` | undefined | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required. |
 | `MW_WG_SITENAME` | "wikibase-docker" | $wgSitename to use for MediaWiki |
 | `MW_WG_LANGUAGE_CODE` | "en" | $wgLanguageCode to use for MediaWiki |
 | `MW_WG_ENABLE_UPLOADS` | "false" | $wgEnableUploads to use for MediaWiki |
