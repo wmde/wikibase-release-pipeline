@@ -18,3 +18,5 @@ services:
     depends_on:
       wikibase:
         condition: service_healthy
+    environment:
+      VIRTUAL_HOST: pingback-beacon
