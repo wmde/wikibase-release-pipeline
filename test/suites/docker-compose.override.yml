@@ -14,4 +14,4 @@ services:
   wikibase-jobrunner:
     environment:
       MW_WG_ENABLE_UPLOADS: true
-      JOBRUNNER_MAX_JOBS: 10
+      JOBRUNNER_MAX_JOBS: 5

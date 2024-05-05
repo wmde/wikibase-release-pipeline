@@ -5,11 +5,12 @@ describe( 'Pingback', function () {
 		await page.open( '/wiki/Main_Page' );
 
 		// eslint-disable-next-line wdio/no-pause
-		await browser.pause( 15 * 1000 );
+		await browser.pause( 5 * 1000 );
 
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
+		await browser.debug();
 		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
 		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
