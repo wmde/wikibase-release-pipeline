@@ -10,7 +10,7 @@ describe( 'Pingback', function () {
 		const sqlResult = await browser.dbQuery(
 			'SELECT * from updatelog where ul_key LIKE "WikibasePingback%"'
 		);
-		await browser.debug();
+
 		expect( sqlResult ).toMatch( 'WikibasePingback\t' );
 		expect( sqlResult ).toMatch( 'WikibasePingback-1.' );
 
