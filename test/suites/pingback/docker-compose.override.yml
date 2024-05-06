@@ -19,6 +19,3 @@ services:
       - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
     ports:
       - 7171:80
-    depends_on:
-      wikibase:
-        condition: service_healthy

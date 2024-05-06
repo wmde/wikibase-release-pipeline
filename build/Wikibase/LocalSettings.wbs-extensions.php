@@ -33,6 +33,8 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
+$wgWBRepoSettings['wikibasePingback'] = getenv('WIKIBASE_PINGBACK') && strtolower(getenv('WIKIBASE_PINGBACK')) == 'true';
+
 # Load extensions if present, alphabetically ordered by filename  
 foreach (glob("LocalSettings.d/*.php") as $filename)
 {
@@ -44,5 +46,3 @@ $localSettingsOverrideFile = "/config/LocalSettings.override.php";
 if (file_exists($localSettingsOverrideFile)) {
 	include $localSettingsOverrideFile;
 }
-
-$wgWBRepoSettings['wikibasePingback'] = getenv('WIKIBASE_PINGBACK') && strtolower(getenv('WIKIBASE_PINGBACK')) == 'true';
