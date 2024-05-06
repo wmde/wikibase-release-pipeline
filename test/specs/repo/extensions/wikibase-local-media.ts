@@ -68,6 +68,8 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to use uploaded image on statement in UI', async function () {
 		const itemId = await WikibaseApi.createItem( 'image-test-2' );
+		await browser.waitForJobs();
+
 		await ItemPage.open( itemId );
 
 		await $( '=add statement' ).click();
@@ -85,6 +87,6 @@ describe( 'WikibaseLocalMedia', function () {
 			.$( '=save' )
 			.click();
 
-		await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
+			await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
 	} );
 } );
