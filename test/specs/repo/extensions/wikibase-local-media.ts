@@ -87,6 +87,6 @@ describe( 'WikibaseLocalMedia', function () {
 			.$( '=save' )
 			.click();
 
-			await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
+		await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
 	} );
 } );
