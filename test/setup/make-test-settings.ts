@@ -38,8 +38,8 @@ export const defaultTestSettings = {
 			defaultFunctionsInit();
 			await WikibaseApi.initialize(
 				undefined,
-				testEnv.vars.SETUP_MW_ADMIN_NAME,
-				testEnv.vars.SETUP_MW_ADMIN_PASS
+				testEnv.vars.MW_ADMIN_NAME,
+				testEnv.vars.MW_ADMIN_PASS
 			);
 		} catch ( e ) {
 			throw new SevereServiceError( e );

@@ -8,10 +8,3 @@ services:
     volumes:
       - ./LocalSettings.php:/var/www/html/LocalSettings.d/ZZ-LocalSettings.test.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
-    environment:
-      MW_WG_ENABLE_UPLOADS: true
-
-  wikibase-jobrunner:
-    environment:
-      MW_WG_ENABLE_UPLOADS: true
-      JOBRUNNER_MAX_JOBS: 5

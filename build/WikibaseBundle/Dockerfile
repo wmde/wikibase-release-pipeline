@@ -80,4 +80,4 @@ RUN chown www-data /var/www/html/images -R
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
 
-ENV MW_ELASTIC_PORT=9200
+ENV ELASTICSEARCH_PORT=9200

@@ -72,8 +72,8 @@ describe( 'Scribunto Item', function () {
 	// This will generate a change that will dispatch
 	it( 'Should be able to delete the item on repo', async function () {
 		await LoginPage.login(
-			testEnv.vars.SETUP_MW_ADMIN_NAME,
-			testEnv.vars.SETUP_MW_ADMIN_PASS
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
 		);
 
 		// goto delete page

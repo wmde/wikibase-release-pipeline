@@ -18,19 +18,19 @@ if [ -e "/config/LocalSettings.php" ]; then
 else
     echo "/config/LocalSettings.php not found, running MediaWiki install."
 
-    # Check for required SETUP_ env vars
+    # Check for required  env vars
     set +u
     required_vars=(
-        SETUP_DB_SERVER
-        SETUP_DB_USER
-        SETUP_DB_PASS
-        SETUP_DB_NAME
-        SETUP_MW_ADMIN_NAME
-        SETUP_MW_ADMIN_PASS
-        SETUP_MW_ADMIN_EMAIL
         MW_WG_SERVER
-        MW_WG_SITENAME
+        DB_USER
+        DB_PASS
+        DB_NAME
+        DB_SERVER
+        MW_ADMIN_PASS
         MW_WG_LANGUAGE_CODE
+        MW_WG_SITENAME
+        MW_ADMIN_NAME
+        MW_ADMIN_EMAIL
     )
     for var in "${required_vars[@]}"; do
         if [ -z "${!var}" ]; then
@@ -44,17 +44,23 @@ else
     php /var/www/html/maintenance/run.php install \
         --server "$MW_WG_SERVER" \
         --scriptpath "/w" \
-        --dbuser "$SETUP_DB_USER" \
-        --dbpass "$SETUP_DB_PASS" \
-        --dbname "$SETUP_DB_NAME" \
-        --dbserver "$SETUP_DB_SERVER" \
-        --pass "$SETUP_MW_ADMIN_PASS" \
+        --dbuser "$DB_USER" \
+        --dbpass "$DB_PASS" \
+        --dbname "$DB_NAME" \
+        --dbserver "$DB_SERVER" \
+        --pass "$MW_ADMIN_PASS" \
         --lang "$MW_WG_LANGUAGE_CODE" \
         "$MW_WG_SITENAME" \
-        "$SETUP_MW_ADMIN_NAME"
+        "$MW_ADMIN_NAME"
 
     # Include WBS customizations to generated LocalSettings.php
     {
+        set +u
+        if [ -n "$ELASTICSEARCH_HOST" ]; then
+            echo "\$elasticsearchHost = '$ELASTICSEARCH_HOST';"
+        fi
+        set -u
+        echo
         echo '# Insert any custom settings which should be ran BEFORE extensions here'
         echo
         echo 'include "/var/www/html/LocalSettings.wbs-extensions.php";'
@@ -65,10 +71,10 @@ else
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php
     cp /var/www/html/LocalSettings.php /config/LocalSettings.php
     # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)
-    php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$SETUP_MW_ADMIN_NAME" "$SETUP_MW_ADMIN_EMAIL"
+    php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
 
     php /var/www/html/maintenance/run.php update --quick
-    
+
     if [ -f /default-extra-install.sh ]; then
         # shellcheck disable=SC1091
         bash /default-extra-install.sh

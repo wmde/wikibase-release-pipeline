@@ -18,17 +18,15 @@ services:
       - wikibase-images:/var/www/html/images
       - quickstatements-config:/quickstatements/data
     environment:
-      SETUP_MW_ADMIN_NAME: ${SETUP_MW_ADMIN_NAME}
-      SETUP_MW_ADMIN_PASS: ${SETUP_MW_ADMIN_PASS}
-      SETUP_MW_ADMIN_EMAIL: ${SETUP_MW_ADMIN_EMAIL}
-      SETUP_DB_SERVER: mysql:3306
-      SETUP_DB_USER: ${SETUP_DB_USER}
-      SETUP_DB_PASS: ${SETUP_DB_PASS}
-      SETUP_DB_NAME: ${SETUP_DB_NAME}
+      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
       MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
-      MW_WG_ENABLE_UPLOADS: false
-      WIKIBASE_PINGBACK: false
-      MW_ELASTIC_HOST: elasticsearch
+      DB_SERVER: mysql:3306
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
@@ -46,18 +44,6 @@ services:
     restart: always
     volumes_from:
       - wikibase
-    environment:
-      # * These values are duplicated from wikibase above. The
-      # only essential one is `MW_ELASTIC_HOST` as without that
-      # flagged on the related extensions won't be ran in the
-      # WikibaseBundle instance.
-      # TODO: Make LocalSettings.wbs-extensions.php a template
-      # (as was done before) so that /config/LocalSettings.php
-      # is static for JobRunner use and otherwise migrations.
-      MW_ELASTIC_HOST: elasticsearch
-      MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
-      MW_WG_ENABLE_UPLOADS: false
-      WIKIBASE_PINGBACK: false
 
   mysql:
     image: ${MARIADB_IMAGE_URL}
@@ -65,9 +51,9 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: ${SETUP_DB_NAME}
-      MYSQL_USER: ${SETUP_DB_USER}
-      MYSQL_PASSWORD: ${SETUP_DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
@@ -217,7 +203,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme-companion-data:/etc/acme.sh
     environment:
-      DEFAULT_EMAIL: ${SETUP_MW_ADMIN_EMAIL}
+      DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA

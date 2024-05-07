@@ -19,8 +19,8 @@ describe( 'Interwiki links', function () {
 		expect( clientWikiQueryResults ).toMatch( testEnv.vars.WIKIBASE_CLIENT_URL );
 
 		const config = {
-			user: testEnv.vars.SETUP_DB_USER,
-			pass: testEnv.vars.SETUP_DB_PASS,
+			user: testEnv.vars.DB_USER,
+			pass: testEnv.vars.DB_PASS,
 			database: 'client_wiki'
 		};
 		const clientLink = repoLinkFile

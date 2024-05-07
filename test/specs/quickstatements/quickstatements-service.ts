@@ -70,11 +70,11 @@ describe( 'QuickStatements Service', function () {
 		// login after redirect
 		const wpNameEl = await $( '#wpName1' );
 		await wpNameEl.waitForDisplayed();
-		await wpNameEl.setValue( testEnv.vars.SETUP_MW_ADMIN_NAME );
+		await wpNameEl.setValue( testEnv.vars.MW_ADMIN_NAME );
 
 		const wpPasswordEl = await $( '#wpPassword1' );
 		await wpPasswordEl.waitForDisplayed();
-		await wpPasswordEl.setValue( testEnv.vars.SETUP_MW_ADMIN_PASS );
+		await wpPasswordEl.setValue( testEnv.vars.MW_ADMIN_PASS );
 
 		const wpLoginButtonEl = await $( '#wpLoginAttempt' );
 		await wpLoginButtonEl.waitForDisplayed();

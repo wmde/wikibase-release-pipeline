@@ -2,11 +2,10 @@
 set -x
 
 # Enables and configures elasticsearch index
-if [ -z "${MW_ELASTIC_HOST:-}" ] ; then
+if [ -z "${ELASTICSEARCH_HOST:-}" ] ; then
     echo "Skipping Elasticsearch setup ..."
 else
     # shellcheck disable=2153 # do not warn about unused variables
-    /wait-for-it.sh "$MW_ELASTIC_HOST:$MW_ELASTIC_PORT" -t 300
     php /var/www/html/extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
@@ -20,7 +19,7 @@ else
     if php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
         --approve \
         --callbackUrl  "$QUICKSTATEMENTS_PUBLIC_URL/api.php" \
-        --callbackIsPrefix true --user "$SETUP_MW_ADMIN_NAME" --name QuickStatements --description QuickStatements --version 1.0.1 \
+        --callbackIsPrefix true --user "$MW_ADMIN_NAME" --name QuickStatements --description QuickStatements --version 1.0.1 \
         --grants createeditmovepage --grants editpage --grants highvolume --jsonOnSuccess > /quickstatements/data/qs-oauth.json; then
         # Check if JSON file was created
         if [[ -f /quickstatements/data/qs-oauth.json ]]; then

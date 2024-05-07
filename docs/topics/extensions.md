@@ -8,7 +8,7 @@ To create an OAuth consumer
 
 ```
 # set these environment variables
-SETUP_MW_ADMIN_NAME=WikibaseDockerAdmin
+MW_ADMIN_NAME=WikibaseDockerAdmin
 QUICKSTATEMENTS_PUBLIC_URL=http://quickstatements.mydomain.net
 
 # execute this inside the container

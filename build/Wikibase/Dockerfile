@@ -53,7 +53,6 @@ COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 # Make upload path writable for the webserver user
 RUN chown www-data /var/www/html/images -R
 
-COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
@@ -64,14 +63,10 @@ RUN ln -s /var/www/html/ /var/www/html/w
 # MediaWiki build time configuration
 ARG MW_WG_SITENAME
 ARG MW_WG_LANGUAGE_CODE
-ARG MW_WG_ENABLE_UPLOADS
-ARG WIKIBASE_PINGBACK
 
-ENV SETUP_DB_NAME=my_wiki\
+ENV DB_NAME=my_wiki\
     MW_WG_SITENAME=${MW_WG_SITENAME}\
-    MW_WG_LANGUAGE_CODE=${MW_WG_LANGUAGE_CODE}\
-    MW_WG_ENABLE_UPLOADS=false\
-    WIKIBASE_PINGBACK=false
+    MW_WG_LANGUAGE_CODE=${MW_WG_LANGUAGE_CODE}
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]

@@ -17,8 +17,8 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to upload an image', async function () {
 		await LoginPage.login(
-			testEnv.vars.SETUP_MW_ADMIN_NAME,
-			testEnv.vars.SETUP_MW_ADMIN_PASS
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
 		);
 
 		await page.open( '/wiki/Special:Upload/' );

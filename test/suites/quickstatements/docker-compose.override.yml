@@ -22,13 +22,13 @@ services:
     ports:
       - 8383:80
     environment:
-      SETUP_MW_ADMIN_NAME:
-      SETUP_MW_ADMIN_PASS:
-      SETUP_MW_ADMIN_EMAIL:
-      SETUP_DB_SERVER: mysql:3306
-      SETUP_DB_USER:
-      SETUP_DB_PASS:
-      SETUP_DB_NAME: client_wiki
+      MW_ADMIN_NAME:
+      MW_ADMIN_PASS:
+      MW_ADMIN_EMAIL:
+      DB_SERVER: mysql:3306
+      DB_USER:
+      DB_PASS:
+      DB_NAME: client_wiki
       MW_WG_SERVER: http://wikibase-client
       VIRTUAL_HOST: wikibase-client
     healthcheck:
