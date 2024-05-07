@@ -68,7 +68,6 @@ describe( 'WikibaseLocalMedia', function () {
 
 	it( 'Should allow to use uploaded image on statement in UI', async function () {
 		const itemId = await WikibaseApi.createItem( 'image-test-2' );
-		await browser.waitForJobs();
 
 		await ItemPage.open( itemId );
 
@@ -76,6 +75,8 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.keys( propertyLabel.split( '' ) );
 		await propertyIdSelector( propertyId ).click();
+
+		await browser.pause( 3000 );
 
 		await browser.keys( 'image.png'.split( '' ) );
 		await $( 'ul.ui-mediasuggester-list' )
