@@ -76,13 +76,7 @@ describe( 'WikibaseLocalMedia', function () {
 		await browser.keys( propertyLabel.split( '' ) );
 		await propertyIdSelector( propertyId ).click();
 
-		await browser.pause( 3000 );
-
 		await browser.keys( 'image.png'.split( '' ) );
-		await $( 'ul.ui-mediasuggester-list' )
-			.$( 'a' )
-			.$( 'span[title="Image.png"]' )
-			.click();
 
 		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
 			.$( '=save' )
