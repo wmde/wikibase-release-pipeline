@@ -21,13 +21,13 @@ services:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-      MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
+      MW_WG_SERVER: ${PUBLIC_SCHEME}${WIKIBASE_PUBLIC_HOST}
       DB_SERVER: mysql:3306
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
     healthcheck:
@@ -151,9 +151,6 @@ services:
       interval: 10s
       start_period: 2m
 
-  # QuickStatements requires publically accessible hostnames which route to the server running
-  # this service configured and set in QUICKSTATEMENTS_PUBLIC_HOST and WIKIBASE_PUBLIC_HOST
-  # (see .env) to enable authorization against the Wikibase instance.
   quickstatements:
     image: ${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}
     depends_on:
@@ -169,8 +166,8 @@ services:
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
-      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}${WIKIBASE_PUBLIC_HOST}
       VIRTUAL_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
@@ -179,7 +176,7 @@ services:
       start_period: 2m
 
   # --------------------------------------------------
-  # C. OPTIONAL REVERSE PROXY AND SSL SERVICES
+  # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
   # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
@@ -194,16 +191,17 @@ services:
       - nginx-proxy-vhost:/etc/nginx/vhost.d
       - nginx-proxy-html:/usr/share/nginx/html
 
-  # See https://github.com/nginx-proxy/acme-companion for setup and options
-  acme-companion:
-    image: nginxproxy/acme-companion
-    volumes_from:
-      - nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - acme-companion-data:/etc/acme.sh
-    environment:
-      DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
+  # Uncomment below for automatic SSL certificate provisoning (https)
+  # # See https://github.com/nginx-proxy/acme-companion for setup and options
+  # acme-companion:
+  #   image: nginxproxy/acme-companion
+  #   volumes_from:
+  #     - nginx-proxy
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - acme-companion-data:/etc/acme.sh
+  #   environment:
+  #     DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
