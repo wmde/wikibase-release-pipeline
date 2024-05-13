@@ -8,7 +8,7 @@ The provided files are for configuring and deploying Wikibase Suite using Docker
 
     - AMD64 architecture
     - 8 GB RAM
-    - 500 MB disk space
+    - 4 GB free disk space
     - Docker 22.0, or greater
     - Docker Compose 2.10, or greater
 

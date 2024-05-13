@@ -88,7 +88,7 @@ From a shell or terminal in the directory where this README file is found do the
 
   - AMD64 architecture
   - 8 GB of RAM
-  - 500 MB of free disk space
+  - 4 GB free disk space
   - Docker 22.0, or greater
   - Docker Compose 2.10, or greater
 
