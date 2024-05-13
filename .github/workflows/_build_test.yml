@@ -118,8 +118,8 @@ jobs:
         # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
         version:
           # Latest 1.39
-          - WMDE15
-          - WMDE15_BUNDLE
+          - WMDE18
+          - WMDE18_BUNDLE
           # Latest 1.40
           - WMDE19
           - WMDE19_BUNDLE
