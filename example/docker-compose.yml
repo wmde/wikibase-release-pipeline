@@ -98,6 +98,7 @@ services:
     volumes:
       - wdqs-data:/wdqs/data
     environment:
+      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs
       WDQS_PORT: 9999
@@ -121,6 +122,7 @@ services:
         soft: 32768
         hard: 32768
     environment:
+      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs
       WDQS_PORT: 9999
