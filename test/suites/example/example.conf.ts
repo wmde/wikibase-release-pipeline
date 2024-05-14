@@ -9,7 +9,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 // The user stories which reflect our current Example design,
 // among other things, are likely to cover the now deprecated
 // Upgrade test suite.
-// 
+//
 // Here are some proposed stories to cover:
 //
 // 1. User can setup and run all WBS services
@@ -20,7 +20,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 // 4. A Wikibase and/or other services Docker Image upgrades happen
 //    automatically on restart of services
 // 5. Can change setup variables but instance is unchanged if a
-//    /config/LocalSettings.php exists. 
+//    /config/LocalSettings.php exists.
 // 6. Wikibase instance is re-setup if /config/LocalSettings.php
 //    is not provided.
 
