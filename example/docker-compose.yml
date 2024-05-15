@@ -12,22 +12,22 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${WIKIBASE_PORT:-8880}:80
+      - 8880:80
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     environment:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-      MW_WG_SERVER: ${PUBLIC_SCHEME}${WIKIBASE_PUBLIC_HOST}
+      MW_WG_SERVER: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
       DB_SERVER: mysql:3306
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
       VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
     healthcheck:
@@ -98,9 +98,8 @@ services:
     volumes:
       - wdqs-data:/wdqs/data
     environment:
+      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
-      WDQS_HOST: wdqs
-      WDQS_PORT: 9999
     healthcheck:
       test: curl --silent --fail http://localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
@@ -121,9 +120,8 @@ services:
         soft: 32768
         hard: 32768
     environment:
+      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
-      WDQS_HOST: wdqs
-      WDQS_PORT: 9999
 
   wdqs-proxy:
     image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
@@ -140,7 +138,7 @@ services:
       - wdqs-proxy
     restart: unless-stopped
     ports:
-      - ${WDQS_FRONTEND_PORT:-8834}:80
+      - 8834:80
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
@@ -158,16 +156,16 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${QUICKSTATEMENTS_PORT:-8840}:80
+      - 8840:80
     volumes:
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}${QUICKSTATEMENTS_PUBLIC_HOST}
-      WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}${WIKIBASE_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
       VIRTUAL_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
       LETSENCRYPT_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
@@ -211,7 +209,7 @@ volumes:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:
   elasticsearch-data:
-  quickstatements-config:
+  quickstatements-data:
   # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
   nginx-proxy-certs:
   nginx-proxy-vhost:

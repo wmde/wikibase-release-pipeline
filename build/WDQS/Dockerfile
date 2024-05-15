@@ -62,6 +62,7 @@ ENV MEMORY=""\
     HEAP_SIZE="1g"\
     HOST="0.0.0.0"\
     WDQS_HOST="wdqs"\
+    WDQS_PORT="9999"\
     WDQS_ENTITY_NAMESPACES="120,122"\
     WIKIBASE_SCHEME="http"\
     WIKIBASE_HOST="wikibase"\
