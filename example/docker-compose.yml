@@ -13,6 +13,10 @@ services:
     restart: unless-stopped
     ports:
       - ${WIKIBASE_PORT:-8880}:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)
+      - traefik.http.routers.wikibase.entrypoints=web,websecure
     volumes:
       - ./config:/config
       - ./config/wikibase-php.ini:/usr/local/etc/php/conf.d/wikibase-php-config.ini
@@ -29,8 +33,6 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
-      VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
@@ -144,11 +146,13 @@ services:
     restart: unless-stopped
     ports:
       - ${WDQS_FRONTEND_PORT:-8834}:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)
+      - traefik.http.routers.wdqs-frontend.entrypoints=web,websecure
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
-      VIRTUAL_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail http://localhost
       interval: 10s
@@ -164,6 +168,10 @@ services:
       - ${QUICKSTATEMENTS_PORT:-8840}:80
     volumes:
       - quickstatements-config:/quickstatements/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)
+      - traefik.http.routers.quickstatements.entrypoints=web,websecure
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
@@ -171,8 +179,6 @@ services:
       WB_ITEM_PREFIX: "Item:"
       QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
       WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
-      VIRTUAL_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail http://localhost
       interval: 10s
@@ -182,33 +188,25 @@ services:
   # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
-  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
+  traefik:
+    image: traefik:v2.5
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
     ports:
       - 80:80
       - 443:443
+      - 8080:8080  # Traefik dashboard
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./config/nginx-proxy.conf:/etc/nginx/conf.d/nginx-proxy.conf
-      - nginx-proxy-certs:/etc/nginx/certs
-      - nginx-proxy-vhost:/etc/nginx/vhost.d
-      - nginx-proxy-html:/usr/share/nginx/html
-
-  # Uncomment the service below for automatic SSL certificate provisoning for all services
-  # configured with a LETSENCRYPT_HOST env var value set
-  # Note: If using SSL you will need to set PUBLIC_SCHEME=https in your .env file
-  #
-  # See https://github.com/nginx-proxy/acme-companion for additional options
-  # acme-companion:
-  #   image: nginxproxy/acme-companion
-  #   volumes_from:
-  #     - nginx-proxy
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - acme-companion-data:/etc/acme.sh
-  #   environment:
-  #     DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-letsencrypt:/letsencrypt
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
@@ -219,7 +217,4 @@ volumes:
   elasticsearch-data:
   quickstatements-config:
   # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
-  nginx-proxy-certs:
-  nginx-proxy-vhost:
-  nginx-proxy-html:
-  acme-companion-data:
+  traefik-letsencrypt:
