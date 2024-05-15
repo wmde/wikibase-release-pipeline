@@ -12,7 +12,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${WIKIBASE_PORT:-8880}:80
+      - 8880:80
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
@@ -142,7 +142,7 @@ services:
       - wdqs-proxy
     restart: unless-stopped
     ports:
-      - ${WDQS_FRONTEND_PORT:-8834}:80
+      - 8834:80
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
@@ -160,7 +160,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${QUICKSTATEMENTS_PORT:-8840}:80
+      - 8840:80
     volumes:
       - quickstatements-data:/quickstatements/data
     environment:
