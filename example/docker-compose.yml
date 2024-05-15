@@ -12,7 +12,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${WIKIBASE_PORT:-8880}:80
+      - 8880:80
     labels:
       - traefik.enable=true
       - traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)
@@ -144,7 +144,7 @@ services:
       - wdqs-proxy
     restart: unless-stopped
     ports:
-      - ${WDQS_FRONTEND_PORT:-8834}:80
+      - 8834:80
     labels:
       - traefik.enable=true
       - traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)
@@ -164,7 +164,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     ports:
-      - ${QUICKSTATEMENTS_PORT:-8840}:80
+      - 8840:80
     volumes:
       - quickstatements-data:/quickstatements/data
     labels:
