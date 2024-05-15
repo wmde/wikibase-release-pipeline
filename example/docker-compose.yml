@@ -18,7 +18,7 @@ services:
       - traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)
       - traefik.http.routers.wikibase.entrypoints=web,websecure
     volumes:
-      - ./config:/config
+      - wikibase-config:/config
       - wikibase-images:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -206,6 +206,7 @@ services:
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
+  wikibase-config:
   wikibase-images:
   mysql-data:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
