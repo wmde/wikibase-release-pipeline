@@ -16,7 +16,7 @@ services:
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     environment:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
@@ -162,7 +162,7 @@ services:
     ports:
       - ${QUICKSTATEMENTS_PORT:-8840}:80
     volumes:
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
@@ -213,7 +213,7 @@ volumes:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:
   elasticsearch-data:
-  quickstatements-config:
+  quickstatements-data:
   # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
   nginx-proxy-certs:
   nginx-proxy-vhost:
