@@ -40,6 +40,7 @@ ENV LANGUAGE=en\
     BRAND_TITLE=DockerWikibaseQueryService\
     WIKIBASE_HOST="wikibase"\
     WDQS_HOST="wdqs"\
+    WDQS_PORT="9999"\
     COPYRIGHT_URL=undefined
 
 ENTRYPOINT ["/entrypoint.sh"]
