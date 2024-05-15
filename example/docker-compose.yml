@@ -21,7 +21,7 @@ services:
       - ./config:/config
       - ./config/wikibase-php.ini:/usr/local/etc/php/conf.d/wikibase-php-config.ini
       - wikibase-images:/var/www/html/images
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     environment:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
@@ -167,7 +167,7 @@ services:
     ports:
       - ${QUICKSTATEMENTS_PORT:-8840}:80
     volumes:
-      - quickstatements-config:/quickstatements/data
+      - quickstatements-data:/quickstatements/data
     labels:
       - traefik.enable=true
       - traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)
@@ -215,6 +215,6 @@ volumes:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:
   elasticsearch-data:
-  quickstatements-config:
+  quickstatements-data:
   # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
   traefik-letsencrypt:
