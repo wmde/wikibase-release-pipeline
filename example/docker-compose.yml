@@ -19,7 +19,6 @@ services:
       - traefik.http.routers.wikibase.entrypoints=web,websecure
     volumes:
       - ./config:/config
-      - ./config/wikibase-php.ini:/usr/local/etc/php/conf.d/wikibase-php-config.ini
       - wikibase-images:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
