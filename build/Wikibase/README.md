@@ -31,7 +31,7 @@ Wikibase running on MediaWiki.
 
 | File | Description |
 | --- | --- |
-| `/var/www/html/LocalSettings.wbs-extensions.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions.
+| `/var/www/html/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions.
 
 ### JobRunner
 

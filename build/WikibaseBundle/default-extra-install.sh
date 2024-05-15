@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -x
+
+set -ex
 
 # Enables and configures elasticsearch index
 if [ -z "${ELASTICSEARCH_HOST:-}" ] ; then

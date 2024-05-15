@@ -63,7 +63,7 @@ else
         echo
         echo '# Insert any custom settings which should be ran BEFORE extensions here'
         echo
-        echo 'include "/var/www/html/LocalSettings.wbs-extensions.php";'
+        echo 'include "/var/www/html/LocalSettings.wbs.php";'
         echo
         echo '# Insert any custom settings which should be ran AFTER extensions here'
     } >> /var/www/html/LocalSettings.php
