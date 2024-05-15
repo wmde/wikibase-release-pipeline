@@ -100,8 +100,6 @@ services:
     environment:
       WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
-      WDQS_HOST: wdqs
-      WDQS_PORT: 9999
     healthcheck:
       test: curl --silent --fail http://localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
@@ -124,8 +122,6 @@ services:
     environment:
       WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
       WIKIBASE_HOST: wikibase
-      WDQS_HOST: wdqs
-      WDQS_PORT: 9999
 
   wdqs-proxy:
     image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
