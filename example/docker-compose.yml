@@ -17,6 +17,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)
       - traefik.http.routers.wikibase.entrypoints=web,websecure
+      - traefik.http.routers.wikibase.tls.certresolver=myresolver
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
@@ -145,6 +146,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)
       - traefik.http.routers.wdqs-frontend.entrypoints=web,websecure
+      - traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
@@ -167,6 +169,8 @@ services:
       - traefik.enable=true
       - traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)
       - traefik.http.routers.quickstatements.entrypoints=web,websecure
+      - traefik.http.routers.quickstatements.tls.certresolver=myresolver
+
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
