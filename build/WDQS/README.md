@@ -25,15 +25,15 @@ If you can not use [RecentChanges] then you will need to reload from an RDF dump
 
 | Variable | Default | Since | Description |
 | --- | --- | --- | --- |
-| `MEMORY` | "" | 0.2.5 | Memory limit for Blazegraph |
-| `HEAP_SIZE` | "1g" | 0.2.5 | Heap size for Blazegraph |
-| `WIKIBASE_HOST` | "wikibase.svc" | 0.2.5 | Hostname of the Wikibase host |
+| `WIKIBASE_HOST` | "wikibase" | 0.2.5 | Hostname of the Wikibase host |
 | `WIKIBASE_SCHEME` | "http" | 0.2.5 | Scheme of the Wikibase host |
-| `WDQS_HOST` | "wdqs.svc" | 0.2.5 | Hostname of the WDQS host (this service) |
+| `WDQS_HOST` | "wdqs" | 0.2.5 | Hostname of the WDQS host (this service) |
 | `WDQS_PORT` | "9999" | 0.2.5 | Port of the WDQS host (this service) |
 | `WDQS_ENTITY_NAMESPACES` | "120,122" | 0.2.5 | Wikibase Namespaces to load data from |
 | `WIKIBASE_MAX_DAYS_BACK` | "90" | 0.3.0 | Max days updater is allowed back from now |
 | `BLAZEGRAPH_EXTRA_OPTS` | "" | wmde.9 | Extra options to be passed to Blazegraph |
+| `MEMORY` | "" | 0.2.5 | Memory limit for Blazegraph |
+| `HEAP_SIZE` | "1g" | 0.2.5 | Heap size for Blazegraph |
 
 Note on `BLAZEGRAPH_EXTRA_OPTS`: These are options that are directly passed to the Blazegraph jar. That means they must be prefixed with `-D`. Example: `-Dhttps.proxyHost=http://my.proxy.com -Dhttps.proxyPort=3128`. See [the Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Configurable_properties) for all available options.
 

@@ -2,21 +2,14 @@ services:
   wikibase:
     volumes:
       - ./pingback/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.pingback.php
-    environment:
-      WIKIBASE_PINGBACK: true
 
   pingback-beacon:
     image: "node:lts-alpine"
     user: node
+    command: node beacon.mjs
     working_dir: /home/node/app
     restart: always
     volumes:
       - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
-    command: node beacon.mjs
     ports:
       - 7171:80
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    environment:
-      VIRTUAL_HOST: pingback-beacon

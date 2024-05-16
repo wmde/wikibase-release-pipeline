@@ -28,24 +28,24 @@ function update_commit_hashes {
 
 # wikibase/wdqs -> wdqs
 function image_url_to_image_name {
-   local image_url="$1"
+    local image_url="$1"
 
-   # this will complain about image urls with tags in the end, e.g. foo:latest
-   colon_count=$(grep -o ":" <<< "$image_url" | wc -l)
-   if [[ $colon_count -gt 0 ]]; then
-       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
-       exit 1
-   fi
+    # this will complain about image urls with tags in the end, e.g. foo:latest
+    colon_count=$(grep -o ":" <<< "$image_url" | wc -l)
+    if [[ $colon_count -gt 0 ]]; then
+        echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+        exit 1
+    fi
 
-   # this will complain about image urls with hostnames, e.g. ghcr.io/foo/bar
-   slash_count=$(grep -o "/" <<< "$image_url" | wc -l)
-   if [[ $slash_count -gt 1 ]]; then
-       echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
-       exit 1
-   fi
+    # this will complain about image urls with hostnames, e.g. ghcr.io/foo/bar
+    slash_count=$(grep -o "/" <<< "$image_url" | wc -l)
+    if [[ $slash_count -gt 1 ]]; then
+        echo "Incompatible image url '${image_url}'. Only dockerhub 'namespace/image_name' supported." > /dev/stderr
+        exit 1
+    fi
 
-   # only take the second half of the url, the name after the slash
-   echo "$image_url" | cut -d'/' -f 2
+    # only take the second half of the url, the name after the slash
+    echo "$image_url" | cut -d'/' -f 2
 }
 
 
@@ -57,12 +57,8 @@ function build_wikibase {
         --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
         \
-        --build-arg MW_SITE_NAME="$MW_SITE_NAME" \
-        --build-arg MW_SITE_LANG="$MW_SITE_LANG" \
-        --build-arg MW_WG_JOB_RUN_RATE="$MW_WG_JOB_RUN_RATE" \
-        --build-arg MW_WG_ENABLE_UPLOADS="$MW_WG_ENABLE_UPLOADS" \
-        --build-arg MW_WG_UPLOAD_DIRECTORY="$MW_WG_UPLOAD_DIRECTORY" \
-        --build-arg WIKIBASE_PINGBACK="$WIKIBASE_PINGBACK" \
+        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
+        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
@@ -170,6 +166,9 @@ function build_quickstatements {
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
+        \
+        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
+        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$(quickstatements_version)" \

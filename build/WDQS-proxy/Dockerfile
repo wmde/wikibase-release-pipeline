@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-
 COPY entrypoint.sh /entrypoint.sh
 COPY wdqs.template /etc/nginx/conf.d/wdqs.template
 
-ENV PROXY_MAX_QUERY_MILLIS=60000
+ENV PROXY_MAX_QUERY_MILLIS=60000\
+    PROXY_PASS_HOST=wdqs:9999
 
 ENTRYPOINT "/entrypoint.sh"
-

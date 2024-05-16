@@ -1,4 +1,0 @@
-services:
-  wikibase:
-    volumes:
-      - ./upgrade/tmp_LocalSettings.php:/var/www/html/LocalSettings.php

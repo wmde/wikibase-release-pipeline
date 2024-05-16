@@ -8,7 +8,7 @@ In order to change how this image is configured just mount over the wdqs.templat
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `PROXY_PASS_HOST` | "wdqs.svc:9999" | Where to forward the requests to |
+| `PROXY_PASS_HOST` | "wdqs:9999" | Where to forward the requests to |
 | `PROXY_MAX_QUERY_MILLIS` | 60000 | Timeout in milliseconds |
 
 ### Filesystem layout

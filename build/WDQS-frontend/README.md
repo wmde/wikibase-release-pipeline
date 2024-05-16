@@ -8,6 +8,7 @@ Frontend for the Wikibase Query Service, as seen at [https://query.wikidata.org]
 | --- | --- | --- |
 | `LANGUAGE` | "en" | Language to use in the UI |
 | `BRAND_TITLE` | "DockerWikibaseQueryService" | Name to display on the UI |
-| `WIKIBASE_HOST` | "wikibase.svc" | Hostname of the Wikibase host |
-| `WDQS_HOST` | "wdqs-proxy.svc" | Hostname of the WDQS host (probably READONLY, hence use of the wdqs-proxy service) |
+| `WIKIBASE_HOST` | "wikibase" | Hostname of the Wikibase host (required) |
+| `WDQS_HOST` | "wdqs" | Hostname of the WDQS host |
+| `WDQS_PORT` | "9999" | Port of the WDQS host |
 | `COPYRIGHT_URL` | "undefined" | URL for the copyright notice |

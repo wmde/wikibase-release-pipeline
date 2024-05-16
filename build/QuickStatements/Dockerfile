@@ -43,8 +43,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/quickstatements/public_html
 RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf && \
     sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-ENV MW_SITE_NAME=wikibase-docker \
-    MW_SITE_LANG=en \
+ENV MW_WG_SITENAME=${MW_WG_SITENAME}\
+    MW_WG_LANGUAGE_CODE=${MW_WG_LANGUAGE_CODE}\
     PHP_TIMEZONE=UTC
 
 RUN install -d -owww-data /var/log/quickstatements

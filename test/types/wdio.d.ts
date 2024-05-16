@@ -58,11 +58,6 @@ declare namespace WebdriverIO {
 		) => Promise<AxiosResponse>;
 
 		/**
-		 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
-		 */
-		queryBlazeGraphItem: ( itemId: string ) => Promise<Binding[]>;
-
-		/**
 		 * Skip test if extension is not installed (present) on the Wikibase server
 		 */
 		skipIfExtensionNotPresent: (
