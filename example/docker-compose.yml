@@ -199,6 +199,12 @@ services:
       - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
       - --certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      # FOR DEBUGGING ONLY:
+      - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --log.filePath=/logs/traefik.log
+      - --log.level=DEBUG
+      - --accesslog=true
+      - --accesslog.filePath=/logs/access.log
     ports:
       - 80:80
       - 443:443
