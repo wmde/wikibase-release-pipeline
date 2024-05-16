@@ -143,10 +143,10 @@ services:
     ports:
       - 8834:80
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)
-      - traefik.http.routers.wdqs-frontend.entrypoints=web,websecure
-      - traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver
+      - "traefik.enable=true"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-frontend.entrypoints=web,websecure"
+      - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
@@ -166,10 +166,10 @@ services:
     volumes:
       - quickstatements-data:/quickstatements/data
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)
-      - traefik.http.routers.quickstatements.entrypoints=web,websecure
-      - traefik.http.routers.quickstatements.tls.certresolver=myresolver
+      - "traefik.enable=true"
+      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements.entrypoints=web,websecure"
+      - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
 
     environment:
       WB_PROPERTY_NAMESPACE: 122
