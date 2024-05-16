@@ -199,12 +199,8 @@ services:
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--log.filePath=/logs/traefik.log"
-      - "--log.level=DEBUG"
-      - "--accesslog=true"
-      - "--accesslog.filePath=/logs/access.log"
+      # Uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - 80:80
       - 443:443
@@ -212,7 +208,6 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./logs/:/logs/
       - traefik-letsencrypt:/letsencrypt
 
 volumes:
