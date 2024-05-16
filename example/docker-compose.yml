@@ -14,10 +14,10 @@ services:
     ports:
       - 8880:80
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)
-      - traefik.http.routers.wikibase.entrypoints=web,websecure
-      - traefik.http.routers.wikibase.tls.certresolver=myresolver
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase.entrypoints=web,websecure"
+      - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
@@ -190,21 +190,21 @@ services:
   traefik:
     image: traefik:v2.5
     command:
-      - --api.insecure=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --certificatesresolvers.myresolver.acme.httpchallenge=true
-      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
-      - --certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}
-      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
-      # FOR DEBUGGING ONLY:
-      - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-      - --log.filePath=/logs/traefik.log
-      - --log.level=DEBUG
-      - --accesslog=true
-      - --accesslog.filePath=/logs/access.log
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--log.filePath=/logs/traefik.log"
+      - "--log.level=DEBUG"
+      - "--accesslog=true"
+      - "--accesslog.filePath=/logs/access.log"
     ports:
       - 80:80
       - 443:443
@@ -212,6 +212,7 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs/:/logs/
       - traefik-letsencrypt:/letsencrypt
 
 volumes:
