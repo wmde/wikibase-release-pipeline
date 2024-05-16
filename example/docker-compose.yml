@@ -16,8 +16,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
-      - "traefik.http.routers.wikibase.entrypoints=web,websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
+      # - "traefik.http.routers.wikibase.entrypoints=websecure"
+      # - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
@@ -145,8 +145,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
-      - "traefik.http.routers.wdqs-frontend.entrypoints=web,websecure"
-      - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
+      # - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
+      # - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
     environment:
       WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
@@ -168,8 +168,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
-      - "traefik.http.routers.quickstatements.entrypoints=web,websecure"
-      - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
+      # - "traefik.http.routers.quickstatements.entrypoints=websecure"
+      # - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
 
     environment:
       WB_PROPERTY_NAMESPACE: 122
@@ -194,11 +194,11 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       # Uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
       # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
