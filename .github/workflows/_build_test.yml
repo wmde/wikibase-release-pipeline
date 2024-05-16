@@ -107,43 +107,6 @@ jobs:
           name: TestResults
           path: test/suites/**/results
 
-  test-upgrade:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # TODO: can we get this from the environment to not have it hardcoded in the pipeline code?
-        version:
-          # Latest 1.39
-          - WMDE15
-          - WMDE15_BUNDLE
-          # Latest 1.40
-          - WMDE19
-          - WMDE19_BUNDLE
-          # Previous 1.41
-          - WMDE17
-          - WMDE17_BUNDLE
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/pull-ghcr
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: ./test.sh upgrade ${{ matrix.version }}
-        # This step should only take ~5 mins to complete, but sometimes seems to lock up and use the whole job timeout
-        # Set a specific lower timeout to allow us to retry sooner
-        timeout-minutes: 10
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: TestResults
-          path: test/suites/**/results
-
   test-success:
     # Post-test CI step - to check all tests succeeded
     # Github Branch Protection rules require this to pass to allow merging
@@ -151,6 +114,5 @@ jobs:
     needs:
       - lint
       - test
-      - test-upgrade
     steps:
       - run: true

@@ -1,6 +1,6 @@
 <?php
 
-if ( getenv('MW_ELASTIC_HOST') !== false ) {
+if (isset($elasticsearchHost)) {
   // https://www.mediawiki.org/wiki/Extension:Elastica
   wfLoadExtension( 'Elastica' );
 

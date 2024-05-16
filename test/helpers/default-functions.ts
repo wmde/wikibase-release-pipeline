@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import { Context } from 'mocha';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import Binding from '../types/binding.js';
 import BotResponse from '../types/bot-response.js';
 import DatabaseConfig from '../types/database-config.js';
 import ExternalChange from '../types/external-change.js';
@@ -223,30 +222,6 @@ export function defaultFunctions(): void {
 				const { data, status } = await axios.get( url, params );
 				return { data, status };
 			}
-		}
-	);
-
-	/**
-	 * Query blazegraph directly (only works if proxy is disabled, used in upgrade test)
-	 */
-	browser.addCommand(
-		'queryBlazeGraphItem',
-		async ( itemId: string ): Promise<Binding[]> => {
-			const sparqlEndpoint = `${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/sparql`;
-			const params = {
-				headers: { Accept: 'application/sparql-results+json' },
-				validateStatus: false
-			};
-
-			// essentially 'SELECT * WHERE { <http://wikibase/entity/Q101> ?p ?o }' but encoded with some special chars
-			const queryString = `query=SELECT+*+WHERE%7B+%3Chttp%3A%2F%2Fwikibase%2Fentity%2F${ itemId }%3E+%3Fp+%3Fo+%7D`;
-
-			const response = await browser.makeRequest(
-				sparqlEndpoint,
-				params,
-				queryString
-			);
-			return response.data.results.bindings;
 		}
 	);
 

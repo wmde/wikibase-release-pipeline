@@ -48,34 +48,25 @@ RUN apt-get update && \
     install -d /var/log/mediawiki -o www-data && \
     docker-php-ext-install calendar bz2
 
-COPY --from=composer --chown=root:root /var/www/html /var/www/html
-COPY wait-for-it.sh /wait-for-it.sh
+COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
+
+# Make upload path writable for the webserver user
+RUN chown www-data /var/www/html/images -R
+
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
-
-COPY LocalSettings.php.template /LocalSettings.php.template
 COPY htaccess /var/www/html/.htaccess
+COPY LocalSettings.* /var/www/html
 
 RUN ln -s /var/www/html/ /var/www/html/w
 
 # MediaWiki build time configuration
-ARG MW_SITE_NAME
-ARG MW_SITE_LANG
-ARG MW_WG_JOB_RUN_RATE
-ARG MW_WG_ENABLE_UPLOADS
-ARG MW_WG_UPLOAD_DIRECTORY
-ARG WIKIBASE_PINGBACK
+ARG MW_WG_SITENAME
+ARG MW_WG_LANGUAGE_CODE
 
-ENV MW_SITE_NAME=${MW_SITE_NAME}\
-    MW_SITE_LANG=${MW_SITE_LANG}\
-    MW_WG_JOB_RUN_RATE=${MW_WG_JOB_RUN_RATE}\
-    MW_WG_ENABLE_UPLOADS=${MW_WG_ENABLE_UPLOADS}\
-    MW_WG_UPLOAD_DIRECTORY=${MW_WG_UPLOAD_DIRECTORY}\
-    WIKIBASE_PINGBACK=${WIKIBASE_PINGBACK}
-
-RUN mkdir /var/www/html/uploads && \
-    chown www-data /var/www/html/uploads -R && \
-    chmod o-w /var/www/html
+ENV DB_NAME=my_wiki\
+    MW_WG_SITENAME=${MW_WG_SITENAME}\
+    MW_WG_LANGUAGE_CODE=${MW_WG_LANGUAGE_CODE}
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]

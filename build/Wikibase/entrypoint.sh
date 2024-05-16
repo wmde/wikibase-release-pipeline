@@ -1,58 +1,89 @@
 #!/usr/bin/env bash
+
 # This file is provided by the wikibase/wikibase docker image.
 
-# Test if required environment variables have been set
-REQUIRED_VARIABLES=(MW_ADMIN_NAME MW_ADMIN_PASS MW_ADMIN_EMAIL MW_WG_SECRET_KEY DB_SERVER DB_USER DB_PASS DB_NAME)
-for i in "${REQUIRED_VARIABLES[@]}"; do
-    eval THISSHOULDBESET=\$"$i"
-    if [ -z "$THISSHOULDBESET" ]; then
-    echo "$i is required but isn't set. You should pass it to docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file";
-    exit 1;
-    fi
-done
-
-set -eu
-
-# Wait for the db to come up
-/wait-for-it.sh "$DB_SERVER" -t 300
-# Sometimes it appears to come up and then go back down meaning MW install fails
-# So wait for a second and double check!
-sleep 1
-/wait-for-it.sh "$DB_SERVER" -t 300
-
-# Do the mediawiki install (only if LocalSettings doesn't already exist)
-if [ ! -e "/var/www/html/LocalSettings.php" ]; then
-    php /var/www/html/maintenance/install.php --dbuser "$DB_USER" --dbpass "$DB_PASS" --dbname "$DB_NAME" --dbserver "$DB_SERVER" --lang "$MW_SITE_LANG" --pass "$MW_ADMIN_PASS" "$MW_SITE_NAME" "$MW_ADMIN_NAME"
-    php /var/www/html/maintenance/resetUserEmail.php --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
-
-    # Copy our LocalSettings into place after install from the template
-    # https://stackoverflow.com/a/24964089/4746236
-    export DOLLAR='$'
-    envsubst < /LocalSettings.php.template > /var/www/html/LocalSettings.php
-
-    # Run update.php to install Wikibase
-    php /var/www/html/maintenance/update.php --quick
-
-    # Run extrascripts on first run
-    if [ -f /default-extra-install.sh ]; then
-        # shellcheck disable=SC1091
-        source /default-extra-install.sh
-    fi
-
-    # Run extrascripts on first run
-    if [ -f /extra-install.sh ]; then
-        # shellcheck disable=SC1091
-        source /extra-install.sh
-    fi
+# Exit immediately with message if no /config volume is available
+if [ ! -d "/config" ]; then
+    echo "A volume mapped to /config is required."
+    exit 1
 fi
 
-# Copy LocalSettings.php to a shared directory, if the image is being used with this shared directory existing
-# This is generally only done for the docker compose example which currently works out of the box
-# This is used to share a install generated LocalSettings.php with a job runner on first run for example
-if [[ -d "/var/shared-localsettings" ]] && [[ -e "/var/www/html/LocalSettings.php" ]]
-then
-    echo "/var/shared-localsettings & /var/www/html/LocalSettings.php found, so copying LocalSetting.php into shared directory"
-    cp /var/www/html/LocalSettings.php /var/shared-localsettings/LocalSettings.php
+# Exit immediate on errors or unset variables from here onwards
+set -eu
+
+if [ -e "/config/LocalSettings.php" ]; then
+    cp /config/LocalSettings.php /var/www/html/LocalSettings.php
+    # Always run update (this might be the first run off of a new image version on existing config and data)
+    php /var/www/html/maintenance/run.php update --quick
+else
+    echo "/config/LocalSettings.php not found, running MediaWiki install."
+
+    # Check for required  env vars
+    set +u
+    required_vars=(
+        MW_WG_SERVER
+        DB_USER
+        DB_PASS
+        DB_NAME
+        DB_SERVER
+        MW_ADMIN_PASS
+        MW_WG_LANGUAGE_CODE
+        MW_WG_SITENAME
+        MW_ADMIN_NAME
+        MW_ADMIN_EMAIL
+    )
+    for var in "${required_vars[@]}"; do
+        if [ -z "${!var}" ]; then
+            echo "$var is required but isn't set. You should pass it to Docker. See: https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file"
+            exit 1
+        fi
+    done
+    set -u
+
+    # Run MediaWiki install script, and update values
+    php /var/www/html/maintenance/run.php install \
+        --server "$MW_WG_SERVER" \
+        --scriptpath "/w" \
+        --dbuser "$DB_USER" \
+        --dbpass "$DB_PASS" \
+        --dbname "$DB_NAME" \
+        --dbserver "$DB_SERVER" \
+        --pass "$MW_ADMIN_PASS" \
+        --lang "$MW_WG_LANGUAGE_CODE" \
+        "$MW_WG_SITENAME" \
+        "$MW_ADMIN_NAME"
+
+    # Include WBS customizations to generated LocalSettings.php
+    {
+        set +u
+        if [ -n "$ELASTICSEARCH_HOST" ]; then
+            echo "\$elasticsearchHost = '$ELASTICSEARCH_HOST';"
+        fi
+        set -u
+        echo
+        echo '# Insert any custom settings which should be ran BEFORE extensions here'
+        echo
+        echo 'include "/var/www/html/LocalSettings.wbs.php";'
+        echo
+        echo '# Insert any custom settings which should be ran AFTER extensions here'
+    } >> /var/www/html/LocalSettings.php
+
+    # Replace /config/LocalSettings.php with newly generated LocalSettings.php
+    cp /var/www/html/LocalSettings.php /config/LocalSettings.php
+    # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)
+    php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
+
+    php /var/www/html/maintenance/run.php update --quick
+
+    if [ -f /default-extra-install.sh ]; then
+        # shellcheck disable=SC1091
+        bash /default-extra-install.sh
+    fi
+
+    if [ -f /extra-install.sh ]; then
+        # shellcheck disable=SC1091
+        bash /extra-install.sh
+    fi
 fi
 
 # Run the actual entry point

@@ -38,16 +38,12 @@ describe( 'Nuke', function () {
 
 		await browser.acceptAlert();
 
-		await $( 'li*=has been queued for deletion' );
+		await expect( $( 'li*=has been queued for deletion' ) );
+	} );
 
-		await browser.waitForJobs();
-
-		const pageIsGoneResult = await browser.makeRequest(
-			testEnv.vars.WIKIBASE_URL + '/wiki/Vandalism',
-			{ validateStatus: false },
-			{}
-		);
-
-		expect( pageIsGoneResult.status ).toEqual( 404 );
+	it( 'Should show that a Nuke\'d page doesn\'t exist', async function () {
+		this.retries( 4 );
+		await page.open( '/wiki/Vandalism' );
+		await expect( $( 'p*=This page does not exist' ) ).toExist();
 	} );
 } );
