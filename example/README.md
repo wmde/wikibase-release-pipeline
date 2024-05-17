@@ -1,204 +1,71 @@
-# Example docker compose configuration
-
-The example docker compose configuration consists of one file, `docker-compose.yml`, which contains the services:
-
-- Wikibase
-  MediaWiki packaged with the Wikibase extension and other commonly used extensions
-- Job Runner
-  The MediaWiki JobRunner service which uses the same Wikibase container as above.
-- mysql
-  Uses the MariaDB image. MariaDB is a MySQL clone. 
-- elasticsearch
-  The search service used by MediaWiki instead of the built-in search service. Optional, but highly recommended.
-- wdqs
-  WikiData Query Service (WDQS) backend service.
-- wdqs-frontend
-  WDQS Frontend service.
-- wdqs-proxy
-  A middle layer for WDQS which serves to filter requests and make the service more secure. 
-- wdqs-updater
-  Keeps the WDQS data up to date with Wikibase.
-- quickstatements
-  QuickStatements service.
-
-**This configuration serves as an example of how the images could be used together and isn't production ready**
-
-## Configure your installation
-
-Copy `template.env` to `.env` and replace the passwords and secrets with your own.
-
-## Running a Wikibase instance
-
-To run a Wikibase instance on port 80 run the following command:
-
-```
-docker compose up --wait
-```
-
-This will start up the services defined in [docker-compose.yml](docker-compose.yml), listed above. Feel free to remove any unwanted or unneeded services from `docker-compose.yml`, but be advised this is the configuration we test.
-
-## Job runner
-
-The example `docker-compose.yml` sets up a dedicated job runner which restarts itself after every job, to ensure that changes to the configuration are picked up as quickly as possible.
-
-If you run large batches of edits, this job runner may not be able to keep up with edits.
-
-You can speed it up by increasing the `JOBRUNNER_MAX_JOBS` variable to run more jobs between restarts, if you’re okay with configuration changes not taking effect in the job runner immediately. Alternatively, you can run several job runners in parallel by using the `--scale` option.
-
-```sh
-docker compose up --scale wikibase-jobrunner=8
-```
-
-
----
-
 # Wikibase Suite
 
-## WMDE Wikibase Docker images
-  
-Wikimedia Deutschland (WMDE) maintains a series of Docker images designed to ease the creation, maintenance, and extension of a self-hosted instance of Wikibase (i.e MediaWiki with the Wikibase extension installed). The images currently maintained for this purpose are as follows:
-  
-  - [wikibase](https://hub.docker.com/r/wikibase/wikibase)
+The provided files are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to this configuration of MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through Docker Compose and environment variables.
 
-    MediaWiki packaged with the Wikibase extension and other commonly used extensions
+**Starting Wikibase Suite:**
 
-  - [wdqs](https://hub.docker.com/r/wikibase/wdqs), [wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend), and [wdqs-proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)
-    
-    WikiData Query Service (WDQS)...
+1. Ensure the system meets minimum requirements:
 
-  - [quickstatements](https://hub.docker.com/r/wikibase/quickstatements)
-    
-    QuickStatements service.
+    - AMD64 architecture
+    - 8 GB RAM
+    - 4 GB free disk space
+    - Docker 22.0, or greater
+    - Docker Compose 2.10, or greater
 
-  - [elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)
+2. Copy the configuration template: `cp template.env .env`.
+3. Open `.env` file and set configuration values according to instructions in the comments.
+4. Start Wikibase Suite: `docker compose up --wait`.
 
-    The search service used by MediaWiki instead of the built-in search service. Optional, but highly recommended.
+**Stopping Wikibase Suite:**
 
-WMDE also provides a reference Docker Compose configuration for running all of the services together which is actively maintained and tested, and is the recommended starting place for most use cases. This reference configuration is called "Wikibase Suite", or WBS for short.
+- To stop Wikibase Suite, use `docker compose down`.
 
-The remainder of this document is focused on running and WBS.
+**Resetting Wikibase Suite Configuration:**
 
-## Running Wikibase Suite (WBS)
+Most values set in `.env` are copied statically into the respective containers after the first time you run `docker compose up --wait`.
 
-### A. Starting WBS for the first time
+To reset the configuration and keep existing data:
 
-From a shell or terminal in the directory where this README file is found do the following:
+1. Make any needed changes to the MediaWiki setup values in the `.env` file copied from `template.env` above. NOTE: Do not change `DB_*` values unless you are also re-creating the database (see "Removing Wikibase Suite Completely" below).
+2. Delete `LocalSettings.php` from within the Docker volume `wikibase-config`, or delete the entire volume.
+3. Restart Wikibase Suite: `docker compose down && docker compose up --wait`.
 
-1) Whether locally or on an Internet server, make sure the system meets following minium requirements for running WBS:
+**Updating Wikibase Suite with Patch Releases:**
 
-  - AMD64 architecture
-  - 8 GB of RAM
-  - 4 GB free disk space
-  - Docker 22.0, or greater
-  - Docker Compose 2.10, or greater
+- Patch releases are applied automatically when recreating Docker containers: `docker compose down && docker compose up --wait`.
 
-1) Make a copy of the configuration template: `cp template.env .env`
-2) Open the `.env` file in a text editor of your choice. Read the comments carefully, and then set your own values according to the instructions found there.
-3) Start WBS: `docker compose up --wait`
+**Upgrading to New Major Releases of Wikibase Suite:**
 
-Upon the initial successful boot of the `wikibase` service a `LocalSettings.php` file is created in the `wikibase-config` Docker volume. Changes to the `.env` will no longer reflect in the container as long as this file exists, but settings can be changed directly in the `LocalSettings.php`. 
+- Major releases may require additional steps. Refer to specific upgrade instructions in the Migration Guide section of README.md.
 
-### B. Resetting WBS configuration
+**Removing Wikibase Suite Completely:**
 
-In the case of initial setup values may get entered incorrectly. To reset back to the initial installation state based upon the contents of the `.env` directory:
-
-1) Delete `LocalSettings.php` from the Docker volume `wikibase-config`, or simply delete the volume.
-2) Restart WBS: `docker compose down && docker compose up --wait`
-
-### C. Updating WBS with patch releases
-
-According to the tags specified in the `*_IMAGE_URL` variables releases will be made automatically on re-creation of the Docker containers specified for each service in the Docker Compose file. For example if  `wikibase/wikibase:v2` is specified then your instance will automatically move up to the latest 2.x series release once the existing containers are removed and the services started again. To remove and re-create the containers do the following: 
-
-`docker compose down && docker compose up --wait`
-
-### D. Upgrading to new major releases of WBS
-
-*Major releases, which generally will only happen in concert with a MediaWiki major release (e.g. from version 1.40 to 1.41, etc), may need a bit more care than a normal update. See the instructions in the (Migration Guide)[#migration-guide] below for any "from version, to version" specific upgrade notes.*
-
-### E. Removing WBS completely
-
-⚠️ Backup any configuration or data you wish to retain before running the below command:
+To reset the configuration and data, and remove the Wikibase Suite Docker containers. *This will destroy all data, make sure to backup anything you wish to retain*:
 
 `docker compose down --volumes`
 
 ## Migration Guide
 
-- MediaWiki 1.39 > MediaWiki 1.40
-  
-  ...
+**MediaWiki 1.39 to MediaWiki 1.40:**
 
-- MediaWiki 1.40 > MediaWiki 1.41
+- Details on migration steps from MediaWiki version 1.39 to 1.40 are outlined here. Ensure to follow the provided instructions carefully to ensure a smooth transition and compatibility with Wikibase Suite.
 
-  ...
+**MediaWiki 1.40 to MediaWiki 1.41:**
 
-## Troubleshooting and FAQ
+- Information on migrating from MediaWiki version 1.40 to 1.41 is provided in this section. Any specific upgrade notes or considerations are highlighted to assist in the upgrade process.
 
-**Can I migrate an existing MediaWiki installation to the WBS Docker images?**
+[Note: Replace placeholders with actual migration steps and considerations specific to each version upgrade.]
 
-Yes...
+**From an existing MediaWiki installation to Wikibase Suite**
 
-**Can I host WBS locally?**
+It is possible to migrate an existing MediaWiki installation to the Wikibase Suite Docker images. The process may require some manual configuration and adjustment to match the setup provided by the suite.
 
-Yes, for testing, however due to the OAuth requirements you cannot use QuickStatements without a publically accessible domain name.
+## FAQ
+
+**Can I host Wikibase Suite locally?**
+
+Yes, Wikibase Suite can be hosted locally for testing purposes. However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load.
 
 **Do you have any recommended Internet host / VPS provider recommendations?**
-  
-Not at this time. The WBS team has tested this configuration on a variety of providers, and as long as the minium technical requirements were met it ran as expected.
 
-
----
----
-
-
-
-
-The images WMDE currently releases for this purpose are as follows:
-
-- Wikibase: [wikibase](https://hub.docker.com/r/wikibase/wikibase)
-
-  MediaWiki packaged with the Wikibase extension and other commonly used extensions
-
-- ElasticSearch: [elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)
-
-  The search service used by MediaWiki instead of the built-in search service. Optional, but highly recommended. This custom ElasticSearch image includes needed ElasticSearch extensions.
-
-- WikiData Query Service (WDQS): [wdqs](https://hub.docker.com/r/wikibase/wdqs), [wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend), [wdqs-proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)
-
-  Is the Wikimedia implementation of SPARQL server, based on the [Blazegraph](https://wiki.blazegraph.com/wiki/index.php) engine, originally designed to service queries for Wikidata, but is a generalized tool for any Wikibase installation. Please see more detailed description in the [User Manual](https://www.mediawiki.org/wiki/Wikidata_query_service/User_Manual).
-  
-- QuickStatements: [quickstatements](https://hub.docker.com/r/wikibase/quickstatements)
-
-  Is a tool, written by [Magnus Manske](https://www.wikidata.org/wiki/User:Magnus_Manske), that can edit Wikidata items, based on a simple set of text commands. The tool can add and remove statements, labels, descriptions and aliases; as well as add statements with optional qualifiers and sources. The command sequence can be typed in the import window or created in a spreadsheet or text editor and pasted in. It can also be created by external code like Lua, called from a template and passed as a URL. Data edited in [OpenRefine](https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/OpenRefine) can also be exported to the QuickStatements format.
-
-More documentation on each of the images can be found on each of their respective Docker Hub home pages at the links above.
------
-
-  - wdqs-updater
-  - Job Runner
-    The MediaWiki JobRunner service which uses the same Wikibase container as above.
-  - mysql
-    Uses the MariaDB image. MariaDB is a MySQL clone. 
-  - nginx-proxy
-  - acme-companion
-
-
-
-
-
-  The Docker image releases which the WBS team releases are as follows:
-
-  - [wikibase](https://hub.docker.com/r/wikibase/wikibase)
-
-    MediaWiki packaged with the Wikibase extension and other commonly used extensions
-
-  - https://hub.docker.com/r/wikibase/elasticsearch
-
-    The search service used by MediaWiki instead of the built-in search service. Optional, but highly recommended.
-
-  - [wdqs](https://hub.docker.com/r/wikibase/wdqs), [wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend), [wdqs-proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)
-    
-    WikiData Query Service (WDQS)...
-
-  - [quickstatements](https://hub.docker.com/r/wikibase/quickstatements)
-    
-    QuickStatements service.
+At this time, there are no specific recommendations for Internet hosts or VPS providers for hosting Wikibase Suite. The suite has been tested on various providers, and as long as the minimum technical requirements are met, it should run as expected.
