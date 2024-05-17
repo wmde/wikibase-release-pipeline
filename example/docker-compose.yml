@@ -13,6 +13,11 @@ services:
     restart: unless-stopped
     ports:
       - 8880:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase.entrypoints=websecure"
+      - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
     volumes:
       - wikibase-config:/config
       - wikibase-images:/var/www/html/images
@@ -21,17 +26,15 @@ services:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-      MW_WG_SERVER: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
       DB_SERVER: mysql:3306
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
-      VIRTUAL_HOST: ${WIKIBASE_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${WIKIBASE_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail http://localhost/wiki/Main_Page
+      test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
       start_period: 5m
 
@@ -77,7 +80,7 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: curl --silent --fail http://localhost:9200
+      test: curl --silent --fail localhost:9200
       interval: 10s
       start_period: 2m
 
@@ -97,11 +100,8 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
-    environment:
-      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
-      WIKIBASE_HOST: wikibase
     healthcheck:
-      test: curl --silent --fail http://localhost:9999/bigdata/namespace/wdq/sparql
+      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
 
@@ -119,9 +119,6 @@ services:
       nofile:
         soft: 32768
         hard: 32768
-    environment:
-      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
-      WIKIBASE_HOST: wikibase
 
   wdqs-proxy:
     image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
@@ -129,8 +126,6 @@ services:
       wdqs:
         condition: service_healthy
     restart: unless-stopped
-    environment:
-      PROXY_PASS_HOST: wdqs:9999
 
   wdqs-frontend:
     image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
@@ -139,13 +134,15 @@ services:
     restart: unless-stopped
     ports:
       - 8834:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
+      - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
     environment:
-      WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
-      VIRTUAL_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${WDQS_FRONTEND_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail http://localhost
+      test: curl --silent --fail localhost
       interval: 10s
       start_period: 2m
 
@@ -159,17 +156,20 @@ services:
       - 8840:80
     volumes:
       - quickstatements-data:/quickstatements/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements.entrypoints=websecure"
+      - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
-      WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
-      VIRTUAL_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
-      LETSENCRYPT_HOST: ${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail http://localhost
+      test: curl --silent --fail localhost
       interval: 10s
       start_period: 2m
 
@@ -177,29 +177,31 @@ services:
   # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
-  # See https://github.com/nginx-proxy/nginx-proxy/blob/main/docs/README.md for setup and options
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
+  traefik:
+    image: traefik:v2.5
+    command:
+      # Basic setup
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # Redirects all http request to https
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      # ACME SSL certificate generation
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # Uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - 80:80
       - 443:443
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-proxy-certs:/etc/nginx/certs
-      - nginx-proxy-vhost:/etc/nginx/vhost.d
-      - nginx-proxy-html:/usr/share/nginx/html
-
-  # Uncomment below for automatic SSL certificate provisoning (https)
-  # # See https://github.com/nginx-proxy/acme-companion for setup and options
-  # acme-companion:
-  #   image: nginxproxy/acme-companion
-  #   volumes_from:
-  #     - nginx-proxy
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - acme-companion-data:/etc/acme.sh
-  #   environment:
-  #     DEFAULT_EMAIL: ${MW_ADMIN_EMAIL}
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-letsencrypt:/letsencrypt
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
@@ -210,8 +212,5 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
-  nginx-proxy-certs:
-  nginx-proxy-vhost:
-  nginx-proxy-html:
-  acme-companion-data:
+  # C. REVERSE PROXY AND SSL SERVICES DATA
+  traefik-letsencrypt:

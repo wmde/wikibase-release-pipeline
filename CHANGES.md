@@ -2,6 +2,16 @@
 
 This file is only intended to serve the developers of this repository and of the releases. This provides an overview of the releases that have been made using this release pipeline.
 
+## April 2024: Security releases for 1.39.7
+
+- [MediaWiki release announcement: 1.39.7](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/V3WXEPXV2DU6WTVEKK4XHW4QXD5OFKD7/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [Wikibase Suite Release task T361226](https://phabricator.wikimedia.org/T361226)
+
+| Suite Version | Version Info | Date available | Release task |
+| --- | --- | --- | --- |
+| wmde.18 ([spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.18/variables.env)) | MediaWiki (1.39.7, PHP 8.1.27, debian/apache 2.4.57-2), WDQS (0.3.135) | 25 April 2024 | [T361226](https://phabricator.wikimedia.org/T361226) |
+
 ## April 2024: Security releases for 1.41.1
 
 - [MediaWiki release announcement: 1.41.1](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/V3WXEPXV2DU6WTVEKK4XHW4QXD5OFKD7/)
@@ -44,6 +54,13 @@ This file is only intended to serve the developers of this repository and of the
 
 ## February 2024: Security releases for 1.39.6
 
+- [WMDE 15 spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.15/variables.env)
+- [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
+- [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
+- [Run number 7887239057](https://github.com/wmde/wikibase-release-pipeline/actions/runs/7887239057/)
+- [Release task T354646](https://phabricator.wikimedia.org/T354646)
+
+## February 2024: Security releases for 1.39.6
 - [WMDE 15 spec](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.15/variables.env)
 - [MediaWiki security and maintenance release announcement: 1.35.14 / 1.39.6 / 1.40.2](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/message/TDBUBCCOQJUT4SCHJNPHKQNPBUUETY52/)
 - [MediaWiki full release notes](https://www.mediawiki.org/wiki/Release_notes/1.39)
