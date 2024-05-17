@@ -27,8 +27,8 @@ Most values set in `.env` are copied statically into the respective containers a
 To reset the configuration and keep existing data:
 
 1. Make any needed changes to the MediaWiki setup values in the `.env` file copied from `template.env` above. NOTE: Do not change `DB_*` values unless you are also re-creating the database (see "Removing Wikibase Suite Completely" below).
-2. Delete `LocalSettings.php` from within the Docker volume `wikibase-config`, or delete the entire volume.
-3. Restart Wikibase Suite: `docker compose down && docker compose up --wait`.
+2. Delete Wikibase config docker volume: `docker rm wikibase-suite-example_wikibase-config`
+3. Remove and re-create Wikibase Suite services: `docker compose down && docker compose up --wait`
 
 **Updating Wikibase Suite with Patch Releases:**
 
