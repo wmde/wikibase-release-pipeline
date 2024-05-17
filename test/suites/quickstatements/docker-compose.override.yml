@@ -1,8 +1,4 @@
 services:
-  mysql:
-    volumes:
-      - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
-
   wikibase:
     volumes:
       - ./quickstatements/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.quickstatements.php
@@ -30,11 +26,14 @@ services:
       DB_PASS:
       DB_NAME: client_wiki
       MW_WG_SERVER: http://wikibase-client
-      VIRTUAL_HOST: wikibase-client
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
+
+  mysql:
+    volumes:
+      - ./client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
 volumes:
   wikibase-client-config:
