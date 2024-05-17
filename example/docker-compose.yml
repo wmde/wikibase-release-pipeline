@@ -26,15 +26,15 @@ services:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-      MW_WG_SERVER: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
       DB_SERVER: mysql:3306
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail http://localhost/wiki/Main_Page
+      test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
       start_period: 5m
 
@@ -80,7 +80,7 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: curl --silent --fail http://localhost:9200
+      test: curl --silent --fail localhost:9200
       interval: 10s
       start_period: 2m
 
@@ -100,11 +100,8 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
-    environment:
-      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
-      WIKIBASE_HOST: wikibase
     healthcheck:
-      test: curl --silent --fail http://localhost:9999/bigdata/namespace/wdq/sparql
+      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
 
@@ -122,9 +119,6 @@ services:
       nofile:
         soft: 32768
         hard: 32768
-    environment:
-      WIKIBASE_SCHEME: ${PUBLIC_SCHEME}
-      WIKIBASE_HOST: wikibase
 
   wdqs-proxy:
     image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
@@ -132,8 +126,6 @@ services:
       wdqs:
         condition: service_healthy
     restart: unless-stopped
-    environment:
-      PROXY_PASS_HOST: wdqs:9999
 
   wdqs-frontend:
     image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
@@ -148,10 +140,9 @@ services:
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
     environment:
-      WIKIBASE_HOST: wikibase
       WDQS_HOST: wdqs-proxy
     healthcheck:
-      test: curl --silent --fail http://localhost
+      test: curl --silent --fail localhost
       interval: 10s
       start_period: 2m
 
@@ -170,16 +161,15 @@ services:
       - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
       - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
-
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: ${PUBLIC_SCHEME}://${QUICKSTATEMENTS_PUBLIC_HOST}
-      WIKIBASE_PUBLIC_URL: ${PUBLIC_SCHEME}://${WIKIBASE_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail http://localhost
+      test: curl --silent --fail localhost
       interval: 10s
       start_period: 2m
 
@@ -190,10 +180,16 @@ services:
   traefik:
     image: traefik:v2.5
     command:
+      # Basic setup
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # Redirects all http request to https
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      # ACME SSL certificate generation
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
@@ -216,5 +212,5 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  # C. OPTIONAL REVERSE PROXY AND SSL SERVICES DATA
+  # C. REVERSE PROXY AND SSL SERVICES DATA
   traefik-letsencrypt:
