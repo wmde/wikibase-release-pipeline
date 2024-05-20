@@ -28,11 +28,7 @@ export const defaultTestSettings = {
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},
-	beforeServices: async (): Promise<void> => {
-		testEnv.vars.WIKIBASE_TEST_IMAGE_URL = testEnv.settings.isBaseSuite ?
-			testEnv.vars.WIKIBASE_SUITE_WIKIBASE_IMAGE_URL :
-			testEnv.vars.WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL;
-	},
+	beforeServices: async (): Promise<void> => {},
 	before: async (): Promise<void> => {
 		try {
 			defaultFunctionsInit();
@@ -79,7 +75,6 @@ export const makeTestSettings = (
 	);
 	const testSuiteSettings: TestSuiteSettings = {
 		name: settings.name,
-		isBaseSuite: settings.isBaseSuite,
 		specs: settings.specs
 	};
 	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';

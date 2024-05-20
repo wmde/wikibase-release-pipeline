@@ -41,8 +41,6 @@ function image_version {
 
     if [ "$image" = "wikibase" ]; then
         wikibase_version
-    elif [ "$image" = "wikibase-bundle" ]; then
-        wikibase_version
     elif [ "$image" = "elasticsearch" ]; then
         elasticsearch_version
     elif [ "$image" = "wdqs" ]; then
