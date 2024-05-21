@@ -52,13 +52,6 @@ jobs:
           docker_image: wikibase/${{ matrix.component }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      - uses: ./.github/actions/push-ghcr
-        if: matrix.component == 'wikibase'
-        with:
-          docker_image: wikibase/${{ matrix.component }}-bundle
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
   test:
     needs: build
     runs-on: ubuntu-latest
