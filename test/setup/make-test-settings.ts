@@ -28,7 +28,6 @@ export const defaultTestSettings = {
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
 	},
-	beforeServices: async (): Promise<void> => {},
 	before: async (): Promise<void> => {
 		try {
 			defaultFunctionsInit();
@@ -103,8 +102,6 @@ export const makeTestSettings = (
 	};
 	const testHooks: TestHooks = {
 		onPrepare: settings.onPrepare || defaultTestSettings.onPrepare,
-		beforeServices:
-			settings.beforeServices || defaultTestSettings.beforeServices,
 		before: settings.before || defaultTestSettings.before,
 		afterTest: settings.afterTest || defaultTestSettings.afterTest,
 		onComplete: settings.onComplete || defaultTestSettings.onComplete
