@@ -38,14 +38,6 @@ jobs:
       #   continue-on-error: true
       #   with:
       #     image_name: ${{ matrix.component }}
-      #
-      # # TODO: remove extra step with https://phabricator.wikimedia.org/T347000
-      # - name: Scan additional bundle Image for wikibase builds
-      #   if: matrix.component == 'wikibase'
-      #   uses: ./.github/actions/scan-image
-      #   continue-on-error: true
-      #   with:
-      #     image_name: ${{ matrix.component }}-bundle
 
       - uses: ./.github/actions/push-ghcr
         with:
