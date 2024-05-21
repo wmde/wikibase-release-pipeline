@@ -53,6 +53,7 @@ COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 # Make upload path writable for the webserver user
 RUN chown www-data /var/www/html/images -R
 
+COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
