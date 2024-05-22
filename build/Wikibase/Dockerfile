@@ -98,14 +98,13 @@ RUN apt-get update && \
     docker-php-ext-install calendar bz2
 
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
+RUN ln -s /var/www/html/ /var/www/html/w
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.wbs.php /var/www/html/LocalSettings.wbs.php
-
-RUN ln -s /var/www/html/ /var/www/html/w
 
 # Make upload path writable for the webserver user
 RUN chown www-data /var/www/html/images -R
