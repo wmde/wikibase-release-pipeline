@@ -13,7 +13,6 @@ FROM ${COMPOSER_IMAGE_URL} as composer
 COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
-COPY LocalSettings.d.template /tmp/LocalSettings.d.template
 COPY composer.local.json composer.local.json
 
 ARG WIKIBASE_COMMIT
@@ -44,7 +43,6 @@ ARG WIKIBASELOCALMEDIA_COMMIT
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 RUN set -x; \
     IFS=',' read -ra EXTENSIONS <<< ${ALL_EXTENSIONS}; \
-    mkdir LocalSettings.d; \
     for EXTENSION in "${EXTENSIONS[@]}"; do \
         rm -rf "extensions/${EXTENSION}"; \
         git clone "https://gerrit.wikimedia.org/r/mediawiki/extensions/${EXTENSION}" "extensions/${EXTENSION}"; \
@@ -54,18 +52,15 @@ RUN set -x; \
         git -C "extensions/${EXTENSION}" submodule update --init --recursive; \
         rm -rf "extensions/${EXTENSION}/.git*"; \
         find "extensions/${EXTENSION}" -name ".git*" -exec rm -rf {} +; \
-        cp "/tmp/LocalSettings.d.template/${EXTENSION}.php" LocalSettings.d/; \
     done; \
     \
     git clone "https://github.com/ProfessionalWiki/WikibaseEdtf.git" "extensions/WikibaseEdtf"; \
     git -C "extensions/WikibaseEdtf" checkout "${WIKIBASEEDTF_COMMIT}"; \
     rm -rf "extensions/WikibaseEdtf/.git*"; \
-    cp "/tmp/LocalSettings.d.template/WikibaseEdtf.php" LocalSettings.d/; \
     \
     git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia"; \
     git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}"; \
     rm -rf "extensions/WikibaseLocalMedia/.git*"; \
-    cp "/tmp/LocalSettings.d.template/WikibaseLocalMedia.php" LocalSettings.d/; \
     \
     rm -rf vendor && \
     rm -rf composer.lock && \
@@ -108,6 +103,7 @@ COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
+COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.wbs.php /var/www/html/LocalSettings.wbs.php
 
 # Make upload path writable for the webserver user
