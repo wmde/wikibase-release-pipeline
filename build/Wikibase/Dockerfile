@@ -7,12 +7,10 @@ ARG COMPOSER_IMAGE_URL
 # hadolint ignore=DL3006
 FROM ${PHP_IMAGE_URL} as mediawiki
 
-SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+SHELL ["/bin/bash", "-exu", "-c"]
 
 # System dependencies
-RUN set -x; \
-    \
-    apt-get update; \
+RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         git \
         librsvg2-bin \
@@ -23,9 +21,7 @@ RUN set -x; \
     rm -rf /var/lib/apt/lists/*
 
 # Install the PHP extensions we need
-RUN set -x; \
-    \
-    savedAptMark="$(apt-mark showmanual)"; \
+RUN savedAptMark="$(apt-mark showmanual)"; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -62,8 +58,7 @@ RUN set -x; \
     rm -rf /var/lib/apt/lists/*
 
 # Enable Short URLs
-RUN set -x; \
-    a2enmod rewrite; \
+RUN a2enmod rewrite; \
     { \
     echo "<Directory /var/www/html>"; \
     echo "  RewriteEngine On"; \
