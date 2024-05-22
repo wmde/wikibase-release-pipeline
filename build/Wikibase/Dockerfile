@@ -1,10 +1,102 @@
 # Build configuration
-ARG MEDIAWIKI_IMAGE_URL
+ARG PHP_IMAGE_URL
 ARG COMPOSER_IMAGE_URL
 
 # ###########################################################################
+# Based on https://github.com/wikimedia/mediawiki-docker/blob/1161796f04d6a6bcbec9fb4c67a8ce7248392403/1.41/apache/Dockerfile
 # hadolint ignore=DL3006
-FROM ${MEDIAWIKI_IMAGE_URL} as mediawiki
+FROM ${PHP_IMAGE_URL} as mediawiki
+
+SHELL ["/bin/bash", "-exu", "-c"]
+
+# System dependencies
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends \
+        git \
+        gettext-base \
+        librsvg2-bin \
+        imagemagick \
+        # Required for SyntaxHighlighting
+        python3 \
+        # Required for Scribunto
+        lua5.1 \
+        ; \
+    rm -rf /var/lib/apt/lists/*
+
+# Install the PHP extensions we need
+# hadolint ignore=DL4006
+RUN savedAptMark="$(apt-mark showmanual)"; \
+    \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libicu-dev \
+        libonig-dev \
+        libbz2-dev=1.* \
+        ; \
+    \
+    docker-php-ext-install -j "$(nproc)" \
+        bz2 \
+        calendar \
+        intl \
+        mbstring \
+        mysqli \
+        opcache \
+        ; \
+    \
+    pecl install APCu-5.1.21; \
+        docker-php-ext-enable \
+        apcu \
+        ; \
+    rm -r /tmp/pear; \
+    \
+    # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+    apt-mark auto '.*' > /dev/null; \
+    apt-mark manual $savedAptMark; \
+    ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+        | awk '/=>/ { print $3 }' \
+        | sort -u \
+        | xargs -r dpkg-query -S \
+        | cut -d: -f1 \
+        | sort -u \
+        | xargs -rt apt-mark manual; \
+    \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /var/lib/apt/lists/*
+
+# Enable Short URLs
+RUN a2enmod rewrite; \
+    { \
+    echo "<Directory /var/www/html>"; \
+    echo "  RewriteEngine On"; \
+    echo "  RewriteCond %{REQUEST_FILENAME} !-f"; \
+    echo "  RewriteCond %{REQUEST_FILENAME} !-d"; \
+    echo "  RewriteRule ^ %{DOCUMENT_ROOT}/index.php [L]"; \
+    echo "</Directory>"; \
+    } > "$APACHE_CONFDIR/conf-available/short-url.conf"; \
+    a2enconf short-url
+
+# Enable AllowEncodedSlashes for VisualEditor
+RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
+
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=4000'; \
+    echo 'opcache.revalidate_freq=60'; \
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# MediaWiki setup
+WORKDIR /var/www/html
+ARG MEDIAWIKI_VERSION
+# hadolint ignore=DL4006
+RUN set -eux; \
+    curl -fSL "https://releases.wikimedia.org/mediawiki/$(echo ${MEDIAWIKI_VERSION} | cut -d. -f1,2)/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz; \
+    tar -x --strip-components=1 -f mediawiki.tar.gz; \
+    rm -r mediawiki.tar.gz; \
+    install -d /var/log/mediawiki -o www-data
+
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -70,7 +162,7 @@ RUN set -x; \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${MEDIAWIKI_IMAGE_URL}
+FROM mediawiki AS wikibase
 
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
@@ -83,21 +175,14 @@ RUN { \
     echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
 } > /usr/local/etc/php/conf.d/error_reporting.ini
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base lua5.1 && \
-    rm -rf /var/lib/apt/lists/* && \
-    \
-    a2enmod rewrite && \
-    install -d /var/log/mediawiki -o www-data && \
-    docker-php-ext-install calendar bz2
-
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 
 # Remove world writable flag, in combination with sticky bit it breaks the w link
 # https://github.com/wmde/wikibase-release-pipeline/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
+# Make upload path writable for the webserver user
 RUN chmod o-w /var/www/html && \
-    ln -s /var/www/html/ /var/www/html/w
+    ln -s /var/www/html/ /var/www/html/w && \
+    chown www-data /var/www/html/images -R
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
@@ -105,10 +190,6 @@ COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.wbs.php /var/www/html/LocalSettings.wbs.php
-
-# Make upload path writable for the webserver user
-RUN chown www-data /var/www/html/images -R
-
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
 

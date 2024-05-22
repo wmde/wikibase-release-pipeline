@@ -53,7 +53,7 @@ function build_wikibase {
     docker build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
-        --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
+        --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
