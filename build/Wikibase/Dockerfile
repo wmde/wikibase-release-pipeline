@@ -3,13 +3,14 @@ ARG PHP_IMAGE_URL
 ARG COMPOSER_IMAGE_URL
 
 # ###########################################################################
+# Based on https://github.com/wikimedia/mediawiki-docker/blob/1161796f04d6a6bcbec9fb4c67a8ce7248392403/1.41/apache/Dockerfile
 # hadolint ignore=DL3006
-# Based on 
-# https://github.com/wikimedia/mediawiki-docker/blob/1161796f04d6a6bcbec9fb4c67a8ce7248392403/1.41/apache/Dockerfile
 FROM ${PHP_IMAGE_URL} as mediawiki
 
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
 # System dependencies
-RUN set -eux; \
+RUN set -x; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -22,7 +23,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 # Install the PHP extensions we need
-RUN set -eux; \
+RUN set -x; \
     \
     savedAptMark="$(apt-mark showmanual)"; \
     \
@@ -61,7 +62,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 # Enable Short URLs
-RUN set -eux; \
+RUN set -x; \
     a2enmod rewrite; \
     { \
     echo "<Directory /var/www/html>"; \
