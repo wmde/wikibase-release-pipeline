@@ -23,7 +23,7 @@ Wikibase and related software gets release through this repository. The process 
 
 [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Bugfix releases are likely to pass without any adjustments.
 
-[ ] **Do a sanity check by manually reviewing a running instance**. This could be done locally on your machine or by [deploying](https://docs.google.com/document/d/1BGxcqt9CHbb-8dfWjK-lZmNoNcD08urb23JqtgoVTeg/edit#heading=h.6a8ctlepqn5d) it to the [test system](https://wikibase-product-testing.wmcloud.org). You find built images from your PR on GHCR (e.g. [here](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase-bundle)) tagged with `dev-BRANCHNAME`, e.g. `dev-releaseprep-wmde.17`. This tag can be referenced in example to setup an instance running your PR version.
+[ ] **Do a sanity check by manually reviewing a running instance**. This could be done locally on your machine or by [deploying](https://docs.google.com/document/d/1BGxcqt9CHbb-8dfWjK-lZmNoNcD08urb23JqtgoVTeg/edit#heading=h.6a8ctlepqn5d) it to the [test system](https://wikibase-product-testing.wmcloud.org). You find built images from your PR on GHCR (e.g. [here](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase)) tagged with `dev-BRANCHNAME`, e.g. `dev-releaseprep-wmde.17`. This tag can be referenced in example to setup an instance running your PR version.
 
 [ ] **Get two reviews on the release preparation PR**. So that it is technically ready to be merged. The merge will trigger the release to dockerhub later.
 

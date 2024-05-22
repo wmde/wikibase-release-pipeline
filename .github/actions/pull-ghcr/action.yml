@@ -22,7 +22,6 @@ runs:
 
         images=(
           "wikibase"
-          "wikibase-bundle"
           "elasticsearch"
           "wdqs"
           "wdqs-frontend"

@@ -14,10 +14,6 @@ export const allSuiteNames = [
 	'pingback',
 	'confirm_edit',
 	'elasticsearch',
-	'base__repo',
-	'base__repo_client',
-	'base__pingback',
-	'base__fedprops',
 	'example'
 ];
 

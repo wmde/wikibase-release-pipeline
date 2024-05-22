@@ -2,7 +2,6 @@ import { Frameworks } from '@wdio/types';
 
 export type TestSuiteSettings = {
 	name: string;
-	isBaseSuite: boolean;
 	specs: string[];
 };
 

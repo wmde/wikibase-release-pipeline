@@ -53,26 +53,12 @@ function build_wikibase {
     docker build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
-        --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg MEDIAWIKI_IMAGE_URL="$MEDIAWIKI_IMAGE_URL" \
-        --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
-        \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
-        \
-        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
-        \
-        build/Wikibase \
-
-    docker build \
-        --quiet \
-        $DOCKER_BUILD_CACHE_OPT \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
-        --build-arg WIKIBASE_SUITE_WIKIBASE_IMAGE_URL="$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
+        --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
         --build-arg CLDR_COMMIT="$CLDR_COMMIT" \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
@@ -92,10 +78,13 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        -t "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WIKIBASE_BUNDLE_IMAGE_URL:$(wikibase_version)" \
+        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
+        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
         \
-        build/WikibaseBundle
+        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
+        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
+        \
+        build/Wikibase
 }
 
 

@@ -46,8 +46,9 @@ export default class TestEnv {
 		try {
 			await this.setupExitListener();
 			this.resetOutputDir();
-			await this.settings.beforeServices();
-
+			if ( this.settings.beforeServices ) {
+				await this.settings.beforeServices();
+			}
 			console.log(
 				`▶️  Bringing up the test environment ${ this.settings.debug ? '(DEBUG)' : '' }`
 			);
