@@ -21,6 +21,7 @@ RUN apt-get update; \
     rm -rf /var/lib/apt/lists/*
 
 # Install the PHP extensions we need
+# hadlint ignore=DL4006 # do not enforce pipefail
 RUN savedAptMark="$(apt-mark showmanual)"; \
     \
     apt-get update; \
@@ -84,6 +85,7 @@ RUN { \
 # MediaWiki setup
 WORKDIR /var/www/html
 ARG MEDIAWIKI_VERSION
+# hadlint ignore=DL4006 # do not enforce pipefail
 RUN set -eux; \
     curl -fSL "https://releases.wikimedia.org/mediawiki/$(echo ${MEDIAWIKI_VERSION} | cut -d. -f1,2)/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz; \
     tar -x --strip-components=1 -f mediawiki.tar.gz; \
