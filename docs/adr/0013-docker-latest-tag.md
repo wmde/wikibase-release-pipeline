@@ -16,8 +16,6 @@ Previously the wikibase repository has shipped `wikibase/wikibase` images with t
 - latest-base
 - latest (seems to be the base)
 
-As we now have a separate image called `wikibase/wikibase-bundle` the need for latest-bundle / latest-base is gone and we need to decide if tagging each image with "latest" is something we still want to do for each of the images we are to publish.
-
 There are many arguments being presented against using "latest" when running docker images[[1]](https://vsupalov.com/docker-latest-tag/)[[2]](https://blog.container-solutions.com/docker-latest-confusion). It comes with an uncertainty of what image we are actually getting, as latest does not necessarily mean the last image uploaded or the latest version but rather just the image tagged as "latest". It sort of serves as an easy and rather uninformed way of choosing what version to run.
 
 On the other hand it is also a common concept in docker and on dockerhub.
