@@ -98,7 +98,11 @@ RUN apt-get update && \
     docker-php-ext-install calendar bz2
 
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
-RUN ln -s /var/www/html/ /var/www/html/w
+
+# Remove world writable flag, in combination with sticky bit it breaks the w link
+# https://github.com/wmde/wikibase-release-pipeline/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
+RUN chmod o-w /var/www/html && \
+    ln -s /var/www/html/ /var/www/html/w
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
