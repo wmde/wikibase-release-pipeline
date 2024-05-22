@@ -13,10 +13,13 @@ SHELL ["/bin/bash", "-exu", "-c"]
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         git \
+        gettext-base \
         librsvg2-bin \
         imagemagick \
         # Required for SyntaxHighlighting
         python3 \
+        # Required for Scribunto
+        lua5.1 \
         ; \
     rm -rf /var/lib/apt/lists/*
 
@@ -28,9 +31,11 @@ RUN savedAptMark="$(apt-mark showmanual)"; \
     apt-get install -y --no-install-recommends \
         libicu-dev \
         libonig-dev \
+        libbz2-dev=1.* \
         ; \
     \
     docker-php-ext-install -j "$(nproc)" \
+        bz2 \
         calendar \
         intl \
         mbstring \
@@ -90,7 +95,8 @@ RUN set -eux; \
     curl -fSL "https://releases.wikimedia.org/mediawiki/$(echo ${MEDIAWIKI_VERSION} | cut -d. -f1,2)/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz; \
     tar -x --strip-components=1 -f mediawiki.tar.gz; \
     rm -r mediawiki.tar.gz; \
-    chown -R www-data:www-data extensions skins cache images;
+    install -d /var/log/mediawiki -o www-data
+
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -156,7 +162,7 @@ RUN set -x; \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM mediawiki
+FROM mediawiki AS wikibase
 
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
@@ -169,21 +175,14 @@ RUN { \
     echo 'error_reporting = E_ALL ^ E_DEPRECATED'; \
 } > /usr/local/etc/php/conf.d/error_reporting.ini
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get install --yes --no-install-recommends libbz2-dev=1.* gettext-base lua5.1 && \
-    rm -rf /var/lib/apt/lists/* && \
-    \
-    a2enmod rewrite && \
-    install -d /var/log/mediawiki -o www-data && \
-    docker-php-ext-install calendar bz2
-
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 
 # Remove world writable flag, in combination with sticky bit it breaks the w link
 # https://github.com/wmde/wikibase-release-pipeline/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
+# Make upload path writable for the webserver user
 RUN chmod o-w /var/www/html && \
-    ln -s /var/www/html/ /var/www/html/w
+    ln -s /var/www/html/ /var/www/html/w && \
+    chown www-data /var/www/html/images -R
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
@@ -191,10 +190,6 @@ COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.wbs.php /var/www/html/LocalSettings.wbs.php
-
-# Make upload path writable for the webserver user
-RUN chown www-data /var/www/html/images -R
-
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
 
