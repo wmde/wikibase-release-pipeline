@@ -10,16 +10,6 @@ $wgCachePages = false;
 $wgParserCacheType = CACHE_NONE;
 $wgMainCacheType = CACHE_NONE;
 
-## Logs
-## Save these logs inside the container
-$wgDebugLogFile = '/var/log/mediawiki/mw.client.debug.log';
-$wgDebugLogGroups = array(
-	'resourceloader' => '/var/log/mediawiki/mw.client.resourceloader.log',
-	'exception' => '/var/log/mediawiki/mw.client.exception.log',
-	'error' => '/var/log/mediawiki/mw.client.error.log',
-	'fatal' => '/var/log/mediawiki/mw.client.fatal.log',
-);
-
 ## Site Settings
 $wgMetaNamespace = "Project";
 
@@ -27,9 +17,6 @@ $wgMetaNamespace = "Project";
 # This allows use of the /wiki/* path
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = "/w";        // this should already have been configured this way
-$wgArticlePath = "/wiki/$1";
-
-wfLoadSkin( 'Vector' );
 
 $wgEnableWikibaseRepo = false;
 $wgEnableWikibaseClient = true;
@@ -57,32 +44,3 @@ $wgWBClientSettings['repoArticlePath'] = '/wiki/$1';
 $wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];
 $wgWBClientSettings['siteGlobalID'] = 'client_wiki';
 
-foreach (glob("LocalSettings.d/*.php") as $filename)
-{
-
-	if (strpos($filename, 'CirrusSearch') !== false) {
-		continue;
-	}
-
-	if (strpos($filename, 'EntitySchema') !== false) {
-		continue;
-	}
-
-	if (strpos($filename, 'Elastic') !== false) {
-		continue;
-	}
-
-	if (strpos($filename, 'WikibaseCirrusSearch') !== false) {
-		continue;
-	}
-
-	if (strpos($filename, 'WikibaseLocalMedia') !== false) {
-		continue;
-	}
-
-	if (strpos($filename, 'WikibaseEdtf') !== false) {
-		continue;
-	}
-
-    include $filename;
-}
