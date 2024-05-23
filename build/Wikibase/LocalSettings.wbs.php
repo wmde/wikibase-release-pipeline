@@ -1,9 +1,9 @@
 <?php
 
-// JobRunner instance is assumed by default, so jobs on request is disabled
+# JobRunner instance is assumed by default, so jobs on request is disabled
 $wgJobRunRate = 0;
 
-// File Uploads enabled by default
+# File Uploads enabled by default
 $wgEnableUploads = true;
 
 # Logs
@@ -26,13 +26,22 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
-# Load extensions if present, alphabetically ordered by filename  
+# Load extensions if present, alphabetically ordered by filename
 foreach (glob("LocalSettings.d/*.php") as $filename)
 {
-  include $filename;
+	include $filename;
 }
 
-# An optional LocalSettings.override.php
+##############################################################################
+# End of generated LocalSettings.php
+##############################################################################
+
+# To customize your Wikibase Suite installation, please add your configuration
+# to the LocalSettings.override.php included below. This will make it easy to
+# reapply your customizations in case you want to regenerate this
+# LocalSettings.php file later. E.g. when running the MediaWiki installer
+# again.
+#
 $localSettingsOverrideFile = "/config/LocalSettings.override.php";
 if (file_exists($localSettingsOverrideFile)) {
 	include $localSettingsOverrideFile;
