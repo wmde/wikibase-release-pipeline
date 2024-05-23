@@ -1,20 +1,66 @@
 # Wikibase Suite
 
-The provided files are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to this configuration of MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through Docker Compose and environment variables.
+Wikibase Suite is a containerised, production ready Wikibase stack, that allows you to self host a knowledge graph similar to Wikidata.
 
-**Starting Wikibase Suite:**
+> This document is for people wanting to use the full Wikibase Suite. If you are looking for documentation about the individual containers provided with Wikibase Suite, head over to https://hub.docker.com/u/wikibase
 
-1. Ensure the system meets minimum requirements:
+Wikibase Suite comes with the following services:
 
-    - AMD64 architecture
-    - 8 GB RAM
-    - 4 GB free disk space
-    - Docker 22.0, or greater
-    - Docker Compose 2.10, or greater
+- **Wikibase** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
+- **Job Runner** The MediaWiki JobRunner service which uses the same Wikibase container as above.
+- **MariaDB** Database service for MediaWiki and Wikibase.
+- **Elasticsearch** Search service used by MediaWiki.
+- **WDQS** Wikidata Query Service allowing SPARQL queries.
+- **WDQS Frontend** Web Frontend to run SPARQL queries.
+- **wdqs-proxy** A middle layer for WDQS which serves to filter requests and make the service more secure. 
+- **WDQS Updater** Keeps the WDQS data in sync with Wikibase.
+- **Quickstatements** A web based tool to import and manipulate large amounts of data.
+- **Traefik** A reverse proxy handling TLS termination and ACME certificate renewal.
 
-2. Copy the configuration template: `cp template.env .env`.
-3. Open `.env` file and set configuration values according to instructions in the comments.
-4. Start Wikibase Suite: `docker compose up --wait`.
+## Quickstart
+
+### Requirements
+
+#### Hardware
+- Network connection with a public IP address
+- AMD64 architecture
+- 8 GB RAM
+- 4 GB free disk space
+- Docker 22.0, or greater
+- Docker Compose 2.10, or greater
+
+#### Domain Names
+You need three DNS records that resolve to your machines IP address.
+
+- Wikibase e.g. "wikibase.mydomain.net"
+- QueryService e.g. "query.mydomain.net"
+- QuickStatements e.g. "quickstatements.mydomain.net"
+
+### Download required files
+Checkout the files from Github.
+```
+git clone https://github.com/wmde/wikibase-release-pipeline
+git checkout wmde.20
+cd wikibase-release-pipeline/example
+```
+
+### Configuration
+Copy the configuration template in `wikibase-release-pipeline/example`
+```
+cp template.env .env
+```
+
+Set usernames, passwords and domain names in `.env` according to instructions in the comments.
+
+### Start the stack
+Run the following command from within `wikibase-release-pipeline/example`
+```
+docker compose up --wait
+```
+
+### Done
+
+Congratulations, your Wikibase Suite instance should be up and running.
 
 **Stopping Wikibase Suite:**
 
@@ -69,3 +115,7 @@ Yes, Wikibase Suite can be hosted locally for testing purposes. However, due to 
 **Do you have any recommended Internet host / VPS provider recommendations?**
 
 At this time, there are no specific recommendations for Internet hosts or VPS providers for hosting Wikibase Suite. The suite has been tested on various providers, and as long as the minimum technical requirements are met, it should run as expected.
+
+
+
+The provided files are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to this configuration of MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through Docker Compose and environment variables.
