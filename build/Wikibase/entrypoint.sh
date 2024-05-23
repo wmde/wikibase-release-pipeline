@@ -85,7 +85,7 @@ else
             echo "\$elasticsearchHost = '$ELASTICSEARCH_HOST';"
         fi
         echo
-        cat /templates/LocalSettings.wbs.php | grep -v "<?php"
+        grep -v "<?php" /templates/LocalSettings.wbs.php
         echo
     } >> /var/www/html/LocalSettings.php
 
