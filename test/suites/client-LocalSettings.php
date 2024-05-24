@@ -5,6 +5,9 @@ $wgMetaNamespace = "Project";
 $wgEnableWikibaseRepo = false;
 $wgEnableWikibaseClient = true;
 
+# use jobs on request, client does not have a job runner
+$wgJobRunRate = 1;
+
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
