@@ -1,22 +1,6 @@
 <?php
 
-ini_set( 'display_errors', 1 );
-$wgShowExceptionDetails = true;
-$wgShowSQLErrors = true;
-$wgDebugDumpSql  = false;
-$wgShowDBErrorBacktrace = false;
-$wgEnableParserCache = false;
-$wgCachePages = false;
-$wgParserCacheType = CACHE_NONE;
-$wgMainCacheType = CACHE_NONE;
-
-## Site Settings
 $wgMetaNamespace = "Project";
-
-# Configured web paths & short URLs
-# This allows use of the /wiki/* path
-## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "/w";        // this should already have been configured this way
 
 $wgEnableWikibaseRepo = false;
 $wgEnableWikibaseClient = true;

@@ -1,16 +1,5 @@
 <?php
 
-ini_set( 'display_errors', 1 );
-$wgShowExceptionDetails = true;
-$wgShowSQLErrors = true;
-$wgDebugDumpSql  = false;
-$wgShowDBErrorBacktrace = false;
-$wgEnableParserCache = false;
-$wgCachePages = false;
-$wgParserCacheType = CACHE_NONE;
-$wgMainCacheType = CACHE_NONE;
-
-## Site Settings
 $wgMetaNamespace = "Project";
 
 $wgEnableWikibaseRepo = true;

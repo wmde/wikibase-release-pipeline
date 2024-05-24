@@ -6,7 +6,7 @@ services:
   wikibase:
     volumes:
       - wikibase-client-config:/config
-      - ./repo-LocalSettings.php:/var/www/html/LocalSettings.d/Wikibase.php
+      - ./repo-LocalSettings.php:/var/www/html/LocalSettings.d/00_Wikibase.php
       - ./repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
@@ -17,13 +17,13 @@ services:
     restart: always
     volumes:
       - wikibase-client-config:/config
-      - ./client-LocalSettings.php:/var/www/html/LocalSettings.d/Wikibase.php
-      - ./empty.php:/var/www/html/LocalSettings.d/CirrusSearch.php
-      - ./empty.php:/var/www/html/LocalSettings.d/EntitySchema.php
-      - ./empty.php:/var/www/html/LocalSettings.d/Elastic.php
-      - ./empty.php:/var/www/html/LocalSettings.d/WikibaseCirrusSearch.php
-      - ./empty.php:/var/www/html/LocalSettings.d/WikibaseLocalMedia.php
-      - ./empty.php:/var/www/html/LocalSettings.d/WikibaseEdtf.php
+      - ./client-LocalSettings.php:/var/www/html/LocalSettings.d/00_Wikibase.php
+      - ./empty.php:/var/www/html/LocalSettings.d/30_WikibaseCirrusSearch.php
+      - ./empty.php:/var/www/html/LocalSettings.d/30_WikibaseLocalMedia.php
+      - ./empty.php:/var/www/html/LocalSettings.d/30_WikibaseEdtf.php
+      - ./empty.php:/var/www/html/LocalSettings.d/40_CirrusSearch.php
+      - ./empty.php:/var/www/html/LocalSettings.d/40_EntitySchema.php
+      - ./empty.php:/var/www/html/LocalSettings.d/40_Elastic.php
       - ./client-extra-install.sh:/extra-install.sh
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     ports:
