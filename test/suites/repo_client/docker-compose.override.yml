@@ -40,4 +40,3 @@ services:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
-
