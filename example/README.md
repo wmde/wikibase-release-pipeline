@@ -96,11 +96,23 @@ docker compose up --wait
 
 ### Updating Wikibase Suite with Patch Releases
 
-Patch releases are applied automatically when recreating Docker containers
+Minor and patch releases are applied automatically when recreating Docker containers
 
 ```
-docker compose down && docker compose up --wait`
+docker compose down 
+docker compose up --wait
 ```
+
+### Prevent updates on Wikibase Suite Restart
+
+If you do not want to pull in any code changes on restart you just stop your containers before restart without removing them.
+
+```
+docker compose stop 
+docker compose up --wait
+```
+
+Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart as described above.
 
 ### Upgrading to New Major Releases of Wikibase Suite:
 
