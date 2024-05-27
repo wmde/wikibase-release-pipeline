@@ -8,7 +8,7 @@ Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wik
 
 ## What is in the box?
 
-WBS comes with the following WBS Service Containers, all of them packaged in Docker Images:
+This WBS Deployment Kit uses the following WBS Service Containers, all of them packaged as Docker Images:
 
 - **[Wikibase](https://hub.docker.com/r/wikibase/wikibase)** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
 - **Job Runner** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
