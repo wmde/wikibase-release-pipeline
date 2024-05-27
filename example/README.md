@@ -231,28 +231,34 @@ If you did change `docker-compose.yml`, consider using git branches and merging 
 
 New major versions of WBS Deployment Kit might reference new major versions of WBS Service Containers.
 
-> ‼️ Always [create a backup](#backup-your-data) of your data before attempting a major version update.
+> ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
 
-> ‼️ Major releases may require additional steps. Refer to specific upgrade instructions in the Migration Guide section below.
+> ‼️ Major releases may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
 
 Once all version specific migration activities are done, use `git` to update your WBS Deployment Kit to the new version.
 
 ```sh
 docker compose down 
+git remote update
 git checkout NEWVERSIONBRANCH
+git pull
 docker compose up --wait
 ```
 
-### Removing Wikibase Suite Completely with all its data
+### Removing Wikibase Suite Completely with all its Data
 
-To reset the configuration and data, and remove the WBS Service Containers and Docker Volumes. _This will destroy all data, make sure to backup anything you wish to retain_:
+‼️ **This will destroy all data, make sure to [backup anything](#backup-your-data) you wish to retain.**
+
+To reset the configuration and data, and remove the WBS Service Containers and Docker Volumes.
 
 ```sh
+# TODO: test the flow, do we need to delete LocalSettings.php too? What was the DB error wikibase had?
 docker compose down --volumes
 ```
 
 ## Migration Guide
 
+When moving from one major version to another, it might be required to perform additional steps for any of the WBS Service Containers. This might include data migration and configuration adjustments.
 
 ### Wikibase Suite 24 to 25 (MediaWiki 1.41 to MediaWiki 1.42)
 
