@@ -6,7 +6,8 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wikibase
     depends_on:
       mysql:
         condition: service_healthy
@@ -39,7 +40,8 @@ services:
       start_period: 5m
 
   wikibase-jobrunner:
-    image: ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wikibase
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -49,7 +51,7 @@ services:
       - wikibase
 
   mysql:
-    image: ${MARIADB_IMAGE_URL}
+    image: mariadb:10.11
     restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql
@@ -72,7 +74,8 @@ services:
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
   elasticsearch:
-    image: ${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/elasticsearch
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -85,7 +88,8 @@ services:
       start_period: 2m
 
   wdqs:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -106,7 +110,8 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -121,14 +126,16 @@ services:
         hard: 32768
 
   wdqs-proxy:
-    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs-proxy
     depends_on:
       wdqs:
         condition: service_healthy
     restart: unless-stopped
 
   wdqs-frontend:
-    image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs-frontend
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
@@ -147,7 +154,8 @@ services:
       start_period: 2m
 
   quickstatements:
-    image: ${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/quickstatements
     depends_on:
       wikibase:
         condition: service_healthy
