@@ -129,9 +129,11 @@ script](https://www.mediawiki.org/wiki/Manual:Install.php).
 This file is a `php.ini` override file, a good place to tune PHP configuration
 values. It will be loaded by the Wikibase Webservers PHP interpreter.
 
-### Updating Wikibase Suite with Patch Releases
+### Updating Wikibase Suite with non breaking Releases
 
-Minor and patch releases are applied automatically when recreating Docker containers
+Minor and patch releases are applied automatically when recreating Docker
+containers. They do not contain breaking changes and should be always safe to
+apply.
 
 ```
 docker compose down 
