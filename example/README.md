@@ -125,7 +125,7 @@ you need to regenerate your `LocalSettings.php`, your
 when running the [MediaWiki installer
 script](https://www.mediawiki.org/wiki/Manual:Install.php).
 
-### config/wikibase-php.ini
+#### config/wikibase-php.ini
 This file is a `php.ini` override file, a good place to tune PHP configuration
 values. It will be loaded by the Wikibase Webservers PHP interpreter.
 
