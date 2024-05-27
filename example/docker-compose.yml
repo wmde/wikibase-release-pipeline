@@ -1,4 +1,4 @@
-name: wikibase-suite-example
+name: wikibase-suite
 
 services:
   # --------------------------------------------------
@@ -201,7 +201,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt:/letsencrypt
+      - traefik-letsencrypt-data:/letsencrypt
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
@@ -212,4 +212,4 @@ volumes:
   elasticsearch-data:
   quickstatements-data:
   # C. REVERSE PROXY AND SSL SERVICES DATA
-  traefik-letsencrypt:
+  traefik-letsencrypt-data:

@@ -1,3 +1,5 @@
+name: wikibase-suite-test
+
 networks:
   default:
     name: wikibase-suite-test

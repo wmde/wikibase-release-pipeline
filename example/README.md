@@ -38,34 +38,36 @@ You need three DNS records that resolve to your machines IP address.
 - QueryService e.g. "query.mydomain.net"
 - QuickStatements e.g. "quickstatements.mydomain.net"
 
+> If you just want to run a quick test on a machine that is not accessible from the internet and do not want to bother setting up DNS, you can do so by using the example domain names `*.mydomain.net`. Configure those domain names in your `/etc/hosts` to resolve to 127.0.0.1. Wikibase Suite will then generate self-signed placeholder certificates for https.
+
 ### Initial setup
 
-### Download required files
+#### Download required files
 
 Checkout the files from Github.
 
-```
+```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
 git checkout wmde.20
 cd wikibase-release-pipeline/example
 ```
 
-### Configuration
+#### Initial Configuration
 
 Make a copy of the [configuration template](./template.env) in `wikibase-release-pipeline/example`
 
-```
+```sh
 cp template.env .env
 ```
 
 Set usernames, passwords and domain names in your newly created `.env` file
 according to the instructions in the comments.
 
-### Start the stack
+#### Start the stack
 
 Run the following command from within `wikibase-release-pipeline/example`
 
-```
+```sh
 docker compose up --wait
 ```
 
@@ -76,30 +78,31 @@ Congratulations, your Wikibase Suite instance should be up and running. Web
 interfaces are available via https (port 443) on the domain names you
 configured for Wikibase, WDQS Frontend and Quickstatements.
 
-### Stopping Wikibase Suite
+#### Stopping Wikibase Suite
 
 To stop Wikibase Suite, use `docker compose down`.
 
-### Resetting Wikibase Suite Configuration
+#### Resetting Wikibase Suite Configuration
 
 Most values set in `.env` are copied statically into the respective containers
-after the first time you run `docker compose up --wait`.
+after the first time you run `docker compose up`.
 
 To reset the configuration but keep your existing data:
 
 1. Make any needed changes to the values in the `.env` file copied from
    `template.env` above. NOTE: Do not change `DB_*` values unless you are also
-   re-creating the database (see "Removing Wikibase Suite Completely" below).
+   re-creating the database ([see below](#removing-wikibase-suite-completely-with-all-its-data).
 2. Delete your LocalSettings.php from the ./config directory.
-3. Remove and re-create Wikibase Suite services with:
+3. Remove and re-create Wikibase Suite containers with:
 
-```
+```sh
 docker compose down
 docker compose up --wait
 ```
 
-### Customizing your Wikibase Suite MediaWiki
-On first launch, Wikibase Suite will create files in the `./config` directory.
+### Configuring your Wikibase Suite
+On first launch, Wikibase Suite will create files in the `./config` directory next to your `.env` file and the `docker-compose.yml` and `template.env`. This is the configuration of your Wikibase Suite. You own those files. Backup them in order to create a Wikibase Suite with the same configuration later.
+
 Two of those files are related to MediaWiki itself.
 
 #### config/LocalSettings.php
@@ -129,13 +132,62 @@ script](https://www.mediawiki.org/wiki/Manual:Install.php).
 This file is a `php.ini` override file, a good place to tune PHP configuration
 values. It will be loaded by the Wikibase Webservers PHP interpreter.
 
+### Managing your Wikibase Suite Data
+Besides [your configuration](#configuring-your-wikibase-suite), your data is obviously what makes your Wikibase Suite unique. All data is stored in [docker volumes](https://docs.docker.com/storage/volumes/).
+
+ - **wikibase-image-data** MediaWiki image and media uploads.
+ - **mysql-data** MariaDB raw database.
+ - **wdqs-data** Wikidata Query Service raw database.
+ - **elasticsearch-data** Elastic Search raw database.
+ - **quickstatements-data** Quickstatement OAuth binding for this MediaWiki instance.
+ - **traefik-letsencrypt-data** SSL cerificates.
+
+#### Backup your data
+
+You can backup your data by shutting down the stack and dumping the contents of all volumes into `tar.gz` files.
+
+```sh
+docker compose down
+
+for v in \
+    wikibase-suite-wikibase_image-data \
+    wikibase-suite_mysql-data \
+    wikibase-suite_wdqs-data \
+    wikibase-suite_elasticsearch-data \
+    wikibase-suite_quickstatements-data \
+    wikibase-suite_traefik-letsencrypt-data; do
+  docker run --rm --volume $v:/backup debian:12-slim tar cz backup > $v.tar.gz
+done
+```
+
+#### Restore from a data backup
+
+To restore a backup, shut down your stack (in case it is already running) and populate the volumes with data from your `tar.gz` files.
+
+```sh
+docker compose down
+
+for v in \
+    wikibase-suite-wikibase_image-data \
+    wikibase-suite_mysql-data \
+    wikibase-suite_wdqs-data \
+    wikibase-suite_elasticsearch-data \
+    wikibase-suite_quickstatements-data \
+    wikibase-suite_traefik-letsencrypt-data; do
+  docker volume rm $v 2> /dev/null
+  docker volume create $v
+  docker run -i --rm --volume $v:/backup debian:12-slim tar xz < $v.tar.gz
+done
+```
+
+
 ### Updating Wikibase Suite with non breaking Releases
 
 Minor and patch releases are applied automatically when recreating Docker
 containers. They do not contain breaking changes and should be always safe to
 apply.
 
-```
+```sh
 docker compose down 
 docker compose up --wait
 ```
@@ -144,14 +196,16 @@ docker compose up --wait
 
 If you do not want to pull in any code changes on restart you just stop your containers before restart without removing them.
 
-```
+```sh
 docker compose stop 
 docker compose up --wait
 ```
 
 Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart as described above.
 
-### Upgrading to New Major Releases of Wikibase Suite:
+### Upgrading to New Major Releases of Wikibase Suite
+
+Always create a backup of your data before attempting a major version update.
 
 Major releases may require additional steps. Refer to specific upgrade instructions in the Migration Guide section below.
 
@@ -159,7 +213,7 @@ Major releases may require additional steps. Refer to specific upgrade instructi
 
 To reset the configuration and data, and remove the Wikibase Suite Docker containers. _This will destroy all data, make sure to backup anything you wish to retain_:
 
-```
+```sh
 docker compose down --volumes
 ```
 
@@ -175,17 +229,17 @@ docker compose down --volumes
 
 ### Wikibase Suite 22 to 23 (MediaWiki 1.39 to MediaWiki 1.40)
 
-- Details on migration steps from MediaWiki version 1.39 to 1.40 are outlined here. Ensure to follow the provided instructions carefully to ensure a smooth transition and compatibility with Wikibase Suite.
+Upgrading Wikibase Suite from Version 22 to Version 23 also upgrade MediaWiki from 1.39 to 1.40. Checkout the [information on MediaWiki Upgrades](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
 ### From an existing Wikibase installation to Wikibase Suite
 
 It is possible to migrate an existing Wikibase installation to Wikibase Suite. The general procedure would be:
 
-  - Backup your MediaWiki data as [XML dump](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki#Backup_the_content_of_the_wiki_(XML_dump))
-  - Install Wikibase Suite as described above
-  - Re-apply customaization to LocalSettings.php
-  - Import your XML dump
-  - Regenerate WDQS database
+ - [Backup your MediaWiki](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki)
+ - Install Wikibase Suite as [described above](#initial-setup)
+ - Re-apply [customization](#customizing-your-wikibase-suite-mediawiki) to LocalSettings.php
+ - Import your database dump
+ - Regenerate WDQS database
 
 ## FAQ
 
