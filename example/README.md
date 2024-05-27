@@ -71,8 +71,6 @@ docker compose up --wait
 
 The first start of Wikibase Suite can take a couple of minutes. Wait for your shell prompt to return.
 
-### Done
-
 Congratulations, your Wikibase Suite instance should be up and running. Web
 interfaces are available via https (port 443) on the domain names you
 configured for Wikibase, WDQS Frontend and Quickstatements.
