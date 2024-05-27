@@ -2,6 +2,8 @@
 
 Wikibase Suite is a containerised, production ready [Wikibase](https://wikiba.se) stack, that allows you to self host a knowledge graph similar to Wikidata.
 
+> 💡 This document assumes basic Linux administration and docker/docker-compose knowledge.
+
 > This document is for people wanting to self host the full Wikibase Suite. If you are looking for documentation about the individual containers provided with Wikibase Suite, head over to https://hub.docker.com/u/wikibase
 
 Wikibase Suite comes with the following services:
@@ -38,7 +40,9 @@ You need three DNS records that resolve to your machines IP address.
 - QueryService e.g. "query.mydomain.net"
 - QuickStatements e.g. "quickstatements.mydomain.net"
 
-> If you just want to run a quick test on a machine that is not accessible from the internet and do not want to bother setting up DNS, you can do so by using the example domain names `*.mydomain.net`. Configure those domain names in your `/etc/hosts` to resolve to 127.0.0.1. Wikibase Suite will then generate self-signed placeholder certificates for https.
+> 💡 If you just want to run a quick test on a machine that is not accessible
+> from the internet and do not want to bother setting up DNS, check out our
+> [FAQ item below](#can-i-host-wikibase-suite-locally?).
 
 ### Initial setup
 
@@ -74,8 +78,8 @@ docker compose up --wait
 The first start of Wikibase Suite can take a couple of minutes. Wait for your
 shell prompt to return.
 
-Congratulations, your Wikibase Suite instance should be up and running. Web
-interfaces are available via https (port 443) on the domain names you
+🎉 Congratulations, your Wikibase Suite instance should be up and running. Web
+interfaces are available via HTTPS (port 443) on the domain names you
 configured for Wikibase, WDQS Frontend and Quickstatements.
 
 #### Stopping Wikibase Suite
@@ -135,12 +139,12 @@ values. It will be loaded by the Wikibase Webservers PHP interpreter.
 ### Managing your Wikibase Suite Data
 Besides [your configuration](#configuring-your-wikibase-suite), your data is obviously what makes your Wikibase Suite unique. All data is stored in [docker volumes](https://docs.docker.com/storage/volumes/).
 
- - **wikibase-image-data** MediaWiki image and media uploads.
- - **mysql-data** MariaDB raw database.
- - **wdqs-data** Wikidata Query Service raw database.
- - **elasticsearch-data** Elastic Search raw database.
- - **quickstatements-data** Quickstatement OAuth binding for this MediaWiki instance.
- - **traefik-letsencrypt-data** SSL cerificates.
+ - `wikibase-image-data` MediaWiki image and media file uploads.
+ - `mysql-data` MediaWiki/Wikibase MariaDB raw database.
+ - `wdqs-data` Wikidata Query Service raw database.
+ - `elasticsearch-data` Elastic Search raw database.
+ - `quickstatements-data` Quickstatement OAuth binding for this MediaWiki instance.
+ - `traefik-letsencrypt-data` SSL cerificates.
 
 #### Backup your data
 
@@ -245,7 +249,9 @@ It is possible to migrate an existing Wikibase installation to Wikibase Suite. T
 
 ### Can I host Wikibase Suite locally?
 
-Yes, Wikibase Suite can be hosted locally for testing purposes. However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load.
+Yes, Wikibase Suite can be hosted locally for testing purposes by using e.g. the example domain names `*.mydomain.net` from `template.env` in your `.env` file. Configure those domain names also in your `/etc/hosts` to make them resolve to `127.0.0.1`.
+
+However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load in the browser. 
 
 ### Do you have any recommended Internet host / VPS provider recommendations?
 
