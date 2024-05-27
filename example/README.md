@@ -196,7 +196,7 @@ WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 > 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Containers major versions.
 
-### Non breaking (security) updates to WBS Service Containers
+#### Minor updates for WBS Service Containers
 
 As WBS Deployment Kit always references latest minor and patch releases of WBS Service Containers, non breaking changes including security updates are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
 
@@ -205,18 +205,9 @@ docker compose down
 docker compose up --wait
 ```
 
-### Prevent updates on Restart
+> 💡 If you do not want to pull in new versions of WBS Service Containers on restart, just stop your containers before restart without removing them using `docker compose stop`. Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart as described above.
 
-If you do not want to pull in new versions of WBS Service Containers on restart, just stop your containers before restart without removing them.
-
-```sh
-docker compose stop 
-docker compose up --wait
-```
-
-Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart as described above.
-
-### Updating the WBS Deployment Kit Minor and Patch Version
+#### Minor updates for WBS Deployment Kit
 
 The WBS Deployment Kit itself receives updates too. If you did not change `docker-compose.yml`, you can update simply using `git`.
 
@@ -225,11 +216,11 @@ The WBS Deployment Kit itself receives updates too. If you did not change `docke
 git pull
 ```
 
-If you did change `docker-compose.yml`, consider using git branches and merging to combine your adjustments with upstream changes.
+> 💡 If you did change `docker-compose.yml`, consider using git branches and merging to combine your adjustments with upstream changes.
 
-### Upgrading to a New Major Releases of WBS Deployment Kit
+### Major upgrades
 
-New major versions of WBS Deployment Kit might reference new major versions of WBS Service Containers.
+Major version upgrades are performed by updating WBS Deployment Kit. This might reference compatible new major versions of WBS Service Containers too.
 
 > ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
 
