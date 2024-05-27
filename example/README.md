@@ -218,7 +218,7 @@ git pull
 
 > 💡 If you did change `docker-compose.yml`, consider using git branches and merging to combine your adjustments with upstream changes.
 
-### Major upgrades
+#### Major upgrades
 
 Major version upgrades are performed by updating WBS Deployment Kit. This might reference compatible new major versions of WBS Service Containers too.
 
