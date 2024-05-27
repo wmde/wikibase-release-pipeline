@@ -6,7 +6,7 @@ Wikibase Suite is a containerised, production ready [Wikibase](https://wikiba.se
 
 > This document is for people wanting to self host the full Wikibase Suite. If you are looking for documentation about the individual containers provided with Wikibase Suite, head over to https://hub.docker.com/u/wikibase
 
-Wikibase Suite comes with the following services:
+Wikibase Suite comes with the following services, all of them packaged in docker containers:
 
 - **[Wikibase](https://hub.docker.com/r/wikibase/wikibase)** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
 - **Job Runner** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
@@ -40,9 +40,7 @@ You need three DNS records that resolve to your machines IP address.
 - QueryService e.g. "query.mydomain.net"
 - QuickStatements e.g. "quickstatements.mydomain.net"
 
-> 💡 If you just want to run a quick test on a machine that is not accessible
-> from the internet and do not want to bother setting up DNS, check out our
-> [FAQ item below](#can-i-host-wikibase-suite-locally?).
+> 💡 If you want to run a quick test on a machine that has no public IP address, check our [FAQ item below](#can-i-host-wikibase-suite-locally?).
 
 ### Initial setup
 
