@@ -196,9 +196,9 @@ WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 > 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Containers major versions.
 
-### Non breaking updates to WBS Service Containers
+### Non breaking (security) updates to WBS Service Containers
 
-As WBS Deployment Kit always references latest minor and patch releases of WBS Service Containers, non breaking changes are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
+As WBS Deployment Kit always references latest minor and patch releases of WBS Service Containers, non breaking changes including security updates are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
 
 ```sh
 docker compose down 
