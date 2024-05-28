@@ -48,7 +48,7 @@ You need three DNS records that resolve to your machines IP address.
 
 #### Download the WBS Deployment Kit
 
-Checkout the files from Github. And move to the subdirectory `example`.
+Checkout the files from Github and move to the subdirectory `example`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
