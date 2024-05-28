@@ -21,7 +21,7 @@ else
 fi
 
 # Create a LocalSettings.override.php if it is not there already
-if ! [ -e "/config/LocalSettings.override.php" ]; then
+if [ ! -e "/config/LocalSettings.override.php" ]; then
     {
         echo "<?php"
         echo 
