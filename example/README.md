@@ -266,13 +266,13 @@ Besides that, no further migrations are necessary.
 
 ### Wikibase Suite 23 to 24 (MediaWiki 1.40 to MediaWiki 1.41)
 
-Upgrading Wikibase Suite from Version 23 to Version 24 also upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
+Upgrading Wikibase Suite from Version 23 to Version 24 upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
 Besides that, no further migrations are necessary.
 
 ### Wikibase Suite 22 to 23 (MediaWiki 1.39 to MediaWiki 1.40)
 
-Upgrading Wikibase Suite from Version 22 to Version 23 also upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
+Upgrading Wikibase Suite from Version 22 to Version 23 upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
 Besides that, no further migrations are necessary.
 
