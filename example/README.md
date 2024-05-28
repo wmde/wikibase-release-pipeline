@@ -25,6 +25,8 @@ This WBS Deployment Kit uses the following WBS Service Containers, all of them p
 
 ### Requirements
 
+> 💡 If you want to run a quick test on a machine that has no public IP address (e.g. your local machine), check our [FAQ item](#can-i-host-wikibase-suite-locally) below.
+
 #### Hardware
 
 - Network connection with a public IP address
@@ -41,8 +43,6 @@ You need three DNS records that resolve to your machines IP address.
 - Wikibase e.g. "wikibase.mydomain.net"
 - QueryService e.g. "query.mydomain.net"
 - QuickStatements e.g. "quickstatements.mydomain.net"
-
-> 💡 If you want to run a quick test on a machine that has no public IP address (e.g. your local machine), check our [FAQ item](#can-i-host-wikibase-suite-locally) below.
 
 ### Initial Setup
 
