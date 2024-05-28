@@ -42,7 +42,7 @@ You need three DNS records that resolve to your machines IP address.
 - QueryService e.g. "query.mydomain.net"
 - QuickStatements e.g. "quickstatements.mydomain.net"
 
-> 💡 If you want to run a quick test on a machine that has no public IP address (e.g. your local machine), check our [FAQ item below](#can-i-host-wikibase-suite-locally?).
+> 💡 If you want to run a quick test on a machine that has no public IP address (e.g. your local machine), check our [FAQ item](#can-i-host-wikibase-suite-locally) below.
 
 ### Initial Setup
 
