@@ -6,7 +6,7 @@ Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wik
 
 ## Repository overview
 
-The wikibase release pipeline contains tools used for building (./build.sh and ./build), testing (./test.sh and ./test) and publishing images for WBS Service Containers (./.github/workflows) as well as the WBS Deployment Kit (./example).
+The wikibase release pipeline contains tools used for building ([./build.sh] and [./build]), testing ([./test.sh] and [./test]) and publishing images for WBS Service Containers ([./.github/workflows]) as well as the WBS Deployment Kit ([./example]).
 
 ## Quick reference
 
