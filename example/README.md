@@ -260,25 +260,32 @@ When moving from one major version to another, it might be required to perform a
 
 ### Wikibase Suite 24 to 25 (MediaWiki 1.41 to MediaWiki 1.42)
 
-Upgrading Wikibase Suite from Version 24 to Version 25 also upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
+Upgrading Wikibase Suite from Version 24 to Version 25 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
+
+Besides that, no further migrations are necessary.
 
 ### Wikibase Suite 23 to 24 (MediaWiki 1.40 to MediaWiki 1.41)
 
 Upgrading Wikibase Suite from Version 23 to Version 24 also upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
+Besides that, no further migrations are necessary.
+
 ### Wikibase Suite 22 to 23 (MediaWiki 1.39 to MediaWiki 1.40)
 
 Upgrading Wikibase Suite from Version 22 to Version 23 also upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
+Besides that, no further migrations are necessary.
+
 ### From an existing Wikibase installation to Wikibase Suite
 
-It is possible to migrate an existing Wikibase installation to Wikibase Suite. The general procedure would be:
+It is possible to migrate an existing Wikibase installation to WBS Deployment Kit. The general procedure is:
 
  - [Backup your MediaWiki](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki)
  - Install Wikibase Suite as [described above](#initial-setup)
  - Re-apply [customization](#customizing-your-wikibase-suite-mediawiki) to LocalSettings.php
  - Import your database dump
  - Regenerate WDQS database
+ - Regenerate elasticsearch database
 
 ## FAQ
 
