@@ -136,6 +136,11 @@ So if you want to, for example, change your site name later, just put the follow
 $wgSitename = "My New Site Name";
 ```
 
+Now restart your Wikibase Service Container with 
+```sh
+docker restart wikibase-suite-wikibase-1
+```
+
 #### config/wikibase-php.ini
 This file is a `php.ini` override file, a good place to tune PHP configuration
 values. It will be loaded by the Wikibase Webservers PHP interpreter.
