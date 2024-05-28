@@ -125,8 +125,9 @@ For more information on testing see the [README](../../test/README.md).
 
 Wikibase and related software gets release through this repository. The process for releasing involves defining the release in this repository, testing all the components of the release together and finally publishing them.
 
-=== Release Checklist
+### Release Checklist Phabricator Template
 
+```
 [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a Mediawiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
 
 [ ] **Create branches**
@@ -165,3 +166,4 @@ Wikibase and related software gets release through this repository. The process 
 [ ] **Merge back to main**. Decide whether there is stuff you want to merge back to main on the release branch.
 
 You are done. **Congratulations!**
+```
