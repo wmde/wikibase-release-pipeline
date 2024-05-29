@@ -4,14 +4,14 @@ Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wik
 
 > 🔧 This document is for people developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./example/README.md). If you are looking for individual WBS Service Containers, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
-## Repository overview
+## Overview
 
-The repository contains Wikibase Suite tools used for 
+This repository contains Wikibase Suite tools used for 
 
- - building ([build.sh](./build.sh) and [build directory](./build))
- - testing ([test.sh](./test.sh) and [test directory](./test))
- - publishing images for WBS Service Containers ([.github/workflows](.github/workflows)) 
- - deploying ([example directory](./example))
+ - **Building** ([build.sh](./build.sh) and [build directory](./build))
+ - **Testing** ([test.sh](./test.sh) and [test directory](./test))
+ - **Publishing** ([.github/workflows](.github/workflows)) 
+ - **Deploying** ([example directory](./example))
 
 ## Quick reference
 
@@ -47,7 +47,7 @@ $ ./test.sh repo --spec specs/repo/special-item.ts
 $ ./test.sh repo --setup
 ```
 
-### WBS Deployment Kit (example)
+### Deploy
 
 ```
 $ cd example
