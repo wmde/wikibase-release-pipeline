@@ -12,7 +12,7 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 | `OAUTH_CONSUMER_SECRET` | NONE | OAuth consumer secret (obtained from wikibase) |
 | `PHP_TIMEZONE` | UTC | setting of php.ini date.timezone |
 | `MW_WG_LANGUAGE_CODE` | "en" | Site language |
-| `MW_WG_SITENAME` | "wikibase-docker" | Site name |
+| `MW_WG_SITENAME` | "wikibase" | Site name |
 | `WB_PROPERTY_NAMESPACE` | NONE | Wikibase Property namespace |
 | `WB_ITEM_NAMESPACE` | NONE | Wikibase Item namespace |
 | `WB_PROPERTY_PREFIX` | NONE | Wikibase Property prefix |

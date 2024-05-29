@@ -60,21 +60,21 @@ Variables in **bold** are required on first launch without `LocalSettings.php`
 in the Config Volume. The image will fail to start if one of those variables
 does not have a value. Default values do not need to be overwritten.
 
-| Variable                     | Default          | Description                                                                                                                                                                                                  |
-| ---------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`DB_SERVER`**              | undefined        | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                                                                       |
-| **`DB_USER`**                | undefined        | Username to use for the MySQL server                                                                                                                                                                         |
-| **`DB_PASS`**                | undefined        | Password to use for the MySQL server                                                                                                                                                                         |
-| **`DB_NAME`**                | "my_wiki"        | Database name to use for the MySQL server                                                                                                                                                                    |
-| **`MW_ADMIN_NAME`**          | undefined        | Admin username to create on MediaWiki first install                                                                                                                                                          |
-| **`MW_ADMIN_PASS`**          | undefined        | Admin password to use for admin account on first install                                                                                                                                                     |
-| **`MW_ADMIN_EMAIL`**         | undefined        | Admin password to use for admin account on first install                                                                                                                                                     |
-| **`MW_WG_SERVER`**           | undefined        | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                                                                              |
-| **`MW_WG_SITENAME`**         | "wikibase-suite" | $wgSitename to use for MediaWiki                                                                                                                                                                             |
-| **`MW_WG_LANGUAGE_CODE`**    | "en"             | $wgLanguageCode to use for MediaWiki                                                                                                                                                                         |
-| `ELASTICSEARCH_HOST`         | undefined        | Hostname to an Elasticsearch server with the Wikibase Extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable ElasticSearch. |
-| `ELASTICSEARCH_PORT`         | 9200             | Port which Elasticsearch is available on                                                                                                                                                                     |
-| `QUICKSTATEMENTS_PUBLIC_URL` | undefined        | Public URL of the Quickstatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
+| Variable                     | Default    | Description                                                                                                                                                                                                  |
+| ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`DB_SERVER`**              | undefined  | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                                                                       |
+| **`DB_USER`**                | undefined  | Username to use for the MySQL server                                                                                                                                                                         |
+| **`DB_PASS`**                | undefined  | Password to use for the MySQL server                                                                                                                                                                         |
+| **`DB_NAME`**                | "my_wiki"  | Database name to use for the MySQL server                                                                                                                                                                    |
+| **`MW_ADMIN_NAME`**          | undefined  | Admin username to create on MediaWiki first install                                                                                                                                                          |
+| **`MW_ADMIN_PASS`**          | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
+| **`MW_ADMIN_EMAIL`**         | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
+| **`MW_WG_SERVER`**           | undefined  | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                                                                              |
+| **`MW_WG_SITENAME`**         | "wikibase" | $wgSitename to use for MediaWiki                                                                                                                                                                             |
+| **`MW_WG_LANGUAGE_CODE`**    | "en"       | $wgLanguageCode to use for MediaWiki                                                                                                                                                                         |
+| `ELASTICSEARCH_HOST`         | undefined  | Hostname to an Elasticsearch server with the Wikibase Extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable ElasticSearch. |
+| `ELASTICSEARCH_PORT`         | 9200       | Port which Elasticsearch is available on                                                                                                                                                                     |
+| `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the Quickstatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 
 ### Job Runner
 
@@ -154,6 +154,8 @@ This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## Internal filesystem layout
 
+Hooking into the internal filesystem can be used to extend the functionality of this image.
+
 | Directory                       | Description                                                                                                    |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `/var/www/html`                 | Base MediaWiki directory                                                                                       |
@@ -163,14 +165,16 @@ This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.
 | `/var/www/html/LocalSettings.d` | MediaWiki LocalSettings configuration directory, sourced in alphabetical order at the end of LocalSettings.php |
 | `/templates/`                   | Directory containing templates                                                                                 |
 
-| File                                  | Description                                                                                                                                                                                                                |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/default-extra-install.sh`           | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                                                    |
-| `/extra-install.sh`                   | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                                              |
-| `/var/www/html/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions. |
+| File                               | Description                                                                                                                                                                                    |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
+| `/extra-install.sh`                | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                  |
+| `/templates/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client as well as all the other bundled extensions. |
 
 ## Source
+
 This image is built from [this Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/Wikibase/Dockerfile).
 
 ## Authors
+
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
