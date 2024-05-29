@@ -219,7 +219,7 @@ git pull
 ```
 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
 
-> 💡 One major version of WBS Deployment Kit will always reference the same major versions of WBS Service Containers. Therefor, updating WBS Deployment Kit minor and patch versions from its major versions git branch will never lead to breaking changes in WBS Service Containers. Those updates are always considered safe!
+> 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Containers. Therefor, updating WBS Deployment Kit minor and patch versions from its major versions git branch will never lead to breaking changes in WBS Service Containers. Those updates are always considered safe!
 
 #### Major upgrades
 
