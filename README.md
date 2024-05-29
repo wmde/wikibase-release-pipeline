@@ -123,7 +123,7 @@ MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w
 ```
 
-For more information on testing see the [README](../../test/README.md).
+For more information on testing see the [README](./test/README.md).
 
 
 ## Release Process
