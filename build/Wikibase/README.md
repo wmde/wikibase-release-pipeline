@@ -31,7 +31,7 @@ Besides the [Wikibase extension](https://www.mediawiki.org/wiki/Wikibase), this 
 | [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)                                                                                                                                                | Adds support for local media files to Wikibase via a new data type.                                                            |
 | [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)                                                                                                                                               | API provided metadata for structured data repository.                                                                          |
 
-## Running the image
+## Requirements
 
 In order to run Wikibase, you need:
 
@@ -63,28 +63,83 @@ Variables in **bold** are required on first launch without `LocalSettings.php`
 in the Config Volume. The image will fail to start if one of those variables
 does not have a value. Default values do not need to be overwritten.
 
-| Variable                     | Default           | Description                                                                                                     |
-| ---------------------------- | ----------------- | --------------------------------------------------------------------------------------------------------------- |
-| **`DB_SERVER`**              | undefined         | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                          |
-| **`DB_USER`**                | undefined         | Username to use for the MySQL server                                                                            |
-| **`DB_PASS`**                | undefined         | Password to use for the MySQL server                                                                            |
-| **`DB_NAME`**                | "my_wiki"         | Database name to use for the MySQL server                                                                       |
-| **`MW_ADMIN_NAME`**          | undefined         | Admin username to create on MediaWiki first install                                                             |
-| **`MW_ADMIN_PASS`**          | undefined         | Admin password to use for admin account on first install                                                        |
-| **`MW_ADMIN_EMAIL`**         | undefined         | Admin password to use for admin account on first install                                                        |
-| **`MW_WG_SERVER`**           | undefined         | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required. |
-| **`MW_WG_SITENAME`**         | "wikibase-docker" | $wgSitename to use for MediaWiki                                                                                |
-| **`MW_WG_LANGUAGE_CODE`**    | "en"              | $wgLanguageCode to use for MediaWiki                                                                            |
-| `WIKIBASE_PINGBACK`          | "false"           | boolean for [WikibasePingback](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_pingback.html)      |
-| `ELASTICSEARCH_HOST`         | undefined         | Hostname to an Elasticsearch server with the Wikibase Extension installed, if used                              |
-| `ELASTICSEARCH_PORT`         | 9200              | Port which Elasticsearch is available on                                                                        |
-| `QUICKSTATEMENTS_PUBLIC_URL` | undefined         | Public URL of the Quickstatements server, if configured                                                         |
+| Variable                     | Default           | Description                                                                                                                                                  |
+| ---------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`DB_SERVER`**              | undefined         | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                       |
+| **`DB_USER`**                | undefined         | Username to use for the MySQL server                                                                                                                         |
+| **`DB_PASS`**                | undefined         | Password to use for the MySQL server                                                                                                                         |
+| **`DB_NAME`**                | "my_wiki"         | Database name to use for the MySQL server                                                                                                                    |
+| **`MW_ADMIN_NAME`**          | undefined         | Admin username to create on MediaWiki first install                                                                                                          |
+| **`MW_ADMIN_PASS`**          | undefined         | Admin password to use for admin account on first install                                                                                                     |
+| **`MW_ADMIN_EMAIL`**         | undefined         | Admin password to use for admin account on first install                                                                                                     |
+| **`MW_WG_SERVER`**           | undefined         | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                              |
+| **`MW_WG_SITENAME`**         | "wikibase-docker" | $wgSitename to use for MediaWiki                                                                                                                             |
+| **`MW_WG_LANGUAGE_CODE`**    | "en"              | $wgLanguageCode to use for MediaWiki                                                                                                                         |
+| `ELASTICSEARCH_HOST`         | undefined         | Hostname to an Elasticsearch server with the Wikibase Extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable ElasticSearch. |
+| `ELASTICSEARCH_PORT`         | 9200              | Port which Elasticsearch is available on                                                                                                                     |
+| `QUICKSTATEMENTS_PUBLIC_URL` | undefined         | Public URL of the Quickstatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality. |
 
-\* _Note: Additional functionality is installed based upon the existence of values on these variables. Do not pass values into these variables if the related services are not available._
+### Example `docker-compose.yml`
 
-### Versioning
+A minimal setup to run this image can be modeled using Docker Compose like this:
 
-### Filesystem layout
+```yml
+services:
+  wikibase:
+    image: wikibase/wikibase
+    ports:
+      - 80:80
+    volumes:
+      - ./config:/config
+      - wikibase-image-data:/var/www/html/images
+    environment:
+      MW_ADMIN_NAME: "admin"
+      MW_ADMIN_PASS: "change-this-password"
+      MW_ADMIN_EMAIL: "admin@mydomain.net"
+      MW_WG_SERVER: https://wikibase.mydomain.net
+      DB_SERVER: mysql:3306
+      DB_NAME: "my_wiki"
+      DB_USER: "mariadb-user"
+      DB_PASS: "change-this-password"
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+    command: /jobrunner-entrypoint.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: always
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "my_wiki"
+      MYSQL_USER: "mariadb-user"
+      MYSQL_PASSWORD: "change-this-password"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+    restart: unless-stopped
+```
+
+## Versioning
+
+## Filesystem layout
 
 | Directory                       | Description                              |
 | ------------------------------- | ---------------------------------------- |
@@ -102,6 +157,6 @@ does not have a value. Default values do not need to be overwritten.
 
 ---
 
-### JobRunner
+## JobRunner
 
 This container doubles as MediaWiki JobRunner. To use the JobRunner, override the command to `/jobrunner-entrypoint.sh`.

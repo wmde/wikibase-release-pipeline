@@ -78,8 +78,8 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg MW_WG_SITENAME="wikibase-suite" \
+        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
