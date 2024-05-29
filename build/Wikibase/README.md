@@ -8,9 +8,11 @@ Besides Wikibase itself, several other extensions are bundles (see below). The
 MediaWiki application runs on top of PHP on an Apache web server on a Debian
 base image.
 
+> 💡 This image is part of Wikibase Suite (WBS). The [WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+
 ## Bundled extensions
 
-Besides the [Wikibase extension](https://www.mediawiki.org/wiki/Wikibase), the WBS Wikibase Service Container image contains the following set of commonly used extension:
+Besides the [Wikibase extension](https://www.mediawiki.org/wiki/Wikibase), this Wikibase image contains the following set of commonly used extension:
 
 | Extension                                                                                                                                                                                                                   | Description                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
