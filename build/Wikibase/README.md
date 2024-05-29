@@ -91,7 +91,7 @@ Volume with it.
 
 ### Example `docker-compose.yml`
 
-A minimal setup to run this image can be modeled using Docker Compose like this:
+An example setup to run this image on [http://localhost](http://localhost) using Docker Compose could look like this:
 
 ```yml
 services:
