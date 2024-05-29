@@ -2,9 +2,9 @@
 
 Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to Wikidata.
 
-> 💡 This document assumes basic Linux administration and docker/docker-compose knowledge.
-
 > 🔧 This document is for people wanting to self host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Containers, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+
+> 💡 This document assumes basic Linux administration and docker/docker-compose knowledge.
 
 ## What is in the box?
 
