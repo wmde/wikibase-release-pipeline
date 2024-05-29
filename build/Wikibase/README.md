@@ -4,17 +4,13 @@
 for working with versioned semi-structured data in a central repository.
 
 This images contains the Wikibase extension running on top of MediaWiki.
-Besides Wikibase itself, several other extensions are bundles (see below). The
+Besides Wikibase itself, several other extensions are bundled. The
 MediaWiki application runs on top of PHP on an Apache web server on a Debian
 base image.
 
 > 💡 This image is part of Wikibase Suite (WBS). The [WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
-## Bundled extensions
-
-Besides the [Wikibase extension](https://www.mediawiki.org/wiki/Wikibase), this Wikibase image contains the following set of commonly used extension:
-
-| Extension                                                                                                                                                                                                                   | Description                                                                                                                    |
+| Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | [Babel](https://www.mediawiki.org/wiki/Extension:Babel)                                                                                                                                                                     | Adds a parser function to inform other users about language proficiency and categorize users of the same levels and languages. |
 | [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR)                                                                                                                                                                       | Provides functions to localize the names of languages, countries, currencies, and time units based on their language code.     |
@@ -37,7 +33,7 @@ In order to run Wikibase, you need:
 
 - a database
 - a configuration volume
-- initial settings through environment variables
+- initial settings via environment variables
 - job runner
 
 ### Database
@@ -81,7 +77,8 @@ does not have a value. Default values do not need to be overwritten.
 | `QUICKSTATEMENTS_PUBLIC_URL` | undefined        | Public URL of the Quickstatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 
 ### Job Runner
-MediaWiki/Wikibase depends on [jobs being run in the background](https://www.mediawiki.org/wiki/Manual:Job_queue). 
+
+MediaWiki/Wikibase depends on [jobs being run in the background](https://www.mediawiki.org/wiki/Manual:Job_queue).
 This can be either done on HTTP request, or by a dedicated Job Runner. The
 default configuration of this image requires such an external Job Runner.
 
@@ -153,15 +150,18 @@ volumes:
 
 ## Versioning
 
-## Filesystem layout
+This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-| Directory                       | Description                              |
-| ------------------------------- | ---------------------------------------- |
-| `/var/www/html`                 | Base MediaWiki directory                 |
-| `/var/www/html/skins`           | MediaWiki skins directory                |
-| `/var/www/html/extensions`      | MediaWiki extensions directory           |
-| `/var/www/html/LocalSettings.d` | Bundle extension configuration directory |
-| `/templates/`                   | Directory containing templates           |
+## Internal filesystem layout
+
+| Directory                       | Description                                                                                                    |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `/var/www/html`                 | Base MediaWiki directory                                                                                       |
+| `/var/www/html/images`          | MediaWiki image and media upload directory                                                                     |
+| `/var/www/html/skins`           | MediaWiki skins directory                                                                                      |
+| `/var/www/html/extensions`      | MediaWiki extensions directory                                                                                 |
+| `/var/www/html/LocalSettings.d` | MediaWiki LocalSettings configuration directory, sourced in alphabetical order at the end of LocalSettings.php |
+| `/templates/`                   | Directory containing templates                                                                                 |
 
 | File                                  | Description                                                                                                                                                                                                                |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -169,8 +169,8 @@ volumes:
 | `/extra-install.sh`                   | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                                              |
 | `/var/www/html/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions. |
 
----
+## Source
+This image is built from [this Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/Wikibase/Dockerfile).
 
-## JobRunner
-
-This container doubles as MediaWiki JobRunner. To use the JobRunner, override the command to `/jobrunner-entrypoint.sh`.
+## Authors
+This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
