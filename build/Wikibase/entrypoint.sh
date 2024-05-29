@@ -44,16 +44,16 @@ else
     # Check for required  env vars
     set +u
     required_vars=(
-        MW_WG_SERVER
-        DB_USER
-        DB_PASS
-        DB_NAME
         DB_SERVER
-        MW_ADMIN_PASS
-        MW_WG_LANGUAGE_CODE
-        MW_WG_SITENAME
+        DB_PASS
+        DB_USER
+        DB_NAME
         MW_ADMIN_NAME
         MW_ADMIN_EMAIL
+        MW_ADMIN_PASS
+        MW_WG_SERVER
+        MW_WG_LANGUAGE_CODE
+        MW_WG_SITENAME
     )
     for var in "${required_vars[@]}"; do
         if [ -z "${!var}" ]; then
