@@ -196,9 +196,9 @@ WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 > 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Containers major versions.
 
-#### Minor updates for WBS Service Containers
+#### Minor and patch updates for WBS Service Containers
 
-As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Containers, non breaking changes (including security updates) are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
+As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Containers TODO: rephrase, non breaking changes (including security updates) are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
 
 ```sh
 docker compose down 
@@ -207,7 +207,7 @@ docker compose up --wait
 
 > 💡 If you do not want to pull in new versions of WBS Service Containers on restart, just stop your containers using `docker compose stop` before restart. This will keep the current containers intact. Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart with `docker compose down`.
 
-#### Minor updates for WBS Deployment Kit
+#### Minor and patch updates for WBS Deployment Kit
 
 WBS Deployment Kit major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Therefor, pulling from such a branch will only update minor and patch version but never trigger breaking changes.
 
@@ -240,7 +240,7 @@ docker compose up --wait
 ```
 
 #### Automatic updates
-At the moment, WBS Deployment Kit does not support automatic updates. To deploy minor and patch updates, including security fixes, [restart you instance](#minor-updates-for-wbs-service-containers) on a regular basis, e.g. with a systemd timer or cron job.
+At the moment, WBS Deployment Kit does not support automatic updates. To deploy minor and patch updates, including security fixes, [restart you instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis, e.g. with a systemd timer or cron job.
 
 #### Downgrades
 Downgrades are not supported. In order to revert an update, restore your data from a backup made prior to the upgrade.
