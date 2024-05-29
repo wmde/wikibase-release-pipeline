@@ -157,7 +157,7 @@ function build_quickstatements {
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
         --build-arg MW_WG_SITENAME="wikibase-suite" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$(quickstatements_version)" \
