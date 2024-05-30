@@ -18,7 +18,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
+      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
       - ./config:/config
       - wikibase-image-data:/var/www/html/images
@@ -145,7 +145,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
-      - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
+      - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
       WDQS_HOST: wdqs-proxy
     healthcheck:
@@ -168,7 +168,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
-      - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
+      - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
@@ -198,12 +198,12 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       # ACME SSL certificate generation
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       # Uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
-      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - 80:80
       - 443:443
