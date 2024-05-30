@@ -256,7 +256,7 @@ docker compose down --volumes
 rm config/LocalSettings.php
 ```
 
-Removing the traefik-letsencrypt-data volume will request a new certificate from LetsEncrypt on next launch of your instance. Certificate generation on LetsEncrypt is [rate limited](https://letsencrypt.org/docs/rate-limits/). Eventually, you might be blocked from generating new certificates **for a couple of days**. To prevent that, switch to the LetsEncrypt staging server by appending the following to your `traefik` `command` in  your `docker-compose.yml` file:
+Removing the `traefik-letsencrypt-data` volume will request a new certificate from LetsEncrypt on next launch of your instance. Certificate generation on LetsEncrypt is [rate limited](https://letsencrypt.org/docs/rate-limits/). Eventually, you might be blocked from generating new certificates **for a couple of days**. To prevent that, switch to the LetsEncrypt staging server by appending the following to your `traefik` `command` in  your `docker-compose.yml` file:
 ```yml
 --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
