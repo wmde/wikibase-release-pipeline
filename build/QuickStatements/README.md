@@ -1,36 +1,47 @@
 # QuickStatements
 
-[QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
+[QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to
+batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
 > 💡 This image is part of Wikibase Suite (WBS). The [WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/README.md) provides everything including QuickStatements you need to self-host a Wikibase instance out of the box.
 
 ## Requirements
 
-- a Wikibase instance with
+- a MediaWiki/Wikibase instance with
   [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) enabled
+- QuickStatements set up as an OAuth consumer on MediaWiki
+- Reverse proxy (if Wikibase and QuickStatements are running on the same host)
 - DNS resolution for QuickStatements and Wikibase
 - configuration via environment variables
 
 ### Wikibase instance
 
+Any MediaWiki with Wikibase and OAuth extensions should work.
+
 We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase). 
 Follow the setup instructions over there to get it up and running.
 
+### OAuth consumer setup on MediaWiki
+
+You can pass the consumer and secret token you got from your Wikibase instance
+to this container using the environment variables `OAUTH_CONSUMER_KEY` and
+`OAUTH_CONSUMER_SECRET`. Alternatively you can let the [default-extra-install
+script](../Wikibase/default-extra-install.sh) supplied in the Wikibase bundle
+handle this for you.
+
+TODO: more details here
+
+### Reverse proxy
+
+If QuickStatements and Wikibase are running on the same IP address, a reverse
+proxy is required to route HTTP requests to Wikibase or QuickStatements
+depending on the URL used to access them.
+
 ### DNS resolution
 
-In order to authorize QuickStatements against Wikibase via OAuth, this
-container must be available on an address on the host machine that is also
-visible within the Docker network. Set `QUICKSTATEMENTS_PUBLIC_URL` to this
-address.
-
-Likewise, Wikibase needs to be able to access QuickStatements for the OAuth
-callback on a host-recognizable address, set using `WIKIBASE_PUBLIC_URL`.
-
-Note that Docker Engine doesn't provide such addresses, so you will likely need
-to set up a reverse proxy (such as nginx or traefik) alongside either public
-DNS entries or a local DNS server using entries that route to these container.
-See the [`docker-compose.yml` of the WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/docker-compose.yml) 
-for more guidance on how to set that up.
+In order to authorize QuickStatements against Wikibase via OAuth, both services
+need to be accessible via DNS names, both, from within the docker network as
+well as from the users browser.
 
 ### Environment variables
 
@@ -50,25 +61,135 @@ Variables in **bold** are required.
 | `WB_PROPERTY_PREFIX`             | undefined  | Wikibase Property prefix                                                  |
 | `WB_ITEM_PREFIX`                 | undefined  | Wikibase Item prefix                                                      |
 
-## Set up QuickStatements
+## Example `docker-compose.yml`
 
-You can pass the consumer and secret token you got from your Wikibase instance
-to this container using the environment variables `OAUTH_CONSUMER_KEY` and
-`OAUTH_CONSUMER_SECRET`. Alternatively you can let the [default-extra-install
-script](../Wikibase/default-extra-install.sh) supplied in the Wikibase bundle
-handle this for you.
+An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
 
-Test whether it works by navigating to `QUICKSTATEMENTS_PUBLIC_URL` and logging
-in.
+```yml
+name: wikibase-suite
 
-You should be redirected to the wiki, where you can authorize this
-QuickStatements to act on your behalf.
+services:
+  wikibase:
+    image: wikibase/wikibase
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - 8880:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase.entrypoints=websecure"
+      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
+    volumes:
+      - ./config:/config
+      - wikibase-image-data:/var/www/html/images
+      - quickstatements-data:/quickstatements/data
+    environment:
+      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+      DB_SERVER: mysql:3306
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
 
-Finally you should be redirected back to QuickStatements, and you should see
-yourself logged in.
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+    command: /jobrunner-entrypoint.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: always
+    volumes_from:
+      - wikibase
 
-Use QuickStatements as you normally would, using the Run button. The "Run in
-background" option is not supported by this image.
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  quickstatements:
+    image: wikibase/quickstatements
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - 8840:80
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements.entrypoints=websecure"
+      - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
+    environment:
+      WB_PROPERTY_NAMESPACE: 122
+      WB_PROPERTY_PREFIX: "Property:"
+      WB_ITEM_NAMESPACE: 120
+      WB_ITEM_PREFIX: "Item:"
+      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
+
+  traefik:
+    image: traefik:v2.5
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-letsencrypt-data:/letsencrypt
+
+volumes:
+  wikibase-image-data:
+  mysql-data:
+  quickstatements-data:
+  traefik-letsencrypt-data:
+```
+
+
+
+
+### Known Issues
+
+The "Run in background" option is not supported by this image.
+
+"Batches" require an database and are not supported by this image.
 
 #### Troubleshooting
 
