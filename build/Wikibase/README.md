@@ -148,7 +148,7 @@ volumes:
   mysql-data:
 ```
 
-## Versioning
+## Tags and Versioning
 
 This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -161,6 +161,7 @@ We provide several tags on the docker image that relate to the versioning semant
 | v*MAJOR*._MINOR_._PATCH_                                       | v3.1.7                              | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
 | v*MAJOR*._MINOR_._PATCH_-mw*MW-VERSION*                        | v3.1.7-mw1.41.1                     | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
 | v*MAJOR*._MINOR_._PATCH_-mw*MW-VERSION*-build*BUILD-TIMESTAMP* | v3.1.7-mw1.41.1-build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| wbs-dk-_WBS-DEPLOYMENT-KIT-VERSION_                            | wbs-dk-23                           | Tags the latest image compatible with the given version of the [WBS Deployment Kit](https://github.com/wmde/wikibase-release-pipeline/example/README.md).                                                                                  |
 
 ## Internal filesystem layout
 
