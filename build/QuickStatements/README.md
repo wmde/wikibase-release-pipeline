@@ -4,19 +4,19 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 ### Environment variables
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase as seen by the user's browser (required) |
-| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements as seen by the user's browser (required) |
-| `OAUTH_CONSUMER_KEY` | NONE | OAuth consumer key (obtained from Wikibase) |
-| `OAUTH_CONSUMER_SECRET` | NONE | OAuth consumer secret (obtained from wikibase) |
-| `PHP_TIMEZONE` | UTC | setting of php.ini date.timezone |
-| `MW_WG_LANGUAGE_CODE` | "en" | Site language |
-| `MW_WG_SITENAME` | "wikibase" | Site name |
-| `WB_PROPERTY_NAMESPACE` | NONE | Wikibase Property namespace |
-| `WB_ITEM_NAMESPACE` | NONE | Wikibase Item namespace |
-| `WB_PROPERTY_PREFIX` | NONE | Wikibase Property prefix |
-| `WB_ITEM_PREFIX` | NONE | Wikibase Item prefix |
+| Variable                     | Default    | Description                                                               |
+| ---------------------------- | ---------- | ------------------------------------------------------------------------- |
+| `WIKIBASE_PUBLIC_URL`        | NONE       | Host and port of Wikibase as seen by the user's browser (required)        |
+| `QUICKSTATEMENTS_PUBLIC_URL` | NONE       | Host and port of QuickStatements as seen by the user's browser (required) |
+| `OAUTH_CONSUMER_KEY`         | NONE       | OAuth consumer key (obtained from Wikibase)                               |
+| `OAUTH_CONSUMER_SECRET`      | NONE       | OAuth consumer secret (obtained from wikibase)                            |
+| `PHP_TIMEZONE`               | UTC        | setting of php.ini date.timezone                                          |
+| `MW_WG_LANGUAGE_CODE`        | "en"       | Site language                                                             |
+| `MW_WG_SITENAME`             | "wikibase" | Site name                                                                 |
+| `WB_PROPERTY_NAMESPACE`      | NONE       | Wikibase Property namespace                                               |
+| `WB_ITEM_NAMESPACE`          | NONE       | Wikibase Item namespace                                                   |
+| `WB_PROPERTY_PREFIX`         | NONE       | Wikibase Property prefix                                                  |
+| `WB_ITEM_PREFIX`             | NONE       | Wikibase Item prefix                                                      |
 
 ### Filesystem layout
 
@@ -26,11 +26,11 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 | `/var/www/html/quickstatements/public_html` | The Apache root folder         |
 | `/var/www/html/magnustools`                 | Base magnustools directory     |
 
-| File | Description |
-| --- | --- |
-| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` at runtime) |
-| `/templates/oauth.ini` | Template for QuickStatements' oauth.ini (substituted to `/var/www/html/quickstatements/oauth.ini` at runtime) |
-| `/templates/php.ini` | php config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` at runtime) |
+| File                     | Description                                                                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` at runtime)             |
+| `/templates/oauth.ini`   | Template for QuickStatements' oauth.ini (substituted to `/var/www/html/quickstatements/oauth.ini` at runtime)                             |
+| `/templates/php.ini`     | php config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` at runtime) |
 
 ### Set up QuickStatements
 
