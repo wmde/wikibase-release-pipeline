@@ -23,13 +23,22 @@ Follow the setup instructions over there to get it up and running.
 
 ### OAuth consumer setup on MediaWiki
 
+```sh
+php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
+        --approve \
+        --callbackUrl  "$QUICKSTATEMENTS_PUBLIC_URL/api.php" \
+        --callbackIsPrefix true --user "$MW_ADMIN_NAME" --name QuickStatements --description QuickStatements --version 1.0.1 \
+        --grants createeditmovepage --grants editpage --grants highvolume --jsonOnSuccess
+```
+
+TODO: more details here
+
 You can pass the consumer and secret token you got from your Wikibase instance
 to this container using the environment variables `OAUTH_CONSUMER_KEY` and
 `OAUTH_CONSUMER_SECRET`. Alternatively you can let the [default-extra-install
 script](../Wikibase/default-extra-install.sh) supplied in the Wikibase bundle
 handle this for you.
 
-TODO: more details here
 
 ### Reverse proxy
 
