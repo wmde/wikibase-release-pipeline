@@ -18,7 +18,7 @@ batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
 Any MediaWiki with Wikibase and OAuth extensions should work.
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase). 
+We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase).
 Follow the setup instructions over there to get it up and running.
 
 ### OAuth consumer setup on MediaWiki
@@ -180,16 +180,27 @@ volumes:
   traefik-letsencrypt-data:
 ```
 
+## Tags and Versioning
 
+This QuickStatements Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+We provide several tags on the docker image that relate to the versioning semantics.
 
-### Known Issues
+| Tag                                                            | Example                    | Description                                                                                                                                                                                                                                |
+| -------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v*MAJOR*                                                       | v3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| v*MAJOR*._MINOR_                                               | v3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
+| v*MAJOR*._MINOR_._PATCH_                                       | v3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
+| v*MAJOR*._MINOR_._PATCH_-mw*MW-VERSION*-build*BUILD-TIMESTAMP* | v3.1.7-build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| wbs-dk-_WBS-DEPLOYMENT-KIT-VERSION_                            | wbs-dk-23                  | Tags the latest image compatible with the given version of the [WBS Deployment Kit](https://github.com/wmde/wikibase-release-pipeline/example/README.md).                                                                                  |
+
+## Known Issues
 
 The "Run in background" option is not supported by this image.
 
 "Batches" require an database and are not supported by this image.
 
-#### Troubleshooting
+## Troubleshooting
 
 If you see an error such as `mw-oauth exception` when trying to log in, check
 that you have passed the correct consumer token and secret token to
@@ -199,7 +210,7 @@ If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made
 the consumer, you'll need to make another new consumer or reissue the secret
 token for the old one.
 
-### Internal filesystem layout
+## Internal filesystem layout
 
 Hooking into the internal filesystem can be used to extend the functionality of this image.
 
