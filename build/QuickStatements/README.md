@@ -7,12 +7,12 @@ batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
 ## Requirements
 
-- a MediaWiki/Wikibase instance with
+- MediaWiki/Wikibase instance with
   [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) enabled
 - QuickStatements set up as an OAuth consumer on MediaWiki
 - Reverse proxy (if Wikibase and QuickStatements are running on the same host)
 - DNS resolution for QuickStatements and Wikibase
-- configuration via environment variables
+- Configuration via environment variables
 
 ### Wikibase instance
 

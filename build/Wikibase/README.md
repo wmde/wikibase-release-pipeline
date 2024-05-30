@@ -31,10 +31,10 @@ base image.
 
 In order to run Wikibase, you need:
 
-- a database
-- a configuration volume
-- initial settings via environment variables
-- job runner
+- Database
+- Configuration volume
+- Initial settings via environment variables
+- Job runner
 
 ### Database
 
