@@ -77,7 +77,7 @@ services:
       - 8880:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase.rule=Host(`wikibase.mydomain.net`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
       - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
@@ -85,15 +85,15 @@ services:
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
-      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
-      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
-      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+      MW_ADMIN_NAME: "admin"
+      MW_ADMIN_PASS: "change-this-password"
+      MW_ADMIN_EMAIL: "admin@mydomain.net"
+      MW_WG_SERVER: https://wikibase.mydomain.net
       DB_SERVER: mysql:3306
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
-      DB_NAME: ${DB_NAME}
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      DB_NAME: "my_wiki"
+      DB_USER: "mariadb-user"
+      DB_PASS: "change-this-password"
+      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.mydomain.net
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -115,9 +115,9 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: "my_wiki"
+      MYSQL_USER: "mariadb-user"
+      MYSQL_PASSWORD: "change-this-password"
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     healthcheck:
       test: healthcheck.sh --connect --innodb_initialized
@@ -137,7 +137,7 @@ services:
       - quickstatements-data:/quickstatements/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements.rule=Host(`quickstatements.mydomain.net`)"
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
       - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
@@ -145,8 +145,8 @@ services:
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
-      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.mydomain.net
+      WIKIBASE_PUBLIC_URL: https://wikibase.mydomain.net
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
@@ -164,7 +164,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@mydomain.net"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     ports:
       - 80:80
