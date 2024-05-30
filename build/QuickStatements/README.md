@@ -66,8 +66,6 @@ Variables in **bold** are required.
 An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
 
 ```yml
-name: wikibase-suite
-
 services:
   wikibase:
     image: wikibase/wikibase
