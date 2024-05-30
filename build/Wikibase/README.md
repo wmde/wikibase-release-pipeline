@@ -86,7 +86,7 @@ To setup an external Job Runner, use this image for a second container,
 overwrite the command to `/jobrunner-entrypoint.sh` and share the same
 Configuration Volume with it.
 
-### Example `docker-compose.yml`
+## Example `docker-compose.yml`
 
 An example setup to run this image on [http://localhost](http://localhost) using Docker Compose could look like this:
 
