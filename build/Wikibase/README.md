@@ -43,22 +43,22 @@ MediaWiki supports multiple database engines. Though, MariaDB is the most
 commonly used. This is also the only engine used to test the image before
 release.
 
-### Config Volume
+### Configuration Volume
 
 MediaWiki will generate a `LocalSettings.php` file on first launch. This file
-needs to be maintained by you, as you own it after generation. The Config
+needs to be maintained by you, as you own it after generation. The Configuration
 Volume is the place where this file will be stored.
 
 ### Environment variables for initial settings
 
-Those variables are only respected on first launch for generating
-MediaWikis `LocalSettings.php` file. When launching the image with a
-`LocalSettings.php` file present in the Config Volume, environment variables
-will not be taken into account.
+Those variables are only respected on first launch for generating MediaWikis
+`LocalSettings.php` file. When launching the image with a `LocalSettings.php`
+file present in the Configuration Volume, environment variables will not be
+taken into account.
 
 Variables in **bold** are required on first launch without `LocalSettings.php`
-in the Config Volume. The image will fail to start if one of those variables
-does not have a value. Default values do not need to be overwritten.
+in the Configuration Volume. The image will fail to start if one of those
+variables does not have a value. Default values do not need to be overwritten.
 
 | Variable                     | Default    | Description                                                                                                                                                                                                  |
 | ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -83,8 +83,8 @@ This can be either done on HTTP request, or by a dedicated Job Runner. The
 default configuration of this image requires such an external Job Runner.
 
 To setup an external Job Runner, use this image for a second container,
-overwrite the command to `/jobrunner-entrypoint.sh` and share the same Config
-Volume with it.
+overwrite the command to `/jobrunner-entrypoint.sh` and share the same
+Configuration Volume with it.
 
 ### Example `docker-compose.yml`
 
@@ -151,6 +151,16 @@ volumes:
 ## Versioning
 
 This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+We provide several tags on the docker image that relate to the versioning semantics.
+
+| Tag                                                            | Example                             | Description                                                                                                                                                                                                                                |
+| -------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v<MAJOR>                                                       | v3                                  | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| v<MAJOR>.<MINOR>                                               | v3.1                                | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
+| v<MAJOR>.<MINOR>.<PATCH>                                       | v3.1.7                              | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
+| v<MAJOR>.<MINOR>.<PATCH>-mw<MW-VERSION>                        | v3.1.7-mw1.41.1                     | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
+| v<MAJOR>.<MINOR>.<PATCH>-mw<MW-VERSION>-build<BUILD-TIMESTAMP> | v3.1.7-mw1.41.1-build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
 ## Internal filesystem layout
 
