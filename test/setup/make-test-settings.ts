@@ -15,13 +15,13 @@ export const ONE_DAY_IN_MS = 86400000;
 
 export const defaultTestSettings = {
 	envFiles: [
-		'../example/template.env',
+		'../deploy/template.env',
 		'../variables.env',
 		'./test-services.env',
 		'../local.env'
 	],
 	composeFiles: [
-		'../example/docker-compose.yml',
+		'../deploy/docker-compose.yml',
 		'suites/docker-compose.override.yml'
 	],
 	waitForUrls: (): string[] => [],
