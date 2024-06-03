@@ -2,13 +2,13 @@
 
 Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to Wikidata.
 
-> 🔧 This document is for people wanting to self host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Containers, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+> 🔧 This document is for people wanting to self host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
 > 💡 This document assumes basic Linux administration and docker/docker-compose knowledge.
 
 ## What is in the box?
 
-This WBS Deployment Kit uses the following WBS Service Containers, all of them packaged as Docker Images:
+This WBS Deployment Kit uses the following WBS Service Images, all of them packaged as Docker Images:
 
 - **[Wikibase](https://hub.docker.com/r/wikibase/wikibase)** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
 - **Job Runner** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
@@ -125,7 +125,7 @@ If you want to, for example, change your site name, just put the following in yo
 $wgSitename = "My New Site Name";
 ```
 
-Restart your Wikibase Service Container with 
+Restart your Wikibase container with 
 ```sh
 docker restart wikibase-suite-wikibase-1
 ```
@@ -192,20 +192,20 @@ done
 
 ### Updating
 
-WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS Service Containers have individual version numbers.
+WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS Service Images have individual version numbers.
 
-> 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Containers major versions.
+> 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Images major versions.
 
-#### Minor and patch updates for WBS Service Containers
+#### Minor and patch updates for WBS Service Images
 
-As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Containers TODO: rephrase, non breaking changes (including security updates) are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
+As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Images TODO: rephrase, non breaking changes (including security updates) are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
 
 ```sh
 docker compose down 
 docker compose up --wait
 ```
 
-> 💡 If you do not want to pull in new versions of WBS Service Containers on restart, just stop your containers using `docker compose stop` before restart. This will keep the current containers intact. Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart with `docker compose down`.
+> 💡 If you do not want to pull in new versions of WBS Service Images on container restart, just stop your containers using `docker compose stop` before restart. This will keep the current containers intact. Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart with `docker compose down`.
 
 #### Minor and patch updates for WBS Deployment Kit
 
@@ -219,11 +219,11 @@ git pull
 ```
 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
 
-> 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Containers. Therefor, updating WBS Deployment Kit minor and patch versions from its major versions git branch will never lead to breaking changes in WBS Service Containers. Those updates are always considered safe!
+> 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Images. Therefor, updating WBS Deployment Kit minor and patch versions from its major versions git branch will never lead to breaking changes in WBS Service Images. Those updates are always considered safe!
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Containers too and therefor include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
+Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images too and therefor include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
 
 WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and in a next step from 22 to 23.
 
@@ -249,7 +249,7 @@ Downgrades are not supported. In order to revert an update, restore your data fr
 
 ‼️ **This will destroy all data, make sure to [backup anything](#backup-your-data) you wish to retain.**
 
-To reset the configuration and data, remove the WBS Service Containers, Docker Volumes and the generated `LocalSettings.php` file.
+To reset the configuration and data, remove the Docker Containers, Docker Volumes and the generated `LocalSettings.php` file.
 
 ```sh
 docker compose down --volumes
@@ -263,7 +263,7 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 
 ## Migration Guide
 
-When moving from one major version to another, it might be required to perform additional steps for any of the WBS Service Containers. This might include data migration and configuration adjustments.
+When moving from one major version to another, it might be required to perform additional steps for any of the WBS Service Images. This might include data migration and configuration adjustments.
 
 ### Wikibase Suite 24 to 25 (MediaWiki 1.41 to MediaWiki 1.42)
 
