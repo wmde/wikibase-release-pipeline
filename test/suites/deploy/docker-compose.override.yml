@@ -1,4 +1,4 @@
 services:
   wikibase:
     volumes:
-      - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php
+      - ./deploy/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.deploy.php
