@@ -25,7 +25,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 //    is not provided.
 
 export const testEnv = TestEnv.createWithDefaults( {
-	name: 'example',
+	name: 'deploy',
 	specs: [
 		'specs/quickstatements/*.ts',
 		'specs/repo/queryservice.ts',
@@ -33,7 +33,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	],
 	composeFiles: [
 		...defaultTestSettings.composeFiles,
-		'suites/example/docker-compose.override.yml'
+		'suites/deploy/docker-compose.override.yml'
 	]
 } );
 
