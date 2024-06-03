@@ -2,7 +2,7 @@
 
 Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to Wikidata.
 
-> 🔧 This document is for people developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./example/README.md). If you are looking for individual WBS Service Containers, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+> 🔧 This document is for people developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./deploy/README.md). If you are looking for individual WBS Service Containers, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
 ## Overview
 
@@ -11,7 +11,7 @@ This repository contains Wikibase Suite tools used for
  - **Building** ([build.sh](./build.sh) and [build directory](./build))
  - **Testing** ([test.sh](./test.sh) and [test directory](./test))
  - **Publishing** ([.github/workflows](.github/workflows)) 
- - **Deploying** ([example directory](./example))
+ - **Deploying** ([WBS Deployment Kit](./deploy))
 
 ## Quick reference
 
@@ -50,7 +50,7 @@ $ ./test.sh repo --setup
 ### Deploy
 
 ```
-$ cd example
+$ cd deploy
 $ docker compose up --wait
 ```
 
@@ -66,7 +66,7 @@ $ git config core.hooksPath .githooks
 
 Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
-All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/example` directory.
+All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/deploy` directory.
 
 You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
 
@@ -166,7 +166,7 @@ Wikibase and related software gets release through this repository. The process 
 
 [ ] **Make sure the communication is sent.**
 
-[ ] **Update the example directory** ☠️☠️☠️ For this to happen, we currently need to merge another PR to the release branch. This PRs only change should be making the example reference the new version. For this PRs pipeline to properly run, you need to manually delete the git tag of your just released version from the github repo before merging. Merging this example update PR is technically a re-release. This weirdness will hopefully be fixed soon.
+[ ] **Update the deploy directory** ☠️☠️☠️ For this to happen, we currently need to merge another PR to the release branch. This PRs only change should be making the deploy directory reference the new version. For this PRs pipeline to properly run, you need to manually delete the git tag of your just released version from the github repo before merging. Merging this deploy directory update PR is technically a re-release. This weirdness will hopefully be fixed soon.
 
 [ ] **Merge back to main**. Decide whether there is stuff you want to merge back to main on the release branch.
 

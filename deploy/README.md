@@ -48,18 +48,18 @@ You need three DNS records that resolve to your machines IP address.
 
 #### Download the WBS Deployment Kit
 
-Checkout the files from Github and move to the subdirectory `example`.
+Checkout the files from Github and move to the subdirectory `deploy`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
 # TODO update to the correct TAG/BRANCH
 git checkout wmde.20
-cd wikibase-release-pipeline/example
+cd wikibase-release-pipeline/deploy
 ```
 
 #### Initial Configuration
 
-Make a copy of the [configuration template](./template.env) in `wikibase-release-pipeline/example`
+Make a copy of the [configuration template](./template.env) in `wikibase-release-pipeline/deploy`
 
 ```sh
 cp template.env .env
@@ -70,7 +70,7 @@ according to the instructions in the comments.
 
 #### Starting
 
-Run the following command from within `wikibase-release-pipeline/example`
+Run the following command from within `wikibase-release-pipeline/deploy`
 
 ```sh
 docker compose up --wait

@@ -38,7 +38,7 @@ In order to authorize QuickStatements against Wikibase via OAuth, this container
 
 Likewise, Wikibase needs to be able to access QuickStatements for the OAuth callback on a host-recognizable address, set using `WIKIBASE_PUBLIC_URL`.
 
-Note that Docker Engine doesn't provide such addresses, so you will likely need to set up a reverse proxy (such as nginx or haproxy) alongside either public DNS entries or a local DNS server using entries that route to these container. See the Wikibase Suite example configuration for more guidance on how to set that up.
+Note that Docker Engine doesn't provide such addresses, so you will likely need to set up a reverse proxy (such as nginx or haproxy) alongside either public DNS entries or a local DNS server using entries that route to these container. See the Wikibase Suite Deployment Kit for more guidance on how to set that up.
 
 You can pass the consumer and secret token you got from your Wikibase instance to this container using the environment variables `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`. Alternatively you can let the [default-extra-install script](../Wikibase/default-extra-install.sh) supplied in the Wikibase bundle handle this for you.
 

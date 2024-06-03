@@ -3,10 +3,10 @@ import TestEnv from '../../setup/test-env.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
 // TODO: The specs and setup in this suite are deprecated
-// now that the entire test suite runs off the Example
+// now that the entire test suite runs off the Deployment Kit
 // configuration.
 //
-// The user stories which reflect our current Example design,
+// The user stories which reflect our current Deployment Kit design,
 // among other things, are likely to cover the now deprecated
 // Upgrade test suite.
 //
