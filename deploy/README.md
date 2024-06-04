@@ -93,7 +93,7 @@ configured for Wikibase, WDQS Frontend and Quickstatements.
 To stop, use 
 
 ```sh
-docker compose down
+docker compose stop
 ```
 
 #### Resetting the Configuration
