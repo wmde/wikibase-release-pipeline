@@ -106,7 +106,7 @@ To reset the configuration but keep your existing data:
 1. Make any needed changes to the values in the `.env` file copied from
    `template.env` above. NOTE: Do not change `DB_*` values unless you are also
    re-creating the database ([see below](#removing-wikibase-suite-completely-with-all-its-data)).
-2. Delete your LocalSettings.php from the ./config directory.
+2. Delete your `LocalSettings.php` from the `./config` directory.
 3. Remove and re-create containers with:
 
 ```sh
