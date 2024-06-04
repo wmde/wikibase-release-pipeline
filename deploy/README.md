@@ -136,6 +136,8 @@ Restart your Wikibase container with
 docker restart wikibase-suite-wikibase-1
 ```
 
+Note that this file is being included after all the other `LocalSettings.php` code, it runs after all extension have been initialized.
+
 #### `config/wikibase-php.ini`
 This file is a `php.ini` override file, a good place to tune PHP configuration values. It will be loaded by the Wikibase Webservers PHP interpreter.
 
