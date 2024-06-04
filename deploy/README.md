@@ -52,9 +52,9 @@ Checkout the files from Github and move to the subdirectory `deploy`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
+cd wikibase-release-pipeline/deploy
 # TODO update to the correct TAG/BRANCH
 git checkout wmde.20
-cd wikibase-release-pipeline/deploy
 ```
 
 #### Initial Configuration
