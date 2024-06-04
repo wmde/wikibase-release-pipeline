@@ -144,7 +144,7 @@ This file is a `php.ini` override file, a good place to tune PHP configuration v
 #### docker-compose.yml
 To further customize your instance, consider adjusting `docker-compose.yml`.
 
-In order to ease updating to newer versions of the WBS Deployment Kit, consider putting your customization into a new file called `docker-compose.override.yml` and from now on, restart your instance with
+In order to ease updating to newer versions of the WBS Deployment Kit, consider putting your customization into a new file called `docker-compose.override.yml` and from now on, restart your instance with:
 
 ```sh
 docker compose -f docker-compose.yml -f docker-compose.override.yml down
