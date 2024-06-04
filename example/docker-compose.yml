@@ -19,8 +19,8 @@ services:
       - "traefik.http.routers.wikibase.entrypoints=websecure"
       - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
     volumes:
-      - wikibase-config:/config
-      - wikibase-images:/var/www/html/images
+      - ./config:/config
+      - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
@@ -205,8 +205,7 @@ services:
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
-  wikibase-config:
-  wikibase-images:
+  wikibase-image-data:
   mysql-data:
   # B. EXTRA WIKIBASE SUITE SERVICES DATA
   wdqs-data:

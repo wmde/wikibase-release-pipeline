@@ -6,7 +6,8 @@ networks:
 services:
   wikibase:
     volumes:
-      - ./LocalSettings.php:/config/LocalSettings.override.php
+      - wikibase-config:/config
+      - ./LocalSettings.override.php:/config/LocalSettings.override.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     environment:
       MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
@@ -16,3 +17,6 @@ services:
     environment:
       WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}
       QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+
+volumes:
+  wikibase-config:
