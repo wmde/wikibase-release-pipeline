@@ -33,8 +33,12 @@ This WBS Deployment Kit uses the following WBS Service Images, all of them packa
 - AMD64 architecture
 - 8 GB RAM
 - 4 GB free disk space
+
+#### Software
+
 - Docker 22.0, or greater
 - Docker Compose 2.10, or greater
+- git
 
 #### Domain Names
 
