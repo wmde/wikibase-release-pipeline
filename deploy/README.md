@@ -16,7 +16,7 @@ This WBS Deployment Kit uses the following WBS Service Images, all of them packa
 - **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)** Search service used by MediaWiki.
 - **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service allowing SPARQL queries.
 - **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web Frontend to run SPARQL queries.
-- **[wdqs-proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
+- **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
 - **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web based tool to import and manipulate large amounts of data.
 - **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy handling TLS termination and ACME certificate renewal.
