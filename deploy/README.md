@@ -250,7 +250,8 @@ docker compose up --wait
 ```
 
 #### Automatic updates
-At the moment, WBS Deployment Kit does not support automatic updates. To deploy minor and patch updates, including security fixes, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis, e.g. with a systemd timer or cron job.
+
+At the moment, WBS Deployment Kit does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS Service Images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis, e.g. with a systemd timer or cron job.
 
 #### Downgrades
 Downgrades are not supported. In order to revert an update, restore your data from a backup made prior to the upgrade.
