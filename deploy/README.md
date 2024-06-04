@@ -233,7 +233,7 @@ If you have made complex changes to `docker-compose.yml`, `git commit` them to a
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images too and therefor include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
+Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images too and therefore include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
 
 WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and then from 22 to 23.
 
