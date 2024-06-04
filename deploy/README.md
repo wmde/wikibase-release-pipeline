@@ -153,7 +153,7 @@ docker compose -f docker-compose.yml -f docker-compose.override.yml up --wait
 
 This way your changes are kept separate from the original WBS Deploying Kit code.
 
-### Managing your Data
+### Managing your data
 Besides [your configuration](#configuring-your-wikibase-suite), your data is obviously what makes your instance unique. All data is stored in [Docker Volumes](https://docs.docker.com/storage/volumes/).
 
  - `wikibase-image-data` MediaWiki image and media file uploads.
@@ -163,7 +163,7 @@ Besides [your configuration](#configuring-your-wikibase-suite), your data is obv
  - `quickstatements-data` Generated Quickstatement OAuth binding for this MediaWiki instance.
  - `traefik-letsencrypt-data` SSL certificates.
 
-#### Backup your Data
+#### Backup your data
 You can backup your data by shutting down the instance and dumping the contents of all Docker Volumes into `.tar.gz` files.
 
 ```sh
