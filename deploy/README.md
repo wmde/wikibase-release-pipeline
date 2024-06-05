@@ -229,7 +229,7 @@ If you did not change `docker-compose.yml`, you can update simply using `git pul
 # TODO check BRANCH/TAG before release
 git pull
 ```
-> 💡 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
+> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
 
 > 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Images. Therefore, updating WBS Deployment Kit minor and patch versions from a major versions git branch will never lead to breaking changes in WBS Service Images. Those updates are always considered safe!
 
@@ -241,7 +241,7 @@ WBS only supports updating from one major version to the next one. If you want t
 
 ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
 
-> 💡 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with the new upstream changes as you see fit.
+> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with the new upstream changes as you see fit.
 
 Once all version specific migration activities are done, use `git` to update your WBS Deployment Kit to the new version.
 
