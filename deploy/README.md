@@ -272,7 +272,7 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 <details><summary><strong>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
 
-Upgrading from Version 23 to Version 24 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
+Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
 Besides that, no further migrations are necessary.
 
@@ -280,7 +280,7 @@ Besides that, no further migrations are necessary.
 
 <details><summary><strong>WBS Deployment Kit 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</strong></summary><p>
 
-Upgrading from Version 22 to Version 23 upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
+Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
 Besides that, no further migrations are necessary.
 
@@ -288,7 +288,7 @@ Besides that, no further migrations are necessary.
 
 <details><summary><strong>WBS Deployment Kit 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</strong></summary><p>
 
-Upgrading from Version 21 to Version 22 upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
+Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
 Besides that, no further migrations are necessary.
 
