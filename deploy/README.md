@@ -270,7 +270,7 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 ##### Apply migrations according to your version (if any)
 
-<details><summary><strong>>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
+<details><summary><strong>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
 
 Upgrading from Version 23 to Version 24 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
