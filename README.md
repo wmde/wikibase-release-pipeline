@@ -76,13 +76,13 @@ You can run the tests in the docker container locally as they are ran in CI usin
 # See all`./test.sh` CLI options
 ./test.sh --help
 
-# To run all test suites
+# Run all test suites
 ./test.sh all
 
-# To only run a single suite (e.g. repo)
+# Only run a single suite (e.g. repo)
 ./test.sh repo
 
-# To only run a specific file within the setup for any test suite (e.g. repo and the babel extension)
+# Only run a specific file within the setup for any test suite (e.g. repo and the babel extension)
 ./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
