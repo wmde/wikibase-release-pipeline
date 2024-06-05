@@ -294,7 +294,7 @@ Upgrading Wikibase Suite from Version 22 to Version 23 upgrades MediaWiki from 1
 
 Besides that, no further migrations are necessary.
 
-### From an existing Wikibase installation to Wikibase Suite
+### From an existing Wikibase installation to WBS Deployment Kit
 
 It is possible to migrate an existing Wikibase installation to WBS Deployment Kit. The general procedure is:
 
