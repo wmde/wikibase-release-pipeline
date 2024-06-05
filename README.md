@@ -128,7 +128,7 @@ For more information on testing see the [README](./test/README.md).
 
 ## Release Process
 
-Wikibase and related software gets release through this repository. The process for releasing involves defining the release in this repository, testing all the components of the release together and finally publishing them.
+WBS Deployment Kit and WBS Service Images get released via this repository. The process involves defining all upstream component versions to be used, building Service Images, testing all the images together and finally publishing them.
 
 ### Release Checklist Phabricator Template
 
