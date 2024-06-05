@@ -235,15 +235,20 @@ git pull
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images and therefore include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
+Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images and therefore include breaking changes. Those may require additional steps as described below.
 
 WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and then from 22 to 23.
 
+
+##### Backup your data
+
 ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
 
-> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with the new upstream changes as you see fit.
+##### Merge code changes (if any)
 
-Once all version specific migration activities are done, use `git` to update your WBS Deployment Kit to the new version.
+💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with the new upstream changes as you see fit.
+
+##### Pull new version
 
 ```sh
 docker compose down
@@ -252,33 +257,39 @@ git checkout TODO:NEW_BRANCH_NAME_HERE
 git pull
 ```
 
+##### Apply changes to .env (if any)
+
 Look for changes in the new `template.env` that you might want to apply to your `.env` file.
 
-Apply migrations according to your version:
+##### Apply migrations according to your version (if any)
 
-<details>
-<summary>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</summary>
+<details><summary>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</summary>
+
 Upgrading from Version 23 to Version 24 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
 Besides that, no further migrations are necessary.
+
 </details>
 
-<details>
-<summary>WBS Deployment Kit 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</summary>
+<details><summary>WBS Deployment Kit 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</summary>
+
 Upgrading from Version 22 to Version 23 upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
 Besides that, no further migrations are necessary.
+
 </details>
 
-<details>
-<summary>WBS Deployment Kit 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</summary>
+<details><summary>WBS Deployment Kit 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</summary>
+
 Upgrading from Version 21 to Version 22 upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
 Besides that, no further migrations are necessary.
+
 </details>
 
 
-Bring your instance back up using:
+##### Bring your instance back up
+
 ```
 docker compose up --wait
 ```
