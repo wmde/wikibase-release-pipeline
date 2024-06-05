@@ -90,7 +90,7 @@ configured for Wikibase, WDQS Frontend and Quickstatements.
 
 #### Stopping
 
-To stop, use 
+To stop, use
 
 ```sh
 docker compose stop
@@ -131,7 +131,7 @@ If you want to, for example, change your site name, just put the following in yo
 $wgSitename = "My New Site Name";
 ```
 
-Restart your Wikibase container with 
+Restart your Wikibase container with
 ```sh
 docker restart wikibase-suite-wikibase-1
 ```
@@ -213,7 +213,7 @@ As WBS Deployment Kit always references latest minor and patch releases of compa
 This should be always safe to do. Simply run:
 
 ```sh
-docker compose down 
+docker compose down
 docker compose up --wait
 ```
 
@@ -246,13 +246,37 @@ WBS only supports updating from one major version to the next one. If you want t
 Once all version specific migration activities are done, use `git` to update your WBS Deployment Kit to the new version.
 
 ```sh
-docker compose down 
+docker compose down
 git remote update
 git checkout TODO:NEW_BRANCH_NAME_HERE
 git pull
 ```
 
 Look for changes in the new `template.env` that you might want to apply to your `.env` file.
+
+Apply migrations according to your version:
+
+<details>
+<summary>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</summary>
+Upgrading from Version 23 to Version 24 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
+
+Besides that, no further migrations are necessary.
+</details>
+
+<details>
+<summary>WBS Deployment Kit 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</summary>
+Upgrading from Version 22 to Version 23 upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
+
+Besides that, no further migrations are necessary.
+</details>
+
+<details>
+<summary>WBS Deployment Kit 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</summary>
+Upgrading from Version 21 to Version 22 upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
+
+Besides that, no further migrations are necessary.
+</details>
+
 
 Bring your instance back up using:
 ```
@@ -281,30 +305,15 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 ```yml
 --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
+## FAQ
 
-## Migration Guide
+### Can I host Wikibase Suite locally?
 
-When moving from one major version to another, it might be required to perform additional steps for any of the WBS Service Images. This might include data migration and configuration adjustments.
+Yes, Wikibase Suite can be hosted locally for testing purposes by using e.g. the example domain names `*.mydomain.net` from `template.env` in your `.env` file. Configure those domain names also in your `/etc/hosts` to make them resolve to `127.0.0.1`.
 
-### Wikibase Suite 24 to 25 (MediaWiki 1.41 to MediaWiki 1.42)
+However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load in the browser.
 
-Upgrading Wikibase Suite from Version 24 to Version 25 upgrades MediaWiki from 1.41 to 1.42. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
-
-Besides that, no further migrations are necessary.
-
-### Wikibase Suite 23 to 24 (MediaWiki 1.40 to MediaWiki 1.41)
-
-Upgrading Wikibase Suite from Version 23 to Version 24 upgrades MediaWiki from 1.40 to 1.41. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
-
-Besides that, no further migrations are necessary.
-
-### Wikibase Suite 22 to 23 (MediaWiki 1.39 to MediaWiki 1.40)
-
-Upgrading Wikibase Suite from Version 22 to Version 23 upgrades MediaWiki from 1.39 to 1.40. Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
-
-Besides that, no further migrations are necessary.
-
-### From an existing Wikibase installation to WBS Deployment Kit
+### Can I migrate from another Wikibase installation to WBS Deployment Kit?
 
 It is possible to migrate an existing Wikibase installation to WBS Deployment Kit. The general procedure is:
 
@@ -315,14 +324,6 @@ It is possible to migrate an existing Wikibase installation to WBS Deployment Ki
  - Regenerate WDQS database
  - Regenerate elasticsearch database
 
-## FAQ
-
-### Can I host Wikibase Suite locally?
-
-Yes, Wikibase Suite can be hosted locally for testing purposes by using e.g. the example domain names `*.mydomain.net` from `template.env` in your `.env` file. Configure those domain names also in your `/etc/hosts` to make them resolve to `127.0.0.1`.
-
-However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load in the browser. 
-
 ### Do you have any recommended Internet host / VPS provider recommendations?
 
 At this time, there are no specific recommendations for Internet hosts or VPS providers for hosting Wikibase Suite. The suite has been tested on various providers, and as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
@@ -331,4 +332,4 @@ The provided files are for configuring and deploying Wikibase Suite using Docker
 
 ### Where can I get further help?
 
-Feel free to join the [Wikibase Telegram channel](https://t.me/+WBsf9-C9KPuMZCDT) if you have any questions. 
+Feel free to join the [Wikibase Telegram channel](https://t.me/+WBsf9-C9KPuMZCDT) if you have any questions.
