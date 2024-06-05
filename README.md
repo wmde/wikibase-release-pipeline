@@ -66,7 +66,7 @@ $ git config core.hooksPath .githooks
 
 Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
-All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `example` test suite runs against the remote Docker Images specified in the configuration in the `/deploy` directory.
+All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `deploy` test suite runs against the remote Docker Images specified in the configuration in the `./deploy` directory.
 
 You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
 
