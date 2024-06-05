@@ -221,7 +221,7 @@ docker compose up --wait
 
 #### Minor and patch updates for WBS Deployment Kit
 
-WBS Deployment Kit major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Therefore, pulling from such a branch will only update minor and patch versions but never trigger breaking changes.
+WBS Deployment Kit major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Therefore, pulling from the major version branch you are currently on will only update minor and patch versions but never trigger breaking changes.
 
 If you did not change `docker-compose.yml`, you can update simply using `git pull`.
 
@@ -229,25 +229,33 @@ If you did not change `docker-compose.yml`, you can update simply using `git pul
 # TODO check BRANCH/TAG before release
 git pull
 ```
-If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
+> 💡 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
 
-> 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Images. Therefore, updating WBS Deployment Kit minor and patch versions from its major versions git branch will never lead to breaking changes in WBS Service Images. Those updates are always considered safe!
+> 💡 One major version of WBS Deployment Kit will always reference the only one major version for each of the WBS Service Images. Therefore, updating WBS Deployment Kit minor and patch versions from a major versions git branch will never lead to breaking changes in WBS Service Images. Those updates are always considered safe!
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images too and therefore include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
+Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images and therefore include breaking changes. Those may require additional steps. Refer to specific upgrade instructions in the [Migration Guide](#migration-guide) section below.
 
 WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and then from 22 to 23.
 
-> ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
+‼️ Always [create a backup](#backup-your-data) of your data before performing a major version update.
+
+> 💡 If you have made complex changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with the new upstream changes as you see fit.
 
 Once all version specific migration activities are done, use `git` to update your WBS Deployment Kit to the new version.
 
 ```sh
 docker compose down 
 git remote update
-git checkout NEWVERSIONBRANCH
+git checkout TODO:NEW_BRANCH_NAME_HERE
 git pull
+```
+
+Look for changes in the new `template.env` that you might want to apply to your `.env` file.
+
+Bring your instance back up using:
+```
 docker compose up --wait
 ```
 
