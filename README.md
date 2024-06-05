@@ -6,7 +6,7 @@ Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wik
 
 ## Overview
 
-This repository contains Wikibase Suite tools used for 
+This repository contains the Wikibase Suite toolset used for 
 
  - **Building** ([build.sh](./build.sh) and [build directory](./build))
  - **Testing** ([test.sh](./test.sh) and [test directory](./test))
