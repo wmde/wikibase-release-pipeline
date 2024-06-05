@@ -200,15 +200,17 @@ for v in \
 done
 ```
 
-### Updating
+### Updating and Versioning
 
 WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS Service Images have individual version numbers.
 
-> 💡 WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Images major versions.
+WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Images major versions using a special `wbs-dk-MAJOR_VERSION` tag such as `wbs-dk-23` for Wikibase Deployment Kit Versions 23.X.X. This tag is always pointing to the latest compatible version of all the WBS Service Containers. For example the `wikibase` Service Image version 3.0.0 might be the initial version released with WBS Deployment Kit 23.0.0. So the `wikibase` Service Image carrying the `v3.0.0` tag will also carry a `wbs-dk-23` tag. When the `wikibase` Service Image version gets bumped to 3.1.0 for a feature release, a new image is released and tagged with `v3.1.0`. The `wbs-dk-23` tag will be reused and will now point to the newly released image 3.1.0. This way, WBS Deployment Kit always references the latest compatible version by always using the same tag. Nothing needs to be updated in WBS Deployment Kit itself. If the `wikibase` Service Image version gets bumped to 4.0.0, this indicates a breaking change. This new image will not receive the `wbs-dk-23` tag, but a new version of WBS Deployment Kit will be released, in this case 24.0.0 and a new tag `wbs-dk-24` will be used to reference compatible images for this version. WBS Deployment Kit can also receive minor and patch updates. But as just described, they are not required to update related WBS Service Images.
 
 #### Minor and patch updates for WBS Service Images
 
-As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Images TODO: rephrase, non breaking changes (including security updates) are applied automatically when recreating Docker containers. This should be always safe to do. Simply run
+As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Images, non breaking changes (including security updates) are applied automatically when recreating Docker containers.
+
+This should be always safe to do. Simply run:
 
 ```sh
 docker compose down 
