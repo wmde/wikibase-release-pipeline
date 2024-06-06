@@ -237,7 +237,7 @@ git pull
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This might reference new major versions of WBS Service Images and therefore include breaking changes. Those may require additional steps as described below.
+Major version upgrades are performed by updating WBS Deployment Kits major version. This is done by switching your `git` checkout to the new major versions branch. This might reference new major versions of WBS Service Images and include breaking changes. Those may require additional steps as described below.
 
 WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and then from 22 to 23.
 
