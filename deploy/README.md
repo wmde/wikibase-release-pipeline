@@ -250,7 +250,7 @@ docker compose down
 
 ##### Backup your data
 
-‼️ Always [create a backup](#backup-your-data) of your data before performing a major version upgrade.
+Always [create a backup](#backup-your-data) of your data before performing a major version upgrade.
 
 > 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them as you see fit in the next step.
 
@@ -263,6 +263,8 @@ git remote update
 git checkout TODO:NEW_BRANCH_NAME_HERE
 git pull
 ```
+
+> 💡 If you have made changes to `docker-compose.yml`, `git merge` them as you see fit.
 
 ##### Apply changes to .env (if any)
 
