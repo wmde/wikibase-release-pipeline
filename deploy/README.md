@@ -252,9 +252,7 @@ docker compose down
 
 ‼️ Always [create a backup](#backup-your-data) of your data before performing a major version upgrade.
 
-##### Merge code changes (if any)
-
-If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them as you see fit in the next step.
+> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them as you see fit in the next step.
 
 ##### Pull new version
 
