@@ -1,6 +1,6 @@
-# Wikibase Suite
+# Wikibase Suite Deployment Kit
 
-Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
+Wikibase Suite (WBS) Deployment Kit is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS Service Images using Docker Compose.
 
 > 🔧 This document is for people wanting to self host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
@@ -8,7 +8,7 @@ Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wik
 
 ## What is in the box?
 
-This WBS Deployment Kit uses the following WBS Service Images, all of them packaged as Docker Images:
+WBS Deployment Kit consists of the following services:
 
 - **[Wikibase](https://hub.docker.com/r/wikibase/wikibase)** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
 - **Job Runner** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
