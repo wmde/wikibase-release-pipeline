@@ -2,10 +2,10 @@ name: 📦 Build Test Tag and Publish Release
 
 on:
   pull_request:
-    types:
-      - closed
-    branches:
-      - "mw-*"
+    # types:
+    #   - closed
+    # branches:
+    #   - "mw-*"
 
 permissions:
   contents: write
@@ -13,12 +13,12 @@ permissions:
 
 jobs:
   _:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
 
     uses: ./.github/workflows/_build_test.yml
 
   tag-release:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
 
     needs: _
 
@@ -48,7 +48,7 @@ jobs:
           fi
 
   publish-dockerhub:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
 
     needs: tag-release
 
@@ -90,7 +90,12 @@ jobs:
           for image in "${images[@]}"; do
             image_path="wikibase/${image}"
             url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
-            version_tag="$(image_version $image)"
-            docker tag "$url_run_id" "${image_path}:${version_tag}"
-            docker push "${image_path}:${version_tag}"
+            version="$(image_version $image)"
+            tags=$(version_tags "${image}")
+            for tag in $tags; do
+              # docker tag "$url_run_id" "${image_path}:${tag}"
+              # docker push "${image_path}:${tag}"
+              echo docker tag "$url_run_id" "${image_path}:${tag}"
+              echo docker push "${image_path}:${tag}"
+            done
           done

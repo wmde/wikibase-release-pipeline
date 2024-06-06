@@ -12,45 +12,41 @@ if [ -f ./local.env ]; then
 fi
 set +o allexport
 
-function wikibase_version {
-    echo "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function elasticsearch_version {
-    echo "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_version {
-    echo "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_frontend_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_proxy_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
-function quickstatements_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
 function image_version {
     image=$1
 
     if [ "$image" = "wikibase" ]; then
-        wikibase_version
+        echo "$WMDE_RELEASE_VERSION"
     elif [ "$image" = "elasticsearch" ]; then
-        elasticsearch_version
+        echo "$ELASTICSEARCH_VERSION"
     elif [ "$image" = "wdqs" ]; then
-        wdqs_version
+        echo "$WDQS_VERSION"
     elif [ "$image" = "wdqs-frontend" ]; then
-        wdqs_frontend_version
+        echo "$WDQS_FRONTED_VERSION"
     elif [ "$image" = "wdqs-proxy" ]; then
-        wdqs_proxy_version
+        echo "$WDQS_PROXY_VERSION"
     elif [ "$image" = "quickstatements" ]; then
-        quickstatements_version
+        echo "$QUICKSTATEMENTS_VERSION"
     fi
+}
+
+function version_tags() {
+    local image_name=$1
+    local version=$(image_version "${image_name}")
+
+    # TODO: are these really necessary for all images?
+    local tags=(
+        "$version"
+        "${version%.*}"
+        "${version%%.*}"
+        "example-${EXAMPLE_VERSION%%.*}"
+    )
+
+    # Extra tag for wikibase
+    if [[ "$image_name" == "wikibase" ]]; then
+        tags+=("${WMDE_RELEASE_VERSION}_mw-${MEDIAWIKI_VERSION}")
+    fi
+
+    printf "%s\n" "${tags[@]}"
 }
 
