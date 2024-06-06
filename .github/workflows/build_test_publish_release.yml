@@ -1,11 +1,14 @@
 name: 📦 Build Test Tag and Publish Release
 
 on:
-  pull_request:
+  # pull_request:
     # types:
     #   - closed
     # branches:
     #   - "mw-*"
+  push:
+    branches:
+      - "**"
 
 permissions:
   contents: write
