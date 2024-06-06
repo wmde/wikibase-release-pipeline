@@ -248,9 +248,14 @@ WBS only supports updating from one major version to the next one. If you want t
 docker compose down
 ```
 
-##### Backup your data
+##### Backup your data and config
 
-Always [create a backup](#backup-your-data) of your data before performing a major version upgrade.
+[Create a backup](#backup-your-data) of your data.
+
+Backup your `./config` directory too using:
+```
+cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
+```
 
 > 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them as you see fit in the next step.
 
