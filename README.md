@@ -1,12 +1,12 @@
 # Wikibase Suite
 
-Wikibase Suite (WBS) is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page.
+Wikibase Suite (WBS) is a containerized, production-ready [Wikibase](https://wikiba.se) installation that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
 
-> 🔧 This document is for people developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./deploy/README.md). If you are looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+> 🔧 This document is intended for people involved in developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./deploy/README.md). If you're looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for 
+This repository contains the Wikibase Suite toolset used for: 
 
  - **Building** ([build.sh](./build.sh) and [build directory](./build))
  - **Testing** ([test.sh](./test.sh) and [test directory](./test))
@@ -18,20 +18,20 @@ This repository contains the Wikibase Suite toolset used for
 ### Build
 
 ```
-# Build all wikibase suite components docker images
+# Build all Wikibase suite components, Docker images
 $ ./build.sh
 
-# Build only the mediawiki/wikibase containers
+# Build only the MediaWiki/Wikibase containers
 $ ./build.sh wikibase
 
-# Build the wdqs container without using Dockers cache
+# Build the wdqs container without using Docker's cache
 $ ./build.sh --no-cache wdqs
 ```
 
 ### Test
 
 ```
-# Show help for the Test CLI, including various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
+# Show help for the test CLI, including the various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
 $ ./test.sh
 
 # Runs all test suites (defined in `test/suites`)
@@ -54,7 +54,7 @@ $ cd deploy
 $ docker compose up --wait
 ```
 
-## Development Setup
+## Development setup
 
 To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory.
 
@@ -64,11 +64,11 @@ $ git config core.hooksPath .githooks
 
 ## Testing
 
-Tests are organized in "suites" which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
+Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
-All test suites are ran against the most recently built local Docker images, those are the images with the `:latest` tag which are also taken when no tag is specified. The `deploy` test suite runs against the remote Docker Images specified in the configuration in the `./deploy` directory.
+All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
 
-You can run the tests in the docker container locally as they are ran in CI using `test.sh`.
+You can run the tests in the docker container locally exactly as they are run in CI by using `test.sh`.
 
 ## Examples usage of `./test.sh`:
 
@@ -82,34 +82,34 @@ You can run the tests in the docker container locally as they are ran in CI usin
 # Only run a single suite (e.g. repo)
 ./test.sh repo
 
-# Only run a specific file within the setup for any test suite (e.g. repo and the babel extension)
+# Only run a specific file within the setup for any test suite (e.g., repo and the babel extension)
 ./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
-There are also a few special options which are useful when writing tests, or in setting-up and debugging the test runner:
+There are also a few special options, useful when writing tests or in setting up and debugging the test runner:
 
 ```bash
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
 ./test.sh repo --setup
 
-# `--command`, `--c`: Runs the given command on the test-runner and doesn't execute any further commands
+# `--command`, `--c`: Runs the given command on the test runner and doesn't execute any further commands
 ./test.sh --command npm install
 
-# Sets test timeouts to 1 day so they don't timeout while debugging with `await browser.debug()` calls
-# This however can have undesirable effects during normal test runs so only use for actual debugging
+# Sets test timeouts to 1 day so they don't time out while debugging with `await browser.debug()` calls
+# However, this can have undesirable effects during normal test runs, so only use for actual debugging
 # purposes.
 ./test.sh repo --debug
 
-# `DEBUG`: Shows full Docker compose up/down progress logs for the Test Runner
-# Note that the Test Service Docker logs can always be found in `test/suites/<suite>/results/wdio.log`
+# `DEBUG`: Shows full Docker compose up/down progress logs for the test runner
+# Note that the test service Docker logs can always be found in `test/suites/<suite>/results/wdio.log`
 DEBUG=true ./test.sh repo
 ```
 
-WDIO Testrunner CLI options are also supported. See https://webdriver.io/docs/testrunner.
+WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .
 
 ## Variables for testing some other instance
 
-In order to test your own instances of the services, make sure to set the following environment variables to the services that should be tested:
+In order to test your own instances of the services, make sure to change the following environment variables to point at the services that should be tested:
 
 ```bash
 WIKIBASE_URL=http://wikibase
@@ -123,52 +123,52 @@ MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w
 ```
 
-For more information on testing see the [README](./test/README.md).
+For more information on testing, see the [README](./test/README.md).
 
 
-## Release Process
+## Release process
 
-WBS Deployment Kit and WBS Service Images get released via this repository. The process involves defining all upstream component versions to be used, building Service Images, testing all the images together and finally publishing them.
+WBS Deployment Kit and WBS Service Images are released using this repository. The process involves defining all upstream component versions to be used, building service images, testing all the images together and finally publishing them.
 
-### Release Checklist Phabricator Template
+### Release checklist Phabricator template
 
 ```
-[ ] **Pending issues as subtasks**. If any open tickets need to be resolved and related changes need to be included in the release, add them as subtasks of this release ticket. (If this release is triggered by a Mediawiki bugfix release, consider only including bug/security issue fixes and avoid breaking changes.)
+[ ] **Pending issues as subtasks**. If any open tickets need to be resolved and/or related changes need to be included in the release, add them as subtasks of this release ticket. (If this release was triggered by a MediaWiki bugfix release, consider only including bug/security issue fixes, and avoid breaking changes.)
 
 [ ] **Create branches**
 
 - **For bugfix releases**
-  - **Create a release preparation branch.** The release branch already exists. E.g. `mw-1.40`. Create a release preparation branch off of the existing release branch. E.g. `releaseprep-1.40.2` off of `mw-1.40`. Do not name it `mw-*` as this is the reserved naming scheme for our release branches.
-  - **Backport changes from main if really needed.** Bugfix releases should contain as little changes as possible. Make sure that the `variables.env` file is not changed by incoming changes from main.
+  - **Create a release preparation branch.** The release branch itself should already exist, e.g., `mw-1.40`. Create a release preparation branch off the existing release branch. Choose a name for the release prep branch like `releaseprep-1.40.2`. (Don't name it `mw-*`! That's the naming convention for release branches.)
+  - **Backport changes from main only if absolutely necessary.** Bugfix releases should contain as few changes as possible. Make sure that the `variables.env` file is not changed by incoming changes from main.
 - **For major releases**
-  - **Create a new release branch off of main.** E.g. `mw-1.44`. This branch is now equal to main. It will hold all bugfix releases for that major version in the future.
-  - **Create a release preparation branch off of that release branch.** E.g. `releaseprep-1.44.0`. This second branch is meant to prepare the first release on that release branch.
+  - **Create a new release branch off main,** e.g., `mw-1.44`. This branch is now equivalent to main. It will hold all bugfix releases for that major version in the future.
+  - **Create a release preparation branch off that release branch.** e.g., `releaseprep-1.44.0`. This second branch is meant for preparing the first release on that release branch.
 
-[ ] **Update `variables.env`** on the release preparation branch. Find further instruction in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
+[ ] **Update `variables.env`** on the release preparation branch. You can find further instructions in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
 
-[ ] **Update `CHANGES.md`** on the release preparation branch. Add a section following the example of previous releases, update the different values. The spec will eventually point to the release tags variables.env once the release is published.
+[ ] **Update `CHANGES.md`** on the release preparation branch. Add a section following the example of previous releases: update the different values. The spec will eventually point to the release tag's `variables.env` once the release is published.
 
-[ ] **Create a release PR** that merges the release preparation branch e.g. `releaseprep-1.44.0` into release branch e.g. `mw-1.44`.
+[ ] **Create a release PR** that merges the release preparation branch, e.g., `releaseprep-1.44.0`, into the corresponding release branch (`mw-1.44` or equivalent).
 
 [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Bugfix releases are likely to pass without any adjustments.
 
-[ ] **Do a sanity check by manually reviewing a running instance**. This could be done locally on your machine or by [deploying](https://docs.google.com/document/d/1BGxcqt9CHbb-8dfWjK-lZmNoNcD08urb23JqtgoVTeg/edit#heading=h.6a8ctlepqn5d) it to the [test system](https://wikibase-product-testing.wmcloud.org). You find built images from your PR on GHCR (e.g. [here](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase)) tagged with `dev-BRANCHNAME`, e.g. `dev-releaseprep-wmde.17`. This tag can be referenced in example to setup an instance running your PR version.
+[ ] **Do a sanity check by manually reviewing a running instance**. This can be done locally on your machine or by [deploying](https://docs.google.com/document/d/1BGxcqt9CHbb-8dfWjK-lZmNoNcD08urb23JqtgoVTeg/edit#heading=h.6a8ctlepqn5d) to the [test system](https://wikibase-product-testing.wmcloud.org). You can find prebuilt images from your PR on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-BRANCHNAME`, e.g., `dev-releaseprep-wmde.17`. This tag can be referenced to set up an instance running your PR version.
 
-[ ] **Get two reviews on the release preparation PR**. So that it is technically ready to be merged. The merge will trigger the release to dockerhub later.
+[ ] **Get two reviews on the release preparation PR** so that it is technically ready to be merged. Merging will eventually trigger the release to Docker Hub.
 
-[ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1kHhKKwHlwq_P9x4j8-UnzV72yq0AYpsZ) based on existing one.
+[ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1kHhKKwHlwq_P9x4j8-UnzV72yq0AYpsZ) using a template.
 
-[ ] **Agree with ComCom on a timing to publish the release**. Talk to ComCom and TechWriter about that.
+[ ] **Coordinate with ComCom on timing the publication of the release**. Talk to SCoT (ComCom, technical writer) about this.
 
-[ ] **Publish the release** by merging the release preparation branch into the release branch. ‼️ ‼️ ‼️ **This will automatically push docker images to docker hub and therefore release the new version!**
+[ ] **Publish the release** by merging the release preparation branch into the release branch. **ATTENTION: This will automatically push images to Docker Hub, thereby releasng the new version!**
 
-[ ] **Update the [docker install instructions](https://www.mediawiki.org/wiki/Wikibase/Docker)** to reflect the latest version. If you made a bugfix release for an older release, this can be skipped.
+[ ] **Update the [Docker install instructions](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md)** to reflect changes in the latest version. If you were making a bugfix release for an older release, this can be skipped.
 
 [ ] **Make sure the communication is sent.**
 
-[ ] **Update the deploy directory** ☠️☠️☠️ For this to happen, we currently need to merge another PR to the release branch. This PRs only change should be making the deploy directory reference the new version. For this PRs pipeline to properly run, you need to manually delete the git tag of your just released version from the github repo before merging. Merging this deploy directory update PR is technically a re-release. This weirdness will hopefully be fixed soon.
+[ ] **Update the deploy directory.** ☠️☠️☠️ Currently, for this to happen, we need to merge another PR to the release branch. This PR's only change should be making the `deploy` directory reference the new version. For this PR's pipeline to properly run, before merging, you need to manually delete from the git repo the tag of the version you just released. Merging this deploy directory update PR is technically a re-release. Hopefully this weirdness will be fixed soon.
 
-[ ] **Merge back to main**. Decide whether there is stuff you want to merge back to main on the release branch.
+[ ] **Merge back to main**. Now is the time to merge anything you want back to main on the release branch.
 
-You are done. **Congratulations!**
+You`re done. **Congratulations!**
 ```
