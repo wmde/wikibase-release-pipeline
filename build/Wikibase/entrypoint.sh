@@ -20,6 +20,20 @@ else
     cp /usr/local/etc/php/conf.d/wikibase-php.ini /config/wikibase-php.ini
 fi
 
+# Create a LocalSettings.override.php if it is not there already
+if [ ! -e "/config/LocalSettings.override.php" ]; then
+    {
+        echo "<?php"
+        echo 
+        echo "# To customize your Wikibase Suite installation, please add your configuration"
+        echo "# in this LocalSettings.override.php file below. This will make it easy to"
+        echo "# reapply your customizations in case you want to regenerate this"
+        echo "# LocalSettings.php file later. E.g. when running the MediaWiki installer"
+        echo "# again."
+        echo 
+    } > /config/LocalSettings.override.php
+fi
+
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
     # Always run update (this might be the first run off of a new image version on existing config and data)

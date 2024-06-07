@@ -7,6 +7,7 @@ $wgJobRunRate = 0;
 $wgEnableUploads = true;
 
 # Logs
+# TODO: Explore simply logging to stdout/stderr so these appear in Docker logs
 $wgDebugLogGroups = array(
 	'resourceloader' => '/var/log/mediawiki/mw.resourceloader.log',
 	'exception' => '/var/log/mediawiki/mw.exception.log',
@@ -16,8 +17,6 @@ $wgDebugLogGroups = array(
 $wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
 
 $wgArticlePath = "/wiki/$1";
-
-# Add configuration values here or above which should be set before extensions are loaded
 
 # Load extensions if present, alphabetically ordered by filename
 foreach (glob("LocalSettings.d/*.php") as $filename)
@@ -29,4 +28,13 @@ foreach (glob("LocalSettings.d/*.php") as $filename)
 # End of generated LocalSettings.php
 ##############################################################################
 
-# Add configuration values below which should be set after extensions are loaded
+# To customize your Wikibase Suite installation, please add your configuration
+# to the LocalSettings.override.php included below. This will make it easy to
+# reapply your customizations in case you want to regenerate this
+# LocalSettings.php file later. E.g. when running the MediaWiki installer
+# again.
+#
+$localSettingsOverrideFile = "/config/LocalSettings.override.php";
+if (file_exists($localSettingsOverrideFile)) {
+	include $localSettingsOverrideFile;
+}

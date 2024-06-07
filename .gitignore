@@ -7,6 +7,7 @@ local.env
 deploy/log
 deploy/.env
 deploy/config/LocalSettings.php
+deploy/config/LocalSettings.override.php
 deploy/config/wikibase-php.ini
 
 test/log
