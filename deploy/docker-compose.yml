@@ -1,4 +1,4 @@
-name: wikibase-suite-example
+name: wikibase-suite
 
 services:
   # --------------------------------------------------
@@ -6,7 +6,8 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wikibase
     depends_on:
       mysql:
         condition: service_healthy
@@ -17,7 +18,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=myresolver"
+      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
       - ./config:/config
       - wikibase-image-data:/var/www/html/images
@@ -39,7 +40,8 @@ services:
       start_period: 5m
 
   wikibase-jobrunner:
-    image: ${WIKIBASE_SUITE_WIKIBASE_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wikibase
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -49,7 +51,7 @@ services:
       - wikibase
 
   mysql:
-    image: ${MARIADB_IMAGE_URL}
+    image: mariadb:10.11
     restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql
@@ -72,7 +74,8 @@ services:
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
   elasticsearch:
-    image: ${WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/elasticsearch
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -85,7 +88,8 @@ services:
       start_period: 2m
 
   wdqs:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -106,7 +110,8 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: ${WIKIBASE_SUITE_WDQS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -121,14 +126,16 @@ services:
         hard: 32768
 
   wdqs-proxy:
-    image: ${WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs-proxy
     depends_on:
       wdqs:
         condition: service_healthy
     restart: unless-stopped
 
   wdqs-frontend:
-    image: ${WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/wdqs-frontend
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
@@ -138,7 +145,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
-      - "traefik.http.routers.wdqs-frontend.tls.certresolver=myresolver"
+      - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
       WDQS_HOST: wdqs-proxy
     healthcheck:
@@ -147,7 +154,8 @@ services:
       start_period: 2m
 
   quickstatements:
-    image: ${WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL}
+    # TODO: add WBS Deployment Kit version
+    image: wikibase/quickstatements
     depends_on:
       wikibase:
         condition: service_healthy
@@ -160,7 +168,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
-      - "traefik.http.routers.quickstatements.tls.certresolver=myresolver"
+      - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
       WB_PROPERTY_NAMESPACE: 122
       WB_PROPERTY_PREFIX: "Property:"
@@ -190,18 +198,18 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       # ACME SSL certificate generation
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # Uncomment this line to only test ssl generation first, makes sures you don't run into letsencrypt limits
-      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
+      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - 80:80
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt:/letsencrypt
+      - traefik-letsencrypt-data:/letsencrypt
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
@@ -212,4 +220,4 @@ volumes:
   elasticsearch-data:
   quickstatements-data:
   # C. REVERSE PROXY AND SSL SERVICES DATA
-  traefik-letsencrypt:
+  traefik-letsencrypt-data:

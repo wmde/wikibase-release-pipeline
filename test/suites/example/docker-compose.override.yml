@@ -1,4 +1,0 @@
-services:
-  wikibase:
-    volumes:
-      - ./example/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.example.php

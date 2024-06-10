@@ -5,7 +5,7 @@
 		"wikimedia/language/es2019",
 		"@wmde/wikimedia-typescript"
 	],
-	"ignorePatterns": [ "**/results/result.json", "!.github", "!example" ],
+	"ignorePatterns": [ "**/results/result.json", "!.github", "!deploy" ],
 	"parserOptions": {
 		"sourceType": "module",
 		"allowImportExportEverywhere": true,

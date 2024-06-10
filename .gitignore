@@ -4,11 +4,11 @@
 
 local.env
 
-example/log
-example/.env
-example/config/LocalSettings.php
-example/config/LocalSettings.override.php
-example/config/wikibase-php.ini
+deploy/log
+deploy/.env
+deploy/config/LocalSettings.php
+deploy/config/LocalSettings.override.php
+deploy/config/wikibase-php.ini
 
 test/log
 test/mwlog
