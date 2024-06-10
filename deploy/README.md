@@ -1,10 +1,8 @@
 # Wikibase Suite Deployment Kit
 
-Wikibase Suite (WBS) Deployment Kit is a containerized, production-ready [Wikibase](https://wikiba.se) install that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS service images using docker-compose.
+Wikibase Suite (WBS) Deployment Kit is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). In addition to Wikibase on MediaWiki, WBS Deployment Kit includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a Traefik reverse proxy with SSL termination and ACME support. The service orchestration is implemented using docker-compose. 
 
-The files provided are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through docker-compose and environment variables.
-
-> 🔧 This document is for people wanting to self-host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS service images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+> 🔧 This document is for people wanting to self-host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
 > 💡 This document presumes familiarity with basic Linux administration tasks and with Docker/docker-compose.
 
@@ -17,11 +15,11 @@ WBS Deployment Kit consists of the following services:
 - **[MariaDB](https://hub.docker.com/_/mariadb)** Database service for MediaWiki and Wikibase.
 - **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)** Search service used by MediaWiki.
 - **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service to process SPARQL queries.
-- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** web front end for SPARQL queries.
+- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web front end for SPARQL queries.
 - **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
 - **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web-based tool to import and manipulate large amounts of data.
-- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal.
+- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 
 ## Quickstart
 
@@ -44,7 +42,7 @@ WBS Deployment Kit consists of the following services:
 
 #### Domain names
 
-You need three DNS records that resolve to your machine's IP address. Replace "example.com" with a domain whose DNS you can modify.
+You need three DNS records that resolve to your machine's IP address, one for each user facing service.
 
 - Wikibase e.g. "wikibase.example.com"
 - QueryService e.g. "query.example.com"
@@ -83,7 +81,7 @@ docker compose up --wait
 
 The first start can take a couple of minutes. Wait for your shell prompt to return.
 
-🎉 Congratulations, your Wikibase Suite instance should be up and running. Web interfaces are available over HTTPS (port 443) for the subdomains you configured for Wikibase, the WDQS front end and Quickstatements.
+🎉 Congratulations, your Wikibase Suite instance should be up and running. Web interfaces are available over HTTPS (port 443) for the domain names you configured for Wikibase, the WDQS front end and Quickstatements.
 
 > 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some hopefully helpful error messages.
 
@@ -181,9 +179,9 @@ done
 
 ### Updating and versioning
 
-WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS service images have individual version numbers.
+WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS Service Images have individual version numbers.
 
-WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS service images' major versions using a special `wbs-dk-MAJOR_VERSION` tag, such as `wbs-dk-23` for Wikibase Deployment Kit Versions 23.X.X. This tag always points to the latest compatible version of all WBS service images. 
+WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Images' major versions using a special `wbs-dk-MAJOR_VERSION` tag, such as `wbs-dk-23` for Wikibase Deployment Kit Versions 23.X.X. This tag always points to the latest compatible version of all WBS service images. 
 
 #### Example
 
@@ -191,11 +189,11 @@ Let's say the `wikibase` service image version 3.0.0 is the initial version rele
 
 This way, WBS Deployment Kit always references the latest compatible version by using the same tag. Nothing needs to be updated in WBS Deployment Kit itself. If the `wikibase` service image version gets bumped to 4.0.0, that indicates a breaking change; in this case the new image would not receive the `wbs-dk-23` tag. Instead, a new version of WBS Deployment Kit would be released (in this case 24.0.0) and a new tag `wbs-dk-24` would be used to reference compatible images for this version. 
 
-WBS Deployment Kit may also receive minor and patch updates, but, as noted above, they are not required to update related WBS service images.
+WBS Deployment Kit may also receive minor and patch updates, but, as noted above, they are not required to update related WBS Service Images.
 
-#### Minor and patch updates for WBS service images
+#### Minor and patch updates for WBS Service Images
 
-Because WBS Deployment Kit always references the latest minor and patch releases of compatible WBS service images, non-breaking changes (including security updates) are applied automatically when re-creating Docker containers.
+Because WBS Deployment Kit always references the latest minor and patch releases of compatible WBS Service Images, non-breaking changes (including security updates) are applied automatically when re-creating Docker containers.
 
 This is always safe to do. Simply run:
 
@@ -203,8 +201,7 @@ This is always safe to do. Simply run:
 docker compose down
 docker compose up --wait
 ```
-
-> 💡 In order to **prevent** new versions of WBS service images being pulled on container restart, stop your containers using `docker compose stop` instead of `docker compose down`, which will keep the current containers intact. Note: this stops security updates from being applied. It is generally recommended to use `docker compose down`, which removes the containers and allows updates to be applied.
+> 💡 In order to **prevent** new versions of WBS Service Images being pulled on container restart, stop your containers using `docker compose stop` instead of `docker compose down`, which will keep the current containers intact. Note: this stops security updates from being applied. It is generally recommended to use `docker compose down`, which removes the containers and allows updates to be applied.
 
 #### Minor and patch updates for WBS Deployment Kit
 
@@ -220,11 +217,11 @@ git pull
 ```
 > 💡 If you have made changes to `docker-compose.yml`, commit them to a separate branch and merge them with upstream changes as you see fit.
 
-> 💡 Each major version of WBS Deployment Kit always references exactly one major version of each of the WBS service images. Thus, updating WBS Deployment Kit minor and patch versions from a major version's git branch will never lead to breaking changes in WBS service images.
+> 💡 Each major version of WBS Deployment Kit always references exactly one major version of each of the WBS Service Images. Thus, updating WBS Deployment Kit minor and patch versions from a major version's git branch will never lead to breaking changes in WBS service images.
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kit's major version. This is done by changing your git checkout to the new major version branch. This may reference new major versions of WBS service images or involve breaking changes. In turn, those may require additional steps as described below.
+Major version upgrades are performed by updating WBS Deployment Kit's major version. This is done by changing your git checkout to the new major version branch. This may reference new major versions of WBS Service Images or involve breaking changes. In turn, those may require additional steps as described below.
 
 WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 21 to 23, you must first upgrade from 21 to 22 and then to 23.
 
@@ -295,7 +292,7 @@ docker compose up --wait
 
 #### Automatic updates
 
-At the moment, WBS Deployment Kit does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS service images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis with a systemd timer, cron job, or similar.
+At the moment, WBS Deployment Kit does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS Service Images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis with a systemd timer, cron job, or similar.
 
 #### Downgrades
 
