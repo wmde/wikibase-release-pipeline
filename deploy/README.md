@@ -19,7 +19,7 @@ WBS Deployment Kit consists of the following services:
 - **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
 - **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web-based tool to import and manipulate large amounts of data.
-- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal.
+- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 
 ## Quickstart
 
