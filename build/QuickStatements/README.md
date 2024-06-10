@@ -1,13 +1,13 @@
-# QuickStatements docker image
+# QuickStatements Docker image
 
-QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](https://github.com/magnusmanske/quickstatements)
+QuickStatements, available at [https://github.com/magnusmanske/quickstatements](https://github.com/magnusmanske/quickstatements)
 
 ### Environment variables
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase as seen by the user's browser (required) |
-| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements as seen by the user's browser (required) |
+| `WIKIBASE_PUBLIC_URL` | NONE | Host and port of Wikibase visible to the user's browser (required) |
+| `QUICKSTATEMENTS_PUBLIC_URL` | NONE | Host and port of QuickStatements visible to the user's browser (required) |
 | `OAUTH_CONSUMER_KEY` | NONE | OAuth consumer key (obtained from Wikibase) |
 | `OAUTH_CONSUMER_SECRET` | NONE | OAuth consumer secret (obtained from wikibase) |
 | `PHP_TIMEZONE` | UTC | setting of php.ini date.timezone |
@@ -28,9 +28,9 @@ QuickStatements as seen at [https://github.com/magnusmanske/quickstatements](htt
 
 | File | Description |
 | --- | --- |
-| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` at runtime) |
-| `/templates/oauth.ini` | Template for QuickStatements' oauth.ini (substituted to `/var/www/html/quickstatements/oauth.ini` at runtime) |
-| `/templates/php.ini` | php config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` at runtime) |
+| `/templates/config.json` | Template for QuickStatements' config.json (populated and placed into `/var/www/html/quickstatements/public_html/config.json` at runtime) |
+| `/templates/oauth.ini` | Template for QuickStatements' oauth.ini (populated and placed into `/var/www/html/quickstatements/oauth.ini` at runtime) |
+| `/templates/php.ini` | php config (default provided sets date.timezone to prevent php complaining, populated and placed into `/usr/local/etc/php/conf.d/php.ini` at runtime) |
 
 ### Set up QuickStatements
 
@@ -44,7 +44,7 @@ You can pass the consumer and secret token you got from your Wikibase instance t
 
 Test whether it works by navigating to `QUICKSTATEMENTS_PUBLIC_URL` and logging in.
 
-You should be redirected to the wiki, where you can authorize this QuickStatements to act on your behalf.
+You should be redirected to the wiki, where you can authorize QuickStatements to act on your behalf.
 
 Finally you should be redirected back to QuickStatements, and you should see yourself logged in.
 
@@ -52,6 +52,6 @@ Use QuickStatements as you normally would, using the Run button. The "Run in bac
 
 #### Troubleshooting
 
-If you see an error such as `mw-oauth exception` when trying to log in, check that you have passed the correct consumer token and secret token to QuickStatements.
+If you see an error such as `mw-oauth exception` when trying to log in, make sure you're passing the correct consumer token and secret token to QuickStatements.
 
-If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made the consumer, you'll need to make another new consumer or reissue the secret token for the old one.
+If you have changed the value of `$wgSecretKey $wgOAuthSecretKey` since you made the consumer, you'll need to make another new consumer or reissue the secret token for the old one.

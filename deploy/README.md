@@ -1,12 +1,14 @@
 # Wikibase Suite Deployment Kit
 
-Wikibase Suite (WBS) Deployment Kit is a containerised, production ready [Wikibase](https://wikiba.se) system, that allows you to self host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS Service Images using Docker Compose.
+Wikibase Suite (WBS) Deployment Kit is a containerized, production-ready [Wikibase](https://wikiba.se) install that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS service images using docker-compose.
 
-> 🔧 This document is for people wanting to self host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+The files provided are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through docker-compose and environment variables.
 
-> 💡 This document assumes basic Linux administration and docker/docker-compose knowledge.
+> 🔧 This document is for people wanting to self-host the full Wikibase Suite using the Wikibase Suite Deployment Kit. If you are looking for individual WBS service images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
-## What is in the box?
+> 💡 This document presumes familiarity with basic Linux administration tasks and with Docker/docker-compose.
+
+## What's in the box?
 
 WBS Deployment Kit consists of the following services:
 
@@ -14,16 +16,16 @@ WBS Deployment Kit consists of the following services:
 - **Job Runner** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
 - **[MariaDB](https://hub.docker.com/_/mariadb)** Database service for MediaWiki and Wikibase.
 - **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)** Search service used by MediaWiki.
-- **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service allowing SPARQL queries.
-- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web Frontend to run SPARQL queries.
+- **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service to process SPARQL queries.
+- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** web front end for SPARQL queries.
 - **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
-- **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web based tool to import and manipulate large amounts of data.
-- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy handling TLS termination and ACME certificate renewal.
+- **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web-based tool to import and manipulate large amounts of data.
+- **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal.
 
 ## Quickstart
 
-> 💡 If you want to run a quick test on a machine that has no public IP address (e.g. your local machine), check our [FAQ item](#can-i-host-wikibase-suite-locally) below.
+> 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ item](#can-i-host-wikibase-suite-locally) below.
 
 ### Requirements
 
@@ -36,23 +38,23 @@ WBS Deployment Kit consists of the following services:
 
 #### Software
 
-- Docker 22.0, or greater
-- Docker Compose 2.10, or greater
+- Docker 22.0 (or greater)
+- Docker Compose 2.10 (or greater)
 - git
 
-#### Domain Names
+#### Domain names
 
-You need three DNS records that resolve to your machine's IP address.
+You need three DNS records that resolve to your machine's IP address. Replace "example.com" with a domain whose DNS you can modify.
 
-- Wikibase e.g. "wikibase.mydomain.net"
-- QueryService e.g. "query.mydomain.net"
-- QuickStatements e.g. "quickstatements.mydomain.net"
+- Wikibase e.g. "wikibase.example.com"
+- QueryService e.g. "query.example.com"
+- QuickStatements e.g. "quickstatements.example.com"
 
-### Initial Setup
+### Initial setup
 
 #### Download the WBS Deployment Kit
 
-Checkout the files from Github and move to the subdirectory `deploy`.
+Check out the files from Github and move to the subdirectory `deploy`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
@@ -61,20 +63,19 @@ cd wikibase-release-pipeline/deploy
 git checkout wmde.20
 ```
 
-#### Initial Configuration
+#### Initial configuration
 
-Make a copy of the [configuration template](./template.env) in `wikibase-release-pipeline/deploy`
+Make a copy of the [configuration template](./template.env) in the `wikibase-release-pipeline/deploy` directory.
 
 ```sh
 cp template.env .env
 ```
 
-Set usernames, passwords and domain names in your newly created `.env` file
-according to the instructions in the comments.
+Follow the instructions in the comments in your newly cread `.env` file to set usernames, passwords and domain names.
 
 #### Starting
 
-Run the following command from within `wikibase-release-pipeline/deploy`
+Run the following command from within `wikibase-release-pipeline/deploy`:
 
 ```sh
 docker compose up --wait
@@ -82,11 +83,9 @@ docker compose up --wait
 
 The first start can take a couple of minutes. Wait for your shell prompt to return.
 
-🎉 Congratulations, your Wikibase Suite instance should be up and running. Web
-interfaces are available via HTTPS (port 443) on the domain names you
-configured for Wikibase, WDQS Frontend and Quickstatements.
+🎉 Congratulations, your Wikibase Suite instance should be up and running. Web interfaces are available over HTTPS (port 443) for the subdomains you configured for Wikibase, the WDQS front end and Quickstatements.
 
-> 💡 If anything goes wrong, check with `docker logs <CONTAINER_NAME>` for helpful error messages.
+> 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some hopefully helpful error messages.
 
 #### Stopping
 
@@ -96,59 +95,55 @@ To stop, use
 docker compose stop
 ```
 
-#### Resetting the Configuration
+#### Resetting the configuration
 
-Most values set in `.env` are copied statically into the respective containers
-after the first time you run `docker compose up`.
+Most values set in `.env` are written into the respective containers after you run `docker compose up` for the first time.
 
-To reset the configuration but keep your existing data:
+If you want to reset the configuration while retaining your existing data:
 
-1. Make any needed changes to the values in the `.env` file copied from
-   `template.env` above. NOTE: Do not change `DB_*` values unless you are also
-   re-creating the database ([see below](#removing-wikibase-suite-completely-with-all-its-data)).
-2. Delete your `LocalSettings.php` from the `./config` directory.
-3. Remove and re-create containers with:
+1. Make any needed changes to the values in the `.env` file copied from `template.env` above. NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
+2. Delete your `LocalSettings.php` file from the `./config` directory.
+3. Remove and re-create containers:
 
 ```sh
 docker compose down
 docker compose up --wait
 ```
 
-### Advanced Configuration
-On first launch, WBS Deployment Kit will create files in the `./config` directory next to your `.env` file and the `docker-compose.yml` and `template.env`. This is the configuration of your instance. **You own those files.** Be sure to include them in your backups.
+### Advanced configuration
+On first launch, WBS Deployment Kit will create files in the `./config` directory alongside your `.env` file, the `docker-compose.yml` and `template.env`. This is your instance configuration. **You own and control those files.** Be sure to include them in your backups.
 
 #### `config/LocalSettings.php`
-This file is generated by the [MediaWiki installer script](https://www.mediawiki.org/wiki/Manual:Install.php) and augmented by the Wikibase container's `entrypoint.sh` on first launch. Once this file has been generated, you own it, and it is the place to adjust your MediaWiki configuration to your needs. Note that you may [need to make changes in this file as part of major version updates](https://www.mediawiki.org/wiki/Manual:Upgrading#Adapt_your_LocalSettings.php).
 
-The absence of `config/LocalSettings.php` is the trigger for the Wikibase container to run the [MediaWiki installer script](https://www.mediawiki.org/wiki/Manual:Install.php). If you would like the MediaWiki installer to run again, remove the `config/LocalSettings.php` file and restart your instance.
+This file is generated by the [MediaWiki installer script](https://www.mediawiki.org/wiki/Manual:Install.php) and supplemented by the Wikibase container's `entrypoint.sh` script on first launch. Once this file has been generated, you own and control it. This means that not only *can* you make changes, you may *need* to do so for [major version updates](https://www.mediawiki.org/wiki/Manual:Upgrading#Adapt_your_LocalSettings.php). 
+
+If `config/LocalSettings.php` is missing, it triggers the Wikibase container to run the [MediaWiki installer script](https://www.mediawiki.org/wiki/Manual:Install.php). If you need to run the installer again, you can remove the generated `LocalSettings.php` file (but keep a backup just in case!) and restart your instance.
 
 #### `config/wikibase-php.ini`
-This file is a `php.ini` override file, a good place to tune PHP configuration values. It will be loaded by the Wikibase Webservers PHP interpreter.
+This is Wikibase's `php.ini` override file, a good place for tuning PHP configuration values. It gets loaded by the Wikibase web server's PHP interpreter.
 
 #### docker-compose.yml
-To further customize your instance, consider adjusting `docker-compose.yml`.
-
-In order to ease updating to newer versions of the WBS Deployment Kit, consider putting your customization into a new file called `docker-compose.override.yml` and from now on, restart your instance with:
+To further customize your instance, you can also make changes to `docker-compose.yml`. To ease updating to newer versions of the WBS Deployment Kit, consider putting your customizations into a new file called `docker-compose.override.yml`. If you do this, you'll need to start using the following commands to restart your instance:
 
 ```sh
 docker compose -f docker-compose.yml -f docker-compose.override.yml down
 docker compose -f docker-compose.yml -f docker-compose.override.yml up --wait
 ```
 
-This way your changes are kept separate from the original WBS Deploying Kit code.
+This way, your changes are kept separate from the original WBS Deployment Kit code.
 
 ### Managing your data
-Besides [your configuration](#configuring-your-wikibase-suite), your data is obviously what makes your instance unique. All data is stored in [Docker Volumes](https://docs.docker.com/storage/volumes/).
+Besides [your configuration](#configuring-your-wikibase-suite), it's your data that makes your instance unique. All instance data is stored in [Docker Volumes](https://docs.docker.com/storage/volumes/).
 
- - `wikibase-image-data` MediaWiki image and media file uploads.
- - `mysql-data` MediaWiki/Wikibase MariaDB raw database.
- - `wdqs-data` Wikidata Query Service raw database.
- - `elasticsearch-data` Elastic Search raw database.
- - `quickstatements-data` Generated Quickstatement OAuth binding for this MediaWiki instance.
- - `traefik-letsencrypt-data` SSL certificates.
+ - `wikibase-image-data`: MediaWiki image and media file uploads
+ - `mysql-data`: MediaWiki/Wikibase MariaDB raw database
+ - `wdqs-data`: Wikidata Query Service raw database
+ - `elasticsearch-data`: Elasticsearch raw database
+ - `quickstatements-data`: generated Quickstatements OAuth binding for this MediaWiki instance
+ - `traefik-letsencrypt-data`: SSL certificates
 
-#### Backup your data
-You can backup your data by shutting down the instance and dumping the contents of all Docker Volumes into `.tar.gz` files.
+#### Back up your data
+To back up your data, shut down the instance and dump the contents of all Docker Volumes into `.tar.gz` files.
 
 ```sh
 docker compose down
@@ -166,7 +161,7 @@ done
 
 #### Restore from a backup
 
-To restore the volume backups, ensure your instance is shut down with `docker compose down` and populate the Docker Volumes with data from your `.tar.gz` files.
+To restore the volume backups, ensure your instance has been shut down by running `docker compose down` and populate the Docker Volumes with data from your `.tar.gz` files.
 
 ```sh
 docker compose down
@@ -184,47 +179,54 @@ for v in \
 done
 ```
 
-### Updating and Versioning
+### Updating and versioning
 
-WBS is versioned with [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS Service Images have individual version numbers.
+WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). The WBS Deployment Kit and all the WBS service images have individual version numbers.
 
-WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS Service Images major versions using a special `wbs-dk-MAJOR_VERSION` tag such as `wbs-dk-23` for Wikibase Deployment Kit Versions 23.X.X. This tag is always pointing to the latest compatible version of all the WBS Service Images. For example the `wikibase` Service Image version 3.0.0 might be the initial version released with WBS Deployment Kit 23.0.0. So the `wikibase` Service Image carrying the `v3.0.0` tag will also carry a `wbs-dk-23` tag. When the `wikibase` Service Image version gets bumped to 3.1.0 for a feature release, a new image is released and tagged with `v3.1.0`. The `wbs-dk-23` tag will be reused and will now point to the newly released image 3.1.0. This way, WBS Deployment Kit always references the latest compatible version by always using the same tag. Nothing needs to be updated in WBS Deployment Kit itself. If the `wikibase` Service Image version gets bumped to 4.0.0, this indicates a breaking change. This new image will not receive the `wbs-dk-23` tag, but a new version of WBS Deployment Kit will be released, in this case 24.0.0 and a new tag `wbs-dk-24` will be used to reference compatible images for this version. WBS Deployment Kit can also receive minor and patch updates. But as just described, they are not required to update related WBS Service Images.
+WBS Deployment Kit always references the latest minor and patch releases of the compatible WBS service images' major versions using a special `wbs-dk-MAJOR_VERSION` tag, such as `wbs-dk-23` for Wikibase Deployment Kit Versions 23.X.X. This tag always points to the latest compatible version of all WBS service images. 
 
-#### Minor and patch updates for WBS Service Images
+#### Example
 
-As WBS Deployment Kit always references latest minor and patch releases of compatible WBS Service Images, non breaking changes (including security updates) are applied automatically when recreating Docker containers.
+Let's say the `wikibase` service image version 3.0.0 is the initial version released with WBS Deployment Kit 23.0.0. In that case, the `wikibase` service image carrying the `v3.0.0` tag will also carry a `wbs-dk-23` tag. When the `wikibase` service image version is bumped to 3.1.0 for a feature release, a new image is released and tagged with `v3.1.0`. The `wbs-dk-23` tag will then be reused and point to the newly released image 3.1.0. 
 
-This should be always safe to do. Simply run:
+This way, WBS Deployment Kit always references the latest compatible version by using the same tag. Nothing needs to be updated in WBS Deployment Kit itself. If the `wikibase` service image version gets bumped to 4.0.0, that indicates a breaking change; in this case the new image would not receive the `wbs-dk-23` tag. Instead, a new version of WBS Deployment Kit would be released (in this case 24.0.0) and a new tag `wbs-dk-24` would be used to reference compatible images for this version. 
+
+WBS Deployment Kit may also receive minor and patch updates, but, as noted above, they are not required to update related WBS service images.
+
+#### Minor and patch updates for WBS service images
+
+Because WBS Deployment Kit always references the latest minor and patch releases of compatible WBS service images, non-breaking changes (including security updates) are applied automatically when re-creating Docker containers.
+
+This is always safe to do. Simply run:
 
 ```sh
 docker compose down
 docker compose up --wait
 ```
 
-> 💡 If you do not want to pull in new versions of WBS Service Images on container restart, just stop your containers using `docker compose stop` before restart. This will keep the current containers intact. Please note that this will not apply any security updates. It is generally recommended to remove your containers for restart with `docker compose down`.
+> 💡 In order to **prevent** new versions of WBS service images being pulled on container restart, stop your containers using `docker compose stop` instead of `docker compose down`, which will keep the current containers intact. Note: this stops security updates from being applied. It is generally recommended to use `docker compose down`, which removes the containers and allows updates to be applied.
 
 #### Minor and patch updates for WBS Deployment Kit
 
-WBS Deployment Kit major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Therefore, pulling from the major version branch you are currently on will only update minor and patch versions but never trigger breaking changes.
+WBS Deployment Kit major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Pulling from the major version branch you are currently on will only update minor and patch versions and will never trigger breaking changes.
 
-Those updates are always considered safe!
+These updates are **always** considered safe.
 
-If you did not change `docker-compose.yml`, you can update simply using `git pull`.
+If you did not change `docker-compose.yml`, you can update simply by running `git pull`.
 
 ```sh
 # TODO check BRANCH/TAG before release
 git pull
 ```
-> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them with upstream changes as you see fit.
+> 💡 If you have made changes to `docker-compose.yml`, commit them to a separate branch and merge them with upstream changes as you see fit.
 
-> 💡 One major version of WBS Deployment Kit will always reference only one major version for each of the WBS Service Images. Therefore, updating WBS Deployment Kit minor and patch versions from a major versions git branch will never lead to breaking changes in WBS Service Images.
+> 💡 Each major version of WBS Deployment Kit always references exactly one major version of each of the WBS service images. Thus, updating WBS Deployment Kit minor and patch versions from a major version's git branch will never lead to breaking changes in WBS service images.
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deployment Kits major version. This is done by switching your `git` checkout to the new major versions branch. This might reference new major versions of WBS Service Images and include breaking changes. Those may require additional steps as described below.
+Major version upgrades are performed by updating WBS Deployment Kit's major version. This is done by changing your git checkout to the new major version branch. This may reference new major versions of WBS service images or involve breaking changes. In turn, those may require additional steps as described below.
 
-WBS only supports updating from one major version to the next one. If you want to upgrade from 21 to 23, you need to upgrade from 21 to 22 first and then from 22 to 23.
-
+WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 21 to 23, you must first upgrade from 21 to 22 and then to 23.
 
 ##### Bring down your instance
 
@@ -232,20 +234,20 @@ WBS only supports updating from one major version to the next one. If you want t
 docker compose down
 ```
 
-##### Backup your data and config
+##### Back up your data and config
 
 [Create a backup](#backup-your-data) of your data.
 
-Backup your `./config` directory too using:
+Back up your `./config` directory as well using:
 ```
 cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 ```
 
-> 💡 If you have made changes to `docker-compose.yml`, `git commit` them to a separate branch and `git merge` them as you see fit in the next step.
+> 💡 If you made changes to `docker-compose.yml`, commit them to a separate branch and merge them as you see fit in the next step.
 
 ##### Pull new version
 
-WBS Deployment Kit major versions are tracked in separate branches. Switch your checkout to the new major version branch.
+WBS Deployment Kit major versions are tracked in separate branches. Change your checkout to the new major version branch.
 
 ```sh
 git remote update
@@ -253,38 +255,37 @@ git checkout TODO:NEW_BRANCH_NAME_HERE
 git pull
 ```
 
-> 💡 If you have made changes to `docker-compose.yml`, `git merge` them as you see fit.
+> 💡 If you made changes to `docker-compose.yml`, merge them as you see fit.
 
-##### Apply changes to .env (if any)
+##### Apply any changes to .env
 
 Look for changes in the new `template.env` that you might want to apply to your `.env` file.
 
-##### Apply migrations according to your version (if any)
+##### Apply any migrations for your version
 
 <details><summary><strong>WBS Deployment Kit 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
 
-Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
+Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
-Besides that, no further migrations are necessary.
+No Wikibase-specific migrations are necessary.
 
 </p></details>
 
 <details><summary><strong>WBS Deployment Kit 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</strong></summary><p>
 
-Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
+Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
-Besides that, no further migrations are necessary.
+No Wikibase-specific migrations are necessary.
 
 </p></details>
 
 <details><summary><strong>WBS Deployment Kit 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</strong></summary><p>
 
-Checkout the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
+Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
-Besides that, no further migrations are necessary.
+No Wikibase-specific migrations are necessary.
 
 </p></details>
-
 
 ##### Bring your instance back up
 
@@ -294,50 +295,49 @@ docker compose up --wait
 
 #### Automatic updates
 
-At the moment, WBS Deployment Kit does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS Service Images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis, e.g. with a systemd timer or cron job.
+At the moment, WBS Deployment Kit does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS service images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis with a systemd timer, cron job, or similar.
 
 #### Downgrades
+
 Downgrades are not supported. In order to revert an update, restore your data from a backup made prior to the upgrade.
 
 ### Removing Wikibase Suite Completely with all its Data
 
-‼️ **This will destroy all data, make sure to [backup anything](#backup-your-data) you wish to retain.**
+‼️ **This will destroy all data! [Back up](#back-up-your-data) anything you wish to retain.**
 
-To reset the configuration and data, remove the Docker Containers, Docker Volumes and the generated `config/LocalSettings.php` file.
+To reset the configuration and data, remove the Docker containers, Docker volumes and the generated `config/LocalSettings.php` file.
 
 ```sh
 docker compose down --volumes
 rm config/LocalSettings.php
 ```
 
-Removing the `traefik-letsencrypt-data` volume will request a new certificate from LetsEncrypt on the next launch of your instance. Certificate generation on LetsEncrypt is [rate limited](https://letsencrypt.org/docs/rate-limits/). Eventually, you might be blocked from generating new certificates **for a couple of days**. To prevent that, switch to the LetsEncrypt staging server by appending the following to your `traefik` `command` in  your `docker-compose.yml` file:
+Removing the `traefik-letsencrypt-data` volume will request a new certificate from LetsEncrypt on the next launch of your instance. Certificate generation on LetsEncrypt is [rate-limited](https://letsencrypt.org/docs/rate-limits/). Eventually, you may be blocked from generating new certificates **for multiple days**. To avoid that outcome, change to the LetsEncrypt staging server by appending the following line to the `traefik` `command` stanza of your `docker-compose.yml` file:
 ```yml
---certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
 ## FAQ
 
 ### Can I host Wikibase Suite locally?
 
-Yes, Wikibase Suite can be hosted locally for testing purposes by using e.g. the example domain names `*.mydomain.net` from `template.env` in your `.env` file. Configure those domain names also in your `/etc/hosts` to make them resolve to `127.0.0.1`.
+Yes, Wikibase Suite can be hosted locally for testing purposes by using the example domain names `*.example.com` from `template.env` in your `.env` file. Configure those domains in `/etc/hosts` to make them resolve to `127.0.0.1`.
 
-However, due to OAuth requirements, QuickStatements may not function properly without a publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Running locally without publicly accessible addresses will also not generate a valid SSL certificate so accessing services will require allowing the invalid certificate on first load in the browser.
+However, due to OAuth requirements, QuickStatements may not function properly without publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Also, running locally without publicly accessible addresses will prevent the generation of a valid SSL certificate; to accessing locally running services, you will need to allow the invalid certificate when loading the page for the first time.
 
 ### Can I migrate from another Wikibase installation to WBS Deployment Kit?
 
-It is possible to migrate an existing Wikibase installation to WBS Deployment Kit. The general procedure is:
+It is possible to migrate an existing Wikibase installation to WBS Deployment Kit. The general procedure is as follows:
 
- - [Backup your MediaWiki](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki)
- - Install Wikibase Suite as [described above](#initial-setup)
- - Re-apply [customizations](#customizing-your-wikibase-suite-mediawiki) to `config/LocalSettings.php`
+ - [Back up your MediaWiki](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki)
+ - [Install Wikibase Suite](#initial-setup) as described above
+ - Re-apply any [changes](#customizing-your-wikibase-suite-mediawiki) to `config/LocalSettings.php`
  - Import your database dump
- - Regenerate WDQS database
- - Regenerate elasticsearch database
+ - Regenerate the WDQS database
+ - Regenerate the Elasticsearch database
 
-### Do you have any recommended Internet host / VPS provider recommendations?
+### Do you recommend any VPS hosting providers?
 
-At this time, there are no specific recommendations for Internet hosts or VPS providers for hosting Wikibase Suite. The suite has been tested on various providers, and as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
-
-The provided files are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to this configuration of MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through Docker Compose and environment variables.
+As of this writing, we can offer no specific recommendations for VPS providers to host Wikibase Suite. The suite has been tested successfully on various providers; as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
 
 ### Where can I get further help?
 
