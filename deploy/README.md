@@ -15,7 +15,7 @@ WBS Deployment Kit consists of the following services:
 - **[MariaDB](https://hub.docker.com/_/mariadb)** Database service for MediaWiki and Wikibase.
 - **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)** Search service used by MediaWiki.
 - **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service to process SPARQL queries.
-- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** web front end for SPARQL queries.
+- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web front end for SPARQL queries.
 - **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
 - **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web-based tool to import and manipulate large amounts of data.
