@@ -42,7 +42,7 @@ WBS Deployment Kit consists of the following services:
 
 #### Domain names
 
-You need three DNS records that resolve to your machine's IP address. Replace "example.com" with a domain whose DNS you can modify.
+You need three DNS records that resolve to your machine's IP address, one for each user facing service.
 
 - Wikibase e.g. "wikibase.example.com"
 - QueryService e.g. "query.example.com"
@@ -81,7 +81,7 @@ docker compose up --wait
 
 The first start can take a couple of minutes. Wait for your shell prompt to return.
 
-🎉 Congratulations, your Wikibase Suite instance should be up and running. Web interfaces are available over HTTPS (port 443) for the subdomains you configured for Wikibase, the WDQS front end and Quickstatements.
+🎉 Congratulations, your Wikibase Suite instance should be up and running. Web interfaces are available over HTTPS (port 443) for the domain names you configured for Wikibase, the WDQS front end and Quickstatements.
 
 > 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some hopefully helpful error messages.
 
