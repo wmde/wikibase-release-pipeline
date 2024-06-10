@@ -1,6 +1,6 @@
 # Wikibase Suite Deployment Kit
 
-Wikibase Suite (WBS) Deployment Kit is a containerized, production-ready [Wikibase](https://wikiba.se) install that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS Service Images using docker-compose.
+Wikibase Suite (WBS) Deployment Kit is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). It orchestrates a set of WBS Service Images using docker-compose.
 
 The files provided are for configuring and deploying Wikibase Suite using Docker containers. Wikibase is an extension for MediaWiki that enables the creation and management of structured data, similar to Wikidata. In addition to MediaWiki, Wikibase suite includes the Wikidata Query Service (WDQS), QuickStatements, Elasticsearch, and a reverse proxy with SSL services. The configuration is managed through docker-compose and environment variables.
 
