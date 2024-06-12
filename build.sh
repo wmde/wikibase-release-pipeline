@@ -55,7 +55,7 @@ function build_wikibase {
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
-        --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
+        --build-arg WIKIBASE_VERSION="$WIKIBASE_VERSION" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
         \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
@@ -85,10 +85,12 @@ function build_wikibase {
         \
         build/Wikibase
 
-        tags=$(version_tags "wikibase")
-        for tag in $tags; do
-            docker tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$tag"
-        done
+    # shellcheck disable=SC2178
+    tags=$(version_tags "wikibase")
+    # shellcheck disable=SC2178
+    for tag in $tags; do
+        docker tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -104,7 +106,9 @@ function build_elasticseach {
         \
         build/Elasticsearch
 
+        # shellcheck disable=SC2178
         tags=$(version_tags "elasticsearch")
+        # shellcheck disable=SC2178
         for tag in $tags; do
             docker tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$tag"
         done
@@ -123,7 +127,9 @@ function build_wdqs {
         \
         build/WDQS
 
+        # shellcheck disable=SC2178
         tags=$(version_tags "wdqs")
+        # shellcheck disable=SC2178
         for tag in $tags; do
             docker tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$tag"
         done
@@ -143,7 +149,9 @@ function build_wdqs-frontend {
         \
         build/WDQS-frontend
 
+        # shellcheck disable=SC2178
         tags=$(version_tags "wdqs-frontend")
+        # shellcheck disable=SC2178
         for tag in $tags; do
             docker tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$tag"
         done
@@ -160,7 +168,9 @@ function build_wdqs-proxy {
         \
         build/WDQS-proxy
 
+        # shellcheck disable=SC2178
         tags=$(version_tags "wdqs-proxy")
+        # shellcheck disable=SC2178
         for tag in $tags; do
             docker tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$tag"
         done
@@ -183,7 +193,9 @@ function build_quickstatements {
         \
         build/QuickStatements
 
+        # shellcheck disable=SC2178
         tags=$(version_tags "quickstatements")
+        # shellcheck disable=SC2178
         for tag in $tags; do
             docker tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$tag"
         done

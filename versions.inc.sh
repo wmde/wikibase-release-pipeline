@@ -16,7 +16,7 @@ function image_version {
     image=$1
 
     if [ "$image" = "wikibase" ]; then
-        echo "$WMDE_RELEASE_VERSION"
+        echo "$WIKIBASE_VERSION"
     elif [ "$image" = "elasticsearch" ]; then
         echo "$ELASTICSEARCH_VERSION"
     elif [ "$image" = "wdqs" ]; then
@@ -39,12 +39,12 @@ function version_tags() {
         "$version"
         "${version%.*}"
         "${version%%.*}"
-        "example-${EXAMPLE_VERSION%%.*}"
+        "example-${DEPLOYMENT_KIT_VERSION%%.*}"
     )
 
     # Extra tag for wikibase
     if [[ "$image_name" == "wikibase" ]]; then
-        tags+=("${WMDE_RELEASE_VERSION}_mw-${MEDIAWIKI_VERSION}")
+        tags+=("${WIKIBASE_VERSION}_mw-${MEDIAWIKI_VERSION}")
     fi
 
     printf "%s\n" "${tags[@]}"

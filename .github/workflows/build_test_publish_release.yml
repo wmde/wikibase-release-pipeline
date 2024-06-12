@@ -41,12 +41,12 @@ jobs:
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
-          if git tag "$WMDE_RELEASE_VERSION"; then
-            git push --tags origin "$WMDE_RELEASE_VERSION"
+          if git tag "$WIKIBASE_VERSION"; then
+            git push --tags origin "$WIKIBASE_VERSION"
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
-            echo "Cannot tag $WMDE_RELEASE_VERSION, Most probably this tag is already given to another commit."
-            echo "Make sure to update the WMDE_RELEASE_VERSION variable in variables.env to publish a new release."
+            echo "Cannot tag $WIKIBASE_VERSION, Most probably this tag is already given to another commit."
+            echo "Make sure to update the WIKIBASE_VERSION variable in variables.env to publish a new release."
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
           fi
 
