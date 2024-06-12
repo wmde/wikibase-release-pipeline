@@ -32,7 +32,8 @@ function image_version {
 
 function version_tags() {
     local image_name=$1
-    local version=$(image_version "${image_name}")
+    local version
+    version=$(image_version "${image_name}")
 
     # TODO: are these really necessary for all images?
     local tags=(

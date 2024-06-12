@@ -85,12 +85,11 @@ function build_wikibase {
         \
         build/Wikibase
 
-    # shellcheck disable=SC2178
-    tags=$(version_tags "wikibase")
-    # shellcheck disable=SC2178
-    for tag in $tags; do
+    mapfile -t tags < <(version_tags "wikibase")
+    for tag in "${tags[@]}"; do
         docker tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$tag"
     done
+
 }
 
 
@@ -106,10 +105,8 @@ function build_elasticseach {
         \
         build/Elasticsearch
 
-        # shellcheck disable=SC2178
-        tags=$(version_tags "elasticsearch")
-        # shellcheck disable=SC2178
-        for tag in $tags; do
+        mapfile -t tags < <(version_tags "elasticsearch")
+        for tag in "${tags[@]}"; do
             docker tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$tag"
         done
 }
@@ -127,10 +124,8 @@ function build_wdqs {
         \
         build/WDQS
 
-        # shellcheck disable=SC2178
-        tags=$(version_tags "wdqs")
-        # shellcheck disable=SC2178
-        for tag in $tags; do
+        mapfile -t tags < <(version_tags "wdqs")
+        for tag in "${tags[@]}"; do
             docker tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$tag"
         done
 }
@@ -149,10 +144,8 @@ function build_wdqs-frontend {
         \
         build/WDQS-frontend
 
-        # shellcheck disable=SC2178
-        tags=$(version_tags "wdqs-frontend")
-        # shellcheck disable=SC2178
-        for tag in $tags; do
+        mapfile -t tags < <(version_tags "wdqs-frontend")
+        for tag in "${tags[@]}"; do
             docker tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$tag"
         done
 }
@@ -168,10 +161,8 @@ function build_wdqs-proxy {
         \
         build/WDQS-proxy
 
-        # shellcheck disable=SC2178
-        tags=$(version_tags "wdqs-proxy")
-        # shellcheck disable=SC2178
-        for tag in $tags; do
+        mapfile -t tags < <(version_tags "wdqs-proxy")
+        for tag in "${tags[@]}"; do
             docker tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$tag"
         done
 }
@@ -193,10 +184,8 @@ function build_quickstatements {
         \
         build/QuickStatements
 
-        # shellcheck disable=SC2178
-        tags=$(version_tags "quickstatements")
-        # shellcheck disable=SC2178
-        for tag in $tags; do
+        mapfile -t tags < <(version_tags "quickstatements")
+        for tag in "${tags[@]}"; do
             docker tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$tag"
         done
 }
