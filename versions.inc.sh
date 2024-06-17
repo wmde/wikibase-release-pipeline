@@ -18,7 +18,7 @@ function image_version {
     if [ "$image" = "wikibase" ]; then
         echo "$WIKIBASE_VERSION"
     elif [ "$image" = "elasticsearch" ]; then
-        echo "$ELASTICSEARCH_VERSION"
+        echo "$ELASTICSEARCH_WBS_VERSION"
     elif [ "$image" = "wdqs" ]; then
         echo "$WDQS_VERSION"
     elif [ "$image" = "wdqs-frontend" ]; then
@@ -35,17 +35,20 @@ function version_tags() {
     local version
     version=$(image_version "${image_name}")
 
-    # TODO: are these really necessary for all images?
     local tags=(
         "$version"
         "${version%.*}"
         "${version%%.*}"
-        "example-${DEPLOYMENT_KIT_VERSION%%.*}"
+        "deploy-${DEPLOY_VERSION%%.*}"
     )
 
-    # Extra tag for wikibase
+    # Extra tags
     if [[ "$image_name" == "wikibase" ]]; then
-        tags+=("${WIKIBASE_VERSION}_mw-${MEDIAWIKI_VERSION}")
+        tags+=("${WIKIBASE_VERSION}+mw-${MEDIAWIKI_VERSION}")
+    elif [[ "$image_name" == "elasticsearch" ]]; then
+        tags+=("${ELASTICSEARCH_WBS_VERSION}+${ELASTICSEARCH_VERSION}")
+    elif [[ "$image_name" == "wdqs" ]]; then
+        tags+=("${WDQS_WBS_VERSION}+${WDQS_VERSION}")
     fi
 
     printf "%s\n" "${tags[@]}"
