@@ -338,4 +338,4 @@ As of this writing, we can offer no specific recommendations for VPS providers t
 
 ### Where can I get further help?
 
-Feel free to join the [Wikibase Telegram channel](https://t.me/+WBsf9-C9KPuMZCDT) if you have any questions.
+If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
