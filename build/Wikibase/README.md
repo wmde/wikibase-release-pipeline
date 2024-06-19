@@ -88,7 +88,7 @@ Configuration Volume with it.
 
 ## Example
 
-You can use the following example Docker Compose to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
+An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
 
 ```yml
 services:
@@ -102,7 +102,7 @@ services:
     environment:
       MW_ADMIN_NAME: "admin"
       MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@mydomain.net"
+      MW_ADMIN_EMAIL: "admin@example.com"
       MW_WG_SERVER: http://localhost
       DB_SERVER: mysql:3306
       DB_NAME: "my_wiki"
