@@ -9,7 +9,7 @@ describe( 'WikibaseManifest', function () {
 		);
 		const data = result.data;
 
-		expect( data.name ).toEqual( 'wikibase-docker' );
+		expect( data.name ).toEqual( 'wikibase' );
 
 		expect( data.api.action ).toEqual( testEnv.vars.WIKIBASE_URL + '/w/api.php' );
 		expect( data.api.rest ).toEqual( testEnv.vars.WIKIBASE_URL + '/w/rest.php' );

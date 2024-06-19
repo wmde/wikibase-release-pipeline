@@ -77,8 +77,8 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg MW_WG_SITENAME="wikibase" \
+        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
@@ -176,8 +176,8 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg MW_WG_SITENAME="wikibase" \
+        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
         \
