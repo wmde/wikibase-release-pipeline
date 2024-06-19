@@ -60,7 +60,7 @@ jobs:
           - pingback
           - confirm_edit
           - elasticsearch
-          - example
+          - deploy
 
     steps:
       - uses: actions/checkout@v4

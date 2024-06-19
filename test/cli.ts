@@ -14,7 +14,7 @@ export const allSuiteNames = [
 	'pingback',
 	'confirm_edit',
 	'elasticsearch',
-	'example'
+	'deploy'
 ];
 
 const y = yargs( hideBin( process.argv ) );

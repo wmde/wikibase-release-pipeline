@@ -1,9 +1,15 @@
 *.swp
 .DS_Store
 .direnv
-docs/diagrams/node_modules/
-example/log
+
 local.env
+
+deploy/log
+deploy/.env
+deploy/config/LocalSettings.php
+deploy/config/wikibase-php.ini
+
 test/log
 test/mwlog
 test/suites/**/results/
+

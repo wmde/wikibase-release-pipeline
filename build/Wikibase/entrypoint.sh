@@ -11,6 +11,15 @@ fi
 # Exit immediate on errors or unset variables from here onwards
 set -eu
 
+# Take wikibase-php.ini from user config if present
+if [ -e "/config/wikibase-php.ini" ]; then
+    cp /config/wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
+
+# Otherwise, make our stock wikibase-php.ini visible to the user for customization
+else
+    cp /usr/local/etc/php/conf.d/wikibase-php.ini /config/wikibase-php.ini
+fi
+
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
     # Always run update (this might be the first run off of a new image version on existing config and data)
@@ -55,17 +64,15 @@ else
 
     # Include WBS customizations to generated LocalSettings.php
     {
-        set +u
-        if [ -n "$ELASTICSEARCH_HOST" ]; then
+        echo
+        echo '# Configuration added by Wikibase Suite installer in entrypoint.sh'
+        echo
+        if [[ -v ELASTICSEARCH_HOST ]]; then
             echo "\$elasticsearchHost = '$ELASTICSEARCH_HOST';"
         fi
-        set -u
         echo
-        echo '# Insert any custom settings which should be ran BEFORE extensions here'
+        grep -v "<?php" /templates/LocalSettings.wbs.php
         echo
-        echo 'include "/var/www/html/LocalSettings.wbs.php";'
-        echo
-        echo '# Insert any custom settings which should be ran AFTER extensions here'
     } >> /var/www/html/LocalSettings.php
 
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php

@@ -189,9 +189,9 @@ COPY entrypoint.sh /entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
-COPY LocalSettings.wbs.php /var/www/html/LocalSettings.wbs.php
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
+COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 
 # MediaWiki build time configuration
 ARG MW_WG_SITENAME
