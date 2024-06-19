@@ -176,8 +176,8 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="wikibase" \
-        --build-arg MW_WG_LANGUAGE_CODE="en" \
+        --build-arg SITENAME="wikibase" \
+        --build-arg LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
         \
