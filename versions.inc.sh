@@ -16,17 +16,17 @@ function image_version {
     image=$1
 
     if [ "$image" = "wikibase" ]; then
-        echo "$WIKIBASE_VERSION"
+        echo "$WBS_WIKIBASE_VERSION"
     elif [ "$image" = "elasticsearch" ]; then
-        echo "$ELASTICSEARCH_WBS_VERSION"
+        echo "$WBS_ELASTICSEARCH_VERSION"
     elif [ "$image" = "wdqs" ]; then
-        echo "$WDQS_VERSION"
+        echo "$WBS_WDQS_VERSION"
     elif [ "$image" = "wdqs-frontend" ]; then
-        echo "$WDQS_FRONTED_VERSION"
+        echo "$WBS_WDQS_FRONTED_VERSION"
     elif [ "$image" = "wdqs-proxy" ]; then
-        echo "$WDQS_PROXY_VERSION"
+        echo "$WBS_WDQS_PROXY_VERSION"
     elif [ "$image" = "quickstatements" ]; then
-        echo "$QUICKSTATEMENTS_VERSION"
+        echo "$WBS_QUICKSTATEMENTS_VERSION"
     fi
 }
 
@@ -39,16 +39,16 @@ function version_tags() {
         "$version"
         "${version%.*}"
         "${version%%.*}"
-        "deploy-${DEPLOY_VERSION%%.*}"
+        "deploy-${WBS_DEPLOY_VERSION%%.*}"
     )
 
     # Extra tags
     if [[ "$image_name" == "wikibase" ]]; then
-        tags+=("${WIKIBASE_VERSION}_mw${MEDIAWIKI_VERSION}")
+        tags+=("${WBS_WIKIBASE_VERSION}_mw${MEDIAWIKI_VERSION}")
     elif [[ "$image_name" == "elasticsearch" ]]; then
-        tags+=("${ELASTICSEARCH_WBS_VERSION}_es${ELASTICSEARCH_VERSION}")
+        tags+=("${WBS_ELASTICSEARCH_VERSION}_es${ELASTICSEARCH_VERSION}")
     elif [[ "$image_name" == "wdqs" ]]; then
-        tags+=("${WDQS_WBS_VERSION}_wdqs${WDQS_VERSION}")
+        tags+=("${WBS_WDQS_VERSION}_wdqs${WDQS_VERSION}")
     fi
 
     printf "%s\n" "${tags[@]}"

@@ -55,7 +55,7 @@ function build_wikibase {
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
-        --build-arg WIKIBASE_VERSION="$WIKIBASE_VERSION" \
+        --build-arg WIKIBASE_VERSION="$WBS_WIKIBASE_VERSION" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
         \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \

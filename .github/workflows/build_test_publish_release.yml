@@ -42,7 +42,8 @@ jobs:
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
           if git tag "$WIKIBASE_VERSION"; then
-            git push --tags origin "$WIKIBASE_VERSION"
+            # git push --tags origin "$WIKIBASE_VERSION"
+            echo git push --tags origin "$WIKIBASE_VERSION"
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
             echo "Cannot tag $WIKIBASE_VERSION, Most probably this tag is already given to another commit."
