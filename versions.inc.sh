@@ -34,8 +34,11 @@ function version_tags() {
     local image_name=$1
     local version
     version=$(image_version "${image_name}")
+    local date_tag
+    date_tag=$(date +"%Y%m%d%H%M%S")
 
     local tags=(
+        "${version}_${date_tag}"
         "$version"
         "${version%.*}"
         "${version%%.*}"
