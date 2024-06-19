@@ -32,6 +32,7 @@ services:
       DB_NAME: "my_wiki"
       DB_USER: "mariadb-user"
       DB_PASS: "change-this-password"
+      ELASTICSEARCH_HOST: elasticsearch
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -43,13 +44,13 @@ services:
 
   wikibase-jobrunner:
     image: wikibase/wikibase
+    volumes_from:
+      - wikibase
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
-    volumes_from:
-      - wikibase
 
   mysql:
     image: mariadb:10.11
@@ -67,9 +68,23 @@ services:
       timeout: 5s
     restart: unless-stopped
 
+  elasticsearch:
+    image: wikibase/elasticsearch
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+    healthcheck:
+      test: curl --silent --fail localhost:9200
+      interval: 10s
+      start_period: 2m
+
 volumes:
   wikibase-image-data:
   mysql-data:
+  elasticsearch-data:
 ```
 
 ## Tags and Versioning
