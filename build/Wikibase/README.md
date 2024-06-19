@@ -3,12 +3,12 @@
 [Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension
 for working with versioned semi-structured data in a central repository.
 
-This images contains the Wikibase extension running on top of MediaWiki.
+This image contains the Wikibase extension running on top of MediaWiki.
 Besides Wikibase itself, several other extensions are bundled. The
 MediaWiki application runs on top of PHP on an Apache web server on a Debian
 base image.
 
-> 💡 This image is part of Wikibase Suite (WBS). The [WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 | Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -86,7 +86,7 @@ To setup an external Job Runner, use this image for a second container,
 overwrite the command to `/jobrunner-entrypoint.sh` and share the same
 Configuration Volume with it.
 
-## Example `docker-compose.yml`
+## Example
 
 You can use the following example Docker Compose to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
 
@@ -152,16 +152,16 @@ volumes:
 
 This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-We provide several tags on the docker image that relate to the versioning semantics.
+We provide several tags that relate to the versioning semantics.
 
-| Tag                                                             | Example                             | Description                                                                                                                                                                                                                                |
-| --------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                                         | v3                                  | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                                 | v3.1                                | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                                         | v3.1.7                              | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*                         | v3.1.7_mw1.41.1                     | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
-| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*\_build*BUILD-TIMESTAMP* | v3.1.7_mw1.41.1_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
-| deploy-_WBS-DEPLOY-VERSION_                                     | deploy-3                            | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
+| Tag                                                             | Example                            | Description                                                                                                                                                                                                                                |
+| --------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _MAJOR_                                                         | 3                                  | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| _MAJOR_._MINOR_                                                 | 3.1                                | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
+| _MAJOR_._MINOR_._PATCH_                                         | 3.1.7                              | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
+| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*                         | 3.1.7_mw1.41.1                     | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
+| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*\_build*BUILD-TIMESTAMP* | 3.1.7_mw1.41.1_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| deploy-_WBS-DEPLOY-VERSION_                                     | deploy-3                           | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
 
 ## Internal filesystem layout
 
@@ -189,3 +189,7 @@ This image is built from this [Dockerfile](https://github.com/wmde/wikibase-rele
 ## Authors & Contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
+
+If you have questions not listed above or need help, use this [bug report
+form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start
+a conversation with the engineering team.
