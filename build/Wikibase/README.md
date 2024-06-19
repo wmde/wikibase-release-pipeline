@@ -119,13 +119,13 @@ services:
 
   wikibase-jobrunner:
     image: wikibase/wikibase
+    volumes_from:
+      - wikibase
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
-    volumes_from:
-      - wikibase
 
   mysql:
     image: mariadb:10.11
