@@ -1,89 +1,191 @@
-## Wikibase Bundle Docker image
+# WBS Wikibase Image
 
-Wikibase running on MediaWiki bundled with other extensions.
+[Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension
+for working with versioned semi-structured data in a central repository.
 
-### Bundled extensions
+This images contains the Wikibase extension running on top of MediaWiki.
+Besides Wikibase itself, several other extensions are bundled. The
+MediaWiki application runs on top of PHP on an Apache web server on a Debian
+base image.
 
-- [Babel](https://www.mediawiki.org/wiki/Extension:Babel)
-- [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR)
-- [ConfirmEdit](https://www.mediawiki.org/wiki/Extension:ConfirmEdit)
-- [Elastica](https://www.mediawiki.org/wiki/Extension:Elastica), [CirrusSearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch), [WikibaseCirrusSearch](https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch)
-- [EntitySchema](https://www.mediawiki.org/wiki/Extension:EntitySchema)
-- [Nuke](https://www.mediawiki.org/wiki/Extension:Nuke)
-- [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth)
-- [Scribunto](https://www.mediawiki.org/wiki/Extension:Scribunto)
-- [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight)
-- [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)
-- [VisualEditor](https://www.mediawiki.org/wiki/Extension:VisualEditor)
-- [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)
-- [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)
-- [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)
+> 💡 This image is part of Wikibase Suite (WBS). The [WBS Deployment Toolkit](https://github.com/wmde/wikibase-release-pipeline/example/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
-### Environment variables
+| Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [Babel](https://www.mediawiki.org/wiki/Extension:Babel)                                                                                                                                                                     | Adds a parser function to inform other users about language proficiency and categorize users of the same levels and languages. |
+| [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR)                                                                                                                                                                       | Provides functions to localize the names of languages, countries, currencies, and time units based on their language code.     |
+| [ConfirmEdit](https://www.mediawiki.org/wiki/Extension:ConfirmEdit)                                                                                                                                                         | Adds CAPTCHAs for page saves and other user actions.                                                                           |
+| [Elastica](https://www.mediawiki.org/wiki/Extension:Elastica), [CirrusSearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch), [WikibaseCirrusSearch](https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch) | ElasticSearch integration for MediaWiki and Wikibase.                                                                          |
+| [EntitySchema](https://www.mediawiki.org/wiki/Extension:EntitySchema)                                                                                                                                                       | Allows to store Shape Expression Schemas on wiki pages.                                                                        |
+| [Nuke](https://www.mediawiki.org/wiki/Extension:Nuke)                                                                                                                                                                       | Gives sysops the ability to mass delete pages.                                                                                 |
+| [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth)                                                                                                                                                                     | Allow users to safely authorize another application ("consumer") to use the MediaWiki action API on their behalf.              |
+| [Scribunto](https://www.mediawiki.org/wiki/Extension:Scribunto)                                                                                                                                                             | Provides a framework for embedding scripting languages into MediaWiki pages.                                                   |
+| [SyntaxHighlight](https://www.mediawiki.org/wiki/Extension:SyntaxHighlight)                                                                                                                                                 | Allows source code to be syntax highlighted on wiki pages.                                                                     |
+| [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)                                                                                                                             | Tool that allows users to select a language and configure its support in an easy way.                                          |
+| [VisualEditor](https://www.mediawiki.org/wiki/Extension:VisualEditor)                                                                                                                                                       | Allows for editing pages as rich content.                                                                                      |
+| [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)                                                                                                                                                            | Adds support for the Extended Date/Time Format (EDTF) Specification via a new data type.                                       |
+| [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)                                                                                                                                                | Adds support for local media files to Wikibase via a new data type.                                                            |
+| [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)                                                                                                                                               | API provided metadata for structured data repository.                                                                          |
 
-In addition to the environment variables specified for the [Wikibase Base image](../Wikibase/README.md), the follow optional variables are available in this image:
+## Requirements
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `ELASTICSEARCH_HOST` | undefined | Hostname to an Elasticsearch server with the Wikibase Extension installed, if used |
-| `ELASTICSEARCH_PORT` | 9200 | Port which Elasticsearch is available on|
-| `QUICKSTATEMENTS_PUBLIC_URL` | undefined | Public URL of the Quickstatements server, if configured |
+In order to run Wikibase, you need:
 
-\* _Note: Additional functionality is installed based upon the existence of values on these variables. Do not pass values into these variables if the related services are not available._
+- Database
+- Configuration volume
+- Initial settings via environment variables
+- Job runner
 
-### Filesystem layout
+### Database
 
-| Directory                       | Description                              |
-| ------------------------------- | ---------------------------------------- |
-| `/var/www/html`                 | Base MediaWiki directory                 |
-| `/var/www/html/skins`           | MediaWiki skins directory                |
-| `/var/www/html/extensions`      | MediaWiki extensions directory           |
-| `/var/www/html/LocalSettings.d` | Bundle extension configuration directory |
-| `/templates/`                   | Directory containing templates           |
+The database MediaWiki will connect to and store all its data in. Technically,
+MediaWiki supports multiple database engines. Though, MariaDB is the most
+commonly used. This is also the only engine used to test the image before
+release.
 
-| File | Description |
-| --- | --- |
-| `/LocalSettings.php.template` | Template for MediaWiki LocalSettings.php (substituted to `/var/www/html/LocalSettings.php` at runtime) |
-| `/var/www/html/LocalSettings.php` | LocalSettings.php location, when passed in `/LocalSettings.php.template` will not be used. install.php & update.php will also not be run. |
-| `/default-extra-install.sh` | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements |
+### Configuration Volume
 
----
+MediaWiki will generate a `LocalSettings.php` file on first launch. This file
+needs to be maintained by you, as you own it after generation. The Configuration
+Volume is the place where this file will be stored.
 
-## Wikibase Docker image
+### Environment variables for initial settings
 
-Wikibase running on MediaWiki.
+Those variables are only respected on first launch for generating MediaWikis
+`LocalSettings.php` file. When launching the image with a `LocalSettings.php`
+file present in the Configuration Volume, environment variables will not be
+taken into account.
 
-### Environment variables (setup / first run only)
+Variables in **bold** are required on first launch without `LocalSettings.php`
+in the Configuration Volume. The image will fail to start if one of those
+variables does not have a value. Default values do not need to be overwritten.
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `DB_SERVER` | undefined | Hostname and port for the MySQL server to use for MediaWiki & Wikibase |
-| `DB_USER` | undefined | Username to use for the MySQL server |
-| `DB_PASS` | undefined | Password to use for the MySQL server |
-| `DB_NAME` | "my_wiki" | Database name to use for the MySQL server |
-| `MW_ADMIN_NAME` | undefined | Admin username to create on MediaWiki first install |
-| `MW_ADMIN_PASS` | undefined | Admin password to use for admin account on first install |
+| Variable                     | Default    | Description                                                                                                                                                                                                  |
+| ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`DB_SERVER`**              | undefined  | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                                                                       |
+| **`DB_USER`**                | undefined  | Username to use for the MySQL server                                                                                                                                                                         |
+| **`DB_PASS`**                | undefined  | Password to use for the MySQL server                                                                                                                                                                         |
+| **`DB_NAME`**                | "my_wiki"  | Database name to use for the MySQL server                                                                                                                                                                    |
+| **`MW_ADMIN_NAME`**          | undefined  | Admin username to create on MediaWiki first install                                                                                                                                                          |
+| **`MW_ADMIN_PASS`**          | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
+| **`MW_ADMIN_EMAIL`**         | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
+| **`MW_WG_SERVER`**           | undefined  | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                                                                              |
+| **`MW_WG_SITENAME`**         | "wikibase" | $wgSitename to use for MediaWiki                                                                                                                                                                             |
+| **`MW_WG_LANGUAGE_CODE`**    | "en"       | $wgLanguageCode to use for MediaWiki                                                                                                                                                                         |
+| `ELASTICSEARCH_HOST`         | undefined  | Hostname to an Elasticsearch server with the Wikibase Extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable ElasticSearch. |
+| `ELASTICSEARCH_PORT`         | 9200       | Port which Elasticsearch is available on                                                                                                                                                                     |
+| `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the Quickstatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 
-### Environment variables
+### Job Runner
 
-| `MW_WG_SERVER` | undefined | $wgServer to use for MediaWiki. A value matching how this site is accessed from the user's browser is required. |
-| `MW_WG_SITENAME` | "wikibase-docker" | $wgSitename to use for MediaWiki |
-| `MW_WG_LANGUAGE_CODE` | "en" | $wgLanguageCode to use for MediaWiki |
-| `WIKIBASE_PINGBACK` | "false" | boolean for [WikibasePingback](https://doc.wikimedia.org/Wikibase/master/php/md_docs_topics_pingback.html) |
+MediaWiki/Wikibase depends on [jobs being run in the background](https://www.mediawiki.org/wiki/Manual:Job_queue).
+This can be either done on HTTP request, or by a dedicated Job Runner. The
+default configuration of this image requires such an external Job Runner.
 
-### Filesystem layout
+To setup an external Job Runner, use this image for a second container,
+overwrite the command to `/jobrunner-entrypoint.sh` and share the same
+Configuration Volume with it.
 
-| Directory | Description |
-| --- | --- |
-| `/var/www/html` | Base MediaWiki directory |
-| `/var/www/html/skins` | MediaWiki skins directory |
-| `/var/www/html/extensions` | MediaWiki extensions directory |
-| `/var/www/html/LocalSettings.d` | LocalSettings snippet directory. All PHP files from here will be loaded in alphabetical order at the end of other install generated settings |
+## Example `docker-compose.yml`
 
-| File | Description |
-| --- | --- |
-| `/var/www/html/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client extensions, and the standard set of Wikibase Suite MediaWiki extensions.
+You can use the following example Docker Compose to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
 
-### JobRunner
+```yml
+services:
+  wikibase:
+    image: wikibase/wikibase
+    ports:
+      - 80:80
+    volumes:
+      - ./config:/config
+      - wikibase-image-data:/var/www/html/images
+    environment:
+      MW_ADMIN_NAME: "admin"
+      MW_ADMIN_PASS: "change-this-password"
+      MW_ADMIN_EMAIL: "admin@mydomain.net"
+      MW_WG_SERVER: http://localhost
+      DB_SERVER: mysql:3306
+      DB_NAME: "my_wiki"
+      DB_USER: "mariadb-user"
+      DB_PASS: "change-this-password"
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
 
-This container doubles as MediaWiki JobRunner. To use the JobRunner, override the command to `/jobrunner-entrypoint.sh`.
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+    command: /jobrunner-entrypoint.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: always
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "my_wiki"
+      MYSQL_USER: "mariadb-user"
+      MYSQL_PASSWORD: "change-this-password"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+    restart: unless-stopped
+
+volumes:
+  wikibase-image-data:
+  mysql-data:
+```
+
+## Tags and Versioning
+
+This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+We provide several tags on the docker image that relate to the versioning semantics.
+
+| Tag                                                             | Example                             | Description                                                                                                                                                                                                                                |
+| --------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _MAJOR_                                                         | v3                                  | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| _MAJOR_._MINOR_                                                 | v3.1                                | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
+| _MAJOR_._MINOR_._PATCH_                                         | v3.1.7                              | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
+| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*                         | v3.1.7_mw1.41.1                     | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
+| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*\_build*BUILD-TIMESTAMP* | v3.1.7_mw1.41.1_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| deploy-_WBS-DEPLOY-VERSION_                                     | deploy-3                            | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
+
+## Internal filesystem layout
+
+Hooking into the internal filesystem can be used to extend the functionality of this image.
+
+| Directory                       | Description                                                                                                    |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `/var/www/html`                 | Base MediaWiki directory                                                                                       |
+| `/var/www/html/images`          | MediaWiki image and media upload directory                                                                     |
+| `/var/www/html/skins`           | MediaWiki skins directory                                                                                      |
+| `/var/www/html/extensions`      | MediaWiki extensions directory                                                                                 |
+| `/var/www/html/LocalSettings.d` | MediaWiki LocalSettings configuration directory, sourced in alphabetical order at the end of LocalSettings.php |
+| `/templates/`                   | Directory containing templates                                                                                 |
+
+| File                               | Description                                                                                                                                                                                    |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
+| `/extra-install.sh`                | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                  |
+| `/templates/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client as well as all the other bundled extensions. |
+
+## Source
+
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/Wikibase/Dockerfile).
+
+## Authors & Contact
+
+This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
