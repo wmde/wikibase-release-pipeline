@@ -26,9 +26,7 @@ run all our tests against. Follow the setup instructions over there to get it up
 
 #### Other Wikibase instances
 
-Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually.
-
-##### OAuth consumer setup on MediaWiki
+Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually:
 
 ```sh
 php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
