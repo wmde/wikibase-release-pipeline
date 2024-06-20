@@ -6,9 +6,6 @@ on:
       - closed
     branches:
       - "mw-*"
-  push:
-    branches:
-      - "mw-*"
 
 permissions:
   contents: write
