@@ -38,7 +38,7 @@ function version_tags() {
     date_tag=$(date +"%Y%m%d%H%M%S")
 
     local tags=(
-        "${version}_${date_tag}"
+        "${version}_build${date_tag}"
         "$version"
         "${version%.*}"
         "${version%%.*}"
