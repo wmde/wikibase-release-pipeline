@@ -1,4 +1,4 @@
-name: wikibase-suite
+name: wbs-deploy
 
 services:
   # --------------------------------------------------
