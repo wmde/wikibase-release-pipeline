@@ -45,7 +45,11 @@ RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-av
 
 ENV SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en \
-    PHP_TIMEZONE=UTC
+    PHP_TIMEZONE=UTC \
+    WB_ITEM_NAMESPACE=120 \
+    WB_PROPERTY_NAMESPACE=122 \
+    WB_ITEM_PREFIX="Item:" \
+    WB_PROPERTY_PREFIX="Property:"
 
 RUN install -d -owww-data /var/log/quickstatements
 

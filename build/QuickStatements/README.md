@@ -21,8 +21,8 @@ ready to be hooked up to MediaWiki OAuth on a WBS Wikibase Image.
 
 #### Official WBS Wikibase Image
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against.
-Follow the setup instructions over there to get it up and running.
+We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
+run all our tests against. Follow the setup instructions over there to get it up and running.
 
 #### Other Wikibase instances
 
@@ -61,19 +61,19 @@ use public DNS domain names.
 
 Variables in **bold** are required.
 
-| Variable                         | Default    | Description                                                                                            |
-| -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| **`WIKIBASE_PUBLIC_URL`**        | undefined  | Host and port of Wikibase as seen by the user's browser (required)                                     |
-| **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined  | Host and port of QuickStatements as seen by the user's browser (required)                              |
-| **`WB_PROPERTY_NAMESPACE`**      | undefined  | Wikibase Property namespace                                                                            |
-| **`WB_ITEM_NAMESPACE`**          | undefined  | Wikibase Item namespace                                                                                |
-| **`WB_PROPERTY_PREFIX`**         | undefined  | Wikibase Property prefix                                                                               |
-| **`WB_ITEM_PREFIX`**             | undefined  | Wikibase Item prefix                                                                                   |
-| `OAUTH_CONSUMER_KEY`             | undefined  | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
-| `OAUTH_CONSUMER_SECRET`          | undefined  | OAuth consumer secret (from MediaWiki) , required on initial setup, stored in `/quickstatements/data`. |
-| `PHP_TIMEZONE`                   | "UTC"      | setting of php.ini date.timezone                                                                       |
-| `LANGUAGE_CODE`                  | "en"       | Site language                                                                                          |
-| `SITENAME`                       | "wikibase" | Site name                                                                                              |
+| Variable                         | Default     | Description                                                                                            |
+| -------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| **`WIKIBASE_PUBLIC_URL`**        | undefined   | Host and port of Wikibase as seen by the user's browser (required)                                     |
+| **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined   | Host and port of QuickStatements as seen by the user's browser (required)                              |
+| **`OAUTH_CONSUMER_KEY`**         | undefined   | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
+| **`OAUTH_CONSUMER_SECRET`**      | undefined   | OAuth consumer secret (from MediaWiki) , required on initial setup, stored in `/quickstatements/data`. |
+| `WB_ITEM_NAMESPACE`              | 120         | Wikibase Item namespace                                                                                |
+| `WB_PROPERTY_NAMESPACE`          | 122         | Wikibase Property namespace                                                                            |
+| `WB_ITEM_PREFIX`                 | "Item:"     | Wikibase Item prefix                                                                                   |
+| `WB_PROPERTY_PREFIX`             | "Property:" | Wikibase Property prefix                                                                               |
+| `PHP_TIMEZONE`                   | "UTC"       | setting of php.ini date.timezone                                                                       |
+| `LANGUAGE_CODE`                  | "en"        | Site language                                                                                          |
+| `SITENAME`                       | "wikibase"  | Site name                                                                                              |
 
 ## Example
 
