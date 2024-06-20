@@ -104,10 +104,10 @@ function build_elasticseach {
         \
         build/Elasticsearch
 
-        mapfile -t tags < <(version_tags "elasticsearch")
-        for tag in "${tags[@]}"; do
-            docker tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$tag"
-        done
+    mapfile -t tags < <(version_tags "elasticsearch")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -123,10 +123,10 @@ function build_wdqs {
         \
         build/WDQS
 
-        mapfile -t tags < <(version_tags "wdqs")
-        for tag in "${tags[@]}"; do
-            docker tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$tag"
-        done
+    mapfile -t tags < <(version_tags "wdqs")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -143,10 +143,10 @@ function build_wdqs-frontend {
         \
         build/WDQS-frontend
 
-        mapfile -t tags < <(version_tags "wdqs-frontend")
-        for tag in "${tags[@]}"; do
-            docker tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$tag"
-        done
+    mapfile -t tags < <(version_tags "wdqs-frontend")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -160,10 +160,10 @@ function build_wdqs-proxy {
         \
         build/WDQS-proxy
 
-        mapfile -t tags < <(version_tags "wdqs-proxy")
-        for tag in "${tags[@]}"; do
-            docker tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$tag"
-        done
+    mapfile -t tags < <(version_tags "wdqs-proxy")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -183,10 +183,10 @@ function build_quickstatements {
         \
         build/QuickStatements
 
-        mapfile -t tags < <(version_tags "quickstatements")
-        for tag in "${tags[@]}"; do
-            docker tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$tag"
-        done
+    mapfile -t tags < <(version_tags "quickstatements")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$tag"
+    done
 }
 
 
