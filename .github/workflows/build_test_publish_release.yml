@@ -38,12 +38,12 @@ jobs:
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
-          if git tag "$WMDE_RELEASE_VERSION"; then
-            git push --tags origin "$WMDE_RELEASE_VERSION"
+          if git tag "$WBS_DEPLOY_VERSION"; then
+            git push --tags origin "$WBS_DEPLOY_VERSION"
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
-            echo "Cannot tag $WMDE_RELEASE_VERSION, Most probably this tag is already given to another commit."
-            echo "Make sure to update the WMDE_RELEASE_VERSION variable in variables.env to publish a new release."
+            echo "Cannot tag $WBS_DEPLOY_VERSION, Most probably this tag is already given to another commit."
+            echo "Make sure to update the WBS_DEPLOY_VERSION variable in variables.env to publish a new release."
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
           fi
 
@@ -90,7 +90,10 @@ jobs:
           for image in "${images[@]}"; do
             image_path="wikibase/${image}"
             url_run_id="ghcr.io/${{ github.repository_owner }}/${image_path}:dev-${{ github.run_id }}"
-            version_tag="$(image_version $image)"
-            docker tag "$url_run_id" "${image_path}:${version_tag}"
-            docker push "${image_path}:${version_tag}"
+            version="$(image_version $image)"
+            tags=$(version_tags "${image}")
+            for tag in $tags; do
+              docker tag "$url_run_id" "${image_path}:${tag}"
+              docker push "${image_path}:${tag}"
+            done
           done

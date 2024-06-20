@@ -12,45 +12,48 @@ if [ -f ./local.env ]; then
 fi
 set +o allexport
 
-function wikibase_version {
-    echo "$MEDIAWIKI_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function elasticsearch_version {
-    echo "$ELASTICSEARCH_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_version {
-    echo "$WDQS_VERSION-$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_frontend_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
-function wdqs_proxy_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
-function quickstatements_version {
-    echo "$WMDE_RELEASE_VERSION"
-}
-
 function image_version {
     image=$1
 
     if [ "$image" = "wikibase" ]; then
-        wikibase_version
+        echo "$WBS_WIKIBASE_VERSION"
     elif [ "$image" = "elasticsearch" ]; then
-        elasticsearch_version
+        echo "$WBS_ELASTICSEARCH_VERSION"
     elif [ "$image" = "wdqs" ]; then
-        wdqs_version
+        echo "$WBS_WDQS_VERSION"
     elif [ "$image" = "wdqs-frontend" ]; then
-        wdqs_frontend_version
+        echo "$WBS_WDQS_FRONTED_VERSION"
     elif [ "$image" = "wdqs-proxy" ]; then
-        wdqs_proxy_version
+        echo "$WBS_WDQS_PROXY_VERSION"
     elif [ "$image" = "quickstatements" ]; then
-        quickstatements_version
+        echo "$WBS_QUICKSTATEMENTS_VERSION"
     fi
+}
+
+function version_tags() {
+    local image_name=$1
+    local version
+    version=$(image_version "${image_name}")
+    local date_tag
+    date_tag=$(date +"%Y%m%d%H%M%S")
+
+    local tags=(
+        "${version}_build${date_tag}"
+        "$version"
+        "${version%.*}"
+        "${version%%.*}"
+        "deploy-${WBS_DEPLOY_VERSION%%.*}"
+    )
+
+    # Extra tags
+    if [[ "$image_name" == "wikibase" ]]; then
+        tags+=("${WBS_WIKIBASE_VERSION}_mw${MEDIAWIKI_VERSION}")
+    elif [[ "$image_name" == "elasticsearch" ]]; then
+        tags+=("${WBS_ELASTICSEARCH_VERSION}_es${ELASTICSEARCH_VERSION}")
+    elif [[ "$image_name" == "wdqs" ]]; then
+        tags+=("${WBS_WDQS_VERSION}_wdqs${WDQS_VERSION}")
+    fi
+
+    printf "%s\n" "${tags[@]}"
 }
 
