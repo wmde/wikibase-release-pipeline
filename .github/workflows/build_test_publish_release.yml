@@ -1,14 +1,14 @@
 name: 📦 Build Test Tag and Publish Release
 
 on:
-  # pull_request:
-    # types:
-    #   - closed
-    # branches:
-    #   - "mw-*"
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "mw-*"
   push:
     branches:
-      - "**"
+      - "mw-*"
 
 permissions:
   contents: write
@@ -16,12 +16,12 @@ permissions:
 
 jobs:
   _:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
     uses: ./.github/workflows/_build_test.yml
 
   tag-release:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
     needs: _
 
@@ -42,8 +42,7 @@ jobs:
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
           if git tag "$WBS_DEPLOY_VERSION"; then
-            # git push --tags origin "$WBS_DEPLOY_VERSION"
-            echo git push --tags origin "$WBS_DEPLOY_VERSION"
+            git push --tags origin "$WBS_DEPLOY_VERSION"
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
             echo "Cannot tag $WBS_DEPLOY_VERSION, Most probably this tag is already given to another commit."
@@ -52,7 +51,7 @@ jobs:
           fi
 
   publish-dockerhub:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
     needs: tag-release
 
@@ -97,9 +96,7 @@ jobs:
             version="$(image_version $image)"
             tags=$(version_tags "${image}")
             for tag in $tags; do
-              # docker tag "$url_run_id" "${image_path}:${tag}"
-              # docker push "${image_path}:${tag}"
-              echo docker tag "$url_run_id" "${image_path}:${tag}"
-              echo docker push "${image_path}:${tag}"
+              docker tag "$url_run_id" "${image_path}:${tag}"
+              docker push "${image_path}:${tag}"
             done
           done
