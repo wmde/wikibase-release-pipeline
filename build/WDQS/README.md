@@ -8,23 +8,23 @@ The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Quer
 
 In order to run WDQS, you need:
 
-- WDQS requires at least 2 GB of available RAM to start
+- at least 2 GB RAM to start WDQS
 - MediaWiki/Wikibase instance
-- WDQS server
-- WDQS updater
-- WDQS Proxy for public facing setup
-- Initial settings via environment variables
+- WDQS as server
+- WDQS as updater
+- WDQS Proxy for public facing setups
+- Configuration via environment variables
 
-### Wikibase instance
+### MediaWiki/Wikibase instance
 
 We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
 run all our tests against. Follow the setup instructions over there to get it up and running.
 
-### WDQS server
+### WDQS as server
 
 One instance of the image to execute the actual WDQS daemon started using `/runBlazegraph.sh`.
 
-### WDQS updater
+### WDQS as updater
 
 One instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
 

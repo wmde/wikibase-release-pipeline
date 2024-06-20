@@ -17,7 +17,7 @@ ready to be hooked up to MediaWiki OAuth on a WBS Wikibase Image.
 - DNS domain name resolution for QuickStatements and Wikibase
 - Configuration via environment variables
 
-### Wikibase instance
+### MediaWiki/Wikibase instance with
 
 #### Official WBS Wikibase Image
 
