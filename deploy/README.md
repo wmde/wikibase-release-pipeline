@@ -52,13 +52,12 @@ You need three DNS records that resolve to your machine's IP address, one for ea
 
 #### Download WBS Deploy
 
-Check out the files from Github and move to the subdirectory `deploy`.
+Check out the files from Github, move to the subdirectory `deploy` and check out the latest stable branch.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
 cd wikibase-release-pipeline/deploy
-# TODO update to the correct TAG/BRANCH
-git checkout wmde.20
+git checkout deploy-3
 ```
 
 #### Initial configuration
@@ -69,7 +68,7 @@ Make a copy of the [configuration template](./template.env) in the `wikibase-rel
 cp template.env .env
 ```
 
-Follow the instructions in the comments in your newly cread `.env` file to set usernames, passwords and domain names.
+Follow the instructions in the comments in your newly created `.env` file to set usernames, passwords and domain names.
 
 #### Starting
 
@@ -181,13 +180,13 @@ done
 
 WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). The WBS Deploy and all the WBS Images have individual version numbers.
 
-WBS Deploy always references the latest minor and patch releases of the compatible WBS Images' major versions using a special `wbs-dk-MAJOR_VERSION` tag, such as `wbs-dk-23` for Wikibase Deploy Versions 23.X.X. This tag always points to the latest compatible version of all WBS service images. 
+WBS Deploy always references the latest minor and patch releases of the compatible WBS Images' major versions using a special `deploy-MAJOR_VERSION` tag, such as `deploy-3` for Wikibase Deploy Versions 3.X.X. This tag always points to the latest compatible version of all WBS service images. 
 
 #### Example
 
-Let's say the `wikibase` service image version 3.0.0 is the initial version released with WBS Deploy 23.0.0. In that case, the `wikibase` service image carrying the `v3.0.0` tag will also carry a `wbs-dk-23` tag. When the `wikibase` service image version is bumped to 3.1.0 for a feature release, a new image is released and tagged with `v3.1.0`. The `wbs-dk-23` tag will then be reused and point to the newly released image 3.1.0. 
+Let's say the `wikibase` service image version 1.0.0 is the initial version released with WBS Deploy 3.0.0. In that case, the `wikibase` service image carrying the `1.0.0` tag will also carry a `deploy-3` tag. When the `wikibase` service image version is bumped to 1.1.0 for a feature release, a new image is released and tagged with `1.1.0`. The `deploy-3` tag will then be reused and point to the newly released image 1.1.0. 
 
-This way, WBS Deploy always references the latest compatible version by using the same tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` service image version gets bumped to 4.0.0, that indicates a breaking change; in this case the new image would not receive the `wbs-dk-23` tag. Instead, a new version of WBS Deploy would be released (in this case 24.0.0) and a new tag `wbs-dk-24` would be used to reference compatible images for this version. 
+This way, WBS Deploy always references the latest compatible version by using the same tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` service image version gets bumped to 2.0.0, that indicates a breaking change; in this case the new image would not receive the `deploy-3` tag. Instead, a new version of WBS Deploy would be released (in this case 4.0.0) and a new tag `deploy-4` would be used to reference compatible images for this version. 
 
 WBS Deploy may also receive minor and patch updates, but, as noted above, they are not required to update related WBS Images.
 
@@ -205,14 +204,13 @@ docker compose up --wait
 
 #### Minor and patch updates for WBS Deploy
 
-WBS Deploy major versions are tracked in dedicated branches such as `TODO:BRANCH_NAME_HERE`. Pulling from the major version branch you are currently on will only update minor and patch versions and will never trigger breaking changes.
+WBS Deploy major versions are tracked in dedicated branches such as `deploy-3`. Pulling from the major version branch you are currently on will only update minor and patch versions and will never trigger breaking changes.
 
 These updates are **always** considered safe.
 
 If you did not change `docker-compose.yml`, you can update simply by running `git pull`.
 
 ```sh
-# TODO check BRANCH/TAG before release
 git pull
 ```
 > 💡 If you have made changes to `docker-compose.yml`, commit them to a separate branch and merge them with upstream changes as you see fit.
@@ -223,7 +221,7 @@ git pull
 
 Major version upgrades are performed by updating WBS Deploy's major version. This is done by changing your git checkout to the new major version branch. This may reference new major versions of WBS Images or involve breaking changes. In turn, those may require additional steps as described below.
 
-WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 21 to 23, you must first upgrade from 21 to 22 and then to 23.
+WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 1.x.x to 3.x.x, you must first upgrade from 1.x.x to 2.x.x and then to 3.x.x.
 
 ##### Bring down your instance
 
@@ -244,11 +242,11 @@ cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 
 ##### Pull new version
 
-WBS Deploy major versions are tracked in separate branches. Change your checkout to the new major version branch.
+WBS Deploy major versions are tracked in separate branches called `deploy-MAJOR_VERSION`, such as `deploy-2` or `deploy-3`. Change your checkout to the new major version branch.
 
 ```sh
 git remote update
-git checkout TODO:NEW_BRANCH_NAME_HERE
+git checkout deploy-MAJOR_VERSION
 git pull
 ```
 
@@ -260,7 +258,7 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 ##### Apply any migrations for your version
 
-<details><summary><strong>WBS Deploy 23 to 24 (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
+<details><summary><strong>WBS Deploy 2.x.x to 3.x.x (MediaWiki 1.41 to MediaWiki 1.42)</strong></summary><p>
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
@@ -268,17 +266,9 @@ No Wikibase-specific migrations are necessary.
 
 </p></details>
 
-<details><summary><strong>WBS Deploy 22 to 23 (MediaWiki 1.40 to MediaWiki 1.41)</strong></summary><p>
+<details><summary><strong>WBS Deploy 1.x.x to 2.x.x (MediaWiki 1.39 to MediaWiki 1.41)</strong></summary><p>
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
-
-No Wikibase-specific migrations are necessary.
-
-</p></details>
-
-<details><summary><strong>WBS Deploy 21 to 22 (MediaWiki 1.39 to MediaWiki 1.40)</strong></summary><p>
-
-Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_40/UPGRADE).
 
 No Wikibase-specific migrations are necessary.
 
