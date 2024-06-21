@@ -12,6 +12,7 @@ In order to run WDQS Frontend, you need:
 - MediaWiki/Wikibase instance
 - WDQS as server
 - WDQS as updater
+- Reverse proxy (if Wikibase and WDQS Frontend are running on the same host)
 - Configuration via environment variables
 
 ### MediaWiki/Wikibase instance
@@ -26,6 +27,13 @@ We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdq
 ### WDQS as updater
 
 We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Checkout the documentation how to run it in updater mode.
+
+### Reverse proxy
+
+If QuickStatements and Wikibase are running on the same IP address, a reverse
+proxy is required to route HTTP requests to Wikibase or QuickStatements
+depending on the URL used to access them. See the [example](#Example) below for
+a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
 
 ### Environment variables
 
@@ -175,6 +183,7 @@ volumes:
   wikibase-image-data:
   mysql-data:
   wdqs-data:
+  traefik-letsencrypt-data:
 ```
 
 ## Releases
