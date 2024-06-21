@@ -202,6 +202,7 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
+
 ## Source
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/WDQS-frontend/Dockerfile).

@@ -173,6 +173,7 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_\_wdqs*WDQS-VERSION*     | 3.1.7_wdqs0.1.317         | Same as above, but also mentioning the current WDQS version.                                                                                                                                                                               |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
+
 ## Upgrading
 
 When upgrading between WDQS versions, the data stored in `/wdqs/data` may not be compatible with the newer version. When testing the new image, if no data appears to have been loaded into the Query Service, you'll need to reload the data.

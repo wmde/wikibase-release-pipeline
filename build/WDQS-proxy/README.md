@@ -158,6 +158,7 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
 
+
 ## Internal filesystem layout
 
 Hooking into the internal filesystem can be used to extend the functionality of this image.
