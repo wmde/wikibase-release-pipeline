@@ -149,13 +149,15 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-
 volumes:
   wikibase-image-data:
   mysql-data:
   wdqs-data:
 ```
 
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs).
 
 ## Tags and Versioning
 
@@ -200,15 +202,12 @@ If you can't use [RecentChanges], you'll need to reload from an RDF dump:
 In some situations the WDQS Updater enters a restart loop. A workaround is to start the updater once with manual `--init` `--start` parameters for the current day.
 
 In the docker compose example provided above, you could do:
+
 ```sh
 docker compose stop wdqs-updater
 docker compose run --rm wdqs-updater bash -c '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
 docker compose start wdqs-updater
 ```
-
-## Releases
-
-Official releases of this image can be found on [Docker Hub wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs).
 
 ## Source
 

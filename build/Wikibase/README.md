@@ -148,6 +148,10 @@ volumes:
   mysql-data:
 ```
 
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/wikibase](https://hub.docker.com/r/wikibase/wikibase).
+
 ## Tags and Versioning
 
 This Wikibase Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -181,10 +185,6 @@ Hooking into the internal filesystem can be used to extend the functionality of 
 | `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
 | `/extra-install.sh`                | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                  |
 | `/templates/LocalSettings.wbs.php` | Wikibase specific settings appended to the MediaWiki install generated `LocalSettings.php`. In particular this loads the Wikibase repo and client as well as all the other bundled extensions. |
-
-## Releases
-
-Official releases of this image can be found on [Docker Hub wikibase/wikibase](https://hub.docker.com/r/wikibase/wikibase).
 
 ## Source
 
