@@ -1,12 +1,12 @@
 {
-	"site": "${MW_WG_SITENAME}",
+	"site": "${SITENAME}",
 	"bot_config_file": "/var/www/html/bot.ini",
 	"logfile": "/var/log/quickstatements/tool.log",
 	"sites": {
-		"${MW_WG_SITENAME}": {
+		"${SITENAME}": {
 			"oauth": {
-				"language": "${MW_WG_LANGUAGE_CODE}",
-				"project": "${MW_WG_SITENAME}",
+				"language": "${LANGUAGE_CODE}",
+				"project": "${SITENAME}",
 				"ini_file": "/quickstatements/data/oauth.ini",
 				"publicMwOAuthUrl": "${WIKIBASE_PUBLIC_URL}/w/index.php?title=Special:OAuth",
 				"mwOAuthUrl": "${WIKIBASE_PUBLIC_URL}/w/index.php?title=Special:OAuth",

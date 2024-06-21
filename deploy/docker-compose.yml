@@ -170,10 +170,6 @@ services:
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
       - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
-      WB_PROPERTY_NAMESPACE: 122
-      WB_PROPERTY_PREFIX: "Property:"
-      WB_ITEM_NAMESPACE: 120
-      WB_ITEM_PREFIX: "Item:"
       QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
