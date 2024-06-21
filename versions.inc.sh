@@ -38,7 +38,7 @@ function version_tags() {
     date_tag=$(date +"%Y%m%d%H%M%S")
 
     local tags=(
-        "${version}_build${date_tag}"
+        "${version}-build${date_tag}"
         "$version"
         "${version%.*}"
         "${version%%.*}"
@@ -47,11 +47,11 @@ function version_tags() {
 
     # Extra tags
     if [[ "$image_name" == "wikibase" ]]; then
-        tags+=("${WBS_WIKIBASE_VERSION}_mw${MEDIAWIKI_VERSION}")
+        tags+=("${WBS_WIKIBASE_VERSION}-mw${MEDIAWIKI_VERSION}")
     elif [[ "$image_name" == "elasticsearch" ]]; then
-        tags+=("${WBS_ELASTICSEARCH_VERSION}_es${ELASTICSEARCH_VERSION}")
+        tags+=("${WBS_ELASTICSEARCH_VERSION}-es${ELASTICSEARCH_VERSION}")
     elif [[ "$image_name" == "wdqs" ]]; then
-        tags+=("${WBS_WDQS_VERSION}_wdqs${WDQS_VERSION}")
+        tags+=("${WBS_WDQS_VERSION}-wdqs${WDQS_VERSION}")
     fi
 
     printf "%s\n" "${tags[@]}"
