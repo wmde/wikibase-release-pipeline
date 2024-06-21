@@ -1,8 +1,8 @@
-# WBS WDQS Proxy Image
+# Wikibase Suite WDQS Proxy Image
 
 Proxy to put in front of the WBS WDQS Image enforcing READONLY requests, query timeouts and limits access to blazegraph sparql endpoints.
 
-In order to change how this image is configured just mount over the wdqs.template file.
+> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 ## Requirements
 
@@ -34,12 +34,126 @@ We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdq
 | `PROXY_PASS_HOST`        | "wdqs:9999" | Where to forward requests to |
 | `PROXY_MAX_QUERY_MILLIS` | 60000       | Timeout in milliseconds      |
 
-### Filesystem layout
+## Example
+
+An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS Image](https://hub.docker.com/r/wikibase/wdqs) using Docker Compose.
+
+```yml
+services:
+  wikibase:
+    image: wikibase/wikibase
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - 8880:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example.com`)"
+      - "traefik.http.routers.wikibase.entrypoints=websecure"
+      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
+    volumes:
+      - ./config:/config
+      - wikibase-image-data:/var/www/html/images
+    environment:
+      MW_ADMIN_NAME: "admin"
+      MW_ADMIN_PASS: "change-this-password"
+      MW_ADMIN_EMAIL: "admin@example.com"
+      MW_WG_SERVER: https://wikibase.example.com
+      DB_SERVER: mysql:3306
+      DB_NAME: "my_wiki"
+      DB_USER: "mariadb-user"
+      DB_PASS: "change-this-password"
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+    command: /jobrunner-entrypoint.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: always
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "my_wiki"
+      MYSQL_USER: "mariadb-user"
+      MYSQL_PASSWORD: "change-this-password"
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  wdqs:
+    image: wikibase/wdqs
+    command: /runBlazegraph.sh
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    volumes:
+      - wdqs-data:/wdqs/data
+    healthcheck:
+      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
+      interval: 10s
+      start_period: 2m
+
+  wdqs-updater:
+    image: wikibase/wdqs
+    command: /runUpdate.sh
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+
+  wdqs-proxy:
+    image: wikibase/wdqs-proxy
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+
+
+volumes:
+  wikibase-image-data:
+  mysql-data:
+  wdqs-data:
+```
+
+
+### Internal filesystem layout
+
+Hooking into the internal filesystem can be used to extend the functionality of this image.
 
 | File                              | Description                                                                                               |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `/etc/nginx/conf.d/wdqs.template` | Template for the nginx config (substituted to `/etc/nginx/conf.d/default.conf` at runtime)                |
 | `/etc/nginx/conf.d/default.conf`  | nginx config. To override this you must also use a custom entrypoint to avoid the file being overwritten. |
+
+
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/wdqs-proxy](https://hub.docker.com/r/wikibase/wdqs-proxy).
 
 ## Source
 
