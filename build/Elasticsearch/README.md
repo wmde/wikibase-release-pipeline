@@ -10,6 +10,18 @@ plugins for [Wikibase](https://wikiba.se).
 
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
+## Requirements
+
+In order to run Wikibase Elasticsearch, you need:
+
+- MediaWiki/Wikibase instance
+- Configuration via environment variables
+
+### MediaWiki/Wikibase instance
+
+We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
+run all our tests against. Follow the setup instructions over there to get it up and running.
+
 ## Example
 
 You can use the following example Docker Compose to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
@@ -87,6 +99,10 @@ volumes:
   elasticsearch-data:
 ```
 
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch).
+
 ## Tags and Versioning
 
 This Elasticsearch Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -101,10 +117,6 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION*         | 3.1.7_es7.20.2            | Same as above, but also mentioning the current Elasticsearch version.                                                                                                                                                                      |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 | deploy-_WBS-DEPLOY-VERSION_                     | deploy-3                  | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
-
-## Releases
-
-Official releases of this image can be found on [Docker Hub wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch).
 
 
 ## Source
