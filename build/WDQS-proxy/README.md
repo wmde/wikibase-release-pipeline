@@ -159,7 +159,7 @@ We provide several tags that relate to the versioning semantics.
 | deploy-_WBS-DEPLOY-VERSION_                     | deploy-3                  | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
 
 
-### Internal filesystem layout
+## Internal filesystem layout
 
 Hooking into the internal filesystem can be used to extend the functionality of this image.
 
