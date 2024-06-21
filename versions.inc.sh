@@ -42,7 +42,6 @@ function version_tags() {
         "$version"
         "${version%.*}"
         "${version%%.*}"
-        "deploy-${WBS_DEPLOY_VERSION%%.*}"
     )
 
     # Extra tags
