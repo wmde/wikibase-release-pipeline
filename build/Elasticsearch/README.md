@@ -15,12 +15,13 @@ plugins for [Wikibase](https://wikiba.se).
 In order to run Wikibase Elasticsearch, you need:
 
 - MediaWiki/Wikibase instance
-- Configuration via environment variables
 
 ### MediaWiki/Wikibase instance
 
 We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
 run all our tests against. Follow the setup instructions over there to get it up and running.
+
+Be sure to add the `ELASTICSEARCH_HOST` environment variable to you Wikibase container.
 
 ## Example
 
