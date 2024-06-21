@@ -1,4 +1,4 @@
-# WBS QuickStatements Image
+# Wikibase Suite QuickStatements Image
 
 [QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to
 batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
@@ -237,6 +237,10 @@ Hooking into the internal filesystem can be used to extend the functionality of 
 | `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` in `entrypoint.sh`)              |
 | `/templates/oauth.ini`   | Template for QuickStatements' oauth.ini (substituted to `/quickstatements/data/oauth.ini` in `entrypoint.sh`)                                      |
 | `/templates/php.ini`     | PHP config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` in `entrypoint.sh` ) |
+
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements).
 
 ## Source
 

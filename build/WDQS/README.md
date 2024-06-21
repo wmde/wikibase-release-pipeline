@@ -1,4 +1,4 @@
-# WBS WDQS Image
+# Wikibase Suite Wikidata Query Service Image
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 
@@ -205,6 +205,10 @@ docker compose stop wdqs-updater
 docker compose run --rm wdqs-updater bash -c '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
 docker compose start wdqs-updater
 ```
+
+## Releases
+
+Official releases of this image can be found on [Docker Hub wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs).
 
 ## Source
 
