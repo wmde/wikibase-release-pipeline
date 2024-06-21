@@ -210,8 +210,10 @@ docker compose start wdqs-updater
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/WDQS/Dockerfile).
 
-## Authors
+## Authors & Contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
-If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If you have questions not listed above or need help, use this [bug report
+form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start
+a conversation with the engineering team.
