@@ -187,7 +187,9 @@ If you can't use [RecentChanges], you'll need to reload from an RDF dump:
 - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/docs_topics_rdf-binding.html)
 - [Load the RDF dump into the query service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
 
-### Filesystem layout
+## Internal filesystem layout
+
+Hooking into the internal filesystem can be used to extend the functionality of this image.
 
 | File                         | Description                                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -195,9 +197,9 @@ If you can't use [RecentChanges], you'll need to reload from an RDF dump:
 | `/wdqs/RWStore.properties`   | Properties for the service                                                                     |
 | `/templates/mwservices.json` | Template for MediaWiki services (populated and placed into `/wdqs/mwservices.json` at runtime) |
 
-### Known Issues
+## Known Issues
 
-#### Updater keeps restarting
+### Updater keeps restarting
 
 In some situations the WDQS Updater enters a restart loop. A workaround is to start the updater once with manual `--init` `--start` parameters for the current day.
 
