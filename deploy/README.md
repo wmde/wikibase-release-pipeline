@@ -186,7 +186,7 @@ WBS Deploy always references the latest minor and patch releases of the compatib
 
 Let's say the `wikibase` image version 1.0.0 is the initial version released with WBS Deploy 3.0.0. In that case, the `wikibase` image carrying the `1.0.0` tag will also carry a `1` tag. When the `wikibase` image version is bumped to 1.1.0 for a feature release, a new image is released and tagged with `1.1.0`. The `1` tag will then be reused and now point to the newly released image 1.1.0. 
 
-This way, WBS Deploy always references the latest compatible version by using the same major version tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` image version gets bumped to 2.0.0, that indicates a breaking change; in this case the new image would not receive the `1` tag. Instead, a new version of WBS Deploy would be released (in this case 4.0.0) and this one would use a new major version tag called `2` to reference the Wikibase image. 
+This way, WBS Deploy can always reference the latest compatible version by using the major version tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` image version gets bumped to 2.0.0, that indicates a breaking change; in this case the new image would not receive the `1` tag. Instead, a new version of WBS Deploy would be released (in this case 4.0.0) and this one would use a new major version tag called `2` to reference the Wikibase image. 
 
 WBS Deploy may also receive minor and patch updates, but, as noted above, they are not required to update related WBS Images.
 
