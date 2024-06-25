@@ -1,8 +1,12 @@
 # Wikibase Suite
 
-Wikibase Suite (WBS) is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
+Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
 
-> 🔧 This document is intended for people involved in developing WBS. If you want to host your own Wikibase instance, head over to the [WBS Deployment Kit documentation](./deploy/README.md). If you're looking for individual WBS Service Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+If you want to host your own WBS instance, head over to the [WBS Deploy documentation](./deploy/README.md).
+
+If you're looking for individual WBS Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+
+> 🔧 This document is intended for people developing WBS.  
 
 ## Overview
 
@@ -11,14 +15,14 @@ This repository contains the Wikibase Suite toolset used for:
  - **Building** ([build.sh](./build.sh) and [build directory](./build))
  - **Testing** ([test.sh](./test.sh) and [test directory](./test))
  - **Publishing** ([.github/workflows](.github/workflows)) 
- - **Deploying** ([WBS Deployment Kit](./deploy))
+ - **Deploying** ([WBS Deploy](./deploy))
 
 ## Quick reference
 
 ### Build
 
 ```
-# Build all Wikibase suite components, Docker images
+# Build all Wikibase Suite Images
 $ ./build.sh
 
 # Build only the MediaWiki/Wikibase containers
@@ -53,6 +57,8 @@ $ ./test.sh repo --setup
 $ cd deploy
 $ docker compose up --wait
 ```
+
+Find more details in the [WBS Deploy documentations](./deploy/README.md).
 
 ## Development setup
 

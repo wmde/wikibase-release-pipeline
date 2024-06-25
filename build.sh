@@ -55,7 +55,6 @@ function build_wikibase {
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
-        --build-arg WMDE_RELEASE_VERSION="$WMDE_RELEASE_VERSION" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
         \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
@@ -78,13 +77,18 @@ function build_wikibase {
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg MW_WG_SITENAME="wikibase" \
+        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$(wikibase_version)" \
         \
         build/Wikibase
+
+    mapfile -t tags < <(version_tags "wikibase")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$tag"
+    done
+
 }
 
 
@@ -97,9 +101,13 @@ function build_elasticseach {
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
         \
         -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$(elasticsearch_version)" \
         \
         build/Elasticsearch
+
+    mapfile -t tags < <(version_tags "elasticsearch")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -112,9 +120,13 @@ function build_wdqs {
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
         \
         -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$(wdqs_version)" \
         \
         build/WDQS
+
+    mapfile -t tags < <(version_tags "wdqs")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -128,9 +140,13 @@ function build_wdqs-frontend {
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
         \
         -t "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$(wdqs_frontend_version)" \
         \
         build/WDQS-frontend
+
+    mapfile -t tags < <(version_tags "wdqs-frontend")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -141,9 +157,13 @@ function build_wdqs-proxy {
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         \
         -t "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$(wdqs_proxy_version)" \
         \
         build/WDQS-proxy
+
+    mapfile -t tags < <(version_tags "wdqs-proxy")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL:$tag"
+    done
 }
 
 
@@ -156,13 +176,17 @@ function build_quickstatements {
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
         \
-        --build-arg MW_WG_SITENAME="$MW_WG_SITENAME" \
-        --build-arg MW_WG_LANGUAGE_CODE="$MW_WG_LANGUAGE_CODE" \
+        --build-arg SITENAME="wikibase" \
+        --build-arg LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
-        -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$(quickstatements_version)" \
         \
         build/QuickStatements
+
+    mapfile -t tags < <(version_tags "quickstatements")
+    for tag in "${tags[@]}"; do
+        docker tag "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL:$tag"
+    done
 }
 
 

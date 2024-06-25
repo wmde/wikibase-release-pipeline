@@ -7,6 +7,7 @@ $wgJobRunRate = 0;
 $wgEnableUploads = true;
 
 # Logs
+# TODO: Explore simply logging to stdout/stderr so these appear in Docker logs
 $wgDebugLogGroups = array(
 	'resourceloader' => '/var/log/mediawiki/mw.resourceloader.log',
 	'exception' => '/var/log/mediawiki/mw.exception.log',
