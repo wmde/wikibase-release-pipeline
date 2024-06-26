@@ -6,8 +6,7 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wikibase
+    image: wikibase/wikibase:3
     depends_on:
       mysql:
         condition: service_healthy
@@ -40,8 +39,7 @@ services:
       start_period: 5m
 
   wikibase-jobrunner:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wikibase
+    image: wikibase/wikibase:3
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -74,8 +72,7 @@ services:
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
   elasticsearch:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/elasticsearch
+    image: wikibase/elasticsearch:1
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -88,8 +85,7 @@ services:
       start_period: 2m
 
   wdqs:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wdqs
+    image: wikibase/wdqs:1
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -110,8 +106,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wdqs
+    image: wikibase/wdqs:1
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -126,16 +121,14 @@ services:
         hard: 32768
 
   wdqs-proxy:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wdqs-proxy
+    image: wikibase/wdqs-proxy:1
     depends_on:
       wdqs:
         condition: service_healthy
     restart: unless-stopped
 
   wdqs-frontend:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/wdqs-frontend
+    image: wikibase/wdqs-frontend:1
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
@@ -154,8 +147,7 @@ services:
       start_period: 2m
 
   quickstatements:
-    # TODO: add WBS Deployment Kit version
-    image: wikibase/quickstatements
+    image: wikibase/quickstatements:1
     depends_on:
       wikibase:
         condition: service_healthy
