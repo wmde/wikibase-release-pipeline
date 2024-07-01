@@ -44,7 +44,7 @@ RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-av
     sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 ENV SITENAME=wikibase \
-    MW_WG_LANGUAGE_CODE=en \
+    LANGUAGE_CODE=en \
     PHP_TIMEZONE=UTC \
     WB_ITEM_NAMESPACE=120 \
     WB_PROPERTY_NAMESPACE=122 \
