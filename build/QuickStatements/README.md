@@ -122,7 +122,7 @@ services:
       - wikibase
 
   mysql:
-    image: mariadb:11.4
+    image: mariadb:10.11
     restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql

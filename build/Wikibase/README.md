@@ -128,7 +128,7 @@ services:
     restart: always
 
   mysql:
-    image: mariadb:11.4
+    image: mariadb:10.11
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
