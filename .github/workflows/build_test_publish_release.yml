@@ -38,14 +38,14 @@ jobs:
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
-          tag_name="deploy-${WBS_DEPLOY_VERSION}"
+          tag_name="v${VERSION}"
 
           if git tag "$tag_name"; then
             git push --tags origin "$tag_name"
           else
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
             echo "Cannot tag ${tag_name}. Most probably this tag is already given to another commit."
-            echo "Make sure to update the WBS_DEPLOY_VERSION variable in variables.env to publish a new deploy release."
+            echo "Make sure to update the VERSION variable in variables.env to publish a new deploy release."
             echo "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
           fi
 
