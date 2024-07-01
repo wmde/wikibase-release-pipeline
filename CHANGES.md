@@ -2,6 +2,19 @@
 
 This file is intended for use by the developers of this repository and of the releases; it contains an overview of the releases that have been made using this release pipeline.
 
+## July 2024
+
+**WBS Deploy 3.0.0** comes with the following WBS Images:
+
+| WBS Image             | WBS Version | Upstream Version     | Base Image                    | Distribution    |
+| --------------------- | ----------- | -------------------- | ----------------------------- | --------------- |
+| Wikibase Image        | 3.0.0       | MediaWiki 1.42.1     | PHP 8.3.8 apache              | Debian Bookworm |
+| WDQS Image            | 1.0.0       | WDQS 0.3.142         | JRE Eclipse Temurin 8u412-b08 | Debian Bookworm |
+| WDQS Frontend Image   | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
+| WDQS Proxy Image      | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
+| QuickStatements Image | 1.0.0       | N/A                  | PHP 8.3.8 Apache              | Debian Bookworm |
+| ElasticSearch Image   | 1.0.0       | ElasticSearch 7.10.2 | N/A                           | N/A             |
+
 ## April 2024: Security releases for 1.39.7
 
 - [MediaWiki release announcement: 1.39.7](https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/V3WXEPXV2DU6WTVEKK4XHW4QXD5OFKD7/)
