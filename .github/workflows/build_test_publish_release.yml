@@ -5,7 +5,7 @@ on:
     types:
       - closed
     branches:
-      - "mw-*"
+      - "deploy-*"
 
 permissions:
   contents: write
