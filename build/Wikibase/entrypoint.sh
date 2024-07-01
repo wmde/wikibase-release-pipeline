@@ -23,7 +23,9 @@ fi
 if [ -e "/config/LocalSettings.php" ]; then
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
     # Always run update (this might be the first run off of a new image version on existing config and data)
-    php /var/www/html/maintenance/run.php update --quick
+    # TODO: Switch to the new way of running maintenance scripts after dropping 1.39 support end of 2025
+    #php /var/www/html/maintenance/run.php update --quick
+    php /var/www/html/maintenance/update.php --quick
 else
     echo "/config/LocalSettings.php not found, running MediaWiki install."
 
@@ -50,7 +52,9 @@ else
     set -u
 
     # Run MediaWiki install script, and update values
-    php /var/www/html/maintenance/run.php install \
+    # TODO: Switch to the new way of running maintenance scripts after dropping 1.39 support end of 2025
+    #php /var/www/html/maintenance/run.php install \
+    php /var/www/html/maintenance/install.php \
         --server "$MW_WG_SERVER" \
         --scriptpath "/w" \
         --dbuser "$DB_USER" \
@@ -78,9 +82,13 @@ else
     # Replace /config/LocalSettings.php with newly generated LocalSettings.php
     cp /var/www/html/LocalSettings.php /config/LocalSettings.php
     # Update the MW Admin email address (if this admin user doesn't already exist, a new one will be created)
-    php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
+    # TODO: Switch to the new way of running maintenance scripts after dropping 1.39 support end of 2025
+    #php /var/www/html/maintenance/run.php resetUserEmail --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
+    php /var/www/html/maintenance/resetUserEmail.php --no-reset-password "$MW_ADMIN_NAME" "$MW_ADMIN_EMAIL"
 
-    php /var/www/html/maintenance/run.php update --quick
+    # TODO: Switch to the new way of running maintenance scripts after dropping 1.39 support end of 2025
+    #php /var/www/html/maintenance/run.php update --quick
+    php /var/www/html/maintenance/update.php --quick
 
     if [ -f /default-extra-install.sh ]; then
         # shellcheck disable=SC1091
