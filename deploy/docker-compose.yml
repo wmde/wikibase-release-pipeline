@@ -174,7 +174,7 @@ services:
   # --------------------------------------------------
 
   traefik:
-    image: traefik:v2.5
+    image: traefik:3.1
     command:
       # Basic setup
       - "--providers.docker=true"

@@ -158,7 +158,7 @@ services:
       start_period: 2m
 
   traefik:
-    image: traefik:v2.5
+    image: traefik:3.1
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
