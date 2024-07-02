@@ -245,3 +245,4 @@ done
 if ! $build_target_set; then
     build_all
 fi
+
