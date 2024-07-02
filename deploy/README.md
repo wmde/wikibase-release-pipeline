@@ -326,6 +326,66 @@ It is possible to migrate an existing Wikibase installation to WBS Deploy. The g
 
 As of this writing, we can offer no specific recommendations for VPS providers to host Wikibase Suite. The suite has been tested successfully on various providers; as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
 
+### How can I adjust the storage location for data?
+
+By default, WBS Deploy stores all its data in Dockers volume storage location, e.g. `/var/lib/docker/volumes`. To adjust the storage location on a per volume basis, change the storage driver settings in `docker-compose.yml`. For example, you could store all WBS Deploy data in `/mnt/ext-disk` by first creating directories for all volumes:
+
+```sh
+mkdir -p /mnt/ext-disk/wikibase-image-data
+mkdir -p /mnt/ext-disk/mysql-data
+mkdir -p /mnt/ext-disk/wdqs-data
+mkdir -p /mnt/ext-disk/elasticsearch-data
+mkdir -p /mnt/ext-disk/quickstatements-data
+mkdir -p /mnt/ext-disk/traefik-letsencrypt-data
+```
+
+Change the `volumes` section in your `docker-compose.yml` file:
+
+```yml
+volumes:
+  # A. CORE WIKIBASE SUITE SERVICES DATA
+  wikibase-image-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/wikibase-image-data"
+      o: bind
+  mysql-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/mysql-data"
+      o: bind
+  # B. EXTRA WIKIBASE SUITE SERVICES DATA
+  wdqs-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/wdqs-data"
+      o: bind
+  elasticsearch-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/elasticsearch-data"
+      o: bind
+  quickstatements-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/quickstatements-data"
+      o: bind
+  # C. REVERSE PROXY AND SSL SERVICES DATA
+  traefik-letsencrypt-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/mnt/ext-disk/traefik-letsencrypt-data"
+      o: bind
+```
+
+Make sure the docker compose stack has no volumes attached by e.g. running `docker compose down --volumes` and restart your WBS instance.
+
 ### Where can I get further help?
 
 If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
