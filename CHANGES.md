@@ -4,16 +4,29 @@ This file is intended for use by the developers of this repository and of the re
 
 ## July 2024
 
-**WBS Deploy 3.0.0** comes with the following WBS Images:
+### Wikibase Release Pipeline 3.0.0
 
-| WBS Image             | WBS Version | Upstream Version     | Base Image                    | Distribution    |
-| --------------------- | ----------- | -------------------- | ----------------------------- | --------------- |
-| Wikibase Image        | 3.0.0       | MediaWiki 1.42.1     | PHP 8.3.8 apache              | Debian Bookworm |
-| WDQS Image            | 1.0.0       | WDQS 0.3.142         | JRE Eclipse Temurin 8u412-b08 | Debian Bookworm |
-| WDQS Frontend Image   | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
-| WDQS Proxy Image      | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
-| QuickStatements Image | 1.0.0       | N/A                  | PHP 8.3.8 Apache              | Debian Bookworm |
-| ElasticSearch Image   | 1.0.0       | ElasticSearch 7.10.2 | N/A                           | N/A             |
+#### WBS Images
+
+| Image               | WBS Version | Upstream Version     | Base Image                    | Distribution    |
+| ------------------- | ----------- | -------------------- | ----------------------------- | --------------- |
+| WBS Wikibase        | 3.0.0       | MediaWiki 1.42.1     | PHP 8.3.8 apache              | Debian Bookworm |
+| WBS WDQS            | 1.0.0       | WDQS 0.3.142         | JRE Eclipse Temurin 8u412-b08 | Debian Bookworm |
+| WBS WDQS Frontend   | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
+| WBS WDQS Proxy      | 1.0.0       | N/A                  | Nginx 1.27.0                  | Debian Bookworm |
+| WBS QuickStatements | 1.0.0       | N/A                  | PHP 8.3.8 Apache              | Debian Bookworm |
+| WBS ElasticSearch   | 1.0.0       | ElasticSearch 7.10.2 | N/A                           | N/A             |
+
+#### WBS Deploy 3.0.0
+
+https://phabricator.wikimedia.org/T365569
+
+On top of the images above, WBS Deploy uses:
+
+| Image               | Upstream Version     |
+| ------------------- | -------------------- |
+| MariaDB             | 10.11                |
+| Traefik             | 3.1                  |
 
 ## April 2024: Security releases for 1.39.7
 
