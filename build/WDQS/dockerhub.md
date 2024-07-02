@@ -9,10 +9,10 @@ If you want to host your own WBS instance, head over to the [WBS Deploy document
 Version specific documentation for this image is hosted in our [git repository](https://github.com/wmde/wikibase-release-pipeline/).
 
 ## Currently supported versions
+
 - July 2024 [3.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-3/build/WDQS/README.md)
 - July 2024 [2.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-2/build/WDQS/README.md)
 - July 2024 [1.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-1/build/WDQS/README.md)
-
 
 ## Legacy versions
 
