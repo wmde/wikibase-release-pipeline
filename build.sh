@@ -17,6 +17,7 @@ source ./versions.inc.sh
 
 DOCKER_BUILD_CACHE_OPT=""
 
+
 # ℹ️ Update Commit Hashes
 function update_commit_hashes {
     docker build ./test -t wikibase-test-runner
