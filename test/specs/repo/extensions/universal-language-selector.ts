@@ -11,7 +11,12 @@ describe( 'UniversalLanguageSelector', function () {
 
 		// MediaWiki 1.39 default skin sets up language selector differently than subsequent versions,
 		// this exception can be removed once MW 1.39 is no longer supported.
-		if ( parseSemVer( testEnv.vars.MEDIAWIKI_VERSION ).minor > 39 ) {
+		if ( parseSemVer( testEnv.vars.MEDIAWIKI_VERSION ).minor === 39 ) {
+			await $( '#searchInput' ).click();
+			await $( '.imeselector' ).click();
+
+			await expect( $( '.imeselector-menu h3' ) ).toHaveText( 'English' );
+		} else {
 			await $( '#searchform input' ).click();
 			// work around lang selector not showing up the first time
 			// blur the search bar
@@ -28,11 +33,6 @@ describe( 'UniversalLanguageSelector', function () {
 			await expect(
 				$( 'div.imeselector-menu h3.ime-list-title' ).getHTML()
 			).resolves.toMatch( /English/ );
-		} else {
-			await $( '#searchInput' ).click();
-			await $( '.imeselector' ).click();
-
-			await expect( $( '.imeselector-menu h3' ) ).toHaveText( 'English' );
 		}
 	} );
 } );
