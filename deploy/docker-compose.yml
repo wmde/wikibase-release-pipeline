@@ -44,7 +44,7 @@ services:
     depends_on:
       wikibase:
         condition: service_healthy
-    restart: always
+    restart: unless-stopped
     volumes_from:
       - wikibase
 
