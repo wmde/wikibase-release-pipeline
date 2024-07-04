@@ -144,7 +144,7 @@ WBS Deploy and WBS Images are released using this repository. The process involv
 - [ ] Create a release PR with the following changes targeting the appropriate `deploy-X` release branch.
   - [ ] **Update `variables.env`** by adjusting WBS versions and upstream versions. You can find further instructions in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
   - [ ] **Update `CHANGES.md`** by adding a section following the example of previous releases.
-  - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failue, some specs could be flaky.
+  - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failure, some specs could be flaky.
 - [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release PR on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-BRANCHNAME`, e.g., `dev-releaseprep`. This tag can be used to set up an instance running your release PR version.
 - [ ] **Get two reviews on the release PR** so that it is ready to be merged. **Merging to `deploy-X` later will trigger the release to Docker Hub.** Do not merge yet!
 - [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1kHhKKwHlwq_P9x4j8-UnzV72yq0AYpsZ) using a template.
