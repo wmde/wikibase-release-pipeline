@@ -193,13 +193,9 @@ COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
 COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 
-# MediaWiki build time configuration
-ARG MW_WG_SITENAME
-ARG MW_WG_LANGUAGE_CODE
-
-ENV DB_NAME=my_wiki\
-    MW_WG_SITENAME=${MW_WG_SITENAME}\
-    MW_WG_LANGUAGE_CODE=${MW_WG_LANGUAGE_CODE}\
+ENV DB_NAME=my_wiki \
+    MW_WG_SITENAME=wikibase \
+    MW_WG_LANGUAGE_CODE=en \
     ELASTICSEARCH_PORT=9200
 
 ENTRYPOINT ["/bin/bash"]

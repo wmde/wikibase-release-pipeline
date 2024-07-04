@@ -17,6 +17,7 @@ source ./versions.inc.sh
 
 DOCKER_BUILD_CACHE_OPT=""
 
+
 # ℹ️ Update Commit Hashes
 function update_commit_hashes {
     docker build ./test -t wikibase-test-runner
@@ -76,9 +77,6 @@ function build_wikibase {
         --build-arg WIKIBASEMANIFEST_COMMIT="$WIKIBASEMANIFEST_COMMIT" \
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
-        \
-        --build-arg MW_WG_SITENAME="wikibase" \
-        --build-arg MW_WG_LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
         \
@@ -175,9 +173,6 @@ function build_quickstatements {
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
-        \
-        --build-arg SITENAME="wikibase" \
-        --build-arg LANGUAGE_CODE="en" \
         \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
         \

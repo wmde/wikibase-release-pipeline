@@ -117,7 +117,6 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
 | _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION*         | 3.1.7_es7.20.2            | Same as above, but also mentioning the current Elasticsearch version.                                                                                                                                                                      |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
-| deploy-_WBS-DEPLOY-VERSION_                     | deploy-3                  | Tags the latest image compatible with the given version of [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md).                                                                                               |
 
 
 ## Source

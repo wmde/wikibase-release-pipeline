@@ -7,6 +7,7 @@ networks:
 
 services:
   wikibase:
+    image: wikibase/wikibase
     volumes:
       - wikibase-config:/config
       - ./LocalSettings.override.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
@@ -15,7 +16,26 @@ services:
       MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
       QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
 
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+
+  elasticsearch:
+    image: wikibase/elasticsearch
+
+  wdqs:
+    image: wikibase/wdqs
+
+  wdqs-updater:
+    image: wikibase/wdqs
+
+  wdqs-proxy:
+    image: wikibase/wdqs-proxy
+
+  wdqs-frontend:
+    image: wikibase/wdqs-frontend
+
   quickstatements:
+    image: wikibase/quickstatements
     environment:
       WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}
       QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
