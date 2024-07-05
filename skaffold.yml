@@ -1,0 +1,127 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: wikibase-suite
+build:
+  artifacts:
+    - image: wikibase
+      context: build/Wikibase
+      docker:
+        buildArgs:
+          PHP_IMAGE_URL: "{{.PHP_IMAGE_URL}}"
+          COMPOSER_IMAGE_URL: "{{.COMPOSER_IMAGE_URL}}"
+          MEDIAWIKI_VERSION: "{{.MEDIAWIKI_VERSION}}"
+          WIKIBASE_COMMIT: "{{.WIKIBASE_COMMIT}}"
+          BABEL_COMMIT: "{{.BABEL_COMMIT}}"
+          CLDR_COMMIT: "{{.CLDR_COMMIT}}"
+          CIRRUSSEARCH_COMMIT: "{{.CIRRUSSEARCH_COMMIT}}"
+          CONFIRMEDIT_COMMIT: "{{.CONFIRMEDIT_COMMIT}}"
+          ELASTICA_COMMIT: "{{.ELASTICA_COMMIT}}"
+          ENTITYSCHEMA_COMMIT: "{{.ENTITYSCHEMA_COMMIT}}"
+          NUKE_COMMIT: "{{.NUKE_COMMIT}}"
+          OAUTH_COMMIT: "{{.OAUTH_COMMIT}}"
+          SCRIBUNTO_COMMIT: "{{.SCRIBUNTO_COMMIT}}"
+          SYNTAXHIGHLIGHT_GESHI_COMMIT: "{{.SYNTAXHIGHLIGHT_GESHI_COMMIT}}"
+          UNIVERSALLANGUAGESELECTOR_COMMIT: "{{.UNIVERSALLANGUAGESELECTOR_COMMIT}}"
+          VISUALEDITOR_COMMIT: "{{.VISUALEDITOR_COMMIT}}"
+          WIKIBASECIRRUSSEARCH_COMMIT: "{{.WIKIBASECIRRUSSEARCH_COMMIT}}"
+          WIKIBASEMANIFEST_COMMIT: "{{.WIKIBASEMANIFEST_COMMIT}}"
+          WIKIBASEEDTF_COMMIT: "{{.WIKIBASEEDTF_COMMIT}}"
+          WIKIBASELOCALMEDIA_COMMIT: "{{.WIKIBASELOCALMEDIA_COMMIT}}"
+
+    - image: elasticsearch
+      context: build/Elasticsearch
+      docker:
+        buildArgs:
+          ELASTICSEARCH_IMAGE_URL: "{{.ELASTICSEARCH_IMAGE_URL}}"
+          ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA: "{{.ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA}}"
+          ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER: "{{.ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER}}"
+
+    - image: wdqs
+      context: build/WDQS
+      docker:
+        buildArgs:
+          DEBIAN_IMAGE_URL: "{{.DEBIAN_IMAGE_URL}}"
+          JRE_IMAGE_URL: "{{.JRE_IMAGE_URL}}"
+          WDQS_VERSION: "{{.WDQS_VERSION}}"
+
+    - image: wdqs-frontend
+      context: build/WDQS-frontend
+      docker:
+        buildArgs:
+          COMPOSER_IMAGE_URL: "{{.COMPOSER_IMAGE_URL}}"
+          NGINX_IMAGE_URL: "{{.NGINX_IMAGE_URL}}"
+          NODE_IMAGE_URL: "{{.NODE_IMAGE_URL}}"
+          WDQSQUERYGUI_COMMIT: "{{.WDQSQUERYGUI_COMMIT}}"
+
+    - image: wdqs-proxy
+      context: build/WDQS-proxy
+      docker:
+        buildArgs:
+          NGINX_IMAGE_URL: "{{.NGINX_IMAGE_URL}}"
+
+    - image: quickstatements
+      context: build/QuickStatements
+      docker:
+        buildArgs:
+          COMPOSER_IMAGE_URL: "{{.COMPOSER_IMAGE_URL}}"
+          PHP_IMAGE_URL: "{{.PHP_IMAGE_URL}}"
+          QUICKSTATEMENTS_COMMIT: "{{.QUICKSTATEMENTS_COMMIT}}"
+          MAGNUSTOOLS_COMMIT: "{{.MAGNUSTOOLS_COMMIT}}"
+
+  # Add build hooks to run the tagging script
+  hooks:
+    after:
+      - name: tag-images
+        command: ["bash", "skaffold_tag_images.sh"]
+
+profiles:
+  - name: multiplatform
+    build:
+      artifacts:
+        - image: wikibase
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+        - image: elasticsearch
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+        - image: wdqs
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+        - image: wdqs-frontend
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+        - image: wdqs-proxy
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+        - image: quickstatements
+          docker:
+            buildArgs:
+              PLATFORM: linux/amd64,linux/arm64 
+
+  - name: no-cache
+    build:
+      artifacts:
+        - image: wikibase
+          docker:
+            noCache: true
+        - image: elasticsearch
+          docker:
+            noCache: true
+        - image: wdqs
+          docker:
+            noCache: true
+        - image: wdqs-frontend
+          docker:
+            noCache: true
+        - image: wdqs-proxy
+          docker:
+            noCache: true
+        - image: quickstatements
+          docker:
+            noCache: true
