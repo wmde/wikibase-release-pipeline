@@ -142,7 +142,7 @@ WBS Deploy and WBS Images are released using this repository. The process involv
 - [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and/or related changes need to be included in the release, add them as subtasks of this release ticket.
 - [ ] **To release breaking changes** as a new major version of WBS Deploy, create a new branch called `deploy-X`, where `X` is the new major version.
 - [ ] **Create a release PR** from a release preparation branch with the following changes targeting the appropriate `deploy-X` release branch.
-  - [ ] **Backports from `main`** obtained by cherrypicking commits commits from `main` to the release preparation branch.
+  - [ ] **Backport from `main`** by cherrypicking commits from `main` to the release preparation branch.
   - [ ] **Update `variables.env`** by adjusting WBS versions and upstream versions. You can find further instructions in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
   - [ ] **Update `CHANGES.md`** by adding a section following the example of previous releases.
   - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failure, some specs could be flaky.
