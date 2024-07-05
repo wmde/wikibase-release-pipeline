@@ -20,7 +20,7 @@ DOCKER_BUILD_CACHE_OPT=""
 
 # ℹ️ Update Commit Hashes
 function update_commit_hashes {
-    docker build ./test -t wikibase-test-runner
+    docker buildx build ./test -t wikibase-test-runner
     docker run --rm -v "$(pwd)":/workspace wikibase-test-runner bash -c "
         cd /workspace
         python3 update_commits.py
@@ -51,16 +51,15 @@ function image_url_to_image_name {
 
 
 function build_wikibase {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg MEDIAWIKI_VERSION="$MEDIAWIKI_VERSION" \
-        \
         --build-arg WIKIBASE_COMMIT="$WIKIBASE_COMMIT" \
-        --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
-        --build-arg CLDR_COMMIT="$CLDR_COMMIT" \
         --build-arg BABEL_COMMIT="$BABEL_COMMIT" \
         --build-arg CLDR_COMMIT="$CLDR_COMMIT" \
         --build-arg CIRRUSSEARCH_COMMIT="$CIRRUSSEARCH_COMMIT" \
@@ -77,29 +76,26 @@ function build_wikibase {
         --build-arg WIKIBASEMANIFEST_COMMIT="$WIKIBASEMANIFEST_COMMIT" \
         --build-arg WIKIBASEEDTF_COMMIT="$WIKIBASEEDTF_COMMIT" \
         --build-arg WIKIBASELOCALMEDIA_COMMIT="$WIKIBASELOCALMEDIA_COMMIT" \
-        \
         -t "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" \
-        \
         build/Wikibase
 
     mapfile -t tags < <(version_tags "wikibase")
     for tag in "${tags[@]}"; do
         docker tag "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL" "$WIKIBASE_SUITE_WIKIBASE_IMAGE_URL:$tag"
     done
-
 }
 
 
 function build_elasticseach {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg=ELASTICSEARCH_IMAGE_URL="$ELASTICSEARCH_IMAGE_URL" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA" \
         --build-arg=ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER="$ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER" \
-        \
         -t "$WIKIBASE_SUITE_ELASTICSEARCH_IMAGE_URL" \
-        \
         build/Elasticsearch
 
     mapfile -t tags < <(version_tags "elasticsearch")
@@ -110,15 +106,15 @@ function build_elasticseach {
 
 
 function build_wdqs {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg DEBIAN_IMAGE_URL="$DEBIAN_IMAGE_URL" \
         --build-arg JRE_IMAGE_URL="$JRE_IMAGE_URL" \
         --build-arg WDQS_VERSION="$WDQS_VERSION" \
-        \
         -t "$WIKIBASE_SUITE_WDQS_IMAGE_URL" \
-        \
         build/WDQS
 
     mapfile -t tags < <(version_tags "wdqs")
@@ -129,16 +125,16 @@ function build_wdqs {
 
 
 function build_wdqs-frontend {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
         --build-arg NODE_IMAGE_URL="$NODE_IMAGE_URL" \
         --build-arg WDQSQUERYGUI_COMMIT="$WDQSQUERYGUI_COMMIT" \
-        \
         -t "$WIKIBASE_SUITE_WDQS_FRONTEND_IMAGE_URL" \
-        \
         build/WDQS-frontend
 
     mapfile -t tags < <(version_tags "wdqs-frontend")
@@ -149,13 +145,13 @@ function build_wdqs-frontend {
 
 
 function build_wdqs-proxy {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg NGINX_IMAGE_URL="$NGINX_IMAGE_URL" \
-        \
         -t "$WIKIBASE_SUITE_WDQS_PROXY_IMAGE_URL" \
-        \
         build/WDQS-proxy
 
     mapfile -t tags < <(version_tags "wdqs-proxy")
@@ -166,16 +162,16 @@ function build_wdqs-proxy {
 
 
 function build_quickstatements {
-    docker build \
+    docker buildx build \
         --quiet \
         $DOCKER_BUILD_CACHE_OPT \
+        --platform "$BUILD_PLATFORM" \
+        --load \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg QUICKSTATEMENTS_COMMIT="$QUICKSTATEMENTS_COMMIT" \
         --build-arg MAGNUSTOOLS_COMMIT="$MAGNUSTOOLS_COMMIT" \
-        \
         -t "$WIKIBASE_SUITE_QUICKSTATEMENTS_IMAGE_URL" \
-        \
         build/QuickStatements
 
     mapfile -t tags < <(version_tags "quickstatements")
