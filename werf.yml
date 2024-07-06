@@ -28,9 +28,6 @@ images:
       WIKIBASELOCALMEDIA_COMMIT: $WIKIBASELOCALMEDIA_COMMIT
     tags:
       - "{{ .WBS_WIKIBASE_VERSION }}-{{ .MEDIAWIKI_VERSION }}"
-      - "{{ .WBS_WIKIBASE_VERSION }}"
-      - "{{ .WBS_WIKIBASE_VERSION | split:'.' | first }}"
-      - "{{ .WBS_WIKIBASE_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/Wikibase
         to: /
@@ -44,9 +41,6 @@ images:
       ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER: $ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER
     tags:
       - "{{ .WBS_ELASTICSEARCH_VERSION }}-es{{ .ELASTICSEARCH_VERSION }}"
-      - "{{ .WBS_ELASTICSEARCH_VERSION }}"
-      - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | first }}"
-      - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/Elasticsearch
         to: /
@@ -60,9 +54,6 @@ images:
       WDQS_VERSION: $WDQS_VERSION
     tags:
       - "{{ .WBS_WDQS_VERSION }}-wdqs{{ .WDQS_VERSION }}"
-      - "{{ .WBS_WDQS_VERSION }}"
-      - "{{ .WBS_WDQS_VERSION | split:'.' | first }}"
-      - "{{ .WBS_WDQS_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/WDQS
         to: /
@@ -77,8 +68,6 @@ images:
       WDQSQUERYGUI_COMMIT: $WDQSQUERYGUI_COMMIT
     tags:
       - "{{ .WBS_WDQS_FRONTED_VERSION }}"
-      - "{{ .WBS_WDQS_FRONTED_VERSION | split:'.' | first }}"
-      - "{{ .WBS_WDQS_FRONTED_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/WDQS-frontend
         to: /
@@ -90,8 +79,6 @@ images:
       NGINX_IMAGE_URL: $NGINX_IMAGE_URL
     tags:
       - "{{ .WBS_WDQS_PROXY_VERSION }}"
-      - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | first }}"
-      - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/WDQS-proxy
         to: /
@@ -106,8 +93,6 @@ images:
       MAGNUSTOOLS_COMMIT: $MAGNUSTOOLS_COMMIT
     tags:
       - "{{ .WBS_QUICKSTATEMENTS_VERSION }}"
-      - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | first }}"
-      - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | take:2 | join:'.' }}"
     git:
       - add: build/QuickStatements
         to: /
