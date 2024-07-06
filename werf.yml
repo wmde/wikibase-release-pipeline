@@ -1,102 +1,88 @@
-configVersion: 1
-project: wikibase-suite
+configVersion: 2
 
-build:
-  images:
-    - name: wikibase
-      from: {{ .WIKIBASE_BASE_IMAGE_URL }}
-      dockerfile: build/Wikibase/Dockerfile
-      args:
-        PHP_IMAGE_URL: $PHP_IMAGE_URL
-        COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
-        MEDIAWIKI_VERSION: $MEDIAWIKI_VERSION
-        WIKIBASE_COMMIT: $WIKIBASE_COMMIT
-        BABEL_COMMIT: $BABEL_COMMIT
-        CLDR_COMMIT: $CLDR_COMMIT
-        CIRRUSSEARCH_COMMIT: $CIRRUSSEARCH_COMMIT
-        CONFIRMEDIT_COMMIT: $CONFIRMEDIT_COMMIT
-        ELASTICA_COMMIT: $ELASTICA_COMMIT
-        ENTITYSCHEMA_COMMIT: $ENTITYSCHEMA_COMMIT
-        NUKE_COMMIT: $NUKE_COMMIT
-        OAUTH_COMMIT: $OAUTH_COMMIT
-        SCRIBUNTO_COMMIT: $SCRIBUNTO_COMMIT
-        SYNTAXHIGHLIGHT_GESHI_COMMIT: $SYNTAXHIGHLIGHT_GESHI_COMMIT
-        UNIVERSALLANGUAGESELECTOR_COMMIT: $UNIVERSALLANGUAGESELECTOR_COMMIT
-        VISUALEDITOR_COMMIT: $VISUALEDITOR_COMMIT
-        WIKIBASECIRRUSSEARCH_COMMIT: $WIKIBASECIRRUSSEARCH_COMMIT
-        WIKIBASEMANIFEST_COMMIT: $WIKIBASEMANIFEST_COMMIT
-        WIKIBASEEDTF_COMMIT: $WIKIBASEEDTF_COMMIT
-        WIKIBASELOCALMEDIA_COMMIT: $WIKIBASELOCALMEDIA_COMMIT
-      tags:
-        - "{{ .WBS_WIKIBASE_VERSION }}-{{ .MEDIAWIKI_VERSION }}"
-        - "{{ .WBS_WIKIBASE_VERSION }}"
-      git:
-        - add: build/Wikibase
-          to: /
+---
+image: wikibase
+dockerfile: build/Wikibase/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  PHP_IMAGE_URL: $PHP_IMAGE_URL
+  COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
+  MEDIAWIKI_VERSION: $MEDIAWIKI_VERSION
+tags:
+  - "{{ .WBS_WIKIBASE_VERSION }}-{{ .MEDIAWIKI_VERSION }}"
+  - "{{ .WBS_WIKIBASE_VERSION }}"
+  - "{{ .WBS_WIKIBASE_VERSION | split:'.' | first }}"
+  - "{{ .WBS_WIKIBASE_VERSION | split:'.' | take:2 | join:'.' }}"
 
-    - name: elasticsearch
-      from: {{ .ELASTICSEARCH_BASE_IMAGE_URL }}
-      dockerfile: build/Elasticsearch/Dockerfile
-      args:
-        ELASTICSEARCH_IMAGE_URL: $ELASTICSEARCH_IMAGE_URL
-        ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA: $ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA
-        ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER: $ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER
-      tags:
-        - "{{ .WBS_ELASTICSEARCH_VERSION }}-es{{ .ELASTICSEARCH_VERSION }}"
-        - "{{ .WBS_ELASTICSEARCH_VERSION }}"
-      git:
-        - add: build/Elasticsearch
-          to: /
+---
+image: elasticsearch
+dockerfile: build/Elasticsearch/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  ELASTICSEARCH_IMAGE_URL: $ELASTICSEARCH_IMAGE_URL
+  ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA: $ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA
+  ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER: $ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER
+tags:
+  - "{{ .WBS_ELASTICSEARCH_VERSION }}-es{{ .ELASTICSEARCH_VERSION }}"
+  - "{{ .WBS_ELASTICSEARCH_VERSION }}"
+  - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | first }}"
+  - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | take:2 | join:'.' }}"
 
-    - name: wdqs
-      from: {{ .WDQS_BASE_IMAGE_URL }}
-      dockerfile: build/WDQS/Dockerfile
-      args:
-        DEBIAN_IMAGE_URL: $DEBIAN_IMAGE_URL
-        JRE_IMAGE_URL: $JRE_IMAGE_URL
-        WDQS_VERSION: $WDQS_VERSION
-      tags:
-        - "{{ .WBS_WDQS_VERSION }}-wdqs{{ .WDQS_VERSION }}"
-        - "{{ .WBS_WDQS_VERSION }}"
-      git:
-        - add: build/WDQS
-          to: /
+---
+image: wdqs
+dockerfile: build/WDQS/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  DEBIAN_IMAGE_URL: $DEBIAN_IMAGE_URL
+  JRE_IMAGE_URL: $JRE_IMAGE_URL
+  WDQS_VERSION: $WDQS_VERSION
+tags:
+  - "{{ .WBS_WDQS_VERSION }}-wdqs{{ .WDQS_VERSION }}"
+  - "{{ .WBS_WDQS_VERSION }}"
+  - "{{ .WBS_WDQS_VERSION | split:'.' | first }}"
+  - "{{ .WBS_WDQS_VERSION | split:'.' | take:2 | join:'.' }}"
 
-    - name: wdqs-frontend
-      from: {{ .WDQS_FRONTEND_BASE_IMAGE_URL }}
-      dockerfile: build/WDQS-frontend/Dockerfile
-      args:
-        COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
-        NGINX_IMAGE_URL: $NGINX_IMAGE_URL
-        NODE_IMAGE_URL: $NODE_IMAGE_URL
-        WDQSQUERYGUI_COMMIT: $WDQSQUERYGUI_COMMIT
-      tags:
-        - "{{ .WBS_WDQS_FRONTED_VERSION }}"
-      git:
-        - add: build/WDQS-frontend
-          to: /
+---
+image: wdqs-frontend
+dockerfile: build/WDQS-frontend/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
+  NGINX_IMAGE_URL: $NGINX_IMAGE_URL
+  NODE_IMAGE_URL: $NODE_IMAGE_URL
+  WDQSQUERYGUI_COMMIT: $WDQSQUERYGUI_COMMIT
+tags:
+  - "{{ .WBS_WDQS_FRONTEND_VERSION }}"
+  - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | first }}"
+  - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | take:2 | join:'.' }}"
 
-    - name: wdqs-proxy
-      from: {{ .WDQS_PROXY_BASE_IMAGE_URL }}
-      dockerfile: build/WDQS-proxy/Dockerfile
-      args:
-        NGINX_IMAGE_URL: $NGINX_IMAGE_URL
-      tags:
-        - "{{ .WBS_WDQS_PROXY_VERSION }}"
-      git:
-        - add: build/WDQS-proxy
-          to: /
+---
+image: wdqs-proxy
+dockerfile: build/WDQS-proxy/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  NGINX_IMAGE_URL: $NGINX_IMAGE_URL
+tags:
+  - "{{ .WBS_WDQS_PROXY_VERSION }}"
+  - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | first }}"
+  - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | take:2 | join:'.' }}"
 
-    - name: quickstatements
-      from: {{ .QUICKSTATEMENTS_BASE_IMAGE_URL }}
-      dockerfile: build/QuickStatements/Dockerfile
-      args:
-        COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
-        PHP_IMAGE_URL: $PHP_IMAGE_URL
-        QUICKSTATEMENTS_COMMIT: $QUICKSTATEMENTS_COMMIT
-        MAGNUSTOOLS_COMMIT: $MAGNUSTOOLS_COMMIT
-      tags:
-        - "{{ .WBS_QUICKSTATEMENTS_VERSION }}"
-      git:
-        - add: build/QuickStatements
-          to: /
+---
+image: quickstatements
+dockerfile: build/QuickStatements/Dockerfile
+context: .
+platform: [ 'linux/amd64' ]
+args:
+  COMPOSER_IMAGE_URL: $COMPOSER_IMAGE_URL
+  PHP_IMAGE_URL: $PHP_IMAGE_URL
+  QUICKSTATEMENTS_COMMIT: $QUICKSTATEMENTS_COMMIT
+  MAGNUSTOOLS_COMMIT: $MAGNUSTOOLS_COMMIT
+tags:
+  - "{{ .WBS_QUICKSTATEMENTS_VERSION }}"
+  - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | first }}"
+  - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | take:2 | join:'.' }}"
