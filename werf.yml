@@ -96,23 +96,3 @@ images:
     git:
       - add: build/QuickStatements
         to: /
-
-deploy:
-  templates:
-    - name: wikibase
-      path: deploy/wikibase.yaml
-
-    - name: elasticsearch
-      path: deploy/elasticsearch.yaml
-
-    - name: wdqs
-      path: deploy/wdqs.yaml
-
-    - name: wdqs-frontend
-      path: deploy/wdqs-frontend.yaml
-
-    - name: wdqs-proxy
-      path: deploy/wdqs-proxy.yaml
-
-    - name: quickstatements
-      path: deploy/quickstatements.yaml

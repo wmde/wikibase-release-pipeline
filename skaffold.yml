@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta29
+apiVersion: skaffold/v4beta11
 kind: Config
 metadata:
   name: wikibase-suite
@@ -69,12 +69,9 @@ build:
           QUICKSTATEMENTS_COMMIT: "{{.QUICKSTATEMENTS_COMMIT}}"
           MAGNUSTOOLS_COMMIT: "{{.MAGNUSTOOLS_COMMIT}}"
 
-  # Add build hooks to run the tagging script
   hooks:
     after:
-      - name: tag-images
-        command: ["bash", "skaffold_tag_images.sh"]
-
+      - command: ["bash", "skaffold_tag_images.sh"]
 profiles:
   - name: multiplatform
     build:
@@ -125,3 +122,26 @@ profiles:
         - image: quickstatements
           docker:
             noCache: true
+
+  - name: local-only
+    build:
+      local: {}
+      # artifacts:
+      #   - image: wikibase
+      #     docker:
+      #       local: true
+      #   - image: elasticsearch
+      #     docker:
+      #       local: true
+      #   - image: wdqs
+      #     docker:
+      #       local: true
+      #   - image: wdqs-frontend
+      #     docker:
+      #       local: true
+      #   - image: wdqs-proxy
+      #     docker:
+      #       local: true
+      #   - image: quickstatements
+      #     docker:
+      #       local: true
