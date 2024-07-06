@@ -12,8 +12,8 @@ args:
 tags:
   - "{{ .WBS_WIKIBASE_VERSION }}-{{ .MEDIAWIKI_VERSION }}"
   - "{{ .WBS_WIKIBASE_VERSION }}"
-  - "{{ .WBS_WIKIBASE_VERSION | split:'.' | first }}"
-  - "{{ .WBS_WIKIBASE_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_WIKIBASE_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_WIKIBASE_VERSION | split:'.' | take:2 | join:'.' }}"
 
 ---
 image: elasticsearch
@@ -27,8 +27,8 @@ args:
 tags:
   - "{{ .WBS_ELASTICSEARCH_VERSION }}-es{{ .ELASTICSEARCH_VERSION }}"
   - "{{ .WBS_ELASTICSEARCH_VERSION }}"
-  - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | first }}"
-  - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_ELASTICSEARCH_VERSION | split:'.' | take:2 | join:'.' }}"
 
 ---
 image: wdqs
@@ -42,8 +42,8 @@ args:
 tags:
   - "{{ .WBS_WDQS_VERSION }}-wdqs{{ .WDQS_VERSION }}"
   - "{{ .WBS_WDQS_VERSION }}"
-  - "{{ .WBS_WDQS_VERSION | split:'.' | first }}"
-  - "{{ .WBS_WDQS_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_WDQS_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_WDQS_VERSION | split:'.' | take:2 | join:'.' }}"
 
 ---
 image: wdqs-frontend
@@ -57,8 +57,8 @@ args:
   WDQSQUERYGUI_COMMIT: $WDQSQUERYGUI_COMMIT
 tags:
   - "{{ .WBS_WDQS_FRONTEND_VERSION }}"
-  - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | first }}"
-  - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_WDQS_FRONTEND_VERSION | split:'.' | take:2 | join:'.' }}"
 
 ---
 image: wdqs-proxy
@@ -69,8 +69,8 @@ args:
   NGINX_IMAGE_URL: $NGINX_IMAGE_URL
 tags:
   - "{{ .WBS_WDQS_PROXY_VERSION }}"
-  - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | first }}"
-  - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_WDQS_PROXY_VERSION | split:'.' | take:2 | join:'.' }}"
 
 ---
 image: quickstatements
@@ -84,5 +84,5 @@ args:
   MAGNUSTOOLS_COMMIT: $MAGNUSTOOLS_COMMIT
 tags:
   - "{{ .WBS_QUICKSTATEMENTS_VERSION }}"
-  - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | first }}"
-  - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | take:2 | join:'.' }}"
+  # - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | first }}"
+  # - "{{ .WBS_QUICKSTATEMENTS_VERSION | split:'.' | take:2 | join:'.' }}"
