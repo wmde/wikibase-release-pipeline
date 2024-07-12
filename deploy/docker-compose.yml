@@ -173,11 +173,13 @@ services:
       # Basic setup
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # http endpoint
       - "--entrypoints.web.address=:80"
+      # https endpoint
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.websecure.asdefault"
       - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      # Redirects all http request to https
+      # http to https redirect
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
