@@ -1,4 +1,4 @@
-# Wikibase Suite Wikidata Query Service Image
+# Wikibase Suite Wikidata Query Service image
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 
@@ -17,16 +17,15 @@ In order to run WDQS, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
-run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
 
 ### WDQS as server
 
-One instance of the image to execute the actual WDQS daemon started using `/runBlazegraph.sh`.
+You'll need one instance of the image to execute the actual WDQS daemon started using `/runBlazegraph.sh`.
 
 ### WDQS as updater
 
-One instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
+You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
 
 ### WDQS Proxy for public facing setups
 
@@ -52,7 +51,7 @@ Variables in **bold** are required.
 
 ## Example
 
-An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
+Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
 
 ```yml
 services:
@@ -161,7 +160,7 @@ Official releases of this image can be found on [Docker Hub wikibase/wdqs](https
 
 ## Tags and Versioning
 
-This image uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This image uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 
@@ -178,7 +177,7 @@ We provide several tags that relate to the versioning semantics.
 
 When upgrading between WDQS versions, the data stored in `/wdqs/data` may not be compatible with the newer version. When testing the new image, if no data appears to have been loaded into the Query Service, you'll need to reload the data.
 
-If all changes still appear in [RecentChanges], simply removing `/wdqs/data` and restarting the service should reload all data.
+If all changes still appear in [RecentChanges], removing `/wdqs/data` and restarting the service should reload all data.
 
 However, [RecentChanges] are periodically purged of older entries, as determined by the MediaWiki configuration [\$wgRCMaxAge](https://www.mediawiki.org/wiki/Manual:$wgRCMaxAge).
 
@@ -189,7 +188,7 @@ If you can't use [RecentChanges], you'll need to reload from an RDF dump:
 
 ## Internal filesystem layout
 
-Hooking into the internal filesystem can be used to extend the functionality of this image.
+Hooking into the internal filesystem can extend the functionality of this image.
 
 | File                         | Description                                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -197,13 +196,13 @@ Hooking into the internal filesystem can be used to extend the functionality of 
 | `/wdqs/RWStore.properties`   | Properties for the service                                                                     |
 | `/templates/mwservices.json` | Template for MediaWiki services (populated and placed into `/wdqs/mwservices.json` at runtime) |
 
-## Known Issues
+## Known issues
 
 ### Updater keeps restarting
 
 In some situations the WDQS Updater enters a restart loop. A workaround is to start the updater once with manual `--init` `--start` parameters for the current day.
 
-In the docker compose example provided above, you could do:
+In the Docker Compose example provided above, you might run:
 
 ```sh
 docker compose stop wdqs-updater
@@ -219,6 +218,4 @@ This image is built from this [Dockerfile](https://github.com/wmde/wikibase-rele
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
-If you have questions not listed above or need help, use this [bug report
-form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start
-a conversation with the engineering team.
+If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.

@@ -1,10 +1,8 @@
 # Wikibase Suite QuickStatements Image
 
-[QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to
-batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
+[QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
-This image contains Quickstatements and the required Magnustools library. It is
-ready to be hooked up to MediaWiki OAuth on a WBS Wikibase Image.
+This image contains Quickstatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a WBS Wikibase image.
 
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
@@ -19,10 +17,9 @@ ready to be hooked up to MediaWiki OAuth on a WBS Wikibase Image.
 
 ### MediaWiki/Wikibase instance with
 
-#### Official WBS Wikibase Image
+#### Official WBS Wikibase image
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
-run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest to use the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
 
 #### Other Wikibase instances
 
@@ -36,24 +33,15 @@ php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
         --grants createeditmovepage --grants editpage --grants highvolume --jsonOnSuccess
 ```
 
-You can pass the consumer and secret token you got from your Wikibase instance
-to this container using the environment variables `OAUTH_CONSUMER_KEY` and
-`OAUTH_CONSUMER_SECRET`.
+You can pass the consumer and secret token you got from your Wikibase instance to this container using the environment variables `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`.
 
 ### Reverse proxy
 
-If QuickStatements and Wikibase are running on the same IP address, a reverse
-proxy is required to route HTTP requests to Wikibase or QuickStatements
-depending on the URL used to access them. See the [example](#Example) below for
-a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
+If QuickStatements and Wikibase are running on the same IP address, a reverse proxy is required to route HTTP requests to Wikibase or QuickStatements depending on the URL used to access them. See the [example](#Example) below for a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
 
 ### DNS resolution
 
-In order to authorize QuickStatements against Wikibase via OAuth, both services
-need to be accessible via DNS domain names, both, from within the docker
-network as well as from the users browser. The easiest way to archive this is
-by connecting both Wikibase and Quickstatements to the internet and let them
-use public DNS domain names.
+In order to authorize QuickStatements against Wikibase via OAuth, both services need to be accessible via DNS domain names, both from within the Docker network as well as from the user's browser. The easiest way to archive this is by connecting both Wikibase and Quickstatements to the internet and letting them use public DNS domain names.
 
 ### Environment variables
 
@@ -75,7 +63,7 @@ Variables in **bold** are required.
 
 ## Example
 
-An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
+Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
 
 ```yml
 services:
@@ -198,7 +186,7 @@ Official releases of this image can be found on [Docker Hub wikibase/quickstatem
 
 ## Tags and Versioning
 
-This image uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This image uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 
@@ -211,23 +199,19 @@ We provide several tags that relate to the versioning semantics.
 
 ## Known Issues
 
-Quickstatements' "Run in background" option is not supported by this image.
+QuickStatements' "Run in background" option is not supported by this image.
 
-Quickstatements' "Batches" require an database and are not supported by this image.
+QuickStatements' "Batches" require an database and are not supported by this image.
 
 ## Troubleshooting
 
-If you see an error such as `mw-oauth exception` when trying to log in, check
-that you have passed the correct consumer token and secret token to
-QuickStatements.
+If you see an error such as `mw-oauth exception` when trying to log in, check that you have passed the correct consumer token and secret token to QuickStatements.
 
-If you have changed the value of $wgSecretKey $wgOAuthSecretKey since you made
-the consumer, you'll need to make another new consumer or reissue the secret
-token for the old one.
+If you have changed the value of `$wgSecretKey` or `$wgOAuthSecretKey` since you made the consumer, you'll need to make another new consumer or reissue the secret token for the old one.
 
 ## Internal filesystem layout
 
-Hooking into the internal filesystem can be used to extend the functionality of this image.
+Hooking into the internal filesystem can extend the functionality of this image.
 
 | Directory                                   | Description                    |
 | ------------------------------------------- | ------------------------------ |

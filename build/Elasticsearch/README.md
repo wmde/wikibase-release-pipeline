@@ -18,14 +18,14 @@ In order to run Wikibase Elasticsearch, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
+We suggest using the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
 run all our tests against. Follow the setup instructions over there to get it up and running.
 
-Be sure to add the `ELASTICSEARCH_HOST` environment variable to you Wikibase container.
+Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase container.
 
 ## Example
 
-You can use the following example Docker Compose to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
+You can use the following example Docker Compose configuration to setup and run the image. Your Wikibase will be available on [http://localhost](http://localhost).
 
 ```yml
 services:
@@ -106,7 +106,7 @@ Official releases of this image can be found on [Docker Hub wikibase/elasticsear
 
 ## Tags and Versioning
 
-This Elasticsearch Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This Elasticsearch image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 
