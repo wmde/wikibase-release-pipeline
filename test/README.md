@@ -1,4 +1,4 @@
-# Test-cases
+# Test cases
 
 ## Wikibase
 
@@ -13,11 +13,11 @@
 
 ## Wikibase & WDQS/WDQS-frontend
 
-- [x] Create an item on Wikibase, and verify it can be found on Query Service (including the label etc)
-- [x] Delete an item on Wikibase, and verify that the item isn’t there on the query service any more
-- [x] Create an item with a statement and verify that querying using prefixes work correctly (wdt:P1 etc.. )
+- [x] Create an item on Wikibase and verify it can be found on Query Service (including the label, etc.)
+- [x] Delete an item on Wikibase and verify that the item is no longer there on the query service
+- [x] Create an item with a statement and verify that querying using prefixes works correctly (`wdt:P1`, etc.. )
 
-## Wikibase Client & Repo
+## Wikibase client & repo
 
 - [x] Create an item on repo with sitelink to client
 - [x] Create an item on repo and verify that client can reference it using wikitext
@@ -30,13 +30,13 @@
 ## Scribunto
 
 - [x] Verify Lua module can be executed
-- [x] Verify Lua module can be executed within time-limit
+- [x] Verify Lua module can be executed within time limit
 
-## Wikibase Federated properties (using wikidata.org as source wiki)
+## Wikibase federated properties (using wikidata.org as source wiki)
 
 - [x] Create an item on Wikibase and add a statement using a federated property
-  - [x] verify it is available with the correct rdf through the Entity page
-  - [x] verify it is available through the WDQS-frontend with the correct prefixes
+  - [x] Verify it is available with the correct rdf through the Entity page
+  - [x] Verify it is available through the WDQS-frontend with the correct prefixes
 
 ## Elasticsearch
 
@@ -50,7 +50,7 @@ The behavior of the tests can be modified with several environment variables.
 - `WIKIBASE_URL`: protocol, host name and port of the MediaWiki installation. Defaults to `http://127.0.0.1:8080` (Vagrant).
 - `MW_SCRIPT_PATH`: path to `index.php`, `api.php` etc. under `WIKIBASE_URL`. Defaults to `/w`.
 - `WIKIBASE_PROPERTY_STRING`, `WIKIBASE_PROPERTY_URL`, etc.: Property ID of a property with datatype `string`, `url`, etc. – if not set, a new property of this type will be created each time the tests are run. (This will fail unless anonymous users are allowed to create properties on the wiki, so setting `WIKIBASE_PROPERTY_STRING` correctly is recommended.)
-- `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test execution on http://localhost:7900/?autoconnect=1&resize=scale
+- `HEADED_TESTS`: set to `true` to run tests in a headed browser. Follow the test execution on http://localhost:7900/?autoconnect=1&resize=scale .
 
 ## Write more tests
 
