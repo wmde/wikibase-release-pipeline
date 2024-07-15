@@ -17,23 +17,19 @@ In order to run WDQS Frontend, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
-run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
 
 ### WDQS as server
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdqs).
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs).
 
 ### WDQS as updater
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Checkout the documentation how to run it in updater mode.
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Check out the [documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
 
 ### Reverse proxy
 
-If QuickStatements and Wikibase are running on the same IP address, a reverse
-proxy is required to route HTTP requests to Wikibase or QuickStatements
-depending on the URL used to access them. See the [example](#Example) below for
-a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
+If QuickStatements and Wikibase are running on the same IP address, a reverse proxy is required to route HTTP requests to Wikibase or QuickStatements, depending on the URL used to access them. See the [example](#Example) below for a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
 
 ### Environment variables
 
@@ -48,7 +44,7 @@ a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
 
 ## Example
 
-An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS Image](https://hub.docker.com/r/wikibase/wdqs) behind a [Traefik](https://hub.docker.com/_/traefik) reverse proxy using Docker Compose.
+Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs) behind a [Traefik](https://hub.docker.com/_/traefik) reverse proxy using Docker Compose.
 
 ```yml
 services:
@@ -191,7 +187,7 @@ Official releases of this image can be found on [Docker Hub wikibase/wdqs-fronte
 
 ## Tags and Versioning
 
-This WDQS Frontend Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 

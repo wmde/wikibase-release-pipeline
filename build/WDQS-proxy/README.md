@@ -1,6 +1,6 @@
-# Wikibase Suite WDQS Proxy Image
+# Wikibase Suite WDQS Proxy image
 
-Proxy to put in front of the WBS WDQS Image enforcing READONLY requests, query timeouts and limits access to blazegraph sparql endpoints.
+This is a proxy to put in front of the WBS WDQS image that enforces READONLY requests, implements query timeouts and limits access to Blazegraph SPARQL endpoints.
 
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
@@ -16,16 +16,15 @@ In order to run WDQS Proxy, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
-run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
 
 ### WDQS as server
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdqs).
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs).
 
 ### WDQS as updater
 
-We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Checkout the documentation how to run it in updater mode.
+We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Check out the [documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
 
 ## Environment variables
 
@@ -36,7 +35,7 @@ We suggest to use the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wdq
 
 ## Example
 
-An example how to run this image together with the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS Image](https://hub.docker.com/r/wikibase/wdqs) using Docker Compose.
+Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs) using Docker Compose.
 
 ```yml
 services:
@@ -146,7 +145,7 @@ Official releases of this image can be found on [Docker Hub wikibase/wdqs-fronte
 
 ## Tags and Versioning
 
-This WDQS Frontend Image is using [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 
@@ -161,7 +160,7 @@ We provide several tags that relate to the versioning semantics.
 
 ## Internal filesystem layout
 
-Hooking into the internal filesystem can be used to extend the functionality of this image.
+Hooking into the internal filesystem can extend the functionality of this image.
 
 | File                              | Description                                                                                               |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -177,6 +176,4 @@ This image is built from this [Dockerfile](https://github.com/wmde/wikibase-rele
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
-If you have questions not listed above or need help, use this [bug report
-form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start
-a conversation with the engineering team.
+If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
