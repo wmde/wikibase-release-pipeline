@@ -30,6 +30,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Login to dockerhub to prevent image pull rate limiting
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
       - run: ./build.sh ${{ matrix.component }}
 
       # TODO re-enable as soon as we make use of it
@@ -64,6 +71,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # Login to dockerhub to prevent image pull rate limiting
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - uses: ./.github/actions/pull-ghcr
         with:
