@@ -51,6 +51,8 @@ function version_tags() {
         tags+=("${WBS_ELASTICSEARCH_VERSION}-es${ELASTICSEARCH_VERSION}")
     elif [[ "$image_name" == "wdqs" ]]; then
         tags+=("${WBS_WDQS_VERSION}-wdqs${WDQS_VERSION}")
+    elif [[ "$image_name" == "quickstatements" ]]; then
+        tags+=("${WBS_QUICKSTATEMENTS_VERSION}-qs${QUICKSTATEMENTS_VERSION}")
     fi
 
     printf "%s\n" "${tags[@]}"
