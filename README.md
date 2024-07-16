@@ -4,7 +4,7 @@ Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in product
 
 If you want to host your own WBS instance, head over to the [WBS Deploy documentation](./deploy/README.md).
 
-If you're looking for individual WBS Images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+If you're looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
 > 🔧 This document is intended for people developing WBS.  
 
@@ -22,13 +22,13 @@ This repository contains the Wikibase Suite toolset used for:
 ### Build
 
 ```
-# Build all Wikibase Suite Images
+# Build all Wikibase Suite images
 $ ./build.sh
 
 # Build only the MediaWiki/Wikibase containers
 $ ./build.sh wikibase
 
-# Build the wdqs container without using Docker's cache
+# Build the WDQS container without using Docker's cache
 $ ./build.sh --no-cache wdqs
 ```
 
@@ -58,7 +58,7 @@ $ cd deploy
 $ docker compose up --wait
 ```
 
-Find more details in the [WBS Deploy documentations](./deploy/README.md).
+Find more details in the [WBS Deploy documentation](./deploy/README.md).
 
 ## Development setup
 
@@ -70,11 +70,11 @@ $ git config core.hooksPath .githooks
 
 ## Testing
 
-Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run in each suite by default are specified in the `.config.ts` file in each suite directory under the `specs` key.
+Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run by default in each suite are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
 All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
 
-You can run the tests in the docker container locally exactly as they are run in CI by using `test.sh`.
+You can run the tests in the Docker container locally exactly as they are run in CI by using `test.sh`.
 
 ## Examples usage of `./test.sh`:
 
@@ -85,10 +85,10 @@ You can run the tests in the docker container locally exactly as they are run in
 # Run all test suites
 ./test.sh all
 
-# Only run a single suite (e.g. repo)
+# Only run a single suite (e.g., repo)
 ./test.sh repo
 
-# Only run a specific file within the setup for any test suite (e.g., repo and the babel extension)
+# Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
 ./test.sh repo --spec specs/repo/extensions/babel.ts
 ```
 
@@ -134,7 +134,7 @@ For more information on testing, see the [README](./test/README.md).
 
 ## Release process
 
-WBS Deploy and WBS Images are released using this repository. The process involves updating all upstream component versions to be used, building images, testing all the images together and finally publishing them.
+WBS Deploy and WBS images are released using this repository. The process involves updating all upstream component versions to be used, building images, testing all the images together and finally publishing them.
 
 ### Release checklist Phabricator template
 
@@ -151,7 +151,7 @@ WBS Deploy and WBS Images are released using this repository. The process involv
 - [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1kHhKKwHlwq_P9x4j8-UnzV72yq0AYpsZ) using a template.
 - [ ] **Coordinate with ComCom on timing of the publication and the release**. Talk to SCoT (ComCom, technical writer) about this.
 - [ ] **Publish the release** by merging the release branch into the `deploy-X` branch. **ATTENTION: This will automatically push images to Docker Hub!**
-- [ ] **Merge back to main in a separate PR** from `deploy-X` to have adjustments to `CHANGES.md` and alike available on `main` too. Changes from `variables.env` should only be taken from a release of the latest version so that `main` always references the build of the latest components.
+- [ ] **Merge back to main in a separate PR** from `deploy-X` to have adjustments to `CHANGES.md` and the like available on `main` too. Changes from `variables.env` should only be taken from a release of the latest version so that `main` always references the build of the latest components.
 
 You`re done. **Congratulations!**
 ```
