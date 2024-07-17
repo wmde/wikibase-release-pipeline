@@ -208,7 +208,7 @@ In the Docker Compose example provided above, you might run:
 
 ```sh
 docker compose stop wdqs-updater
-docker compose run --rm wdqs-updater bash '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
+docker compose run --rm wdqs-updater bash '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST":"$WIKIBASE_PORT" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST":"$WIKIBASE_PORT" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
 # Ctrl-C to cancel once "Sleeping for 10 secs" is seen
 docker compose start wdqs-updater
 ```
