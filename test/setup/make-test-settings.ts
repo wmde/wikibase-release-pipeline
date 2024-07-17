@@ -16,7 +16,6 @@ export const ONE_DAY_IN_MS = 86400000;
 export const defaultTestSettings = {
 	envFiles: [
 		'../deploy/template.env',
-		'../variables.env',
 		'./test-services.env',
 		'../local.env'
 	],
