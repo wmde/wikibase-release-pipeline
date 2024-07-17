@@ -201,7 +201,7 @@ We provide several tags that relate to the versioning semantics.
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/WDQS-frontend/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs-frontend/Dockerfile).
 
 ## Authors
 

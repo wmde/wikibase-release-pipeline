@@ -121,7 +121,7 @@ We provide several tags that relate to the versioning semantics.
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/Elasticsearch/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/elasticsearch/Dockerfile).
 
 ## Authors & Contact
 

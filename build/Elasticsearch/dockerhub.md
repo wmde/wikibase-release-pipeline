@@ -10,12 +10,12 @@ Version specific documentation for this image is hosted in our [git repository](
 
 ## Currently supported versions
 
-- July 2024 [3.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-3/build/Elasticsearch/README.md)
-- July 2024 [2.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-2/build/Elasticsearch/README.md)
-- July 2024 [1.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-1/build/Elasticsearch/README.md)
+- July 2024 [3.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-3/build/elasticsearch/README.md)
+- July 2024 [2.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-2/build/elasticsearch/README.md)
+- July 2024 [1.x.x](https://github.com/wmde/wikibase-release-pipeline/blob/deploy-1/build/elasticsearch/README.md)
 
 ## Legacy versions
 
-- 17 April 2024 [7.10.2-wmde.20](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.20/build/Elasticsearch/README.md)
-- 17 April 2024 [7.10.2-wmde.19](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/build/Elasticsearch/README.md)
-- 29 April 2024 [7.10.2-wmde.18](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.18/build/Elasticsearch/README.md)
+- 17 April 2024 [7.10.2-wmde.20](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.20/build/elasticsearch/README.md)
+- 17 April 2024 [7.10.2-wmde.19](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.19/build/elasticsearch/README.md)
+- 29 April 2024 [7.10.2-wmde.18](https://github.com/wmde/wikibase-release-pipeline/blob/wmde.18/build/elasticsearch/README.md)

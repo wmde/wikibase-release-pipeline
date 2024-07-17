@@ -212,7 +212,7 @@ docker compose start wdqs-updater
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/WDQS/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs/Dockerfile).
 
 ## Authors & Contact
 

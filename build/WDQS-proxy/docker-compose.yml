@@ -1,0 +1,10 @@
+services:
+  wdqs-proxy:
+    image: ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION}
+    build:
+      context: .
+      args:
+        - NGINX_IMAGE_URL
+      tags:
+        - ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION_MAJOR}
+        - ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION_MINOR}

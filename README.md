@@ -29,7 +29,7 @@ $ ./build.sh
 $ ./build.sh wikibase
 
 # Build the WDQS container without using Docker's cache
-$ ./build.sh --no-cache wdqs
+$ ./build.sh wdqs --no-cache
 ```
 
 ### Test

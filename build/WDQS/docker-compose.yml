@@ -1,0 +1,13 @@
+services:
+  wdqs:
+    image: ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION}
+    build:
+      context: .
+      args:
+        - DEBIAN_IMAGE_URL
+        - JRE_IMAGE_URL
+        - WDQS_VERSION
+      tags:
+        - ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION_MAJOR}
+        - ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION_MINOR}
+        - ${WBS_WDQS_IMAGE_URL}:wdqs${WDQS_VERSION}
