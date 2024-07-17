@@ -39,7 +39,7 @@ function build() {
         derive_version_variables "$var"
     done
 
-    docker compose --env-file variables.env -f docker-compose.build.yml build "$@"
+    docker compose -f docker-compose.build.yml build "$@"
 }
 
 for arg in "$@"; do
