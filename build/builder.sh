@@ -12,8 +12,8 @@ source "$SCRIPT_DIR/build.env"
 # Find and source all build.env files in the $SCRIPT_DIR/build/*/ directories
 for build_env_file in "$SCRIPT_DIR"/*/build.env; 
 do 
-    # shellcheck disable=SC1091
-    source "$build_env_file"; 
+    # shellcheck disable=SC1090,SC1091
+    source "$build_env_file"
 done
 
 if [ -f "$SCRIPT_DIR/../local.env" ]; then
