@@ -1,0 +1,99 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+
+build:
+  local:
+    push: false
+    concurrency: 6
+
+  tagPolicy:
+    inputDigest: {}
+
+  # Extracts and applies correct full version number tag, but cannot create multiple tags
+  # tagPolicy:
+  #   envTemplate:
+  #     template: "{{ env (printf \"WBS_%s_VERSION\" (.IMAGE_NAME | replace \"wikibase/\" \"\" | upper)) }}"
+
+  artifacts:
+    - image: wikibase/wikibase
+      context: ./build/Wikibase
+      docker:
+        buildArgs:
+          PHP_IMAGE_URL: "{{ .PHP_IMAGE_URL }}"
+          COMPOSER_IMAGE_URL: "{{ .COMPOSER_IMAGE_URL }}"
+          MEDIAWIKI_VERSION: "{{ .MEDIAWIKI_VERSION }}"
+          WIKIBASE_COMMIT: "{{ .WIKIBASE_COMMIT }}"
+          BABEL_COMMIT: "{{ .BABEL_COMMIT }}"
+          CLDR_COMMIT: "{{ .CLDR_COMMIT }}"
+          CIRRUSSEARCH_COMMIT: "{{ .CIRRUSSEARCH_COMMIT }}"
+          CONFIRMEDIT_COMMIT: "{{ .CONFIRMEDIT_COMMIT }}"
+          ELASTICA_COMMIT: "{{ .ELASTICA_COMMIT }}"
+          ENTITYSCHEMA_COMMIT: "{{ .ENTITYSCHEMA_COMMIT }}"
+          NUKE_COMMIT: "{{ .NUKE_COMMIT }}"
+          OAUTH_COMMIT: "{{ .OAUTH_COMMIT }}"
+          SCRIBUNTO_COMMIT: "{{ .SCRIBUNTO_COMMIT }}"
+          SYNTAXHIGHLIGHT_GESHI_COMMIT: "{{ .SYNTAXHIGHLIGHT_GESHI_COMMIT }}"
+          UNIVERSALLANGUAGESELECTOR_COMMIT: "{{ .UNIVERSALLANGUAGESELECTOR_COMMIT }}"
+          VISUALEDITOR_COMMIT: "{{ .VISUALEDITOR_COMMIT }}"
+          WIKIBASECIRRUSSEARCH_COMMIT: "{{ .WIKIBASECIRRUSSEARCH_COMMIT }}"
+          WIKIBASEMANIFEST_COMMIT: "{{ .WIKIBASEMANIFEST_COMMIT }}"
+          WIKIBASEEDTF_COMMIT: "{{ .WIKIBASEEDTF_COMMIT }}"
+          WIKIBASELOCALMEDIA_COMMIT: "{{ .WIKIBASELOCALMEDIA_COMMIT }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
+
+    - image: wikibase/elasticsearch
+      context: ./build/Elasticsearch
+      docker:
+        buildArgs:
+          ELASTICSEARCH_IMAGE_URL: "{{ .ELASTICSEARCH_IMAGE_URL }}"
+          ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA: "{{ .ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA }}"
+          ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER: "{{ .ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
+
+    - image: wikibase/wdqs
+      context: ./build/WDQS
+      docker:
+        buildArgs:
+          DEBIAN_IMAGE_URL: "{{ .DEBIAN_IMAGE_URL }}"
+          JRE_IMAGE_URL: "{{ .JRE_IMAGE_URL }}"
+          WDQS_VERSION: "{{ .WDQS_VERSION }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
+
+    - image: wikibase/wdqs-frontend
+      context: ./build/WDQS-frontend
+      docker:
+        buildArgs:
+          COMPOSER_IMAGE_URL: "{{ .COMPOSER_IMAGE_URL }}"
+          NGINX_IMAGE_URL: "{{ .NGINX_IMAGE_URL }}"
+          NODE_IMAGE_URL: "{{ .NODE_IMAGE_URL }}"
+          WDQSQUERYGUI_COMMIT: "{{ .WDQSQUERYGUI_COMMIT }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
+
+    - image: wikibase/wdqs-proxy
+      context: ./build/WDQS-proxy
+      docker:
+        buildArgs:
+          NGINX_IMAGE_URL: "{{ .NGINX_IMAGE_URL }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
+
+    - image: wikibase/quickstatements
+      context: ./build/QuickStatements
+      docker:
+        buildArgs:
+          COMPOSER_IMAGE_URL: "{{ .COMPOSER_IMAGE_URL }}"
+          PHP_IMAGE_URL: "{{ .PHP_IMAGE_URL }}"
+          QUICKSTATEMENTS_COMMIT: "{{ .QUICKSTATEMENTS_COMMIT }}"
+          MAGNUSTOOLS_COMMIT: "{{ .MAGNUSTOOLS_COMMIT }}"
+      hooks:
+        after:
+          - command: ["./skaffold_tagging.sh"]
