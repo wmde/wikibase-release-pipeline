@@ -16,6 +16,8 @@ export const ONE_DAY_IN_MS = 86400000;
 export const defaultTestSettings = {
 	envFiles: [
 		'../deploy/template.env',
+		// For MEDIAWIKI_VERSION only
+		'../build/wikibase/build.env',
 		'./test-services.env',
 		'../local.env'
 	],
