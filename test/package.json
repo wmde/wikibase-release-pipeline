@@ -1,7 +1,6 @@
 {
 	"name": "wikibase-release-selenium-testing",
 	"version": "0.1.0",
-	"private": true,
 	"type": "module",
 	"devDependencies": {
 		"@types/mocha": "^10.0.6",

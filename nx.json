@@ -1,12 +1,35 @@
 {
   "installation": {
-    "version": "19.5.0"
-  },
-  "release": {
-    "projectsRelationship": "independent",
-    "changelog": {
-      "projectChangelogs": true
+    "version": "19.5.0",
+    "plugins": {
+      "@nx/js": "19.5.0"
     }
   },
-  "packageManager": "pnpm"
+  "workspaces": [
+    "build/*",
+    "deploy",
+    "test"
+  ],
+  "release": {
+    "groups": {
+      "images": {
+        "projects": [
+          "build/*"
+        ]
+      },
+      "deploy": {
+        "projects": [
+          "deploy"
+        ]
+      }
+    },
+    "projectsRelationship": "independent",
+    "changelog": {
+      "projectChangelogs": true,
+      "createRelease": "github"
+    }
+  },
+  "plugins": [
+    "nx/plugins/package-json"
+  ]
 }
