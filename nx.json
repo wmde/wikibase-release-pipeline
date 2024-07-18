@@ -24,6 +24,9 @@
       }
     },
     "projectsRelationship": "independent",
+    "version": {
+      "conventionalCommits": true
+    },
     "changelog": {
       "projectChangelogs": true,
       "createRelease": "github"
