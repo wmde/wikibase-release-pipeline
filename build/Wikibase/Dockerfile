@@ -114,19 +114,14 @@ RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/
     rm -f /var/www/html/extensions/Wikibase/.travis.yml && \
     find /var/www/html/extensions/Wikibase -name ".git*" -exec rm -rf {} +
 
-ARG ALL_EXTENSIONS="Babel,cldr,CirrusSearch,ConfirmEdit,Elastica,EntitySchema,Nuke,OAuth,Scribunto,SyntaxHighlight_GeSHi,UniversalLanguageSelector,VisualEditor,WikibaseCirrusSearch,WikibaseManifest"
+ARG ALL_EXTENSIONS="Babel,cldr,CirrusSearch,Elastica,EntitySchema,OAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest"
 ARG BABEL_COMMIT
 ARG CLDR_COMMIT
 ARG CIRRUSSEARCH_COMMIT
-ARG CONFIRMEDIT_COMMIT
 ARG ELASTICA_COMMIT
 ARG ENTITYSCHEMA_COMMIT
-ARG NUKE_COMMIT
 ARG OAUTH_COMMIT
-ARG SCRIBUNTO_COMMIT
-ARG SYNTAXHIGHLIGHT_GESHI_COMMIT
 ARG UNIVERSALLANGUAGESELECTOR_COMMIT
-ARG VISUALEDITOR_COMMIT
 ARG WIKIBASECIRRUSSEARCH_COMMIT
 ARG WIKIBASEMANIFEST_COMMIT
 ARG WIKIBASEEDTF_COMMIT
