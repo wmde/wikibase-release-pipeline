@@ -1,0 +1,12 @@
+{
+  "installation": {
+    "version": "19.5.0"
+  },
+  "release": {
+    "projectsRelationship": "independent",
+    "changelog": {
+      "projectChangelogs": true
+    }
+  },
+  "packageManager": "pnpm"
+}
