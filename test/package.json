@@ -1,5 +1,5 @@
 {
-	"name": "wikibase-release-selenium-testing",
+	"name": "test",
 	"version": "3.0.0",
 	"type": "module",
 	"devDependencies": {
