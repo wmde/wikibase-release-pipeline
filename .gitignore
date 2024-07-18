@@ -13,3 +13,8 @@ test/log
 test/mwlog
 test/suites/**/results/
 
+node_modules
+
+.nx/installation
+.nx/cache
+.nx/workspace-data
