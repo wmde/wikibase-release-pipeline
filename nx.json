@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "installation": {
     "version": "19.5.0",
     "plugins": {
