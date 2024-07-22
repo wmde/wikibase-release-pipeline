@@ -10,6 +10,8 @@ RUN npm ci
 
 # Install Docker CLI
 # hadolint global ignore=DL3059
+SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
+
 RUN curl -fsSL https://get.docker.com -o get-docker.sh | bash
 RUN sh get-docker.sh
 RUN npm config set loglevel error
