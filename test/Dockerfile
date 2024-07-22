@@ -1,4 +1,5 @@
-FROM node:18.19-bullseye
+# Use Node Iron LTS (20): https://nodejs.org/en/blog/release/v20.9.0
+FROM node:iron-bullseye
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
