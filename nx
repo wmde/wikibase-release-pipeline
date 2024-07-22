@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Ensure the script exits on error
+set -e
+
+IMAGE_NAME="nx-runner:latest"
+
+echo "Current CI VALUE: $CI"
+
+# Check if we're in a CI environment
+if [ "$CI" = "true" ]; then
+  npm ci
+  npx nx "$@"
+else
+  # Get the current working directory
+  WORKDIR=$(pwd)
+  if ! docker image inspect $IMAGE_NAME > /dev/null 2>&1; then
+    echo "Docker image $IMAGE_NAME not found. Building it..."
+    docker build -t $IMAGE_NAME .
+  fi
+  # Run the Nx command inside the Docker container
+  docker run --rm -it \
+    -v "$WORKDIR:/workspace" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -w /workspace \
+    $IMAGE_NAME "$@"
+fi

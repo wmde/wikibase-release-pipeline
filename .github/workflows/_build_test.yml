@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: ./build.sh ${{ matrix.component }}
+      - run: ./nx run ${{ matrix.component }}:build
 
       # TODO re-enable as soon as we make use of it
       # - name: Scan Image
