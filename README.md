@@ -10,45 +10,40 @@ If you're looking for individual WBS images, head over to [hub.docker.com/u/wiki
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for: 
-
- - **Building** ([build.sh](./build.sh) and [build directory](./build))
- - **Testing** ([test.sh](./test.sh) and [test directory](./test))
- - **Publishing** ([.github/workflows](.github/workflows)) 
- - **Deploying** ([WBS Deploy](./deploy))
-
+This repository contains the Wikibase Suite toolset used for [building](./build)), testing, and publishing ([.github/workflows](.github/workflows)) WBS Images and WBS Deploy ([WBS Deploy](./deploy)).
+ 
 ## Quick reference
 
 ### Build
 
 ```
 # Build all Wikibase Suite images
-$ ./build.sh
+$ ./nx run-many -t build
 
 # Build only the MediaWiki/Wikibase containers
-$ ./build.sh wikibase
+$ ./nx run wikibase:build
 
 # Build the WDQS container without using Docker's cache
-$ ./build.sh wdqs --no-cache
+$ ./nx run wdqs:build --no-cache
 ```
 
 ### Test
 
 ```
 # Show help for the test CLI, including the various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
-$ ./test.sh
+$ ./nx run test:test
 
 # Runs all test suites (defined in `test/suites`)
-$ ./test.sh all
+$ ./nx run test:test all
 
 # Runs the `repo` test suite
-$ ./test.sh repo
+$ ./nx run test:test repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./test.sh repo --spec specs/repo/special-item.ts
+$ ./nx run test:test repo --spec specs/repo/special-item.ts
 
 # Start and leave up the test environment for a given test suite without running tests
-$ ./test.sh repo --setup
+$ ./nx run test:test repo --setup
 ```
 
 ### Deploy
