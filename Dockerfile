@@ -35,4 +35,4 @@ RUN sh get-docker.sh
 RUN npm config set loglevel error
 
 # Set entry point
-ENTRYPOINT ["npx", "nx"]
+ENTRYPOINT ["bash"]

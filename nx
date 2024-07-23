@@ -3,7 +3,7 @@
 # Ensure the script exits on error
 set -e
 
-IMAGE_NAME="nx-runner:latest"
+IMAGE_NAME="wbs-dev:latest"
 
 # Check if we're in a CI environment
 if [ "$CI" = "true" ]; then
@@ -13,9 +13,11 @@ if [ "$CI" = "true" ]; then
 else
   # Run the Nx command inside the Docker container
   docker build -q -t $IMAGE_NAME . > /dev/null
-  docker run --rm -it \
+  exec docker run --rm -it \
     -v "$(pwd):/workspace" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -w /workspace \
-    $IMAGE_NAME "$@"
+    --entrypoint npx \
+    $IMAGE_NAME \
+    nx "$@"
 fi
