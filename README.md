@@ -151,6 +151,7 @@ WBS Deploy and WBS images are released using this repository. The process involv
 - [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1iZMbdXGPsG0pLs-_HrniT5ac28aw1Edu) using a template.
 - [ ] **Coordinate with ComCom on timing the publication of the release**. Talk to SCoT (ComCom, technical writer) about this.
 - [ ] **Publish the release** by merging the release branch into the `deploy-X` branch. **ATTENTION: This will automatically push images to Docker Hub!**
+- [ ] **Update Dockerhub README** (from `./build/*/dockerhub.md`) for major versions, to make each image readme contain a link to appropriate version docs.
 - [ ] **Merge back to main in a separate PR** from `deploy-X` to have adjustments to `CHANGES.md` and the like available on `main` too. Changes from `variables.env` should only be taken from a release of the latest version so that `main` always references the build of the latest components.
 
 You`re done. **Congratulations!**
