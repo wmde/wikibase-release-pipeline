@@ -11,12 +11,10 @@ if [ "$CI" = "true" ]; then
   npm ci
   npx nx "$@"
 else
-  # Get the current working directory
-  WORKDIR=$(pwd)
-  docker build -q -t $IMAGE_NAME . > /dev/null
   # Run the Nx command inside the Docker container
+  docker build -q -t $IMAGE_NAME . > /dev/null
   docker run --rm -it \
-    -v "$WORKDIR:/workspace" \
+    -v "$(pwd):/workspace" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -w /workspace \
     $IMAGE_NAME "$@"
