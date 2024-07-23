@@ -10,4 +10,4 @@ fi
 test_runner__down
 
 $TEST_COMPOSE up -d
-$RUN_TEST_RUNNER_CMD "npm run -s test -- ${*:1}"
+$RUN_TEST_RUNNER_CMD "./nx run test:test -- ${*:1}"

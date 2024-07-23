@@ -1,20 +1,26 @@
 {
   "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
+	"compilerOptions": {
     "declaration": false,
-    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
+    "rootDir": ".",
+		"esModuleInterop": true,
+		"module": "Node16",
+		"sourceMap": true,
+		"target": "es2019",
     "baseUrl": ".",
-    "paths": {}
-  },
-  "exclude": ["node_modules", "tmp"]
+		"types": [ "node", "@wdio/globals/types", "@wdio/mocha-framework" ],
+    "lib": ["es2020"],
+    "paths": {
+      "@wbs": ["."]
+    }
+	},
+	"ts-node": {
+		"files": true,
+		"esm": true
+	},
+	"include": [ "./**/*.ts", "./**/*.mjs" ]
 }

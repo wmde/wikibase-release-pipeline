@@ -33,7 +33,6 @@
       "createRelease": "github"
     }
   },
-  "plugins": [
-    "nx/plugins/package-json"
-  ]
+  "packageManager": "pnpm",
+  "plugins": []
 }

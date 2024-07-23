@@ -25,8 +25,6 @@
 		"lodash": "^4.17.21",
 		"mocha": "^10.3.0",
 		"npm-run-all": "^4.1.5",
-		"prettier": "^3.2.5",
-		"prettier-plugin-organize-imports": "^3.2.4",
 		"semver-parser": "^4.1.6",
 		"stylelint-config-wikimedia": "0.16.1",
 		"ts-node": "^10.9.2",
@@ -40,19 +38,16 @@
 	"browserslist": [
 		"ie 11"
 	],
-	"engines": {
-		"node": "^20.9.0"
-	},
 	"scripts": {
-		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
-		"lint": "npx eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml",
-		"lint-js": "npx eslint . --ext .cjs,.js,.json,.mjs,.ts",
-		"lint-yml": "npx eslint .. --ext .yml --config ./.eslintrc.json",
-		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
-		"lint:fix:format": "npx prettier \"**/*.{cjs,js,mjs,ts,json,md,yml}\" --write --log-level error",
-		"lint:fix:lint": "npx eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml --fix",
-		"lint:fix-js": "npx prettier \"**/*.{cjs,js,json,mjs,ts}\" --write --log-level error && npx eslint . --ext .cjs,.js,.json,.mjs,.ts --fix",
-		"lint:fix-md": "npx prettier \"../**/*.md\" --write --log-level error --config ./.prettierrc.json",
-		"lint:fix-yml": "npx prettier \"../**/*.yml\" --write --log-level error --config ./.prettierrc.json && npx eslint .. --ext .yml --fix --config ./.eslintrc.json"
+		"test": "npx node cli.ts",
+		"lint": "pnpm eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml",
+		"lint-js": "pnpm eslint . --ext .cjs,.js,.json,.mjs,.ts",
+		"lint-yml": "pnpm eslint .. --ext .yml --config ./.eslintrc.json",
+		"lint:fix": "pnpm run lint:fix:format && npm run lint:fix:lint",
+		"lint:fix:format": "pnpm prettier \"**/*.{cjs,js,mjs,ts,json,md,yml}\" --write --log-level error",
+		"lint:fix:lint": "pnpm eslint . --ext .cjs,.js,.mjs,.ts,.json,.yml --fix",
+		"lint:fix-js": "pnpm prettier \"**/*.{cjs,js,json,mjs,ts}\" --write --log-level error && pnpm eslint . --ext .cjs,.js,.json,.mjs,.ts --fix",
+		"lint:fix-md": "pnpm prettier \"../**/*.md\" --write --log-level error --config ./.prettierrc.json",
+		"lint:fix-yml": "pnpm prettier \"../**/*.yml\" --write --log-level error --config ./.prettierrc.json && pnpm eslint .. --ext .yml --fix --config ./.eslintrc.json"
 	}
 }

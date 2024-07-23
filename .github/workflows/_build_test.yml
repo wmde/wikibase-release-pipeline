@@ -74,7 +74,7 @@ jobs:
       - name: Reporter
         run: |
           cd .github/reporter
-          npm install
+          pnpm install
           node report.js ${{ matrix.suite }}
 
       - name: Show logs

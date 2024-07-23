@@ -15,6 +15,10 @@ test/log
 test/mwlog
 test/suites/**/results/
 
+# === PNPM
+pnpm
+.pnpm-store
+
 # === Added by nx installation
 
 # compiled output
