@@ -33,6 +33,20 @@
       "createRelease": "github"
     }
   },
+  "targetDefaults": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd {projectRoot} && docker compose --env-file build.env build"
+      }
+    },
+    "nx-release-publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"WOULD RUN: cd {projectRoot} && docker compose --env-file build.env push\""
+      }
+    }
+  },
   "plugins": [
     "nx/plugins/package-json"
   ]

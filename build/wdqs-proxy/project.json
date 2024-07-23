@@ -1,0 +1,6 @@
+{
+  "targets": {
+    "build": {},
+    "nx-release-publish": {}
+  }
+}
