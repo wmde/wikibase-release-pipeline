@@ -138,7 +138,7 @@ WBS Deploy and WBS images are released using this repository. The process involv
 - [ ] **To release breaking changes** as a new major version of WBS Deploy, create a new branch called `deploy-X`, where `X` is the new major version.
 - [ ] **Create a release PR** from a release preparation branch with the following changes targeting the appropriate `deploy-X` release branch.
   - [ ] **Backport from `main`** by cherrypicking commits from `main` to the release preparation branch.
-  - [ ] **Update `variables.env`** by adjusting WBS versions and upstream versions. You can find further instructions in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
+  - [ ] **Update `build/*/build.env`** files by adjusting WBS versions and upstream versions. You can find further instructions in the `build.env` files themselves.
   - [ ] **Update `CHANGES.md`** by adding a section following the example of previous releases.
   - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failure, some specs could be flaky.
 - [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release preparation branch on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-BRANCHNAME`, e.g., `dev-releaseprep`. This tag can be used to set up an instance running your release preparation version.
