@@ -45,6 +45,12 @@
       "options": {
         "command": "echo \"WOULD RUN: cd {projectRoot} && docker compose --env-file build.env push\""
       }
+    },
+    "update-commits": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 build/update_commits.py {projectRoot}/build.env"
+      }
     }
   },
   "plugins": [
