@@ -1,59 +1,59 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "installation": {
-    "version": "19.5.0",
-    "plugins": {
-      "@nx/js": "19.5.0"
-    }
-  },
-  "workspaces": [
-    "build/*",
-    "deploy",
-    "test"
-  ],
-  "release": {
-    "groups": {
-      "images": {
-        "projects": [
-          "build/*"
-        ]
-      },
-      "deploy": {
-        "projects": [
-          "deploy"
-        ]
-      }
-    },
-    "projectsRelationship": "independent",
-    "version": {
-      "conventionalCommits": true
-    },
-    "changelog": {
-      "projectChangelogs": true,
-      "createRelease": "github"
-    }
-  },
-  "targetDefaults": {
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cd {projectRoot} && docker compose --env-file build.env build"
-      }
-    },
-    "nx-release-publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "echo \"WOULD RUN: cd {projectRoot} && docker compose --env-file build.env push\""
-      }
-    },
-    "update-commits": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "python3 build/update_commits.py {projectRoot}/build.env"
-      }
-    }
-  },
-  "plugins": [
-    "nx/plugins/package-json"
-  ]
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"installation": {
+		"version": "19.5.0",
+		"plugins": {
+			"@nx/js": "19.5.0"
+		}
+	},
+	"workspaces": [
+		"build/*",
+		"deploy",
+		"test"
+	],
+	"release": {
+		"groups": {
+			"images": {
+				"projects": [
+					"build/*"
+				]
+			},
+			"deploy": {
+				"projects": [
+					"deploy"
+				]
+			}
+		},
+		"projectsRelationship": "independent",
+		"version": {
+			"conventionalCommits": true
+		},
+		"changelog": {
+			"projectChangelogs": true,
+			"createRelease": "github"
+		}
+	},
+	"targetDefaults": {
+		"build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "cd {projectRoot} && docker compose --env-file build.env build"
+			}
+		},
+		"nx-release-publish": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "echo \"WOULD RUN: cd {projectRoot} && docker compose --env-file build.env push\""
+			}
+		},
+		"update-commits": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "python3 build/update_commits.py {projectRoot}/build.env"
+			}
+		}
+	},
+	"plugins": [
+		"nx/plugins/package-json"
+	]
 }

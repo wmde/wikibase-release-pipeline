@@ -1,8 +1,8 @@
-name: wikibase-suite-test
+name: wbs-test
 
 networks:
   default:
-    name: wikibase-suite-test
+    name: wbs-test
     external: true
 
 services:

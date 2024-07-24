@@ -1,7 +1,7 @@
 {
-  "targets": {
-    "build": {},
-    "nx-release-publish": {},
-    "update-commits": {}
-  }
+	"targets": {
+		"build": {},
+		"nx-release-publish": {},
+		"update-commits": {}
+	}
 }
