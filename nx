@@ -3,21 +3,18 @@
 # Ensure the script exits on error
 set -e
 
-IMAGE_NAME="wbs-dev:latest"
-
 # Check if we're in a CI environment
 if [ "$CI" = "true" ]; then
   echo "Running in CI mode"
   npm ci
   npx nx "$@"
 else
+  # Explicitly adds the Docker network wbs-dev
+  docker network inspect wbs-dev > /dev/null 2>&1 || \
+  docker network create wbs-dev > /dev/null
+
   # Run the Nx command inside the Docker container
-  docker build -q -t $IMAGE_NAME . > /dev/null
-  exec docker run --rm -it \
-    -v "$(pwd):/workspace" \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -w /workspace \
-    --entrypoint npx \
-    $IMAGE_NAME \
-    nx "$@"
+  exec docker compose --progress quiet --env-file=test/test-runner.env \
+  run --build --rm --service-ports runner -c \
+  "npx nx ${*}"
 fi

@@ -1,5 +1,5 @@
 # Use Node Iron LTS (20): https://nodejs.org/en/blog/release/v20.9.0
-FROM node:iron-bullseye as wbs-dev-base
+FROM node:iron-bullseye as wbs-dev-runner-base
 
 # Set environment variable to skip Chromium download
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -28,7 +28,7 @@ RUN apt-get update && \
 RUN curl -fsSL https://get.docker.com -o get-docker.sh | bash
 RUN sh get-docker.sh
 
-FROM wbs-dev-base
+FROM wbs-dev-runner-base
 # Install NPM dependencies
 # * if adding dependencies run `npm install` from a local node installation
 COPY package*.json ./

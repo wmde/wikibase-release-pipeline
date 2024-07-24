@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Lint
-        run: ./lint.sh
+        run: ./nx lint
 
   build:
     runs-on: ubuntu-latest

@@ -205,7 +205,7 @@ export default class TestEnv {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
 			`--project-directory ${ this.settings.pwd }/suites`,
-			'-p wbs-test-services'
+			'-p wbs-dev-test-services'
 		];
 
 		this.settings.composeFiles.forEach( ( composeFile ) =>

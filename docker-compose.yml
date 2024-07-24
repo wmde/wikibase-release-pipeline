@@ -1,0 +1,33 @@
+# Test runner
+
+name: wbs-dev
+
+networks:
+  default:
+    name: wbs-dev
+    external: true
+
+services:
+  runner:
+    image: wbs-dev-runner:latest
+    scale: 0
+    build:
+      dockerfile: Dockerfile
+    stop_grace_period: 1s
+    ports:
+      - 9229:9229
+    volumes:
+      - .:/workspace
+      - node_modules:/workspace/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file: ./test/test-runner.env
+    environment:
+      HOST_PWD: ${PWD}/test
+
+volumes:
+  node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./node_modules

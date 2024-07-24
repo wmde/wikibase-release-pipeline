@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"scripts": {
 		"lint": "npm run lint --workspace test",
-		"test": "npm run start --workspace test"
+		"test": "npm run test --workspace test"
 	},
 	"private": true,
 	"devDependencies": {
