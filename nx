@@ -6,14 +6,15 @@ if ! [[ -f "local.env" ]]; then
 	touch local.env
 fi
 
+# Explicitly adds the Docker network wbs-dev
+docker network inspect wbs-dev > /dev/null 2>&1 || docker network create wbs-dev > /dev/null
+
 # Check if we're in a CI environment
 if [ "$CI" = "true" ]; then
   echo "Running in CI mode"
   npm ci
   exec npx nx "$@"
 else
-  # Explicitly adds the Docker network wbs-dev
-  docker network inspect wbs-dev > /dev/null 2>&1 || docker network create wbs-dev > /dev/null
   # Run the Nx command inside the Docker container
   exec docker compose --progress quiet run --build --rm --service-ports runner -c "npx nx ${*}"
 fi
