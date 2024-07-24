@@ -1,25 +1,25 @@
 # Test runner
 
-name: wikibase-suite-test-runner
+name: wbs-test-runner
 
 networks:
   default:
-    name: wikibase-suite-test
+    name: wbs-test
     external: true
 
 services:
-  test-runner:
+  runner:
+    image: wbs-dev:latest
     scale: 0
     build:
-      context: ../test
+      context: ..
       dockerfile: Dockerfile
     stop_grace_period: 1s
-    entrypoint: /bin/bash
     ports:
       - 9229:9229
     volumes:
-      - ..:/usr/src
-      - node_modules:/usr/src/test/node_modules
+      - ..:/workspace
+      - node_modules:/workspace/test/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     env_file: ./test-runner.env
     environment:

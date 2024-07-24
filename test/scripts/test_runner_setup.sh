@@ -4,10 +4,10 @@ if ! [[ -f "local.env" ]]; then
 	touch local.env
 fi
 
-# Explicitly adds the Docker network wikibase-suite-test which is shared by both
+# Explicitly adds the Docker network wbs-test which is shared by both
 # test runner and test services
-docker network inspect wikibase-suite-test > /dev/null 2>&1 || \
-  docker network create wikibase-suite-test > /dev/null
+docker network inspect wbs-test > /dev/null 2>&1 || \
+  docker network create wbs-test > /dev/null
 
 # `node_modules` is set to persist using a bind-mounteded Docker volume stored at
 # `test/node_modules`, so we need to make sure that directory always exists before
@@ -30,11 +30,11 @@ if [ -z "$DEBUG" ]; then
 fi
 
 # Standard way to run commmands on the test runner. Always builds, and removes the
-# test-runner container after use
-export RUN_TEST_RUNNER_CMD="$TEST_COMPOSE run --rm --build --service-ports test-runner -c"
+# runner container after use
+export RUN_TEST_RUNNER_CMD="$TEST_COMPOSE run --rm --build --service-ports runner -c"
 
 # `--command`, `-c`: Run as ``,/<script>.sh --command <command>` to run a command
-# on the `test-runner` container. Alias `-c`. Exits without running any subsequent
+# on the `runner` container. Alias `-c`. Exits without running any subsequent
 # code. Examples and common usage:
 # `./tesh.sh --command npm install`
 # `./tesh.sh -c bash`

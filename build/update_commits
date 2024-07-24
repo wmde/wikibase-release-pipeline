@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Ensure the script exits on error
+set -e
+
+IMAGE_NAME="nx-runner:latest"
+
+# Run the Nx command inside the Docker container
+cd ..
+docker build -q -t $IMAGE_NAME . > /dev/null
+exec docker run --rm -it \
+  -v "$(pwd)":/workspace \
+  -w /workspace \
+  --entrypoint python3 \
+  $IMAGE_NAME \
+  build/update_commits.py
