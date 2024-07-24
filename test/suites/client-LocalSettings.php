@@ -30,4 +30,3 @@ $wgWBClientSettings['repoScriptPath'] = '/w';
 $wgWBClientSettings['repoArticlePath'] = '/wiki/$1';
 $wgWBClientSettings['siteLinkGroups'] = [ 'mywikigroup' ];
 $wgWBClientSettings['siteGlobalID'] = 'client_wiki';
-

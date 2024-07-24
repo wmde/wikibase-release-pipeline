@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires, no-undef */
 const fs = require( 'fs' );
 const {
 	extractModuleLineAndColumn
@@ -11,14 +12,14 @@ if ( suiteName ) {
 	return;
 }
 
-const filePath = `../../test/suites/${ suiteName }/results/result.json`;
+const resultFilePath = `../../test/suites/${ suiteName }/results/result.json`;
 
 let resultObject = {};
 
-if ( fs.existsSync( filePath ) ) {
-	resultObject = JSON.parse( fs.readFileSync( filePath, 'utf8' ) )[ suiteName ];
+if ( fs.existsSync( resultFilePath ) ) {
+	resultObject = JSON.parse( fs.readFileSync( resultFilePath, 'utf8' ) )[ suiteName ];
 
-	if ( resultObject.fail.length != 0 ) {
+	if ( resultObject.fail.length !== 0 ) {
 		resultObject.fail.forEach( ( test ) => {
 			const error = extractModuleLineAndColumn( test.error.stack );
 			let filePath = '';

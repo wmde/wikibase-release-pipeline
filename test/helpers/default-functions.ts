@@ -140,7 +140,7 @@ export function defaultFunctions(): void {
 			await browser.waitUntil(
 				async () => {
 					const commandTextArray = await Promise.all(
-						commands.map( async ( command ) => command.getText() )
+						await commands.map( async ( command ) => command.getText() )
 					);
 					return commandTextArray.every(
 						( commandText ) => commandText === 'done'
