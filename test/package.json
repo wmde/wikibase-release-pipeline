@@ -11,6 +11,7 @@
 		"@wdio/reporter": "^8.17.0",
 		"@wdio/spec-reporter": "^8.18.1",
 		"@wmde/eslint-config-wikimedia-typescript": "^0.2.7",
+		"any-eslint-parser": "^1.0.1",
 		"api-testing": "^1.6.0",
 		"apollo-boost": "^0.4.9",
 		"async-wait-until": "^2.0.12",
@@ -26,7 +27,7 @@
 		"mocha": "^10.3.0",
 		"npm-run-all": "^4.1.5",
 		"prettier": "^3.2.5",
-    "prettier-plugin-organize-imports": "^3.2.4",
+		"prettier-plugin-organize-imports": "^3.2.4",
 		"semver-parser": "^4.1.6",
 		"stylelint-config-wikimedia": "0.16.1",
 		"ts-node": "^10.9.2",
@@ -40,21 +41,18 @@
 	"browserslist": [
 		"ie 11"
 	],
-	"engines": {
-		"node": "^20.9.0"
-	},
 	"scripts": {
-		"start": "bash test",
+		"start": "bash test.sh",
 		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
-		"lint": "bash lint",
-		"lint-all": "npx eslint .. --ext .cjs,.js,.json,.mjs,.ts,.yml,.yaml,.md,.sh --config ./.eslintrc.json",
-		"lint-js": "npx eslint .. --ext .cjs,.js,.json,.mjs,.ts",
-		"lint-yml": "npx eslint .. --ext .yml --config ./.eslintrc.json",
-		"lint:fix": "npm run lint:fix:format && npm run lint:fix:lint",
-		"lint:fix:format": "npx prettier \"../**/*.{cjs,js,mjs,ts,json,md,yml,yaml}\" --write --log-level error",
-		"lint:fix:lint": "npx eslint .. --ext .cjs,.js,.mjs,.ts,.json,.yml,.yaml --fix",
-		"lint:fix-js": "npx prettier \"../**/*.{cjs,js,json,mjs,ts}\" --write --log-level error && npm run lint-js -- --fix",
-		"lint:fix-md": "npx prettier \"../**/*.md\" --write --log-level error --config ./.prettierrc.json",
-		"lint:fix-yml": "npx prettier \"../**/*.yml\" --write --log-level error --config ./.prettierrc.json && npx eslint .. --ext .yml --fix --config ./.eslintrc.json"
+		"lint": "./lint.sh",
+		"lint:js-and-yml": "npx eslint .. --config .eslintrc.json",
+		"lint:js-and-yml:fix": "npm run lint:js-and-yml -- --fix",
+		"lint:whitespace": "npx eslint \"../**/**\" --config .eslintrc-whitespace.json",
+		"lint:whitespace:fix": "npm run lint:whitespace -- --fix",
+		"lint:fix": "npm run lint:js-and-yml:fix && npm run lint:whitespace:fix",
+		"format:js:fix": "npx prettier \"../**/*.{cjs,js,mjs,ts,json}\" --log-level error --write",
+		"format:md:fix": "npx prettier \"../**/*.md\" --log-level error --config ./.prettierrc.json --write",
+		"format:yml:fix": "npx prettier \"../**/*.{yml,yaml}\" --write --log-level error --config ./.prettierrc.json --write",
+		"format:fix": "npm run format:fix:js && npm run format:fix:md && npm run format:fix:yml"
 	}
 }
