@@ -69,41 +69,34 @@ Tests are organized in suites, which can be found in `test/suites`. Each suite r
 
 All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
 
-You can run the tests in the Docker container locally exactly as they are run in CI by using `test.sh`.
+You can run the tests in the Docker container locally exactly as they are run in CI by using `./nx test`.
 
-## Examples usage of `./test.sh`:
+## Examples usage of `./nx test`:
 
 ```bash
-# See all`./test.sh` CLI options
-./test.sh --help
+# See all`./nx test` CLI options
+./nx test -- --help
 
 # Run all test suites
-./test.sh all
+./nx test -- all
 
 # Only run a single suite (e.g., repo)
-./test.sh repo
+./nx test -- repo
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./test.sh repo --spec specs/repo/extensions/babel.ts
+./nx test -- --spec specs/repo/extensions/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:
 
 ```bash
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
-./test.sh repo --setup
-
-# `--command`, `--c`: Runs the given command on the test runner and doesn't execute any further commands
-./test.sh --command npm install
+./nx test -- repo --setup
 
 # Sets test timeouts to 1 day so they don't time out while debugging with `await browser.debug()` calls
 # However, this can have undesirable effects during normal test runs, so only use for actual debugging
 # purposes.
-./test.sh repo --debug
-
-# `DEBUG`: Shows full Docker compose up/down progress logs for the test runner
-# Note that the test service Docker logs can always be found in `test/suites/<suite>/results/wdio.log`
-DEBUG=true ./test.sh repo
+./nx test -- repo --debug
 ```
 
 WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .

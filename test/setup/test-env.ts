@@ -204,6 +204,8 @@ export default class TestEnv {
 	protected makeBaseDockerComposeCmd(): string {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
+			'--env-file test-runner.env',
+			'--env-file ../local.env',
 			`--project-directory ${ this.settings.pwd }/suites`,
 			'-p wbs-dev-test-services'
 		];
