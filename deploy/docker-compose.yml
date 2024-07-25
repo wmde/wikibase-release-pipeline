@@ -16,8 +16,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
-      - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
       - ./config:/config
       - wikibase-image-data:/var/www/html/images
@@ -137,8 +135,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
-      - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
-      - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
       WDQS_HOST: wdqs-proxy
     healthcheck:
@@ -159,8 +155,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
-      - "traefik.http.routers.quickstatements.entrypoints=websecure"
-      - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
       QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
@@ -179,9 +173,13 @@ services:
       # Basic setup
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      # http endpoint
       - "--entrypoints.web.address=:80"
+      # https endpoint
       - "--entrypoints.websecure.address=:443"
-      # Redirects all http request to https
+      - "--entrypoints.websecure.asdefault"
+      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      # http to https redirect
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
