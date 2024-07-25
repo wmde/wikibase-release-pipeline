@@ -42,7 +42,7 @@
 		"ie 11"
 	],
 	"scripts": {
-		"test": "NODE_NO_WARNINGS=1 npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
+		"test": "npx --node-options='--require ts-node/register --loader=ts-node/esm' node cli.ts",
 		"lint": "./lint.sh",
 		"lint:js-and-yml": "npx eslint .. --config .eslintrc.json",
 		"lint:js-and-yml:fix": "npm run lint:js-and-yml -- --fix",

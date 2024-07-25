@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-SHOULD_FIX=false
-
-# Check if the script is run with the --fix or -f option
+# ℹ️ Linting JS, YAML, Python scripts, and general whitespace (optionally fix)
 if [[ $1 == "--fix" || $1 == "-f" ]]; then
-  SHOULD_FIX=true
-fi
-
-# ℹ️ Linting JS, YAML, MD, Python scripts, and general whitespace (optionally fix)
-if $SHOULD_FIX; then
-  echo "Fixing Linting and Formatting Issues"
+  echo "ℹ️ Fixing linting issues"
   npm run lint:fix --workspace test
   # TODO: We only have 1 python script, should we do away with the Python dependency
   # and use Typescript/Javascript utility scripts instead?
