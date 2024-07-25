@@ -13,7 +13,7 @@ if $SHOULD_FIX; then
   echo "Fixing Linting and Formatting Issues"
   npm run lint:fix --workspace test
   # TODO: We only have 1 python script, should we do away with the Python dependency
-  # and use Typescript/Javascript utility scripts instead? 
+  # and use Typescript/Javascript utility scripts instead?
   python3 -m black ../
 else
   npm run lint:js-and-yml --workspace test
