@@ -1,7 +1,7 @@
 import logger, { Logger } from '@wdio/logger';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
-import { mkdirSync, rmSync } from 'fs';
+import { mkdirSync, rmSync, existsSync } from 'fs';
 import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/test-settings.js';
@@ -205,7 +205,9 @@ export default class TestEnv {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
 			'--env-file test-runner.env',
-			'--env-file ../local.env',
+			existsSync( '../local.env' ) ?
+				'--env-file ../local.env' :
+				'',
 			`--project-directory ${ this.settings.pwd }/suites`,
 			'-p wbs-dev-test-services'
 		];

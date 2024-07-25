@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
@@ -30,7 +31,7 @@ export default function loadEnvFiles(
 ): Record<string, string> {
 	let envVars = {};
 	envFilePaths
-		.filter( ( envFilePath ) => envFilePath )
+		.filter( ( envFilePath ) => envFilePath && existsSync( envFilePath ) )
 		.forEach( ( envFilePath ) => {
 			envVars = loadEnvFile( envFilePath, envVars );
 		} );
