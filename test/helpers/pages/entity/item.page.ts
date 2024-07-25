@@ -18,7 +18,7 @@ class ItemPage extends Page {
 		itemId: string,
 		params: ItemPageParams = {}
 	): Promise<void> {
-		return super.open( `/wiki/Item:${ itemId }${ urlParameters( params ) }` );
+		super.open( `/wiki/Item:${ itemId }${ urlParameters( params ) }` );
 	}
 }
 

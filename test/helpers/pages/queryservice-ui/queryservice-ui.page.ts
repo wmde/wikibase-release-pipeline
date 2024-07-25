@@ -21,7 +21,7 @@ class QueryServiceUIPage extends SubmittablePage {
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
-		return browser.url(
+		browser.url(
 			`${ testEnv.vars.WDQS_FRONTEND_URL }/#${ encodeURI( query ) }`
 		);
 	}
