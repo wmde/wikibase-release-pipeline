@@ -2,6 +2,7 @@
 	"name": "@wbs/source",
 	"version": "3.0.0",
 	"license": "MIT",
+	"type": "module",
 	"scripts": {
 		"lint": "npm run lint --workspace test",
 		"test": "npm run test --workspace test"

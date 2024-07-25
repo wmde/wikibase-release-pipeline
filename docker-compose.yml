@@ -18,6 +18,9 @@ services:
       - .:/workspace
       - node_modules:/workspace/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - test/test-runner.env
+      - local.env
     environment:
       HOST_PWD: ${PWD}/test
 

@@ -2,24 +2,13 @@
 
 set -e
 
-# Load local.env if it exists (for $RUN_NODE_LOCALLY setting)
-if [[ -f "local.env" ]]; then
-	source local.env
+# Create local.env if it doesn't exist to keep docker compose happy
+if ! [[ -f "local.env" ]]; then
+	touch local.env
 fi
 
 # Make sure the docker network exists
 (docker network create wbs-dev > /dev/null 2>&1) || true
 (mkdir node_modules > /dev/null 2>&1) || true
 
-NX_COMMAND="npx nx ${*}"
-
-# if [ "$CI" = "true" ] || [ "$RUN_NODE_LOCALLY" = "true" ]; then
-#   echo "nx running in CI/local Node mode"
-# 	if [ ! -d "node_modules" ]; then
-# 		npm ci -s
-# 	fi
-# 	exec $NX_COMMAND
-# else
-# Run the Nx command inside the Docker container
-exec docker compose run --build --rm --service-ports runner -c "$NX_COMMAND"
-# fi
+exec docker compose --progress quiet run --build --rm --service-ports runner -c "npx nx ${*}"
