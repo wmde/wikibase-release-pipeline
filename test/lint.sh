@@ -12,7 +12,6 @@ fi
 if $SHOULD_FIX; then
   echo "Fixing Linting and Formatting Issues"
   npm run lint:fix --workspace test
-  npm run format:fix --workspace test
   python3 -m black ../
 else
   npm run lint:js-and-yml --workspace test
