@@ -1,18 +1,17 @@
-# Test runner
-
 name: wbs-dev
 
 networks:
   default:
     name: wbs-dev
-    external: true
 
 services:
   runner:
-    image: wbs-dev-runner:latest
+    image: ghcr.io/wmde/wbs-dev-runner:latest
     scale: 0
     build:
-      dockerfile: Dockerfile
+      context: .
+      tags:
+        - ghcr.io/wmde/wbs-dev-runner:latest
     stop_grace_period: 1s
     ports:
       - 9229:9229
@@ -23,6 +22,7 @@ services:
     environment:
       HOST_PWD: ${PWD}/test
 
+# https://stackoverflow.com/a/67010277
 volumes:
   node_modules:
     driver: local
