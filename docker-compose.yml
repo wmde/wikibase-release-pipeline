@@ -3,15 +3,14 @@ name: wbs-dev
 networks:
   default:
     name: wbs-dev
+    external: true
 
 services:
   runner:
-    image: ghcr.io/wmde/wbs-dev-runner:latest
+    image: wbs-dev-runner:latest
     scale: 0
     build:
       context: .
-      tags:
-        - ghcr.io/wmde/wbs-dev-runner:latest
     stop_grace_period: 1s
     ports:
       - 9229:9229

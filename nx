@@ -2,9 +2,13 @@
 
 set -e
 
+# Load local.env if it exists (for $RUN_NODE_LOCALLY setting)
 if [[ -f "local.env" ]]; then
 	source local.env
 fi
+
+# Make sure the docker network exists
+(docker network create wbs-dev > /dev/null 2>&1) || true
 
 NX_COMMAND="npx nx ${*}"
 
