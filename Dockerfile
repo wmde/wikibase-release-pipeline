@@ -1,5 +1,5 @@
 # Use Node Iron LTS (20): https://nodejs.org/en/blog/release/v20.9.0
-FROM node:iron-bullseye-slim as wbs-dev-runner-base
+FROM node:iron-bookworm-slim as wbs-dev-runner-base
 
 # WBS tests use the Selinium Standalone image so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
