@@ -12,13 +12,13 @@ fi
 
 NX_COMMAND="npx nx ${*}"
 
-if [ "$CI" = "true" ] || [ "$RUN_NODE_LOCALLY" = "true" ]; then
-  echo "nx running in CI/local Node mode"
-	if [ ! -d "node_modules" ]; then
-		npm ci -s
-	fi
-	exec $NX_COMMAND
-else
-  # Run the Nx command inside the Docker container
-  exec docker compose --progress quiet run --build --rm --service-ports runner -c "$NX_COMMAND"
-fi
+# if [ "$CI" = "true" ] || [ "$RUN_NODE_LOCALLY" = "true" ]; then
+#   echo "nx running in CI/local Node mode"
+# 	if [ ! -d "node_modules" ]; then
+# 		npm ci -s
+# 	fi
+# 	exec $NX_COMMAND
+# else
+# Run the Nx command inside the Docker container
+exec docker compose --progress quiet run --build --rm --service-ports runner -c "$NX_COMMAND"
+# fi

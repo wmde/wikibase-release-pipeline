@@ -1,7 +1,7 @@
 # Use Node Iron LTS (20): https://nodejs.org/en/blog/release/v20.9.0
-FROM node:iron-bullseye as wbs-dev-runner-base
+FROM node:iron-bullseye-slim as wbs-dev-runner-base
 
-# Set environment variable to skip Chromium download
+# WBS tests use the Selinium Standalone image so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Set the working directory
@@ -14,6 +14,7 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         python3-pip \
+        curl \
         && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/* \
         && pip3 install --no-cache-dir --upgrade \
@@ -23,7 +24,6 @@ RUN apt-get update && \
             bs4 \
             lxml \
             black
-    
 # Install Docker CLI
 RUN curl -fsSL https://get.docker.com -o get-docker.sh | bash
 RUN sh get-docker.sh
@@ -34,5 +34,4 @@ FROM wbs-dev-runner-base
 COPY package*.json ./
 RUN npm ci && npm config set loglevel error
 
-# Set entry point
 ENTRYPOINT [ "bash" ]
