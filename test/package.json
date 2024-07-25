@@ -44,14 +44,14 @@
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts",
 		"lint": "./lint.sh",
-		"lint:js-and-yml": "npx --no-install eslint .. --config .eslintrc.json",
-		"lint:whitespace": "npx --no-install eslint \"../**/**\" --config ./.eslintrc-whitespace.json",
+		"lint:js-and-yml": "eslint .. --config .eslintrc.json",
+		"lint:whitespace": "eslint \"../**/**\" --config ./.eslintrc-whitespace.json",
 		"lint:js-and-yml:fix": "npm run lint:js-and-yml -- --fix",
 		"lint:whitespace:fix": "npm run lint:whitespace -- --fix",
 		"lint:fix": "npm run lint:js-and-yml:fix && npm run lint:whitespace:fix",
-		"format:js:fix": "npx --no-install prettier \"../**/*.{cjs,js,mjs,ts,json}\" --log-level error --write",
-		"format:md:fix": "npx --no-install prettier \"../**/*.md\" --log-level error --config ./.prettierrc.json --write",
-		"format:yml:fix": "npx --no-install prettier \"../**/*.{yml,yaml}\" --log-level error --config ./.prettierrc.json --write",
+		"format:js:fix": "prettier \"../**/*.{cjs,js,mjs,ts,json}\" --log-level error --write",
+		"format:md:fix": "prettier \"../**/*.md\" --log-level error --config ./.prettierrc.json --write",
+		"format:yml:fix": "prettier \"../**/*.{yml,yaml}\" --log-level error --config ./.prettierrc.json --write",
 		"format:fix": "npm run format:js:fix && npm run format:md:fix && npm run format:yml:fix"
 	}
 }

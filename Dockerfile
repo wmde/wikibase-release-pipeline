@@ -41,8 +41,8 @@ FROM wbs-dev-runner-base
 COPY package*.json ./
 RUN npm ci && npm config set loglevel error
 
-# Activate virtual environment by default
-ENV PATH="/workspace/venv/bin:$PATH"
+# Add npm bins and activate Python venv virtual environment
+ENV PATH="/workspace/node_modules/.bin:/workspace/venv/bin:$PATH"
 
 # Set the entrypoint
 ENTRYPOINT [ "bash" ]

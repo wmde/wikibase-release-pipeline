@@ -11,4 +11,4 @@ fi
 (docker network create wbs-dev > /dev/null 2>&1) || true
 (mkdir node_modules > /dev/null 2>&1) || true
 
-exec docker compose --progress quiet run --build --rm --service-ports runner -c "npx nx ${*}"
+exec docker compose --progress quiet run --build --rm --service-ports runner -c "nx ${*}"
