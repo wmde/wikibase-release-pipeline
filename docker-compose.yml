@@ -24,6 +24,9 @@ services:
     environment:
       HOST_PWD: ${PWD}/test
 
+# We need this somewhat unexpected/hacky but functional thing to be able to use "runner" with the
+# repo volume mapped into the container (vs copied in each run) as node_modules must exist within
+# the root of the repository. For more details on how this works see:
 # https://stackoverflow.com/a/67010277
 volumes:
   node_modules:
