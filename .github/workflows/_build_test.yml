@@ -9,8 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: pwd
-      - run: ls
       - run: ./nx lint
 
   build:
