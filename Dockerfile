@@ -20,8 +20,8 @@ RUN apt-get update && \
         && rm -rf /var/lib/apt/lists/*
 
 # Set up Python virtual environment and install Python packages
-RUN python3 -m venv /workspace/venv && \
-    /workspace/venv/bin/pip install --no-cache-dir --upgrade \
+RUN python3 -m venv /root/venv && \
+    /root/venv/bin/pip install --no-cache-dir --upgrade \
         pip \
         setuptools \
         requests \
@@ -44,6 +44,6 @@ COPY ./test/package.json ./test/package.json
 RUN npm ci && npm config set loglevel error
 
 # Add npm bins and activate Python venv virtual environment
-ENV PATH="/workspace/node_modules/.bin:/workspace/venv/bin:$PATH"
+ENV PATH="/workspace/node_modules/.bin:/root/venv/bin:$PATH"
 
 ENTRYPOINT [ "bash" ]
