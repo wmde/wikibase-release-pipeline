@@ -22,5 +22,8 @@
 		"test/**",
 		"deploy/**"
 	],
-	"nx": {}
+	"nx": {},
+	"engines": {
+		"node": "20"
+	}
 }

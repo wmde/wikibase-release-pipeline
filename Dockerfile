@@ -1,5 +1,5 @@
-# Use Node Iron LTS (20)
-FROM node:iron-bookworm-slim as wbs-dev-runner-base
+# Use Node Iron LTS (20) and Debian Bookworm LTS (12)
+FROM node:20-bookworm-slim as wbs-dev-runner-base
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
