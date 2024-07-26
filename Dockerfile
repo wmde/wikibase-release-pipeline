@@ -39,7 +39,7 @@ FROM wbs-dev-runner-base
 
 # Copy package files and install NPM dependencies
 COPY package*.json ./
-# Add any package.json files which have actual dependency defintions here (keep directory structure)
+# Add any workspace package.json files with dependencies (keep directory structure)
 COPY ./test/package.json ./test/package.json
 RUN npm ci && npm config set loglevel error
 
