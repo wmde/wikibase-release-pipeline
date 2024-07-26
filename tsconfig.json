@@ -17,7 +17,11 @@
     "paths": {}
   },
   "ts-node": {
-		"files": true,
+
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+
+    "files": true,
     "esm": true
   },
   "exclude": [ "node_modules", "tmp" ],
