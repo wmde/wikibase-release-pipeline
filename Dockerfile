@@ -39,10 +39,11 @@ FROM wbs-dev-runner-base
 
 # Copy package files and install NPM dependencies
 COPY package*.json ./
+# Add any package.json files which have actual dependency defintions here (keep directory structure)
+COPY ./test/package.json ./test/package.json
 RUN npm ci && npm config set loglevel error
 
 # Add npm bins and activate Python venv virtual environment
 ENV PATH="/workspace/node_modules/.bin:/workspace/venv/bin:$PATH"
 
-# Set the entrypoint
 ENTRYPOINT [ "bash" ]
