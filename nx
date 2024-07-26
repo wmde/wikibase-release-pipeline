@@ -7,7 +7,4 @@ set -ex
 # make sure the docker network exists
 docker network create wbs-dev > /dev/null 2>&1 || true
 
-docker compose run --build --rm runner -c "pwd"
-docker compose run --build --rm runner -c "ls -l"
-docker compose run --build --rm runner -c "whoami"
-docker compose run --build --rm runner -c "nx ${*}"
+docker compose run --build --rm runner -c "echo \$PATH; which nx; nx ${*}"
