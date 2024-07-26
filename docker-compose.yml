@@ -28,6 +28,11 @@ services:
 # repo volume mapped into the container (vs copied in each run) as node_modules must exist within
 # the root of the repository. For more details on how this works see:
 # https://stackoverflow.com/a/67010277
+# 
+# NOTE: One possible less hacky solution may be to copy the `package-lock.json` files and workspace
+# subdirs into another directory in the container and then set that in the path in the container.
+# According to this StackOverflow answer that may work fine with careful design:
+# https://stackoverflow.com/a/26293141
 volumes:
   node_modules:
     driver: local
