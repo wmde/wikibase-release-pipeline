@@ -7,4 +7,4 @@ set -ex
 # make sure the docker network exists
 docker network create wbs-dev > /dev/null 2>&1 || true
 
-docker compose run --build --rm runner -c "echo \$PATH; which nx; nx ${*}"
+docker compose run --build --rm runner -c "echo \$PATH; ls -ls /workspace/node_modules/.bin; which nx; nx ${*}"
