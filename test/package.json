@@ -32,7 +32,6 @@
 		"stylelint-config-wikimedia": "0.17.2",
 		"ts-node": "^10.9.2",
 		"tslib": "^2.6.3",
-		"typescript": "^5.3.3",
 		"wdio-mediawiki": "2.5.0",
 		"wdio-wikibase": "^6.0.2",
 		"yaml-eslint-parser": "^1.2.3",

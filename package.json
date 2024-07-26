@@ -15,7 +15,7 @@
 		"@swc/core": "~1.5.7",
 		"@swc/helpers": "~0.5.11",
 		"nx": "19.5.1",
-		"typescript": "~5.5.2"
+		"typescript": "^5.3.3"
 	},
 	"workspaces": [
 		"build/*",
