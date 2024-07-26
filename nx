@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 
 # local.env is designated as an env file for the runner in compose
 [ -f "local.env" ] || touch local.env
 # make sure the docker network exists
 docker network create wbs-dev > /dev/null 2>&1 || true
 
-docker compose run --build --rm runner -c "echo \$PATH; ls -ls /workspace/node_modules/.bin; which nx; nx ${*}"
+exec docker compose --progress quiet run --build --rm runner -c "nx ${*}"
