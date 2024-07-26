@@ -2,13 +2,9 @@
 
 set -e
 
-# Create local.env if it doesn't exist to keep docker compose happy
-if ! [[ -f "local.env" ]]; then
-	touch local.env
-fi
-
-# Make sure the docker network exists
-(docker network create wbs-dev > /dev/null 2>&1) || true
-(mkdir node_modules > /dev/null 2>&1) || true
+# local.env is designated as an env file for the runner in compose
+[ -f "local.env" ] || touch local.env
+# make sure the docker network exists
+docker network create wbs-dev > /dev/null 2>&1 || true
 
 exec docker compose --progress quiet run --build --rm --service-ports runner -c "nx ${*}"
