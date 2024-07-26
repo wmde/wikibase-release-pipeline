@@ -37,9 +37,6 @@
 		"yaml-eslint-parser": "^1.2.3",
 		"yargs": "^17.7.2"
 	},
-	"browserslist": [
-		"ie 11"
-	],
 	"scripts": {
 		"test": "NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts",
 		"lint": "./lint.sh",
