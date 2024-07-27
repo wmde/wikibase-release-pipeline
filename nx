@@ -6,6 +6,6 @@ set -e
 [ -f "local.env" ] || touch local.env
 # make sure the docker network exists
 docker network create wbs-dev > /dev/null 2>&1 || true
-mkdir -p node_modules 
+mkdir -p node_modules
 
 exec docker compose --progress quiet run --build --rm runner -c "nx ${*}"

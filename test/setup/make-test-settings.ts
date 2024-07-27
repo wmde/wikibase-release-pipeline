@@ -93,7 +93,7 @@ export const makeTestSettings = (
 			ONE_DAY_IN_MS :
 			parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		pwd: process.env.HOST_PWD || process.cwd()
+		pwd: process.env.HOST_PWD ? `${ process.env.HOST_PWD }/test` : process.cwd()
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || defaultTestSettings.composeFiles,

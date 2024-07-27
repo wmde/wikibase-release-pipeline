@@ -1,10 +1,9 @@
-# Use Node Iron LTS (20) and Debian Bookworm LTS (12)
+# Base image: Node.js LTS (20) on Debian Bookworm (12)
 FROM node:20-bookworm-slim as wbs-dev-runner-base
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Set the working directory
 WORKDIR /workspace
 
 # hadolint global ignore=DL3059
@@ -13,9 +12,10 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # Install necessary packages except Docker
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
+        curl \
+        shellcheck \
         python3-pip \
         python3-venv \
-        curl \
         && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/*
 
@@ -34,10 +34,16 @@ RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     bash get-docker.sh && \
     rm get-docker.sh
 
-# Use the base image to install NPM dependencies
+# Stage to get the hadolint binary
+FROM ghcr.io/hadolint/hadolint:latest-debian as hadolint
+
+# Final stage: Build on top of the base image
 FROM wbs-dev-runner-base
 
-# Copy package files and install NPM dependencies
+# Copy the Dockerfile linter hadolint binary from the hadolint image
+COPY --from=hadolint /bin/hadolint /usr/local/bin/hadolint
+
+# NPM dependencies
 COPY package*.json ./
 # Add any workspace package.json files with dependencies (keep directory structure)
 COPY ./test/package.json ./test/package.json

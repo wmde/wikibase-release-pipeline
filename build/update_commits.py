@@ -1,6 +1,7 @@
 import os, json, re, requests
 from bs4 import BeautifulSoup
 
+
 def get_commit(variable: str, url: str, parse_commit: callable, previous_commit: str):
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
@@ -65,7 +66,9 @@ def run(file_path):
     mediawiki_match = re.search(r"MEDIAWIKI_VERSION=(\d+)\.(\d+)", variable_contents)
     if mediawiki_match:
         rel = f"REL{mediawiki_match.group(1)}_{mediawiki_match.group(2)}"
-        print(f"Mediawiki Version:\t{mediawiki_match.group(1)}.{mediawiki_match.group(2)}")
+        print(
+            f"Mediawiki Version:\t{mediawiki_match.group(1)}.{mediawiki_match.group(2)}"
+        )
         variable_contents = re.sub(r"\bREL\d+_\d+", rel, variable_contents)
 
     for gerrit_commit in re.findall(gerrit_pattern, variable_contents):
@@ -110,8 +113,10 @@ def run(file_path):
     with open(file_path, "w") as variable_file:
         variable_file.write(variable_contents)
 
+
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) != 2:
         print("Usage: python script_name.py <path_to_env_file>")
     else:

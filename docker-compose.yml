@@ -22,7 +22,7 @@ services:
       - test/test-runner.env
       - local.env
     environment:
-      HOST_PWD: ${PWD}/test
+      HOST_PWD: $PWD
 
 # We need this somewhat unexpected/hacky but functional thing to be able to use "runner" with the
 # repo volume mapped into the container (vs copied in each run) as node_modules must exist within
