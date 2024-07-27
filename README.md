@@ -6,12 +6,12 @@ If you want to host your own WBS instance, head over to the [WBS Deploy document
 
 If you're looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
-> 🔧 This document is intended for people developing WBS.  
+> 🔧 This document is intended for people developing WBS.
 
 ## Overview
 
 This repository contains the Wikibase Suite toolset used for [building](./build)), testing, and publishing ([.github/workflows](.github/workflows)) WBS Images and WBS Deploy ([WBS Deploy](./deploy)).
- 
+
 ## Quick reference
 
 ### Build
@@ -25,6 +25,12 @@ $ ./nx run wikibase:build
 
 # Build the WDQS container without using Docker's cache
 $ ./nx run wdqs:build --no-cache
+
+# Update upstream commit hashes for wikibase
+$ ./nx run wikibase:update-commits
+
+# Update upstream commit hashes for all images
+$ ./nx run-many -t update-commits
 ```
 
 ### Test
@@ -118,7 +124,6 @@ MW_SCRIPT_PATH=/w
 ```
 
 For more information on testing, see the [README](./test/README.md).
-
 
 ## Release process
 
