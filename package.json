@@ -3,10 +3,6 @@
 	"version": "3.0.0",
 	"license": "MIT",
 	"type": "module",
-	"scripts": {
-		"lint": "npm run lint --workspace test",
-		"test": "npm run test --workspace test"
-	},
 	"private": true,
 	"devDependencies": {
 		"@nx/js": "^19.5.1",
@@ -14,8 +10,31 @@
 		"@swc-node/register": "~1.9.1",
 		"@swc/core": "~1.5.7",
 		"@swc/helpers": "~0.5.11",
+		"@wmde/eslint-config-wikimedia-typescript": "^0.2.9",
+		"any-eslint-parser": "^1.0.1",
 		"nx": "19.5.1",
-		"typescript": "^5.3.3"
+		"eslint": "^8.57.0",
+		"eslint-config-wikimedia": "0.27.0",
+		"eslint-plugin-compat": "^4.2.0",
+		"eslint-plugin-unicorn": "^51.0.1",
+		"prettier": "^3.3.3",
+		"prettier-plugin-organize-imports": "^4.0.0",
+		"stylelint-config-wikimedia": "0.17.2",
+		"typescript": "^5.3.3",
+		"yaml-eslint-parser": "^1.2.3"
+	},
+	"scripts": {
+		"test": "npm run test --workspace test",
+		"lint": "./lint.sh",
+		"lint:js-and-yml": "eslint . --config ./.eslintrc.json",
+		"lint:whitespace": "eslint \"./**/**\" --config ./.eslintrc-whitespace.json",
+		"lint:js-and-yml:fix": "npm run lint:js-and-yml -- --fix",
+		"lint:whitespace:fix": "npm run lint:whitespace -- --fix",
+		"lint:fix": "npm run lint:js-and-yml:fix && npm run lint:whitespace:fix",
+		"format:js:fix": "prettier \"**/*.{cjs,js,mjs,ts,json}\" --log-level error --write",
+		"format:md:fix": "prettier \"**/*.md\" --log-level error --config .prettierrc.json --write",
+		"format:yml:fix": "prettier \"**/*.{yml,yaml}\" --log-level error --config .prettierrc.json --write",
+		"format:fix": "npm run format:js:fix && npm run format:md:fix && npm run format:yml:fix"
 	},
 	"workspaces": [
 		"build/*",

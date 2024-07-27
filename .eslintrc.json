@@ -9,7 +9,8 @@
 		"**/results/result.json",
 		"!.github",
 		"!deploy",
-		"package-lock.json"
+		"package-lock.json",
+		"*.properties"
 	],
 	"parserOptions": {
 		"sourceType": "module",
