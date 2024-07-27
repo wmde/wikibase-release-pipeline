@@ -27,7 +27,7 @@
 		"test": "npm run test --workspace test",
 		"lint": "./lint.sh",
 		"lint:js-and-yml": "eslint . --config ./.eslintrc.json",
-		"lint:whitespace": "eslint \"./**/**\" --config ./.eslintrc-whitespace.json",
+		"lint:whitespace": "eslint \"./**/**\" --no-eslintrc --config ./.eslintrc-whitespace.json",
 		"format:js:fix": "prettier \"**/*.{cjs,js,mjs,ts,json}\" --log-level error --write",
 		"format:md:fix": "prettier \"**/*.md\" --log-level error --config .prettierrc.json --write",
 		"format:yml:fix": "prettier \"**/*.{yml,yaml}\" --log-level error --config .prettierrc.json --write"

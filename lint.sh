@@ -5,13 +5,11 @@ if [[ $1 == "--fix" || $1 == "-f" ]]; then
   echo "ℹ️ Fixing linting issues"
   npm run lint:js-and-yml -- --fix
   npm run lint:whitespace -- --fix
-  # TODO: We only have 1 python script, should we do away with the Python dependency
-  # and use Typescript/Javascript utility scripts instead?
   python3 -m black ./**/*.py
 else
   npm run lint:js-and-yml
   npm run lint:whitespace
-  python3 -m black ./**/*.py --check
+  python3 -m black ./**/*.py --quiet --check
 fi
 
 # ℹ️ Linting shell scripts (*.sh) with shellcheck

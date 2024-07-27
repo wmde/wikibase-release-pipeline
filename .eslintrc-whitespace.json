@@ -1,40 +1,21 @@
 {
+	"root": true,
 	"parser": "any-eslint-parser",
 	"ignorePatterns": [
-		"**/results/result.json",
+		"test/**/results",
 		"!.github",
 		"!deploy",
 		"package-lock.json",
-		"*.log",
+		"*.properties",
+		"*.ts",
+		"*.js",
+		"*.json",
+		"*.yml",
+		"*.yaml",
+		"*.json",
 		"*.png"
 	],
-	"overrides": [
-		{
-			"files": [
-				"**/*.js",
-				"**/*.jsx",
-				"**/*.ts",
-				"**/*.tsx",
-				"**/*.sh",
-				"**/*.json",
-				"**/*.py",
-				"**/*.yml",
-				"**/*.yaml",
-				"**/*.env",
-				"**/*.lua",
-				"**/*.sql",
-				"**/*.sx",
-				"**/*.php",
-				"**/*.xml",
-				"**/*.md",
-				"**/*.template",
-				"**/Dockerfile"
-			],
-			"rules": {
-				"eol-last": "error",
-				"no-tabs": "off",
-				"max-len": "off"
-			}
-		}
-	]
+	"rules": {
+		"eol-last": [ "error", "always" ]
+	}
 }
