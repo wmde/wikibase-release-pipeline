@@ -1,7 +1,6 @@
 import os, json, re, requests
 from bs4 import BeautifulSoup
 
-
 def get_commit(variable: str, url: str, parse_commit: callable, previous_commit: str):
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
@@ -19,39 +18,32 @@ def get_commit(variable: str, url: str, parse_commit: callable, previous_commit:
         print(f"\tError:\t{exc}")
         return False
 
-
 gerrit_pattern = re.compile(
     r"# (https://gerrit.*)[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
-
 
 def parse_gerrit_commit(response: requests.Response) -> str:
     """Parse webpage using BeautifulSoup"""
     soup = BeautifulSoup(response.content, "lxml")
     return soup.find("th", string="commit").next_sibling.text
 
-
 github_pattern = re.compile(
     r"# (https://github\.com/(.*/commits.*))[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
-
 
 def parse_github_commit(response: requests.Response) -> str:
     """Fetch from API"""
     data = json.loads(response.content)
     return data["sha"]
 
-
 bitbucket_pattern = re.compile(
     r"# (https://bitbucket\.org/(.*/commits)/branch/master)[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
 )
-
 
 def parse_bitbucket_commit(response: requests.Response) -> str:
     """Fetch from API"""
     data = json.loads(response.content)
     return data["values"][0]["hash"]
-
 
 def run(file_path):
     if not os.path.exists(file_path):
@@ -112,7 +104,6 @@ def run(file_path):
 
     with open(file_path, "w") as variable_file:
         variable_file.write(variable_contents)
-
 
 if __name__ == "__main__":
     import sys
