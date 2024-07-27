@@ -21,9 +21,7 @@ class QueryServiceUIPage extends SubmittablePage {
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
-		browser.url(
-			`${ testEnv.vars.WDQS_FRONTEND_URL }/#${ encodeURI( query ) }`
-		);
+		browser.url( `${ testEnv.vars.WDQS_FRONTEND_URL }/#${ encodeURI( query ) }` );
 	}
 
 	public async resultIncludes( prop: string, value?: string ): Promise<boolean> {

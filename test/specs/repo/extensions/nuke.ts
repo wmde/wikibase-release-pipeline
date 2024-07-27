@@ -41,7 +41,7 @@ describe( 'Nuke', function () {
 		await expect( $( 'li*=has been queued for deletion' ) );
 	} );
 
-	it( 'Should show that a Nuke\'d page doesn\'t exist', async function () {
+	it( "Should show that a Nuke'd page doesn't exist", async function () {
 		this.retries( 4 );
 		await page.open( '/wiki/Vandalism' );
 		await expect( $( 'p*=This page does not exist' ) ).toExist();

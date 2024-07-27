@@ -1,6 +1,6 @@
-import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
+import { existsSync } from 'fs';
 
 function loadEnvFile(
 	envFilePath: string,
