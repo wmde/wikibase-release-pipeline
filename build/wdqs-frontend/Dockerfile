@@ -2,7 +2,6 @@ ARG NGINX_IMAGE_URL
 ARG NODE_IMAGE_URL
 ARG WDQSQUERYGUI_COMMIT
 
-
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${NODE_IMAGE_URL} as builder
@@ -21,7 +20,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN sed -i "/npm: '--production --no-package-lock'/c\npm: '--no-package-lock'" Gruntfile.js && \
     npm install && \
     npm run build
-
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -45,4 +43,3 @@ ENV LANGUAGE=en\
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
-

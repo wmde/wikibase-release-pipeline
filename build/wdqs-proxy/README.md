@@ -132,7 +132,6 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-
 volumes:
   wikibase-image-data:
   mysql-data:
@@ -156,8 +155,6 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
-
-
 ## Internal filesystem layout
 
 Hooking into the internal filesystem can extend the functionality of this image.
@@ -166,7 +163,6 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | --------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `/etc/nginx/conf.d/wdqs.template` | Template for the nginx config (substituted to `/etc/nginx/conf.d/default.conf` at runtime)                |
 | `/etc/nginx/conf.d/default.conf`  | nginx config. To override this you must also use a custom entrypoint to avoid the file being overwritten. |
-
 
 ## Source
 

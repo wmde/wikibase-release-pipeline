@@ -97,7 +97,6 @@ RUN set -eux; \
     rm -r mediawiki.tar.gz; \
     install -d /var/log/mediawiki -o www-data
 
-
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${COMPOSER_IMAGE_URL} as composer
@@ -158,7 +157,6 @@ RUN set -x; \
     rm -rf composer.lock && \
     ls -la && pwd && \
     composer install --no-dev -vv -n
-
 
 # ###########################################################################
 # hadolint ignore=DL3006

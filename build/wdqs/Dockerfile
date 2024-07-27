@@ -5,7 +5,6 @@ ARG JRE_IMAGE_URL
 # hadolint ignore=DL3006
 FROM ${JRE_IMAGE_URL} as jre
 
-
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${DEBIAN_IMAGE_URL} as fetcher
@@ -25,7 +24,6 @@ RUN set -x; \
     echo "$(cat $SIGNATURE)  $TARBALL" | md5sum -c; \
     mkdir /tmp/wdqs-service; \
     tar zxvf $TARBALL -C /tmp/wdqs-service --strip-components=1
-
 
 # ###########################################################################
 # hadolint ignore=DL3006

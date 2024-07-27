@@ -118,7 +118,6 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION*         | 3.1.7_es7.20.2            | Same as above, but also mentioning the current Elasticsearch version.                                                                                                                                                                      |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
 
-
 ## Source
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/elasticsearch/Dockerfile).
