@@ -91,12 +91,10 @@ else
     php /var/www/html/maintenance/update.php --quick
 
     if [ -f /default-extra-install.sh ]; then
-        # shellcheck disable=SC1091
         bash /default-extra-install.sh
     fi
 
     if [ -f /extra-install.sh ]; then
-        # shellcheck disable=SC1091
         bash /extra-install.sh
     fi
 fi

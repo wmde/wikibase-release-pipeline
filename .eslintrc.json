@@ -7,7 +7,7 @@
 	],
 	"ignorePatterns": [
 		"**/results/result.json",
-		"!.github",
+		"!.github/**/**",
 		"!deploy",
 		"package-lock.json",
 		"*.properties"
@@ -24,32 +24,21 @@
 		"es-x/no-import-meta": "off",
 		"es-x/no-nullish-coalescing-operators": "off",
 		"es-x/no-class-fields": "off",
-		"no-mixed-spaces-and-tabs": [
-			"error",
-			"smart-tabs"
-		],
+		"no-mixed-spaces-and-tabs": [ "error", "smart-tabs" ],
 		"eol-last": [ "error", "always" ]
 	},
 	"overrides": [
 		{
-			"files": [
-				"*.json"
-			],
+			"files": [ "*.json" ],
 			"rules": {
 				"quotes": "off",
-				"quote-props": [
-					"error",
-					"consistent"
-				],
+				"quote-props": [ "error", "consistent" ],
 				"@typescript-eslint/semi": "off",
 				"no-unused-expressions": "off"
 			}
 		},
 		{
-			"files": [
-				"*.yaml",
-				"*.yml"
-			],
+			"files": [ "*.yaml", "*.yml" ],
 			"parser": "yaml-eslint-parser",
 			"rules": {
 				"max-len": "off",
@@ -60,10 +49,7 @@
 			}
 		},
 		{
-			"files": [
-				"docker-compose*.yaml",
-				"docker-compose*.yml"
-			],
+			"files": [ "docker-compose*.yaml", "docker-compose*.yml" ],
 			"parser": "yaml-eslint-parser",
 			"rules": {
 				"yml/indent": 1,

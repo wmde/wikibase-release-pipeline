@@ -13,7 +13,6 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         curl \
-        shellcheck \
         python3-pip \
         python3-venv \
         && ln -sf /usr/bin/python3 /usr/bin/python \

@@ -17,7 +17,6 @@
 		"paths": {}
 	},
 	"ts-node": {
-
 		"experimentalSpecifierResolution": "node",
 		"transpileOnly": true,
 

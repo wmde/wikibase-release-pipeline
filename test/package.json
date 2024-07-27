@@ -26,8 +26,5 @@
 		"wdio-mediawiki": "2.5.0",
 		"wdio-wikibase": "^6.0.2",
 		"yargs": "^17.7.2"
-	},
-	"scripts": {
-		"test": "NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts"
 	}
 }
