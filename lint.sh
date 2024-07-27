@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# ℹ️ Linting JS, YAML, Python scripts, and general whitespace (optionally fix)
+# ℹ️ Linting JS, YAML, Python scripts, and general whitespace
 if [[ $1 == "--fix" || $1 == "-f" ]]; then
   echo "ℹ️ Fixing linting issues"
-  npm run lint:fix
+  npm run lint:js-and-yml -- --fix
+  npm run lint:whitespace -- --fix
   # TODO: We only have 1 python script, should we do away with the Python dependency
   # and use Typescript/Javascript utility scripts instead?
   python3 -m black ./**/*.py
