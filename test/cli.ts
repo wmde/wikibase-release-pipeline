@@ -150,8 +150,8 @@ export async function runWdio(
 ): Promise<number> {
 	try {
 		// `logger` is a singleton and without this line the `<suiteName>/results/wdio.log` of the
-		// first suite in a multiple suite test ran (e.g. `./nx test -- all`) is appended for all the
-		// suites in the run
+		// first suite in a multiple suite test ran (e.g. `./nx test -- all`) is appended for all
+		// the suites in the run
 		logger.clearLogger();
 
 		const wdio = new Launcher( configFilePath, wdioOpts );
