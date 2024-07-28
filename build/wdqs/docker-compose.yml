@@ -1,14 +1,12 @@
 services:
-  wdqs:
-    image: ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION}
+  default:
+    image: ${IMAGE_NAMESPACE?}:/${IMAGE_NAME?}:${IMAGE_VERSION?}
     build:
-      context: .
       args:
         - DEBIAN_IMAGE_URL
         - JRE_IMAGE_URL
         - WDQS_VERSION
       tags:
-        - ${WBS_WDQS_IMAGE_URL}:latest
-        - ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION_MAJOR}
-        - ${WBS_WDQS_IMAGE_URL}:${WBS_WDQS_VERSION_MINOR}
-        - ${WBS_WDQS_IMAGE_URL}:wdqs${WDQS_VERSION}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:latest
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MAJOR?}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MINOR?}

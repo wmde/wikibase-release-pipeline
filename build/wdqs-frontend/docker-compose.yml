@@ -1,14 +1,13 @@
 services:
-  wdqs-frontend:
-    image: ${WBS_WDQS_FRONTEND_IMAGE_URL}:${WBS_WDQS_FRONTEND_VERSION}
+  default:
+    image: ${IMAGE_NAMESPACE?}:/${IMAGE_NAME?}:${IMAGE_VERSION?}
     build:
-      context: .
       args:
         - COMPOSER_IMAGE_URL
         - NGINX_IMAGE_URL
         - NODE_IMAGE_URL
         - WDQSQUERYGUI_COMMIT
       tags:
-        - ${WBS_WDQS_FRONTEND_IMAGE_URL}:latest
-        - ${WBS_WDQS_FRONTEND_IMAGE_URL}:${WBS_WDQS_FRONTEND_VERSION_MAJOR}
-        - ${WBS_WDQS_FRONTEND_IMAGE_URL}:${WBS_WDQS_FRONTEND_VERSION_MINOR}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:latest
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MAJOR?}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MINOR?}

@@ -1,11 +1,10 @@
 services:
-  wdqs-proxy:
-    image: ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION}
+  default:
+    image: ${IMAGE_NAMESPACE?}:/${IMAGE_NAME?}:${IMAGE_VERSION?}
     build:
-      context: .
       args:
         - NGINX_IMAGE_URL
       tags:
-        - ${WBS_WDQS_PROXY_IMAGE_URL}:latest
-        - ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION_MAJOR}
-        - ${WBS_WDQS_PROXY_IMAGE_URL}:${WBS_WDQS_PROXY_VERSION_MINOR}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:latest
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MAJOR?}
+        - ${IMAGE_NAMESPACE?}/${IMAGE_NAME?}:${IMAGE_VERSION_MINOR?}

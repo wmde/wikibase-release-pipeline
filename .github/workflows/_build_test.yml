@@ -29,15 +29,44 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: ./nx build ${{ matrix.component }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        id: builder
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
 
-      # TODO re-enable as soon as we make use of it
-      # - name: Scan Image
-      #   uses: ./.github/actions/scan-image
-      #   continue-on-error: true
-      #   with:
-      #     image_name: ${{ matrix.component }}
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Current issue is generating an appropriate dev tag for the image
+      # I would like to have nx manage this through pre-release numbers,
+      # but may need to do something less complicated first to figure-out
+      # the target workflow.
+      #
+      # Multi platform builds are REALLY slow on Github Actions currently.
+      # We may need to use https://github.com/baschny/append-buildx-action
+      # and an external runner for the ARM64 builds, running either off of
+      # a local ARM machine on the team or a ARM-based VPS to get off qemu.
+      # To enable multi-platform builds add this to the buildx bake params:
+      #
+      # --set default.platform=linux/amd64,linux/arm64
+      #
+      # However, multi-platform builds cannot be loaded but only directly
+      # pushed to a repository, so we need to ammend what is here to make
+      # the push work from the build (so not all the tags).
+      - run: |
+          export $(grep -v '^#' build.env | xargs)
+          export IMAGE_REGISTRY=ghcr.io
+          export IMAGE_NAMESPACE=${{ github.repository_owner }}
+          docker buildx bake
+        working-directory: ./build/${{ matrix.component }}
+  
       - uses: ./.github/actions/push-ghcr
         with:
           docker_image: wikibase/${{ matrix.component }}
