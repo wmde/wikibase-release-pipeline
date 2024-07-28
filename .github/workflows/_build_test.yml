@@ -64,7 +64,7 @@ jobs:
           export $(grep -v '^#' build.env | xargs)
           # export IMAGE_REGISTRY=ghcr.io
           # export IMAGE_NAMESPACE=${{ github.repository_owner }}
-          export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/${{ matrix.component }}:dev-${{ github.run_id }}
+          export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
           docker buildx bake --set default.tags=$PR_BUILD_TAG --push
         working-directory: ./build/${{ matrix.component }}
   
