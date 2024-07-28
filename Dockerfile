@@ -1,5 +1,5 @@
 # Base image: Node.js LTS (20) on Debian Bookworm (12)
-FROM node:20-bookworm-slim as wbs-dev-runner-base
+FROM node:20-bookworm-slim AS wbs-dev-runner-base
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -34,7 +34,7 @@ RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     rm get-docker.sh
 
 # Stage to get the hadolint binary
-FROM ghcr.io/hadolint/hadolint:latest-debian as hadolint
+FROM ghcr.io/hadolint/hadolint:latest-debian AS hadolint
 
 # Final stage: Build on top of the base image
 FROM wbs-dev-runner-base
