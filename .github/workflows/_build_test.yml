@@ -64,7 +64,7 @@ jobs:
           export $(grep -v '^#' build.env | xargs)
           # export IMAGE_REGISTRY=ghcr.io
           # export IMAGE_NAMESPACE=${{ github.repository_owner }}
-          docker buildx bake
+          docker buildx bake --load
         working-directory: ./build/${{ matrix.component }}
   
       - uses: ./.github/actions/push-ghcr
