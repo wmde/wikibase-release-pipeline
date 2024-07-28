@@ -62,9 +62,10 @@ jobs:
       # the push work from the build (so not all the tags).
       - run: |
           export $(grep -v '^#' build.env | xargs)
-          export IMAGE_REGISTRY=ghcr.io
+          # export IMAGE_REGISTRY=ghcr.io
           # export IMAGE_NAMESPACE=${{ github.repository_owner }}
-          docker buildx bake --push
+          export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image }}:dev-${{ github.run_id }}
+          docker buildx bake -set default.tags=ghcr.io/$PR_BUILD_TAG --push
         working-directory: ./build/${{ matrix.component }}
   
       # - uses: ./.github/actions/push-ghcr
