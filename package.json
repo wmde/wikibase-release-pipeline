@@ -10,6 +10,7 @@
 		"@swc-node/register": "~1.9.1",
 		"@swc/core": "~1.5.7",
 		"@swc/helpers": "~0.5.11",
+		"@types/node": "^20.11.28",
 		"@wmde/eslint-config-wikimedia-typescript": "^0.2.9",
 		"any-eslint-parser": "^1.0.1",
 		"eslint": "^8.57.0",
