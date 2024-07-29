@@ -11,8 +11,8 @@ declare namespace WebdriverIO {
 	interface Browser {
 		/**
 		 * As of v8 of WDIO the browser.config object is deprecated in preference to browser.options
-		 * This tolerates our reassignment of options to config in default-functions which is necessary
-		 * until the upstream WMDE and WikiMedia WDIO helper modules catch-up
+		 * This tolerates our reassignment of options to config in default-functions which is
+		 * necessary until the upstream WMDE and WikiMedia WDIO helper modules catch-up
 		 */
 		config: Options;
 
