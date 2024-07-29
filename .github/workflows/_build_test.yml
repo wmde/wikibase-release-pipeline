@@ -57,9 +57,7 @@ jobs:
       #
       # --set default.platform=linux/amd64,linux/arm64
       #
-      # However, multi-platform builds cannot be loaded but only directly
-      # pushed to a repository, so we need to ammend what is here to make
-      # the push work from the build (so not all the tags).
+      # Timeout-minutes also need to be increased
       - run: |
           export $(grep -v '^#' build.env | xargs)
           # export IMAGE_REGISTRY=ghcr.io
@@ -67,11 +65,6 @@ jobs:
           export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
           docker buildx bake --set default.tags=$PR_BUILD_TAG --push
         working-directory: ./build/${{ matrix.component }}
-  
-      # - uses: ./.github/actions/push-ghcr
-      #   with:
-      #     docker_image: wikibase/${{ matrix.component }}
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     needs: build
