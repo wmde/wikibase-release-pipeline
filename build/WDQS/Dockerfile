@@ -61,18 +61,20 @@ RUN mkdir /var/log/wdqs && chown blazegraph /var/log/wdqs
 ENV MEMORY=""\
     HEAP_SIZE="1g"\
     HOST="0.0.0.0"\
+    WDQS_ENTITY_NAMESPACES="120,122"\
+    WDQS_SCHEME="http"\
     WDQS_HOST="wdqs"\
     WDQS_PORT="9999"\
-    WDQS_ENTITY_NAMESPACES="120,122"\
     WIKIBASE_SCHEME="http"\
     WIKIBASE_HOST="wikibase"\
+    WIKIBASE_PORT="80"\
     WIKIBASE_MAX_DAYS_BACK="90"\
     BLAZEGRAPH_EXTRA_OPTS=""\
     LOG_CONFIG="/wdqs/logback.xml"
 
 WORKDIR /wdqs
 
-COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
+COPY --chown=blazegraph:blazegraph entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
 COPY --chown=blazegraph:blazegraph RWStore.properties allowlist.txt logback.xml /wdqs/
 
