@@ -48,7 +48,7 @@ services:
       - 5900:5900
       - 7900:7900
     volumes:
-      - .:/usr/src/test
+      # Should map to same location as wbs-dev-runner workspace root
       - ../../:/workspace
     shm_size: 2g
     environment:
