@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import SpecialEntityDataPage from '../../helpers/pages/special/entity-data.page.js';
+import SpecialEntityDataPage from '../helpers/pages/special/entity-data.page.js';
 
 type ReferenceValue = {
 	id: string;

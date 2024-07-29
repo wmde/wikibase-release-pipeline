@@ -1,8 +1,8 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ItemPage from '../../helpers/pages/entity/item.page.js';
-import page from '../../helpers/pages/page.js';
-import SearchResult from '../../types/search-result.js';
+import ItemPage from '../helpers/pages/entity/item.page.js';
+import page from '../helpers/pages/page.js';
+import SearchResult from '../types/search-result.js';
 
 const itemAlias: string = getTestString( 'alias' );
 const itemLabel: string = getTestString( 'testItem' );

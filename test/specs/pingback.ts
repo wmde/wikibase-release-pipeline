@@ -1,4 +1,4 @@
-import page from '../../helpers/pages/page.js';
+import page from '../helpers/pages/page.js';
 
 describe( 'Pingback', function () {
 	it( 'Should ping on first page request', async function () {
