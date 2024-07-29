@@ -1,5 +1,6 @@
 {
 	"targets": {
+		"lint": {},
 		"build": {},
 		"nx-release-publish": {},
 		"update-commits": {}
