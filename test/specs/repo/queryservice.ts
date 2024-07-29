@@ -277,12 +277,6 @@ describe( 'QueryService', function () {
 	} );
 
 	it( 'Should show results from a page in allowlist.txt', async function () {
-		// We don't currently have a way for WBS Deploy to pass tests with breaking changes
-		// Please see T361575 for more info
-		if ( testEnv.settings.name === 'deploy' ) {
-			this.skip();
-		}
-
 		await QueryServiceUIPage.open( `
 			PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
 			PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>

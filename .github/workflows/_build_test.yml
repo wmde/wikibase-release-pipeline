@@ -82,7 +82,6 @@ jobs:
           - pingback
           - confirm_edit
           - elasticsearch
-          - deploy
 
     steps:
       - uses: actions/checkout@v4
