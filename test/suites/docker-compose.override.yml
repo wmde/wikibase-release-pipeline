@@ -49,6 +49,7 @@ services:
       - 7900:7900
     volumes:
       - .:/usr/src/test
+      - ../../:/workspace
     shm_size: 2g
     environment:
       SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
