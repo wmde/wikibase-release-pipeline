@@ -35,7 +35,7 @@
 		"build": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) build && docker buildx bake --load"
+				"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) && docker buildx bake --load"
 			}
 		},
 		"test": {

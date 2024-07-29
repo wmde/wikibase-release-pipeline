@@ -24,5 +24,5 @@
 		"esm": true
 	},
 	"exclude": [ "node_modules", "tmp" ],
-	"include": [ "**/*.ts" ]
+	"include": [ "**/*.ts", "**/*.d.ts" ]
 }

@@ -7,12 +7,22 @@ source local.env
 path="."
 fix=false
 prettier=false
+exit_code=0
 
 # Function to display help message
 usage() {
   echo "Usage: lint.sh <path> [--fix, -f] [--prettier]"
   exit 1
 }
+
+# Error handler to capture errors
+error_handler() {
+  # shellcheck disable=SC2317
+  exit_code=1
+}
+
+# Trap ERR to handle errors
+trap 'error_handler' ERR
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
@@ -75,3 +85,6 @@ shellcheck -x ./nx
 echo "ℹ️ Running hadolint on all Dockerfiles"
 find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name Dockerfile -print0 | xargs -0 -r \
   hadolint --config .hadolint.yml
+
+echo $exit_code
+exit $exit_code

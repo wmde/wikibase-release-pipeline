@@ -19,7 +19,7 @@ export function defaultFunctions(): void {
 	// As of v8 of WDIO the browser.config object is deprecated in preference to browser.options
 	// This reassignment of options to config is necessary until the upstream WMDE and WikiMedia
 	// WDIO helper modules catch-up
-	browser.config = browser.options
+	browser.config = browser.options;
 
 	// Base for browser.url() and Page#openTitle()
 	browser.options.baseUrl =

@@ -1,6 +1,7 @@
 {
 	"targets": {
 		"lint": {},
+		"build": {},
 		"test": {}
 	}
 }

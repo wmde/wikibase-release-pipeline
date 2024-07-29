@@ -14,6 +14,7 @@ services:
     stop_grace_period: 1s
     ports:
       - 9229:9229
+      - 4211:4211
     volumes:
       - .:/workspace
       - node_modules:/workspace/node_modules

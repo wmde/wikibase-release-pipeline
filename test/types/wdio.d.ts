@@ -6,6 +6,7 @@ declare namespace WebdriverIO {
 	type DatabaseConfig = import( './database-config.js' ).default;
 	type ExternalChange = import( './external-change.js' ).default;
 	type LuaCPUValue = import( './lua-cpu-value.js' ).default;
+	type Options = import('@wdio/types').Options;
 
 	interface Browser {
 		/**
@@ -13,7 +14,7 @@ declare namespace WebdriverIO {
 		 * This tolerates our reassignment of options to config in default-functions which is necessary
 		 * until the upstream WMDE and WikiMedia WDIO helper modules catch-up
 		 */
-		config: any;
+		config: Options;
 
 		/**
 		 * Execute query on database
