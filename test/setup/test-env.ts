@@ -95,9 +95,9 @@ export default class TestEnv {
 			shell: true,
 			encoding: 'utf-8',
 			env: {
+				...process.env,
 				...this.vars,
-				OUTPUT_DIR: this.settings.outputDir,
-				PATH: process.env.PATH
+				OUTPUT_DIR: this.settings.outputDir
 			}
 		} );
 
