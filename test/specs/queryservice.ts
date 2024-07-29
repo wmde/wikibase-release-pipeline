@@ -2,9 +2,9 @@ import { stringify } from 'querystring';
 import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice-ui.page.js';
-import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
-import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
+import QueryServiceUIPage from '../helpers/pages/queryservice-ui/queryservice-ui.page.js';
+import SpecialNewItemPage from '../helpers/pages/special/new-item.page.js';
+import { wikibasePropertyString } from '../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', function () {
 	it( 'Should not be able to post to sparql endpoint', async function () {
