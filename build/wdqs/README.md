@@ -1,4 +1,4 @@
-# Wikibase Suite Wikidata Query Service image
+# Wikibase Suite Wikidata Query Service (wdqs) image
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 

@@ -1,4 +1,4 @@
-# Wikibase Suite WDQS Proxy image
+# Wikibase Suite Wikidata Query Service Proxy (wdqs-proxy) image
 
 This is a proxy to put in front of the WBS WDQS image that enforces READONLY requests, implements query timeouts and limits access to Blazegraph SPARQL endpoints.
 
