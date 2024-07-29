@@ -8,12 +8,13 @@ import { hideBin } from 'yargs/helpers';
 
 export const allSuiteNames = [
 	'repo',
-	'fedprops',
 	'repo_client',
+	'elasticsearch',
+	'queryservice',
 	'quickstatements',
 	'pingback',
 	'confirm_edit',
-	'elasticsearch'
+	'fedprops'
 ];
 
 const y = yargs( hideBin( process.argv ) );

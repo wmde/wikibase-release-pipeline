@@ -76,12 +76,13 @@ jobs:
       matrix:
         suite:
           - repo
-          - fedprops
           - repo_client
+          - elasticsearch
+          - queryservice
           - quickstatements
           - pingback
           - confirm_edit
-          - elasticsearch
+          - fedprops
 
     steps:
       - uses: actions/checkout@v4
