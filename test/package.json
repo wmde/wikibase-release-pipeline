@@ -16,8 +16,6 @@
 		"lodash": "^4.17.21",
 		"mocha": "^10.7.0",
 		"semver-parser": "^4.1.6",
-		"ts-node": "^10.9.2",
-		"tslib": "^2.6.3",
 		"wdio-mediawiki": "2.5.0",
 		"wdio-wikibase": "^6.0.2",
 		"yargs": "^17.7.2"

@@ -44,8 +44,6 @@ COPY --from=hadolint /bin/hadolint /usr/local/bin/hadolint
 
 # NPM dependencies
 COPY package*.json ./
-# Add any workspace package.json files with dependencies (keep directory structure)
-COPY ./test/package.json ./test/package.json
 RUN npm ci && npm config set loglevel error
 
 # Add npm bins and activate Python venv virtual environment

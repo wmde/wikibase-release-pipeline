@@ -22,7 +22,9 @@
 		"prettier-plugin-organize-imports": "^4.0.0",
 		"shellcheck": "^3.0.0",
 		"stylelint-config-wikimedia": "0.17.2",
-		"typescript": "^5.3.3",
+		"tslib": "^2.6.3",
+		"ts-node": "^10.9.2",
+		"typescript": "~5.4.5",
 		"yaml-eslint-parser": "^1.2.3"
 	},
 	"workspaces": [
