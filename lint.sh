@@ -86,5 +86,4 @@ echo "ℹ️ Running hadolint on all Dockerfiles"
 find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name Dockerfile -print0 | xargs -0 -r \
   hadolint --config .hadolint.yml
 
-echo $exit_code
 exit $exit_code
