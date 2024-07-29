@@ -6,7 +6,7 @@ declare namespace WebdriverIO {
 	type DatabaseConfig = import( './database-config.js' ).default;
 	type ExternalChange = import( './external-change.js' ).default;
 	type LuaCPUValue = import( './lua-cpu-value.js' ).default;
-	type Options = import('@wdio/types').Options;
+	type Options = import( '@wdio/types' ).Options;
 
 	interface Browser {
 		/**
