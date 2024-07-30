@@ -1,4 +1,5 @@
 Todo:
+
 - [ ] move nx build task to build/workspace.json, and make different run for local and ci (or pr and release)
 - [ ] make sure the ./nx build wikibase --can-tag-params-that-get-forwarded-to-buildx
 - [ ] Look into build_test_publish / ./nx release --dry-run for handling tagging (use default tags in imagel, so buildx without --set default.tags)
@@ -7,10 +8,9 @@ Todo:
 
 Ref. https://www.luu.io/posts/multi-platform-docker-image:
 
-1) `docker buildx create --name mybuilder --bootstrap --platform linux/amd64,linux/arm64 --use --config mybuilderconfig.toml` *
-2) `docker run -d -p 5000:5000 --name registry registry`
-3) `docker buildx build . --platform=linux/amd64,linux/arm64 --push --tag localhost:5000/wikibase/wbs-dev-runner:latest`
-
+1. `docker buildx create --name mybuilder --bootstrap --platform linux/amd64,linux/arm64 --use --config mybuilderconfig.toml` \*
+2. `docker run -d -p 5000:5000 --name registry registry`
+3. `docker buildx build . --platform=linux/amd64,linux/arm64 --push --tag localhost:5000/wikibase/wbs-dev-runner:latest`
 
 ```
 # mybuilderconfig.toml
@@ -19,8 +19,26 @@ http = true
 insecure = true
 ```
 
+# Setting up the multi platform builders and building
 
-docker-bake.hcl for wikibase:
+```
+
+#!/bin/bash
+
+# Create and configure builders for each platform
+docker buildx create --name builder-arm64 --platform linux/arm64
+docker buildx create --name builder-amd64 --platform linux/amd64
+
+# Create a multi-builder that includes both platform-specific builders
+docker buildx create --name multi-builder --driver docker-container --use
+docker buildx create --append --name multi-builder --platform linux/arm64 --node builder-arm64
+docker buildx create --append --name multi-builder --platform linux/amd64 --node builder-amd64
+
+# Run docker buildx bake for the multi-platform build
+docker buildx bake --progress=plain
+```
+
+# A docker-bake.hcl WIP for wikibase
 
 ```
 variable "IMAGE_NAME" {
