@@ -2,3 +2,5 @@
 /.nx/cache
 /.nx/workspace-data
 package-lock.json
+pnpm/**/**
+pnpm-lock.yaml

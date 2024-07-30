@@ -27,11 +27,6 @@
 		"typescript": "~5.4.5",
 		"yaml-eslint-parser": "^1.2.3"
 	},
-	"workspaces": [
-		"build/*",
-		"test/**",
-		"deploy/**"
-	],
 	"nx": {},
 	"engines": {
 		"node": "20"

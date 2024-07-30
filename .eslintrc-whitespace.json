@@ -6,6 +6,8 @@
 		"!.github",
 		"!deploy",
 		"package-lock.json",
+		"pnpm/**/**",
+		"pnpm-lock.yaml",
 		"*.properties",
 		"*.ts",
 		"*.js",
