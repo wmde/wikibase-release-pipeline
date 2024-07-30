@@ -40,16 +40,16 @@ $ ./nx run-many -t update-commits
 $ ./nx test
 
 # Runs all test suites (defined in `test/suites`)
-$ ./nx test all
+$ ./nx test -- all
 
 # Runs the `repo` test suite
-$ ./nx test repo
+$ ./nx test -- repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./nx test repo --spec specs/repo/special-item.ts
+$ ./nx test -- repo --spec specs/repo/special-item.ts
 
 # Start and leave up the test environment for a given test suite without running tests
-$ ./nx test repo --setup
+$ ./nx test -- repo --setup
 ```
 
 ### Deploy
@@ -84,25 +84,25 @@ You can run the tests in the Docker container locally exactly as they are run in
 ./nx test --help
 
 # Run all test suites
-./nx test all
+./nx test -- all
 
 # Only run a single suite (e.g., repo)
-./nx test repo
+./nx test -- repo
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./nx test repo --spec specs/repo/extensions/babel.ts
+./nx test -- repo --spec specs/repo/extensions/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:
 
 ```bash
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
-./nx test repo --setup
+./nx test -- repo --setup
 
 # Sets test timeouts to 1 day so they don't time out while debugging with `await browser.debug()` calls
 # However, this can have undesirable effects during normal test runs, so only use for actual debugging
 # purposes.
-./nx test repo --debug
+./nx test -- repo --debug
 ```
 
 WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .
