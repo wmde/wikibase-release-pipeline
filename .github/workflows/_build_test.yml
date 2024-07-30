@@ -31,7 +31,7 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         id: builder
         uses: docker/setup-buildx-action@v3
@@ -92,12 +92,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: ./nx test -- ${{ matrix.suite }}
-
-      - name: Reporter
-        run: |
-          cd .github/reporter
-          npm install
-          node report.js ${{ matrix.suite }}
 
       - name: Show logs
         run: |
