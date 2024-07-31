@@ -27,11 +27,6 @@
   - [ ] TODO ...
 - [x] Create an item on repo and verify that client can use it using Lua (Scribunto)
 
-## Scribunto
-
-- [x] Verify Lua module can be executed
-- [x] Verify Lua module can be executed within time limit
-
 ## Wikibase federated properties (using wikidata.org as source wiki)
 
 - [x] Create an item on Wikibase and add a statement using a federated property
