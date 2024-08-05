@@ -10,7 +10,7 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"importHelpers": true,
-		"lib": ["esnext"],
+		"lib": [ "esnext" ],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
@@ -22,6 +22,6 @@
 		"files": true,
 		"esm": true
 	},
-	"exclude": ["node_modules", "tmp"],
-	"include": ["**/*.ts", "**/*.d.ts"]
+	"exclude": [ "node_modules", "tmp" ],
+	"include": [ "**/*.ts", "**/*.d.ts" ]
 }
