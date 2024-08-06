@@ -31,11 +31,11 @@
 		"lint": {
 			"command": "./lint.sh {projectRoot}"
 		},
-		"build": {
-			"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) && docker buildx bake --load"
-		},
 		"test": {
 			"command": "cd test && NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts"
+		},
+		"build": {
+			"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) && docker buildx bake --load"
 		},
 		"update-commits": {
 			"command": "python3 build/update_commits.py {projectRoot}/build.env"
