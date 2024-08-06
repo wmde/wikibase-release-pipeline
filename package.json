@@ -27,7 +27,13 @@
 		"typescript": "~5.4.5",
 		"yaml-eslint-parser": "^1.2.3"
 	},
-	"nx": {},
+	"nx": {
+		"targets": {
+			"lint": {},
+			"build": {},
+			"test": {}
+		}	
+	},
 	"engines": {
 		"node": "20"
 	}
