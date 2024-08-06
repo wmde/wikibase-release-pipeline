@@ -43,6 +43,5 @@
 		"nx-release-publish": {
 			"command": "echo \"WOULD PUSH TO DOCKERHUB\""
 		}
-
 	}
 }
