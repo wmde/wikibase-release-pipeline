@@ -16,7 +16,10 @@ export const ONE_DAY_IN_MS = 86400000;
 export const defaultTestSettings = {
 	envFiles: [
 		'../deploy/template.env',
-		// For MEDIAWIKI_VERSION only
+		// TODO: For MEDIAWIKI_VERSION only. Could use this Action API endpoint
+		// instead to remove dependency:
+		// https://wikibase/api.php?action=query&meta=siteinfo&siprop=general 
+		// Returns JSON and version is available at the query.general.generator key
 		'../build/wikibase/build.env',
 		'./test-services.env',
 		'../local.env'
