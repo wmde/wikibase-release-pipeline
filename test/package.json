@@ -24,5 +24,10 @@
 		"wdio-wikibase": "^6.0.2",
 		"webdriverio": "^8.39.1",
 		"yargs": "^17.7.2"
-	}
+	},
+	"nx": {
+		"targets": {
+			"lint": {}
+		}
+	}		
 }

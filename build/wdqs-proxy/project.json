@@ -1,7 +1,0 @@
-{
-	"targets": {
-		"lint": {},
-		"build": {},
-		"nx-release-publish": {}
-	}
-}
