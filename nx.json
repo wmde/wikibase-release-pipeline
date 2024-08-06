@@ -29,34 +29,19 @@
 	},
 	"targetDefaults": {
 		"lint": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "./lint.sh {projectRoot}"
-			}
+			"command": "./lint.sh {projectRoot}"
 		},
 		"build": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) && docker buildx bake --load"
-			}
+			"command": "cd {projectRoot} && export $(grep -v '^#' build.env | xargs) && docker buildx bake --load"
 		},
 		"test": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "cd test && NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts"
-			}
+			"command": "cd test && NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts"
 		},
 		"nx-release-publish": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "echo \"WOULD RUN: cd {projectRoot} && docker compose --env-file build.env push\""
-			}
+			"command": "echo \"WOULD PUSH TO DOCKERHUB\""
 		},
 		"update-commits": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "python3 build/update_commits.py {projectRoot}/build.env"
-			}
+			"command": "python3 build/update_commits.py {projectRoot}/build.env"
 		}
 	}
 }
