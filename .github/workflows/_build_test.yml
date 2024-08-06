@@ -7,9 +7,19 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
       - uses: actions/checkout@v4
 
-      - run: ./nx lint
+      - name: Install dependencies
+        run: pnpm install
+
+      - run: pnpm exec nx lint
 
   build:
     runs-on: ubuntu-latest
@@ -27,7 +37,23 @@ jobs:
           - quickstatements
 
     steps:
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -38,16 +64,10 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
 
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Building ${{ matrix.component }}
         run: |
           export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
-          cd build && ./build.sh ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
+          pnpm exec nx build ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
 
   test:
     needs: build
@@ -68,13 +88,23 @@ jobs:
           - deploy
 
     steps:
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pnpm install
 
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: ./nx test -- ${{ matrix.suite }}
+      - run: pnpm exec nx build -- ${{ matrix.suite }}
 
       - name: Show logs
         run: |
