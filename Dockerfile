@@ -12,6 +12,7 @@ RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         git \
         curl \
+        jq \
         python3-pip \
         python3-venv \
         && ln -sf /usr/bin/python3 /usr/bin/python \

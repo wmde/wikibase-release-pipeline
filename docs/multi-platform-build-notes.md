@@ -83,3 +83,23 @@ target "default" {
   ]
 }
 ```
+---
+
+Scraps:
+
+```
+# Current issue is generating an appropriate dev tag for the image
+# I would like to have nx manage this through pre-release numbers,
+# but may need to do something less complicated first to figure-out
+# the target workflow.
+#
+# Multi platform builds are REALLY slow on Github Actions currently.
+# We may need to use https://github.com/baschny/append-buildx-action
+# and an external runner for the ARM64 builds, running either off of
+# a local ARM machine on the team or a ARM-based VPS to get off qemu.
+# To enable multi-platform builds add this to the buildx bake params:
+#
+# --set default.platform=linux/amd64,linux/arm64
+#
+# Timeout-minutes also need to be increased
+```

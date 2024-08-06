@@ -30,7 +30,6 @@
 	"nx": {
 		"targets": {
 			"lint": {},
-			"build": {},
 			"test": {}
 		}
 	},
