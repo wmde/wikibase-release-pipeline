@@ -37,11 +37,12 @@
 		"test": {
 			"command": "cd test && NODE_NO_WARNINGS=1 node --require ts-node/register --loader=ts-node/esm cli.ts"
 		},
-		"nx-release-publish": {
-			"command": "echo \"WOULD PUSH TO DOCKERHUB\""
-		},
 		"update-commits": {
 			"command": "python3 build/update_commits.py {projectRoot}/build.env"
+		},
+		"nx-release-publish": {
+			"command": "echo \"WOULD PUSH TO DOCKERHUB\""
 		}
+
 	}
 }
