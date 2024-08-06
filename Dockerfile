@@ -4,14 +4,13 @@ FROM node:20-bookworm-slim AS wbs-dev-runner-base
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-WORKDIR /workspace
-
 # hadolint global ignore=DL3059
 SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 # Install necessary packages except Docker and PNPM
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
+        git \
         curl \
         python3-pip \
         python3-venv \
@@ -32,6 +31,11 @@ RUN python3 -m venv /root/venv && \
 RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
     bash get-docker.sh && \
     rm get-docker.sh
+
+WORKDIR /workspace
+
+# Setup Git
+RUN git config --global --add safe.directory /workspace
 
 # Install PNPM
 RUN curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" PNPM_VERSION=9.6.0 bash -
