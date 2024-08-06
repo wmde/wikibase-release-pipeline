@@ -12,7 +12,8 @@
 		"package-lock.json",
 		"pnpm/**/**",
 		"pnpm-lock.yaml",
-		"*.properties"
+		"*.properties",
+		"ts-config.json"
 	],
 	"parserOptions": {
 		"sourceType": "module",
