@@ -47,7 +47,7 @@ jobs:
       - name: Building ${{ matrix.component }}
         run: |
           export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
-          ./nx build ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
+          cd build && ./build.sh ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
 
   test:
     needs: build
