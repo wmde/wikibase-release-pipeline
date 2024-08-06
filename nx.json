@@ -7,7 +7,6 @@
 			"nx/plugins/package-json": "19.5.0"
 		}
 	},
-	"packageManager": "pnpm",
 	"release": {
 		"groups": {
 			"images": {
