@@ -13,7 +13,7 @@
 		"pnpm/**/**",
 		"pnpm-lock.yaml",
 		"*.properties",
-		"ts-config.json"
+		"tsconfig.json"
 	],
 	"parserOptions": {
 		"sourceType": "module",

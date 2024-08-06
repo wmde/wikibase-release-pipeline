@@ -7,6 +7,6 @@
 			"build": {},
 			"nx-release-publish": {},
 			"update-commits": {}
-		}	
+		}
 	}
 }

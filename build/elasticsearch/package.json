@@ -6,6 +6,6 @@
 			"lint": {},
 			"build": {},
 			"nx-release-publish": {}
-		}	
+		}
 	}
 }
