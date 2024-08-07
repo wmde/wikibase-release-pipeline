@@ -45,10 +45,10 @@ jobs:
           node-version-file: package.json
           cache: "pnpm"
 
-      - name: Setup PNPM and install dependencies
-        run: |
-          corepack enable
-          pnpm install
+      - run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
@@ -97,10 +97,10 @@ jobs:
           node-version-file: package.json
           cache: "pnpm"
 
-      - name: Setup PNPM and install dependencies
-        run: |
-          corepack enable
-          pnpm install
+      - run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install
 
       - uses: ./.github/actions/pull-ghcr
         with:
