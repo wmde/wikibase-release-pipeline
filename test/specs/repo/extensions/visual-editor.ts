@@ -1,10 +1,6 @@
 import page from '../../../helpers/pages/page.js';
 
 describe( 'VisualEditor', function () {
-	beforeEach( async function () {
-		await browser.skipIfExtensionNotPresent( this, 'VisualEditor' );
-	} );
-
 	it( 'Should be able to edit a page using the editor', async function () {
 		await page.open( '/wiki/TestVisualEditor?veaction=edit' );
 

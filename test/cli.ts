@@ -12,7 +12,6 @@ export const allSuiteNames = [
 	'repo_client',
 	'quickstatements',
 	'pingback',
-	'confirm_edit',
 	'elasticsearch',
 	'deploy'
 ];
