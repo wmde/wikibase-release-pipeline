@@ -9,17 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: corepack enable
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - run: pnpm exec nx lint
+      - run: ./nx lint
 
   build:
     runs-on: ubuntu-latest
@@ -37,19 +27,6 @@ jobs:
           - quickstatements
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: package.json
-          cache: "pnpm"
-
-      - run: corepack enable
-
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -65,10 +42,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: actions/checkout@v4
+
       - name: Building ${{ matrix.component }}
         run: |
           export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
-          pnpm exec nx build ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
+          build/build.sh ${{ matrix.component }} --set default.tags=$PR_BUILD_TAG --push
 
   test:
     needs: build
@@ -91,22 +70,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: package.json
-          cache: "pnpm"
-
-      - run: corepack enable
-
-      - name: Install dependencies
-        run: pnpm install
-
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: pnpm exec nx build -- ${{ matrix.suite }}
+      - run: test/test.sh ${{ matrix.suite }}
 
       - name: Show logs
         run: |
