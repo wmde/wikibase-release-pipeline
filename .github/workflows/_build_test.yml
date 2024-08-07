@@ -74,7 +74,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: test/test.sh ${{ matrix.suite }}
+      - run: ./nx test -- ${{ matrix.suite }}
 
       - name: Show logs
         run: |
