@@ -37,13 +37,13 @@ jobs:
           - quickstatements
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
           cache: "pnpm"
-
-      - uses: actions/checkout@v4
 
       - name: Setup PNPM and install dependencies
         run: |
@@ -89,13 +89,13 @@ jobs:
           - deploy
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
           cache: "pnpm"
-
-      - uses: actions/checkout@v4
 
       - name: Setup PNPM and install dependencies
         run: |
