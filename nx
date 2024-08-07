@@ -3,8 +3,6 @@
 set -e
 
 [ -f "local.env" ] || touch local.env
-# Make sure the docker network exists
-docker network create wbs-dev > /dev/null 2>&1 || true
 
 # If running inside a Docker container, execute nx directly
 if [ -f /.dockerenv ]; then
