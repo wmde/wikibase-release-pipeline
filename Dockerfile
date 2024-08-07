@@ -10,12 +10,10 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # Install necessary packages except Docker and PNPM
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
+        ca-certificates \
         git \
         curl \
         jq \
-        python3-pip \
-        python3-venv \
-        && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/*
 
 # Install Docker CLI
@@ -31,16 +29,6 @@ RUN ARCH=$(uname -m) && \
         curl -L https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-arm64 -o /usr/local/bin/hadolint; \
     fi && \
     chmod +x /usr/local/bin/hadolint
-
-# Set up Python virtual environment and install Python packages (for black and update_commits.py)
-RUN python3 -m venv /root/venv && \
-    /root/venv/bin/pip install --no-cache-dir --upgrade \
-        pip \
-        setuptools \
-        requests \
-        bs4 \
-        lxml \
-        black
 
 WORKDIR /workspace
 

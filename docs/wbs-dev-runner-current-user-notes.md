@@ -30,9 +30,6 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         curl \
-        python3-pip \
-        python3-venv \
-        && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/*
 
 # Install Docker CLI
@@ -57,16 +54,6 @@ RUN set -ex; \
     usermod -u "$UID" node
 
 USER node
-
-# Set up Python virtual environment and install Python packages
-RUN python3 -m venv ~/venv && \
-    ~/venv/bin/pip install --no-cache-dir --upgrade \
-        pip \
-        setuptools \
-        requests \
-        bs4 \
-        lxml \
-        black
 
 # Install PNPM
 RUN mkdir ~/.npm-global && npm config set prefix ~/.npm-global && npm install -g pnpm@9.6.0

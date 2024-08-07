@@ -62,24 +62,16 @@ if $fix; then
   echo "ℹ️ Running ESLint with fix"
   eslint "$path" --fix
   eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json --fix
-
-  echo "ℹ️ Running Black for Python"
-  find "$path" -path "$path/node_modules" -prune -o -name '*.py' -print0 | xargs -0 -r \
-    python3 -m black --quiet
 else
   echo "ℹ️ Running ESLint (without --fix)"
   eslint "$path"
   eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json
-
-  echo "ℹ️ Running Python Black on all *.py files (with --check)"
-  find "$path" -path "$path/node_modules" -prune -o -name '*.py' -print0 | xargs -0 -r \
-    python3 -m black --diff --quiet --check
 fi
 
 echo "ℹ️ Running shellcheck on *.sh files"
 find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name "*.sh" -print0 | xargs -0 \
   shellcheck -x
-# Always check nx script...
+# Also check nx script...
 shellcheck -x ./nx
 
 echo "ℹ️ Running hadolint on all Dockerfiles"
