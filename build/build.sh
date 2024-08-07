@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+# Change to the directory where the script is located
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit
+
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <directory> [docker buildx bake arguments...]"
     exit 1
 fi
 
-# Change to the specified directory
+# Change to the directory for the specified project
 cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
 
 # Remove the first argument, leaving the rest for docker buildx bake
