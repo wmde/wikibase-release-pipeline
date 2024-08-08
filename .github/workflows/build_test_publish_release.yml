@@ -17,7 +17,7 @@ jobs:
 
     uses: ./.github/workflows/_build_test.yml
 
-  tag-release:
+  release:
     if: github.event.pull_request.merged == true
 
     needs: _
@@ -27,6 +27,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.6.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Git tag release
         run: |
           set -e # abort on error
@@ -35,7 +52,7 @@ jobs:
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
-          ./nx release --dry-run
+          pnpm exec nx release --dry-run
 
   publish-dockerhub:
     if: github.event.pull_request.merged == true
@@ -49,6 +66,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.6.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install
+
       - uses: ./.github/actions/pull-ghcr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +88,4 @@ jobs:
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Push release to dockerhub
-        run: |
-          set -x
-
-          ./nx release publish --dry-run
+        run: "pnpm exec nx release publish --dry-run"

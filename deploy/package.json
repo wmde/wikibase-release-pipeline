@@ -4,7 +4,9 @@
 	"nx": {
 		"targets": {
 			"lint": {},
-			"nx-release-publish": {}
+			"nx-release-publish": {
+				"command": "echo \"⚠️ Make sure to updated related documentation to point to new Deploy release (nothing changed)\"" 
+			}
 		}
 	}
 }

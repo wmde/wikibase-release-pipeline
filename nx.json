@@ -40,7 +40,7 @@
 			"command": "build/update-commits.sh {projectName}"
 		},
 		"nx-release-publish": {
-			"command": "echo \"WOULD PUSH TO DOCKERHUB\""
+			"command": "build/publish.sh {projectName}"
 		}
 	}
 }

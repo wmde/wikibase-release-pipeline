@@ -4,7 +4,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit
 
 if [ "$#" -lt 1 ]; then
-		echo "Usage: $0 <directory> <--release-tag> <--dry-run> [docker buildx build arguments...]"
+		echo "Usage: $0 <directory> <--dry-run> [docker buildx build arguments...]"
 		exit 1
 fi
 
@@ -14,26 +14,22 @@ cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
 # Remove the first argument, leaving the rest for docker buildx build
 shift
 
-RELEASE_TAG=true
 DRY_RUN=false
 PROVIDED_BUILD_OPTIONS=()
 
 for arg in "$@"; do
-	if [ "$arg" == "--release-tag" ]; then
-		RELEASE_TAG=true
-	elif [ "$arg" == "--dry-run" ]; then
+	if [ "$arg" == "--dry-run" ]; then
 		DRY_RUN=true
 	else
 		PROVIDED_BUILD_OPTIONS+=("$arg")
 	fi
 done
 
-BUILD_OPTIONS=()
+BUILD_ARGS=()
 BUILD_ENV_FILE="build.env"
 
 IMAGE_NAME=$(jq -r '.name' package.json)
-IMAGE_NAMESPACE="${IMAGE_NAMESPACE:-wikibase}"
-IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE?}/${IMAGE_NAME?}
+IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE:-wikibase}/${IMAGE_NAME?}
 
 # Extract --build-args from environment variables (excluding IMAGE_TAGS)
 while IFS='=' read -r key value; do
@@ -41,28 +37,11 @@ while IFS='=' read -r key value; do
 	[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
 
 	if [ -n "$value" ]; then
-		BUILD_OPTIONS+=("--build-arg" "$key=$value")
+		BUILD_ARGS+=("--build-arg" "$key=$value")
 	fi
 done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
 
-# Add versions tags if release
-if [ "$RELEASE_TAG" == true ]; then
-	IMAGE_VERSION=$(jq -r '.version' package.json)
-	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
-	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
-	VERSION_TAGS=("${IMAGE_VERSION_MAJOR}" "${IMAGE_VERSION_MINOR}" "${IMAGE_VERSION}")
-
-	# Source the environment file for IMAGE_TAGS
-	# shellcheck disable=SC1090
-	source $BUILD_ENV_FILE
-	COMBINED_TAGS=("${IMAGE_TAGS[@]}" "${VERSION_TAGS[@]}")
-
-	for tag in "${COMBINED_TAGS[@]}"; do
-		BUILD_OPTIONS+=("--tag" "${IMAGE_URL}:${tag}")
-	done
-fi
-
-BUILD_COMMAND="docker buildx build ${BUILD_OPTIONS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL} ."
+BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL} ."
 
 if [ "$DRY_RUN" == true ]; then
 	echo "$BUILD_COMMAND" "(Dry-run: no build ran)"
