@@ -45,28 +45,27 @@ while IFS='=' read -r key value; do
 	fi
 done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
 
+# Add versions tags if release
 if [ "$RELEASE_TAG" == true ]; then
 	IMAGE_VERSION=$(jq -r '.version' package.json)
 	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
 	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
 	VERSION_TAGS=("${IMAGE_VERSION_MAJOR}" "${IMAGE_VERSION_MINOR}" "${IMAGE_VERSION}")
 
-	# Source the environment file to IMAGE_TAGS
+	# Source the environment file for IMAGE_TAGS
 	# shellcheck disable=SC1090
 	source $BUILD_ENV_FILE
 	COMBINED_TAGS=("${IMAGE_TAGS[@]}" "${VERSION_TAGS[@]}")
 
-	if [ -n "${COMBINED_TAGS+x}" ]; then
-		for tag in "${COMBINED_TAGS[@]}"; do
-			BUILD_OPTIONS+=("--tag" "${IMAGE_URL}:${tag}")
-		done
-	fi
+	for tag in "${COMBINED_TAGS[@]}"; do
+		BUILD_OPTIONS+=("--tag" "${IMAGE_URL}:${tag}")
+	done
 fi
 
-DOCKER_CMD="docker buildx build ${BUILD_OPTIONS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL} ."
+BUILD_COMMAND="docker buildx build ${BUILD_OPTIONS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL} ."
 
 if [ "$DRY_RUN" == true ]; then
-	echo "$DOCKER_CMD" "(Dry-run: no build ran)"
+	echo "$BUILD_COMMAND" "(Dry-run: no build ran)"
 else
-	exec $DOCKER_CMD
+	exec $BUILD_COMMAND
 fi
