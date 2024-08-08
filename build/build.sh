@@ -14,7 +14,7 @@ cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
 # Remove the first argument, leaving the rest for docker buildx build
 shift
 
-RELEASE_TAG=false
+RELEASE_TAG=true
 DRY_RUN=false
 PROVIDED_BUILD_OPTIONS=()
 
