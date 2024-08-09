@@ -6,16 +6,11 @@ If you want to host your own WBS instance, head over to the [WBS Deploy document
 
 If you're looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
 
-> 🔧 This document is intended for people developing WBS.  
+> 🔧 This document is intended for people developing WBS.
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for: 
-
- - **Building** ([build.sh](./build.sh) and [build directory](./build))
- - **Testing** ([test.sh](./test.sh) and [test directory](./test))
- - **Publishing** ([.github/workflows](.github/workflows)) 
- - **Deploying** ([WBS Deploy](./deploy))
+This repository contains the Wikibase Suite toolset used for [building](./build)), testing, and publishing ([.github/workflows](.github/workflows)) WBS Images and WBS Deploy ([WBS Deploy](./deploy)).
 
 ## Quick reference
 
@@ -23,32 +18,38 @@ This repository contains the Wikibase Suite toolset used for:
 
 ```
 # Build all Wikibase Suite images
-$ ./build.sh
+$ ./nx run-many -t build -p "build/**"
 
 # Build only the MediaWiki/Wikibase containers
-$ ./build.sh wikibase
+$ ./nx build wikibase
 
-# Build the WDQS container without using Docker's cache
-$ ./build.sh --no-cache wdqs
+# Build the WDQS container without using Docker's cache (accepts `docker buildx bake` options)
+$ ./nx build wdqs --no-cache
+
+# Update upstream commit hashes for wikibase
+$ ./nx run wikibase:update-commits
+
+# Update upstream commit hashes for all images
+$ ./nx run-many -t update-commits
 ```
 
 ### Test
 
 ```
 # Show help for the test CLI, including the various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
-$ ./test.sh
+$ ./nx test
 
 # Runs all test suites (defined in `test/suites`)
-$ ./test.sh all
+$ ./nx test -- all
 
 # Runs the `repo` test suite
-$ ./test.sh repo
+$ ./nx test -- repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./test.sh repo --spec specs/repo/special-item.ts
+$ ./nx test -- repo --spec specs/repo/special-item.ts
 
 # Start and leave up the test environment for a given test suite without running tests
-$ ./test.sh repo --setup
+$ ./nx test -- repo --setup
 ```
 
 ### Deploy
@@ -74,41 +75,34 @@ Tests are organized in suites, which can be found in `test/suites`. Each suite r
 
 All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
 
-You can run the tests in the Docker container locally exactly as they are run in CI by using `test.sh`.
+You can run the tests in the Docker container locally exactly as they are run in CI by using `./nx test`.
 
-## Examples usage of `./test.sh`:
+## Examples usage of `./nx test`:
 
 ```bash
-# See all`./test.sh` CLI options
-./test.sh --help
+# See all`./nx test` CLI options
+./nx test --help
 
 # Run all test suites
-./test.sh all
+./nx test -- all
 
 # Only run a single suite (e.g., repo)
-./test.sh repo
+./nx test -- repo
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./test.sh repo --spec specs/repo/extensions/babel.ts
+./nx test -- repo --spec specs/repo/extensions/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:
 
 ```bash
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
-./test.sh repo --setup
-
-# `--command`, `--c`: Runs the given command on the test runner and doesn't execute any further commands
-./test.sh --command npm install
+./nx test -- repo --setup
 
 # Sets test timeouts to 1 day so they don't time out while debugging with `await browser.debug()` calls
 # However, this can have undesirable effects during normal test runs, so only use for actual debugging
 # purposes.
-./test.sh repo --debug
-
-# `DEBUG`: Shows full Docker compose up/down progress logs for the test runner
-# Note that the test service Docker logs can always be found in `test/suites/<suite>/results/wdio.log`
-DEBUG=true ./test.sh repo
+./nx test -- repo --debug
 ```
 
 WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .
@@ -131,7 +125,6 @@ MW_SCRIPT_PATH=/w
 
 For more information on testing, see the [README](./test/README.md).
 
-
 ## Release process
 
 WBS Deploy and WBS images are released using this repository. The process involves updating all upstream component versions to be used, building images, testing all the images together and finally publishing them.
@@ -143,7 +136,7 @@ WBS Deploy and WBS images are released using this repository. The process involv
 - [ ] **To release breaking changes** as a new major version of WBS Deploy, create a new branch called `deploy-X`, where `X` is the new major version.
 - [ ] **Create a release PR** from a release preparation branch with the following changes targeting the appropriate `deploy-X` release branch.
   - [ ] **Backport from `main`** by cherrypicking commits from `main` to the release preparation branch.
-  - [ ] **Update `variables.env`** by adjusting WBS versions and upstream versions. You can find further instructions in the [variables.env](https://github.com/wmde/wikibase-release-pipeline/blob/main/variables.env) file itself.
+  - [ ] **Update `build/*/build.env`** files by adjusting WBS versions and upstream versions. You can find further instructions in the `build.env` files themselves.
   - [ ] **Update `CHANGES.md`** by adding a section following the example of previous releases.
   - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failure, some specs could be flaky.
 - [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release preparation branch on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-BRANCHNAME`, e.g., `dev-releaseprep`. This tag can be used to set up an instance running your release preparation version.

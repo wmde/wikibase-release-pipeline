@@ -12,4 +12,3 @@ $wgEnableParserCache = false;
 $wgCachePages = false;
 $wgParserCacheType = CACHE_NONE;
 $wgMainCacheType = CACHE_NONE;
-
