@@ -29,7 +29,19 @@ BUILD_ARGS=()
 BUILD_ENV_FILE="build.env"
 
 IMAGE_NAME=$(jq -r '.name' package.json)
-IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE:-wikibase}/${IMAGE_NAME?}
+
+# Setup for push to GHCR if running in CI
+if [ "$GITHUB_ACTIONS" == true ]; then
+	IMAGE_REGISTRY=ghcr.io
+  IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
+	BASE_TAG="dev-${GITHUB_RUN_ID}"
+else
+	# When not tagging anything but the image name the "latest" tag is by default applied
+	# choosing to make that explicit here:
+	BASE_TAG="latest"
+fi
+
+IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE:-wikibase}/${IMAGE_NAME}
 
 # Extract --build-args from environment variables (excluding IMAGE_TAGS)
 while IFS='=' read -r key value; do
@@ -41,7 +53,7 @@ while IFS='=' read -r key value; do
 	fi
 done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
 
-BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL} ."
+BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL}:${BASE_TAG} ."
 
 if [ "$DRY_RUN" == true ]; then
 	echo "$BUILD_COMMAND" "(Dry-run: no build ran)"

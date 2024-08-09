@@ -56,11 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Building ${{ matrix.component }}
-        run: |
-          export PR_BUILD_TAG=ghcr.io/${{ github.repository_owner }}/wikibase/${{ matrix.component }}:dev-${{ github.run_id }}
-          IMAGE_REGISTRY=ghcr.io \
-          IMAGE_NAMESPACE=${{ github.repository_owner }}/wikibase \
-          pnpm exec nx build ${{ matrix.component }} --tag $PR_BUILD_TAG --push
+        run: pnpm exec nx build ${{ matrix.component }} --push
 
   test:
     needs: build
