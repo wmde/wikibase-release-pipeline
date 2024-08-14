@@ -9,6 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - run: ./nx lint
 
   build:
@@ -18,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component:
+        imageName:
           - wikibase
           - elasticsearch
           - wdqs
@@ -28,35 +32,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2
+  
+      - uses: ./.github/actions/setup-environment
         with:
-          version: 9.6.0
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - run: pnpm install
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Setup Docker Buildx
-        id: builder
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: linux/amd64,linux/arm64
-
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Building ${{ matrix.component }}
-        run: pnpm exec nx build ${{ matrix.component }} --push
+      - name: Build and push ${{ matrix.imageName }}
+        run: pnpm exec nx build ${{ matrix.imageName }} --push
 
   test:
     needs: build
@@ -78,23 +60,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 9.6.0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - run: pnpm install
-
-      - uses: ./.github/actions/pull-ghcr
+  
+      - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: pnpm exec nx test -- ${{ matrix.suite }}
+      - name: "Pull images from GHCR"
+        uses: ./.github/actions/pull-ghcr
+
+      - name: "Run ${{ matrix.suite }} test suite"
+        run: pnpm exec nx test -- ${{ matrix.suite }}
 
       - name: Show logs
         run: |
@@ -108,8 +83,6 @@ jobs:
           path: test/suites/**/results
 
   test-success:
-    # Post-test CI step - to check all tests succeeded
-    # Github Branch Protection rules require this to pass to allow merging
     runs-on: ubuntu-latest
     needs:
       - lint

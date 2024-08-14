@@ -1,10 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# !!! 
+# Note: This script is currently not in use. Multi-platform builds cannot be stored locally, but only
+# in a Docker registry, so we currently add the appropriate tags and push to the registry at build
+# time in build.sh. 
+# !!!!
+
+# publish.sh: Sets up and pushes the tags for a specified image which is assumed to be in
+# available locally.
 
 # Change to the directory where the script is located
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit
 
 if [ "$#" -lt 1 ]; then
-		echo "Usage: $0 <directory> <--dry-run>"
+		echo "Usage: $0 <image-name> <--dry-run>"
 		exit 1
 fi
 

@@ -40,7 +40,7 @@
 			"command": "build/update-commits.sh {projectName}"
 		},
 		"nx-release-publish": {
-			"command": "build/publish.sh {projectName}"
+			"command": "build/build.sh {projectName}"
 		}
 	}
 }

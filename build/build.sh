@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash  
+
+# === Script setup
 
 # Change to the directory where the script is located
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit
 
 if [ "$#" -lt 1 ]; then
-		echo "Usage: $0 <directory> <--dry-run> [docker buildx build arguments...]"
-		exit 1
+	echo "Usage: $0 <directory> <--dry-run> [docker buildx build arguments...]"
+	exit 1
 fi
 
 # Change to the directory for the specified project
@@ -15,37 +17,83 @@ cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
 shift
 
 DRY_RUN=false
-PROVIDED_BUILD_OPTIONS=()
+PUBLISH=$([[ "$NX_TASK_TARGET_TARGET" == "nx-release-publish" ]] && echo true || echo false)
+BUILD_ARGS=()
+BUILD_ENV_FILE="build.env"
+DISALLOWED_ARGS=(
+	"--firstRelease=true"
+)
 
 for arg in "$@"; do
-	if [ "$arg" == "--dry-run" ]; then
+	if [[ $arg == "--dry-run" || $arg == "--dryRun=true" ]]; then
 		DRY_RUN=true
+	elif [[ " ${DISALLOWED_ARGS[*]} " =~ $arg ]]; then
+		continue
 	else
-		PROVIDED_BUILD_OPTIONS+=("$arg")
+		BUILD_ARGS+=("$arg")
 	fi
 done
 
-BUILD_ARGS=()
-BUILD_ENV_FILE="build.env"
+# === Setup tags
 
-IMAGE_NAME=$(jq -r '.name' package.json)
-
-# Setup for push to GHCR if running in CI
-if [ "$GITHUB_ACTIONS" == true ]; then
-	IMAGE_REGISTRY=ghcr.io
-  IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
-	BASE_TAG="dev-${GITHUB_RUN_ID}"
+# publish to Dockerhub
+if [ "$PUBLISH" == true ]; then
+	IMAGE_VERSION=$(jq -r '.version' package.json)
+	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
+	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
+	TAGS+=(
+		"${IMAGE_VERSION}"
+		"${IMAGE_VERSION_MAJOR}"
+		"${IMAGE_VERSION_MINOR}"
+	)
+# build/test in CI
+elif [ "$GITHUB_ACTIONS" == true ]; then
+	TAGS+=(
+		"dev-${GITHUB_RUN_ID}"
+	)
+# local build
 else
-	# When not tagging anything but the image name the "latest" tag is by default applied
-	# choosing to make that explicit here:
-	BASE_TAG="latest"
+	# When not tagging anything but the image name the "latest" tag is by default applied,
+	# making that explicit here:
+	TAGS+=(
+		"latest"
+	)
 fi
 
-IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE:-wikibase}/${IMAGE_NAME}
+# get image specific tags
+# shellcheck disable=SC1090
+source "$BUILD_ENV_FILE"
+eval "$(declare -p IMAGE_TAGS)"
+TAGS+=(
+	"${IMAGE_TAGS[@]}"
+)
 
-# Extract --build-args from environment variables (excluding IMAGE_TAGS)
+# transform TAGS to build args
+IMAGE_NAME=$(jq -r '.name' package.json)
+
+# publish to Dockerhub
+if [ "$PUBLISH" == true ]; then
+	IMAGE_REGISTRY=dockerhub.io
+	IMAGE_NAMESPACE=wikibase
+# build/test in CI
+elif [ "$GITHUB_ACTIONS" == true ]; then
+	IMAGE_REGISTRY=ghcr.io
+  IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
+# local build
+else
+	IMAGE_NAMESPACE=wikibase
+fi
+
+IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE}/${IMAGE_NAME}
+
+for TAG in "${TAGS[@]}"; do
+	BUILD_ARGS+=("--tag ${IMAGE_URL}:${TAG}")
+done
+
+# === Transform vars in build.env to build args
+
 while IFS='=' read -r key value; do
-	# Skip if the line is empty or the key is IMAGE_TAGS
+	# skip if the line is empty or the key is IMAGE_TAGS
 	[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
 
 	if [ -n "$value" ]; then
@@ -53,10 +101,15 @@ while IFS='=' read -r key value; do
 	fi
 done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
 
-BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ${PROVIDED_BUILD_OPTIONS[*]} --tag ${IMAGE_URL}:${BASE_TAG} ."
+# == Run build
+
+BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ."
 
 if [ "$DRY_RUN" == true ]; then
-	echo "$BUILD_COMMAND" "(Dry-run: no build ran)"
+	echo "Dry-run. This is the build command which would run:"
+	echo
+	echo "$BUILD_COMMAND"
+	echo
 else
 	exec $BUILD_COMMAND
 fi
