@@ -107,9 +107,26 @@ WORKDIR /var/www/html
 
 COPY composer.local.json composer.local.json
 
+# WORKAROUND for https://phabricator.wikimedia.org/T372458
+# Take wikibase submodules from github as phabricator rate limits us
+COPY --chown=nobody:nogroup --chmod=755 \
+  wikibase-submodules-from-github-instead-of-phabricator.patch \
+  /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
+USER root
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends \
+        patch \
+        ; \
+    rm -rf /var/lib/apt/lists/*
+USER nobody
+
 ARG WIKIBASE_COMMIT
-RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/www/html/extensions/Wikibase && \
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+RUN set -x; \
+    git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/www/html/extensions/Wikibase && \
     git -C /var/www/html/extensions/Wikibase checkout ${WIKIBASE_COMMIT} && \
+    patch -d /var/www/html/extensions/Wikibase -Np1 </tmp/wikibase-submodules-from-github-instead-of-phabricator.patch && \
+    rm /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch && \
     git -C /var/www/html/extensions/Wikibase submodule update --init --recursive && \
     rm -f /var/www/html/extensions/Wikibase/.travis.yml && \
     find /var/www/html/extensions/Wikibase -name ".git*" -exec rm -rf {} +
