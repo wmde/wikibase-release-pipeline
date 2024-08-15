@@ -111,6 +111,16 @@ COPY --chown=nobody:nogroup --chmod=755 \
   wikibase-submodules-from-github-instead-of-phabricator.patch \
   /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
 
+USER root
+
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends \
+        patch \
+        ; \
+    rm -rf /var/lib/apt/lists/*
+
+USER nobody
+
 ARG WIKIBASE_COMMIT
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 RUN set -x; \
