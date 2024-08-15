@@ -1,7 +1,6 @@
 on:
   workflow_call:
 
-
 jobs:
   lint:
     runs-on: self-hosted
