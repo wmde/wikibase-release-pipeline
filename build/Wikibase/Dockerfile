@@ -107,18 +107,17 @@ WORKDIR /var/www/html
 
 COPY composer.local.json composer.local.json
 
+# WORKAROUND for https://phabricator.wikimedia.org/T372458
+# Take wikibase submodules from github as phabricator rate limits us
 COPY --chown=nobody:nogroup --chmod=755 \
   wikibase-submodules-from-github-instead-of-phabricator.patch \
   /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
-
 USER root
-
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         patch \
         ; \
     rm -rf /var/lib/apt/lists/*
-
 USER nobody
 
 ARG WIKIBASE_COMMIT
