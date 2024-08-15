@@ -114,7 +114,9 @@ COPY --chown=nobody:nogroup --chmod=755 \
 ARG WIKIBASE_COMMIT
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/www/html/extensions/Wikibase && \
     git -C /var/www/html/extensions/Wikibase checkout ${WIKIBASE_COMMIT} && \
+    cd /var/www/html/extensions/Wikibase && \
     cat /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch | patch -Np1 && \
+    cd - && \
     git -C /var/www/html/extensions/Wikibase submodule update --init --recursive && \
     rm -f /var/www/html/extensions/Wikibase/.travis.yml && \
     find /var/www/html/extensions/Wikibase -name ".git*" -exec rm -rf {} +
