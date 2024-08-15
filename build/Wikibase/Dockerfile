@@ -105,7 +105,7 @@ FROM ${COMPOSER_IMAGE_URL} as composer
 COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
-COPY composer.local.json composer.local.json
+COPY --chown=nobody:nogroup --chmod=755 composer.local.json composer.local.json
 
 ARG WIKIBASE_COMMIT
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/www/html/extensions/Wikibase && \
