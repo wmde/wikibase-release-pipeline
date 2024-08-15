@@ -52,6 +52,7 @@ function image_url_to_image_name {
 
 function build_wikibase {
     docker build \
+        --quiet \
         $DOCKER_BUILD_CACHE_OPT \
         --build-arg PHP_IMAGE_URL="$PHP_IMAGE_URL" \
         --build-arg COMPOSER_IMAGE_URL="$COMPOSER_IMAGE_URL" \
