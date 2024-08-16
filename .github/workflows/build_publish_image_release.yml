@@ -1,0 +1,56 @@
+name: 📦 Build and Publish a WBS Image Release to Dockerhub
+
+on:
+  push:
+    tags:
+      - 'elasticsearch@*'
+      - 'quickstatements@*'
+      - 'wdqs@*'
+      - 'wdqs-frontend@*'
+      - 'wdqs-proxy@*'
+      - 'wikibase@*'     
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  extract_and_use_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract imageName and confirm it is a valid semantic version tag
+        id: extract_tag
+        run: |
+          # Extract the tag name
+          TAG_NAME=$(echo ${{ github.ref }} | sed 's/refs\/tags\///')
+
+          # Use regex to extract the imageName before the @ and confirm the version is valid semver version tag
+          if [[ "$TAG_NAME" =~ ^([^@]+)@([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)$ ]]; then
+            echo "::set-output name=imageName::${BASH_REMATCH[1]}"
+          else
+            echo "Tag does not match the pattern {imageName}@{semantic-version}"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Build image and push to Dockerhub with release tags
+        run: |
+          set -e # abort on error
+          set -x # show commands
+
+          git config --global user.name 'wikibase suite github actions bot'
+          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
+          
+          pnpm exec nx release publish -p ${{ steps.extract_tag.outputs.imageName }}

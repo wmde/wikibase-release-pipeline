@@ -17,7 +17,7 @@ cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
 shift
 
 DRY_RUN=false
-PUBLISH=$([[ "$NX_TASK_TARGET_TARGET" == "nx-release-publish" ]] && echo true || echo false)
+PUBLISH=false
 BUILD_ARGS=()
 BUILD_ENV_FILE="build.env"
 DISALLOWED_ARGS=(
@@ -27,6 +27,8 @@ DISALLOWED_ARGS=(
 for arg in "$@"; do
 	if [[ $arg == "--dry-run" || $arg == "--dryRun=true" ]]; then
 		DRY_RUN=true
+	elif [[ $arg == "--publish" ]]; then
+		PUBLISH=true
 	elif [[ " ${DISALLOWED_ARGS[*]} " =~ $arg ]]; then
 		continue
 	else

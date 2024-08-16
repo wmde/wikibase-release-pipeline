@@ -1,4 +1,4 @@
-name: 📦 Build and Publish a WBS Image Release
+name: 📦 Create a WBS Image Release
 
 on:
   workflow_dispatch:
@@ -9,13 +9,14 @@ on:
         required: true
         default: 'wikibase'
         options:
+          - deploy
           - elasticsearch
           - quickstatements
           - wdqs
           - wdqs-frontend
           - wdqs-proxy
           - wikibase
-          - All images with unreleased changes
+          - All projects (images and deploy) with unreleased changes
       dry_run:
         description: "Only log what will be done, don't do it yet."
         type: boolean
@@ -43,7 +44,7 @@ jobs:
           username: wmdetravisbot
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - name: Git tag release and publish version tagged images to Dockerhub
+      - name: Git tag release
         run: |
           set -e # abort on error
           set -x # show commands
@@ -57,10 +58,10 @@ jobs:
             DRY_RUN_FLAG=""
           fi
 
-          if [ "${{ inputs.image_name }}" == "All images with unreleased changes" ]; then
+          if [ "${{ inputs.image_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
             PROJECT_ARG=""
           else
             PROJECT_ARG="-p ${{ inputs.image_name }}"
           fi
 
-          pnpm exec nx release publish $PROJECT_ARG $DRY_RUN_FLAG
+          pnpm exec nx release $PROJECT_ARG $DRY_RUN_FLAG
