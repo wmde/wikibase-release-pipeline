@@ -48,6 +48,13 @@ if [ "$PUBLISH" == true ]; then
 		"${IMAGE_VERSION_MAJOR}"
 		"${IMAGE_VERSION_MINOR}"
 	)
+	# get image specific tags
+	# shellcheck disable=SC1090
+	source "$BUILD_ENV_FILE"
+	eval "$(declare -p IMAGE_TAGS)"
+	TAGS+=(
+		"${IMAGE_TAGS[@]}"
+	)
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	TAGS+=(
@@ -62,14 +69,6 @@ else
 	)
 fi
 
-# get image specific tags
-# shellcheck disable=SC1090
-source "$BUILD_ENV_FILE"
-eval "$(declare -p IMAGE_TAGS)"
-TAGS+=(
-	"${IMAGE_TAGS[@]}"
-)
-
 # transform TAGS to build args
 IMAGE_NAME=$(jq -r '.name' package.json)
 
@@ -80,7 +79,7 @@ if [ "$PUBLISH" == true ]; then
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	IMAGE_REGISTRY=ghcr.io
-  IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
+	IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
 # local build
 else
 	IMAGE_NAMESPACE=wikibase

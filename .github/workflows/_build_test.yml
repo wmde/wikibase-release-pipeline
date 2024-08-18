@@ -83,6 +83,8 @@ jobs:
           path: test/suites/**/results
 
   test-success:
+    # Post-test CI step - to check all tests succeeded
+    # Github Branch Protection rules require this to pass to allow merging
     runs-on: ubuntu-latest
     needs:
       - lint

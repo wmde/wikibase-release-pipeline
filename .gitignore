@@ -16,11 +16,6 @@ test/log
 test/mwlog
 test/suites/**/results/
 
-# compiled output
-dist
-tmp
-/out-tsc
-
 # dependencies
 node_modules
 

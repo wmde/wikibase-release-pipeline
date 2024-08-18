@@ -166,7 +166,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs-proxy/Dockerfile).
 
 ## Authors & Contact
 
