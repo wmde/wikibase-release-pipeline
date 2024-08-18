@@ -38,7 +38,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
-        run: pnpm exec nx build ${{ matrix.imageName }} --push
+        run: ./nx build ${{ matrix.imageName }} --push
 
   test:
     needs: build
@@ -69,7 +69,7 @@ jobs:
         uses: ./.github/actions/pull-ghcr
 
       - name: "Run ${{ matrix.suite }} test suite"
-        run: pnpm exec nx test -- ${{ matrix.suite }}
+        run: ./nx test -- ${{ matrix.suite }}
 
       - name: Show logs
         run: |

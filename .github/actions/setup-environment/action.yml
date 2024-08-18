@@ -36,3 +36,7 @@ runs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ inputs.github_token }}
+
+    - name: Set NX to run locally using Node vs in Docker dev runner container
+      shell: bash
+      run: echo "NX_RUN_LOCAL=true" >> $GITHUB_ENV

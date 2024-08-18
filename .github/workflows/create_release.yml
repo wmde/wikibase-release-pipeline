@@ -64,4 +64,4 @@ jobs:
             PROJECT_ARG="-p ${{ inputs.image_name }}"
           fi
 
-          pnpm exec nx release $PROJECT_ARG $DRY_RUN_FLAG
+          ./nx release $PROJECT_ARG $DRY_RUN_FLAG

@@ -62,6 +62,7 @@ elif [ "$GITHUB_ACTIONS" == true ]; then
 	)
 # local build
 else
+	BUILD_ARGS+=("--load")
 	# When not tagging anything but the image name the "latest" tag is by default applied,
 	# making that explicit here:
 	TAGS+=(

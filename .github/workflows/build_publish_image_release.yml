@@ -53,4 +53,4 @@ jobs:
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
           
-          pnpm exec nx release publish -p ${{ steps.extract_tag.outputs.imageName }}
+          ./nx release publish -p ${{ steps.extract_tag.outputs.imageName }}

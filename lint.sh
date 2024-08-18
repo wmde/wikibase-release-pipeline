@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# Always run in dev runner (docker) to have the extra dependencies available (currently Python and Hadolint)
+# If not running in Docker, start dev runner and run script again there
+if [[ ! -f /.dockerenv  ]]; then
+  # Make sure the docker network exists
+  docker network create wbs-dev > /dev/null 2>&1 || true
+
+  exec docker compose --progress quiet run --build --rm runner -c './lint.sh "$@"' -- "$@"
+fi
+
 [ -f "local.env" ] || touch local.env
 source local.env
 
