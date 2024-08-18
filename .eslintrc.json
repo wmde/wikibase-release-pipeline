@@ -12,8 +12,7 @@
 		"package-lock.json",
 		"pnpm/**/**",
 		"pnpm-lock.yaml",
-		"*.properties",
-		"tsconfig.json"
+		"*.properties"
 	],
 	"parserOptions": {
 		"sourceType": "module",
@@ -34,6 +33,7 @@
 		{
 			"files": [ "*.json" ],
 			"rules": {
+				"array-bracket-spacing": "off",
 				"quotes": "off",
 				"quote-props": [ "error", "consistent" ],
 				"@typescript-eslint/semi": "off",

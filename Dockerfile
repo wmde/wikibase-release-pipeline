@@ -50,11 +50,8 @@ RUN git config --global --add safe.directory /workspace
 # Install PNPM
 RUN curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" PNPM_VERSION=9.6.0 bash -
 ENV PATH="/root/.local/share/pnpm:${PATH}"
-# Fixes issue that was only happening on Github CI
-# ref. https://github.com/nrwl/nx/issues/27040
-ENV NX_ISOLATE_PLUGINS=false
 
-# Add npm bins and activate Python venv virtual environment
+# Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/node_modules/.bin:/root/venv/bin:$PATH"
 
 ENTRYPOINT [ "./entrypoint.sh" ]
