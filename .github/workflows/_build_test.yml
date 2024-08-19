@@ -76,9 +76,9 @@ jobs:
           tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: TestResults
+          name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
           path: test/suites/**/results
 
   test-success:
