@@ -17,7 +17,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 80
+    timeout-minutes: 60
 
     strategy:
       fail-fast: false
@@ -38,7 +38,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
-        run: ./nx build ${{ matrix.imageName }} --push --platform linux/amd64,linux/arm64
+        run: ./nx build ${{ matrix.imageName }} --push
 
   test:
     needs: build

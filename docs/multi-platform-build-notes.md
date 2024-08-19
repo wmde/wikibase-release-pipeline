@@ -2,9 +2,13 @@
 
 ## Current testing
 
-A build of all images to multi-platform using QEMU on an Herzner VPS (AMD64, 8 VCPU, 16 GB) running 7 self-hosted GitHub Action runners (only because of the current Phabricator repo locked-out due to rate limiting): https://github.com/wmde/wikibase-release-pipeline/actions/runs/10318403871. Completed successfully and tested for Wikibase (pulled and ran localy both for a AMD an ARM environment. I got the approprate build in each environment, and they both ran as expected. The total build time for all images building in parallel was about 57 Mins. In my estimate based on the performance of the less complex multi-platform builds (ElasticSearch, WDQS-Proxy) which don't have any compilation, I think this will be about 10+ mins faster in total using the standard AMD64 GitHub Action runners and QEMU. In conclusion, we may be already ready to turn on multi-platform builds once we agree to a testing strategy.
+To try to build multi-platform just add `--platform linux/amd64,linux/arm64` to the arguments for `nx build` locally or in `.github/_build_test.yml` if trying on CI. The builder and QEMU setup is already there in the GitHub actions world. An example of successful multi-platform build is here, it completed including a AMD64 test run in a total of 42 mins: https://github.com/wmde/wikibase-release-pipeline/actions/runs/10443948331
 
-*To try to build multi-platform just add `--platform linux/amd64,linux/arm64` to the arguments for `nx build` locally or in `.github/_build_test.yml` if trying on CI. The builder and QEMU setup is already there in the GitHub actions world.*
+Assuming we find that result acceptable, then we can use our current GitHub Actions runner to achieve multi-platform builds, however our tests currently only run against the AMD64 image. If we want to run the full test suite also against the ARM64 builds I suspect that the GitHub Actions runner will be forbiddingly slow running the AMD64 images for that test run.
+
+---
+
+OLDER NOTES FOLLOW:
 
 ## Setting up the multi platform builders and building (WIP)
 
