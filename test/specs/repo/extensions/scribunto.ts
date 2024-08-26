@@ -1,6 +1,7 @@
 import { readFile } from 'fs/promises';
 import { utf8 } from '../../../helpers/read-file-encoding.js';
 
+// Test the installation and function of lua in the Wikibase Docker image
 describe( 'Scribunto', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
