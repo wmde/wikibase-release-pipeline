@@ -13,8 +13,6 @@ services:
       elasticsearch:
         condition: service_healthy
     restart: unless-stopped
-    ports:
-      - 8880:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
@@ -132,8 +130,6 @@ services:
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
-    ports:
-      - 8834:80
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
@@ -150,8 +146,6 @@ services:
       wikibase:
         condition: service_healthy
     restart: unless-stopped
-    ports:
-      - 8840:80
     volumes:
       - quickstatements-data:/quickstatements/data
     labels:
