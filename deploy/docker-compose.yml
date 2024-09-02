@@ -10,6 +10,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     restart: unless-stopped
     ports:
       - 8880:80
