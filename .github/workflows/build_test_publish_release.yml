@@ -22,7 +22,7 @@ jobs:
 
     needs: _
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v4
@@ -54,7 +54,7 @@ jobs:
 
     needs: tag-release
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     timeout-minutes: 30
 
