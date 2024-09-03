@@ -27,7 +27,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
-        run: ./nx run-many -t build -p "build/**" --push
+        run: ./nx run-many --parallel=6 -t build -p "build/**" --push
 
   test:
     needs: build
