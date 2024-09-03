@@ -200,11 +200,11 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 ### Updater keeps restarting
 
-In some situations the WDQS Updater enters a restart loop, e.g. when restarted without containing any entities. So when you restart a fresh instance, you will encounter this issue.
+In some situations the WDQS Updater enters a restart loop, e.g., when restarted without containing any entities. When you restart a freshly installed instance, you will encounter this issue.
 
 A workaround is to start the updater once with manual `--init` `--start` parameters. This forces it to sync data from MediaWiki for the current day.
 
-In the Docker Compose example provided above, you might run the following. This will also fix the problem in a Wikibase Suite Deploy instance:
+In the Docker Compose example provided above, you might use the commands and instructions supplied below. This will also fix the problem in a Wikibase Suite Deploy instance.
 
 ```sh
 # Stop the stock updater
@@ -212,13 +212,14 @@ docker compose stop wdqs-updater
 
 # Start an updater with force sync settings
 docker compose run --rm wdqs-updater bash '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
+
 # As soon as you see "Sleeping for 10 secs" in the logs, press CTRL-C to stop it again
 
 # Start the stock updater again
 docker compose start wdqs-updater
 ```
 
-As soon as the updater synced the first entity from MediaWiki, the issue should disappear.
+As soon as the updater has synced the first entity from MediaWiki, the issue should disappear.
 
 ## Source
 
