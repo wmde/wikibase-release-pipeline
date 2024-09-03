@@ -1,7 +1,7 @@
 {
 	"name": "wikibase-release-pipeline",
 	"version": "3.0.0",
-  "license": "BSD-3-Clause",
+	"license": "BSD-3-Clause",
 	"type": "module",
 	"private": true,
 	"devDependencies": {
