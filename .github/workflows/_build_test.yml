@@ -19,26 +19,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
-    strategy:
-      fail-fast: false
-      matrix:
-        imageName:
-          - wikibase
-          - elasticsearch
-          - wdqs
-          - wdqs-frontend
-          - wdqs-proxy
-          - quickstatements
-
     steps:
       - uses: actions/checkout@v4
-  
+
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
-        run: ./nx build ${{ matrix.imageName }} --push
+        run: ./nx run-many -t build -p "build/**" --push
 
   test:
     needs: build
@@ -59,7 +48,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-  
+
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
