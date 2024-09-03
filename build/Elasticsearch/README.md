@@ -46,24 +46,25 @@ services:
       DB_USER: "mariadb-user"
       DB_PASS: "change-this-password"
       ELASTICSEARCH_HOST: elasticsearch
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
     depends_on:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: /healthcheck.sh
+      interval: 10s
+      start_period: 5m
 
   wikibase-jobrunner:
     image: wikibase/wikibase
     volumes_from:
       - wikibase
-    command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
+    environment:
+      IS_JOBRUNNER: true
 
   mysql:
     image: mariadb:10.11
@@ -90,7 +91,7 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
     healthcheck:
-      test: curl --silent --fail localhost:9200
+      test: /healthcheck.sh
       interval: 10s
       start_period: 2m
 
