@@ -28,7 +28,7 @@ jobs:
           # Use regex to extract the imageName before the @ and confirm the version is valid semver version tag
           if [[ "$TAG_NAME" =~ ^([^@]+)@([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)$ ]]; then
             # Sets and passes the imageName output from this step, which is used in the subsequent step
-            # e.g. `steps.extract_tag.outputs.imageName` gets set to "wikibase" matched from "wikibase@1.01")
+            # e.g. `steps.extract_tag.outputs.imageName` gets set to "wikibase" matched from "wikibase@1.0.1")
             echo "::set-output name=imageName::${BASH_REMATCH[1]}"
           else
             echo "Tag does not match the pattern {imageName}@{semantic-version}"
