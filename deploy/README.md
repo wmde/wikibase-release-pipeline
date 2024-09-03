@@ -322,6 +322,10 @@ It is possible to migrate an existing Wikibase installation to WBS Deploy. The g
  - Regenerate the WDQS database
  - Regenerate the Elasticsearch database
 
+### My WDQS Updater keeps crashing, what can I do?
+
+Check out the known issue in the [WDQS README](../build/WDQS/README.md#Known-issues). You may find your solution there in the form of a workaround.
+
 ### Do you recommend any VPS hosting providers?
 
 As of this writing, we can offer no specific recommendations for VPS providers to host Wikibase Suite. The suite has been tested successfully on various providers; as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
