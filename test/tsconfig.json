@@ -1,14 +1,6 @@
 {
+	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"esModuleInterop": true,
-		"module": "Node16",
-		"sourceMap": true,
-		"target": "es2019",
-		"types": [ "node", "@wdio/globals/types", "@wdio/mocha-framework" ]
-	},
-	"ts-node": {
-		"files": true,
-		"esm": true
-	},
-	"include": [ "./**/*.ts" ]
+		"types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
+	}
 }

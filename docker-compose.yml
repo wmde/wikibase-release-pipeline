@@ -1,0 +1,25 @@
+name: wbs-dev
+
+networks:
+  default:
+    name: wbs-dev
+    external: true
+
+services:
+  runner:
+    image: wbs-dev-runner:latest
+    scale: 0
+    build:
+      context: .
+    stop_grace_period: 1s
+    ports:
+      - 9229:9229
+      - 4211:4211
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - test/test-runner.env
+      - local.env
+    environment:
+      HOST_PWD: $PWD

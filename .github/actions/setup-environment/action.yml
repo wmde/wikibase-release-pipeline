@@ -1,0 +1,42 @@
+name: "Setup Node and Docker build environment"
+description: "Reusable action to set up the environment for builds and tests"
+inputs:
+  github_token:
+    description: token to access GHCR
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 9.6.0
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+
+    - name: Install Javascript dependencies (PNPM)
+      shell: bash
+      run: pnpm install
+
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Setup a Docker Buildx builder
+      id: builder
+      uses: docker/setup-buildx-action@v3
+      with:
+        platforms: linux/amd64,linux/arm64
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ inputs.github_token }}
+
+    - name: Set NX to run locally using Node vs in Docker dev runner container
+      shell: bash
+      run: echo "NX_RUN_LOCAL=true" >> $GITHUB_ENV

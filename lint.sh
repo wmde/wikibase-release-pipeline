@@ -1,56 +1,98 @@
 #!/usr/bin/env bash
-set -e
-source ./test/scripts/test_runner_setup.sh
 
-SHOULD_FIX=false
-while getopts f flag
-do
-    case "${flag}" in
-        f) SHOULD_FIX=true;;
-        *)
-    esac
+# Always run in dev runner (docker) to have the extra dependencies available (currently Python and Hadolint)
+# If not running in Docker, start dev runner and run script again there
+if [[ ! -f /.dockerenv  ]]; then
+  # Make sure the docker network exists
+  docker network create wbs-dev > /dev/null 2>&1 || true
+
+  exec docker compose --progress quiet run --build --rm runner -c './lint.sh "$@"' -- "$@"
+fi
+
+[ -f "local.env" ] || touch local.env
+source local.env
+
+# Default values
+path="."
+fix=false
+prettier=false
+exit_code=0
+
+# Function to display help message
+usage() {
+  echo "Usage: lint.sh <path> [--fix, -f] [--prettier]"
+  exit 1
+}
+
+# Error handler to capture errors
+error_handler() {
+  # shellcheck disable=SC2317
+  exit_code=1
+}
+
+# Trap ERR to handle errors
+trap 'error_handler' ERR
+
+# Parse command-line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --fix|-f)
+      fix=true
+      shift
+      ;;
+    --prettier)
+      prettier=true
+      shift
+      ;;
+    *)
+      path="$1"
+      shift
+      ;;
+  esac
 done
 
-if $SHOULD_FIX
-then
-  echo "Fixing Linting and Formatting Issues"
-  NPM_JS_COMMAND="lint:fix-js"
-  NPM_YML_COMMAND="lint:fix-yml"
-  NEWLINE_FLAGS="--fix"
-  BLACK_FLAGS=""
+# Ensure path is a directory
+if [[ ! -d $path ]]; then
+  echo "Error: Path '$path' does not exist or is not a directory."
+  usage
+fi
+
+# Linting JS, YAML, Python scripts, and general whitespace
+if $fix; then
+  echo "ℹ️ Fixing linting issues which can be fixed automatically"
+
+  if $prettier; then
+    echo "ℹ️ Pre-processing with Prettier"
+    prettier "$path/**/*.{cjs,js,mjs,ts,json}" --log-level error --write
+    prettier "$path/**/*.md" --log-level error --config .prettierrc.json --write
+    prettier "$path/**/*.{yml,yaml}" --log-level error --config .prettierrc.json --write
+  fi
+
+  echo "ℹ️ Running ESLint with fix"
+  eslint "$path" --fix
+  eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json --fix
+
+  echo "ℹ️ Running Black for Python"
+  find "$path" -path "$path/node_modules" -prune -o -name '*.py' -print0 | xargs -0 -r \
+    python3 -m black --quiet
 else
-  NPM_JS_COMMAND="lint-js"
-  NPM_YML_COMMAND="lint-yml"
-  NEWLINE_FLAGS=""
-  BLACK_FLAGS="--check"
+  echo "ℹ️ Running ESLint (without --fix)"
+  eslint "$path"
+  eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json
+
+  echo "ℹ️ Running Python Black on all *.py files (with --check)"
+  find "$path" -path "$path/node_modules" -prune -o -name '*.py' -print0 | xargs -0 -r \
+    python3 -m black --diff --quiet --check
 fi
 
-# ℹ️ Linting Javascript test/**/*.cjs,js,json,mjs,ts
-$RUN_TEST_RUNNER_CMD "npm run $NPM_JS_COMMAND"
+echo "ℹ️ Running shellcheck on *.sh files"
+find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name "*.sh" -print0 | xargs -0 \
+  shellcheck -x
+# Always check nx script...
+shellcheck -x ./nx
 
-# ℹ️ Linting Markdown **/*.md
-if $SHOULD_FIX
-then
-  $RUN_TEST_RUNNER_CMD "npm run lint:fix-md"
-fi
+echo "ℹ️ Running hadolint on all Dockerfiles"
+find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name Dockerfile -print0 | xargs -0 -r \
+  hadolint --config .hadolint.yml
 
-# ℹ️ Linting YML **/*.yml
-$RUN_TEST_RUNNER_CMD "npm run $NPM_YML_COMMAND"
-
-# ℹ️ Linting Shell Scripts (**/*.sh) - https://github.com/koalaman/shellcheck#from-your-terminal
-find . -type d -name node_modules -prune -false -o -name "*.sh" -print0 \
-  | xargs -0 docker run --rm -v "$(pwd)":/code dcycle/shell-lint:2
-
-# ℹ️ Linting Dockerfiles (**/Dockerfile) - https://github.com/hadolint/hadolint
-docker run --rm -v "$(pwd)":/code -v "$(pwd)/.hadolint.yml":/.hadolint.yml hadolint/hadolint:latest-alpine sh -c "
-  find . -name Dockerfile -print -o -type d -name node_modules -prune | xargs hadolint
-"
-
-# ℹ️ Formatting Python scripts
-$RUN_TEST_RUNNER_CMD "python3 -m black ../ $BLACK_FLAGS"
-
-# ℹ️ Linting newlines across the repo
-MY_FILES="$(git ls-files)"
-$TEST_COMPOSE run --rm --build -v "$(pwd):/tmp" test-runner -c "
-  python3 scripts/add_newline.py /tmp '$MY_FILES' $NEWLINE_FLAGS
-"
+exit $exit_code
