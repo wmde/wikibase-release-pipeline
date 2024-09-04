@@ -105,7 +105,7 @@ FROM ${COMPOSER_IMAGE_URL} as composer
 COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
-COPY composer.local.json composer.local.json
+COPY --chown=nobody:nogroup --chmod=755 composer.local.json composer.local.json
 
 # WORKAROUND for https://phabricator.wikimedia.org/T372458
 # Take wikibase submodules from github as phabricator rate limits us
