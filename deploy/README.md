@@ -307,7 +307,7 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 
 ### Can I host WBS Deploy locally?
 
-Yes, WBS Deploy can be hosted locally for testing purposes by using the example domain names `*.example.com` from `template.env` in your `.env` file. Configure those domains in `/etc/hosts` **on your host machine**, so that your host machine browser can resolve `*.example.com` to `127.0.0.1` and access the local WBS Deploy instance.
+Yes, WBS Deploy can be hosted locally for testing purposes by using the example domain names `*.example.com` from `template.env` in your `.env` file. Configure those domains in your host machine's `/etc/hosts` file, so that your browser (on your host machine) resolves `*.example.com` to `127.0.0.1` and access the local WBS Deploy instance.
 
 However, due to OAuth requirements, QuickStatements may not function properly without publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Also, running locally without publicly accessible addresses will prevent the generation of a valid SSL certificate; to accessing locally running services, you will need to allow the invalid certificate when loading the page for the first time.
 
