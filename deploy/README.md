@@ -75,7 +75,7 @@ Follow the instructions in the comments in your newly created `.env` file to set
 Run the following command from within `wikibase-release-pipeline/deploy`:
 
 ```sh
-docker compose up --wait
+docker compose up
 ```
 
 The first start can take a couple of minutes. Wait for your shell prompt to return.
@@ -104,7 +104,7 @@ If you want to reset the configuration while retaining your existing data:
 
 ```sh
 docker compose down
-docker compose up --wait
+docker compose up
 ```
 
 ### Advanced configuration
@@ -198,7 +198,7 @@ This is always safe to do. Simply run:
 
 ```sh
 docker compose down
-docker compose up --wait
+docker compose up
 ```
 > 💡 In order to **prevent** new versions of WBS images being pulled on container restart, stop your containers using `docker compose stop` instead of `docker compose down`, which will keep the current containers intact. **Note**: this stops security updates from being applied. It is generally recommended to use `docker compose down`, which removes the containers and allows updates to be applied.
 
@@ -277,7 +277,7 @@ No Wikibase-specific migrations are necessary.
 ##### Bring your instance back up
 
 ```
-docker compose up --wait
+docker compose up
 ```
 
 #### Automatic updates
