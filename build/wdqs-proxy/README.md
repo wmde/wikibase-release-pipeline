@@ -49,7 +49,7 @@ services:
       - 8880:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example.com`)"
+      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
       - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
@@ -58,8 +58,8 @@ services:
     environment:
       MW_ADMIN_NAME: "admin"
       MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@example.com"
-      MW_WG_SERVER: https://wikibase.example.com
+      MW_ADMIN_EMAIL: "admin@wikibase.example"
+      MW_WG_SERVER: https://wikibase.example
       DB_SERVER: mysql:3306
       DB_NAME: "my_wiki"
       DB_USER: "mariadb-user"

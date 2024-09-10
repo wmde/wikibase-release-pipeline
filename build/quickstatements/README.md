@@ -77,7 +77,7 @@ services:
       - 8880:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example.com`)"
+      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
       - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
@@ -87,13 +87,13 @@ services:
     environment:
       MW_ADMIN_NAME: "admin"
       MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@example.com"
-      MW_WG_SERVER: https://wikibase.example.com
+      MW_ADMIN_EMAIL: "admin@wikibase.example"
+      MW_WG_SERVER: https://wikibase.example
       DB_SERVER: mysql:3306
       DB_NAME: "my_wiki"
       DB_USER: "mariadb-user"
       DB_PASS: "change-this-password"
-      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example.com
+      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -137,7 +137,7 @@ services:
       - quickstatements-data:/quickstatements/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`quickstatements.example.com`)"
+      - "traefik.http.routers.quickstatements.rule=Host(`quickstatements.example`)"
       - "traefik.http.routers.quickstatements.entrypoints=websecure"
       - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
     environment:
@@ -145,8 +145,8 @@ services:
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: 120
       WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example.com
-      WIKIBASE_PUBLIC_URL: https://wikibase.example.com
+      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
+      WIKIBASE_PUBLIC_URL: https://wikibase.example
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
@@ -164,7 +164,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     ports:
       - 80:80

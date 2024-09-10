@@ -23,7 +23,7 @@ WBS Deploy consists of the following services:
 
 ## Quickstart
 
-> 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ entry](#can-i-host-wikibase-suite-locally) below.
+> 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ entry](#can-i-host-wbs-deploy-locally) below.
 
 ### Requirements
 
@@ -44,9 +44,9 @@ WBS Deploy consists of the following services:
 
 You need three DNS records that resolve to your machine's IP address, one for each user-facing service:
 
-- Wikibase, e.g., "wikibase.example.com"
-- QueryService, e.g., "query.example.com"
-- QuickStatements, e.g., "quickstatements.example.com"
+- Wikibase, e.g., "wikibase.example"
+- QueryService, e.g., "query.example"
+- QuickStatements, e.g., "quickstatements.example"
 
 ### Initial setup
 
@@ -305,9 +305,9 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 ```
 ## FAQ
 
-### Can I host Wikibase Suite locally?
+### Can I host WBS Deploy locally?
 
-Yes, Wikibase Suite can be hosted locally for testing purposes by using the example domain names `*.example.com` from `template.env` in your `.env` file. Configure those domains in `/etc/hosts` to make them resolve to `127.0.0.1`.
+Yes, WBS Deploy can be hosted locally for testing purposes by using the example domain names `*.example` from `template.env` in your `.env` file. Configure those domains in your host machine's `/etc/hosts` file, so that your browser (on your host machine) resolves `*.example` to `127.0.0.1` and access the local WBS Deploy instance.
 
 However, due to OAuth requirements, QuickStatements may not function properly without publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Also, running locally without publicly accessible addresses will prevent the generation of a valid SSL certificate; to accessing locally running services, you will need to allow the invalid certificate when loading the page for the first time.
 
