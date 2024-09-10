@@ -79,7 +79,7 @@ services:
     environment:
       MW_ADMIN_NAME: "admin"
       MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@example.com"
+      MW_ADMIN_EMAIL: "admin@wikibase.example"
       MW_WG_SERVER: http://localhost
       DB_SERVER: mysql:3306
       DB_NAME: "my_wiki"

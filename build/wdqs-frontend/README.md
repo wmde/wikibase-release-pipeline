@@ -58,7 +58,7 @@ services:
       - 8880:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example.com`)"
+      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
       - "traefik.http.routers.wikibase.entrypoints=websecure"
       - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
     volumes:
@@ -67,8 +67,8 @@ services:
     environment:
       MW_ADMIN_NAME: "admin"
       MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@example.com"
-      MW_WG_SERVER: https://wikibase.example.com
+      MW_ADMIN_EMAIL: "admin@wikibase@example"
+      MW_WG_SERVER: https://wikibase.example
       DB_SERVER: mysql:3306
       DB_NAME: "my_wiki"
       DB_USER: "mariadb-user"
@@ -143,7 +143,7 @@ services:
       - 8834:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example.com`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
@@ -165,7 +165,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@example.com"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     ports:
       - 80:80
