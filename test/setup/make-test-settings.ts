@@ -16,7 +16,11 @@ export const ONE_DAY_IN_MS = 86400000;
 export const defaultTestSettings = {
 	envFiles: [
 		'../deploy/template.env',
-		'../variables.env',
+		// TODO: For MEDIAWIKI_VERSION only. Could use this Action API endpoint
+		// instead to remove dependency:
+		// https://wikibase/api.php?action=query&meta=siteinfo&siprop=general
+		// Returns JSON and version is available at the query.general.generator key
+		'../build/wikibase/build.env',
 		'./test-services.env',
 		'../local.env'
 	],
@@ -92,7 +96,7 @@ export const makeTestSettings = (
 			ONE_DAY_IN_MS :
 			parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		pwd: process.env.HOST_PWD || process.cwd()
+		pwd: process.env.HOST_PWD ? `${ process.env.HOST_PWD }/test` : process.cwd()
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || defaultTestSettings.composeFiles,

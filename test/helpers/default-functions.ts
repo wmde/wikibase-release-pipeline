@@ -16,6 +16,11 @@ export function defaultFunctions(): void {
 	// ======
 	// Use in a test as `browser.options.<key>`.
 
+	// As of v8 of WDIO the browser.config object is deprecated in preference to browser.options
+	// This reassignment of options to config is necessary until the upstream WMDE and WikiMedia
+	// WDIO helper modules catch-up
+	browser.config = browser.options;
+
 	// Base for browser.url() and Page#openTitle()
 	browser.options.baseUrl =
 		testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
@@ -140,7 +145,7 @@ export function defaultFunctions(): void {
 			await browser.waitUntil(
 				async () => {
 					const commandTextArray = await Promise.all(
-						commands.map( async ( command ) => command.getText() )
+						await commands.map( async ( command ) => command.getText() )
 					);
 					return commandTextArray.every(
 						( commandText ) => commandText === 'done'

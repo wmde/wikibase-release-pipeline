@@ -1,0 +1,23 @@
+{
+	"root": true,
+	"parser": "any-eslint-parser",
+	"ignorePatterns": [
+		"test/**/results",
+		"!.github",
+		"!deploy",
+		"package-lock.json",
+		"pnpm/**/**",
+		"pnpm-lock.yaml",
+		"*.properties",
+		"*.ts",
+		"*.js",
+		"*.json",
+		"*.yml",
+		"*.yaml",
+		"*.json",
+		"*.png"
+	],
+	"rules": {
+		"eol-last": [ "error", "always" ]
+	}
+}

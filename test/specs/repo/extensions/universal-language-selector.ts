@@ -9,8 +9,8 @@ describe( 'UniversalLanguageSelector', function () {
 	it( 'Should be able to see the language selector menu', async function () {
 		await page.open( '' );
 
-		// MediaWiki 1.39 default skin sets up language selector differently than subsequent versions,
-		// this exception can be removed once MW 1.39 is no longer supported.
+		// MediaWiki 1.39 default skin sets up language selector differently than subsequent
+		// versions, this exception can be removed once MW 1.39 is no longer supported.
 		if ( parseSemVer( testEnv.vars.MEDIAWIKI_VERSION ).minor === 39 ) {
 			await $( '#searchInput' ).click();
 			await $( '.imeselector' ).click();

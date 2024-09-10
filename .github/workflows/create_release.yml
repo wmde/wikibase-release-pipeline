@@ -1,0 +1,67 @@
+name: 📦 Create a WBS Image Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_name:
+        description: 'Image to release'
+        type: choice
+        required: true
+        default: 'wikibase'
+        options:
+          - deploy
+          - elasticsearch
+          - quickstatements
+          - wdqs
+          - wdqs-frontend
+          - wdqs-proxy
+          - wikibase
+          - All projects (images and deploy) with unreleased changes
+      dry_run:
+        description: "Only log what will be done, don't do it yet."
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/login-action@v3
+        with:
+          # implicitly docker hub
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Git tag release
+        run: |
+          set -e # abort on error
+          set -x # show commands
+
+          git config --global user.name 'wikibase suite github actions bot'
+          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
+
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          else
+            DRY_RUN_FLAG=""
+          fi
+
+          if [ "${{ inputs.image_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
+            PROJECT_ARG=""
+          else
+            PROJECT_ARG="-p ${{ inputs.image_name }}"
+          fi
+
+          ./nx release $PROJECT_ARG $DRY_RUN_FLAG

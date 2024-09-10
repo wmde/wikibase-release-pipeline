@@ -1,5 +1,8 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+pnpm
+.pnpm-store
 *.swp
-.DS_Store
 .direnv
 
 local.env
@@ -13,3 +16,22 @@ test/log
 test/mwlog
 test/suites/**/results/
 
+# dependencies
+node_modules
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+npm-debug.log
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.nx/cache
+.nx/workspace-data

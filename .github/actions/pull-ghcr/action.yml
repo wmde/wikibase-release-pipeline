@@ -1,21 +1,10 @@
 name: pull-ghcr
-description: Pull all from GHCR
-inputs:
-  github_token:
-    description: token to access GHCR
-    required: true
+description: Pull all images from GHCR (for current run ID)
 
 runs:
   using: composite
 
   steps:
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ inputs.github_token }}
-
     - shell: bash
       run: |
         set -x

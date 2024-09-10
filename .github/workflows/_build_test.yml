@@ -9,17 +9,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Lint
-        run: ./lint.sh
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: ./nx lint
 
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     strategy:
       fail-fast: false
       matrix:
-        component:
+        imageName:
           - wikibase
           - elasticsearch
           - wdqs
@@ -29,20 +32,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - run: ./build.sh ${{ matrix.component }}
-
-      # TODO re-enable as soon as we make use of it
-      # - name: Scan Image
-      #   uses: ./.github/actions/scan-image
-      #   continue-on-error: true
-      #   with:
-      #     image_name: ${{ matrix.component }}
-
-      - uses: ./.github/actions/push-ghcr
+  
+      - uses: ./.github/actions/setup-environment
         with:
-          docker_image: wikibase/${{ matrix.component }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.imageName }}
+        run: ./nx build ${{ matrix.imageName }} --push
 
   test:
     needs: build
@@ -63,18 +59,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/pull-ghcr
+  
+      - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: ./test.sh ${{ matrix.suite }}
+      - name: "Pull images from GHCR"
+        uses: ./.github/actions/pull-ghcr
 
-      - name: Reporter
-        run: |
-          cd .github/reporter
-          npm install
-          node report.js ${{ matrix.suite }}
+      - name: "Run ${{ matrix.suite }} test suite"
+        run: ./nx test -- ${{ matrix.suite }}
 
       - name: Show logs
         run: |
@@ -82,9 +76,9 @@ jobs:
           tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: TestResults
+          name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
           path: test/suites/**/results
 
   test-success:

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
+import { existsSync } from 'fs';
 
 function loadEnvFile(
 	envFilePath: string,
@@ -30,7 +31,8 @@ export default function loadEnvFiles(
 ): Record<string, string> {
 	let envVars = {};
 	envFilePaths
-		.filter( ( envFilePath ) => envFilePath )
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
+		.filter( ( envFilePath ) => envFilePath && existsSync( envFilePath ) )
 		.forEach( ( envFilePath ) => {
 			envVars = loadEnvFile( envFilePath, envVars );
 		} );
