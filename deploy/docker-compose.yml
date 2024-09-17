@@ -109,8 +109,8 @@ services:
       - "traefik.http.middlewares.cors-headers.headers.accesscontrolalloworigin=*"
       - "traefik.http.middlewares.cors-headers.headers.addvaryheader=true"
       # Define wdqs-rate-limit middleware for rate limiting
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=10" # Adjust average request rate
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=20" # Adjust burst limit
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=10"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=20"
       # Apply middlewares to the wdqs router
       - "traefik.http.routers.wdqs-router.middlewares=wdqs-rate-limit,wdqs-headers,cors-headers"
       # Set timeouts for the wdqs service
