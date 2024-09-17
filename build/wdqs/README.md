@@ -29,9 +29,7 @@ You'll need one instance of the image to execute the updater started using `/run
 
 ### WDQS Proxy for public facing setups
 
-By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. Wikibase Suite offers the [WDQS-proxy](../WDQS-proxy/README.md) which filters out all long-running or unwanted requests.
-
-When running WDQS in a setup without WDQS-proxy, **please consider disabling these endpoints in some other way**.
+By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. Wikibase Suite Deploy includes a Traefik-based proxy setup which filters out all long-running or unwanted requests. When running WDQS in a setup without a proxy, **please consider disabling these endpoints in some other way**.
 
 ### Environment variables
 
@@ -140,13 +138,6 @@ services:
       nofile:
         soft: 32768
         hard: 32768
-
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
 
 volumes:
   wikibase-image-data:

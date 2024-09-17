@@ -117,7 +117,6 @@ WIKIBASE_CLIENT_URL=http://wikibase-client
 QUICKSTATEMENTS_URL=http://quickstatements
 WDQS_FRONTEND_URL=http://wdqs-frontend
 WDQS_URL=http://wdqs:9999
-WDQS_PROXY_URL=http://wdqs-proxy
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w

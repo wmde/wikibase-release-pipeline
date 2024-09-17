@@ -9,7 +9,7 @@ import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js
 describe( 'QueryService', function () {
 	it( 'Should not be able to post to sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`,
+			`${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/sparql`,
 			{ validateStatus: false },
 			{}
 		);
@@ -18,14 +18,14 @@ describe( 'QueryService', function () {
 
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
+			`${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/sparql`
 		);
 		expect( result.status ).toEqual( 200 );
 	} );
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
+			`${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/ldf`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );
@@ -33,7 +33,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
+			`${ testEnv.vars.WDQS_URL }/bigdata/namespace/wdq/assets`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );
@@ -41,7 +41,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph workbench', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
+			`${ testEnv.vars.WDQS_URL }/bigdata/#query`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );

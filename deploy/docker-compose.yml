@@ -96,6 +96,26 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    labels:
+      - "traefik.enable=true"
+      # Define router for wdqs service
+      - "traefik.http.routers.wdqs-router.rule=PathPrefix(`/bigdata`)"
+      - "traefik.http.routers.wdqs-router.entrypoints=web"
+      - "traefik.http.routers.wdqs-router.service=wdqs-service"
+      # Headers to enforce read-only and query timeouts
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS and Vary headers
+      - "traefik.http.middlewares.cors-headers.headers.accesscontrolalloworigin=*"
+      - "traefik.http.middlewares.cors-headers.headers.addvaryheader=true"
+      # Define wdqs-rate-limit middleware for rate limiting
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=10" # Adjust average request rate
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=20" # Adjust burst limit
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-rate-limit,wdqs-headers,cors-headers"
+      # Set timeouts for the wdqs service
+      - "traefik.http.services.wdqs-service.loadbalancer.server.timeout.connect=5s"
+      - "traefik.http.services.wdqs-service.loadbalancer.server.timeout.read=300s"
     volumes:
       - wdqs-data:/wdqs/data
     healthcheck:
@@ -118,23 +138,14 @@ services:
         soft: 32768
         hard: 32768
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy:1
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-
   wdqs-frontend:
     image: wikibase/wdqs-frontend:1
     depends_on:
-      - wdqs-proxy
+      - wdqs
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
-    environment:
-      WDQS_HOST: wdqs-proxy
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
