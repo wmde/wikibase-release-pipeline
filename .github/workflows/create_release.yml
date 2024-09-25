@@ -1,4 +1,4 @@
-name: 📦 Create a WBS Image Release
+name: 📦 Create a WBS Release
 
 on:
   workflow_dispatch:
