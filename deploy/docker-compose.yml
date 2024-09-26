@@ -98,6 +98,8 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
+    environment:
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
@@ -117,6 +119,8 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    environment:
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy:1
