@@ -55,6 +55,7 @@ if [ "$PUBLISH" == true ]; then
 	TAGS+=(
 		"${IMAGE_TAGS[@]}"
 	)
+	BUILD_ARGS+=("--push")
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	TAGS+=(
