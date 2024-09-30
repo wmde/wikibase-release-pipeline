@@ -324,7 +324,7 @@ It is possible to migrate an existing Wikibase installation to WBS Deploy. The g
 
 ### My WDQS Updater keeps crashing, what can I do?
 
-Check out the known issue in the [WDQS README](../build/WDQS/README.md#Known-issues). You may find your solution there in the form of a workaround.
+Check out the known issue in the [WDQS README](../build/wdqs/README.md#Known-issues). You may find your solution there in the form of a workaround.
 
 ### Do you recommend any VPS hosting providers?
 
