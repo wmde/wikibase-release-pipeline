@@ -38,23 +38,24 @@ done
 
 # === Setup tags
 
+IMAGE_VERSION=$(jq -r '.version' package.json)
+IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
+IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
+TAGS+=(
+	"${IMAGE_VERSION}"
+	"${IMAGE_VERSION_MAJOR}"
+	"${IMAGE_VERSION_MINOR}"
+)
+# get image specific tags
+# shellcheck disable=SC1090
+source "$BUILD_ENV_FILE"
+eval "$(declare -p IMAGE_TAGS)"
+TAGS+=(
+	"${IMAGE_TAGS[@]}"
+)
+
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
-	IMAGE_VERSION=$(jq -r '.version' package.json)
-	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
-	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
-	TAGS+=(
-		"${IMAGE_VERSION}"
-		"${IMAGE_VERSION_MAJOR}"
-		"${IMAGE_VERSION_MINOR}"
-	)
-	# get image specific tags
-	# shellcheck disable=SC1090
-	source "$BUILD_ENV_FILE"
-	eval "$(declare -p IMAGE_TAGS)"
-	TAGS+=(
-		"${IMAGE_TAGS[@]}"
-	)
 	BUILD_ARGS+=("--push")
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
