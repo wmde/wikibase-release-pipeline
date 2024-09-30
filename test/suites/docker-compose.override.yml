@@ -24,9 +24,15 @@ services:
 
   wdqs:
     image: wikibase/wdqs
+    # TODO: remove as soon as #772 is merged
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-updater:
     image: wikibase/wdqs
+    # TODO: remove as soon as #772 is merged
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy

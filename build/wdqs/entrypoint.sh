@@ -2,7 +2,7 @@
 # This file is provided by the wikibase/wdqs docker image.
 
 # Test if required environment variables have been set
-REQUIRED_VARIABLES=(WIKIBASE_HOST WDQS_HOST WDQS_PORT)
+REQUIRED_VARIABLES=(WIKIBASE_HOST WIKIBASE_CONCEPT_URI WDQS_HOST WDQS_PORT)
 for i in "${REQUIRED_VARIABLES[@]}"; do
     eval THISSHOULDBESET=\$"$i"
     if [ -z "$THISSHOULDBESET" ]; then
