@@ -108,7 +108,7 @@ describe( 'QueryService', function () {
 		// property value is set with correct rdf
 		await expect(
 			QueryServiceUIPage.resultIncludes(
-				`<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }>`,
+				`<${ testEnv.vars.WIKIBASE_CONCEPT_URI }/prop/direct/${ propertyId }>`,
 				propertyValue
 			)
 		).resolves.toEqual( true );
@@ -122,7 +122,7 @@ describe( 'QueryService', function () {
 		// should be set only to the item
 		await expect(
 			QueryServiceUIPage.resultIncludes(
-				`<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>`,
+				`<${ testEnv.vars.WIKIBASE_CONCEPT_URI }/entity/${ itemId }>`,
 				propertyValue
 			)
 		).resolves.toEqual( true );
@@ -256,7 +256,7 @@ describe( 'QueryService', function () {
 
 		await QueryServiceUIPage.open( `SELECT (COUNT(*) AS ?count)
 		WHERE {
-		  <${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }> <${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }> "test-property" .
+		  <${ testEnv.vars.WIKIBASE_CONCEPT_URI }/entity/${ itemId }> <${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }> "test-property" .
 		}` );
 
 		// wait for WDQS-updater
