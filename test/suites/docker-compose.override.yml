@@ -24,15 +24,9 @@ services:
 
   wdqs:
     image: wikibase/wdqs
-    # TODO: remove as soon as #772 is merged
-    environment:
-      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-updater:
     image: wikibase/wdqs
-    # TODO: remove as soon as #772 is merged
-    environment:
-      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy
@@ -60,6 +54,19 @@ services:
     environment:
       SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
       SE_VNC_NO_PASSWORD: 1
+    links:
+      - "traefik:wikibase.example"
+      - "traefik:wdqs-frontend.example"
+      - "traefik:quickstatements.example"
+
+  traefik:
+    command:
+      # Basic setup
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      # http endpoint
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.asdefault"
 
 volumes:
   wikibase-config:
