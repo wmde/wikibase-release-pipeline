@@ -10,7 +10,6 @@ set -u
 
 cd /wdqs || exit
 
-# TODO env vars for entity namespaces
 /wait-for-it.sh "$WIKIBASE_HOST:80" -t 300 -- \
 /wait-for-it.sh "$WDQS_HOST:$WDQS_PORT" -t 300 -- \
 ./runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_CONCEPT_URI" --entityNamespaces "$WDQS_ENTITY_NAMESPACES"
