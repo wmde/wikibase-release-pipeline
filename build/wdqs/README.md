@@ -125,8 +125,6 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
-    environment:
-      WIKIBASE_CONCEPT_URI: https://wikibase.example
     healthcheck:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
