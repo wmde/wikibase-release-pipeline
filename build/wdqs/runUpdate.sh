@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # This file is provided by the wikibase/wdqs docker image.
 
+set +u
+if [ -z "$WIKIBASE_CONCEPT_URI" ]; then
+  echo "WIKIBASE_CONCEPT_URI is required but isn't set.";
+  exit 1;
+fi
+set -u
+
 cd /wdqs || exit
 
 # TODO env vars for entity namespaces

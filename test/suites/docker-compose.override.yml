@@ -24,9 +24,6 @@ services:
 
   wdqs:
     image: wikibase/wdqs
-    # TODO: maybe we only need it for the updater?
-    environment:
-      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-updater:
     image: wikibase/wdqs
