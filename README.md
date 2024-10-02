@@ -48,6 +48,12 @@ $ ./nx test -- repo
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
 $ ./nx test -- repo --spec specs/repo/special-item.ts
 
+# Start with a headed browser
+$ ./nx test -- repo --headed
+
+# Start a specific spec only
+./nx test -- repo --spec specs/repo/queryservice.ts
+
 # Start and leave up the test environment for a given test suite without running tests
 $ ./nx test -- repo --setup
 ```
