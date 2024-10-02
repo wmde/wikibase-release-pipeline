@@ -56,10 +56,6 @@ services:
     environment:
       SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
       SE_VNC_NO_PASSWORD: 1
-    links:
-      - "traefik:wikibase.example"
-      - "traefik:wdqs-frontend.example"
-      - "traefik:quickstatements.example"
 
   traefik:
     command:
