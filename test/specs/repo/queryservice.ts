@@ -69,7 +69,7 @@ describe( 'QueryService', function () {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -114,7 +114,7 @@ describe( 'QueryService', function () {
 		).resolves.toEqual( true );
 
 		// query the property using wdt: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s <http://wikibase.example/prop/direct/${ propertyId }> ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
@@ -146,7 +146,7 @@ describe( 'QueryService', function () {
 		).replace( /[()]/g, '' );
 
 		// Check it shows up after creation
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -172,7 +172,7 @@ describe( 'QueryService', function () {
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause

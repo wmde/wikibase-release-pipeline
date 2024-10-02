@@ -24,9 +24,14 @@ services:
 
   wdqs:
     image: wikibase/wdqs
+    # TODO: maybe we only need it for the updater?
+    environment:
+      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-updater:
     image: wikibase/wdqs
+    environment:
+      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy
@@ -67,6 +72,12 @@ services:
       # http endpoint
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.asdefault"
+    networks:
+      default:
+        aliases:
+          - wikibase.example
+          - wdqs-frontend.example
+          - quickstatements.example
 
 volumes:
   wikibase-config:

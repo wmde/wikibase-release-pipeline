@@ -98,6 +98,7 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
+    # TODO: maybe we only need it for the updater?
     environment:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
