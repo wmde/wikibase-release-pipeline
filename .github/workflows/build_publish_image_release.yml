@@ -8,7 +8,7 @@ on:
       - 'wdqs@*'
       - 'wdqs-frontend@*'
       - 'wdqs-proxy@*'
-      - 'wikibase@*'     
+      - 'wikibase@*'
 
 permissions:
   contents: write
@@ -36,8 +36,6 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
 
       - uses: ./.github/actions/setup-environment
         with:
@@ -56,5 +54,5 @@ jobs:
 
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
-          
+
           ./nx release publish -p ${{ steps.extract_tag.outputs.imageName }}
