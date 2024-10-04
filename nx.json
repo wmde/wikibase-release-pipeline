@@ -22,7 +22,6 @@
 		},
 		"changelog": {
 			"projectChangelogs": {
-				"createRelease": "github"
 			}
 		}
 	},
