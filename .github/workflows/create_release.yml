@@ -18,7 +18,7 @@ on:
           - wikibase
           - All projects (images and deploy) with unreleased changes
       dry_run:
-        description: "Only log what will be done, don't do it yet."
+        description: "Dry run, don't do it yet."
         type: boolean
         required: true
         default: true
@@ -46,7 +46,7 @@ jobs:
           username: wmdetravisbot
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - name: Git tag release
+      - name: Create release
         run: |
           set -e # abort on error
           set -x # show commands
