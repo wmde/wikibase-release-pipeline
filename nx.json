@@ -8,14 +8,14 @@
 		}
 	},
 	"release": {
-    "conventionalCommits": {
-      "types": {
-        "docs": true,
-        "chore": true,
-        "feat": true,
-        "fix": true
-      }
-    },
+		"conventionalCommits": {
+			"types": {
+				"docs": true,
+				"chore": true,
+				"feat": true,
+				"fix": true
+			}
+		},
 		"groups": {
 			"images": {
 				"projects": [ "build/*" ]
