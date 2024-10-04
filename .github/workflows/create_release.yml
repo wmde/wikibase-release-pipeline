@@ -14,7 +14,6 @@ on:
           - quickstatements
           - wdqs
           - wdqs-frontend
-          - wdqs-proxy
           - wikibase
           - All projects (images and deploy) with unreleased changes
       dry_run:

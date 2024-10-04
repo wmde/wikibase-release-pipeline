@@ -28,9 +28,6 @@ services:
   wdqs-updater:
     image: wikibase/wdqs
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-
   wdqs-frontend:
     image: wikibase/wdqs-frontend
 
