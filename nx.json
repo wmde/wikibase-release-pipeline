@@ -21,9 +21,7 @@
 			"conventionalCommits": true
 		},
 		"changelog": {
-			"projectChangelogs": {
-				"createRelease": "github"
-			}
+			"projectChangelogs": true
 		}
 	},
 	"targetDefaults": {

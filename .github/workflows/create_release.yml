@@ -36,6 +36,7 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+          token: ${{ secrets.GH_WBS_BOT_TOKEN }}
 
       - uses: ./.github/actions/setup-environment
         with:
@@ -67,4 +68,10 @@ jobs:
             PROJECT_ARG="-p ${{ inputs.image_name }}"
           fi
 
-          ./nx release $PROJECT_ARG $DRY_RUN_FLAG
+          ./nx release $PROJECT_ARG $DRY_RUN_FLAG --skip-publish --verbose
+
+          # Temporary workaround for nx issue: https://github.com/nrwl/nx/issues/22073#
+          if [ $? -eq 0 ] && [ -z "$DRY_RUN_FLAG" ]; then
+            git push origin main --tags
+          fi
+
