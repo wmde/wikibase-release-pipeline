@@ -29,8 +29,7 @@
 			"conventionalCommits": true
 		},
 		"changelog": {
-			"projectChangelogs": {
-			}
+			"projectChangelogs": true
 		}
 	},
 	"targetDefaults": {
