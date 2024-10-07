@@ -53,8 +53,8 @@ jobs:
           set -x # show commands
 
           git config --global user.name 'wikibase suite github actions bot'
-          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
-          git remote set-url origin https://$GH_WBS_BOT_TOKEN@github.com/${{ github.repository }}
+          git config --global user.email 'wikibase-suite-bot@users.noreply.github.com'
+          git remote set-url origin https://wikibase-suite-bot:$GH_WBS_BOT_TOKEN@github.com/${{ github.repository }}
 
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             DRY_RUN_FLAG="--dry-run"
