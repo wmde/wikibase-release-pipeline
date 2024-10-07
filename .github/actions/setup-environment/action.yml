@@ -1,6 +1,9 @@
 name: "Setup Node and Docker build environment"
 description: "Reusable action to set up the environment for builds and tests"
 inputs:
+  github_user:
+    description: user to access GHCR
+    required: true
   github_token:
     description: token to access GHCR
     required: true
@@ -34,7 +37,7 @@ runs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.repository_owner }}
+        username: ${{ inputs.github_user }}
         password: ${{ inputs.github_token }}
 
     - name: Set NX to run locally using Node vs in Docker dev runner container
