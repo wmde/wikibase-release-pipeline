@@ -54,7 +54,7 @@ jobs:
 
           git config --global user.name 'wikibase suite github actions bot'
           git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
-          git remote set-url origin https://$GH_RELEASES_TOKEN@github.com/${{ github.repository }}
+          git remote set-url origin https://$GH_WBS_BOT_TOKEN@github.com/${{ github.repository }}
 
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             DRY_RUN_FLAG="--dry-run"
@@ -70,4 +70,4 @@ jobs:
 
           ./nx release $PROJECT_ARG $DRY_RUN_FLAG
         env:
-          GH_RELEASES_TOKEN: ${{ secrets.GH_RELEASES_TOKEN }}  # Use the GH_RELEASES_TOKEN from secrets
+          GH_WBS_BOT_TOKEN: ${{ secrets.GH_WBS_BOT_TOKEN }}
