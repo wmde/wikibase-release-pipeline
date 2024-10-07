@@ -36,6 +36,7 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+          token: ${{ secrets.GH_WBS_BOT_TOKEN }}
 
       - uses: ./.github/actions/setup-environment
         with:
@@ -52,10 +53,6 @@ jobs:
           set -e # abort on error
           set -x # show commands
 
-          git config --global user.name 'wikibase suite github actions bot'
-          git config --global user.email 'wikibase-suite-bot@users.noreply.github.com'
-          git remote set-url origin https://wikibase-suite-bot:$GH_WBS_BOT_TOKEN@github.com/${{ github.repository }}
-
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             DRY_RUN_FLAG="--dry-run"
           else
@@ -69,5 +66,3 @@ jobs:
           fi
 
           ./nx release $PROJECT_ARG $DRY_RUN_FLAG
-        env:
-          GH_WBS_BOT_TOKEN: ${{ secrets.GH_WBS_BOT_TOKEN }}
