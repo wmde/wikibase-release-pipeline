@@ -39,7 +39,8 @@ jobs:
 
       - uses: ./.github/actions/setup-environment
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_user: wikibase-suite-bot
+          github_token: ${{ secrets.GH_WBS_BOT_TOKEN }}
 
       - uses: docker/login-action@v3
         with:

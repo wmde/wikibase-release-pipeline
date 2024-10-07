@@ -11,6 +11,7 @@ jobs:
 
       - uses: ./.github/actions/setup-environment
         with:
+          github_user: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: ./nx lint
@@ -35,6 +36,7 @@ jobs:
   
       - uses: ./.github/actions/setup-environment
         with:
+          github_user: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
@@ -62,6 +64,7 @@ jobs:
   
       - uses: ./.github/actions/setup-environment
         with:
+          github_user: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Pull images from GHCR"
