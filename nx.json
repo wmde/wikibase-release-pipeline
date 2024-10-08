@@ -29,7 +29,16 @@
 			"conventionalCommits": true
 		},
 		"changelog": {
-			"projectChangelogs": true
+			"projectChangelogs": {
+				"renderOptions": {
+					"authors": false
+				}
+			},
+			"workspaceChangelog": {
+				"renderOptions": {
+					"authors": false
+				}
+			}
 		}
 	},
 	"targetDefaults": {
