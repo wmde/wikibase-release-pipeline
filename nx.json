@@ -10,10 +10,16 @@
 	"release": {
 		"conventionalCommits": {
 			"types": {
-				"docs": true,
+				"build": true,
 				"chore": true,
+				"ci": true,
+				"docs": true,
 				"feat": true,
-				"fix": true
+				"fix": true,
+				"perf": true,
+				"refactor": true,
+				"style": true,
+				"test": true
 			}
 		},
 		"groups": {
