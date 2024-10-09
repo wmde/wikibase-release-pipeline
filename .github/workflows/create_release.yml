@@ -53,8 +53,8 @@ jobs:
           set -e # abort on error
           set -x # show commands
 
-          git config --global user.name 'wikibase suite github actions bot'
-          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
+          git config --global user.name 'wikibase-suite-bot'
+          git config --global user.email 'wikibase-suite-engineers@wikimedia.de'
 
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             DRY_RUN_FLAG="--dry-run"
