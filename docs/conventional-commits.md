@@ -13,13 +13,13 @@ NX supports [a number of](https://github.com/nrwl/nx/blob/db10812da789cd48d3a722
 
 | Type     | SemVer Bump | Changelog Title  |
 | -------- | ----------- | ---------------- |
-| build    | none        | 📦 Build         |
-| chore    | none        | 🏡 Chore         |
-| ci       | none        | 🤖 CI            |
-| docs     | none        | 📖 Documentation |
+| build    | patch       | 📦 Build         |
+| chore    | patch       | 🏡 Chore         |
+| ci       | patch       | 🤖 CI            |
+| docs     | patch       | 📖 Documentation |
 | feat     | minor       | 🚀 Features      |
 | fix      | patch       | 🩹 Fixes         |
 | perf     | patch       | 🔥 Performance   |
 | refactor | patch       | 💅 Refactors     |
-| style    | none        | 🎨 Styles        |
-| test     | none        | ✅ Tests         |
+| style    | patch       | 🎨 Styles        |
+| test     | patch       | ✅ Tests         |
