@@ -23,3 +23,32 @@ NX supports [a number of](https://github.com/nrwl/nx/blob/db10812da789cd48d3a722
 | refactor | patch       | 💅 Refactors     |
 | style    | patch       | 🎨 Styles        |
 | test     | patch       | ✅ Tests         |
+
+## Examples
+
+### Feature
+
+A new feature implementation bumping the minor version:
+
+```
+feat: added support for cats
+```
+
+### Documentation update
+
+Some update to the docs bumping a minor version:
+
+```
+docs: describe how to work around sleeping cats
+```
+
+
+### Breaking change
+
+All types can be breaking changes. Here is an example for a breaking refactor, bumping a major version.
+
+```
+refactor!: remove support for sabre-toothed tiger
+```
+
+
