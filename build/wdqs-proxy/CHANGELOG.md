@@ -1,4 +1,5 @@
-## **wdqs-proxy@1.0.1** (2024-10-04)
+## **wdqs-proxy@1.0.1** (2024-10-09)
 
-### 🚀 Features
-- Updates documentation
+### 📖 Documentation
+
+- Switch from `.example.com` to `.example`
