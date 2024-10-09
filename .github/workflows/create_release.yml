@@ -18,7 +18,7 @@ on:
           - wikibase
           - All projects (images and deploy) with unreleased changes
       dry_run:
-        description: "Only log what will be done, don't do it yet."
+        description: "Dry run, don't do it yet."
         type: boolean
         required: true
         default: true
@@ -33,6 +33,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_WBS_BOT_TOKEN }}
 
       - uses: ./.github/actions/setup-environment
         with:
@@ -44,7 +48,7 @@ jobs:
           username: wmdetravisbot
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - name: Git tag release
+      - name: Create release
         run: |
           set -e # abort on error
           set -x # show commands
@@ -64,4 +68,10 @@ jobs:
             PROJECT_ARG="-p ${{ inputs.image_name }}"
           fi
 
-          ./nx release $PROJECT_ARG $DRY_RUN_FLAG
+          ./nx release $PROJECT_ARG $DRY_RUN_FLAG --skip-publish --verbose
+
+          # Temporary workaround for nx issue: https://github.com/nrwl/nx/issues/22073#
+          if [ $? -eq 0 ] && [ -z "$DRY_RUN_FLAG" ]; then
+            git push origin main --tags
+          fi
+
