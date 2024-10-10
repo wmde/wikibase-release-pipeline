@@ -117,6 +117,8 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy:1
