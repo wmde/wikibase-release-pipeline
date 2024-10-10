@@ -23,6 +23,9 @@ We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wiki
 
 You'll need one instance of the image to execute the actual WDQS daemon started using `/runBlazegraph.sh`.
 
+You can send `GET` requests with your SPARQL query to the WDQS endpoint (following the example below):
+`http://wdqs:9999/bigdata/namespace/wdq/sparql?query={SPARQL}`
+
 ### WDQS as updater
 
 You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.

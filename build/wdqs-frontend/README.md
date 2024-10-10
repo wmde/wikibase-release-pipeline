@@ -2,6 +2,14 @@
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
+To interact with the WDQS frontend, navigate to the URL corresponding to the port allocated for it. In the example below, WDQS frontend is available at `http://localhost:8834`.
+
+When writing queries using the frontend interface, click "Code" to view the corresponding URL.
+
+For general instructions on using WDQS, building SPARQL queries, and additional resources, see:
+[Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
+[What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
+
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 ## Requirements
