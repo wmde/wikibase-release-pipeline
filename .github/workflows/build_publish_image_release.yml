@@ -22,7 +22,7 @@ jobs:
       - name: Extract image name and confirm it is a valid semantic version tag
         id: extract_tag
         run: |
-          set -x
+          set -x # show commands
 
           # Extract the tag name
           TAG_NAME=$(echo ${{ github.ref }} | sed 's/refs\/tags\///')
@@ -52,8 +52,5 @@ jobs:
         run: |
           set -e # abort on error
           set -x # show commands
-
-          git config --global user.name 'wikibase suite github actions bot'
-          git config --global user.email 'wikibase-suite-github-actions-bot@users.noreply.github.com'
 
           ./nx release publish -p $IMAGE_NAME
