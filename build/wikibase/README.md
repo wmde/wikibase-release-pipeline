@@ -4,6 +4,11 @@
 
 This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those hipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
 
+Find more documentation about MediaWiki here: https://www.mediawiki.org/wiki/Manual:Contents
+
+Technical documentation about Wikibase can be found here: https://doc.wikimedia.org/Wikibase/REL1_42/php/
+TODO: how to update???
+
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 | Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
