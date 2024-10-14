@@ -1,6 +1,6 @@
 # Conventional commits
 
-[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) are human and machine readable commit messages. We use them to automatically generate changelog items and semantic version (SemVer) bumps on release using [NX](https://nx.dev). Here is an example of a commit message describing a bug fix in a backup script. Releasing this change would bump the project's patch version number:
+[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) are human and machine readable commit messages. We use them to automatically generate changelog items and [semantic version (SemVer)](https://semver.org/) bumps on release using [NX](https://nx.dev). Here is an example of a commit message describing a bug fix in a backup script. Releasing this change would bump the project's patch version number:
 
 ```
 fix(backup-script): report error if space left on device
