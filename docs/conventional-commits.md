@@ -51,7 +51,7 @@ All types can be breaking changes. Here is an example for a breaking refactor, b
 refactor!: remove support for sabre-toothed tiger
 ```
 
-### Test change for a certain component
+### Performance change for a certain component
 
 Noting that a change is specific to a component or subsystem in a project.
 
