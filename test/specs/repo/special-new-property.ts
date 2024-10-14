@@ -17,7 +17,7 @@ describe( 'Special:NewProperty', function () {
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
-		describe( `Should be able to work with datatype ${ dataType.name }`, function () {
+		describe( `Should be able to work with datatype ${ dataType.name } `, function () {
 			before( async function () {
 				if ( dataType.extensionNeeded ) {
 					await browser.skipIfExtensionNotPresent(
@@ -51,7 +51,7 @@ describe( 'Special:NewProperty', function () {
 				await browser.waitForJobs();
 
 				await expect( browser ).toHaveUrl(
-					/http:\/\/wikibase\/wiki\/Property:P\d+/
+					/http:\/\/wikibase.example\/wiki\/Property:P\d+/
 				);
 
 				await expect( $( '.wikibase-propertyview-datatype-value' ) ).toHaveText(

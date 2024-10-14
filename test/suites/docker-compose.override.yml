@@ -27,6 +27,8 @@ services:
 
   wdqs-updater:
     image: wikibase/wdqs
+    environment:
+      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy
@@ -54,6 +56,21 @@ services:
     environment:
       SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
       SE_VNC_NO_PASSWORD: 1
+
+  traefik:
+    command:
+      # Basic setup
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      # http endpoint
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.asdefault"
+    networks:
+      default:
+        aliases:
+          - wikibase.example
+          - wdqs-frontend.example
+          - quickstatements.example
 
 volumes:
   wikibase-config:
