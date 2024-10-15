@@ -38,6 +38,12 @@ A new feature implementation bumping the minor version:
 feat: added support for cats
 ```
 
+Will generate the following changelog entry:
+
+#### 🚀 Features
+
+- added support for cats
+
 ### Documentation update
 
 Some update to the docs bumping a minor version:
@@ -46,6 +52,11 @@ Some update to the docs bumping a minor version:
 docs: describe how to work around sleeping cats
 ```
 
+Will generate the following changelog entry:
+
+#### 📖 Documentation
+
+- describe how to work around sleeping cats
 
 ### Breaking change
 
@@ -55,6 +66,12 @@ All types can be breaking changes. Here is an example for a breaking refactor, b
 refactor!: remove support for sabre-toothed tiger
 ```
 
+Will generate the following changelog entry:
+
+#### 💅 Refactors
+
+- remove support for sabre-toothed tiger
+
 ### Performance change for a certain component
 
 Noting that a change is specific to a component or subsystem in a project.
@@ -62,3 +79,9 @@ Noting that a change is specific to a component or subsystem in a project.
 ```
 pref(food-dispenser): improved speed
 ```
+
+Will generate the following changelog entry:
+
+#### 🔥 Performance
+
+- food-dispenser: improved speed
