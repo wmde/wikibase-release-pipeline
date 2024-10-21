@@ -9,6 +9,8 @@ on:
       - 'wdqs-frontend@*'
       - 'wdqs-proxy@*'
       - 'wikibase@*'
+    branches-ignore:
+      - '**' # weird workaround to trigger on multiple tags for a single commit
 
 permissions:
   contents: write
