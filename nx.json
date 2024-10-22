@@ -8,6 +8,20 @@
 		}
 	},
 	"release": {
+		"conventionalCommits": {
+			"types": {
+				"build": true,
+				"chore": true,
+				"ci": true,
+				"docs": true,
+				"feat": true,
+				"fix": true,
+				"perf": true,
+				"refactor": true,
+				"style": true,
+				"test": true
+			}
+		},
 		"groups": {
 			"images": {
 				"projects": [ "build/*" ]
@@ -22,7 +36,14 @@
 		},
 		"changelog": {
 			"projectChangelogs": {
-				"createRelease": "github"
+				"renderOptions": {
+					"authors": false
+				}
+			},
+			"workspaceChangelog": {
+				"renderOptions": {
+					"authors": false
+				}
 			}
 		}
 	},
