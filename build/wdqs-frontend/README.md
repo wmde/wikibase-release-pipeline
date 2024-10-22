@@ -2,13 +2,13 @@
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
-To interact with the WDQS frontend, navigate to the URL corresponding to the port allocated for it. In the example below, WDQS frontend is available at `http://localhost:8834`.
+To interact with the WDQS frontend, navigate to the URL corresponding to the port allocated for it. In the example below, the WDQS frontend is available at `http://localhost:8834`.
 
 When writing queries using the frontend interface, click "Code" to view the corresponding URL.
 
 For general instructions on using WDQS, building SPARQL queries, and additional resources, see:
-[Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
-[What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
+- [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
+- [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
 > 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
@@ -29,11 +29,11 @@ We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wiki
 
 ### WDQS as server
 
-We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs).
+We suggest using the [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs).
 
 ### WDQS as updater
 
-We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Check out the [documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
+We suggest using the [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Check out the [documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
 
 ### Reverse proxy
 
@@ -193,7 +193,7 @@ volumes:
 
 Official releases of this image can be found on [Docker Hub wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend).
 
-## Tags and Versioning
+## Tags and versioning
 
 This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -214,4 +214,4 @@ This image is built from this [Dockerfile](https://github.com/wmde/wikibase-rele
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
-If you have questions not listed above or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If you have questions not covered above or need further help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
