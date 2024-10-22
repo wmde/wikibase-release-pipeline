@@ -303,6 +303,15 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 ```yml
       --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
+
+## WDQS Frontend
+
+To interact with the WDQS frontend, navigate to the URL defined as `WDQS_FRONTEND_PUBLIC_HOST` in the `.env` file. By default, this is set to `wdqs-frontend.example`.
+
+Alternatively, send `GET` requests with your SPARQL query to the WDQS frontend endpoint:
+`https://wdqs-frontend.example.com/proxy/wdqs/bigdata/namespace/wdq/sparql?query={SPARQL}`
+
+
 ## FAQ
 
 ### Can I host WBS Deploy locally?

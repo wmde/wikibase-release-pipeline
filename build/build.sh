@@ -76,7 +76,7 @@ IMAGE_NAME=$(jq -r '.name' package.json)
 
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
-	IMAGE_REGISTRY=dockerhub.io
+	# IMAGE_REGISTRY implies dockerhub if empty
 	IMAGE_NAMESPACE=wikibase
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
