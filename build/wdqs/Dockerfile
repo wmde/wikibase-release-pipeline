@@ -54,6 +54,7 @@ RUN apt-get update && \
 COPY --from=fetcher --chown=blazegraph:blazegraph /tmp/wdqs-service /wdqs
 
 RUN mkdir /var/log/wdqs && chown blazegraph /var/log/wdqs
+RUN mkdir /wdqs/data && chown blazegraph /wdqs/data
 
 # Don't set a memory limit otherwise bad things happen (OOMs)
 ENV MEMORY=""\
@@ -76,5 +77,7 @@ COPY --chown=blazegraph:blazegraph RWStore.properties allowlist.txt logback.xml 
 
 # TODO this shouldn't be needed, but CI currently doesnt check for the +x bit, which is why this line is here
 RUN chmod +x /wdqs/runUpdate.sh
+
+USER blazegraph
 
 ENTRYPOINT ["/entrypoint.sh"]
