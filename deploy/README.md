@@ -146,12 +146,13 @@ To back up your data, shut down the instance and dump the contents of all Docker
 docker compose down
 
 for v in \
-    wikibase-suite-wikibase_image-data \
-    wikibase-suite_mysql-data \
-    wikibase-suite_wdqs-data \
-    wikibase-suite_elasticsearch-data \
-    wikibase-suite_quickstatements-data \
-    wikibase-suite_traefik-letsencrypt-data; do
+    wbs-deploy_elasticsearch-data \
+    wbs-deploy_mysql-data \
+    wbs-deploy_quickstatements-data \
+    wbs-deploy_traefik-letsencrypt-data \
+    wbs-deploy_wdqs-data \
+    wbs-deploy_wikibase-image-data \
+    ; do
   docker run --rm --volume $v:/backup debian:12-slim tar cz backup > $v.tar.gz
 done
 ```
@@ -164,12 +165,13 @@ To restore the volume backups, ensure your instance has been shut down by runnin
 docker compose down
 
 for v in \
-    wikibase-suite-wikibase_image-data \
-    wikibase-suite_mysql-data \
-    wikibase-suite_wdqs-data \
-    wikibase-suite_elasticsearch-data \
-    wikibase-suite_quickstatements-data \
-    wikibase-suite_traefik-letsencrypt-data; do
+    wbs-deploy_elasticsearch-data \
+    wbs-deploy_mysql-data \
+    wbs-deploy_quickstatements-data \
+    wbs-deploy_traefik-letsencrypt-data \
+    wbs-deploy_wdqs-data \
+    wbs-deploy_wikibase-image-data \
+    ; do
   docker volume rm $v 2> /dev/null
   docker volume create $v
   docker run -i --rm --volume $v:/backup debian:12-slim tar xz < $v.tar.gz
@@ -303,6 +305,15 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 ```yml
       --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
 ```
+
+## WDQS Frontend
+
+To interact with the WDQS frontend, navigate to the URL defined as `WDQS_FRONTEND_PUBLIC_HOST` in the `.env` file. By default, this is set to `wdqs-frontend.example`.
+
+Alternatively, send `GET` requests with your SPARQL query to the WDQS frontend endpoint:
+`https://wdqs-frontend.example.com/proxy/wdqs/bigdata/namespace/wdq/sparql?query={SPARQL}`
+
+
 ## FAQ
 
 ### Can I host WBS Deploy locally?

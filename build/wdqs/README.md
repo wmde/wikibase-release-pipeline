@@ -23,6 +23,9 @@ We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wiki
 
 You'll need one instance of the image to execute the actual WDQS daemon started using `/runBlazegraph.sh`.
 
+You can send `GET` requests with your SPARQL query to the WDQS endpoint (following the example below):
+`http://wdqs:9999/bigdata/namespace/wdq/sparql?query={SPARQL}`
+
 ### WDQS as updater
 
 You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
@@ -213,7 +216,7 @@ In the Docker Compose example provided above, you might use the commands and ins
 docker compose stop wdqs-updater
 
 # Start an updater with force sync settings
-docker compose run --rm wdqs-updater bash '/wdqs/runUpdate.sh -h http://"$WDQS_HOST":"$WDQS_PORT" -- --wikibaseUrl "$WIKIBASE_SCHEME"://"$WIKIBASE_HOST" --conceptUri "$WIKIBASE_CONCEPT_URI" --entityNamespaces "$WDQS_ENTITY_NAMESPACES" --init --start $(date +%Y%m%d000000)'
+docker compose run --rm wdqs-updater /wdqs/runUpdate.sh -h http://\$WDQS_HOST:\$WDQS_PORT -- --wikibaseUrl \$WIKIBASE_SCHEME://\$WIKIBASE_HOST --conceptUri \$WIKIBASE_CONCEPT_URI --entityNamespaces \$WDQS_ENTITY_NAMESPACES --init --start $(date +%Y%m%d000000)
 
 # As soon as you see "Sleeping for 10 secs" in the logs, press CTRL-C to stop it again
 
