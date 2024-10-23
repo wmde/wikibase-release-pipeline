@@ -40,17 +40,18 @@ When running WDQS in a setup without WDQS-proxy, **please consider disabling the
 
 Variables in **bold** are required.
 
-| Variable                 | Default    | Description                                                                                                                                                                                                                                                               |
-| ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`WIKIBASE_HOST`**      | "wikibase" | Hostname of the Wikibase service                                                                                                                                                                                                                                          |
-| **`WDQS_HOST`**          | "wdqs"     | WDQS hostname (this service)                                                                                                                                                                                                                                              |
-| **`WDQS_PORT`**          | "9999"     | WDQS port (this service)                                                                                                                                                                                                                                                  |
-| `WIKIBASE_SCHEME`        | "http"     | URL scheme of the Wikibase service                                                                                                                                                                                                                                        |
-| `WDQS_ENTITY_NAMESPACES` | "120,122"  | Wikibase namespaces to load data from                                                                                                                                                                                                                                     |
-| `WIKIBASE_MAX_DAYS_BACK` | "90"       | Maximum number of days updater can reach back in time from now                                                                                                                                                                                                            |
-| `MEMORY`                 | ""         | Memory limit for Blazegraph                                                                                                                                                                                                                                               |
-| `HEAP_SIZE`              | "1g"       | Heap size for Blazegraph                                                                                                                                                                                                                                                  |
-| `BLAZEGRAPH_EXTRA_OPTS`  | ""         | Extra options to be passed to Blazegraph,they must be prefixed with `-D`. Example: `-Dhttps.proxyHost=http://my.proxy.com -Dhttps.proxyPort=3128`. See [the WDQS User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Configurable_properties). |
+| Variable                   | Default    | Description                                                                                                                                                                                                                                                               |
+| -------------------------  | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`WIKIBASE_HOST`**        | "wikibase" | Hostname to reach the Wikibase service, e.g. the docker network internal hostname                                                                                                                                                                                         |
+| **`WIKIBASE_CONCEPT_URI`** | ""         | Concept URI, required for `/runUpdate.sh` only, the identifying prefix to entities in this knowledge graph, e.g. the public URL of the Wikibase host.                                                                                                                     |
+| **`WDQS_HOST`**            | "wdqs"     | WDQS hostname (this service)                                                                                                                                                                                                                                              |
+| **`WDQS_PORT`**            | "9999"     | WDQS port (this service)                                                                                                                                                                                                                                                  |
+| `WIKIBASE_SCHEME`          | "http"     | URL scheme used to reach the Wikibase service, e.g. http to reach a local wikibase on the same docker network                                                                                                                                                             |
+| `WDQS_ENTITY_NAMESPACES`   | "120,122"  | Wikibase namespaces to load data from                                                                                                                                                                                                                                     |
+| `WIKIBASE_MAX_DAYS_BACK`   | "90"       | Maximum number of days updater can reach back in time from now                                                                                                                                                                                                            |
+| `MEMORY`                   | ""         | Memory limit for Blazegraph                                                                                                                                                                                                                                               |
+| `HEAP_SIZE`                | "1g"       | Heap size for Blazegraph                                                                                                                                                                                                                                                  |
+| `BLAZEGRAPH_EXTRA_OPTS`    | ""         | Extra options to be passed to Blazegraph,they must be prefixed with `-D`. Example: `-Dhttps.proxyHost=http://my.proxy.com -Dhttps.proxyPort=3128`. See [the WDQS User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Configurable_properties). |
 
 ## Example
 
@@ -143,6 +144,8 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    environment:
+      WIKIBASE_CONCEPT_URI: https://wikibase.example
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy
@@ -213,7 +216,7 @@ In the Docker Compose example provided above, you might use the commands and ins
 docker compose stop wdqs-updater
 
 # Start an updater with force sync settings
-docker compose run --rm wdqs-updater /wdqs/runUpdate.sh -h http://\$WDQS_HOST:\$WDQS_PORT -- --wikibaseUrl \$WIKIBASE_SCHEME://\$WIKIBASE_HOST --conceptUri \$WIKIBASE_SCHEME://\$WIKIBASE_HOST --entityNamespaces \$WDQS_ENTITY_NAMESPACES --init --start $(date +%Y%m%d000000)
+docker compose run --rm wdqs-updater /wdqs/runUpdate.sh -h http://\$WDQS_HOST:\$WDQS_PORT -- --wikibaseUrl \$WIKIBASE_SCHEME://\$WIKIBASE_HOST --conceptUri \$WIKIBASE_CONCEPT_URI --entityNamespaces \$WDQS_ENTITY_NAMESPACES --init --start $(date +%Y%m%d000000)
 
 # As soon as you see "Sleeping for 10 secs" in the logs, press CTRL-C to stop it again
 
