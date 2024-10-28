@@ -83,7 +83,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
