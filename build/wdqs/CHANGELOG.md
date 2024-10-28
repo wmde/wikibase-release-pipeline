@@ -1,3 +1,25 @@
+# 2.0.0 (2024-10-28)
+
+
+### 🚀 Features
+
+- ⚠️  require concept uri via environment variable
+
+
+### 🩹 Fixes
+
+- drop privileges during docker build
+
+
+### 📖 Documentation
+
+- WBS specific usage of WDQS frontend
+
+
+#### ⚠️  Breaking Changes
+
+- ⚠️  require concept uri via environment variable
+
 ## **wdqs@1.0.1** (2024-10-09)
 
 ### 📖 Documentation

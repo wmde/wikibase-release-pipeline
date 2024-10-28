@@ -1,6 +1,6 @@
 {
 	"name": "wdqs-frontend",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"nx": {
 		"targets": {
 			"lint": {},
