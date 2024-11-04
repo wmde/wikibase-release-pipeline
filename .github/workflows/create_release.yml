@@ -3,8 +3,8 @@ name: 📦 Create a WBS Release
 on:
   workflow_dispatch:
     inputs:
-      image_name:
-        description: 'Image to release'
+      project_name:
+        description: 'Project to release'
         type: choice
         required: true
         default: 'wikibase'
@@ -16,7 +16,7 @@ on:
           - wdqs-frontend
           - wdqs-proxy
           - wikibase
-          - All projects (images and deploy) with unreleased changes
+          - All projects with unreleased changes
       dry_run:
         description: "Dry run, don't do it yet."
         type: boolean
@@ -56,16 +56,19 @@ jobs:
             DRY_RUN_FLAG=""
           fi
 
-          if [ "${{ inputs.image_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
+          if [ "${{ inputs.project_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
             PROJECT_ARG=""
           else
-            PROJECT_ARG="-p ${{ inputs.image_name }}"
+            PROJECT_ARG="-p ${{ inputs.project_name }}"
           fi
 
           ./nx release $PROJECT_ARG $DRY_RUN_FLAG --skip-publish --verbose
 
+          BRANCH="$(git branch | grep '^\*' | sed 's/^\* //')"
+          echo "Target branch is $BRANCH"
+
           # Temporary workaround for nx issue: https://github.com/nrwl/nx/issues/22073#
           if [ $? -eq 0 ] && [ -z "$DRY_RUN_FLAG" ]; then
-            git push origin main --tags
+            git push origin $BRANCH --tags
           fi
 
