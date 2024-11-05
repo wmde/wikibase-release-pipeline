@@ -29,113 +29,121 @@ const config: Config = {
     locales: ['en'],
   },
 
-  presets: [
-    [
-      'classic',
-      {
-        docs: {
-          routeBasePath: '/', // Serve the docs at the site's root
-          sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
-        blog: false,
-        theme: {
-          customCss: './src/css/custom.css',
-        },
-      } satisfies Preset.Options,
-    ],
-  ],
-
-
-  // plugins: [
+  // presets: [
   //   [
-  //     '@docusaurus/plugin-content-docs',
+  //     'classic',
   //     {
-  //       id: 'community',
-  //       path: 'community',
-  //       routeBasePath: 'community',
-  //       sidebarPath: './sidebarsCommunity.js',
-  //       // ... other options
-  //     },
+  //       docs: {
+  //         routeBasePath: '/', // Serve the docs at the site's root
+  //         sidebarPath: './sidebars.ts',
+  //         // Please change this to your repo.
+  //         // Remove this to remove the "edit this page" links.
+  //         editUrl:
+  //           'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+  //       },
+  //       blog: false,
+  //       theme: {
+  //         customCss: './src/css/custom.css',
+  //       },
+  //     } satisfies Preset.Options,
   //   ],
   // ],
+  // // themes: ['@docusaurus/theme-classic'],
+  // //
+  // plugins: [
+  //   // [
+  //     '@docusaurus/plugin-content-docs',
+  // //     {
+  // //       id: 'main',
+  // //       path: 'docs',
+  // //       routeBasePath: '/test',
+  // //       sidebarPath: './sidebars.ts',
+  // //       // ... other options
+  // //     },
+  //   // ],
+  // ],
   //
-  themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
-    navbar: {
-      title: 'Wikibase Suite',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
-      },
-      items: [
-        {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'left',
-          label: 'Tutorial',
-        },
-        {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
-          position: 'right',
-        },
-      ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Tutorial',
-              to: '/docs/intro',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    },
-    prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
-    },
-  } satisfies Preset.ThemeConfig,
+
+  themes: [['@docusaurus/theme-classic', {}]],
+  plugins: [
+    ['@docusaurus/plugin-content-docs', {id: 'docs1', path: 'docs', routeBasePath: '/'}],
+    ['@docusaurus/plugin-content-docs', {id: 'docs2', path: 'community', routeBasePath: 'a'}],
+    // ['@docusaurus/plugin-content-docs', {id: 'docs3', path: 'api'}],
+  ],
+
+  // themeConfig: {
+  // //   // Replace with your project's social card
+  //   image: 'img/docusaurus-social-card.jpg',
+  //   navbar: {
+  //     title: 'Wikibase Suite',
+  //     logo: {
+  //       alt: 'My Site Logo',
+  //       src: 'img/logo.svg',
+  //     },
+  //     items: [
+  //       {
+  //         type: 'docSidebar',
+  //         sidebarId: 'tutorialSidebar',
+  //         position: 'left',
+  //         label: 'Tutorial',
+  //       },
+  //       {
+  //         href: 'https://github.com/facebook/docusaurus',
+  //         label: 'GitHub',
+  //         position: 'right',
+  //       },
+  //     ],
+  //   },
+  //   footer: {
+  //     style: 'dark',
+  //     links: [
+  //       {
+  //         title: 'Docs',
+  //         items: [
+  //           {
+  //             label: 'Tutorial',
+  //             to: '/docs/intro',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         title: 'Community',
+  //         items: [
+  //           {
+  //             label: 'Stack Overflow',
+  //             href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+  //           },
+  //           {
+  //             label: 'Discord',
+  //             href: 'https://discordapp.com/invite/docusaurus',
+  //           },
+  //           {
+  //             label: 'Twitter',
+  //             href: 'https://twitter.com/docusaurus',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         title: 'More',
+  //         items: [
+  //           {
+  //             label: 'Blog',
+  //             to: '/blog',
+  //           },
+  //           {
+  //             label: 'GitHub',
+  //             href: 'https://github.com/facebook/docusaurus',
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //     copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+  //   },
+  //   prism: {
+  //     theme: prismThemes.github,
+  //     darkTheme: prismThemes.dracula,
+  //   },
+  // } satisfies Preset.ThemeConfig,
 };
 
 export default config;
