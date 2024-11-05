@@ -1,0 +1,48 @@
+newIssueWelcomeComment: >
+  Hi! 👋
+
+  Thank you so much for opening your first issue with us! 🎉 We are thrilled to have you here and really appreciate you taking the time to contribute.
+
+  Your input is valuable in making our project better for everyone. If you have any questions, do not hesitate to ask. We're here to help and support you along the way!
+
+  Here are a few links to get you started:
+  * [Documentation]()
+  * [Developer Guide/Contribution Guide]()
+  * [Telegram Community Channel]()
+  * [Phabricator Tickets]()
+  * [Contact form]()
+  * [Wikibase Mailing List]()
+  * [Wikibase Suite Team Mail]()
+
+  Looking forward to collaborating with you. 😊
+
+  Happy contributing! 🚀
+
+
+newPRWelcomeComment: >
+  Hi! 👋
+
+  Thank you so much for submitting your first pull request! 🎉 We are excited to see your contribution and really appreciate the effort you've put in.
+
+  Your work helps make our project better, and we are here to support you. If you have any questions or need any guidance, please feel free to reach out. We are all here to help make this process as smooth as possible for you.
+
+  Here are a few links you might want to check out:
+  * [Documentation]()
+  * [Developer Guide/Contribution Guide]()
+  * [Telegram Community Channel]()
+  * [Phabricator Tickets]()
+  * [Contact form]()
+  * [Wikibase Mailing List]()
+  * [Wikibase Suite Team Mail]()
+  
+  Looking forward to working with you on this and future contributions! 😊
+
+  Happy contributing! 🚀
+
+
+firstPRMergeComment: >
+  Congratulations on merging your first pull request! We hope to see more of your contributions to Wikibase Suite. 
+
+  We would love to see you join our community on [Telegram]() if you haven't already.
+
+  See you very soon in the next contribution 🚀
