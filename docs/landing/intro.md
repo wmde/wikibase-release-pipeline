@@ -3,7 +3,7 @@ sidebar_position: 1
 slug: /
 ---
 
-# community
+# landing page
 
 Let's discover **Docusaurus in less than 5 minutes**.
 
