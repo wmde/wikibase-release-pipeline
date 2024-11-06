@@ -7,9 +7,9 @@ slug: /
 
 [Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository.
 
-This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those hipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
+This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those shipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](/deploy) provides everything you need to self-host a Wikibase instance out of the box.
 
 ## Source
 
