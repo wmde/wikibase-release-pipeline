@@ -8,3 +8,4 @@ git diff deploy@3.0.1..deploy@3.0.2 -- deploy/README.md
 
 there was no benefit in applying them.
 
+adjusted changelog

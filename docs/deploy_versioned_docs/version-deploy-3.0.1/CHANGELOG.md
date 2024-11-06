@@ -1,22 +1,3 @@
-## 3.0.2 (2024-10-28)
-
-
-### 🩹 Fixes
-
-- provide concept uri to wdqs
-
-
-### 📖 Documentation
-
-- WBS specific usage of WDQS frontend
-
-- **deploy:** fix backup script volume names
-
-
-### 🏡 Chore
-
-- bump deploy to version 2
-
 ## 3.0.1 (2024-10-09)
 
 ### 🩹 Fixes
