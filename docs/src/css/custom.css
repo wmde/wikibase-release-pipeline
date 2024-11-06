@@ -28,3 +28,11 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* We have so many versioned components, we need to wrap on narrow screens */
+.navbar__items {
+  flex-wrap: wrap;
+}
+.navbar {
+  height: auto;
+}

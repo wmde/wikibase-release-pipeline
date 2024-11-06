@@ -1,6 +1,6 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 const config: Config = {
 	title: 'Wikibase Suite Deploy',
@@ -24,10 +24,7 @@ const config: Config = {
 	// Even if you don't use internationalization, you can use this field to set
 	// useful metadata like html lang. For example, if your site is Chinese, you
 	// may want to replace "en" with "zh-Hans".
-	i18n: {
-		defaultLocale: 'en',
-		locales: ['en']
-	},
+	i18n: { defaultLocale: 'en', locales: ['en'] },
 
 	// presets: [
 	//   [
@@ -64,7 +61,9 @@ const config: Config = {
 	// ],
 	//
 
-	themes: [['@docusaurus/theme-classic', {}]],
+	themes: [
+		['@docusaurus/theme-classic', { customCss: './src/css/custom.css' }]
+	],
 	plugins: [
 		[
 			'@docusaurus/plugin-content-docs',
@@ -83,8 +82,93 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'deploy',
-				path: 'deploy',
-				routeBasePath: 'deploy'
+				path: 'wbs-deploy',
+				routeBasePath: 'wbs-deploy',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'wikibase',
+				path: 'wbs-wikibase',
+				routeBasePath: 'wbs-wikibase',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'wdqs',
+				path: 'wbs-wdqs',
+				routeBasePath: 'wbs-wdqs',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'wdqs-frontend',
+				path: 'wbs-wdqs-frontend',
+				routeBasePath: 'wbs-wdqs-frontend',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'wdqs-proxy',
+				path: 'wbs-wdqs-proxy',
+				routeBasePath: 'wbs-wdqs-proxy',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'quickstatements',
+				path: 'wbs-quickstatements',
+				routeBasePath: 'wbs-quickstatements',
+				includeCurrentVersion: false
+				//         sidebarPath: './sidebars.ts',
+				//         // Please change this to your repo.
+				//         // Remove this to remove the "edit this page" links.
+				// editUrl:
+				// 	'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/'
+			}
+		],
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'elasticsearch',
+				path: 'wbs-elasticsearch',
+				routeBasePath: 'wbs-elasticsearch',
+				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
 				//         // Remove this to remove the "edit this page" links.
@@ -96,81 +180,78 @@ const config: Config = {
 	],
 
 	themeConfig: {
-	//   // Replace with your project's social card
-	  image: 'img/docusaurus-social-card.jpg',
-	  navbar: {
-	    title: 'Wikibase Suite',
-	//     logo: {
-	//       alt: 'My Site Logo',
-	//       src: 'img/logo.svg',
-	//     },
-	    items: [
-	      // {
-	        // type: 'docsVersionDropdown'
-	      // }
-	//       {
-	//         type: 'docSidebar',
-	//         sidebarId: 'tutorialSidebar',
-	//         position: 'left',
-	//         label: 'Tutorial',
-	//       },
-	//       {
-	//         href: 'https://github.com/facebook/docusaurus',
-	//         label: 'GitHub',
-	//         position: 'right',
-	//       },
-	    ],
-	  },
-	  // footer: {
-	  //   style: 'dark',
-	  //   links: [
-	  //     {
-	  //       title: 'Docs',
-	  //       items: [
-	  //         {
-	  //           label: 'Tutorial',
-	  //           to: '/docs/intro',
-	  //         },
-	  //       ],
-	  //     },
-	  //     {
-	  //       title: 'Community',
-	  //       items: [
-	  //         {
-	  //           label: 'Stack Overflow',
-	  //           href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-	  //         },
-	  //         {
-	  //           label: 'Discord',
-	  //           href: 'https://discordapp.com/invite/docusaurus',
-	  //         },
-	  //         {
-	  //           label: 'Twitter',
-	  //           href: 'https://twitter.com/docusaurus',
-	  //         },
-	  //       ],
-	  //     },
-	  //     {
-	  //       title: 'More',
-	  //       items: [
-	  //         {
-	  //           label: 'Blog',
-	  //           to: '/blog',
-	  //         },
-	  //         {
-	  //           label: 'GitHub',
-	  //           href: 'https://github.com/facebook/docusaurus',
-	  //         },
-	  //       ],
-	  //     },
-	  //   ],
-	  //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-	  // },
-	  // prism: {
-	  //   theme: prismThemes.github,
-	  //   darkTheme: prismThemes.dracula,
-	  // },
-	} satisfies Preset.ThemeConfig,
+		//   // Replace with your project's social card
+		image: 'img/docusaurus-social-card.jpg',
+		navbar: {
+			title: 'Wikibase Suite',
+			//     logo: {
+			//       alt: 'My Site Logo',
+			//       src: 'img/logo.svg',
+			//     },
+			items: [
+				{ type: 'docsVersionDropdown', docsPluginId: 'deploy' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'wikibase' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'wdqs' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'wdqs-frontend' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'wdqs-proxy' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'quickstatements' },
+				{ type: 'docsVersionDropdown', docsPluginId: 'elasticsearch' }
+				//       {
+				//         type: 'docSidebar',
+				//         sidebarId: 'tutorialSidebar',
+				//         position: 'left',
+				//         label: 'Tutorial',
+				//       },
+				//       {
+				//         href: 'https://github.com/facebook/docusaurus',
+				//         label: 'GitHub',
+				//         position: 'right',
+				//       },
+			]
+		},
+		footer: {
+			style: 'dark',
+			links: [
+				{
+					title: 'Resources',
+					items: [
+						{
+							label: 'Wikiba.se',
+							to: 'https://wikiba.se'
+						},
+						{
+							label: 'MediaWiki.org',
+							to: 'https://www.mediawiki.org/wiki/Wikibase'
+						},
+						{
+							label: 'Github',
+							to: 'https://github.com/wmde/wikibase-release-pipeline'
+						}
+					]
+				},
+				{
+					title: 'Community',
+					items: [
+						{
+							label: 'Telegram User Group',
+							href: 'https://t.me/joinchat/HGjGexZ9NE7BwpXzMsoDLA'
+						},
+						{
+							label: 'Mailing List',
+							href: 'https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/'
+						}
+					]
+				}
+			]
+			// TODO: docs license?
+			// copyright: `Copyright © ${new Date().getFullYear()} Wikimedia Germany.
+			// Built with Docusaurus.`,
+		},
+		prism: {
+			theme: prismThemes.github,
+			darkTheme: prismThemes.dracula
+		}
+	} satisfies Preset.ThemeConfig
 };
 
 export default config;
