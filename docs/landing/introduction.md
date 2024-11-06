@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
 slug: /
+hide_title: true
+sidebar_label: Introduction
 ---
-
-# Introduction
 
 ![](./Wikibase_Suite_RGB.svg)
 
