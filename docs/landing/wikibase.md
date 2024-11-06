@@ -3,17 +3,15 @@ sidebar_position: 3
 slug: /landing/wikibase
 ---
 
-# Wikibase (MediaWiki)
+# Wikibase
 
+[Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository and forms the heart of every Wikibase Suite instance.
 
-
-[Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository.
-
-Wikibase Suite offers a Wikibase Image running Wikibase on MediaWiki with a preconfigured set of selected extensions and skins.
+Wikibase Suite offers an optinionated Wikibase Image running Wikibase on MediaWiki with a preconfigured set of selected extensions and skins.
 
 ## Getting started
 
-The easiest way to host a Wikibase Suite instance is to use [Wikibase Suite Deploy](./deploy). Checkout the [documentation](./wbs-deploy) to learn how to get started.
+The easiest way to host a Wikibase Suite instance is to use [Wikibase Suite Deploy](./getting_started.md). Checkout the [documentation](./../deploy) to learn how to get started.
 
 ## Advanced setups
 
