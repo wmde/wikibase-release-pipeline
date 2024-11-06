@@ -12,19 +12,19 @@ However, due to OAuth requirements, QuickStatements may not function properly wi
 It is possible to migrate an existing Wikibase installation to WBS Deploy. The general procedure is as follows:
 
  - [Back up your MediaWiki](https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki)
- - [Install Wikibase Suite](#initial-setup) as described above
- - Re-apply any [changes](#customizing-your-wikibase-suite-mediawiki) to `config/LocalSettings.php`
+ - [Install Wikibase Suite](./02_quickstart.md#initial-setup) as described above
+ - Re-apply any changes to `config/LocalSettings.php`
  - Import your database dump
  - Regenerate the WDQS database
  - Regenerate the Elasticsearch database
 
 ## My WDQS Updater keeps crashing, what can I do?
 
-Check out the known issue in the [WDQS README](../build/wdqs/README.md#Known-issues). You may find your solution there in the form of a workaround.
+Check out the known issue in the [WDQS README](/wdqs#Known-issues). You may find your solution there in the form of a workaround.
 
 ## Do you recommend any VPS hosting providers?
 
-As of this writing, we can offer no specific recommendations for VPS providers to host Wikibase Suite. The suite has been tested successfully on various providers; as long as the [minimum technical requirements](#hardware) are met, it should run as expected.
+As of this writing, we can offer no specific recommendations for VPS providers to host Wikibase Suite. The suite has been tested successfully on various providers; as long as the [minimum technical requirements](./02_quickstart.md#hardware) are met, it should run as expected.
 
 ## Where can I get further help?
 
