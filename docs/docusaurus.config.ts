@@ -139,6 +139,10 @@ const config: Config = {
 					title: 'Community',
 					items: [
 						{
+							label: 'Report an issue',
+							href: 'https://phabricator.wikimedia.org/maniphest/task/edit/form/129/'
+						},
+						{
 							label: 'Telegram User Group',
 							href: 'https://t.me/joinchat/HGjGexZ9NE7BwpXzMsoDLA'
 						},
