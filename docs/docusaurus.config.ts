@@ -82,8 +82,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'deploy',
-				path: 'wbs-deploy',
-				routeBasePath: 'wbs-deploy',
+				path: 'deploy',
+				routeBasePath: 'deploy',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -96,8 +96,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wikibase',
-				path: 'wbs-wikibase',
-				routeBasePath: 'wbs-wikibase',
+				path: 'wikibase',
+				routeBasePath: 'wikibase',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -110,8 +110,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs',
-				path: 'wbs-wdqs',
-				routeBasePath: 'wbs-wdqs',
+				path: 'wdqs',
+				routeBasePath: 'wdqs',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -124,8 +124,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs-frontend',
-				path: 'wbs-wdqs-frontend',
-				routeBasePath: 'wbs-wdqs-frontend',
+				path: 'wdqs-frontend',
+				routeBasePath: 'wdqs-frontend',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -138,8 +138,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs-proxy',
-				path: 'wbs-wdqs-proxy',
-				routeBasePath: 'wbs-wdqs-proxy',
+				path: 'wdqs-proxy',
+				routeBasePath: 'wdqs-proxy',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -152,8 +152,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'quickstatements',
-				path: 'wbs-quickstatements',
-				routeBasePath: 'wbs-quickstatements',
+				path: 'quickstatements',
+				routeBasePath: 'quickstatements',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
@@ -166,8 +166,8 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'elasticsearch',
-				path: 'wbs-elasticsearch',
-				routeBasePath: 'wbs-elasticsearch',
+				path: 'elasticsearch',
+				routeBasePath: 'elasticsearch',
 				includeCurrentVersion: false
 				//         sidebarPath: './sidebars.ts',
 				//         // Please change this to your repo.
