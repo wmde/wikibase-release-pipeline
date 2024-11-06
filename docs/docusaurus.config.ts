@@ -33,56 +33,70 @@ const config: Config = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'deploy',
+				path: 'deploy',
 				routeBasePath: 'deploy',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'deploy-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wikibase',
+				path: 'wikibase',
 				routeBasePath: 'wikibase',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'wikibase-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs',
+				path: 'wdqs',
 				routeBasePath: 'wdqs',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'wdqs-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs-frontend',
+				path: 'wdqs-frontend',
 				routeBasePath: 'wdqs-frontend',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'wdqs-frontend-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'wdqs-proxy',
+				path: 'wdqs-proxy',
 				routeBasePath: 'wdqs-proxy',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'wdqs-proxy-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'quickstatements',
+				path: 'quickstatements',
 				routeBasePath: 'quickstatements',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'quickstatements-next' } }
 			}
 		],
 		[
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'elasticsearch',
+				path: 'elasticsearch',
 				routeBasePath: 'elasticsearch',
-				includeCurrentVersion: false
+				// includeCurrentVersion: false,
+				versions: { current: { label: 'elasticsearch-next' } }
 			}
 		]
 	],
