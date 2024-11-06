@@ -1,6 +1,6 @@
 # Quickstart
 
-> 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ entry](#can-i-host-wbs-deploy-locally) below.
+> 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ entry](./09_faq.md#can-i-host-wbs-deploy-locally) below.
 
 ### Requirements
 
@@ -39,7 +39,7 @@ git checkout deploy-3
 
 #### Initial configuration
 
-Make a copy of the [configuration template](./template.env) in the `wikibase-release-pipeline/deploy` directory.
+Make a copy of the configuration template in the `wikibase-release-pipeline/deploy` directory.
 
 ```sh
 cp template.env .env

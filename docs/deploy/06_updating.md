@@ -51,9 +51,9 @@ WBS only supports updating from one major version to the next version in sequenc
 docker compose down
 ```
 
-##### Back up your data and config
+### Back up your data and config
 
-[Create a backup](#backup-your-data) of your data.
+[Create a backup](./05_data.md#backup-your-data) of your data.
 
 Back up your `./config` directory as well using:
 ```
@@ -104,7 +104,7 @@ docker compose up
 
 ## Automatic updates
 
-At the moment, WBS Deploy does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS images, [restart your instance](#minor-and-patch-updates-for-wbs-service-containers) on a regular basis with a systemd timer, cron job, or similar.
+At the moment, WBS Deploy does not support automatic updates. To automatically deploy minor and patch updates including security fixes to your WBS images, restart your instance on a regular basis with a systemd timer, cron job, or similar.
 
 ## Downgrades
 

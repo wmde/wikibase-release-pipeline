@@ -1,5 +1,5 @@
 # Your data
-Besides [your configuration](#configuring-your-wikibase-suite), it's your data that makes your instance unique. All instance data is stored in [Docker volumes](https://docs.docker.com/storage/volumes/).
+Besides [your configuration](./04_advanced_config.md), it's your data that makes your instance unique. All instance data is stored in [Docker volumes](https://docs.docker.com/storage/volumes/).
 
  - `wikibase-image-data`: MediaWiki image and media file uploads
  - `mysql-data`: MediaWiki/Wikibase MariaDB raw database
