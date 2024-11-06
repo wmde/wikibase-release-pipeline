@@ -1,0 +1,7 @@
+deploy@3.0.0 is a copy of deploy@3.0.1
+
+```
+git diff --ignore-all-space deploy@3.0.0..deploy@3.0.1 -- deploy/README.md
+````
+
+changes to example domain names and text change in oauth faq entry were applied

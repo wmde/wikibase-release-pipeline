@@ -1,0 +1,10 @@
+deploy@3.0.1 is an exact copy of deploy@3.0.2
+
+even though git showed differences
+
+```
+git diff deploy@3.0.1..deploy@3.0.2 -- deploy/README.md
+````
+
+there was no benefit in applying them.
+
