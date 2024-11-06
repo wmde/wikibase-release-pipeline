@@ -17,7 +17,7 @@
 
 - bump deploy to version 2
 
-## **deploy@3.0.1** (2024-10-09)
+## 3.0.1 (2024-10-09)
 
 ### 🩹 Fixes
 
@@ -34,3 +34,18 @@
 ### 🏡 Chore
 
 - Adds default Traefik LetsEncrypt configuration for services
+
+## 3.0.0 (2024-07-15)
+
+### 🏡 Chore
+- Initial release featuring MediaWiki 1.42.
+
+## 2.0.0 (2024-07-15)
+
+### 🏡 Chore
+- Initial release featuring MediaWiki 1.41.
+
+## 1.0.0 (2024-07-15)
+
+### 🏡 Chore
+- Initial release featuring MediaWiki 1.39.
