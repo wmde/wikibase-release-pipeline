@@ -83,7 +83,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -104,7 +104,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -117,6 +117,8 @@ services:
       nofile:
         soft: 32768
         hard: 32768
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-proxy:
     image: wikibase/wdqs-proxy:1
