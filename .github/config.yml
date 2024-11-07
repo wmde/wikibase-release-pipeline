@@ -1,3 +1,5 @@
+# Replies to people who have created an issue on this repository for the first time.
+
 newIssueWelcomeComment: >
 
   Hi! 👋
@@ -7,17 +9,18 @@ newIssueWelcomeComment: >
   Your input is valuable in making our project better for everyone. If you have any questions, do not hesitate to ask. We're here to help and support you along the way!
 
   Here are a few links to get you started:
-  * [Documentation]()
-  * [Developer Guide/Contribution Guide]()
-  * [Telegram Community Channel]()
-  * [Phabricator Tickets]()
-  * [Contact form]()
-  * [Wikibase Mailing List]()
-  * [Wikibase Suite Team Mail]()
+  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md)
+  * [Telegram Community Channel](https://t.me/+WBsf9-C9KPuMZCDT)
+  * [Phabricator Tickets](https://phabricator.wikimedia.org/project/board/5755/)
+  * [Contact form](https://wikiba.se/contact/)
+  * [Wikibase Mailing List](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
+  * [Wikibase Suite Team Mail](wikibase-suite@wikimedia.de)
 
   Looking forward to collaborating with you. We will get back to you on this issue within the next 14 days. 😊
 
   Happy contributing! 🚀
+
+# Replies to people who have created a PR on this repository for the first time.
 
 newPRWelcomeComment: >
 
@@ -28,17 +31,18 @@ newPRWelcomeComment: >
   Your work helps make our project better, and we are here to support you. If you have any questions or need any guidance, please feel free to reach out. We are all here to help make this process as smooth as possible for you.
 
   Here are a few links you might want to check out:
-  * [Documentation]()
-  * [Developer Guide/Contribution Guide]()
-  * [Telegram Community Channel]()
-  * [Phabricator Tickets]()
-  * [Contact form]()
-  * [Wikibase Mailing List]()
-  * [Wikibase Suite Team Mail]()
+  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md)
+  * [Telegram Community Channel](https://t.me/+WBsf9-C9KPuMZCDT)
+  * [Phabricator Tickets](https://phabricator.wikimedia.org/project/board/5755/)
+  * [Contact form](https://wikiba.se/contact/)
+  * [Wikibase Mailing List](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
+  * [Wikibase Suite Team Mail](wikibase-suite@wikimedia.de)
   
   Looking forward to working with you on this and future contributions! We will get back to you on this PR within the next 14 days.😊
 
   Happy contributing! 🚀
+
+# Replies to people who have merged a PR on this repository for the first time.
 
 firstPRMergeComment: >
 
