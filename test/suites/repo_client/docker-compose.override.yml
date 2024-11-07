@@ -37,7 +37,7 @@ services:
       DB_PASS:
       DB_NAME: client_wiki
     healthcheck:
-      test: curl --silent --fail http://localhost/wiki/Main_Page
+      test: /healthcheck.sh
       interval: 10s
       start_period: 2m
 

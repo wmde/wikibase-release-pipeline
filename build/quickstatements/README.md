@@ -95,19 +95,20 @@ services:
       DB_PASS: "change-this-password"
       QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
     healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
+      test: /healthcheck.sh
       interval: 10s
       start_period: 5m
 
   wikibase-jobrunner:
     image: wikibase/wikibase
-    command: /jobrunner-entrypoint.sh
+    volumes_from:
+      - wikibase
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
-    volumes_from:
-      - wikibase
+    environment:
+      IS_JOBRUNNER: true
 
   mysql:
     image: mariadb:10.11
@@ -148,7 +149,7 @@ services:
       QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
       WIKIBASE_PUBLIC_URL: https://wikibase.example
     healthcheck:
-      test: curl --silent --fail localhost
+      test: /healthcheck.sh
       interval: 10s
       start_period: 2m
 
@@ -215,6 +216,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 | Directory                                   | Description                    |
 | ------------------------------------------- | ------------------------------ |
+| `/healthcheck.sh`                           | Optional healthcheck script    |
 | `/var/www/html/quickstatements`             | Base QuickStatements directory |
 | `/var/www/html/quickstatements/public_html` | The Apache root folder         |
 | `/var/www/html/magnustools`                 | Base magnustools directory     |
