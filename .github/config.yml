@@ -1,6 +1,6 @@
 # Replies to people who have created an issue on this repository for the first time.
 
-newIssueWelcomeComment: >
+newIssueWelcomeComment: |
 
   Hi! 👋
 
@@ -22,7 +22,7 @@ newIssueWelcomeComment: >
 
 # Replies to people who have created a PR on this repository for the first time.
 
-newPRWelcomeComment: >
+newPRWelcomeComment: |
 
   Hi! 👋
 
@@ -44,7 +44,7 @@ newPRWelcomeComment: >
 
 # Replies to people who have merged a PR on this repository for the first time.
 
-firstPRMergeComment: >
+firstPRMergeComment: |
 
   Congratulations on merging your first pull request! We hope to see more of your contributions to Wikibase Suite. 
 
