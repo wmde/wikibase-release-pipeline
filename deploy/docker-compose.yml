@@ -104,7 +104,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runUpdate.sh
     depends_on:
       wdqs:
