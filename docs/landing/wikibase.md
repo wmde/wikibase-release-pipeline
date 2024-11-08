@@ -15,7 +15,7 @@ The easiest way to host a Wikibase Suite instance is to use [Wikibase Suite Depl
 
 ## Advanced setups
 
-If you want to use our Wikibase Image standalone or make use of advanced configuration options, checkout the [Wikibase Image documentation](./wikibase).
+If you want to use our Wikibase Image standalone or make use of advanced configuration options, checkout the [Wikibase Image documentation](../wikibase).
 
 ## Releases
 You can always find the latest version on DockerHub [wikibase/wikibase](https://hub.docker.com/u/wikibase/wikibase).
