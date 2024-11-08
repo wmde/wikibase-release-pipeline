@@ -194,15 +194,16 @@ WBS Deploy may also receive minor and patch updates, but, as noted above, they a
 
 #### Minor and patch updates for WBS images
 
-Because WBS Deploy always references the latest minor and patch releases of compatible WBS images, non-breaking changes (including security updates) are applied automatically when re-creating Docker containers.
+Because WBS Deploy always references the latest minor and patch releases of compatible WBS images, non-breaking changes (including security updates) can be pulled at any time.
 
 This is always safe to do. Simply run:
 
 ```sh
 docker compose down
+docker compose pull
 docker compose up
 ```
-> 💡 In order to **prevent** new versions of WBS images being pulled on container restart, stop your containers using `docker compose stop` instead of `docker compose down`, which will keep the current containers intact. **Note**: this stops security updates from being applied. It is generally recommended to use `docker compose down`, which removes the containers and allows updates to be applied.
+> 💡 In order to automatically update images on every start, you can also use `docker compose up --pull always` to start your WBS Deploy stack.
 
 #### Minor and patch updates for WBS Deploy
 
