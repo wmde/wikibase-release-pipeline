@@ -44,7 +44,7 @@ newPRWelcomeComment: |
 
 # Replies to people who have merged a PR on this repository for the first time.
 
-firstPRMergeComment: |
+firstPRMergeComment: |+
 
   Congratulations on merging your first pull request! We hope to see more of your contributions to Wikibase Suite. 
 
