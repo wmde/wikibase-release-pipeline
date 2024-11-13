@@ -54,4 +54,7 @@ ENV PATH="/root/.local/share/pnpm:${PATH}"
 # Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/node_modules/.bin:/root/venv/bin:$PATH"
 
+# https://github.com/nrwl/nx/issues/27040
+ENV NX_ISOLATE_PLUGINS=false
+
 ENTRYPOINT [ "./entrypoint.sh" ]
