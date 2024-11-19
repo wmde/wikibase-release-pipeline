@@ -85,19 +85,20 @@ services:
       DB_USER: "mariadb-user"
       DB_PASS: "change-this-password"
     healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
+      test: /healthcheck.sh
       interval: 10s
       start_period: 5m
 
   wikibase-jobrunner:
     image: wikibase/wikibase
-    command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
     volumes_from:
       - wikibase
+    environment:
+      IS_JOBRUNNER: true
 
   mysql:
     image: mariadb:10.11
@@ -129,7 +130,7 @@ services:
     volumes:
       - wdqs-data:/wdqs/data
     healthcheck:
-      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
+      test: /healthcheck.sh
       interval: 10s
       start_period: 2m
 
@@ -197,6 +198,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 | File                         | Description                                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------------------- |
+| `/healthcheck.sh`            | Optional healthcheck script                                                                    |
 | `/wdqs/allowlist.txt`        | SPARQL endpoints allowed for federation                                                        |
 | `/wdqs/RWStore.properties`   | Properties for the service                                                                     |
 | `/templates/mwservices.json` | Template for MediaWiki services (populated and placed into `/wdqs/mwservices.json` at runtime) |

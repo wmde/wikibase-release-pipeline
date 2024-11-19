@@ -34,6 +34,7 @@ COPY --from=composer /tmp/quickstatements /var/www/html/quickstatements
 COPY --from=composer /tmp/magnustools /var/www/html/magnustools
 
 COPY entrypoint.sh /entrypoint.sh
+COPY healthcheck.sh /healthcheck.sh
 
 COPY config.json /templates/config.json
 COPY oauth.ini /templates/oauth.ini
