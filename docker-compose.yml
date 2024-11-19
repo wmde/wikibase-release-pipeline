@@ -8,13 +8,14 @@ networks:
 services:
   runner:
     image: wbs-dev-runner:latest
-    scale: 0
+    scale: 1
     build:
       context: .
     stop_grace_period: 1s
     ports:
       - 9229:9229
       - 4211:4211
+      - 3000:3000
     volumes:
       - .:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
@@ -23,3 +24,7 @@ services:
       - local.env
     environment:
       HOST_PWD: $PWD
+    entrypoint:
+      - sleep
+    command:
+      - infinity
