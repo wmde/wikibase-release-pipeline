@@ -52,12 +52,12 @@ You need three DNS records that resolve to your machine's IP address, one for ea
 
 #### Download WBS Deploy
 
-Check out the files from Github, move to the subdirectory `deploy` and check out the latest stable branch.
+Check out the files from Github, move to the subdirectory `deploy` and check out the latest version tagged with `deploy@x.y.z`:
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
 cd wikibase-release-pipeline/deploy
-git checkout deploy-3
+git checkout deploy@3.0.3
 ```
 
 #### Initial configuration
