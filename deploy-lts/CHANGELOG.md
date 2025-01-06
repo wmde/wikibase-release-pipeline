@@ -1,11 +1,11 @@
-## 3.0.3 (2024-11-07)
+## 1.0.1 (2025-01-06)
 
 
 ### 🩹 Fixes
 
 - bump wdqs-updater version to 2 as well
 
-## 3.0.2 (2024-10-28)
+## (from Deploy 3.0.2 (2024-10-28))
 
 
 ### 🩹 Fixes
@@ -24,7 +24,7 @@
 
 - bump deploy to version 2
 
-## **deploy@3.0.1** (2024-10-09)
+## (from **deploy@3.0.1** (2024-10-09))
 
 ### 🩹 Fixes
 
