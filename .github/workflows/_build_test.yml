@@ -57,6 +57,7 @@ jobs:
           - pingback
           - elasticsearch
           - deploy
+          - deploy-lts
 
     steps:
       - uses: actions/checkout@v4
