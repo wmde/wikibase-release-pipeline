@@ -23,7 +23,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 // 6. Wikibase instance is re-setup if /config/LocalSettings.php
 //    is not provided.
 
-export const testEnv = TestEnv.createWithDefaults({
+export const testEnv = TestEnv.createWithDefaults( {
 	name: 'deploy-lts',
 	specs: [
 		'specs/quickstatements/*.ts',
@@ -45,7 +45,7 @@ export const testEnv = TestEnv.createWithDefaults({
 		'../build/wikibase-lts/build.env',
 		'./test-services.env',
 		'../local.env'
-	],
-});
+	]
+} );
 
-export const config = wdioConfig(testEnv);
+export const config = wdioConfig( testEnv );
