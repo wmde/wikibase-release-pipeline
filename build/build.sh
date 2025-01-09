@@ -71,8 +71,11 @@ else
 	)
 fi
 
-# transform TAGS to build args
 IMAGE_NAME=$(jq -r '.name' package.json)
+
+# Removes "-lts" from end of name if it exists.
+# LTS products are released on Dockerhub on the main image name
+IMAGE_NAME=${IMAGE_NAME%-lts}
 
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
