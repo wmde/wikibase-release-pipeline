@@ -89,4 +89,4 @@ jobs:
       - lint
       - test
     steps:
-      - run: true
+      - run: "true"

@@ -1,0 +1,5 @@
+services:
+  wikibase:
+    image: wikibase/wikibase-lts
+    volumes:
+      - ./deploy-lts/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.deploy.php
