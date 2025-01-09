@@ -24,6 +24,7 @@ jobs:
       matrix:
         imageName:
           - wikibase
+          - wikibase-lts
           - elasticsearch
           - wdqs
           - wdqs-frontend
