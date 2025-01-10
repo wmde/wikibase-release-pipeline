@@ -10,11 +10,9 @@ import * as path from 'path';
 
 const targetDirectory = './suites/';
 const allContents = fs.readdirSync( targetDirectory );
-const directories = allContents.filter( ( content ) =>
+export const allSuiteNames = allContents.filter( ( content ) =>
 	fs.statSync( path.join( targetDirectory, content ) ).isDirectory()
 );
-
-export const allSuiteNames = directories;
 
 const y = yargs( hideBin( process.argv ) );
 
