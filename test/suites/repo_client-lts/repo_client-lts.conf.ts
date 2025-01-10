@@ -18,7 +18,8 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'../deploy/docker-compose.yml',
 		'suites/docker-compose.override.yml',
 		'suites/docker-compose-lts.override.yml',
-		'suites/repo_client/docker-compose.override.yml'
+		'suites/repo_client/docker-compose.override.yml',
+		'suites/repo_client-lts/docker-compose.override.yml'
 	]
 } );
 
