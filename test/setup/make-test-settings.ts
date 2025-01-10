@@ -14,16 +14,8 @@ import loadEnvFiles from './load-env-files.js';
 export const ONE_DAY_IN_MS = 86400000;
 
 export const defaultTestSettings = {
-	envFiles: [
-		'../deploy/template.env',
-		'../build/wikibase/build.env', // to compare actual MediaWiki version to build
-		'./test-services.env',
-		'../local.env'
-	],
-	composeFiles: [
-		'../deploy/docker-compose.yml',
-		'suites/docker-compose.override.yml'
-	],
+	envFiles: [],
+	composeFiles: [],
 	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
