@@ -116,6 +116,7 @@ const commandHandler = async ( argv ): Promise<void> => {
 		const { testEnv } = await import(
 			`./suites/${ suiteNames[ 0 ] }/${ suiteNames[ 0 ] }.conf.ts`
 		);
+		// TODO: here we could create two envs, one for lts, one for latest
 		await testEnv.up();
 		exitCode = 0;
 	} else {
