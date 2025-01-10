@@ -6,4 +6,3 @@ services:
 
   wikibase-jobrunner:
     image: wikibase/wikibase-lts
-
