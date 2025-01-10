@@ -33,7 +33,8 @@ export const testEnv = TestEnv.createWithDefaults( {
 		// 'specs/repo/extensions/*.ts'
 	],
 	composeFiles: [
-		...defaultTestSettings.composeFiles,
+		'../deploy-lts/docker-compose.yml',
+		'suites/docker-compose.override.yml',
 		'suites/deploy-lts/docker-compose.override.yml'
 	],
 	envFiles: [
