@@ -28,9 +28,9 @@ export const testEnv = TestEnv.createWithDefaults( {
 	specs: [
 		'specs/quickstatements/*.ts',
 		'specs/repo/queryservice.ts',
-		'specs/elasticsearch/*.ts'
-		// 'specs/repo/*.ts',
-		// 'specs/repo/extensions/*.ts'
+		'specs/elasticsearch/*.ts',
+		'specs/repo/*.ts',
+		'specs/repo/extensions/*.ts'
 	],
 	composeFiles: [
 		'../deploy-lts/docker-compose.yml',
