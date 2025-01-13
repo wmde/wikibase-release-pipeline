@@ -3,7 +3,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const testEnv = TestEnv.createWithDefaults( {
 	name: 'quickstatements',
-	specs: [ 'specs/repo_client/interwiki-links.ts', 'specs/quickstatements/*.ts' ],
+	specs: [ 'specs/quickstatements/*.ts' ],
 	envFiles: [
 		'../deploy/template.env',
 		// TODO: For MEDIAWIKI_VERSION only. Could use this Action API endpoint
