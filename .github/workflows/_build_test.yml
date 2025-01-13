@@ -3,7 +3,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
@@ -16,7 +16,7 @@ jobs:
       - run: ./nx lint
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
 
     strategy:
@@ -42,7 +42,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     strategy:
@@ -84,7 +84,7 @@ jobs:
   test-success:
     # Post-test CI step - to check all tests succeeded
     # Github Branch Protection rules require this to pass to allow merging
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - lint
       - test

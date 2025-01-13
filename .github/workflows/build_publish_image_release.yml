@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   extract_tag_and_publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Extract image name and confirm it is a valid semantic version tag
