@@ -6,7 +6,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 	specs: [ 'specs/repo/*.ts', 'specs/repo/extensions/*.ts' ],
 	envFiles: [
 		'../deploy-lts/template.env',
-		'../build/wikibase/build.env', // to compare actual MediaWiki version to build
+		'../build/wikibase-lts/build.env', // to compare actual MediaWiki version to build
 		'./test-services.env',
 		'../local.env'
 	],
