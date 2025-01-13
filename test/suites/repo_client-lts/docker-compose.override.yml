@@ -1,0 +1,3 @@
+services:
+  wikibase-client:
+    image: wikibase/wikibase-lts
