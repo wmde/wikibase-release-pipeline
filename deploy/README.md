@@ -57,7 +57,6 @@ Check out the files from Github, move to the subdirectory `deploy` and check out
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
 cd wikibase-release-pipeline/deploy
-git checkout deploy-3
 ```
 
 #### Initial configuration
@@ -245,12 +244,11 @@ cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 
 ##### Pull new version
 
-WBS Deploy major versions are tracked in separate branches called `deploy-MAJOR_VERSION`, such as `deploy-2` or `deploy-3`. Change your checkout to the new major version branch.
+WBS Deploy versions are tagged, such as `deploy@2.0.0` or `deploy-3.0.3`. To update, just switch to a more recent tag.
 
 ```sh
 git remote update
-git checkout deploy-MAJOR_VERSION
-git pull
+git checkout deploy@3.0.3
 ```
 
 > 💡 If you made changes to `docker-compose.yml`, merge them as you see fit.
