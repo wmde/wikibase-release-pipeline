@@ -39,11 +39,6 @@
 				"renderOptions": {
 					"authors": false
 				}
-			},
-			"workspaceChangelog": {
-				"renderOptions": {
-					"authors": false
-				}
 			}
 		}
 	},
