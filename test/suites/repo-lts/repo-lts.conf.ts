@@ -15,7 +15,7 @@ export const testEnv = TestEnv.createWithDefaults( {
 		'../local.env'
 	],
 	composeFiles: [
-		'../deploy/docker-compose.yml',
+		'../deploy-lts/docker-compose.yml',
 		'suites/docker-compose.override.yml',
 		'suites/docker-compose-lts.override.yml',
 		'suites/repo/docker-compose.override.yml'
