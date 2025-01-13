@@ -170,6 +170,7 @@ RUN set -x; \
     ls -la && pwd && \
     composer install --no-dev -vv -n
 
+
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM mediawiki AS wikibase
@@ -194,9 +195,11 @@ RUN chmod o-w /var/www/html && \
     ln -s /var/www/html/ /var/www/html/w && \
     chown www-data /var/www/html/images -R
 
-COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
+COPY mediawiki-entrypoint.sh /mediawiki-entrypoint.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
+COPY healthcheck.sh /healthcheck.sh
+COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
 COPY default-extra-install.sh /default-extra-install.sh
@@ -206,7 +209,8 @@ COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 ENV DB_NAME=my_wiki \
     MW_WG_SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en \
-    ELASTICSEARCH_PORT=9200
+    ELASTICSEARCH_PORT=9200 \
+    IS_JOBRUNNER=false
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]
