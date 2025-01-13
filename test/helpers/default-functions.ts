@@ -286,6 +286,30 @@ export function defaultFunctions(): void {
 			);
 		}
 	);
+
+	browser.addCommand(
+		'getMediaWikiVersion',
+		async (
+			serverURL: string = testEnv.vars.WIKIBASE_URL
+		): Promise<string> => {
+			const result = await browser.makeRequest(
+				`${ serverURL }/w/api.php?action=query&meta=siteinfo&siprop=general&format=json`,
+				{ validateStatus: false },
+				{}
+			);
+			const generatorString = result.data.query.general.generator;
+			const regex = /MediaWiki\s+(\d+\.\d+\.\d+)/i;
+			const match = generatorString.match( regex );
+
+			if ( !match || !match[ 1 ] ) {
+				throw new Error(
+					`Cannot get MediaWiki Version via ActionAPI serverURL=${ serverURL }, generatorString=${ generatorString }`
+				);
+			}
+
+			return match[ 1 ];
+		}
+	);
 }
 
 /**

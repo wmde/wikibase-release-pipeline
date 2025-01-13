@@ -78,6 +78,10 @@ declare namespace WebdriverIO {
 			timeout?: number,
 			timeoutMsg?: string
 		) => Promise<boolean>;
+
+		getMediaWikiVersion: (
+			serverURL?: string
+		) => Promise<string>;
 	}
 
 	interface Element {
