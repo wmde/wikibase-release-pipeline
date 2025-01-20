@@ -8,7 +8,7 @@ export const testEnv = TestEnv.create( {
 	specs: [ 'specs/repo/*.ts', 'specs/repo/extensions/*.ts' ],
 	envFiles: [
 		...ltsSettings.envFiles,
-		'../build/wikibase/build.env' // to compare actual MediaWiki version to build
+		'../build/wikibase-lts/build.env' // to compare actual MediaWiki version to build
 	],
 	composeFiles: [
 		...ltsSettings.composeFiles,
