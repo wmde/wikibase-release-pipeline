@@ -56,7 +56,7 @@ export const baseTestSettings = {
 	}
 };
 
-const makeTestSettings = (
+export const makeTestSettings = (
 	settings: Partial<TestSettings>
 ): TestSettings => {
 	// NOTE: The values from these env files are put in testEnv.vars
@@ -107,7 +107,7 @@ const makeTestSettings = (
 	} as TestSettings;
 };
 
-export const defaultSettings = makeTestSettings( {
+export const defaultSettings: Partial<TestSettings> = {
 	envFiles: [
 		'../deploy/template.env',
 		'./test-services.env',
@@ -117,9 +117,9 @@ export const defaultSettings = makeTestSettings( {
 		'../deploy/docker-compose.yml',
 		'suites/docker-compose.override.yml'
 	]
-} );
+};
 
-export const ltsSettings = makeTestSettings( {
+export const ltsSettings: Partial<TestSettings> = {
 	envFiles: [
 		'../deploy-lts/template.env',
 		'./test-services.env',
@@ -130,4 +130,4 @@ export const ltsSettings = makeTestSettings( {
 		'suites/docker-compose.override.yml',
 		'suites/docker-compose-lts.override.yml'
 	]
-} );
+};

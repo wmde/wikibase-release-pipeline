@@ -6,6 +6,7 @@ import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/test-settings.js';
 import checkIfUp from './check-if-up.js';
+import { makeTestSettings } from './make-test-settings.js';
 
 declare global {
 	// eslint-disable-next-line no-var, no-use-before-define
@@ -19,8 +20,8 @@ export default class TestEnv {
 
 	public baseDockerComposeCmd: string;
 
-	public static create( settings: TestSettings ): TestEnv {
-		return new this( settings );
+	public static create( settings: Partial<TestSettings> ): TestEnv {
+		return new this( makeTestSettings( settings ) );
 	}
 
 	public constructor( settings?: TestSettings ) {
