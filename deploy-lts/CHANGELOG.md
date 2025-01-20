@@ -1,6 +1,3 @@
-+# NEXT UPCOMING: TO BE RELEASED MANUALLY BY TAGGING
-+# git tag deploy-lts@1.0.1
- 
 +## 1.0.1 (2025-01-XX)
 
 

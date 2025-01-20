@@ -1,6 +1,3 @@
-# NEXT UPCOMING: TO BE PUBLISHED BY MANUALLY TAGGING
-# git tag wikibase-lts@1.0.1
-
 ## 1.0.1 (2025-01-XX)
 
 
