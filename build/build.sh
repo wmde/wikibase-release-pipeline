@@ -71,17 +71,22 @@ else
 	)
 fi
 
-# transform TAGS to build args
 IMAGE_NAME=$(jq -r '.name' package.json)
 
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
 	# IMAGE_REGISTRY implies dockerhub if empty
 	IMAGE_NAMESPACE=wikibase
+
+	# Removes "-lts" from end of name if it exists.
+	# LTS products are published on Dockerhub on the main image name
+	IMAGE_NAME=${IMAGE_NAME%-lts}
+
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	IMAGE_REGISTRY=ghcr.io
 	IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
+
 # local build
 else
 	IMAGE_NAMESPACE=wikibase

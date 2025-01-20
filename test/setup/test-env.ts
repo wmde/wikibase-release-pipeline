@@ -20,11 +20,8 @@ export default class TestEnv {
 
 	public baseDockerComposeCmd: string;
 
-	public static createWithDefaults(
-		providedSettings: Partial<TestSettings>
-	): TestEnv {
-		const settings = makeTestSettings( providedSettings );
-		return new this( settings );
+	public static create( settings: Partial<TestSettings> ): TestEnv {
+		return new this( makeTestSettings( settings ) );
 	}
 
 	public constructor( settings?: TestSettings ) {

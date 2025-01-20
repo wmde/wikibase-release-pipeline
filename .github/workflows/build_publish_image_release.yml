@@ -9,6 +9,7 @@ on:
       - 'wdqs-frontend@*'
       - 'wdqs-proxy@*'
       - 'wikibase@*'
+      - 'wikibase-lts@*'
 
 permissions:
   contents: write

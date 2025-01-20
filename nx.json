@@ -27,7 +27,7 @@
 				"projects": [ "build/*" ]
 			},
 			"deploy": {
-				"projects": [ "deploy" ]
+				"projects": [ "deploy", "deploy-lts" ]
 			}
 		},
 		"projectsRelationship": "independent",
@@ -36,11 +36,6 @@
 		},
 		"changelog": {
 			"projectChangelogs": {
-				"renderOptions": {
-					"authors": false
-				}
-			},
-			"workspaceChangelog": {
 				"renderOptions": {
 					"authors": false
 				}
