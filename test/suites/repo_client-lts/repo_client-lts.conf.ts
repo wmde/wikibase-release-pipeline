@@ -8,7 +8,8 @@ export const testEnv = TestEnv.create( {
 	specs: [ 'specs/repo_client/*.ts', 'specs/repo_client/extensions/*.ts' ],
 	composeFiles: [
 		...ltsSettings.composeFiles,
-		'suites/repo_client/docker-compose.override.yml'
+		'suites/repo_client/docker-compose.override.yml',
+		'suites/repo_client-lts/docker-compose.override.yml'
 	]
 } );
 
