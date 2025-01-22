@@ -1,3 +1,10 @@
+## 2.0.1 (2025-01-22)
+
+
+### 🩹 Fixes
+
+- injected standard prefixes reference wikidata
+
 # 2.0.0 (2024-10-28)
 
 
