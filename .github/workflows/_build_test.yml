@@ -3,7 +3,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
@@ -16,7 +16,7 @@ jobs:
       - run: ./nx lint
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
 
     strategy:
@@ -24,6 +24,7 @@ jobs:
       matrix:
         imageName:
           - wikibase
+          - wikibase-lts
           - elasticsearch
           - wdqs
           - wdqs-frontend
@@ -42,7 +43,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     strategy:
@@ -50,12 +51,17 @@ jobs:
       matrix:
         suite:
           - repo
+          - repo-lts
           - fedprops
+          - fedprops-lts
           - repo_client
+          - repo_client-lts
           - quickstatements
+          - quickstatements-lts
           - pingback
+          - pingback-lts
           - elasticsearch
-          - deploy
+          - elasticsearch-lts
 
     steps:
       - uses: actions/checkout@v4
@@ -84,9 +90,9 @@ jobs:
   test-success:
     # Post-test CI step - to check all tests succeeded
     # Github Branch Protection rules require this to pass to allow merging
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - lint
       - test
     steps:
-      - run: true
+      - run: "true"

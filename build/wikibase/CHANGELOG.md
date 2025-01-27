@@ -5,7 +5,7 @@
 
 - bump mediawiki to 1.42.3, bump extensions
 
-## **wikibase@3.0.1** (2024-10-09)
+## 3.0.1 (2024-10-09)
 
 ### 📖 Documentation
 

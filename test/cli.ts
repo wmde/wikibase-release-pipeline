@@ -5,16 +5,14 @@ import chalk from 'chalk';
 import lodash from 'lodash';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const allSuiteNames = [
-	'repo',
-	'fedprops',
-	'repo_client',
-	'quickstatements',
-	'pingback',
-	'elasticsearch',
-	'deploy'
-];
+const targetDirectory = './suites/';
+const allContents = fs.readdirSync( targetDirectory );
+export const allSuiteNames = allContents.filter( ( content ) =>
+	fs.statSync( path.join( targetDirectory, content ) ).isDirectory()
+);
 
 const y = yargs( hideBin( process.argv ) );
 

@@ -2,3 +2,4 @@ packages:
   - "build/*"
   - "test/**"
   - "deploy/**"
+  - "deploy-lts/**"

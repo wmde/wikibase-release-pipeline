@@ -188,6 +188,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
