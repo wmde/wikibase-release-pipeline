@@ -5,7 +5,7 @@
 
 - injected standard prefixes reference wikidata
 
-# 2.0.0 (2024-10-28)
+## 2.0.0 (2024-10-28)
 
 
 ### 🚀 Features
@@ -27,7 +27,8 @@
 
 - ⚠️  require concept uri via environment variable
 
-## **wdqs@1.0.1** (2024-10-09)
+## @1.0.1 (2024-10-09)
+
 
 ### 📖 Documentation
 
