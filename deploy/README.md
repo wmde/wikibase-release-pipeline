@@ -181,13 +181,13 @@ done
 
 WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). The WBS Deploy and all the WBS images have individual version numbers.
 
-WBS Deploy always references the latest minor and patch releases of the compatible WBS images' major versions using the images' major version tag.
+WBS Deploy always references the latest minor and patch releases of the compatible WBS images' major versions using the Docker images' major version tag.
 
 #### Example
 
-Let's say the `wikibase` image version 1.0.0 is the initial version released with WBS Deploy 3.0.0. In that case, the `wikibase` image carrying the `1.0.0` tag will also carry a `1` tag. When the `wikibase` image version is bumped to 1.1.0 for a feature release, a new image is released and tagged with `1.1.0`. The `1` tag will then be reused and now point to the newly released image 1.1.0.
+Let's say the `wikibase` image version 1.0.0 is the initial version released with WBS Deploy 3.0.0. In that case, the `wikibase` image carrying the `1.0.0` tag will also carry a `1` tag. When the `wikibase` image version is bumped to 1.1.0 for a feature release, a new image is released and tagged with `1.1.0`, `1.1` and `1` so that the `1` tag will be reused and now point to the newly released image 1.1.0.
 
-This way, WBS Deploy can always reference the latest compatible version by using the major version tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` image version gets bumped to 2.0.0, that indicates a breaking change; in this case the new image would not receive the `1` tag. Instead, a new version of WBS Deploy would be released (in this case 4.0.0) and this one would use a new major version tag called `2` to reference the Wikibase image.
+This way, WBS Deploy can always reference the latest compatible version by using the major version tag. Nothing needs to be updated in WBS Deploy itself. If the `wikibase` image version gets bumped to 2.0.0, that indicates a breaking change; in this case the new image would not receive the `1` tag. Instead, a new version of WBS Deploy would be released (in this case 4.0.0) and this one would use a new major version tag called `2` to reference the `wikibase` image.
 
 WBS Deploy may also receive minor and patch updates, but, as noted above, they are not required to update related WBS images.
 
@@ -206,22 +206,19 @@ docker compose up
 
 #### Minor and patch updates for WBS Deploy
 
-WBS Deploy major versions are tracked in dedicated branches such as `deploy-3`. Pulling from the major version branch you are currently on will only update minor and patch versions and will never trigger breaking changes.
-
-These updates are **always** considered safe.
-
-If you did not change `docker-compose.yml`, you can update simply by running `git pull`.
+WBS Deploy versions are tagged in git with tags such as `deploy@3.0.1`. Switching to a tag with the same major version will never trigger breaking changes. These updates are **always** considered safe. If you did not change `docker-compose.yml`, you can update simply by switching the git tag.
 
 ```sh
-git pull
+git remote update
+git checkout deploy@3.0.1
 ```
 > 💡 If you have made changes to `docker-compose.yml`, commit them to a separate branch and merge them with upstream changes as you see fit.
 
-> 💡 Each major version of WBS Deploy always references exactly one major version of each of the WBS images. Thus, updating WBS Deploy minor and patch versions from a major version's git branch will never lead to breaking changes in WBS service images.
+> 💡 Each major version of WBS Deploy always references exactly one major version of each of the WBS images. Thus, updating WBS Deploy minor and patch versions will never lead to breaking changes in WBS service images.
 
 #### Major upgrades
 
-Major version upgrades are performed by updating WBS Deploy's major version. This is done by changing your git checkout to the new major version branch. This may reference new major versions of WBS images or involve breaking changes. In turn, those may require additional steps as described below.
+Major version upgrades are performed by updating WBS Deploy's major version. This is done by changing your git checkout to the new major version tag. This may reference new major versions of WBS images and involve breaking changes. In turn, those may require additional steps as described below.
 
 WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 1.x.x to 3.x.x, you must first upgrade from 1.x.x to 2.x.x and then to 3.x.x.
 
@@ -242,9 +239,9 @@ cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 
 > 💡 If you made changes to `docker-compose.yml`, commit them to a separate branch and merge them as you see fit in the next step.
 
-##### Pull new version
+##### Switch to new version
 
-WBS Deploy versions are tagged, such as `deploy@2.0.0` or `deploy-3.0.3`. To update, just switch to a more recent tag.
+WBS Deploy versions are tagged, such as `deploy@2.0.0` or `deploy@3.0.3`. To update, just switch to a more recent tag.
 
 ```sh
 git remote update
