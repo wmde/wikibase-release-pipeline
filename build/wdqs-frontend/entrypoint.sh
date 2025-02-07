@@ -14,8 +14,16 @@ fi
 
 set -eu
 
+# Take config from user config dir if present
+if [ -e "/config/wdqs-frontend-config.json" ]; then
+    cp /config/wdqs-frontend-config.json /usr/share/nginx/html/custom-config.json
+
+# Otherwise, make our stock config visible to the user for customization
+else
+    cp /usr/share/nginx/html/custom-config.json /config/wdqs-frontend-config.json
+fi
+
 export DOLLAR='$'
-envsubst < /templates/custom-config.json > /usr/share/nginx/html/custom-config.json
-envsubst < /templates/default.conf > /etc/nginx/conf.d/default.conf
+envsubst < /templates/nginx-default.conf.template > /etc/nginx/conf.d/default.conf
 
 exec "$@"
