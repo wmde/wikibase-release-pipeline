@@ -32,6 +32,9 @@ services:
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
+    environment:
+      WDQS_PUBLIC_URL: http://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
 
   quickstatements:
     image: wikibase/quickstatements
