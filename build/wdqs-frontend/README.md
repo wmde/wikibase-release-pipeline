@@ -152,6 +152,9 @@ services:
       - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
+    environment:
+      WDQS_PUBLIC_URL: https://query.example/sparql
+      WIKIBASE_PUBLIC_URL: https://wikibase.example/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
