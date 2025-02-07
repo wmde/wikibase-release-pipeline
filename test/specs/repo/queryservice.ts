@@ -9,14 +9,14 @@ import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js
 describe( 'QueryService', function () {
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_FRONTEND_URL }/sparql`
+			`${ testEnv.vars.WDQS_URL }/sparql`
 		);
 		expect( result.status ).toEqual( 200 );
 	} );
 
 	it( 'Should not be able to post to sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_FRONTEND_URL }/sparql`,
+			`${ testEnv.vars.WDQS_URL }/sparql`,
 			{ validateStatus: false },
 			{}
 		);
@@ -25,7 +25,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_FRONTEND_URL }/ldf`,
+			`${ testEnv.vars.WDQS_URL }/ldf`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );
@@ -33,7 +33,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_FRONTEND_URL }/assets`,
+			`${ testEnv.vars.WDQS_URL }/assets`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );

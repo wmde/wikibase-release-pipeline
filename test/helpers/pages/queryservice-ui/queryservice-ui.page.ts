@@ -10,18 +10,18 @@ class QueryServiceUIPage extends SubmittablePage {
 	}
 
 	/**
-	 * `${testEnv.vars.WDQS_FRONTEND_URL}/#${prefixes, query}`
+	 * `${testEnv.vars.WDQS_URL}/#${prefixes, query}`
 	 *
 	 * @param {string} query
 	 * @param {string[]} prefixes - Optional
 	 * @return {void}
 	 */
 	public async open( query: string, prefixes: string[] = [] ): Promise<void> {
-		await browser.url( testEnv.vars.WDQS_FRONTEND_URL );
+		await browser.url( testEnv.vars.WDQS_URL );
 		if ( prefixes ) {
 			query = [ ...prefixes, query ].join( '\n' );
 		}
-		browser.url( `${ testEnv.vars.WDQS_FRONTEND_URL }/#${ encodeURI( query ) }` );
+		browser.url( `${ testEnv.vars.WDQS_URL }/#${ encodeURI( query ) }` );
 	}
 
 	public async resultIncludes( prop: string, value?: string ): Promise<boolean> {
