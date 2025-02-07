@@ -68,9 +68,9 @@ services:
     networks:
       default:
         aliases:
-          - wikibase.example
-          - wdqs-frontend.example
-          - quickstatements.example
+          - ${WIKIBASE_PUBLIC_HOST}
+          - ${WDQS_FRONTEND_PUBLIC_HOST}
+          - ${QUICKSTATEMENTS_PUBLIC_HOST}
 
 volumes:
   wikibase-config:
