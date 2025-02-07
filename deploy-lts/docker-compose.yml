@@ -128,10 +128,12 @@ services:
     restart: unless-stopped
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:1
+    image: wikibase/wdqs-frontend:2
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
+    volumes:
+      - ./config:/config
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"

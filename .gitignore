@@ -11,6 +11,9 @@ deploy/log
 deploy/.env
 deploy/config/LocalSettings.php
 deploy/config/wikibase-php.ini
+deploy/config/wdqs-frontend-config.json
+
+deploy-lts/config/wdqs-frontend-config.json
 
 test/log
 test/mwlog
