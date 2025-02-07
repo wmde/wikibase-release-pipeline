@@ -125,6 +125,7 @@ services:
         hard: 32768
     volumes:
       - wdqs-data:/wdqs/data
+    # TODO: make it available
     healthcheck:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
@@ -144,8 +145,6 @@ services:
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
-    depends_on:
-      - wdqs-proxy
     restart: unless-stopped
     ports:
       - 8834:80
@@ -154,8 +153,6 @@ services:
       - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
-    environment:
-      WDQS_HOST: wdqs-proxy
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s

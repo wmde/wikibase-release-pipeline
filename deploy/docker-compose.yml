@@ -83,7 +83,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs:2
+    image: wikibase/wdqs
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -102,6 +102,31 @@ services:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
+    labels:
+      - "traefik.enable=true"
+      # Define router for wdqs service
+      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-router.rule=PathPrefix(`/sparql`)"
+      # Add path prefix
+      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
+      # Enforce HTTP methods
+      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # Headers to enforce read-only and query timeouts
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS and Vary headers
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.addvaryheader=true"
+      # Define wdqs-rate-limit middleware for rate limiting
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=10"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=20"
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
+      # TODO: Set timeouts for the wdqs service
+      # - "traefik.http.serverstransports.wdqs-transport.forwardingtimeouts.dialtimeout=5s"
+      # - "traefik.http.serverstransports.wdqs-transport.forwardingtimeouts.responseheadertimeout=300s"
+      # - "traefik.http.routers.wdqs-router.service=wdqs-service"
+      # - "traefik.http.services.wdqs-service.loadbalancer.serverstransport=wdqs-transport"
 
   wdqs-updater:
     image: wikibase/wdqs:2
@@ -120,23 +145,16 @@ services:
     environment:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy:1
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:1
-    depends_on:
-      - wdqs-proxy
+    image: wikibase/wdqs-frontend
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-frontend.rule=!PathPrefix(`/sparql`)"
     environment:
-      WDQS_HOST: wdqs-proxy
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s

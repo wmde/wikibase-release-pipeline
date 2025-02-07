@@ -30,11 +30,11 @@ You can send `GET` requests with your SPARQL query to the WDQS endpoint (followi
 
 You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
 
-### WDQS Proxy for public facing setups
+### Proxy for public facing setups
 
-By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. Wikibase Suite offers the [WDQS-proxy](../WDQS-proxy/README.md) which filters out all long-running or unwanted requests.
+By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. Wikibase Suite offers the [WDQS-frontend](../WDQS-frontend/README.md), doubling as a proxy, which filters out all long-running or unwanted requests.
 
-When running WDQS in a setup without WDQS-proxy, **please consider disabling these endpoints in some other way**.
+When running WDQS in a setup without WDQS-frontend, **please consider disabling these endpoints in some other way**.
 
 ### Environment variables
 
@@ -146,13 +146,6 @@ services:
         hard: 32768
     environment:
       WIKIBASE_CONCEPT_URI: https://wikibase.example
-
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
 
 volumes:
   wikibase-image-data:

@@ -30,9 +30,6 @@ services:
     environment:
       WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-
   wdqs-frontend:
     image: wikibase/wdqs-frontend
 
