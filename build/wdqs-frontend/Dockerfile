@@ -29,17 +29,18 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-
 WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /tmp/wikidata-query-gui/build /usr/share/nginx/html
-RUN echo "" > style.css
-COPY entrypoint.sh /entrypoint.sh
-COPY custom-config.json /templates/custom-config.json
-COPY default.conf /templates/default.conf
+COPY frontend-config.json /usr/share/nginx/html/custom-config.json
 
-ENV LANGUAGE=en\
-    BRAND_TITLE=DockerWikibaseQueryService\
-    WIKIBASE_HOST="wikibase"\
-    WDQS_HOST="wdqs"\
-    WDQS_PORT="9999"\
-    COPYRIGHT_URL=undefined
+COPY entrypoint.sh /entrypoint.sh
+
+COPY nginx-default.conf.template /templates/nginx-default.conf.template
+
+RUN mkdir -p /config
+
+ENV LANGUAGE=en \
+    WIKIBASE_HOST="wikibase" \
+    WDQS_HOST="wdqs" \
+    WDQS_PORT="9999"
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
