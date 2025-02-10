@@ -30,6 +30,7 @@ WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /tmp/wikidata-query-gui/build /usr/share/nginx/html
 RUN echo "" > style.css
+COPY logo.svg /usr/share/nginx/html/logo.svg
 COPY entrypoint.sh /entrypoint.sh
 COPY custom-config.json /templates/custom-config.json
 COPY default.conf /templates/default.conf
