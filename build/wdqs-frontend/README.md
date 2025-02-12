@@ -149,11 +149,11 @@ services:
       - 8834:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.wikibase.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
-      WDQS_PUBLIC_URL: https://query.example/sparql
+      WDQS_PUBLIC_URL: https://query.wikibase.example/sparql
       WIKIBASE_PUBLIC_URL: https://wikibase.example/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
