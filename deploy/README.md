@@ -45,7 +45,7 @@ WBS Deploy consists of the following services:
 You need three DNS records that resolve to your machine's IP address, one for each user-facing service:
 
 - Wikibase, e.g., "wikibase.example"
-- QueryService, e.g., "query.example"
+- QueryService, e.g., "query.wikibase.example"
 - QuickStatements, e.g., "quickstatements.example"
 
 ### Initial setup
@@ -304,10 +304,10 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 
 ## WDQS Frontend
 
-To interact with the WDQS frontend, navigate to the URL defined as `WDQS_FRONTEND_PUBLIC_HOST` in the `.env` file. By default, this is set to `query.example`.
+To interact with the WDQS frontend, navigate to the URL defined as `WDQS_FRONTEND_PUBLIC_HOST` in the `.env` file. By default, this is set to `query.wikibase.example`.
 
 Alternatively, send `GET` requests with your SPARQL query to the WDQS frontend endpoint:
-`https://query.example/proxy/wdqs/bigdata/namespace/wdq/sparql?query={SPARQL}`
+`https://query.wikibase.example/proxy/wdqs/bigdata/namespace/wdq/sparql?query={SPARQL}`
 
 
 ## FAQ

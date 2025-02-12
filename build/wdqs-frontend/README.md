@@ -151,7 +151,7 @@ services:
       - 8834:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.wikibase.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
