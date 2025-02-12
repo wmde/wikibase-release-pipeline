@@ -119,7 +119,7 @@ services:
       - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
       # https://github.com/blazegraph/database/wiki/REST_API#query
       - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
-      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect 
+      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect
       # Allow unauthenticated requests from any origin
       - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
       # Define middleware for rate limiting
