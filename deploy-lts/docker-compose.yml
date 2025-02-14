@@ -105,7 +105,7 @@ services:
     labels:
       - "traefik.enable=true"
       # Define router rules for WDQS service, including limits to HTTP methods
-      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && Method(`GET`, `OPTIONS`, `POST`)"
+      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
       # Add prefix to path before forwarding to upstream service
       - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
       # Announce limited HTTP methods in preflight requests
