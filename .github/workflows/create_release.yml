@@ -15,7 +15,6 @@ on:
           - quickstatements
           - wdqs
           - wdqs-frontend
-          - wdqs-proxy
           - wikibase
           - wikibase-lts
           - All projects with unreleased changes

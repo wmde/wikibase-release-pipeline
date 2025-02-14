@@ -1,10 +1,10 @@
 {
 	"api": {
 		"sparql": {
-			"uri": "/proxy/wdqs/bigdata/namespace/wdq/sparql"
+			"uri": "$WDQS_PUBLIC_URL"
 		},
 		"wikibase": {
-			"uri": "/proxy/wikibase/w/api.php"
+			"uri": "$WIKIBASE_PUBLIC_URL"
 		},
 		"examples": {
 			"server": "https://www.wikidata.org/",

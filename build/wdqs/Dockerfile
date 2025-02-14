@@ -69,6 +69,8 @@ ENV MEMORY=""\
     BLAZEGRAPH_EXTRA_OPTS=""\
     LOG_CONFIG="/wdqs/logback.xml"
 
+EXPOSE 9999
+
 WORKDIR /wdqs
 
 COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /

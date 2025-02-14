@@ -30,11 +30,11 @@ services:
     environment:
       WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-
   wdqs-frontend:
     image: wikibase/wdqs-frontend
+    environment:
+      WDQS_PUBLIC_URL: http://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
 
   quickstatements:
     image: wikibase/quickstatements
@@ -68,9 +68,9 @@ services:
     networks:
       default:
         aliases:
-          - wikibase.example
-          - wdqs-frontend.example
-          - quickstatements.example
+          - ${WIKIBASE_PUBLIC_HOST}
+          - ${WDQS_PUBLIC_HOST}
+          - ${QUICKSTATEMENTS_PUBLIC_HOST}
 
 volumes:
   wikibase-config:
