@@ -1,7 +1,7 @@
 {
 	"api": {
 		"sparql": {
-			"uri": "/proxy/wdqs/bigdata/namespace/wdq/sparql"
+			"uri": "/sparql"
 		},
 		"wikibase": {
 			"uri": "/proxy/wikibase/w/api.php"

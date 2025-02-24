@@ -128,7 +128,7 @@ services:
     restart: unless-stopped
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:1
+    image: wikibase/wdqs-frontend:2
     depends_on:
       - wdqs-proxy
     restart: unless-stopped
