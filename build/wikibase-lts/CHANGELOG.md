@@ -1,3 +1,14 @@
+## 1.0.2 (2025-02-24)
+
+
+### 🏡 Chore
+
+- bump mediawiki to 1.39.11
+
+- bump php to 8.3.16
+
+- bump mediawiki extensions
+
 ## 1.0.1 (2025-01-21)
 
 
