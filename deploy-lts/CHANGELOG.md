@@ -1,3 +1,13 @@
+## 1.0.2 (2025-02-24)
+
+### 🩹 Fixes
+
+- Remove generated php.ini from deploy-lts config
+
+### 📖 Documentation
+
+- update docs to mention version tags
+
 ## 1.0.1 (2025-01-21)
 
 
