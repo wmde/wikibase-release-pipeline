@@ -133,9 +133,37 @@ For more information on testing, see the [README](./test/README.md).
 
 ## Release process
 
-WBS Deploy and WBS images are released using this repository. The process
-involves updating upstream component versions to be used, building images,
-testing all the images together and finally publishing them.
+WBS Deploy and WBS Images are released using this repository. The process involves updating upstream component versions, building images, testing all the images together, releasing them by generating a changelog, git tagging the new version and finally publishing it.
+
+### Preparing a release
+
+```bash
+# Do a release dry-run (nothing but informative output will happen)
+# for all projects with unreleased changes
+./nx release --dry-run
+
+# Do a release (bump version, generate changelog and git tag it) for a single
+# project (e.g. wikibase).
+# Nothing will be pushed or published with this command, but a new commit with
+# changelog and package.json adjustments will be created locally. This should
+# happen  on `main`. Also, a new git tag with the new version of the released
+# project will be created locally.
+./nx release -p wikibase
+
+# Push the changelog and package.json changes to Github.
+# Yes, we push to `main` here ¯\_(ツ)_/¯
+# ATTENTION!!! THIS DOES NOT PUSH THE NEW GIT TAG
+# ATTENTION!!! PUSHING ALSO THE NEW GIT TAG WOULD PUBLISH IMAGE RELEASES TO DOCKERHUB
+git push
+```
+
+### Publishing a release
+
+Deploy releases are currently just published in this git repo via a git tag. Pushing the tag to Github effectively publishes a deploy version.
+
+Image releases are published on Dockerhub. The actual push to Dockerhub is handled by Github Actions and is triggered by pushing a git tag to Github.
+
+For example `./nx release -p wikibase` would tag the next wikibase version with a git tag such as `wikibase@1.2.3`. Pushing this tag with `git push origin wikibase@1.2.3` will trigger Github Actions to publish the `wikibase` project from this tag to Dockerhub.
 
 ### Release checklist Phabricator template
 
