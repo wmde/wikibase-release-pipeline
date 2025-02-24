@@ -7,10 +7,10 @@ pnpm
 
 local.env
 
-deploy/log
-deploy/.env
-deploy/config/LocalSettings.php
-deploy/config/wikibase-php.ini
+deploy*/log
+deploy*/.env
+deploy*/config/LocalSettings.php
+deploy*/config/wikibase-php.ini
 
 test/log
 test/mwlog
