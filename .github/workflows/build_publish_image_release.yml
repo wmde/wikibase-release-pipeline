@@ -11,11 +11,15 @@ on:
       - 'wikibase@*'
       - 'wikibase-lts@*'
 
+# TODO: review permissions
 permissions:
   contents: write
   packages: write
 
 jobs:
+  _:
+    uses: ./.github/workflows/_build_test.yml
+
   extract_tag_and_publish:
     runs-on: ubuntu-24.04
 

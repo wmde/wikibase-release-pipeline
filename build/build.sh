@@ -56,11 +56,13 @@ if [ "$PUBLISH" == true ]; then
 		"${IMAGE_TAGS[@]}"
 	)
 	BUILD_ARGS+=("--push")
+
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	TAGS+=(
 		"dev-${GITHUB_RUN_ID}"
 	)
+
 # local build
 else
 	BUILD_ARGS+=("--load")
