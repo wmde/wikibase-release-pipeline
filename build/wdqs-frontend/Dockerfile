@@ -32,11 +32,9 @@ COPY --from=builder /tmp/wikidata-query-gui/build /usr/share/nginx/html
 
 RUN echo "" > style.css
 COPY logo.svg /usr/share/nginx/html/logo.svg
-
 COPY entrypoint.sh /entrypoint.sh
-
-COPY custom-config.json /templates/custom-config.json
-COPY default.conf /templates/default.conf
+COPY frontend-config.json /usr/share/nginx/html/custom-config.json
+COPY nginx-default.conf.template /templates/default.conf
 
 RUN mkdir -p /config
 
