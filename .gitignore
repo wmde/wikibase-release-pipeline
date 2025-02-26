@@ -15,6 +15,7 @@ deploy/config/*.php
 
 test/log
 test/mwlog
+test/suites/config
 test/suites/**/results/
 
 # dependencies
