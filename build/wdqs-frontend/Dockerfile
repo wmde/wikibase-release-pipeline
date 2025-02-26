@@ -29,11 +29,14 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-
 WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /tmp/wikidata-query-gui/build /usr/share/nginx/html
-COPY frontend-config.json /usr/share/nginx/html/custom-config.json
+
+RUN echo "" > style.css
+COPY logo.svg /usr/share/nginx/html/logo.svg
 
 COPY entrypoint.sh /entrypoint.sh
 
-COPY nginx-default.conf.template /templates/nginx-default.conf.template
+COPY custom-config.json /templates/custom-config.json
+COPY default.conf /templates/default.conf
 
 RUN mkdir -p /config
 

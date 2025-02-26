@@ -1,3 +1,17 @@
+## 3.0.4 (2025-02-24)
+
+
+### 🩹 Fixes
+
+- set traefik restart policy to 'unless-stopped'
+
+
+### 📖 Documentation
+
+- fix updating images section
+
+- update docs to mention version tags
+
 ## 3.0.3 (2024-11-07)
 
 
