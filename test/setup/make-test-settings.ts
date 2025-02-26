@@ -118,4 +118,3 @@ export const defaultSettings: Partial<TestSettings> = {
 		'suites/docker-compose.override.yml'
 	]
 };
-
