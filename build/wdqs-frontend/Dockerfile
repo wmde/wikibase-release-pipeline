@@ -34,7 +34,7 @@ RUN echo "" > style.css
 COPY logo.svg /usr/share/nginx/html/logo.svg
 COPY entrypoint.sh /entrypoint.sh
 COPY frontend-config.json /usr/share/nginx/html/custom-config.json
-COPY nginx-default.conf.template /templates/default.conf
+COPY nginx-default.conf.template /templates/nginx-default.conf.template
 
 RUN mkdir -p /config
 
