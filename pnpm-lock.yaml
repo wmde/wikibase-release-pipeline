@@ -114,11 +114,7 @@ importers:
 
   build/wikibase: {}
 
-  build/wikibase-lts: {}
-
   deploy: {}
-
-  deploy-lts: {}
 
   test:
     devDependencies:

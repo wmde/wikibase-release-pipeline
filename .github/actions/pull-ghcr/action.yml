@@ -11,11 +11,9 @@ runs:
 
         images=(
           "wikibase"
-          "wikibase-lts"
           "elasticsearch"
           "wdqs"
           "wdqs-frontend"
-          "wdqs-proxy"
           "quickstatements"
         )
 
