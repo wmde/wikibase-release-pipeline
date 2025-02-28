@@ -17,7 +17,7 @@ export DOLLAR='$'
 
 # Generate initial config from template and put it to /config
 if ! [ -e "/config/wdqs-frontend-config.json" ]; then
-    envsubst < /templates/wdqs-frontend-config.json.template > /config/wdqs-frontend-config.json
+	envsubst < /templates/wdqs-frontend-config.json.template > /config/wdqs-frontend-config.json
 fi
 
 # Use config from /config
