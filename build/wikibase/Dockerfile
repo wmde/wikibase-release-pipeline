@@ -111,6 +111,13 @@ COPY composer.local.json composer.local.json
 COPY --chown=nobody:nogroup --chmod=755 \
   wikibase-submodules-from-github-instead-of-phabricator.patch \
   /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
+
+# WORKAROUND for oauth on same domain problem introduced 
+# by https://phabricator.wikimedia.org/T299737#8171169
+COPY --chown=nobody:nogroup --chmod=755 \
+  mediawiki-extensions-OAuth-same-domain.patch \
+  /tmp/mediawiki-extensions-OAuth-same-domain.patch
+
 USER root
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -164,6 +171,8 @@ RUN set -x; \
     git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia"; \
     git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}"; \
     rm -rf "extensions/WikibaseLocalMedia/.git*"; \
+    \
+    patch -d /var/www/html/extensions/OAuth -Np1 </tmp/mediawiki-extensions-OAuth-same-domain.patch && \
     \
     rm -rf vendor && \
     rm -rf composer.lock && \

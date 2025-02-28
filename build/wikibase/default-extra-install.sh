@@ -14,7 +14,7 @@ fi
 
 # Creates an OAuth consumer for quickstatements
 if [ -z "${QUICKSTATEMENTS_PUBLIC_URL:-}" ] ; then
-    echo "Skipping QuickStatements setup ..."
+    echo "OAuth Skipping QuickStatements setup... QUICKSTATEMENTS_PUBLIC_URL not set"
 else
     # Attempt to create OAuth consumer for QuickStatements
     if php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
@@ -31,6 +31,11 @@ else
             export OAUTH_CONSUMER_SECRET
 
             envsubst < /templates/oauth.ini > /quickstatements/data/oauth.ini
+        else
+            echo "OAuth qs-oauth.json not created, skipped oauth.ini creation"
         fi
+
+    else
+        echo "OAuth consumer creation failed, check errors above."
     fi
 fi
