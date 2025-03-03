@@ -14,12 +14,16 @@ fi
 
 set -eu
 
+export DOLLAR='$'
+
 # Generate initial config from template and put it to /config
 if ! [ -e "/config/wdqs-frontend-config.json" ]; then
     envsubst < /templates/wdqs-frontend-config.json.template > /config/wdqs-frontend-config.json
 fi
 
-export DOLLAR='$'
+# Use config from /config
+cp /config/wdqs-frontend-config.json /usr/share/nginx/html/custom-config.json
+
 envsubst < /templates/nginx-default.conf.template > /etc/nginx/conf.d/default.conf
 
 exec "$@"
