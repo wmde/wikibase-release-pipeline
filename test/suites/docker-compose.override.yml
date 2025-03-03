@@ -36,6 +36,8 @@ services:
     environment:
       WDQS_PUBLIC_URL: ${WDQS_URL}/sparql
       WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}/w/api.php
+    volumes:
+      - wdqs-frontend-config:/config
 
   quickstatements:
     image: wikibase/quickstatements
@@ -75,3 +77,4 @@ services:
 volumes:
   wikibase-config:
   wikibase-extensions:
+  wdqs-frontend-config:
