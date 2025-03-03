@@ -118,16 +118,3 @@ export const defaultSettings: Partial<TestSettings> = {
 		'suites/docker-compose.override.yml'
 	]
 };
-
-export const ltsSettings: Partial<TestSettings> = {
-	envFiles: [
-		'../deploy-lts/template.env',
-		'./test-services.env',
-		'../local.env'
-	],
-	composeFiles: [
-		'../deploy-lts/docker-compose.yml',
-		'suites/docker-compose.override.yml',
-		'suites/docker-compose-lts.override.yml'
-	]
-};
