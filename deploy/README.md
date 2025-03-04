@@ -117,6 +117,9 @@ If `config/LocalSettings.php` is missing, it triggers the Wikibase container to 
 #### `config/wikibase-php.ini`
 This is Wikibase's `php.ini` override file, a good place for tuning PHP configuration values. It gets loaded by the Wikibase web server's PHP interpreter.
 
+#### User defined extensions
+It is possible to add extension to Wikibase Suite Deploy's MediaWiki. To learn how this works, checkout the [README in config/extensions](./config/extensions/README.md).
+
 #### docker-compose.yml
 To further customize your instance, you can also make changes to `docker-compose.yml`. To ease updating to newer versions of WBS Deploy, consider putting your customizations into a new file called `docker-compose.override.yml`. If you do this, you'll need to start using the following commands to restart your instance:
 
