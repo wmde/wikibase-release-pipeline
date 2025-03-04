@@ -54,3 +54,7 @@ You can verify that your extension was loaded by visiting https://wikibase.examp
 ## Updating the extension
 
 When you install extensions manually as described above, you are responsible to update those extensions. Extensions might contain security vulnerabilities that eventually get patches. You are responsible to install these patches! When you upgrade a MediaWiki minor version, e.g. from 1.42 to 1.43 (this can happen with Wikibase Suite Deploy major version updates), the extension might need an update too in order to remain compatible.
+
+## More information
+
+More information are available in the [MediaWiki Manual](https://www.mediawiki.org/wiki/Manual:Extensions).
