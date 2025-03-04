@@ -78,10 +78,6 @@ if [ "$PUBLISH" == true ]; then
 	# IMAGE_REGISTRY implies dockerhub if empty
 	IMAGE_NAMESPACE=wikibase
 
-	# Removes "-lts" from end of name if it exists.
-	# LTS products are published on Dockerhub on the main image name
-	IMAGE_NAME=${IMAGE_NAME%-lts}
-
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
 	IMAGE_REGISTRY=ghcr.io

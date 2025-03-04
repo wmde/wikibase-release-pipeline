@@ -27,7 +27,7 @@
 				"projects": [ "build/*" ]
 			},
 			"deploy": {
-				"projects": [ "deploy", "deploy-lts" ]
+				"projects": [ "deploy" ]
 			}
 		},
 		"projectsRelationship": "independent",
