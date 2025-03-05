@@ -1,6 +1,0 @@
-services:
-  wikibase:
-    image: wikibase/wikibase-lts
-
-  wikibase-jobrunner:
-    image: wikibase/wikibase-lts

@@ -10,14 +10,12 @@ on:
         default: 'wikibase'
         options:
           - deploy
-          - deploy-lts
           - elasticsearch
           - quickstatements
           - wdqs
           - wdqs-frontend
           - wdqs-proxy
           - wikibase
-          - wikibase-lts
           - All projects with unreleased changes
       dry_run:
         description: "Dry run, don't do it yet."
