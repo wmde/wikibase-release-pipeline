@@ -18,6 +18,8 @@ services:
       - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
       - ./config:/config
+      - ./config/extensions:/var/www/html/extensions/extensions
+      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
