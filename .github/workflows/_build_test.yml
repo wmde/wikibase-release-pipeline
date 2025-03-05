@@ -27,7 +27,6 @@ jobs:
           - elasticsearch
           - wdqs
           - wdqs-frontend
-          - wdqs-proxy
           - quickstatements
 
     steps:
