@@ -41,12 +41,13 @@ If QuickStatements and Wikibase are running on the same IP address, a reverse pr
 
 ### Environment variables
 
-| Variable        | Default                      | Description                              |
-| --------------- | ---------------------------- | ---------------------------------------- |
-| `LANGUAGE`      | "en"                         | Language to use in the UI                |
-| `WIKIBASE_HOST` | "wikibase"                   | Hostname of the Wikibase host (required) |
-| `WDQS_HOST`     | "wdqs"                       | Hostname of the WDQS host                |
-| `WDQS_PORT`     | "9999"                       | Port of the WDQS host                    |
+Variables in **bold** are required.
+
+| Variable                  | Default                      | Description                    |
+| ------------------------- | ---------------------------- | -------------------------------|
+| `LANGUAGE`                | "en"                         | Language to use in the UI      |
+| **`WDQS_PUBLIC_URL`**     |                              | Hostname of the WDQS host      |
+| **`WIKIBASE_PUBLIC_URL`** |                              | Hostname of the Wikibase host  |
 
 ## Example
 
@@ -142,18 +143,17 @@ services:
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
-    depends_on:
-      - wdqs-proxy
     restart: unless-stopped
     ports:
       - 8834:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.wikibase.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
-      WDQS_HOST: wdqs-proxy
+      WDQS_PUBLIC_URL: https://query.wikibase.example/sparql
+      WIKIBASE_PUBLIC_URL: https://wikibase.example/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s

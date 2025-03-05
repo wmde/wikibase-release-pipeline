@@ -7,7 +7,6 @@ on:
       - 'quickstatements@*'
       - 'wdqs@*'
       - 'wdqs-frontend@*'
-      - 'wdqs-proxy@*'
       - 'wikibase@*'
 
 permissions:

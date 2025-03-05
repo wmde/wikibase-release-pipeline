@@ -121,9 +121,7 @@ In order to test your own instances of the services, make sure to change the fol
 WIKIBASE_URL=http://wikibase
 WIKIBASE_CLIENT_URL=http://wikibase-client
 QUICKSTATEMENTS_URL=http://quickstatements
-WDQS_FRONTEND_URL=http://wdqs-frontend
-WDQS_URL=http://wdqs:9999
-WDQS_PROXY_URL=http://wdqs-proxy
+WDQS_URL=http://query
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w

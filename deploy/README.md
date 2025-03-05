@@ -16,7 +16,6 @@ WBS Deploy consists of the following services:
 - **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch)** Search service used by MediaWiki.
 - **[WDQS](https://hub.docker.com/r/wikibase/wdqs)** Wikidata Query Service to process SPARQL queries.
 - **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web front end for SPARQL queries.
-- **[WDQS Proxy](https://hub.docker.com/r/wikibase/wdqs-proxy)** A middle layer for WDQS which serves to filter requests and make the service more secure.
 - **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh)** Keeps the WDQS data in sync with Wikibase.
 - **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements)** A web-based tool to import and manipulate large amounts of data.
 - **[Traefik](https://hub.docker.com/_/traefik)** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
@@ -45,7 +44,7 @@ WBS Deploy consists of the following services:
 You need three DNS records that resolve to your machine's IP address, one for each user-facing service:
 
 - Wikibase, e.g., "wikibase.example"
-- QueryService, e.g., "query.example"
+- QueryService, e.g., "query.wikibase.example"
 - QuickStatements, e.g., "quickstatements.example"
 
 ### Initial setup
@@ -304,10 +303,10 @@ Removing the `traefik-letsencrypt-data` volume will request a new certificate fr
 
 ## WDQS Frontend
 
-To interact with the WDQS frontend, navigate to the URL defined as `WDQS_FRONTEND_PUBLIC_HOST` in the `.env` file. By default, this is set to `wdqs-frontend.example`.
+To interact with the WDQS frontend, navigate to the URL defined as `WDQS_PUBLIC_HOST` in the `.env` file. By default, this is set to `query.wikibase.example`.
 
 Alternatively, send `GET` requests with your SPARQL query to the WDQS frontend endpoint:
-`https://wdqs-frontend.example.com/proxy/wdqs/bigdata/namespace/wdq/sparql?query={SPARQL}`
+`https://query.wikibase.example/sparql?query={SPARQL}`
 
 
 ## FAQ
