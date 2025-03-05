@@ -24,7 +24,6 @@ jobs:
       matrix:
         imageName:
           - wikibase
-          - wikibase-lts
           - elasticsearch
           - wdqs
           - wdqs-frontend
@@ -51,17 +50,11 @@ jobs:
       matrix:
         suite:
           - repo
-          - repo-lts
           - fedprops
-          - fedprops-lts
           - repo_client
-          - repo_client-lts
           - quickstatements
-          - quickstatements-lts
           - pingback
-          - pingback-lts
           - elasticsearch
-          - elasticsearch-lts
 
     steps:
       - uses: actions/checkout@v4
