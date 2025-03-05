@@ -23,6 +23,7 @@ on:
         required: true
         default: true
 
+# TODO: review permissions
 permissions:
   contents: write
   packages: write
@@ -36,7 +37,7 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
-          token: ${{ secrets.GH_WBS_BOT_TOKEN }}
+          token: ${{ secrets.GH_WBS_BOT_TOKEN }} # TODO: who do we need the bot token?
 
       - uses: ./.github/actions/setup-environment
         with:
