@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
       - ./config:/config
       - wikibase-image-data:/var/www/html/images
@@ -30,7 +30,8 @@ services:
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -154,7 +155,7 @@ services:
       - ./config:/config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
+      - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
     environment:
       WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
@@ -173,9 +174,14 @@ services:
       - quickstatements-data:/quickstatements/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.regex=/tools/quickstatements$"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.replacement=/tools/quickstatements/"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.permanent=true"
+      - "traefik.http.middlewares.quickstatements-stripprefix.stripprefix.prefixes=/tools/quickstatements"
+      - "traefik.http.routers.quickstatements-router.middlewares=quickstatements-redirectregex,quickstatements-stripprefix"
     environment:
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost
@@ -186,6 +192,7 @@ services:
   # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
+  # This is the reverse proxy and SSL service
   traefik:
     image: traefik:3.1
     command:

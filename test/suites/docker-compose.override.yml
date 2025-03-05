@@ -13,8 +13,8 @@ services:
       - ./LocalSettings.override.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     environment:
-      MW_WG_SERVER: http://${WIKIBASE_PUBLIC_HOST}
-      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      MW_WG_SERVER: ${WIKIBASE_URL}
+      QUICKSTATEMENTS_PUBLIC_URL: ${QUICKSTATEMENTS_URL}
 
   wikibase-jobrunner:
     image: wikibase/wikibase
@@ -28,21 +28,21 @@ services:
   wdqs-updater:
     image: wikibase/wdqs
     environment:
-      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
+      WIKIBASE_CONCEPT_URI: ${WIKIBASE_URL}
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
     volumes:
       - wdqs-frontend-config:/config
     environment:
-      WDQS_PUBLIC_URL: http://${WDQS_PUBLIC_HOST}/sparql
-      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
+      WDQS_PUBLIC_URL: ${WDQS_URL}/sparql
+      WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}/w/api.php
 
   quickstatements:
     image: wikibase/quickstatements
     environment:
-      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}
-      QUICKSTATEMENTS_PUBLIC_URL: http://${QUICKSTATEMENTS_PUBLIC_HOST}
+      WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}
+      QUICKSTATEMENTS_PUBLIC_URL: ${QUICKSTATEMENTS_URL}
 
   browser:
     image: ${TEST_BROWSER_IMAGE_URL}
@@ -72,7 +72,6 @@ services:
         aliases:
           - ${WIKIBASE_PUBLIC_HOST}
           - ${WDQS_PUBLIC_HOST}
-          - ${QUICKSTATEMENTS_PUBLIC_HOST}
 
 volumes:
   wikibase-config:
