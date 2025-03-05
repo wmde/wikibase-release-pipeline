@@ -56,7 +56,7 @@ jobs:
             DRY_RUN_FLAG=""
           fi
 
-          if [ "${{ inputs.project_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
+          if [ "${{ inputs.project_name }}" == "All projects with unreleased changes" ]; then
             PROJECT_ARG=""
           else
             PROJECT_ARG="-p ${{ inputs.project_name }}"
