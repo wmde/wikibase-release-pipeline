@@ -315,7 +315,7 @@ Alternatively, send `GET` requests with your SPARQL query to the WDQS frontend e
 
 Yes, WBS Deploy can be hosted locally for testing purposes by using the example domain names `*.example` from `template.env` in your `.env` file. Configure those domains in your host machine's `/etc/hosts` file, so that your browser (on your host machine) resolves `*.example` to `127.0.0.1` and access the local WBS Deploy instance.
 
-However, due to OAuth requirements, QuickStatements may not function properly without publicly accessible domain names for both the `WIKIBASE_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST`. Also, running locally without publicly accessible addresses will prevent the generation of a valid SSL certificate; to accessing locally running services, you will need to allow the invalid certificate when loading the page for the first time.
+However, due to OAuth requirements, QuickStatements may not function properly without publicly accessible domain name for `WIKIBASE_PUBLIC_HOST`. Also, running locally without publicly accessible addresses will prevent the generation of a valid SSL certificate; to accessing locally running services, you will need to allow the invalid certificate when loading the page for the first time.
 
 ### Can I migrate from another Wikibase installation to WBS Deploy?
 
