@@ -30,11 +30,9 @@ You can send `GET` requests with your SPARQL query to the WDQS endpoint (followi
 
 You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
 
-### WDQS Proxy for public facing setups
+### Proxy for public facing setups
 
-By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might allow for abuse of the system. Wikibase Suite offers the [WDQS-proxy](../WDQS-proxy/README.md) which filters out all long-running or unwanted requests.
-
-When running WDQS in a setup without WDQS-proxy, **please consider disabling these endpoints in some other way**.
+By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might not be intended in every setup, especially when running as a public service. The example below includes a traefik proxy configuration limiting the functionality WDQS exposes.
 
 ### Environment variables
 
@@ -132,6 +130,33 @@ services:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
+    labels:
+      - "traefik.enable=true"
+      # Define router rules for WDQS service, including limits to HTTP methods
+      - "traefik.http.routers.wdqs-router.rule=Host(`query.wikibase.example`) && PathPrefix(`/sparql`) && Method(`GET`, `OPTIONS`, `POST`)"
+      # Add prefix to path before forwarding to upstream service
+      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
+      # Announce limited HTTP methods in preflight requests
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # Announce Accept header can lead to varying responses
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
+      # WDQS/blazegraph config headers
+      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      # https://github.com/blazegraph/database/wiki/REST_API#query
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect 
+      # Allow unauthenticated requests from any origin
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
+      # Define middleware for rate limiting
+      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
 
   wdqs-updater:
     image: wikibase/wdqs
@@ -147,17 +172,40 @@ services:
     environment:
       WIKIBASE_CONCEPT_URI: https://wikibase.example
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy
-    depends_on:
-      wdqs:
-        condition: service_healthy
+  traefik:
+    image: traefik:3.1
+    command:
+      # Basic setup
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      # http endpoint
+      - "--entrypoints.web.address=:80"
+      # https endpoint
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.asdefault"
+      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      # http to https redirect
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      # ACME SSL certificate generation
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-letsencrypt-data:/letsencrypt
 
 volumes:
   wikibase-image-data:
   mysql-data:
   wdqs-data:
+  traefik-letsencrypt-data:
 ```
 
 ## Releases
