@@ -6,16 +6,14 @@ pnpm
 .direnv
 
 local.env
-**/.env
 
 deploy/log
-deploy/config/*.ini
-deploy/config/*.json
-deploy/config/*.php
+deploy/.env
+deploy/config/LocalSettings.php
+deploy/config/wikibase-php.ini
 
 test/log
 test/mwlog
-test/suites/config
 test/suites/**/results/
 
 # dependencies

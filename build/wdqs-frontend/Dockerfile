@@ -32,15 +32,15 @@ COPY --from=builder /tmp/wikidata-query-gui/build /usr/share/nginx/html
 RUN echo "" > style.css
 COPY logo.svg /usr/share/nginx/html/logo.svg
 COPY entrypoint.sh /entrypoint.sh
-COPY wdqs-frontend-config.json.template /templates/wdqs-frontend-config.json.template
-COPY nginx-default.conf.template /templates/nginx-default.conf.template
+COPY custom-config.json /templates/custom-config.json
+COPY default.conf /templates/default.conf
 
-RUN mkdir -p /config
-
-ENV LANGUAGE=en \
-    WIKIBASE_HOST="wikibase" \
-    WDQS_HOST="wdqs" \
-    WDQS_PORT="9999"
+ENV LANGUAGE=en\
+    BRAND_TITLE=DockerWikibaseQueryService\
+    WIKIBASE_HOST="wikibase"\
+    WDQS_HOST="wdqs"\
+    WDQS_PORT="9999"\
+    COPYRIGHT_URL=undefined
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

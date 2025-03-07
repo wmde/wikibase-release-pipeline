@@ -18,10 +18,10 @@
 		}
 	},
 	"brand": {
-		"title": "WBS Query Service",
+		"title": "$BRAND_TITLE",
 		"logo": "logo.svg",
 		"favicon": "favicon.ico",
-		"copyrightUrl": "",
+		"copyrightUrl": "$COPYRIGHT_URL",
 		"index": "./index.html"
 	}
 }

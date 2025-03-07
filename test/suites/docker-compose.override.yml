@@ -35,8 +35,6 @@ services:
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
-    volumes:
-      - wdqs-frontend-config:/config
 
   quickstatements:
     image: wikibase/quickstatements
@@ -76,4 +74,3 @@ services:
 
 volumes:
   wikibase-config:
-  wdqs-frontend-config:
