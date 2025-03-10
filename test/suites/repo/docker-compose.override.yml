@@ -2,3 +2,4 @@ services:
   wikibase:
     volumes:
       - ./repo/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.repo.php
+      - ./repo/extensions:/var/www/html/extensions/extensions

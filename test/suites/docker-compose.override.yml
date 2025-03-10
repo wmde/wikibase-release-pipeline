@@ -10,7 +10,9 @@ services:
     image: wikibase/wikibase
     volumes:
       - wikibase-config:/config
+      - wikibase-extensions:/var/www/html/extensions/extensions
       - ./LocalSettings.override.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
+      - ./empty.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
       - ../${OUTPUT_DIR}:/var/log/mediawiki
     environment:
       MW_WG_SERVER: ${WIKIBASE_URL}
@@ -76,3 +78,4 @@ services:
 volumes:
   wikibase-config:
   wdqs-frontend-config:
+  wikibase-extensions:
