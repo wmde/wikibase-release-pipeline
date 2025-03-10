@@ -206,6 +206,8 @@ docker compose up
 ```
 > 💡 In order to automatically update images on every start, you can also use `docker compose up --pull always` to start your WBS Deploy stack.
 
+If you installed user defined extensions in `config/extensions`, they might have updates too. Make sure to update them regularly too. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
+
 #### Minor and patch updates for WBS Deploy
 
 WBS Deploy versions are tagged in git with tags such as `deploy@3.0.1`. Switching to a tag with the same major version will never trigger breaking changes. These updates are **always** considered safe. If you did not change `docker-compose.yml`, you can update simply by switching the git tag.
@@ -273,6 +275,10 @@ Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles
 No Wikibase-specific migrations are necessary.
 
 </p></details>
+
+##### Apply updates to user defined extension
+
+If you installed user defined extensions in `config/extensions`, they might require updates in order to be compatible with the new MediaWiki version. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
 
 ##### Bring your instance back up
 
