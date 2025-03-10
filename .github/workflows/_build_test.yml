@@ -9,16 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: |
-
-          secret="${{ secrets.GITHUB_TOKEN }}"
-          length=${#secret}
-          echo "The length of the GITHUB_TOKEN is: $length"
-
-          secret="${{ secrets.WBS_PUBLISH_TOKEN }}"
-          length=${#secret}
-          echo "The length of the WBS_PUBLISH_TOKEN is: $length"
-
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
