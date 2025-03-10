@@ -30,15 +30,15 @@ services:
   wdqs-updater:
     image: wikibase/wdqs
     environment:
-      WIKIBASE_CONCEPT_URI: ${WIKIBASE_URL}
+      WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
     volumes:
       - wdqs-frontend-config:/config
     environment:
-      WDQS_PUBLIC_URL: ${WDQS_URL}/sparql
-      WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}/w/api.php
+      WDQS_PUBLIC_URL: http://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
 
   quickstatements:
     image: wikibase/quickstatements
