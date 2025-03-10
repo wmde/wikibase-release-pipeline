@@ -4,6 +4,9 @@ inputs:
   github_token:
     description: token to access GHCR
     required: true
+  dockerhub_token:
+    description: token to access dockerhub
+    required: true
 
 runs:
   using: "composite"
@@ -42,7 +45,7 @@ runs:
       with:
         # implicitly docker hub
         username: wmdetravisbot
-        password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+        password: ${{ inputs.dockerhub_token }}
 
     - name: Set NX to run locally using Node vs in Docker dev runner container
       shell: bash

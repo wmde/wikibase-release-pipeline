@@ -12,6 +12,7 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - run: ./nx lint
 
@@ -35,6 +36,7 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
         run: ./nx build ${{ matrix.imageName }} --push
@@ -61,6 +63,7 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: "Pull images from GHCR"
         uses: ./.github/actions/pull-ghcr
