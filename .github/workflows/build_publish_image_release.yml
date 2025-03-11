@@ -7,7 +7,6 @@ on:
       - 'quickstatements@*'
       - 'wdqs@*'
       - 'wdqs-frontend@*'
-      - 'wdqs-proxy@*'
       - 'wikibase@*'
 
 permissions:
@@ -41,12 +40,7 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: docker/login-action@v3
-        with:
-          # implicitly docker hub
-          username: wmdetravisbot
-          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Build image and push to Dockerhub with release tags
         run: |
