@@ -10,7 +10,7 @@ If you're looking for individual WBS images, head over to [hub.docker.com/u/wiki
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for [building](./build)), testing, and publishing ([.github/workflows](.github/workflows)) WBS Images and WBS Deploy ([WBS Deploy](./deploy)).
+This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing ](.github/workflows) WBS Images and [WBS Deploy](./deploy).
 
 ## Quick reference
 
