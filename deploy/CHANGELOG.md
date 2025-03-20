@@ -1,10 +1,35 @@
-## 3.0.4 (2025-02-24)
+# 4.0.0 (2025-03-20)
 
+### 🚀 Features
+
+- ⚠️ wikibase:4, based on MediaWiki 1.43
+- ⚠️ wdqs-frontend:2, support user config
+- ⚠️ Serve QuickStatements from subdirectory
+- ⚠️ Update SPARQL endpoint URL
+- User defined MediaWiki extensions
+
+### 📖 Documentation
+
+- Describe new features
+- Clarifications
+
+### 🏡 Chore
+
+- ⚠️ Remove wdqs-proxy
+
+#### ⚠️ Breaking Changes
+
+- ⚠️ wikibase:4, based on MediaWiki 1.43
+- ⚠️ wdqs-frontend:2, support user config
+- ⚠️ Serve QuickStatements from subdirectory
+- ⚠️ Remove wdqs-proxy
+- ⚠️ Update SPARQL endpoint URL
+
+## 3.0.4 (2025-02-24)
 
 ### 🩹 Fixes
 
 - set traefik restart policy to 'unless-stopped'
-
 
 ### 📖 Documentation
 
@@ -14,25 +39,21 @@
 
 ## 3.0.3 (2024-11-07)
 
-
 ### 🩹 Fixes
 
 - Bump WDQS-Updater version to 2
 
 ## 3.0.2 (2024-10-28)
 
-
 ### 🩹 Fixes
 
 - Provide Concept URI to WDQS
-
 
 ### 📖 Documentation
 
 - Add some notes about WDQS-frontend
 
 - Fix backup script volume names
-
 
 ## 3.0.1 (2024-10-09)
 
