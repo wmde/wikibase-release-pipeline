@@ -1,5 +1,23 @@
-## 3.0.3 (2025-02-24)
+# 4.0.0 (2025-03-20)
 
+### 🩹 Fixes
+
+- OAuth consumers (e.g. QuickStatements) on same domain
+
+### 📖 Documentation
+
+- Prepare Deploy 4 release
+- Update Dockerhub readme
+
+### 🏡 Chore
+
+-  ⚠️ Bump MediaWiki to 1.43
+
+#### ⚠️ Breaking Changes
+
+-  ⚠️ Bump MediaWiki to 1.43
+
+## 3.0.3 (2025-02-24)
 
 ### 🏡 Chore
 
@@ -12,7 +30,6 @@
 - bump to mediawiki 1.42.5
 
 ## 3.0.2 (2024-10-28)
-
 
 ### 🏡 Chore
 
