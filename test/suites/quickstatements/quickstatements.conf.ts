@@ -1,12 +1,13 @@
-import { defaultTestSettings } from '../../setup/make-test-settings.js';
+import { defaultSettings } from '../../setup/make-test-settings.js';
 import TestEnv from '../../setup/test-env.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createWithDefaults( {
+export const testEnv = TestEnv.create( {
+	...defaultSettings,
 	name: 'quickstatements',
-	specs: [ 'specs/repo_client/interwiki-links.ts', 'specs/quickstatements/*.ts' ],
+	specs: [ 'specs/quickstatements/*.ts' ],
 	composeFiles: [
-		...defaultTestSettings.composeFiles,
+		...defaultSettings.composeFiles,
 		'suites/quickstatements/docker-compose.override.yml'
 	]
 } );

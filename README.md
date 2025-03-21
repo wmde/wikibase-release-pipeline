@@ -10,7 +10,7 @@ If you're looking for individual WBS images, head over to [hub.docker.com/u/wiki
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for [building](./build)), testing, and publishing ([.github/workflows](.github/workflows)) WBS Images and WBS Deploy ([WBS Deploy](./deploy)).
+This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing ](.github/workflows) WBS Images and [WBS Deploy](./deploy).
 
 ## Quick reference
 
@@ -121,9 +121,7 @@ In order to test your own instances of the services, make sure to change the fol
 WIKIBASE_URL=http://wikibase
 WIKIBASE_CLIENT_URL=http://wikibase-client
 QUICKSTATEMENTS_URL=http://quickstatements
-WDQS_FRONTEND_URL=http://wdqs-frontend
-WDQS_URL=http://wdqs:9999
-WDQS_PROXY_URL=http://wdqs-proxy
+WDQS_URL=http://query
 MW_ADMIN_NAME=
 MW_ADMIN_PASS=
 MW_SCRIPT_PATH=/w
@@ -133,25 +131,51 @@ For more information on testing, see the [README](./test/README.md).
 
 ## Release process
 
-WBS Deploy and WBS images are released using this repository. The process involves updating all upstream component versions to be used, building images, testing all the images together and finally publishing them.
+WBS Deploy and WBS Images are released using this repository. The process involves updating upstream component versions, building images, testing all the images together, releasing them by generating a changelog, git tagging the new version and finally publishing it.
+
+### Preparing a release
+
+```bash
+# Do a release dry-run (nothing but informative output will happen)
+# for all projects with unreleased changes
+./nx release --dry-run
+
+# Do a release (bump version, generate changelog and git tag it) for a single
+# project (e.g. wikibase).
+# Nothing will be pushed or published with this command, but a new commit with
+# changelog and package.json adjustments will be created locally. This should
+# happen  on `main`. Also, a new git tag with the new version of the released
+# project will be created locally.
+./nx release -p wikibase
+
+# Push the changelog and package.json changes to Github.
+# Yes, we push to `main` here ¯\_(ツ)_/¯
+# ATTENTION!!! THIS DOES NOT PUSH THE NEW GIT TAG
+# ATTENTION!!! PUSHING ALSO THE NEW GIT TAG WOULD PUBLISH IMAGE RELEASES TO DOCKERHUB
+git push
+```
+
+### Publishing a release
+
+Deploy releases are currently just published in this git repo via a git tag. Pushing the tag to Github effectively publishes a deploy version.
+
+Image releases are published on Dockerhub. The actual push to Dockerhub is handled by Github Actions and is triggered by pushing a git tag to Github.
+
+For example `./nx release -p wikibase` would tag the next wikibase version with a git tag such as `wikibase@1.2.3`. Pushing this tag with `git push origin wikibase@1.2.3` will trigger Github Actions to publish the `wikibase` project from this tag to Dockerhub.
 
 ### Release checklist Phabricator template
 
 ```
 - [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and/or related changes need to be included in the release, add them as subtasks of this release ticket.
-- [ ] **To release breaking changes** as a new major version of WBS Deploy, create a new branch called `deploy-X`, where `X` is the new major version.
-- [ ] **Create a release PR** from a release preparation branch with the following changes targeting the appropriate `deploy-X` release branch.
-  - [ ] **Backport from `main`** by cherrypicking commits from `main` to the release preparation branch.
-  - [ ] **Update `build/*/build.env`** files by adjusting WBS versions and upstream versions. You can find further instructions in the `build.env` files themselves.
-  - [ ] **Update `CHANGES.md`** by adding a section following the example of previous releases.
-  - [ ] **CI should be green**. Tests may need adjustments in order to pass for the new version. Minor releases are likely to pass without any adjustments. Try re-running tests on failure, some specs could be flaky.
-- [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release preparation branch on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-BRANCHNAME`, e.g., `dev-releaseprep`. This tag can be used to set up an instance running your release preparation version.
-- [ ] **Get two reviews on the release PR** so that it is ready to be merged. **Merging to `deploy-X` later will trigger the release to Docker Hub.** Do not merge yet!
-- [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1iZMbdXGPsG0pLs-_HrniT5ac28aw1Edu) using a template.
+  - [ ] **Update `build/*/build.env`** bump upstream versions by changing `build.env` files. You can find further instructions in the `build.env` files themselves.
+- [ ] **Merge all pending changes to `main`** releases are always done from the `main` branch.
+- [ ] **Verify CI on `main` is green**
+- [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release preparation branch on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-GITHUB_ACTIONS_RUN_NUMBER`, e.g., `dev-123456789`. This tag can be used to set up an instance running your release preparation version.
+- [ ] **Release Dry Run** by running the Github Action [Create a WBS Release](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) in Dry Run mode. Check the output and review version and changelog generated.
+- [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1iZMbdXGPsG0pLs-_HrniT5ac28aw1Edu).
 - [ ] **Coordinate with ComCom on timing the publication of the release**. Talk to SCoT (ComCom, technical writer) about this.
-- [ ] **Publish the release** by merging the release branch into the `deploy-X` branch. **ATTENTION: This will automatically push images to Docker Hub!**
-- [ ] **Update Dockerhub README** (from `./build/*/dockerhub.md`) for major versions, to make each image readme contain a link to appropriate version docs.
-- [ ] **Merge back to main in a separate PR** from `deploy-X` to have adjustments to `CHANGES.md` and the like available on `main` too. Changes from `variables.env` should only be taken from a release of the latest version so that `main` always references the build of the latest components.
+- [ ] **Publish the release** by running the Github Action [Create a WBS Release](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) **ATTENTION: This will automatically push images to Docker Hub!**
+- [ ] **Update Dockerhub README** (from `./build/*/dockerhub.md`) if required (e.g. major versions changed).
 
 You`re done. **Congratulations!**
 ```
