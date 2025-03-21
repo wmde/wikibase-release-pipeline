@@ -6,6 +6,64 @@ on:
       - main
 
 jobs:
-  _:
+  check-previous-run:
+    runs-on: ubuntu-24.04
+    outputs:
+      skip_ci: ${{ steps.decide.outputs.skip_ci }}
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for full history / merge-base comparison
+
+      - name: Fetch main branch
+        run: git fetch origin main
+
+      # Note: This is a double-check for the branch protection rule
+      # which also ensures the PR is up-to-date with main
+      - name: Ensure commit was based on latest main
+        id: up_to_date_check
+        run: |
+          BASE=$(git merge-base $GITHUB_SHA origin/main)
+          MAIN=$(git rev-parse origin/main)
+
+          echo "Merge base with main: $BASE"
+          echo "Current origin/main:  $MAIN"
+
+          if [[ "$BASE" != "$MAIN" ]]; then
+            echo "❌ This commit was NOT based on latest main."
+            echo "::error title=Outdated Branch::This commit is not based on latest main. CI must run in the PR, not here."
+            exit 1
+          fi
+
+          echo "✅ This commit was based on the latest main."
+
+      - name: Check if CI already passed for this commit (via REST API)
+        id: decide
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMIT_SHA=${GITHUB_SHA}
+          echo "🔍 Checking combined status for commit: $COMMIT_SHA"
+
+          RESPONSE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/commits/$COMMIT_SHA/status")
+
+          STATE=$(echo "$RESPONSE" | jq -r '.state')
+
+          echo "Combined commit status: $STATE"
+
+          if [[ "$STATE" == "success" ]]; then
+            echo "✅ CI already passed for this commit. Skipping full CI."
+            echo "skip_ci=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ CI has not passed (state: $STATE). Will run CI."
+            echo "skip_ci=false" >> $GITHUB_OUTPUT
+          fi
+
+  run-ci:
+    needs: check-previous-run
+    if: needs.check-previous-run.outputs.skip_ci == 'false'
     uses: ./.github/workflows/_build_test.yml
     secrets: inherit
