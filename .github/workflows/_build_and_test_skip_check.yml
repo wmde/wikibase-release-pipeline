@@ -1,0 +1,23 @@
+name: Skip Strategy (using fkirc/skip-duplicate-actions)
+
+on:
+  workflow_call:
+    outputs:
+      should_skip:
+        description: "Whether CI should be skipped"
+        value: ${{ jobs.skip-check.outputs.should_skip }}
+
+jobs:
+  skip-check:
+    runs-on: ubuntu-24.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Check for duplicate successful runs
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
+          skip_after_successful_duplicate: true
+          do_not_skip: '["workflow_dispatch", "schedule"]'
