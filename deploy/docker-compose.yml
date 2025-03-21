@@ -196,7 +196,7 @@ services:
 
   # This is the reverse proxy and SSL service
   traefik:
-    image: traefik:3.1
+    image: traefik:3
     command:
       # Basic setup
       - "--providers.docker=true"
