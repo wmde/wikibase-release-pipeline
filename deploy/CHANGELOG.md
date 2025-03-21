@@ -1,3 +1,10 @@
+## 4.0.1 (2025-03-21)
+
+
+### 🏡 Chore
+
+- allow traefik updates within 3.x.x
+
 # 4.0.0 (2025-03-20)
 
 ### 🚀 Features
