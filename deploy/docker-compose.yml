@@ -6,7 +6,7 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: wikibase/wikibase:3
+    image: wikibase/wikibase:4
     depends_on:
       mysql:
         condition: service_healthy
@@ -15,9 +15,11 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
       - ./config:/config
+      - ./config/extensions:/var/www/html/extensions/extensions
+      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -30,14 +32,15 @@ services:
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
       start_period: 5m
 
   wikibase-jobrunner:
-    image: wikibase/wikibase:3
+    image: wikibase/wikibase:4
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -102,9 +105,36 @@ services:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
+    labels:
+      - "traefik.enable=true"
+      # Define router rules for WDQS service, including limits to HTTP methods
+      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
+      # Add prefix to path before forwarding to upstream service
+      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
+      # Announce limited HTTP methods in preflight requests
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # Announce Accept header can lead to varying responses
+      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
+      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
+      # WDQS/blazegraph config headers
+      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
+      # https://github.com/blazegraph/database/wiki/REST_API#query
+      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
+      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect
+      # Allow unauthenticated requests from any origin
+      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
+      # Define middleware for rate limiting
+      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
+      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
+      # Apply middlewares to the wdqs router
+      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
 
   wdqs-updater:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -120,23 +150,17 @@ services:
     environment:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy:1
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:1
-    depends_on:
-      - wdqs-proxy
+    image: wikibase/wdqs-frontend:2
     restart: unless-stopped
+    volumes:
+      - ./config:/config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
+      - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
     environment:
-      WDQS_HOST: wdqs-proxy
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
@@ -152,9 +176,14 @@ services:
       - quickstatements-data:/quickstatements/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
+      - "traefik.http.routers.quickstatements-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.regex=/tools/quickstatements$"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.replacement=/tools/quickstatements/"
+      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.permanent=true"
+      - "traefik.http.middlewares.quickstatements-stripprefix.stripprefix.prefixes=/tools/quickstatements"
+      - "traefik.http.routers.quickstatements-router.middlewares=quickstatements-redirectregex,quickstatements-stripprefix"
     environment:
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost
@@ -165,8 +194,9 @@ services:
   # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
+  # This is the reverse proxy and SSL service
   traefik:
-    image: traefik:3.1
+    image: traefik:3
     command:
       # Basic setup
       - "--providers.docker=true"
@@ -186,8 +216,10 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+
       # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443

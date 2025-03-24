@@ -41,14 +41,13 @@ If QuickStatements and Wikibase are running on the same IP address, a reverse pr
 
 ### Environment variables
 
-| Variable        | Default                      | Description                              |
-| --------------- | ---------------------------- | ---------------------------------------- |
-| `LANGUAGE`      | "en"                         | Language to use in the UI                |
-| `BRAND_TITLE`   | "DockerWikibaseQueryService" | Name to display on the UI                |
-| `WIKIBASE_HOST` | "wikibase"                   | Hostname of the Wikibase host (required) |
-| `WDQS_HOST`     | "wdqs"                       | Hostname of the WDQS host                |
-| `WDQS_PORT`     | "9999"                       | Port of the WDQS host                    |
-| `COPYRIGHT_URL` | "undefined"                  | URL for the copyright notice             |
+Variables in **bold** are required.
+
+| Variable                  | Default                      | Description                    |
+| ------------------------- | ---------------------------- | -------------------------------|
+| `LANGUAGE`                | "en"                         | Language to use in the UI      |
+| **`WDQS_PUBLIC_URL`**     |                              | Hostname of the WDQS host      |
+| **`WIKIBASE_PUBLIC_URL`** |                              | Hostname of the Wikibase host  |
 
 ## Example
 
@@ -144,18 +143,17 @@ services:
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
-    depends_on:
-      - wdqs-proxy
     restart: unless-stopped
     ports:
       - 8834:80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.example`)"
+      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.wikibase.example`)"
       - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
       - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
     environment:
-      WDQS_HOST: wdqs-proxy
+      WDQS_PUBLIC_URL: https://query.wikibase.example/sparql
+      WIKIBASE_PUBLIC_URL: https://wikibase.example/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
@@ -205,6 +203,16 @@ We provide several tags that relate to the versioning semantics.
 | _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
 | _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
 | _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+
+## Internal filesystem layout
+
+Hooking into the internal filesystem can extend the functionality of this image.
+
+| File                                         | Description                                |
+| -------------------------------------------- | ------------------------------------------ |
+| `/config/wdqs-frontend-config.json`          | Configuration file for the WDQS frontend.  |
+| `/templates/nginx-default.conf.template`     | Nginx config template.                     |
+
 
 ## Source
 

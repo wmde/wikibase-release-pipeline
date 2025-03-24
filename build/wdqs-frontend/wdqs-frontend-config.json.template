@@ -1,10 +1,10 @@
 {
 	"api": {
 		"sparql": {
-			"uri": "/proxy/wdqs/bigdata/namespace/wdq/sparql"
+			"uri": "$WDQS_PUBLIC_URL"
 		},
 		"wikibase": {
-			"uri": "/proxy/wikibase/w/api.php"
+			"uri": "$WIKIBASE_PUBLIC_URL"
 		},
 		"examples": {
 			"server": "https://www.wikidata.org/",
@@ -18,10 +18,10 @@
 		}
 	},
 	"brand": {
-		"title": "$BRAND_TITLE",
+		"title": "WBS Query Service",
 		"logo": "logo.svg",
 		"favicon": "favicon.ico",
-		"copyrightUrl": "$COPYRIGHT_URL",
+		"copyrightUrl": "",
 		"index": "./index.html"
 	}
 }

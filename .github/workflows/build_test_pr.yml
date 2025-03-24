@@ -12,3 +12,4 @@ on:
 jobs:
   _:
     uses: ./.github/workflows/_build_test.yml
+    secrets: inherit

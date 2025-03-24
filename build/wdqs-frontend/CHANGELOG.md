@@ -1,5 +1,30 @@
-## 1.0.2 (2024-10-28)
+# 2.0.0 (2025-03-20)
 
+### 🚀 Features
+
+-  ⚠️ Support user configuration file
+
+### 📖 Documentation
+
+- Prepare Deploy 4 release
+- Update Dockerhub readme
+
+### 🏡 Chore
+
+-  ⚠️ Remove wdqs-proxy interaction in WBS Deploy
+-  ⚠️ Update environment variable names
+
+### 🎨 Styles
+
+- Add Wikibase logo
+
+#### ⚠️ Breaking Changes
+
+-  ⚠️ Support user configuration file
+-  ⚠️ Remove wdqs-proxy interaction in WBS Deploy
+-  ⚠️ Update environment variable names
+
+## 1.0.2 (2024-10-28)
 
 ### 📖 Documentation
 
