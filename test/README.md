@@ -59,3 +59,5 @@ When working on the browser tests, you’ll want to consult the documentation of
 - [WebdriverIO](https://webdriver.io/docs/api) for controlling the browser (`browser`, `$`, `waitForVisible`, …)
 - [Mocha](https://mochajs.org/) as the general testing framework (`describe`, `it`, `before`, …)
 - [`expect`](https://webdriver.io/docs/api/expect-webdriverio/) for assertions (`toBe`, `toEqual`, …)
+
+## DUMMY CHANGE FOR TESTING
