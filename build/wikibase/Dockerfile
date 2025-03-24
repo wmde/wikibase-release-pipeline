@@ -196,6 +196,7 @@ RUN { \
 
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 
+
 # Remove world writable flag, in combination with sticky bit it breaks the w link
 # https://github.com/wmde/wikibase-release-pipeline/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
 # Make upload path writable for the webserver user
