@@ -81,13 +81,3 @@ jobs:
         with:
           name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
           path: test/suites/**/results
-
-  test-success:
-    # Post-test CI step - to check all tests succeeded
-    # Github Branch Protection rules require this to pass to allow merging
-    runs-on: ubuntu-24.04
-    needs:
-      - lint
-      - test
-    steps:
-      - run: "true"

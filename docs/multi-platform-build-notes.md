@@ -2,7 +2,7 @@
 
 ## Current testing
 
-To try to build multi-platform just add `--platform linux/amd64,linux/arm64` to the arguments for `nx build` locally or in `.github/_build_test.yml` if trying on CI. The builder and QEMU setup is already there in the GitHub actions world. An example of successful multi-platform build is here, it completed including a AMD64 test run in a total of 42 mins: https://github.com/wmde/wikibase-release-pipeline/actions/runs/10443948331
+To try to build multi-platform just add `--platform linux/amd64,linux/arm64` to the arguments for `nx build` locally or in `.github/_build_and_test.yml` if trying on CI. The builder and QEMU setup is already there in the GitHub actions world. An example of successful multi-platform build is here, it completed including a AMD64 test run in a total of 42 mins: https://github.com/wmde/wikibase-release-pipeline/actions/runs/10443948331
 
 Assuming we find that result acceptable, then we can use our current GitHub Actions runner to achieve multi-platform builds, however our tests currently only run against the AMD64 image. If we want to run the full test suite also against the ARM64 builds I suspect that the GitHub Actions runner will be forbiddingly slow running the AMD64 images for that test run.
 
