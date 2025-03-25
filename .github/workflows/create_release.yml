@@ -27,7 +27,13 @@ permissions:
   packages: write
 
 jobs:
+  build_and_test:
+    uses: ./.github/workflows/_build_and_test.yml
+    secrets: inherit
+
   release:
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
     runs-on: ubuntu-24.04
 
     steps:
@@ -41,6 +47,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
 
       - name: Create release
         run: |

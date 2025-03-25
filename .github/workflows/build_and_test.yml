@@ -1,0 +1,22 @@
+name: 🧪 Build and Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    uses: ./.github/workflows/_build_and_test.yml
+    secrets: inherit
+
+  # Post-test CI step - to check all tests succeeded
+  # Github Branch Protection rules require this to pass to allow merging
+  test-success:
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - run: "true"
