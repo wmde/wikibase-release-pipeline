@@ -358,7 +358,7 @@ Due to the OAuth configuration for MediaWiki and QuickStatements, along with the
 
 However, for testing purposes WBS Deploy can be run locally or on a server that is not accessible to the Internet, with the following caveats:
 
-* In this configuration, you will still need to set `WIKIBASE_PUBLIC_URL` and `QUICKSTATEMENTS_PUBLIC_URL` to URLs that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup. 
+* In this configuration, you will still need to set `WIKIBASE_PUBLIC_HOST` to hostnames that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup. 
 * Any SSL certificates generated in this setup will be invalid, though you can optionally bypass the warning about these invalid certificates when first loading the Wikibase site in the browser.
 * QuickStatements will not function in this setup, as OAuth will not authorize against a local, non-Internet-accessible Wikibase installation.
 
