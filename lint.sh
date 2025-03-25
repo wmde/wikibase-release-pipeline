@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo "Linting"
-
 # Always run in dev runner (docker) to have the extra dependencies available (currently Python and Hadolint)
 # If not running in Docker, start dev runner and run script again there
 if [[ ! -f /.dockerenv  ]]; then
