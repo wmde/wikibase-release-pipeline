@@ -10,7 +10,7 @@ FROM ${PHP_IMAGE_URL} as mediawiki
 SHELL ["/bin/bash", "-exu", "-c"]
 
 # System dependencies
-RUN apt-get update; \
+RUN apt- get update; \
     apt-get install -y --no-install-recommends \
         git \
         gettext-base \
