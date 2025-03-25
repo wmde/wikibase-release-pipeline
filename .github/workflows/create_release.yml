@@ -32,9 +32,9 @@ jobs:
     secrets: inherit
 
   release:
-    runs-on: ubuntu-24.04
     needs: build_and_test
     if: needs.build_and_test.result == 'success'
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4

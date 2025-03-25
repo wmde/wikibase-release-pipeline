@@ -14,13 +14,15 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
           skip_after_successful_duplicate: true
+          cancel_others: true
           do_not_skip: '["workflow_dispatch", "schedule"]'
 
   lint:
+    needs:
+      - skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
-    needs: skip_check
-    if: needs.skip_check.outputs.should_skip != 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -33,10 +35,11 @@ jobs:
       - run: ./nx lint
 
   build:
+    needs:
+      - skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    needs: skip_check
-    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false
@@ -60,11 +63,12 @@ jobs:
         run: ./nx build ${{ matrix.imageName }} --push
 
   test:
-    needs: build
+    needs:
+      - skip_check
+      - build
+    if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    needs: skip_check
-    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false
