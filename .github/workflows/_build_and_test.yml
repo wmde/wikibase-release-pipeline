@@ -36,9 +36,9 @@ jobs:
   build:
     needs:
       - skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false
@@ -65,9 +65,9 @@ jobs:
     needs:
       - skip_check
       - build
+    if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false
