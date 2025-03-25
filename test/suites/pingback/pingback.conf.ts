@@ -1,12 +1,13 @@
-import { defaultTestSettings } from '../../setup/make-test-settings.js';
+import { defaultSettings } from '../../setup/make-test-settings.js';
 import TestEnv from '../../setup/test-env.js';
 import wdioConfig from '../../setup/wdio.conf.js';
 
-export const testEnv = TestEnv.createWithDefaults( {
+export const testEnv = TestEnv.create( {
+	...defaultSettings,
 	name: 'pingback',
 	specs: [ 'specs/pingback/*.ts' ],
 	composeFiles: [
-		...defaultTestSettings.composeFiles,
+		...defaultSettings.composeFiles,
 		'suites/pingback/docker-compose.override.yml'
 	]
 } );

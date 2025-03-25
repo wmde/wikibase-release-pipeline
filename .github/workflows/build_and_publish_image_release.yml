@@ -7,7 +7,6 @@ on:
       - 'quickstatements@*'
       - 'wdqs@*'
       - 'wdqs-frontend@*'
-      - 'wdqs-proxy@*'
       - 'wikibase@*'
 
 permissions:
@@ -15,8 +14,14 @@ permissions:
   packages: write
 
 jobs:
+  build_and_test:
+    uses: ./.github/workflows/_build_and_test.yml
+    secrets: inherit
+
   extract_tag_and_publish:
-    runs-on: ubuntu-latest
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Extract image name and confirm it is a valid semantic version tag
@@ -41,12 +46,7 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: docker/login-action@v3
-        with:
-          # implicitly docker hub
-          username: wmdetravisbot
-          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Build image and push to Dockerhub with release tags
         run: |

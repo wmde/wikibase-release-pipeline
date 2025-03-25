@@ -14,7 +14,6 @@ on:
           - quickstatements
           - wdqs
           - wdqs-frontend
-          - wdqs-proxy
           - wikibase
           - All projects with unreleased changes
       dry_run:
@@ -28,8 +27,14 @@ permissions:
   packages: write
 
 jobs:
+  build_and_test:
+    uses: ./.github/workflows/_build_and_test.yml
+    secrets: inherit
+
   release:
-    runs-on: ubuntu-latest
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -41,6 +46,8 @@ jobs:
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
 
       - name: Create release
         run: |
@@ -56,7 +63,7 @@ jobs:
             DRY_RUN_FLAG=""
           fi
 
-          if [ "${{ inputs.project_name }}" == "All projects (images and deploy) with unreleased changes" ]; then
+          if [ "${{ inputs.project_name }}" == "All projects with unreleased changes" ]; then
             PROJECT_ARG=""
           else
             PROJECT_ARG="-p ${{ inputs.project_name }}"
