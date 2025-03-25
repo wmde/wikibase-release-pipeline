@@ -2,9 +2,25 @@ on:
   workflow_call:
 
 jobs:
+  skip_check:
+    runs-on: ubuntu-24.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Check for duplicate successful runs
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
+          skip_after_successful_duplicate: true
+          do_not_skip: '["workflow_dispatch", "schedule"]'
+
   lint:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    needs: skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +35,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    needs: skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false
@@ -45,6 +63,8 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    needs: skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
 
     strategy:
       fail-fast: false

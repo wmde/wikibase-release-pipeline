@@ -9,23 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  skip_check:
-    runs-on: ubuntu-24.04
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - name: Check for duplicate successful runs
-        id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
-          skip_after_successful_duplicate: true
-          do_not_skip: '["workflow_dispatch", "schedule"]'
-
   build_and_test:
-    needs: skip_check
-    if: needs.skip_check.outputs.should_skip != 'true'
     uses: ./.github/workflows/_build_and_test.yml
     secrets: inherit
 
@@ -33,8 +17,7 @@ jobs:
     # Post-test CI step - to check all tests succeeded
     # Github Branch Protection rules require this to pass to allow merging
     runs-on: ubuntu-24.04
-    needs:
-      - build_and_test
-    if: needs.skip_check.outputs.should_skip == 'true' || needs.build_and_test.result == 'success'
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
     steps:
       - run: "true"
