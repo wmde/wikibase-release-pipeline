@@ -1,5 +1,7 @@
 name: wbs-deploy
 
+# DUMMY CODE UPDATE
+
 services:
   # --------------------------------------------------
   # A. CORE WIKIBASE SUITE SERVICES
