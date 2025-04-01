@@ -202,12 +202,16 @@ services:
       - "--providers.file.filename=/etc/traefik/traefik.yml"
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     volumes:
-      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
-      - "./services.yml:/etc/traefik/services.yml:ro"
-      - "traefik-letsencrypt-data:/letsencrypt"
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./config/traefik-services.yml:/etc/traefik/services.yml:ro
+      - traefik-letsencrypt-data:/letsencrypt
+    environment:
+      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
