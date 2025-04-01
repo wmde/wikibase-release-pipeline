@@ -1,3 +1,4 @@
+api: {}
 entryPoints:
   web:
     address: ":80"
@@ -13,8 +14,8 @@ entryPoints:
       tls:
         certResolver: "letsencrypt"
         domains:
-          - main: "${WIKIBASE_PUBLIC_HOST}"
-          - main: "${WDQS_PUBLIC_HOST}"
+          - main: "{{env WIKIBASE_PUBLIC_HOST}}"
+          - main: "{{env WDQS_PUBLIC_HOST}}"
 
 
 certificatesResolvers:
@@ -22,7 +23,7 @@ certificatesResolvers:
     acme:
       # TODO: how to?
       # caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
-      email: "${MW_ADMIN_EMAIL}"
+      email: "{{env MW_ADMIN_EMAIL}}"
       storage: "/letsencrypt/acme.json"
       httpChallenge:
         entryPoint: "web"
@@ -33,24 +34,28 @@ providers:
 
 http:
   routers:
+    dashboard:
+      rule: Host(`wikibase.example`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      service: api@internal
+
     wikibase-router:
-      rule: "Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
+      rule: "Host(`{{env WIKIBASE_PUBLIC_HOST}}`) && !PathPrefix(`/tools`)"
       service: "wikibase"
       entryPoints: ["websecure"]
 
     wdqs-router:
-      rule: "Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
+      rule: "Host(`{{env WDQS_PUBLIC_HOST}}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
       service: "wdqs"
       entryPoints: ["websecure"]
       middlewares: ["wdqs-prefix", "wdqs-headers", "wdqs-cors-headers", "wdqs-rate-limit"]
 
     wdqs-frontend-router:
-      rule: "Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
+      rule: "Host(`{{env WDQS_PUBLIC_HOST}}`) && !PathPrefix(`/sparql`)"
       service: "wdqs-frontend"
       entryPoints: ["websecure"]
 
     quickstatements-router:
-      rule: "Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      rule: "Host(`{{env WIKIBASE_PUBLIC_HOST}}`) && PathPrefix(`/tools/quickstatements`)"
       service: "quickstatements"
       entryPoints: ["websecure"]
       middlewares: ["quickstatements-redirectregex", "quickstatements-stripprefix"]
