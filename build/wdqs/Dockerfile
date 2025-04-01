@@ -73,7 +73,7 @@ EXPOSE 9999
 
 WORKDIR /wdqs
 
-COPY --chown=blazegraph:blazegraph wait-for-it.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
+COPY --chown=blazegraph:blazegraph wait-for-it.sh healthcheck.sh entrypoint.sh runBlazegraph.sh runUpdate.sh /
 COPY --chown=blazegraph:blazegraph mwservices.json /templates/mwservices.json
 COPY --chown=blazegraph:blazegraph RWStore.properties allowlist.txt logback.xml /wdqs/
 
