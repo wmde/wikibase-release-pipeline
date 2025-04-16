@@ -7,7 +7,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const config: Config = {
 	title: 'Wikibase Suite',
 	tagline: 'Because for some reason, you decided to host a Wikibase',
-	favicon: 'img/wikibase-symbol/wikibase_symbol_rgb.svg',
+	favicon: 'img/wikibase-symbol/wikibase_rgb.svg',
 
 	// Set the production url of your site here
 	url: 'https://your-docusaurus-site.example.com',
@@ -60,8 +60,11 @@ const config: Config = {
 		// Replace with your project's social card
 		// image: 'img/docusaurus-social-card.jpg',
 		navbar: {
-			title: 'Wikibase Suite',
-			logo: { alt: 'WBS', src: 'img/wikibase-symbol/wikibase_symbol_rgb.svg' },
+			// title: 'Wikibase Suite',
+			logo: {
+				alt: 'Wikibase Suite',
+				src: 'img/wikibase-suite/wikibase_suite_rgb.svg'
+			},
 			items: [
 				{
 					type: 'docSidebar',
