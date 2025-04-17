@@ -196,7 +196,7 @@ WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS Deploy 
 
 WBS Deploy always references the latest minor and patch releases of the compatible WBS images' major versions using the Docker images' major version tag. For example, WBS Deploy 2.0.1 might reference `wikibase/wikibase:3`, a tag that always points to the latest image Wikibase 3.x.x image.
 
-#### Minor and patch updates for WBS images
+### Minor and patch updates for WBS images
 
 Because WBS Deploy always references the latest minor and patch releases of compatible WBS images, non-breaking changes (including security updates) can be pulled at any time.
 
@@ -241,7 +241,7 @@ docker compose down
 
 Back up your `./config` directory as well using:
 
-```
+```bash
 cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 ```
 
@@ -296,7 +296,7 @@ If you installed User Defined Extensions in `config/extensions`, they might requ
 
 #### Bring your instance back up
 
-```
+```bash
 docker compose up
 ```
 

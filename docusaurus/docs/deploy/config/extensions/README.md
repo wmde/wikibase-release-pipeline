@@ -12,7 +12,8 @@ In order to download additional MediaWiki extensions, you can visit e.g. https:/
 
 Once the file is downloaded, unpack it to `config/extensions`
 
-```
+<!-- prettier-ignore-start -->
+```md
 deploy
 |
 +- config
@@ -22,8 +23,8 @@ deploy
       +- README.md <- you are here
       |
       +- MyExtension <- we are going to create this directory
-
 ```
+<!-- prettier-ignore-end -->
 
 ```sh
 tar -xzf MyExtension.tar.gz -C path/to/deploy/config/extensions
