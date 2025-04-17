@@ -77,7 +77,7 @@ const config: Config = {
 					href: 'https://github.com/wmde/wikibase-release-pipeline/',
 					label: 'GitHub',
 					position: 'right'
-				},
+				}
 				// { type: 'docsVersionDropdown' }
 			]
 		},
