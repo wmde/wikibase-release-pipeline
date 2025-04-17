@@ -42,7 +42,7 @@ wfLoadExtension('extensions/MyExtension')
 And restart the Wikibase container running MediaWiki.
 
 ```sh
-docker compose restart wikibase 
+docker compose restart wikibase
 ```
 
 Some extensions might ask you to run `update.php` as part of the installation process. The Wikibase Suite Wikibase Image does this automatically in its entrypoint. There is no need for running `update.php` manually.
