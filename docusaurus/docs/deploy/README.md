@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Wikibase Suite Deploy
 
 Wikibase Suite (WBS) Deploy is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). In addition to Wikibase on MediaWiki, WBS Deploy includes the Wikidata Query Service (WDQS) and its front end, along with QuickStatements, Elasticsearch and a Traefik reverse proxy with SSL termination and ACME support. The service orchestration is implemented using Docker Compose V2.
