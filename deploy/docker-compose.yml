@@ -17,9 +17,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
-      - ./config:/config
-      - ./config/extensions:/var/www/html/extensions/extensions
-      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
+      - ./config:/config:z
+      - ./config/extensions:/var/www/html/extensions/extensions:z
+      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -154,7 +154,7 @@ services:
     image: wikibase/wdqs-frontend:2
     restart: unless-stopped
     volumes:
-      - ./config:/config
+      - ./config:/config:z
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
@@ -226,6 +226,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-letsencrypt-data:/letsencrypt
+    privileged: true
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
