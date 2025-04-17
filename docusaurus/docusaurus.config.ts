@@ -63,7 +63,7 @@ const config: Config = {
 			// title: 'Wikibase Suite',
 			logo: {
 				alt: 'Wikibase Suite',
-				src: 'img/wikibase-suite/wikibase_suite_rgb.svg'
+				src: 'img/wikibase-symbol/wikibase_black.svg'
 			},
 			items: [
 				{
