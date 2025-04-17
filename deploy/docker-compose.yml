@@ -175,37 +175,26 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # enable ping endpoint for healthcheck
-      # - "--ping=true"
       # additionial traefik dynamic configuration via config file
       - "--providers.file.filename=/etc/traefik/dynamic.yml"
-
       # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-
-      # Helpful for debugging
-      - "--api.dashboard=true"
-      - "--api.insecure=true"
-      - "--log.level=DEBUG"
-
+      # Uncomment the following line for debugging, also expose port 8080 below
+      # - "--api.dashboard=true"
+      # - "--api.insecure=true"
+      # - "--log.level=DEBUG"
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
-      - 8088:8080 # for dashboard
+      # traefik dashboard
+      # - 8080:8080
     volumes:
       - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
       - traefik-letsencrypt-data:/letsencrypt
-    # TODO: some might not be needed anymore, e.g. the email is only used in the static config
     environment:
       WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
       WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
-      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
-    # TODO: healthcheck "traefik healthcheck"
-    # healthcheck:
-    #   test: traefik healthcheck
-    #   interval: 10s
-    #   start_period: 2m
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
