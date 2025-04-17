@@ -7,6 +7,7 @@ To interact with the WDQS frontend, navigate to the URL corresponding to the por
 When writing queries using the frontend interface, click "Code" to view the corresponding URL.
 
 For general instructions on using WDQS, building SPARQL queries, and additional resources, see:
+
 - [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
 - [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
@@ -43,11 +44,11 @@ If QuickStatements and Wikibase are running on the same IP address, a reverse pr
 
 Variables in **bold** are required.
 
-| Variable                  | Default                      | Description                    |
-| ------------------------- | ---------------------------- | -------------------------------|
-| `LANGUAGE`                | "en"                         | Language to use in the UI      |
-| **`WDQS_PUBLIC_URL`**     |                              | Hostname of the WDQS host      |
-| **`WIKIBASE_PUBLIC_URL`** |                              | Hostname of the Wikibase host  |
+| Variable                  | Default | Description                   |
+| ------------------------- | ------- | ----------------------------- |
+| `LANGUAGE`                | "en"    | Language to use in the UI     |
+| **`WDQS_PUBLIC_URL`**     |         | Hostname of the WDQS host     |
+| **`WIKIBASE_PUBLIC_URL`** |         | Hostname of the Wikibase host |
 
 ## Example
 
@@ -197,22 +198,21 @@ This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/
 
 We provide several tags that relate to the versioning semantics.
 
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| Tag | Example | Description |
+| --- | --- | --- |
+| _MAJOR_ | 3 | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| _MAJOR_._MINOR_ | 3.1 | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates. |
+| _MAJOR_._MINOR_._PATCH_ | 3.1.7 | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes. |
+| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility. |
 
 ## Internal filesystem layout
 
 Hooking into the internal filesystem can extend the functionality of this image.
 
-| File                                         | Description                                |
-| -------------------------------------------- | ------------------------------------------ |
-| `/config/wdqs-frontend-config.json`          | Configuration file for the WDQS frontend.  |
-| `/templates/nginx-default.conf.template`     | Nginx config template.                     |
-
+| File | Description |
+| --- | --- |
+| `/config/wdqs-frontend-config.json` | Configuration file for the WDQS frontend. |
+| `/templates/nginx-default.conf.template` | Nginx config template. |
 
 ## Source
 
