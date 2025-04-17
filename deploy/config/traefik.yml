@@ -3,14 +3,14 @@
 # TODO: disable API before merge
 api:
   dashboard: true
-  insecure: true  # Set to false in production
+  insecure: true # Set to false in production
 
 # TODO: disable debug log before merge
 log:
-  level: "DEBUG"
+  level: DEBUG
 
 accessLog:
-  format: "common"
+  format: common
 
 entryPoints:
   web:
@@ -18,23 +18,23 @@ entryPoints:
     http:
       redirections:
         entryPoint:
-          to: "websecure"
-          scheme: "https"
+          to: websecure
+          scheme: https
           permanent: true
   websecure:
     address: ":443"
     http:
       tls:
-        certResolver: "letsencrypt"
+        certResolver: letsencrypt
 
 certificatesResolvers:
   letsencrypt:
     acme:
       caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
-      storage: "/letsencrypt/acme.json"
+      storage: /letsencrypt/acme.json
       httpChallenge:
-        entryPoint: "web"
+        entryPoint: web
 
 providers:
   file:
-    filename: "/etc/traefik/dynamic.yml"
+    filename: /etc/traefik/dynamic.yml
