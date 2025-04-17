@@ -8,8 +8,7 @@ This image contains Quickstatements and the required Magnustools library. It is 
 
 ## Requirements
 
-- MediaWiki/Wikibase instance with
-  [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) enabled
+- MediaWiki/Wikibase instance with [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) enabled
 - QuickStatements set up as an OAuth consumer on MediaWiki
 - Reverse proxy (if Wikibase and QuickStatements are running on the same host)
 - DNS domain name resolution for QuickStatements and Wikibase
@@ -47,19 +46,19 @@ In order to authorize QuickStatements against Wikibase via OAuth, both services 
 
 Variables in **bold** are required.
 
-| Variable                         | Default     | Description                                                                                            |
-| -------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
-| **`WIKIBASE_PUBLIC_URL`**        | undefined   | Host and port of Wikibase as seen by the user's browser (required)                                     |
-| **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined   | Host and port of QuickStatements as seen by the user's browser (required)                              |
-| **`OAUTH_CONSUMER_KEY`**         | undefined   | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
-| **`OAUTH_CONSUMER_SECRET`**      | undefined   | OAuth consumer secret (from MediaWiki) , required on initial setup, stored in `/quickstatements/data`. |
-| `WB_ITEM_NAMESPACE`              | 120         | Wikibase Item namespace                                                                                |
-| `WB_PROPERTY_NAMESPACE`          | 122         | Wikibase Property namespace                                                                            |
-| `WB_ITEM_PREFIX`                 | "Item:"     | Wikibase Item prefix                                                                                   |
-| `WB_PROPERTY_PREFIX`             | "Property:" | Wikibase Property prefix                                                                               |
-| `PHP_TIMEZONE`                   | "UTC"       | setting of php.ini date.timezone                                                                       |
-| `LANGUAGE_CODE`                  | "en"        | Site language                                                                                          |
-| `SITENAME`                       | "wikibase"  | Site name                                                                                              |
+| Variable | Default | Description |
+| --- | --- | --- |
+| **`WIKIBASE_PUBLIC_URL`** | undefined | Host and port of Wikibase as seen by the user's browser (required) |
+| **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined | Host and port of QuickStatements as seen by the user's browser (required) |
+| **`OAUTH_CONSUMER_KEY`** | undefined | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`. |
+| **`OAUTH_CONSUMER_SECRET`** | undefined | OAuth consumer secret (from MediaWiki) , required on initial setup, stored in `/quickstatements/data`. |
+| `WB_ITEM_NAMESPACE` | 120 | Wikibase Item namespace |
+| `WB_PROPERTY_NAMESPACE` | 122 | Wikibase Property namespace |
+| `WB_ITEM_PREFIX` | "Item:" | Wikibase Item prefix |
+| `WB_PROPERTY_PREFIX` | "Property:" | Wikibase Property prefix |
+| `PHP_TIMEZONE` | "UTC" | setting of php.ini date.timezone |
+| `LANGUAGE_CODE` | "en" | Site language |
+| `SITENAME` | "wikibase" | Site name |
 
 ## Example
 
@@ -190,12 +189,12 @@ This image uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 We provide several tags that relate to the versioning semantics.
 
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| Tag | Example | Description |
+| --- | --- | --- |
+| _MAJOR_ | 3 | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
+| _MAJOR_._MINOR_ | 3.1 | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates. |
+| _MAJOR_._MINOR_._PATCH_ | 3.1.7 | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes. |
+| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility. |
 
 ## Known Issues
 
@@ -219,11 +218,11 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | `/var/www/html/quickstatements/public_html` | The Apache root folder         |
 | `/var/www/html/magnustools`                 | Base magnustools directory     |
 
-| File                     | Description                                                                                                                                        |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` in `entrypoint.sh`)              |
-| `/templates/oauth.ini`   | Template for QuickStatements' oauth.ini (substituted to `/quickstatements/data/oauth.ini` in `entrypoint.sh`)                                      |
-| `/templates/php.ini`     | PHP config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` in `entrypoint.sh` ) |
+| File | Description |
+| --- | --- |
+| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` in `entrypoint.sh`) |
+| `/templates/oauth.ini` | Template for QuickStatements' oauth.ini (substituted to `/quickstatements/data/oauth.ini` in `entrypoint.sh`) |
+| `/templates/php.ini` | PHP config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` in `entrypoint.sh` ) |
 
 ## Source
 
