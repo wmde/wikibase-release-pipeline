@@ -158,6 +158,7 @@ services:
     image: traefik:3
     command:
       # defining these values here, because we cannot use env vars in the static config
+      # https://doc.traefik.io/traefik/providers/file/#go-templating
       - "--entrypoints.websecure.http.tls.domains[0].main=${WIKIBASE_PUBLIC_HOST}"
       - "--entrypoints.websecure.http.tls.domains[1].main=${WDQS_PUBLIC_HOST}"
       - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
