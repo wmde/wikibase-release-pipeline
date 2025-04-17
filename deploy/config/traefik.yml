@@ -1,4 +1,17 @@
-api: {}
+# traefik static configuration
+
+# TODO: disable API before merge
+api:
+  dashboard: true
+  insecure: true  # Set to false in production
+
+# TODO: disable debug log before merge
+log:
+  level: "DEBUG"
+
+accessLog:
+  format: "common"
+
 entryPoints:
   web:
     address: ":80"
@@ -13,78 +26,15 @@ entryPoints:
     http:
       tls:
         certResolver: "letsencrypt"
-        domains:
-          - main: "{{env WIKIBASE_PUBLIC_HOST}}"
-          - main: "{{env WDQS_PUBLIC_HOST}}"
-
 
 certificatesResolvers:
   letsencrypt:
     acme:
-      # TODO: how to?
-      # caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
-      email: "{{env MW_ADMIN_EMAIL}}"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       storage: "/letsencrypt/acme.json"
       httpChallenge:
         entryPoint: "web"
 
 providers:
   file:
-    filename: "/etc/traefik/services.yml"
-
-http:
-  routers:
-    dashboard:
-      rule: Host(`wikibase.example`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
-      service: api@internal
-
-    wikibase-router:
-      rule: "Host(`{{env WIKIBASE_PUBLIC_HOST}}`) && !PathPrefix(`/tools`)"
-      service: "wikibase"
-      entryPoints: ["websecure"]
-
-    wdqs-router:
-      rule: "Host(`{{env WDQS_PUBLIC_HOST}}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
-      service: "wdqs"
-      entryPoints: ["websecure"]
-      middlewares: ["wdqs-prefix", "wdqs-headers", "wdqs-cors-headers", "wdqs-rate-limit"]
-
-    wdqs-frontend-router:
-      rule: "Host(`{{env WDQS_PUBLIC_HOST}}`) && !PathPrefix(`/sparql`)"
-      service: "wdqs-frontend"
-      entryPoints: ["websecure"]
-
-    quickstatements-router:
-      rule: "Host(`{{env WIKIBASE_PUBLIC_HOST}}`) && PathPrefix(`/tools/quickstatements`)"
-      service: "quickstatements"
-      entryPoints: ["websecure"]
-      middlewares: ["quickstatements-redirectregex", "quickstatements-stripprefix"]
-
-  middlewares:
-    wdqs-prefix:
-      addPrefix:
-        prefix: "/bigdata/namespace/wdq/"
-    wdqs-headers:
-      headers:
-        accessControlAllowMethods: "GET,OPTIONS,POST"
-        customResponseHeaders:
-          VARY: "Accept"
-        customRequestHeaders:
-          X-BIGDATA-READ-ONLY: "yes"
-          X-BIGDATA-MAX-QUERY-MILLIS: "300000"
-    wdqs-cors-headers:
-      headers:
-        accessControlAllowHeaders: "*"
-    wdqs-rate-limit:
-      rateLimit:
-        burst: 30
-        average: 60
-        period: "1m"
-    quickstatements-redirectregex:
-      redirectRegex:
-        regex: "/tools/quickstatements$"
-        replacement: "/tools/quickstatements/"
-        permanent: true
-    quickstatements-stripprefix:
-      stripPrefix:
-        prefixes: ["/tools/quickstatements"]
+    filename: "/etc/traefik/dynamic.yml"
