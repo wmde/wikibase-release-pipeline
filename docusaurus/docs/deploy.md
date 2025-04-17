@@ -93,8 +93,7 @@ Most values set in `.env` are written into the respective containers after you r
 
 If you want to reset the configuration while retaining your existing data:
 
-1. Make any needed changes to the values in `.env`.
-   NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
+1. Make any needed changes to the values in `.env`. NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
 2. Remove your `LocalSettings.php` file from the `deploy/config` directory. (Create a backup if you made any changes.)
 3. Remove and re-create containers:
 
@@ -259,11 +258,12 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 #### Apply any migrations for your version
 
-<details><summary><strong>WBS Deploy 3.x.x to 4.x.x</strong></summary><p>
+##### WBS Deploy 3.x.x to 4.x.x
 
 Wikibase Image switched from version 3.x.x to 4.x.x; this upgrades MediaWiki from 1.42 to 1.43. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE).
 
 Note that URLs changed with Deploy 4 to the following defaults:
+
 - https://wikibase.example MediaWiki with Wikibase extension
 - https://wikibase.example/w/rest.php MediaWiki REST API including Wikibase REST API
 - https://query.wikibase.example Front end for WDQS (Query GUI)
@@ -274,23 +274,17 @@ Note that the `wdqs-proxy` image has been removed. Routing of WDQS HTTP traffic 
 
 Note that `wdqs-frontend` environment variables changed. Read more on https://github.com/wmde/wikibase-release-pipeline/tree/main/build/wdqs-frontend#environment-variables
 
-</p></details>
-
-<details><summary><strong>WBS Deploy 2.x.x to 3.x.x</strong></summary><p>
+##### WBS Deploy 2.x.x to 3.x.x
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
 No Wikibase-specific migrations are necessary.
 
-</p></details>
-
-<details><summary><strong>WBS Deploy 1.x.x to 2.x.x</strong></summary><p>
+##### WBS Deploy 1.x.x to 2.x.x
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
 No Wikibase-specific migrations are necessary.
-
-</p></details>
 
 #### Apply updates to User Defined Extension
 
@@ -341,7 +335,7 @@ Due to the OAuth configuration for MediaWiki and QuickStatements, along with the
 
 However, for testing purposes WBS Deploy can be run locally or on a server that is not accessible to the Internet, with the following caveats:
 
-- In this configuration, you will still need to set `WIKIBASE_PUBLIC_HOST` to hostnames that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup. 
+- In this configuration, you will still need to set `WIKIBASE_PUBLIC_HOST` to hostnames that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup.
 - Any SSL certificates generated in this setup will be invalid, though you can optionally bypass the warning about these invalid certificates when first loading the Wikibase site in the browser.
 - QuickStatements will not function in this setup, as OAuth will not authorize against a local, non-Internet-accessible Wikibase installation.
 
