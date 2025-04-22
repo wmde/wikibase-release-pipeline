@@ -1,3 +1,7 @@
+---
+sidebar_label: Wikibase Suite Elasticsearch Image
+---
+
 # Wikibase Suite Elasticsearch Image
 
 [Elasticsearch](https://en.wikipedia.org/wiki/Elasticsearch) is a search engine based on the Lucene library.

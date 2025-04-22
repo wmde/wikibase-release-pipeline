@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+sidebar_label: Wikibase Suite Deploy
 ---
 
 # Wikibase Suite Deploy

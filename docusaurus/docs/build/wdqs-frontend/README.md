@@ -1,3 +1,7 @@
+---
+sidebar_label: Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
+---
+
 ## Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).

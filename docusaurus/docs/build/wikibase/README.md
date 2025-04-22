@@ -1,3 +1,7 @@
+---
+sidebar_label: Wikibase Suite Wikibase Image
+---
+
 # Wikibase Suite Wikibase Image
 
 [Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository.
