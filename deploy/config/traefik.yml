@@ -1,0 +1,85 @@
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure"
+          scheme: "https"
+          permanent: true
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: "letsencrypt"
+        domains:
+          - main: "${WIKIBASE_PUBLIC_HOST}"
+          - main: "${WDQS_PUBLIC_HOST}"
+
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      # TODO: how to?
+      # caserver: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      email: "${MW_ADMIN_EMAIL}"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: "web"
+
+providers:
+  file:
+    filename: "/etc/traefik/services.yml"
+
+http:
+  routers:
+    wikibase-router:
+      rule: "Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
+      service: "wikibase"
+      entryPoints: ["websecure"]
+
+    wdqs-router:
+      rule: "Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
+      service: "wdqs"
+      entryPoints: ["websecure"]
+      middlewares: ["wdqs-prefix", "wdqs-headers", "wdqs-cors-headers", "wdqs-rate-limit"]
+
+    wdqs-frontend-router:
+      rule: "Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
+      service: "wdqs-frontend"
+      entryPoints: ["websecure"]
+
+    quickstatements-router:
+      rule: "Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
+      service: "quickstatements"
+      entryPoints: ["websecure"]
+      middlewares: ["quickstatements-redirectregex", "quickstatements-stripprefix"]
+
+  middlewares:
+    wdqs-prefix:
+      addPrefix:
+        prefix: "/bigdata/namespace/wdq/"
+    wdqs-headers:
+      headers:
+        accessControlAllowMethods: "GET,OPTIONS,POST"
+        customResponseHeaders:
+          VARY: "Accept"
+        customRequestHeaders:
+          X-BIGDATA-READ-ONLY: "yes"
+          X-BIGDATA-MAX-QUERY-MILLIS: "300000"
+    wdqs-cors-headers:
+      headers:
+        accessControlAllowHeaders: "*"
+    wdqs-rate-limit:
+      rateLimit:
+        burst: 30
+        average: 60
+        period: "1m"
+    quickstatements-redirectregex:
+      redirectRegex:
+        regex: "/tools/quickstatements$"
+        replacement: "/tools/quickstatements/"
+        permanent: true
+    quickstatements-stripprefix:
+      stripPrefix:
+        prefixes: ["/tools/quickstatements"]

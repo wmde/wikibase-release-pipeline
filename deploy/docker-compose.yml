@@ -195,38 +195,19 @@ services:
   # --------------------------------------------------
 
   # This is the reverse proxy and SSL service
+  #
   traefik:
     image: traefik:3
     command:
-      # Basic setup
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      # http endpoint
-      - "--entrypoints.web.address=:80"
-      # https endpoint
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asdefault"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      # http to https redirect
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # ACME SSL certificate generation
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-
-      # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--providers.file.filename=/etc/traefik/traefik.yml"
     restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt-data:/letsencrypt
-    privileged: true
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./services.yml:/etc/traefik/services.yml:ro"
+      - "traefik-letsencrypt-data:/letsencrypt"
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
