@@ -25,7 +25,7 @@ WBS Deploy consists of the following services:
 #### Hardware
 
 - Network connection with a public IP address
-- AMD64 architecture
+- x86_64 (AMD64) architecture
 - 8 GB RAM
 - 4 GB free disk space
 
