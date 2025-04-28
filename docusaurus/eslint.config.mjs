@@ -6,35 +6,35 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default defineConfig([
+export default defineConfig( [
 	{
-		files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+		files: [ '**/*.{js,mjs,cjs,ts,jsx,tsx}' ],
 		plugins: { js },
-		extends: ['js/recommended']
+		extends: [ 'js/recommended' ]
 	},
 	{
-		files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+		files: [ '**/*.{js,mjs,cjs,ts,jsx,tsx}' ],
 		languageOptions: { globals: globals.browser }
 	},
 	tseslint.configs.recommended,
 	// pluginReact.configs.flat.recommended,
 	{
-		files: ['**/*.json'],
+		files: [ '**/*.json' ],
 		plugins: { json },
 		language: 'json/json',
-		extends: ['json/recommended']
+		extends: [ 'json/recommended' ]
 	},
 	{
-		files: ['**/*.md'],
+		files: [ '**/*.md' ],
 		plugins: { markdown },
 		language: 'markdown/commonmark',
-		extends: ['markdown/recommended']
+		extends: [ 'markdown/recommended' ]
 	},
 	{
-		files: ['**/*.css'],
+		files: [ '**/*.css' ],
 		plugins: { css },
 		language: 'css/css',
-		extends: ['css/recommended']
+		extends: [ 'css/recommended' ]
 	},
-	{ ignores: ['.docusaurus/*', 'package-lock.json'] }
-]);
+	{ ignores: [ '.docusaurus/*', 'package-lock.json' ] }
+] );

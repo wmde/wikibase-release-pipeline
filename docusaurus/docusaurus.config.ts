@@ -26,7 +26,7 @@ const config: Config = {
 	// Even if you don't use internationalization, you can use this field to set
 	// useful metadata like html lang. For example, if your site is Chinese, you
 	// may want to replace "en" with "zh-Hans".
-	i18n: { defaultLocale: 'en', locales: ['en'] },
+	i18n: { defaultLocale: 'en', locales: [ 'en' ] },
 
 	presets: [
 		[
@@ -86,7 +86,7 @@ const config: Config = {
 			links: [
 				{
 					title: 'Docs',
-					items: [{ label: 'Tutorial', to: '/docs/intro' }]
+					items: [ { label: 'Tutorial', to: '/docs/intro' } ]
 				}
 				// {
 				// 	title: 'Community',
@@ -110,7 +110,7 @@ const config: Config = {
 				// 	]
 				// }
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} WMDE. Built with Docusaurus.`
+			copyright: `Copyright © ${ new Date().getFullYear() } WMDE. Built with Docusaurus.`
 		},
 		prism: { theme: prismThemes.github, darkTheme: prismThemes.dracula }
 	} satisfies Preset.ThemeConfig
