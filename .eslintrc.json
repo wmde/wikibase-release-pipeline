@@ -59,6 +59,12 @@
 				"yml/no-empty-mapping-value": "off",
 				"yml/plain-scalar": "off"
 			}
+		},
+		{
+			"files": ["docusaurus/*"],
+			"rules": {
+				"n/no-missing-import": "off"
+			}
 		}
 	]
 }
