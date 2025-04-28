@@ -61,7 +61,7 @@
 			}
 		},
 		{
-			"files": [ "docusaurus/*", "docusaurus/**/*" ],
+			"files": [ "docs/*", "docs/**/*" ],
 			"rules": {
 				"n/no-missing-import": "off",
 				"no-tabs": "off"
