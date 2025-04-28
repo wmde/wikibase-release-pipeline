@@ -86,9 +86,9 @@ const config: Config = {
 			links: [
 				{
 					title: 'Docs',
-					items: [ 
+					items: [
 						// { label: 'Tutorial', to: '/docs/intro' }
-					 ]
+					]
 				}
 				// {
 				// 	title: 'Community',
