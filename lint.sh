@@ -78,8 +78,8 @@ if $fix; then
 else
   if $prettier; then
     echo "ℹ️ Running Prettier (without --write) on Markdown and YAML files"
-      prettier "$path/**/*.md" --log-level error --config .prettierrc.json
-      prettier "$path/**/*.{yml,yaml}" --log-level error --config .prettierrc.json
+      prettier "$path/**/*.md" --log-level error --config .prettierrc.json --check
+      prettier "$path/**/*.{yml,yaml}" --log-level error --config .prettierrc.json --check
   fi
 
   echo "ℹ️ Running ESLint (without --fix)"
