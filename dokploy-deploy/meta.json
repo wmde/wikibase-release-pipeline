@@ -1,0 +1,15 @@
+{
+  "id": "wbs",
+  "name": "Wikibase Suite",
+  "version": "4.0.1",
+  "description": "Wikibase Suite is a packaging of MediaWiki with the Wikibase extensions and adjacent services.",
+  "logo": "grafana.svg",
+  "links": {
+    "github": "https://github.com/grafana/grafana",
+    "website": "https://grafana.com/",
+    "docs": "https://grafana.com/docs/"
+  },
+  "tags": [
+    "monitoring"
+  ]
+}
