@@ -20,6 +20,7 @@ services:
       - ./config:/config
       - ./config/extensions:/var/www/html/extensions/extensions
       - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
+      - ./config/WikibaseManifest.php:/var/www/html/LocalSettings.d/33_WikibaseManifest.php
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -33,6 +34,7 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}
 
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
@@ -48,6 +50,8 @@ services:
     restart: unless-stopped
     volumes_from:
       - wikibase
+    environment:
+      JOBRUNNER: true
 
   mysql:
     image: mariadb:10.11
