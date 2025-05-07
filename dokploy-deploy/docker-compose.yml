@@ -14,9 +14,9 @@ services:
         condition: service_healthy
     restart: unless-stopped
     volumes:
-      - ./config:/config
-      - ./config/extensions:/var/www/html/extensions/extensions
-      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
+      - ../files/config:/config
+      - ../files/config/extensions:/var/www/html/extensions/extensions
+      - ../files/config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -123,7 +123,7 @@ services:
     image: wikibase/wdqs-frontend:2
     restart: unless-stopped
     volumes:
-      - ./config:/config
+      - ../files/config:/config
     environment:
       WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
