@@ -44,11 +44,11 @@
 	"nx": {
 		"targets": {
 			"build": {
-        "command": "cd {projectName} && pnpm docusaurus build"
-		  },
+				"command": "cd {projectName} && pnpm docusaurus build"
+			},
 			"dev": {
-        "command": "cd {projectName} && pnpm docusaurus start --host 0.0.0.0"
-		  }
+				"command": "cd {projectName} && pnpm docusaurus start --host 0.0.0.0"
+			}
 		}
 	}
 }
