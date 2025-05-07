@@ -113,6 +113,17 @@ There are also a few special options, useful when writing tests or in setting up
 
 WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .
 
+
+## Building and developing docs
+
+```sh
+# run a docusaurus dev server
+./nx run docs:dev
+
+# build static docs into docs/build
+./nx run docs:build
+```
+
 ## Variables for testing some other instance
 
 In order to test your own instances of the services, make sure to change the following environment variables to point at the services that should be tested:
