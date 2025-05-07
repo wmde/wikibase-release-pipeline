@@ -16,7 +16,7 @@ services:
       - 9229:9229
       - 4211:4211
     volumes:
-      - .:/workspace
+      - .:/workspace:z
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - test/test-runner.env
