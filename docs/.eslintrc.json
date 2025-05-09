@@ -1,0 +1,8 @@
+{
+	"overrides": [
+		{
+			"files": ["docusaurus.config.ts", "sidebars.ts", "src/pages/index.tsx"],
+			"rules": { "n/no-missing-import": "off", "no-tabs": "off" }
+		}
+	]
+}

@@ -59,13 +59,6 @@
 				"yml/no-empty-mapping-value": "off",
 				"yml/plain-scalar": "off"
 			}
-		},
-		{
-			"files": [ "docs/*", "docs/**/*" ],
-			"rules": {
-				"n/no-missing-import": "off",
-				"no-tabs": "off"
-			}
 		}
 	]
 }
