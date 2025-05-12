@@ -17,7 +17,7 @@ services:
       - 4211:4211
       - 3000:3000
     volumes:
-      - .:/workspace:z
+      - .:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - test/test-runner.env
