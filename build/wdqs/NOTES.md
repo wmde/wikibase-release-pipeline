@@ -1,7 +1,3 @@
----
-sidebar_label: Development Notes
----
-
 ### Development
 
 New releases available for image creation can be found on Archiva: https://archiva.wikimedia.org/repository/releases/org/wikidata/query/rdf/service/
