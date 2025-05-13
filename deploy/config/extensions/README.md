@@ -1,7 +1,3 @@
----
-sidebar_label: User-Defined MediaWiki Extensions
----
-
 # Wikibase Suite User defined MediaWiki Extensions
 
 This is a place for additional MediaWiki/Wikibase extensions. In order to load additional extensions, three things need to be done:

@@ -12,7 +12,6 @@ deploy/log
 deploy/config/*.ini
 deploy/config/*.json
 deploy/config/*.php
-deploy/config/extensions
 
 test/log
 test/mwlog
