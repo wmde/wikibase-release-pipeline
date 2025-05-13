@@ -127,7 +127,7 @@ This configuration file allows you to control `wdqs-frontend`, the GUI for the q
 
 ### User-defined extensions
 
-It is possible to add extensions to Wikibase Suite Deploy's MediaWiki. To learn how this works, consult the [README in `deploy/config/extensions`](./config/extensions/README.md).
+It is possible to add extensions to Wikibase Suite Deploy's MediaWiki. To learn how this works, consult the [README in `deploy/config/extensions`](./extensions/README.md).
 
 ### docker-compose.yml
 
@@ -211,7 +211,7 @@ docker compose up
 
 > 💡 In order to automatically update images on every start, you can also use `docker compose up --pull always` to start your WBS Deploy stack.
 
-If you installed User Defined Extensions in `config/extensions`, they might have updates too. Make sure to update them regularly too. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
+If you installed User Defined Extensions in `config/extensions`, they might have updates too. Make sure to update them regularly too. See [User Defined Extension Docs](./extensions/README.md) for more information.
 
 ### Minor and patch updates for WBS Deploy
 
@@ -293,7 +293,7 @@ No Wikibase-specific migrations are necessary.
 
 #### Apply updates to User Defined Extension
 
-If you installed User Defined Extensions in `config/extensions`, they might require updates in order to be compatible with the new MediaWiki version too. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
+If you installed User Defined Extensions in `config/extensions`, they might require updates in order to be compatible with the new MediaWiki version too. See [User Defined Extension Docs](./extensions/README.md) for more information.
 
 #### Bring your instance back up
 
