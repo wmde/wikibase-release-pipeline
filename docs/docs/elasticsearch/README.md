@@ -1,5 +1,5 @@
 ---
-sidebar_label: Wikibase Suite Elasticsearch Image
+sidebar_label: Elasticsearch Image
 ---
 
 # Wikibase Suite Elasticsearch Image

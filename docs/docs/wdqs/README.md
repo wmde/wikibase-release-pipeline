@@ -1,5 +1,5 @@
 ---
-sidebar_label: Wikibase Suite Wikidata Query Service (wdqs) Image
+sidebar_label: Wikidata Query Service (wdqs) Image
 ---
 
 # Wikibase Suite Wikidata Query Service (wdqs) image

@@ -1,5 +1,5 @@
 ---
-sidebar_label: Wikibase Suite Wikibase Image
+sidebar_label: Wikibase Image
 ---
 
 # Wikibase Suite Wikibase Image

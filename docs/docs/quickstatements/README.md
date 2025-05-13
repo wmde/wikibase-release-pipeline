@@ -1,3 +1,7 @@
+---
+sidebar_label: QuickStatements Image
+---
+
 # Wikibase Suite QuickStatements Image
 
 [QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
