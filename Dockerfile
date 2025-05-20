@@ -13,7 +13,11 @@ RUN apt-get update && \
         git \
         curl \
         jq \
-        python3-pip \
+    	ghostscript imagemagick xpdf-utils \
+    	exiv2 libtiff-tools \
+    	ffmpeg \
+    	libvips-tools \
+    	python3-pip \
         python3-venv \
         && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/*
