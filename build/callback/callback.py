@@ -3,10 +3,8 @@ import requests
 import json
 import re
 
-# GraphQL endpoint
 GRAPHQL_URL = "https://wikibase-metadata.toolforge.org/graphql"
 
-# GraphQL mutation
 MUTATION = """
 mutation AddWikibaseMutation($wikibaseName: String!, $baseUrl: String!) {
   addWikibase(wikibaseInput: {wikibaseName: $wikibaseName, urls: {baseUrl: $baseUrl}}) {
@@ -30,10 +28,10 @@ def main():
         print("Error: BASE_URL environment variable not set.")
         return
     if re.search(r"\.example$", base_url):
-        print("Error: BASE_URL environment variable set to example domain.")
+        print("Error: BASE_URL environment variable set to invalid .example domain.")
         return
     if re.search(r"\.localhost$", base_url):
-        print("Error: BASE_URL environment variable set to localhost domain.")
+        print("Error: BASE_URL environment variable set to invalid .localhost domain.")
         return
 
     variables = {
