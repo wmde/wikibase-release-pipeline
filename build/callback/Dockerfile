@@ -1,4 +1,5 @@
-FROM python:3.13-slim
+ARG PYTHON_IMAGE_URL
+FROM ${PYTHON_IMAGE_URL} as python
 
 WORKDIR /app
 COPY pyproject.toml .

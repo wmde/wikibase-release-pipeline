@@ -1,0 +1,11 @@
+{
+	"name": "callback",
+	"version": "0.0.1",
+	"nx": {
+		"targets": {
+			"lint": {},
+			"build": {},
+			"nx-release-publish": {}
+		}
+	}
+}
