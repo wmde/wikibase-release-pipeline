@@ -243,10 +243,8 @@ services:
         if [ "$METADATA_CALLBACK" = "false" ]; then
           echo "METADATA_CALLBACK not enabled. Exiting."
           exit 0 # Exit successfully if not enabled
-        else
-          echo "Starting" $@
-          exec "$@"
         fi
+        exec python callback.py
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
