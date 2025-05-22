@@ -1,0 +1,9 @@
+[project]
+name = "wikibase-suite-callback"
+version = "0.1.0"
+description = "Register the local Wikibase Suite Deploy Instance at wikibase-metadata"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "requests>=2.32.3",
+]
