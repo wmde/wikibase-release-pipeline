@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import re
 
 # GraphQL endpoint
 GRAPHQL_URL = "https://wikibase-metadata.toolforge.org/graphql"
@@ -28,6 +29,12 @@ def main():
     if not base_url:
         print("Error: BASE_URL environment variable not set.")
         return
+    if re.search(r"\.example$", base_url):
+        print("Error: BASE_URL environment variable set to example domain.")
+        return
+    if re.search(r"\.localhost$", base_url):
+        print("Error: BASE_URL environment variable set to localhost domain.")
+        return
 
     variables = {
         "wikibaseName": wikibase_name,
@@ -44,12 +51,13 @@ def main():
     }
 
     try:
+        print(f"Trying to register at {GRAPHQL_URL} with {wikibase_name},{base_url}...")
         response = requests.post(GRAPHQL_URL, headers=headers, data=json.dumps(payload))
         response.raise_for_status()  # Raise an exception for HTTP errors
-        print("Mutation successful:")
+        print("Request successful:")
         print(response.json())
     except requests.exceptions.RequestException as e:
-        print(f"Error sending GraphQL request: {e}")
+        print(f"Error sending request: {e}")
         if hasattr(e, 'response') and e.response is not None:
             print(f"Response content: {e.response.text}")
 
