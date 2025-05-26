@@ -13,15 +13,7 @@ RUN apt-get update && \
         git \
         curl \
         jq \
-# ghostscript imagemagick xpdf-utils are dependencies for Extension:PdfHandler:
-    	ghostscript imagemagick xpdf-utils \
-# exiv2 libtiff-tools are dependecies for Extension:PagedTiffHandler:
-    	exiv2 libtiff-tools \
-# ffmpeg is a dependency for Extension:TimedMediaHandler:
-    	ffmpeg \
-# libvips-tools is dependency for Extension:VipsScaler:     	
-    	libvips-tools \
-    	python3-pip \
+        python3-pip \
         python3-venv \
         && ln -sf /usr/bin/python3 /usr/bin/python \
         && rm -rf /var/lib/apt/lists/*
