@@ -13,13 +13,10 @@ services:
       elasticsearch:
         condition: service_healthy
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wikibase-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && !PathPrefix(`/tools`)"
     volumes:
-      - ./config:/config
-      - ./config/extensions:/var/www/html/extensions/extensions
-      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
+      - ./config:/config:z
+      - ./config/extensions:/var/www/html/extensions/extensions:z
+      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -105,33 +102,6 @@ services:
       test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
       interval: 10s
       start_period: 2m
-    labels:
-      - "traefik.enable=true"
-      # Define router rules for WDQS service, including limits to HTTP methods
-      - "traefik.http.routers.wdqs-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && PathPrefix(`/sparql`) && (Method(`GET`) || Method(`OPTIONS`) || Method(`POST`))"
-      # Add prefix to path before forwarding to upstream service
-      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
-      # Announce limited HTTP methods in preflight requests
-      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
-      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
-      # Announce Accept header can lead to varying responses
-      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
-      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
-      # WDQS/blazegraph config headers
-      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
-      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
-      # https://github.com/blazegraph/database/wiki/REST_API#query
-      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
-      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect
-      # Allow unauthenticated requests from any origin
-      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
-      # Define middleware for rate limiting
-      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
-      # Apply middlewares to the wdqs router
-      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
 
   wdqs-updater:
     image: wikibase/wdqs:2
@@ -154,10 +124,7 @@ services:
     image: wikibase/wdqs-frontend:2
     restart: unless-stopped
     volumes:
-      - ./config:/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend-router.rule=Host(`${WDQS_PUBLIC_HOST}`) && !PathPrefix(`/sparql`)"
+      - ./config:/config:z
     environment:
       WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
@@ -174,14 +141,6 @@ services:
     restart: unless-stopped
     volumes:
       - quickstatements-data:/quickstatements/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements-router.rule=Host(`${WIKIBASE_PUBLIC_HOST}`) && PathPrefix(`/tools/quickstatements`)"
-      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.regex=/tools/quickstatements$"
-      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.replacement=/tools/quickstatements/"
-      - "traefik.http.middlewares.quickstatements-redirectregex.redirectregex.permanent=true"
-      - "traefik.http.middlewares.quickstatements-stripprefix.stripprefix.prefixes=/tools/quickstatements"
-      - "traefik.http.routers.quickstatements-router.middlewares=quickstatements-redirectregex,quickstatements-stripprefix"
     environment:
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
@@ -198,9 +157,9 @@ services:
   traefik:
     image: traefik:3
     command:
-      # Basic setup
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      # traefik static configuration via command line
+      # enable accesslog
+      - "--accesslog.format=common"
       # http endpoint
       - "--entrypoints.web.address=:80"
       # https endpoint
@@ -216,16 +175,26 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-
+      # additionial traefik dynamic configuration via config file
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
       # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # Uncomment the following line for debugging, also expose port 8080 below
+      # - "--api.dashboard=true"
+      # - "--api.insecure=true"
+      # - "--log.level=DEBUG"
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
+      # traefik dashboard
+      # - 8080:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
       - traefik-letsencrypt-data:/letsencrypt
+    environment:
+      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
