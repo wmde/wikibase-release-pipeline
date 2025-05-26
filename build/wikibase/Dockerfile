@@ -20,6 +20,14 @@ RUN apt-get update; \
         python3 \
         # Required for Scribunto
         lua5.1 \
+	# ghostscript imagemagick xpdf-utils are dependencies for Extension:PdfHandler:
+    	ghostscript imagemagick xpdf-utils \
+	# exiv2 libtiff-tools are dependecies for Extension:PagedTiffHandler:
+    	exiv2 libtiff-tools \
+	# ffmpeg is a dependency for Extension:TimedMediaHandler:
+    	ffmpeg \
+	# libvips-tools is dependency for Extension:VipsScaler:     	
+    	libvips-tools \
         ; \
     rm -rf /var/lib/apt/lists/*
 
