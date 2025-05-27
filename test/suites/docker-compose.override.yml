@@ -74,6 +74,12 @@ services:
           - ${WIKIBASE_PUBLIC_HOST}
           - ${WDQS_PUBLIC_HOST}
 
+  callback:
+    entrypoint:
+      # TODO: find a better way to make the finished container not fail the full stack
+      - sleep
+      - infinity
+
 volumes:
   wikibase-config:
   wdqs-frontend-config:
