@@ -1,4 +1,7 @@
 ARG PYTHON_IMAGE_URL
+
+# ###########################################################################
+# hadolint ignore=DL3006
 FROM ${PYTHON_IMAGE_URL} as python
 
 WORKDIR /app
