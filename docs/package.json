@@ -1,0 +1,49 @@
+{
+	"name": "docs",
+	"version": "0.0.0",
+	"dependencies": {
+		"@docusaurus/core": "^3.7.0",
+		"@docusaurus/preset-classic": "^3.7.0",
+		"@mdx-js/react": "^3.1.0",
+		"clsx": "^2.1.1",
+		"prism-react-renderer": "^2.4.1",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@docusaurus/module-type-aliases": "^3.7.0",
+		"@docusaurus/tsconfig": "^3.7.0",
+		"@docusaurus/types": "^3.7.0",
+		"eslint": "^8.57.0",
+		"globals": "^16.1.0",
+		"prettier": "^3.3.3",
+		"prettier-plugin-organize-imports": "^4.0.0",
+		"typescript": "5.4.5",
+		"typescript-eslint": "^7.18.0"
+	},
+	"browserslist": {
+		"production": [
+			">0.5%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 3 chrome version",
+			"last 3 firefox version",
+			"last 5 safari version"
+		]
+	},
+	"engines": {
+		"node": ">=18.0"
+	},
+	"nx": {
+		"targets": {
+			"build": {
+				"command": "cd {projectName} && pnpm docusaurus build"
+			},
+			"dev": {
+				"command": "cd {projectName} && pnpm docusaurus start --host 0.0.0.0"
+			}
+		}
+	}
+}

@@ -1,3 +1,8 @@
+---
+sidebar_position: 1
+sidebar_label: Deploy
+---
+
 # Wikibase Suite Deploy
 
 Wikibase Suite (WBS) Deploy is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). In addition to Wikibase on MediaWiki, WBS Deploy includes the Wikidata Query Service (WDQS) and its front end, along with QuickStatements, Elasticsearch and a Traefik reverse proxy with SSL termination and ACME support. The service orchestration is implemented using Docker Compose V2.
@@ -93,8 +98,7 @@ Most values set in `.env` are written into the respective containers after you r
 
 If you want to reset the configuration while retaining your existing data:
 
-1. Make any needed changes to the values in `.env`.
-   NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
+1. Make any needed changes to the values in `.env`. NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
 2. Remove your `LocalSettings.php` file from the `deploy/config` directory. (Create a backup if you made any changes.)
 3. Remove and re-create containers:
 
@@ -123,7 +127,7 @@ This configuration file allows you to control `wdqs-frontend`, the GUI for the q
 
 ### User-defined extensions
 
-It is possible to add extensions to Wikibase Suite Deploy's MediaWiki. To learn how this works, consult the [README in `deploy/config/extensions`](./config/extensions/README.md).
+It is possible to add extensions to Wikibase Suite Deploy's MediaWiki. To learn how this works, consult the [README in `deploy/config/extensions`](./extensions/README.md).
 
 ### docker-compose.yml
 
@@ -193,7 +197,7 @@ WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS Deploy 
 
 WBS Deploy always references the latest minor and patch releases of the compatible WBS images' major versions using the Docker images' major version tag. For example, WBS Deploy 2.0.1 might reference `wikibase/wikibase:3`, a tag that always points to the latest image Wikibase 3.x.x image.
 
-#### Minor and patch updates for WBS images
+### Minor and patch updates for WBS images
 
 Because WBS Deploy always references the latest minor and patch releases of compatible WBS images, non-breaking changes (including security updates) can be pulled at any time.
 
@@ -207,7 +211,7 @@ docker compose up
 
 > 💡 In order to automatically update images on every start, you can also use `docker compose up --pull always` to start your WBS Deploy stack.
 
-If you installed User Defined Extensions in `config/extensions`, they might have updates too. Make sure to update them regularly too. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
+If you installed User Defined Extensions in `config/extensions`, they might have updates too. Make sure to update them regularly too. See [User Defined Extension Docs](./extensions/README.md) for more information.
 
 ### Minor and patch updates for WBS Deploy
 
@@ -238,7 +242,7 @@ docker compose down
 
 Back up your `./config` directory as well using:
 
-```
+```bash
 cp -r ./config ./config-$(date +%Y%M%d%H%M%S)
 ```
 
@@ -259,11 +263,12 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 #### Apply any migrations for your version
 
-<details><summary><strong>WBS Deploy 3.x.x to 4.x.x</strong></summary><p>
+##### WBS Deploy 3.x.x to 4.x.x
 
 Wikibase Image switched from version 3.x.x to 4.x.x; this upgrades MediaWiki from 1.42 to 1.43. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE).
 
 Note that URLs changed with Deploy 4 to the following defaults:
+
 - https://wikibase.example MediaWiki with Wikibase extension
 - https://wikibase.example/w/rest.php MediaWiki REST API including Wikibase REST API
 - https://query.wikibase.example Front end for WDQS (Query GUI)
@@ -274,31 +279,25 @@ Note that the `wdqs-proxy` image has been removed. Routing of WDQS HTTP traffic 
 
 Note that `wdqs-frontend` environment variables changed. Read more on https://github.com/wmde/wikibase-release-pipeline/tree/main/build/wdqs-frontend#environment-variables
 
-</p></details>
-
-<details><summary><strong>WBS Deploy 2.x.x to 3.x.x</strong></summary><p>
+##### WBS Deploy 2.x.x to 3.x.x
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
 
 No Wikibase-specific migrations are necessary.
 
-</p></details>
-
-<details><summary><strong>WBS Deploy 1.x.x to 2.x.x</strong></summary><p>
+##### WBS Deploy 1.x.x to 2.x.x
 
 Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
 
 No Wikibase-specific migrations are necessary.
 
-</p></details>
-
 #### Apply updates to User Defined Extension
 
-If you installed User Defined Extensions in `config/extensions`, they might require updates in order to be compatible with the new MediaWiki version too. See [User Defined Extension Docs](./config/extensions/README.md) for more information.
+If you installed User Defined Extensions in `config/extensions`, they might require updates in order to be compatible with the new MediaWiki version too. See [User Defined Extension Docs](./extensions/README.md) for more information.
 
 #### Bring your instance back up
 
-```
+```bash
 docker compose up
 ```
 
@@ -341,7 +340,7 @@ Due to the OAuth configuration for MediaWiki and QuickStatements, along with the
 
 However, for testing purposes WBS Deploy can be run locally or on a server that is not accessible to the Internet, with the following caveats:
 
-- In this configuration, you will still need to set `WIKIBASE_PUBLIC_HOST` to hostnames that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup. 
+- In this configuration, you will still need to set `WIKIBASE_PUBLIC_HOST` to hostnames that resolve locally to the IP address of the machine running the services. Configuring locally resolving DNS entries differs depending on your environment (Linux, MacOS, Windows), so setting this up correctly will require knowledge of or additional research about your specific setup.
 - Any SSL certificates generated in this setup will be invalid, though you can optionally bypass the warning about these invalid certificates when first loading the Wikibase site in the browser.
 - QuickStatements will not function in this setup, as OAuth will not authorize against a local, non-Internet-accessible Wikibase installation.
 
@@ -358,7 +357,7 @@ It is possible to migrate an existing Wikibase installation to WBS Deploy. The g
 
 ### My WDQS Updater keeps crashing, what can I do?
 
-Check out the known issue in the [WDQS README](../build/wdqs/README.md#Known-issues). You may find your solution there in the form of a workaround.
+Check out the known issue in the [WDQS README](/wdqs/README.md#Known-issues). You may find your solution there in the form of a workaround.
 
 ### Do you recommend any VPS hosting providers?
 

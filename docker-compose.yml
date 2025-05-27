@@ -15,6 +15,7 @@ services:
     ports:
       - 9229:9229
       - 4211:4211
+      - 3000:3000
     volumes:
       - .:/workspace
       - /var/run/docker.sock:/var/run/docker.sock

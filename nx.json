@@ -28,6 +28,9 @@
 			},
 			"deploy": {
 				"projects": [ "deploy" ]
+			},
+			"docs": {
+				"projects": [ "docs" ]
 			}
 		},
 		"projectsRelationship": "independent",

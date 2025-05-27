@@ -1,3 +1,7 @@
+---
+sidebar_label: User-Defined MediaWiki Extensions
+---
+
 # Wikibase Suite User defined MediaWiki Extensions
 
 This is a place for additional MediaWiki/Wikibase extensions. In order to load additional extensions, three things need to be done:
@@ -12,7 +16,8 @@ In order to download additional MediaWiki extensions, you can visit e.g. https:/
 
 Once the file is downloaded, unpack it to `config/extensions`
 
-```
+<!-- prettier-ignore-start -->
+```md
 deploy
 |
 +- config
@@ -22,8 +27,8 @@ deploy
       +- README.md <- you are here
       |
       +- MyExtension <- we are going to create this directory
-
 ```
+<!-- prettier-ignore-end -->
 
 ```sh
 tar -xzf MyExtension.tar.gz -C path/to/deploy/config/extensions
@@ -42,7 +47,7 @@ wfLoadExtension('extensions/MyExtension')
 And restart the Wikibase container running MediaWiki.
 
 ```sh
-docker compose restart wikibase 
+docker compose restart wikibase
 ```
 
 Some extensions might ask you to run `update.php` as part of the installation process. The Wikibase Suite Wikibase Image does this automatically in its entrypoint. There is no need for running `update.php` manually.
