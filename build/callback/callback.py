@@ -13,6 +13,7 @@ mutation AddWikibaseMutation($wikibaseName: String!, $baseUrl: String!) {
 }
 """
 
+
 def main():
     """
     Sends a GraphQL mutation to add a new Wikibase instance.
@@ -34,19 +35,11 @@ def main():
         print("Error: BASE_URL environment variable set to invalid .localhost domain.")
         return
 
-    variables = {
-        "wikibaseName": wikibase_name,
-        "baseUrl": base_url
-    }
+    variables = {"wikibaseName": wikibase_name, "baseUrl": base_url}
 
-    payload = {
-        "query": MUTATION,
-        "variables": variables
-    }
+    payload = {"query": MUTATION, "variables": variables}
 
-    headers = {
-        "Content-Type": "application/json"
-    }
+    headers = {"Content-Type": "application/json"}
 
     try:
         print(f"Trying to register at {GRAPHQL_URL} with {wikibase_name},{base_url}...")
@@ -56,8 +49,9 @@ def main():
         print(response.json())
     except requests.exceptions.RequestException as e:
         print(f"Error sending request: {e}")
-        if hasattr(e, 'response') and e.response is not None:
+        if hasattr(e, "response") and e.response is not None:
             print(f"Response content: {e.response.text}")
+
 
 if __name__ == "__main__":
     main()
