@@ -15,6 +15,7 @@ runs:
           "wdqs"
           "wdqs-frontend"
           "quickstatements"
+          "callback"
         )
 
         for i in "${images[@]}"; do
