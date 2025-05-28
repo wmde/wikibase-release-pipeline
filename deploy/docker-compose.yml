@@ -7,6 +7,14 @@ services:
 
   wikibase:
     image: wikibase/wikibase:4
+    entrypoint:
+      - bash
+      - -c
+      - |
+        if [ -v METADATA_CALLBACK  ] && [ "$METADATA_CALLBACK" = "true" ]; then
+          bash /callback.sh
+        fi
+        exec bash /entrypoint.sh
     depends_on:
       mysql:
         condition: service_healthy
@@ -17,9 +25,11 @@ services:
       - ./config:/config:z
       - ./config/extensions:/var/www/html/extensions/extensions:z
       - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
+      - ./callback.sh:/callback.sh:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
+      METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
@@ -30,7 +40,6 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
-
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
@@ -195,27 +204,6 @@ services:
     environment:
       WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
       WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
-
-  # --------------------------------------------------
-  # D. REGISTRTION WITH WIKIBASE METADATA PROJECT
-  # --------------------------------------------------
-  callback:
-    image: wikibase/callback
-    environment:
-      METADATA_CALLBACK: ${METADATA_CALLBACK:-false}
-      WIKIBASE_NAME: ${WIKIBASE_PUBLIC_HOST}
-      BASE_URL: https://${WIKIBASE_PUBLIC_HOST}
-    entrypoint:
-      - sh
-      - -c
-      - |
-        if [ "$METADATA_CALLBACK" = "false" ]; then
-          echo "METADATA_CALLBACK not enabled. Exiting."
-          exit 0 # Exit successfully if not enabled
-        fi
-        python callback.py
-        # TODO: find a better way to make the finished container not fail the full stack
-        sleep infinity
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA

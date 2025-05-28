@@ -50,7 +50,6 @@ jobs:
           - wdqs
           - wdqs-frontend
           - quickstatements
-          - callback
 
     steps:
       - uses: actions/checkout@v4
