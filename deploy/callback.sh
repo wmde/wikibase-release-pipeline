@@ -41,6 +41,7 @@ CURL_OUTPUT=$(curl -s -w "\n%{http_code}" \
 RESPONSE_BODY="${CURL_OUTPUT%$'\n'*}"
 HTTP_STATUS="${CURL_OUTPUT##*$'\n'}"
 
+# shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
   echo "Error sending request: curl command failed."
   exit 1
