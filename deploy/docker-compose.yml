@@ -40,6 +40,7 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s

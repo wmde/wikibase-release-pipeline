@@ -14,6 +14,11 @@ if [ -z "$MW_WG_SERVER" ]; then
   exit 1
 fi
 
+if [ -z "$WDQS_PUBLIC_HOST" ]; then
+  echo "Error: WDQS_PUBLIC_HOST environment variable not set."
+  exit 1
+fi
+
 if [[ "$MW_WG_SERVER" == *.example ]]; then
   echo "Error: MW_WG_SERVER environment variable using invalid .example domain: $MW_WG_SERVER"
   exit 1
@@ -25,10 +30,23 @@ if [[ "$MW_WG_SERVER" == *.localhost ]]; then
 fi
 
 GRAPHQL_URL="https://wikibase-metadata.toolforge.org/graphql"
-PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {wikibaseName: \\\"$MW_WG_SERVER\\\", urls: {baseUrl: \\\"$MW_WG_SERVER\\\"}}) { id } }\"}"
+PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
+  wikibaseName: \\\"$MW_WG_SERVER\\\", \
+  urls: {\
+    baseUrl: \\\"$MW_WG_SERVER\\\", \
+    actionApiUrl: \\\"$MW_WG_SERVER/w/api.php\\\", \
+    indexApiUrl: \\\"$MW_WG_SERVER/w/index.php\\\", \
+    sparqlQueryUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
+    sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
+    specialStatisticsUrl: \\\"$MW_WG_SERVER/wiki/Special:Statistics\\\", \
+    specialVersionUrl: \\\"$MW_WG_SERVER/wiki/Special:Version\\\"}}) { \
+      id \
+    } \
+  }\"\
+}"
 
 
-echo "Trying to register at $GRAPHQL_URL with $MW_WG_SERVER,$MW_WG_SERVER..."
+echo "Trying to register at $GRAPHQL_URL with $PAYLOAD..."
 
 # Capture curl output (body + newline + http_code)
 CURL_OUTPUT=$(curl -s -w "\n%{http_code}" \
