@@ -34,12 +34,10 @@ PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
   wikibaseName: \\\"$MW_WG_SERVER\\\", \
   urls: {\
     baseUrl: \\\"$MW_WG_SERVER\\\", \
-    actionApiUrl: \\\"$MW_WG_SERVER/w/api.php\\\", \
-    indexApiUrl: \\\"$MW_WG_SERVER/w/index.php\\\", \
-    sparqlQueryUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
+    articlePath: \\\"$MW_WG_SERVER/wiki\\\", \
+    scriptPath: \\\"$MW_WG_SERVER/w\\\", \
     sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
-    specialStatisticsUrl: \\\"$MW_WG_SERVER/wiki/Special:Statistics\\\", \
-    specialVersionUrl: \\\"$MW_WG_SERVER/wiki/Special:Version\\\"}}) { \
+    sparqlFrontendUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
       id \
     } \
   }\"\
