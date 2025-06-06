@@ -34,8 +34,8 @@ PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
   wikibaseName: \\\"$MW_WG_SERVER\\\", \
   urls: {\
     baseUrl: \\\"$MW_WG_SERVER\\\", \
-    articlePath: \\\"$MW_WG_SERVER/wiki\\\", \
-    scriptPath: \\\"$MW_WG_SERVER/w\\\", \
+    articlePath: \\\"/wiki\\\", \
+    scriptPath: \\\"/w\\\", \
     sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
     sparqlFrontendUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
       id \
