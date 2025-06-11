@@ -64,12 +64,11 @@ services:
 
   traefik:
     command:
-      # Basic setup
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      # http endpoint
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.asdefault"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
+    volumes:
+      - ../../deploy/config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
     networks:
       default:
         aliases:
