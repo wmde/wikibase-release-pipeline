@@ -15,7 +15,7 @@ jobs:
           paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
           skip_after_successful_duplicate: true
           cancel_others: true
-          do_not_skip: '["workflow_dispatch", "schedule"]'
+          do_not_skip: '["schedule"]'
 
   lint:
     needs:
