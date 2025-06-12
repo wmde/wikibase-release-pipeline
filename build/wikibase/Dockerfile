@@ -16,17 +16,17 @@ RUN apt-get update; \
         gettext-base \
         librsvg2-bin \
         imagemagick \
-        # Required by the SyntaxHighlighting MediaWiki Extension
+        # Required by SyntaxHighlighting MediaWiki Extension
         python3 \
-        # Required by the Scribunto MediaWiki Extension
+        # Required by Scribunto MediaWiki Extension
         lua5.1 \
         # Required by PdfHandler MediaWiki Extension
-        ghostscript imagemagick poppler-utils \
+        ghostscript poppler-utils \
         # Required by PagedTiffHandler MediaWiki Extension
     	exiv2 libtiff-tools \
-        # Required by the TimedMediaHandler MediaWiki Extension
+        # Required by TimedMediaHandler MediaWiki Extension
         ffmpeg \
-        # Required by the VipsScaler MediaWiki Extension
+        # Required by VipsScaler MediaWiki Extension
     	libvips-tools \
         ; \
     rm -rf /var/lib/apt/lists/*
