@@ -1,3 +1,10 @@
+## 4.1.0 (2025-06-13)
+
+
+### 🚀 Features
+
+- Add operating system dependencies for Mediawiki extensions
+
 ## 4.0.1 (2025-04-29)
 
 
