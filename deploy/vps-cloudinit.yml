@@ -8,6 +8,6 @@ packages:
   - git
 
 runcmd:
-  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/cloud-config-test/deploy/vps-setup-for-wbs.sh -o /usr/local/bin/vps-setup-for-wbs.sh
+  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/cloud-config-test/deploy/vps-setup.sh -o /usr/local/bin/vps-setup-for-wbs.sh
   - chmod +x /usr/local/bin/vps-setup-for-wbs.sh
   - /usr/local/bin/vps-setup-for-wbs.sh
