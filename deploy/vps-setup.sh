@@ -38,7 +38,7 @@ EOF
   while true; do
     {
       echo "<!DOCTYPE html><html><head><title>Installer Log</title><meta http-equiv=\"refresh\" content=\"5\"><style>body { font-family: monospace; white-space: pre; background: #111; color: #eee; padding: 1em; }</style></head><body>"
-      tail -n 50 /var/log/cloud-init-output.log | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
+      cat /var/log/cloud-init-output.log | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
       echo "</body></html>"
     } > "$WBS_DIR/bootstrap-status/index.html"
     sleep 2
