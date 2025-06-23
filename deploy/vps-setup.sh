@@ -102,11 +102,6 @@ EOF
 echo ".env created at $WBS_DIR/wikibase-release-pipeline/deploy/.env:"
 cat "$WBS_DIR/wikibase-release-pipeline/deploy/.env"
 
-# 9) Stop bootstrap nginx + log tailer
-echo "Stopping provisional nginx and log tailer..."
-docker stop wbs-bootstrap-nginx && docker rm wbs-bootstrap-nginx
-kill $TAIL_PID || true
-
 # 10) Bring up Wikibase Suite
 echo "Bringing up Wikibase Suite..."
 cd "$WBS_DIR/wikibase-release-pipeline/deploy"
@@ -118,3 +113,9 @@ echo "DB Password: ${DB_PASS}"
 echo "Your Wikibase Suite should now be accessible at:"
 echo "  https://${PUBLIC_IP}.traefik.me"
 echo "  https://query.${PUBLIC_IP}.traefik.me"
+
+# 9) Stop bootstrap nginx + log tailer
+# echo "Stopping provisional nginx and log tailer..."
+# docker stop wbs-bootstrap-nginx && docker rm wbs-bootstrap-nginx
+# kill $TAIL_PID || true
+
