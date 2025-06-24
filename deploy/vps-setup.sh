@@ -105,7 +105,7 @@ cat "$WBS_DIR/wikibase-release-pipeline/deploy/.env"
 # 10) Bring up Wikibase Suite
 echo "Bringing up Wikibase Suite..."
 cd "$WBS_DIR/wikibase-release-pipeline/deploy"
-docker compose up -d
+# docker compose up -d
 
 echo "Deployment complete!"
 echo "Admin Password: ${MW_ADMIN_PASS}"
