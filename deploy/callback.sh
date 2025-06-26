@@ -12,7 +12,7 @@ set -eu
 # to https://wikibase-metadata.toolforge.org in form of a graphql request.
 # The service running there will then periodically collect publicly
 # accessible information from the instance. We can only access publicly visible
-# information. If Wikibase requiress a login to view data, we will not be
+# information. If Wikibase requires a login to view data, we will not be
 # able to collect statistics on the protected data. Find more information in
 # the README.md file.
 #
