@@ -25,22 +25,22 @@ if ! [ -v METADATA_CALLBACK  ] || ! [ "$METADATA_CALLBACK" = "true" ]; then
 fi
 
 if [ -z "$MW_WG_SERVER" ]; then
-  echo "Error: MW_WG_SERVER environment variable not set."
+  echo "Callback Error: MW_WG_SERVER environment variable not set."
   exit 1
 fi
 
 if [ -z "$WDQS_PUBLIC_HOST" ]; then
-  echo "Error: WDQS_PUBLIC_HOST environment variable not set."
+  echo "Callback Error: WDQS_PUBLIC_HOST environment variable not set."
   exit 1
 fi
 
 if [[ "$MW_WG_SERVER" == *.example ]]; then
-  echo "Error: MW_WG_SERVER environment variable using invalid .example domain: $MW_WG_SERVER"
+  echo "Callback Error: MW_WG_SERVER environment variable using invalid .example domain: $MW_WG_SERVER"
   exit 1
 fi
 
 if [[ "$MW_WG_SERVER" == *.localhost ]]; then
-  echo "Error: MW_WG_SERVER environment variable using invalid .localhost domain: $MW_WG_SERVER"
+  echo "Callback Error: MW_WG_SERVER environment variable using invalid .localhost domain: $MW_WG_SERVER"
   exit 1
 fi
 
@@ -74,14 +74,14 @@ HTTP_STATUS="${CURL_OUTPUT##*$'\n'}"
 
 # shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
-  echo "Error sending request: curl command failed."
+  echo "Callback Error sending request: curl command failed."
   exit 1
 fi
 
 if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
-  echo "Request successful"
+  echo "Callback Request successful"
 else
-  echo "Request failed"
+  echo "Callback Request failed"
 fi
 
 echo "$HTTP_STATUS"
