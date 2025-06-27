@@ -46,13 +46,15 @@ fi
 
 GRAPHQL_URL="https://wikibase-metadata.toolforge.org/graphql"
 PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
-  wikibaseName: \\\"$MW_WG_SERVER\\\", \
-  urls: {\
-    baseUrl: \\\"$MW_WG_SERVER\\\", \
-    articlePath: \\\"/wiki\\\", \
-    scriptPath: \\\"/w\\\", \
-    sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
-    sparqlFrontendUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
+      wikibaseName: \\\"$MW_WG_SERVER\\\", \
+      urls: {\
+        baseUrl: \\\"$MW_WG_SERVER\\\", \
+        articlePath: \\\"/wiki\\\", \
+        scriptPath: \\\"/w\\\", \
+        sparqlFrontendUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
+        sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
+      } \
+    }) { \
       id \
     } \
   }\"\
