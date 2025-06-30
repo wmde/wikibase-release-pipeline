@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu
+set -u
 
 # This script is part of Wikibase Suite Deploy
 #
@@ -83,7 +83,7 @@ fi
 if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
   echo "Callback Request successful"
 else
-  echo "Callback Request failed"
+  echo "Callback Error: Request failed"
 fi
 
 echo "$HTTP_STATUS"
