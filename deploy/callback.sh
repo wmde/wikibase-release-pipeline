@@ -8,12 +8,12 @@ set -u
 # list to be a central hub for data re-use and federation initiatives between
 # Wikibases, where users can discover other Wikibases easily.
 #
-# This script takes the configured URLs for Wikibase and WDQS and sends them
-# to https://wikibase-metadata.toolforge.org in form of a graphql request.
-# The service running there will then periodically collect publicly
-# accessible information from the instance. We can only access publicly visible
-# information. If Wikibase requires a login to view data, we will not be
-# able to collect statistics on the protected data. Find more information in
+# This script takes the configured URLs for Wikibase and WDQS and sends them to
+# https://wikibase-metadata.toolforge.org in the form of a graphql request. The
+# service running there will then periodically collect publicly accessible
+# information from the instance. We can only access publicly visible
+# information. If Wikibase requires a login to view data, we will not be able
+# to collect statistics on the protected data. You can find more information in
 # the README.md file.
 #
 # If you change your mind you can always remove your instance from the list by
