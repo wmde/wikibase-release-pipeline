@@ -4,9 +4,10 @@ set -u
 # This script is part of Wikibase Suite Deploy
 #
 # This is part of an initiative to maintain an index of Wikibases. The goal of
-# this index is to gather statistics on how Wikibase is used. We aim for this
-# list to be a central hub for data re-use and federation initiatives between
-# Wikibases, where users can discover other Wikibases easily.
+# this index is to gather more quantitative data to learn more about how
+# Wikibase is being used. We aim for this list to be a central hub for data
+# re-use and federation initiatives between Wikibases, where users can discover
+# other Wikibases easily.
 #
 # This script takes the configured URLs for Wikibase and WDQS and sends them to
 # https://wikibase-metadata.toolforge.org in the form of a graphql request. The
@@ -18,6 +19,7 @@ set -u
 #
 # If you change your mind you can always remove your instance from the list by
 # sending an E-Mail to wikibase-suite-support@wikimedia.de
+
 
 if ! [ -v METADATA_CALLBACK  ] || ! [ "$METADATA_CALLBACK" = "true" ]; then
   echo "METADATA_CALLBACK not enabled. Exiting."
