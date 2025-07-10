@@ -14,7 +14,9 @@ echo "Detected public IP: $PUBLIC_IP"
 # 2) Set or generate passwords and hosts
 echo "Setting passwords and hostnames..."
 
-MW_ADMIN_PASS="${MEDIAWIKI_ADMIN_PASS:-$(openssl rand -base64 16)}"
+MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL:-admin@wikibase.example}
+MW_ADMIN_NAME=${MW_ADMIN_NAME:-admin}
+MW_ADMIN_PASS="${MW_ADMIN_PASS:-$(openssl rand -base64 16)}"
 DB_PASS="${DB_ROOT_PASSWORD:-$(openssl rand -base64 16)}"
 WIKIBASE_PUBLIC_HOST="${WIKIBASE_HOST:-$PUBLIC_IP.nip.io}"
 WDQS_PUBLIC_HOST="${WDQS_FRONTEND_HOST:-query.$PUBLIC_IP.nip.io}"
@@ -92,8 +94,8 @@ WIKIBASE_PUBLIC_HOST=$WIKIBASE_PUBLIC_HOST
 WDQS_PUBLIC_HOST=$WDQS_PUBLIC_HOST
 
 # MediaWiki / Wikibase admin user configuration.
-MW_ADMIN_NAME=${MEDIAWIKI_ADMIN_USER:-admin}
-MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL:-admin@wikibase.example}
+MW_ADMIN_NAME=$MW_ADMIN_NAME
+MW_ADMIN_EMAIL=$MW_ADMIN_EMAIL
 MW_ADMIN_PASS=$MW_ADMIN_PASS
 
 # MediaWiki / Wikibase database configuration.

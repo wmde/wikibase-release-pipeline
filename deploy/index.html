@@ -86,7 +86,7 @@
       let envLines = '';
       for (const key in v) {
         if (v[key].trim()) {
-          envLines += `    ${key}=${v[key]} \\\n`;
+          envLines += `${key}=${v[key]} `;
         }
       }
 
@@ -95,11 +95,9 @@ package_update: true
 package_upgrade: true
 
 runcmd:
-  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh -o /tmp/vps-setup.sh
-  - chmod +x /tmp/vps-setup.sh
-${envLines ? `  - ${envLines}    /tmp/vps-setup.sh` : '  - /tmp/vps-setup.sh'}
+  - ${envLines} curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh | bash
 `;
-    };
+    }
 
     function updateOutput() {
       const data = new FormData(form);
