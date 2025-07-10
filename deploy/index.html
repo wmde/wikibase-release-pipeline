@@ -30,41 +30,44 @@
 
   <p>This tool helps you generate a <code>cloud-init.yaml</code> file to deploy your own Wikibase instance on a VPS (e.g. Hetzner, DigitalOcean, AWS). Just paste the generated file into your cloud provider's <strong>User Data</strong> field when creating a server.</p>
 
-  <p><strong>All fields are optional</strong> — if you leave any blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>traefik.me</code>).</p>
+  <p><strong>All fields are optional</strong> — except <code>MW_ADMIN_EMAIL</code>, which is required. If you leave any other field blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>traefik.me</code>).</p>
 
   <h2>Features</h2>
   <ul>
     <li>🔧 Fully automated Wikibase installation</li>
     <li>🌐 Optional default domains like <code>IP.traefik.me</code> and <code>query.IP.traefik.me</code></li>
     <li>🔐 Secure passwords generated automatically if left blank</li>
+    <li>📮 Admin email required to complete setup</li>
     <li>🐳 Powered by Docker + Docker Compose</li>
     <li>🚀 One-click bootstrap via cloud-init</li>
   </ul>
 
   <form id="form">
+    <label>Wikibase Public Host:
+      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.traefik.me (optional)">
+    </label>
+    <label>WDQS Public Host:
+      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.traefik.me (optional)">
+    </label>
+
     <label>Admin Username:
-      <input name="MEDIAWIKI_ADMIN_USER" placeholder="Leave blank to auto-generate">
+      <input name="MW_ADMIN_NAME" placeholder="default: admin">
+    </label>
+    <label>Admin Email (required):
+      <input name="MW_ADMIN_EMAIL" required type="email" placeholder="you@example.org">
     </label>
     <label>Admin Password:
-      <input name="MEDIAWIKI_ADMIN_PASS" type="password" placeholder="Leave blank to auto-generate">
+      <input name="MW_ADMIN_PASS" type="password" placeholder="Leave blank to auto-generate">
     </label>
-    <label>DB Root Password:
-      <input name="DB_ROOT_PASSWORD" type="password" placeholder="Leave blank to auto-generate">
+
+    <label>Database Name:
+      <input name="DB_NAME" placeholder="default: my_wiki">
     </label>
-    <label>WDQS Secret:
-      <input name="WDQS_SECRET" type="password" placeholder="Leave blank to auto-generate">
+    <label>Database User:
+      <input name="DB_USER" placeholder="default: sqluser">
     </label>
-    <label>Wikibase Host:
-      <input name="WIKIBASE_HOST" placeholder="e.g. wikibase.example.org — or leave blank for IP.traefik.me">
-    </label>
-    <label>WDQS Host:
-      <input name="WDQS_HOST" placeholder="Leave blank for IP.traefik.me">
-    </label>
-    <label>WDQS Frontend Host:
-      <input name="WDQS_FRONTEND_HOST" placeholder="Leave blank for query.IP.traefik.me">
-    </label>
-    <label>Elasticsearch Host:
-      <input name="ELASTICSEARCH_HOST" placeholder="Leave blank for elasticsearch.IP.traefik.me">
+    <label>Database Password:
+      <input name="DB_PASS" type="password" placeholder="Leave blank to auto-generate">
     </label>
   </form>
 
