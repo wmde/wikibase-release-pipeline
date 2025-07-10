@@ -11,10 +11,13 @@ echo "Detecting public IP..."
 PUBLIC_IP=$(curl -s https://api.ipify.org)
 echo "Detected public IP: $PUBLIC_IP"
 
-# 2) Generate secure random passwords
-echo "Generating passwords..."
-MW_ADMIN_PASS=$(openssl rand -base64 16)
-DB_PASS=$(openssl rand -base64 16)
+# 2) Set or generate passwords and hosts
+echo "Setting passwords and hostnames..."
+
+MW_ADMIN_PASS="${MEDIAWIKI_ADMIN_PASS:-$(openssl rand -base64 16)}"
+DB_PASS="${DB_ROOT_PASSWORD:-$(openssl rand -base64 16)}"
+WIKIBASE_PUBLIC_HOST="${WIKIBASE_HOST:-$PUBLIC_IP.traefik.me}"
+WDQS_PUBLIC_HOST="${WDQS_FRONTEND_HOST:-query.$PUBLIC_IP.traefik.me}"
 
 # 3) Create live log HTML page
 cat <<EOF > "$WBS_DIR/bootstrap-status/index.html"
@@ -85,18 +88,18 @@ cat <<EOF > "$WBS_DIR/wikibase-release-pipeline/deploy/.env"
 # Public hostname configuration.
 # These domain names should point to your VPS public IP.
 # Using traefik.me for quick testing — change in production.
-WIKIBASE_PUBLIC_HOST=${PUBLIC_IP}.traefik.me
-WDQS_PUBLIC_HOST=query.${PUBLIC_IP}.traefik.me
+WIKIBASE_PUBLIC_HOST=$WIKIBASE_PUBLIC_HOST
+WDQS_PUBLIC_HOST=$WDQS_PUBLIC_HOST
 
 # MediaWiki / Wikibase admin user configuration.
-MW_ADMIN_NAME=admin
+MW_ADMIN_NAME=${MEDIAWIKI_ADMIN_USER:-admin}
 MW_ADMIN_EMAIL=admin@wikibase.example
-MW_ADMIN_PASS=${MW_ADMIN_PASS}
+MW_ADMIN_PASS=$MW_ADMIN_PASS
 
 # MediaWiki / Wikibase database configuration.
 DB_NAME=my_wiki
 DB_USER=sqluser
-DB_PASS=${DB_PASS}
+DB_PASS=$DB_PASS
 EOF
 
 echo ".env created at $WBS_DIR/wikibase-release-pipeline/deploy/.env:"
@@ -105,17 +108,16 @@ cat "$WBS_DIR/wikibase-release-pipeline/deploy/.env"
 # 10) Bring up Wikibase Suite
 echo "Bringing up Wikibase Suite..."
 cd "$WBS_DIR/wikibase-release-pipeline/deploy"
-# docker compose up -d
+docker compose up -d
 
 echo "Deployment complete!"
-echo "Admin Password: ${MW_ADMIN_PASS}"
-echo "DB Password: ${DB_PASS}"
+echo "Admin Password: $MW_ADMIN_PASS"
+echo "DB Password: $DB_PASS"
 echo "Your Wikibase Suite should now be accessible at:"
-echo "  https://${PUBLIC_IP}.traefik.me"
-echo "  https://query.${PUBLIC_IP}.traefik.me"
+echo "  https://$WIKIBASE_PUBLIC_HOST"
+echo "  https://$WDQS_PUBLIC_HOST"
 
-# 9) Stop bootstrap nginx + log tailer
+# 11) Optional: Stop bootstrap nginx + log tailer
 # echo "Stopping provisional nginx and log tailer..."
 # docker stop wbs-bootstrap-nginx && docker rm wbs-bootstrap-nginx
 # kill $TAIL_PID || true
-

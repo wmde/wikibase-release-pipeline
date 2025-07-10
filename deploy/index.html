@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wikibase Cloud Init Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: sans-serif; padding: 2em; max-width: 800px; margin: auto; }
+    label { display: block; margin-top: 1em; font-weight: bold; }
+    input { width: 100%; padding: 0.5em; margin-top: 0.3em; }
+    pre {
+      background-color: #f0f0f0;
+      padding: 1em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.6em 1em;
+      cursor: pointer;
+    }
+    #buttons { display: flex; gap: 1em; }
+    ul { margin-bottom: 2em; }
+  </style>
+</head>
+<body>
+  <h1>Wikibase Cloud Init Generator</h1>
+
+  <p>This tool helps you generate a <code>cloud-init.yaml</code> file to deploy your own Wikibase instance on a VPS (e.g. Hetzner, DigitalOcean, AWS). Just paste the generated file into your cloud provider's <strong>User Data</strong> field when creating a server.</p>
+
+  <p><strong>All fields are optional</strong> — if you leave any blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>traefik.me</code>).</p>
+
+  <h2>Features</h2>
+  <ul>
+    <li>🔧 Fully automated Wikibase installation</li>
+    <li>🌐 Optional default domains like <code>IP.traefik.me</code> and <code>query.IP.traefik.me</code></li>
+    <li>🔐 Secure passwords generated automatically if left blank</li>
+    <li>🐳 Powered by Docker + Docker Compose</li>
+    <li>🚀 One-click bootstrap via cloud-init</li>
+  </ul>
+
+  <form id="form">
+    <label>Admin Username:
+      <input name="MEDIAWIKI_ADMIN_USER" placeholder="Leave blank to auto-generate">
+    </label>
+    <label>Admin Password:
+      <input name="MEDIAWIKI_ADMIN_PASS" type="password" placeholder="Leave blank to auto-generate">
+    </label>
+    <label>DB Root Password:
+      <input name="DB_ROOT_PASSWORD" type="password" placeholder="Leave blank to auto-generate">
+    </label>
+    <label>WDQS Secret:
+      <input name="WDQS_SECRET" type="password" placeholder="Leave blank to auto-generate">
+    </label>
+    <label>Wikibase Host:
+      <input name="WIKIBASE_HOST" placeholder="e.g. wikibase.example.org — or leave blank for IP.traefik.me">
+    </label>
+    <label>WDQS Host:
+      <input name="WDQS_HOST" placeholder="Leave blank for IP.traefik.me">
+    </label>
+    <label>WDQS Frontend Host:
+      <input name="WDQS_FRONTEND_HOST" placeholder="Leave blank for query.IP.traefik.me">
+    </label>
+    <label>Elasticsearch Host:
+      <input name="ELASTICSEARCH_HOST" placeholder="Leave blank for elasticsearch.IP.traefik.me">
+    </label>
+  </form>
+
+  <h2>Generated cloud-init.yaml</h2>
+  <pre><code id="output">#cloud-config will appear here...</code></pre>
+  <div id="buttons">
+    <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+    <button onclick="downloadFile()">⬇️ Download cloud-init.yaml</button>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const output = document.getElementById('output');
+
+    const template = (v) => {
+      let envLines = '';
+      for (const key in v) {
+        if (v[key].trim()) {
+          envLines += `    ${key}=${v[key]} \\\n`;
+        }
+      }
+
+      return `#cloud-config
+package_update: true
+package_upgrade: true
+
+runcmd:
+  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh -o /tmp/vps-setup.sh
+  - chmod +x /tmp/vps-setup.sh
+${envLines ? `  - ${envLines}    /tmp/vps-setup.sh` : '  - /tmp/vps-setup.sh'}
+`;
+    };
+
+    function updateOutput() {
+      const data = new FormData(form);
+      const values = Object.fromEntries(data.entries());
+      output.textContent = template(values);
+    }
+
+    form.addEventListener('input', updateOutput);
+    document.addEventListener('DOMContentLoaded', updateOutput);
+
+    function copyToClipboard() {
+      const range = document.createRange();
+      range.selectNode(output);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      alert('Copied to clipboard!');
+    }
+
+    function downloadFile() {
+      const blob = new Blob([output.textContent], { type: 'text/yaml' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'cloud-init.yaml';
+      link.click();
+    }
+  </script>
+</body>
+</html>
