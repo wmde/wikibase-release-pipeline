@@ -79,25 +79,29 @@
   </div>
 
   <script>
-    const form = document.getElementById('form');
-    const output = document.getElementById('output');
-
     const template = (v) => {
-      let envLines = '';
+      let exportLines = '';
       for (const key in v) {
         if (v[key].trim()) {
-          envLines += `${key}=${v[key]} `;
+          exportLines += `    export ${key}="${v[key]}"\n`;
         }
       }
 
       return `#cloud-config
-package_update: true
-package_upgrade: true
 
-runcmd:
-  - ${envLines} curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh | bash
-`;
-    }
+    package_update: true
+    package_upgrade: true
+
+    packages:
+      - curl
+      - git
+
+    runcmd:
+      - |
+    ${exportLines}
+        curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh | bash
+    `;
+    };
 
     function updateOutput() {
       const data = new FormData(form);
