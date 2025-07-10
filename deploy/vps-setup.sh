@@ -16,8 +16,8 @@ echo "Setting passwords and hostnames..."
 
 MW_ADMIN_PASS="${MEDIAWIKI_ADMIN_PASS:-$(openssl rand -base64 16)}"
 DB_PASS="${DB_ROOT_PASSWORD:-$(openssl rand -base64 16)}"
-WIKIBASE_PUBLIC_HOST="${WIKIBASE_HOST:-$PUBLIC_IP.traefik.me}"
-WDQS_PUBLIC_HOST="${WDQS_FRONTEND_HOST:-query.$PUBLIC_IP.traefik.me}"
+WIKIBASE_PUBLIC_HOST="${WIKIBASE_HOST:-$PUBLIC_IP.nip.io}"
+WDQS_PUBLIC_HOST="${WDQS_FRONTEND_HOST:-query.$PUBLIC_IP.nip.io}"
 
 # 3) Create live log HTML page
 cat <<EOF > "$WBS_DIR/bootstrap-status/index.html"
@@ -87,13 +87,13 @@ cat <<EOF > "$WBS_DIR/wikibase-release-pipeline/deploy/.env"
 
 # Public hostname configuration.
 # These domain names should point to your VPS public IP.
-# Using traefik.me for quick testing — change in production.
+# Using nip.io for quick testing — change in production.
 WIKIBASE_PUBLIC_HOST=$WIKIBASE_PUBLIC_HOST
 WDQS_PUBLIC_HOST=$WDQS_PUBLIC_HOST
 
 # MediaWiki / Wikibase admin user configuration.
 MW_ADMIN_NAME=${MEDIAWIKI_ADMIN_USER:-admin}
-MW_ADMIN_EMAIL=admin@wikibase.example
+MW_ADMIN_EMAIL=${MW_ADMIN_EMAIL:-admin@wikibase.example}
 MW_ADMIN_PASS=$MW_ADMIN_PASS
 
 # MediaWiki / Wikibase database configuration.

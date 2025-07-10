@@ -30,12 +30,12 @@
 
   <p>This tool helps you generate a <code>cloud-init.yaml</code> file to deploy your own Wikibase instance on a VPS (e.g. Hetzner, DigitalOcean, AWS). Just paste the generated file into your cloud provider's <strong>User Data</strong> field when creating a server.</p>
 
-  <p><strong>All fields are optional</strong> — except <code>MW_ADMIN_EMAIL</code>, which is required. If you leave any other field blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>traefik.me</code>).</p>
+  <p><strong>All fields are optional</strong> — except <code>MW_ADMIN_EMAIL</code>, which is required. If you leave any other field blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>nip.io</code>).</p>
 
   <h2>Features</h2>
   <ul>
     <li>🔧 Fully automated Wikibase installation</li>
-    <li>🌐 Optional default domains like <code>IP.traefik.me</code> and <code>query.IP.traefik.me</code></li>
+    <li>🌐 Optional default domains like <code>IP.nip.io</code> and <code>query.IP.nip.io</code></li>
     <li>🔐 Secure passwords generated automatically if left blank</li>
     <li>📮 Admin email required to complete setup</li>
     <li>🐳 Powered by Docker + Docker Compose</li>
@@ -44,10 +44,10 @@
 
   <form id="form">
     <label>Wikibase Public Host:
-      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.traefik.me (optional)">
+      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.nip.io (optional)">
     </label>
     <label>WDQS Public Host:
-      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.traefik.me (optional)">
+      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.nip.io (optional)">
     </label>
 
     <label>Admin Username:
