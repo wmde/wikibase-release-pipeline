@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const port = 80;
-const DEPLOY_DIR = '/opt/wbs/wikibase-release-pipeline/deploy';
+const DEPLOY_DIR = '/data';
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
