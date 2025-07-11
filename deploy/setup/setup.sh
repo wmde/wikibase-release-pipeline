@@ -44,7 +44,7 @@ echo "Please go to http://$PUBLIC_IP to continue Wikibase Suite Deploy setup..."
 
 # Background poller that exits when :8888 is available
 (
-  until curl -sf http://localhost:8888 > /dev/null; do
+  until curl -sf http://$PUBLIC_IP:8888 > /dev/null; do
     sleep 1
   done
   echo ">>> Setup page detected on port 8888, stopping temporary server..."
