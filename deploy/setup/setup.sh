@@ -14,9 +14,10 @@ echo ">>> [3/7] Cloning Wikibase Release Pipeline..."
 mkdir -p /opt/wbs
 cd /opt/wbs
 git clone https://github.com/wmde/wikibase-release-pipeline.git
-cd wikibase-release-pipeline/deploy
+cd wikibase-release-pipeline
 # TODO: Remove once complete
 git checkout cloud-config-test
+cd deploy/setup
 
 echo ">>> [4/7] Starting setup webserver container..."
 docker build -t wbs-deploy-setup .
