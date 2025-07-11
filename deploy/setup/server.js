@@ -92,5 +92,5 @@ app.post('/shutdown', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Installer webserver running at http://localhost:${port}`);
+  console.log(`Wikibase Suite Deploy Setup server running`);
 });

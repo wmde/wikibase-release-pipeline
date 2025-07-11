@@ -5,6 +5,7 @@ package_upgrade: true
 
 packages:
   - curl
+  - netcat-openbsd
   - git
 
 runcmd:

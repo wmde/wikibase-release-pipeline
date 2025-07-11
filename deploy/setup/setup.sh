@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
-mkdir -p /opt/wbs
-exec > >(tee -a /opt/wbs/deploy-setup.log) 2>&1
-
 PUBLIC_IP=$(curl -s https://api.ipify.org)
+INITIAL_SETUP_PAGE_PORT=80
+SETUP_PAGE_PORT=8888
+
+WBS_DIR="/opt/wbs"
+DEPLOY_DIR="$WBS_DIR/wikibase-release-pipeline/deploy"
+LOG_FILE=$WBS_DIR/deploy-setup.log
+
+mkdir -p $WBS_DIR
+exec > >(tee -a $LOG_FILE) 2>&1
 
 cat > /tmp/waiting.html <<EOF
 HTTP/1.1 200 OK
@@ -24,8 +30,8 @@ HTTP/1.1 200 OK
   <script>
     async function check() {
       try {
-        const res = await fetch("http://$PUBLIC_IP:8888", {mode: 'no-cors'});
-        location.href = "http://$PUBLIC_IP:8888";
+        const res = await fetch("http://$PUBLIC_IP:$SETUP_PAGE_PORT", {mode: 'no-cors'});
+        location.href = "http://$PUBLIC_IP:$SETUP_PAGE_PORT";
       } catch (e) {
         setTimeout(check, 2000);
       }
@@ -37,56 +43,60 @@ HTTP/1.1 200 OK
 EOF
 
 # Start temporary HTTP server in background
-(while true; do cat /tmp/waiting.html | nc -l -p 80 -q 1; done) &
-WAITER_PID=$!
+cat /tmp/waiting.html | nc -l -p $INITIAL_SETUP_PAGE_PORT -q 1 &
+NC_PID=$!
 
 echo "Please go to http://$PUBLIC_IP to continue Wikibase Suite Deploy setup..."
 
-# Background poller that exits when :8888 is available
+# Background poller that exits when $SETUP_PAGE_PORT is available
 (
-  until curl -sf http://$PUBLIC_IP:8888 > /dev/null; do
+  until curl -sf http://$PUBLIC_IP:$SETUP_PAGE_PORT > /dev/null; do
     sleep 1
   done
-  echo ">>> Setup page detected on port 8888, stopping temporary server..."
-  kill $WAITER_PID 2>/dev/null || true
+  echo ">>> Setup page detected on port $SETUP_PAGE_PORT, stopping temporary server..."
+  kill $NC_PID 2>/dev/null || true
 ) &
 
-echo ">>> [1/7] Installing Docker..."
+echo ">>> [1/8] 🌐 Installing Docker..."
 curl -fsSL https://get.docker.com | sh
 
-echo ">>> [2/7] Installing Docker Compose plugin..."
+echo ">>> [2/8] 🐳 Installing Docker Compose plugin..."
 mkdir -p ~/.docker/cli-plugins
 curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
   -o ~/.docker/cli-plugins/docker-compose
 chmod +x ~/.docker/cli-plugins/docker-compose
 
-echo ">>> [3/7] Cloning Wikibase Release Pipeline..."
-cd /opt/wbs
+echo "[3/8] 🌀 Enabling Docker service..."
+systemctl enable --now docker
+
+echo ">>> [4/8] 🔄 Cloning Wikibase Release Pipeline..."
+cd $WBS_DIR
+
 git clone https://github.com/wmde/wikibase-release-pipeline.git
 cd wikibase-release-pipeline
 # TODO: Remove once complete
 git checkout cloud-config-test
 cd deploy/setup
 
-echo ">>> [4/7] Starting setup webserver container..."
+echo ">>> [5/8] 🏁 Starting setup webserver container..."
 docker build -t wbs-deploy-setup .
 docker run -d \
   --name wbs-deploy-setup \
-  -p 8888:80 \
-  -v /opt/wbs/wikibase-release-pipeline/deploy:/data \
-  -v /opt/wbs/deploy-setup.log:/log/deploy-setup.log:ro \
+  -p $SETUP_PAGE_PORT:80 \
+  -v $DEPLOY_DIR:/data \
+  -v $LOG_FILE:/log/deploy-setup.log:ro \
   wbs-deploy-setup
 
-echo ">>> [5/7] Waiting for /opt/wbs/wikibase-release-pipeline/deploy/.env..."
-until [ -f /opt/wbs/wikibase-release-pipeline/deploy/.env ]; do
+echo ">>> [6/8] 🕐 Waiting for $DEPLOY_DIR/.env..."
+until [ -f $DEPLOY_DIR/.env ]; do
   sleep 2
 done
 echo ">>> .env file detected. Proceeding with deployment..."
 
-echo ">>> [6/7] Launching Wikibase Suite containers..."
-cd /opt/wbs/wikibase-release-pipeline/deploy
+echo ">>> [7/8] 🚀 Launching Wikibase Suite containers..."
+cd $DEPLOY_DIR
 docker compose --ansi always up -d
 
-echo ">>> [7/7] Deployment complete!"
+echo ">>> [8/8] ✅ Deployment complete!"
 echo "You can now shut down the installer container from the web UI at:"
-echo "  http://${PUBLIC_IP}:8888"
+echo "  http://${PUBLIC_IP}:${SETUP_PAGE_PORT}"

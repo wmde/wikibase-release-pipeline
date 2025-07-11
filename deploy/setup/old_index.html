@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wikibase Suite Installer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+    }
+    #form-section, #log-section {
+      flex: 1;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+    #form-section {
+      border-right: 1px solid #ccc;
+    }
+    form label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    form input {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.3em;
+    }
+    #log {
+      background: #111;
+      color: #eee;
+      white-space: pre-wrap;
+      padding: 1em;
+      height: 100%;
+      overflow-y: scroll;
+      border: none;
+    }
+    #submit-btn, #shutdown-btn {
+      margin-top: 1em;
+      padding: 0.6em 1em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #shutdown-section {
+      margin-top: 2em;
+      padding: 1em;
+      background: #efe;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="form-section">
+    <h2>Configure Wikibase Suite</h2>
+    <form id="config-form">
+      <label>Admin Email (required):
+        <input name="MW_ADMIN_EMAIL" required type="email" placeholder="you@example.org" />
+      </label>
+      <label>Wikibase Public Host:
+        <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.nip.ip" />
+      </label>
+      <label>WDQS Public Host:
+        <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.nip.ip" />
+      </label>
+      <label>Admin Username:
+        <input name="MW_ADMIN_NAME" placeholder="admin" />
+      </label>
+      <label>Admin Password:
+        <input name="MW_ADMIN_PASS" type="password" placeholder="Leave blank to auto-generate" />
+      </label>
+      <label>Database Name:
+        <input name="DB_NAME" placeholder="my_wiki" />
+      </label>
+      <label>Database User:
+        <input name="DB_USER" placeholder="sqluser" />
+      </label>
+      <label>Database Password:
+        <input name="DB_PASS" type="password" placeholder="Leave blank to auto-generate" />
+      </label>
+      <label>
+        <input type="checkbox" name="METADATA_CALLBACK" checked>
+        Include in list of known Wikibases?
+      </label>
+      <button type="submit" id="submit-btn">Save and Begin Install</button>
+    </form>
+    <div id="shutdown-section" style="display: none;">
+      <h3>✅ Install complete</h3>
+      <p>Visit your Wikibase instance at:</p>
+      <ul>
+        <li><span id="wikibase-url"></span></li>
+        <li><span id="wdqs-url"></span></li>
+      </ul>
+      <p><strong>Be sure to save your admin and database credentials.</strong></p>
+      <button id="shutdown-btn">🛑 Stop Install Webserver</button>
+    </div>
+  </div>
+  <div id="log-section">
+    <h2>Install Log</h2>
+    <pre id="log">Loading installer log...</pre>
+  </div>
+
+  <script>
+    const form = document.getElementById('config-form');
+    const logEl = document.getElementById('log');
+    const shutdownBtn = document.getElementById('shutdown-btn');
+    const shutdownSection = document.getElementById('shutdown-section');
+    const submitBtn = document.getElementById('submit-btn');
+
+    const wikibaseURL = document.getElementById('wikibase-url');
+    const wdqsURL = document.getElementById('wdqs-url');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      submitBtn.disabled = true;
+      form.querySelectorAll('input').forEach(i => i.disabled = true);
+      const res = await fetch('/write-env', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        alert('Failed to write config');
+        submitBtn.disabled = false;
+        form.querySelectorAll('input').forEach(i => i.disabled = false);
+      }
+    });
+
+    shutdownBtn.addEventListener('click', async () => {
+      await fetch('/shutdown', { method: 'POST' });
+      alert('Webserver shutting down...');
+    });
+
+    const ansi_up = new AnsiUp();
+    ansi_up.use_classes = true;
+
+    async function pollLog() {
+      try {
+        const res = await fetch('/log');
+        const text = await res.text();
+        const html = ansi_up.ansi_to_html(text);
+        logEl.innerHTML = html;
+
+        // Scroll to bottom
+        logEl.scrollTop = logEl.scrollHeight;
+
+        if (text.includes('Deployment complete!')) {
+          shutdownSection.style.display = 'block';
+          const match1 = text.match(/https?:\/\/(.*?\.nip\.io)/);
+          const match2 = text.match(/https?:\/\/(query\..*?\.nip\.io)/);
+          wikibaseURL.textContent = match1 ? `https://${match1[1]}` : '';
+          wdqsURL.textContent = match2 ? `https://${match2[1]}` : '';
+        }
+      } catch (err) {
+        logEl.textContent = 'Error fetching log.';
+      }
+      setTimeout(pollLog, 3000);
+    }
+
+    pollLog();
+  </script>
+</body>
+</html>
