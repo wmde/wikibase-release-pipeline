@@ -17,7 +17,7 @@ git clone https://github.com/wmde/wikibase-release-pipeline.git
 cd wikibase-release-pipeline/deploy
 
 echo ">>> [4/7] Starting setup webserver container..."
-docker build -t wbs-deploy-setup ./setup
+docker build -t wbs-deploy-setup .
 docker run -d \
   --name wbs-deploy-setup \
   -p 8888:80 \
