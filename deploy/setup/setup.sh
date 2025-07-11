@@ -4,6 +4,53 @@ set -e
 mkdir -p /opt/wbs
 exec > >(tee -a /opt/wbs/deploy-setup.log) 2>&1
 
+PUBLIC_IP=$(curl -s https://api.ipify.org)
+
+cat > /tmp/waiting.html <<'EOF'
+HTTP/1.1 200 OK
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Preparing Installer...</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 20vh; }
+  </style>
+</head>
+<body>
+  <h1>Preparing setup...</h1>
+  <p>This page will redirect to the installer once it's ready.</p>
+  <script>
+    async function check() {
+      try {
+        const res = await fetch("http://localhost:8888", {mode: 'no-cors'});
+        location.href = "http://localhost:8888";
+      } catch (e) {
+        setTimeout(check, 2000);
+      }
+    }
+    check();
+  </script>
+</body>
+</html>
+EOF
+
+# Start temporary HTTP server in background
+(while true; do cat /tmp/waiting.html | nc -l -p 80 -q 1; done) &
+WAITER_PID=$!
+
+echo "Please go to http://$PUBLIC_IP to continue Wikibase Suite Deploy setup..."
+
+# Background poller that exits when :8888 is available
+(
+  until curl -sf http://localhost:8888 > /dev/null; do
+    sleep 1
+  done
+  echo ">>> Setup page detected on port 8888, stopping temporary server..."
+  kill $WAITER_PID 2>/dev/null || true
+) &
+
 echo ">>> [1/7] Installing Docker..."
 curl -fsSL https://get.docker.com | sh
 
@@ -42,5 +89,4 @@ docker compose up -d
 
 echo ">>> [7/7] Deployment complete!"
 echo "You can now shut down the installer container from the web UI at:"
-PUBLIC_IP=$(curl -s https://api.ipify.org)
 echo "  http://${PUBLIC_IP}:8888"
