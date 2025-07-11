@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+mkdir -p /opt/wbs
+exec > >(tee -a /opt/wbs/deploy-setup.log) 2>&1
+
 echo ">>> [1/7] Installing Docker..."
 curl -fsSL https://get.docker.com | sh
 
@@ -11,7 +14,6 @@ curl -SL "https://github.com/docker/compose/releases/latest/download/docker-comp
 chmod +x ~/.docker/cli-plugins/docker-compose
 
 echo ">>> [3/7] Cloning Wikibase Release Pipeline..."
-mkdir -p /opt/wbs
 cd /opt/wbs
 git clone https://github.com/wmde/wikibase-release-pipeline.git
 cd wikibase-release-pipeline
@@ -25,7 +27,7 @@ docker run -d \
   --name wbs-deploy-setup \
   -p 8888:80 \
   -v /opt/wbs/wikibase-release-pipeline/deploy:/data \
-  -v /var/log/cloud-init-output.log:/log/cloud-init-output.log:ro \
+  -v /opt/wbs/deploy-setup.log:/log/deploy-setup.log:ro \
   wbs-deploy-setup
 
 echo ">>> [5/7] Waiting for /opt/wbs/wikibase-release-pipeline/deploy/.env..."

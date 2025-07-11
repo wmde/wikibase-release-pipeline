@@ -37,7 +37,7 @@ function generatePassword() {
 
 // Log streaming
 app.get('/log', (req, res) => {
-  const logPath = '/var/log/cloud-init-output.log';
+  const logPath = '/log/deploy-setup.log';
   if (!fs.existsSync(logPath)) return res.status(404).send('Log not found');
   fs.readFile(logPath, 'utf8', (err, data) => {
     if (err) return res.status(500).send('Error reading log');
