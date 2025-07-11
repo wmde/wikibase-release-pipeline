@@ -15,6 +15,8 @@ mkdir -p /opt/wbs
 cd /opt/wbs
 git clone https://github.com/wmde/wikibase-release-pipeline.git
 cd wikibase-release-pipeline/deploy
+# TODO: Remove once complete
+git checkout cloud-config-test
 
 echo ">>> [4/7] Starting setup webserver container..."
 docker build -t wbs-deploy-setup .
