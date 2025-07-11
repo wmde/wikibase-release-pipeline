@@ -11,14 +11,15 @@ services:
       - bash
       - -c
       - |
-        if ! [ -v METADATA_CALLBACK  ] || ! [ -n "$METADATA_CALLBACK" ]; then
-          echo "*** ERROR ***"
-          echo "METADATA_CALLBACK not configured. Please set it in your .env file."
-          echo "Find more information about METADATA_CALLBACK in ./template.env and on "
-          echo "https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md"
-          echo "Exiting Wikibase container now."
-          exit 1
-        elif [ -v METADATA_CALLBACK  ] && [ "$METADATA_CALLBACK" = "true" ]; then
+        # TODO: enable in 5.0.0
+        # if ! [ -v METADATA_CALLBACK  ] || ! [ -n "$METADATA_CALLBACK" ]; then
+        #   echo "*** ERROR ***"
+        #   echo "METADATA_CALLBACK not configured. Please set it in your .env file."
+        #   echo "Find more information about METADATA_CALLBACK in ./template.env and on "
+        #   echo "https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md"
+        #   echo "Exiting Wikibase container now."
+        #   exit 1
+        if [ -v METADATA_CALLBACK  ] && [ "$METADATA_CALLBACK" = "true" ]; then
           bash /callback.sh
         fi
         exec bash /entrypoint.sh
