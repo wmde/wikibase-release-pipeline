@@ -85,7 +85,7 @@ echo ">>> .env file detected. Proceeding with deployment..."
 
 echo ">>> [6/7] Launching Wikibase Suite containers..."
 cd /opt/wbs/wikibase-release-pipeline/deploy
-docker compose up -d
+docker compose --ansi always up -d
 
 echo ">>> [7/7] Deployment complete!"
 echo "You can now shut down the installer container from the web UI at:"

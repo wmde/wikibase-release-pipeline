@@ -4,13 +4,55 @@
   <meta charset="UTF-8">
   <title>Wikibase Installer</title>
   <style>
-    body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; }
-    #form-area, #log-area { width: 50%; padding: 1em; box-sizing: border-box; }
-    #log-area { background: #111; color: #eee; overflow-y: scroll; white-space: pre-wrap; }
-    label { display: block; margin-top: 1em; }
-    input, button { width: 100%; padding: 0.5em; }
-    button { margin-top: 1em; }
+    body {
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+    }
+    #form-area, #log-area {
+      width: 50%;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+    #log-area {
+      background: #111;
+      color: #eee;
+      overflow-y: scroll;
+      white-space: pre-wrap;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.5em;
+    }
+    button {
+      margin-top: 1em;
+    }
+
+    /* ansi_up class-based styles */
+    .ansi-black { color: #000; }
+    .ansi-red { color: #f00; }
+    .ansi-green { color: #0f0; }
+    .ansi-yellow { color: #ff0; }
+    .ansi-blue { color: #00f; }
+    .ansi-magenta { color: #f0f; }
+    .ansi-cyan { color: #0ff; }
+    .ansi-white { color: #fff; }
+    .ansi-bright-black { color: #555; }
+    .ansi-bright-red { color: #f55; }
+    .ansi-bright-green { color: #5f5; }
+    .ansi-bright-yellow { color: #ff5; }
+    .ansi-bright-blue { color: #55f; }
+    .ansi-bright-magenta { color: #f5f; }
+    .ansi-bright-cyan { color: #5ff; }
+    .ansi-bright-white { color: #eee; }
+    .ansi-bold { font-weight: bold; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.0.0/ansi_up.min.js"></script>
 </head>
 <body>
   <div id="form-area">
@@ -29,11 +71,14 @@
     </form>
     <button id="shutdown" style="display:none;">Stop Install Webserver</button>
   </div>
-  <div id="log-area">Loading logs...</div>
+  <div id="log-area"><pre id="log">Loading logs...</pre></div>
+
   <script>
     const form = document.getElementById('configForm');
     const shutdownBtn = document.getElementById('shutdown');
-    const logArea = document.getElementById('log-area');
+    const logEl = document.getElementById('log');
+    const ansi_up = new AnsiUp();
+    ansi_up.use_classes = true;
 
     form.onsubmit = async (e) => {
       e.preventDefault();
@@ -56,8 +101,15 @@
     };
 
     async function updateLogs() {
-      const res = await fetch('/log');
-      logArea.textContent = await res.text();
+      try {
+        const res = await fetch('/log');
+        const text = await res.text();
+        const html = ansi_up.ansi_to_html(text);
+        logEl.innerHTML = html;
+        logEl.parentElement.scrollTop = logEl.parentElement.scrollHeight;
+      } catch {
+        logEl.textContent = 'Error fetching log.';
+      }
     }
 
     setInterval(updateLogs, 2000);
