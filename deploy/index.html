@@ -7,7 +7,11 @@
   <style>
     body { font-family: sans-serif; padding: 2em; max-width: 800px; margin: auto; }
     label { display: block; margin-top: 1em; font-weight: bold; }
-    input { width: 100%; padding: 0.5em; margin-top: 0.3em; }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%; padding: 0.5em; margin-top: 0.3em;
+    }
     pre {
       background-color: #f0f0f0;
       padding: 1em;
@@ -38,20 +42,21 @@
     <li>🌐 Optional default domains like <code>IP.nip.io</code> and <code>query.IP.nip.io</code></li>
     <li>🔐 Secure passwords generated automatically if left blank</li>
     <li>📮 Admin email required to complete setup</li>
+    <li>🛰️ Option to opt-in to the known Wikibases list</li>
     <li>🐳 Powered by Docker + Docker Compose</li>
     <li>🚀 One-click bootstrap via cloud-init</li>
   </ul>
 
   <form id="form">
     <label>Wikibase Public Host:
-      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.nip.io (optional)">
+      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.nip.io (optional)" type="text">
     </label>
     <label>WDQS Public Host:
-      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.nip.io (optional)">
+      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.nip.io (optional)" type="text">
     </label>
 
     <label>Admin Username:
-      <input name="MW_ADMIN_NAME" placeholder="default: admin">
+      <input name="MW_ADMIN_NAME" placeholder="default: admin" type="text">
     </label>
     <label>Admin Email (required):
       <input name="MW_ADMIN_EMAIL" required type="email" placeholder="you@example.org">
@@ -61,13 +66,18 @@
     </label>
 
     <label>Database Name:
-      <input name="DB_NAME" placeholder="default: my_wiki">
+      <input name="DB_NAME" placeholder="default: my_wiki" type="text">
     </label>
     <label>Database User:
-      <input name="DB_USER" placeholder="default: sqluser">
+      <input name="DB_USER" placeholder="default: sqluser" type="text">
     </label>
     <label>Database Password:
       <input name="DB_PASS" type="password" placeholder="Leave blank to auto-generate">
+    </label>
+
+    <label>
+      <input type="checkbox" name="METADATA_CALLBACK" value="true">
+      Include in Known Wikibases List (optional)
     </label>
   </form>
 
@@ -79,33 +89,47 @@
   </div>
 
   <script>
+    const form = document.getElementById('form');
+    const output = document.getElementById('output');
+
     const template = (v) => {
       let exportLines = '';
+
       for (const key in v) {
+        if (key === 'METADATA_CALLBACK') continue; // Handle checkbox separately
         if (v[key].trim()) {
           exportLines += `    export ${key}="${v[key]}"\n`;
         }
       }
 
+      // Checkbox: explicitly write true/false
+      exportLines += `    export METADATA_CALLBACK=${v.METADATA_CALLBACK === "true" ? "true" : "false"}\n`;
+
       return `#cloud-config
 
-    package_update: true
-    package_upgrade: true
+package_update: true
+package_upgrade: true
 
-    packages:
-      - curl
-      - git
+packages:
+  - curl
+  - git
 
-    runcmd:
-      - |
-    ${exportLines}
-        curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh | bash
-    `;
+runcmd:
+  - |
+${exportLines}
+    curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/cloud-config-test/deploy/vps-setup.sh | bash
+`;
     };
 
     function updateOutput() {
       const data = new FormData(form);
       const values = Object.fromEntries(data.entries());
+
+      // Unchecked checkbox won't appear in FormData
+      if (!('METADATA_CALLBACK' in values)) {
+        values.METADATA_CALLBACK = 'false';
+      }
+
       output.textContent = template(values);
     }
 
