@@ -24,8 +24,8 @@ HTTP/1.1 200 OK
   <script>
     async function check() {
       try {
-        const res = await fetch("http://localhost:8888", {mode: 'no-cors'});
-        location.href = "http://localhost:8888";
+        const res = await fetch("http://$PUBLIC_IP:8888", {mode: 'no-cors'});
+        location.href = "http://$PUBLIC_IP:8888";
       } catch (e) {
         setTimeout(check, 2000);
       }
