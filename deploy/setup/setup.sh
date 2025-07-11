@@ -6,7 +6,7 @@ exec > >(tee -a /opt/wbs/deploy-setup.log) 2>&1
 
 PUBLIC_IP=$(curl -s https://api.ipify.org)
 
-cat > /tmp/waiting.html <<'EOF'
+cat > /tmp/waiting.html <<EOF
 HTTP/1.1 200 OK
 
 <!DOCTYPE html>
