@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body { font-family: sans-serif; padding: 2em; max-width: 800px; margin: auto; }
-    label { display: block; margin-top: 1em; font-weight: bold; }
+    label { display: block; margin-top: 1em; font-weight: bold; font-size: 0.9em }
     input[type="text"],
     input[type="email"],
     input[type="password"] {
@@ -17,7 +17,7 @@
       padding: 1em;
       white-space: pre-wrap;
       word-wrap: break-word;
-      border-radius: 5px;
+      border-radius: 1em;
       font-size: 0.9em;
     }
     button {
@@ -30,39 +30,37 @@
   </style>
 </head>
 <body>
-  <h1>Wikibase Cloud Init Generator</h1>
+  <h1>Wikibase Suite: Deploy</h1>
+  <h2>Cloud Init Generator</h2>
 
   <p>This tool helps you generate a <code>cloud-init.yaml</code> file to deploy your own Wikibase instance on a VPS (e.g. Hetzner, DigitalOcean, AWS). Just paste the generated file into your cloud provider's <strong>User Data</strong> field when creating a server.</p>
-
-  <p><strong>All fields are optional</strong> — except <code>MW_ADMIN_EMAIL</code>, which is required. If you leave any other field blank, the setup script will generate secure defaults automatically, including passwords and domain names based on your server’s IP address (using <code>nip.io</code>).</p>
-
-  <h2>Features</h2>
-  <ul>
-    <li>🔧 Fully automated Wikibase installation</li>
-    <li>🌐 Optional default domains like <code>IP.nip.io</code> and <code>query.IP.nip.io</code></li>
-    <li>🔐 Secure passwords generated automatically if left blank</li>
-    <li>📮 Admin email required to complete setup</li>
-    <li>🛰️ Option to opt-in to the known Wikibases list</li>
-    <li>🐳 Powered by Docker + Docker Compose</li>
-    <li>🚀 One-click bootstrap via cloud-init</li>
-  </ul>
-
+  
   <form id="form">
-    <label>Wikibase Public Host:
-      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. IP.nip.io (optional)" type="text">
-    </label>
-    <label>WDQS Public Host:
-      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.IP.nip.io (optional)" type="text">
-    </label>
-
-    <label>Admin Username:
-      <input name="MW_ADMIN_NAME" placeholder="default: admin" type="text">
-    </label>
     <label>Admin Email (required):
       <input name="MW_ADMIN_EMAIL" required type="email" placeholder="you@example.org">
     </label>
-    <label>Admin Password:
-      <input name="MW_ADMIN_PASS" type="password" placeholder="Leave blank to auto-generate">
+
+    <label>
+      <input type="checkbox" name="METADATA_CALLBACK" checked>
+      Include in list of known Wikibases?
+    </label>
+
+    <label>
+      Wikibase Public Host
+      <input name="WIKIBASE_PUBLIC_HOST" placeholder="e.g. mywikibase.com, defaults to &#x3C;IP-OF-SERVER&#x3E;.nip.io" type="text">
+    </label>
+
+    <label>WDQS Public Host:
+      <input name="WDQS_PUBLIC_HOST" placeholder="e.g. query.mywikibase.com, defaults to query.&#x3C;IP-OF-SERVER&#x3E;.nip.io" type="text">
+    </label>
+
+    <hr />
+
+    <label>Admin Username:
+      <input name="MW_ADMIN_NAME" type="text" placeholder="default: Admin">
+    </label>
+    <label>Admin Password (leave blank to auto-generate):
+      <input name="MW_ADMIN_PASS" type="password">
     </label>
 
     <label>Database Name:
@@ -75,10 +73,6 @@
       <input name="DB_PASS" type="password" placeholder="Leave blank to auto-generate">
     </label>
 
-    <label>
-      <input type="checkbox" name="METADATA_CALLBACK" value="true">
-      Include in Known Wikibases List (optional)
-    </label>
   </form>
 
   <h2>Generated cloud-init.yaml</h2>
@@ -103,7 +97,7 @@
       }
 
       // Checkbox: explicitly write true/false
-      exportLines += `    export METADATA_CALLBACK=${v.METADATA_CALLBACK === "true" ? "true" : "false"}\n`;
+      exportLines += `    export METADATA_CALLBACK=${v.METADATA_CALLBACK === 'on' ? 'true' : 'false'}\n`;
 
       return `#cloud-config
 
