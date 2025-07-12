@@ -14,9 +14,6 @@ done
 if [[ "$DEPLOY_SETUP_VERBOSE" == "true" ]]; then
   VERBOSE=true
 fi
-if [[ -n "$DEPLOY_SETUP_EMAIL" ]]; then
-  EMAIL="$DEPLOY_SETUP_EMAIL"
-fi
 
 # Require a real email
 if [[ -z "$EMAIL" ]]; then
