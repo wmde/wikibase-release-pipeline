@@ -146,10 +146,35 @@ launch_wikibase() {
 
 final_message() {
   echo
-  echo "Wikibase Suite Deploy setup and running at!"
+  echo "Setup is Complete!"
   echo
-  echo "https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
-  echo
+
+  if [[ -f "$DEPLOY_DIR/.env" ]]; then
+    # Load key=value pairs from .env into current shell (safe since we control the format)
+    while IFS= read -r line; do
+      # Ignore comments and blank lines
+      [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+      eval "export $line"
+    done < "$DEPLOY_DIR/.env"
+
+    if [[ -n "$WIKIBASE_PUBLIC_HOST" ]]; then
+      echo "Access your MediaWiki / Wikibase instance at:"
+      echo
+      echo "  https://$WIKIBASE_PUBLIC_HOST"
+    else
+      echo "⚠️ Could not determine WIKIBASE_PUBLIC_HOST from .env"
+    fi
+
+    echo
+    echo "The following configuration was generated during setup."
+    echo "Please copy and save these credentials and settings securely:"
+    echo
+    sed 's/^/  /' "$DEPLOY_DIR/.env"
+    echo
+  else
+    echo "⚠️ .env file not found at $DEPLOY_DIR/.env"
+    echo
+  fi
 }
 
 # --- Execution ---
