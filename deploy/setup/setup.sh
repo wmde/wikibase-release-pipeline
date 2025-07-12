@@ -123,7 +123,11 @@ start_setup_wizard_container() {
 }
 
 wait_for_env_file() {
-  log "Waiting for $DEPLOY_DIR/.env to be created..."
+  echo "Wikibase Suite Deploy Setup started"
+  echo "To continue setup navigate to:"
+  echo
+  echo "https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
+  echo
   until [ -f "$DEPLOY_DIR/.env" ]; do
     sleep 2
   done
@@ -131,16 +135,17 @@ wait_for_env_file() {
 }
 
 launch_wikibase() {
-  log "Launching Wikibase Suite containers..."
+  log "Launching Wikibase Suite Docker containers..."
   cd "$DEPLOY_DIR"
   log_cmd "docker compose --ansi always up -d"
 }
 
 final_message() {
   echo
-  echo "Wikibase Suite Deploy Setup started"
-  echo "To continue setup navigate to:"
-  echo "  https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
+  echo "Wikibase Suite Deploy setup and running at!"
+  echo
+  echo "https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
+  echo
 }
 
 # --- Execution ---
