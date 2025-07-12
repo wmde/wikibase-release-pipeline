@@ -102,8 +102,8 @@ generate_lets_encrypt_cert() {
       -d "$CERT_DOMAIN"
 
   CERT_PATH="$DEPLOY_DIR/setup/letsencrypt/live/$CERT_DOMAIN"
-  ln -sf "$CERT_PATH/fullchain.pem" "$DEPLOY_DIR/setup/certs/cert.pem"
-  ln -sf "$CERT_PATH/privkey.pem" "$DEPLOY_DIR/setup/certs/key.pem"
+  cp "$CERT_PATH/fullchain.pem" "$DEPLOY_DIR/setup/certs/cert.pem"
+  cp "$CERT_PATH/privkey.pem" "$DEPLOY_DIR/setup/certs/key.pem"
 }
 
 start_setup_wizard_container() {
@@ -119,7 +119,6 @@ start_setup_wizard_container() {
     -v $DEPLOY_DIR:/data \
     -v $DEPLOY_DIR/setup/certs:/certs \
     -v $LOG_FILE:/log/deploy-setup.log:ro \
-    -e SETUP_DOMAIN=$CERT_DOMAIN \
     deploy-setup-wizard"
 }
 

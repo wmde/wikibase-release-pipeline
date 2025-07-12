@@ -95,7 +95,7 @@ app.post('/shutdown', (req, res) => {
 
 // HTTPS server setup
 if (!fs.existsSync(CERT_PATH) || !fs.existsSync(KEY_PATH)) {
-  console.error('Missing SSL certificate or key in /data/setup/');
+  console.error('Missing SSL certificate or key in /certs');
   process.exit(1);
 }
 
