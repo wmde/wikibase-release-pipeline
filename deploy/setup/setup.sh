@@ -41,11 +41,14 @@ WBS_DIR="/opt/wbs"
 REPO_URL="https://github.com/wmde/wikibase-release-pipeline.git"
 DEPLOY_DIR="$WBS_DIR/wikibase-release-pipeline/deploy"
 LOG_FILE="$WBS_DIR/deploy-setup.log"
+
+PUBLIC_IP=$(curl $CURL_SILENT https://api.ipify.org)
+# Random suffic keeps Let's Encrypt from rate limiting
+SETUP_PAGE_DOMAIN_RAND_SUFFIX=$(head /dev/urandom | tr -dc a-z0-9 | head -c 6)
+SETUP_PAGE_DOMAIN="wbs-setup-${SETUP_PAGE_DOMAIN_RAND_SUFFIX}.${PUBLIC_IP}.nip.io"
 SETUP_PAGE_PORT=8888
 
-# Get public IP
 CURL_SILENT="--silent --show-error --fail"
-PUBLIC_IP=$(curl $CURL_SILENT https://api.ipify.org)
 
 # Setup logging
 mkdir -p "$WBS_DIR"
@@ -86,11 +89,7 @@ generate_lets_encrypt_cert() {
   log "Generating Let's Encrypt TLS certificate..."
 
   log_cmd "mkdir -p $DEPLOY_DIR/setup/letsencrypt $DEPLOY_DIR/setup/certs"
-
-  RAND_SUFFIX=$(head /dev/urandom | tr -dc a-z0-9 | head -c 6)
-  CERT_DOMAIN="wbs-setup-${RAND_SUFFIX}.${PUBLIC_IP}.nip.io"
-
-  log "Using domain: $CERT_DOMAIN"
+  log "Using domain: $SETUP_PAGE_DOMAIN"
 
   # Pre-pull certbot image to suppress output
   log_cmd "docker pull certbot/certbot"
@@ -104,9 +103,9 @@ generate_lets_encrypt_cert() {
       --preferred-challenges http \
       --agree-tos \
       --email $EMAIL \
-      -d $CERT_DOMAIN"
+      -d $SETUP_PAGE_DOMAIN"
 
-  CERT_PATH="$DEPLOY_DIR/setup/letsencrypt/live/$CERT_DOMAIN"
+  CERT_PATH="$DEPLOY_DIR/setup/letsencrypt/live/$SETUP_PAGE_DOMAIN"
   cp "$CERT_PATH/fullchain.pem" "$DEPLOY_DIR/setup/certs/cert.pem"
   cp "$CERT_PATH/privkey.pem" "$DEPLOY_DIR/setup/certs/key.pem"
 }
@@ -130,18 +129,18 @@ start_setup_wizard_container() {
 wait_for_env_file() {
   echo "To complete setup navigate to:"
   echo
-  echo "https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
+  echo "https://$SETUP_PAGE_DOMAIN:$SETUP_PAGE_PORT"
   echo
   until [ -f "$DEPLOY_DIR/.env" ]; do
     sleep 2
   done
-  log ".env file detected. Proceeding with deployment..."
+  echo "Configuration saved."
 }
 
 launch_wikibase() {
-  log "Launching Wikibase Suite Docker containers..."
+  echo "Launching Wikibase Suite Docker containers..."
   log_cmd "cd $DEPLOY_DIR"
-  log_cmd "docker compose --ansi always up -d"
+  log_cmd "docker compose up -d"
 }
 
 final_message() {

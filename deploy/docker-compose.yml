@@ -112,7 +112,7 @@ services:
     volumes:
       - ./config:/config:z
     environment:
-      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparqla
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
@@ -141,4 +141,3 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  traefik-letsencrypt-data:  # still needed for override!

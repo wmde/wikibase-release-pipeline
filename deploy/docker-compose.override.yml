@@ -25,3 +25,6 @@ services:
     environment:
       WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
       WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+
+volumes:
+  traefik-letsencrypt-data:
