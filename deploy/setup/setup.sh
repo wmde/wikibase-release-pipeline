@@ -55,6 +55,11 @@ log "Verbose mode enabled"
 
 # --- Functions ---
 
+start_message() {
+    echo "Wikibase Suite Deploy Setup starting..."
+    echo
+}
+
 setup_docker() {
   log "Installing Docker..."
   log_cmd "curl -fsSL https://get.docker.com | sh"
@@ -79,7 +84,7 @@ clone_release_pipeline() {
 generate_lets_encrypt_cert() {
   log "Generating Let's Encrypt TLS certificate..."
 
-  mkdir -p "$DEPLOY_DIR/setup/letsencrypt" "$DEPLOY_DIR/setup/certs"
+  log_cmd "mkdir -p $DEPLOY_DIR/setup/letsencrypt $DEPLOY_DIR/setup/certs"
 
   RAND_SUFFIX=$(head /dev/urandom | tr -dc a-z0-9 | head -c 6)
   CERT_DOMAIN="wbs-setup-${RAND_SUFFIX}.${PUBLIC_IP}.nip.io"
@@ -88,8 +93,7 @@ generate_lets_encrypt_cert() {
 
   # Pre-pull certbot image to suppress output
   log_cmd "docker pull certbot/certbot"
-
-  docker run --rm \
+  log_cmd "docker run --rm \
     -v "$DEPLOY_DIR/setup/letsencrypt:/etc/letsencrypt" \
     -v "$DEPLOY_DIR/setup/certs:/certs" \
     -p 80:80 \
@@ -98,8 +102,8 @@ generate_lets_encrypt_cert() {
       --non-interactive \
       --preferred-challenges http \
       --agree-tos \
-      --email "$EMAIL" \
-      -d "$CERT_DOMAIN"
+      --email $EMAIL \
+      -d $CERT_DOMAIN"
 
   CERT_PATH="$DEPLOY_DIR/setup/letsencrypt/live/$CERT_DOMAIN"
   cp "$CERT_PATH/fullchain.pem" "$DEPLOY_DIR/setup/certs/cert.pem"
@@ -123,8 +127,7 @@ start_setup_wizard_container() {
 }
 
 wait_for_env_file() {
-  echo "Wikibase Suite Deploy Setup started"
-  echo "To continue setup navigate to:"
+  echo "To complete setup navigate to:"
   echo
   echo "https://$CERT_DOMAIN:$SETUP_PAGE_PORT"
   echo
@@ -136,7 +139,7 @@ wait_for_env_file() {
 
 launch_wikibase() {
   log "Launching Wikibase Suite Docker containers..."
-  cd "$DEPLOY_DIR"
+  log_cmd "cd $DEPLOY_DIR"
   log_cmd "docker compose --ansi always up -d"
 }
 
@@ -150,6 +153,7 @@ final_message() {
 
 # --- Execution ---
 
+start_message
 setup_docker
 install_docker_compose
 clone_release_pipeline
