@@ -56,6 +56,7 @@ log "Verbose mode enabled"
 # --- Functions ---
 
 start_message() {
+    echo
     echo "Wikibase Suite Deploy Setup starting..."
     echo
 }
