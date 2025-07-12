@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
 set -e
 
-PUBLIC_IP=$(curl -s https://api.ipify.org)
+# Constants
+WBS_DIR="/opt/wbs"
+REPO_URL="https://github.com/wmde/wikibase-release-pipeline.git"
+DEPLOY_DIR="$WBS_DIR/wikibase-release-pipeline/deploy"
+LOG_FILE="$WBS_DIR/deploy-setup.log"
 INITIAL_SETUP_PAGE_PORT=80
 SETUP_PAGE_PORT=8888
 
-WBS_DIR="/opt/wbs"
-DEPLOY_DIR="$WBS_DIR/wikibase-release-pipeline/deploy"
-LOG_FILE=$WBS_DIR/deploy-setup.log
+# Get public IP
+PUBLIC_IP=$(curl -s https://api.ipify.org)
 
-mkdir -p $WBS_DIR
-exec > >(tee -a $LOG_FILE) 2>&1
+# Setup logging
+mkdir -p "$WBS_DIR"
+exec > >(tee -a "$LOG_FILE") 2>&1
 
-cat > /tmp/waiting.html <<EOF
+# --- Functions ---
+
+start_waiting_page() {
+  cat > /tmp/waiting.html <<EOF
 HTTP/1.1 200 OK
 
 <!DOCTYPE html>
@@ -42,61 +49,89 @@ HTTP/1.1 200 OK
 </html>
 EOF
 
-# Start temporary HTTP server in background
-cat /tmp/waiting.html | nc -l -p $INITIAL_SETUP_PAGE_PORT -q 1 &
-NC_PID=$!
+  cat /tmp/waiting.html | nc -l -p $INITIAL_SETUP_PAGE_PORT -q 1 &
+  NC_PID=$!
 
-echo "Please go to http://$PUBLIC_IP to continue Wikibase Suite Deploy setup..."
+  echo "Open http://$PUBLIC_IP to begin Wikibase Suite Deploy setup..."
 
-# Background poller that exits when $SETUP_PAGE_PORT is available
-(
-  until curl -sf http://$PUBLIC_IP:$SETUP_PAGE_PORT > /dev/null; do
-    sleep 1
+  (
+    until curl -sf "http://$PUBLIC_IP:$SETUP_PAGE_PORT" > /dev/null; do
+      sleep 1
+    done
+    echo "Setup page detected on port $SETUP_PAGE_PORT, stopping temporary server..."
+    kill $NC_PID 2>/dev/null || true
+  ) &
+}
+
+setup_docker() {
+  echo "Installing Docker..."
+  curl -fsSL https://get.docker.com | sh
+
+  echo "Enabling and starting Docker service..."
+  systemctl enable --now docker
+}
+
+install_docker_compose() {
+  echo "Installing Docker Compose plugin..."
+  mkdir -p ~/.docker/cli-plugins
+  curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+    -o ~/.docker/cli-plugins/docker-compose
+  chmod +x ~/.docker/cli-plugins/docker-compose
+}
+
+clone_release_pipeline() {
+  echo "Cloning Wikibase Release Pipeline repository..."
+  cd "$WBS_DIR"
+  git clone "$REPO_URL"
+  cd wikibase-release-pipeline
+  git checkout cloud-config-test  # TODO: Remove once stable
+}
+
+start_setup_wizard_container() {
+  echo "Starting setup webserver container..."
+  cd "$DEPLOY_DIR/setup"
+
+  # Generate self-signed SSL certs
+  mkdir -p "certs"
+  docker run --rm -v "$DEPLOY_DIR/setup/certs:/certs" stakater/ssl-certs-generator:1.0
+
+  docker build -t deploy-setup-wizard .
+  docker run -d \
+    --name deploy-setup-wizard \
+    -p $SETUP_PAGE_PORT:443 \
+    -v "$DEPLOY_DIR:/data" \
+    -v "$DEPLOY_DIR/setup/certs:/certs" \
+    -v "$LOG_FILE:/log/deploy-setup.log:ro" \
+    deploy-setup-wizard
+}
+
+wait_for_env_file() {
+  echo "Waiting for $DEPLOY_DIR/.env to be created..."
+  until [ -f "$DEPLOY_DIR/.env" ]; do
+    sleep 2
   done
-  echo ">>> Setup page detected on port $SETUP_PAGE_PORT, stopping temporary server..."
-  kill $NC_PID 2>/dev/null || true
-) &
+  echo ".env file detected. Proceeding with deployment..."
+}
 
-echo ">>> [1/8] 🌐 Installing Docker..."
-curl -fsSL https://get.docker.com | sh
+launch_wikibase() {
+  echo "Launching Wikibase Suite containers..."
+  cd "$DEPLOY_DIR"
+  docker compose --ansi always up -d
+}
 
-echo ">>> [2/8] 🐳 Installing Docker Compose plugin..."
-mkdir -p ~/.docker/cli-plugins
-curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
-  -o ~/.docker/cli-plugins/docker-compose
-chmod +x ~/.docker/cli-plugins/docker-compose
+final_message() {
+  echo "Deployment complete!"
+  echo "You can now shut down the installer container from the web UI at:"
+  echo "  http://$PUBLIC_IP:$SETUP_PAGE_PORT"
+}
 
-echo "[3/8] 🌀 Enabling Docker service..."
-systemctl enable --now docker
+# --- Execution ---
 
-echo ">>> [4/8] 🔄 Cloning Wikibase Release Pipeline..."
-cd $WBS_DIR
-
-git clone https://github.com/wmde/wikibase-release-pipeline.git
-cd wikibase-release-pipeline
-# TODO: Remove once complete
-git checkout cloud-config-test
-cd deploy/setup
-
-echo ">>> [5/8] 🏁 Starting setup webserver container..."
-docker build -t wbs-deploy-setup .
-docker run -d \
-  --name wbs-deploy-setup \
-  -p $SETUP_PAGE_PORT:80 \
-  -v $DEPLOY_DIR:/data \
-  -v $LOG_FILE:/log/deploy-setup.log:ro \
-  wbs-deploy-setup
-
-echo ">>> [6/8] 🕐 Waiting for $DEPLOY_DIR/.env..."
-until [ -f $DEPLOY_DIR/.env ]; do
-  sleep 2
-done
-echo ">>> .env file detected. Proceeding with deployment..."
-
-echo ">>> [7/8] 🚀 Launching Wikibase Suite containers..."
-cd $DEPLOY_DIR
-docker compose --ansi always up -d
-
-echo ">>> [8/8] ✅ Deployment complete!"
-echo "You can now shut down the installer container from the web UI at:"
-echo "  http://${PUBLIC_IP}:${SETUP_PAGE_PORT}"
+start_waiting_page
+setup_docker
+install_docker_compose
+clone_release_pipeline
+start_setup_wizard_container
+wait_for_env_file
+launch_wikibase
+final_message
