@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <title>Wikibase Installer</title>
@@ -72,16 +72,16 @@
     <h2>Wikibase Suite Deploy Setup</h2>
     <h3>Configuration</h3>
     <form id="configForm">
-      <label>Admin Email Address (required, used for MediaWiki Admin user, etc): <input name="MW_ADMIN_EMAIL" required /></label>
-      <label>Wikibase Host (defaults to &#x3C;SERVER-IP&#x3E;.nip.io): <input name="WIKIBASE_PUBLIC_HOST" /></label>
-      <label>Query Service Host (defaults to query.&#x3C;SERVER-IP&#x3E;.nip.io: <input name="WDQS_PUBLIC_HOST" /></label>
+      <label>Admin Email Address (<em>required, used for MediaWiki Admin user, etc</em>): <input name="MW_ADMIN_EMAIL" required /></label>
+      <label>Wikibase Host (<em>e.g. wikibase.myhostname.com. defaults to &#x3C;SERVER-IP&#x3E;.nip.io</em>): <input name="WIKIBASE_PUBLIC_HOST" /></label>
+      <label>Query Service Host (<em>defaults to query.&#x3C;SERVER-IP&#x3E;.nip.io</em>): <input name="WDQS_PUBLIC_HOST" /></label>
       <label>
         <input type="checkbox" name="METADATA_CALLBACK" checked role="switch" />
         This Wikibase should be visible in the global Wikibase directory
       </label>
       <br />
       <details name="config">
-        <summary role="secondary">Advanced</summary>
+        <summary role="secondary">Advanced Options</summary>
         <label>MediaWiki Admin Name: <input name="MW_ADMIN_NAME" /></label>
         <label>MediaWiki Admin Password: <input name="MW_ADMIN_PASS" type="password" /></label>
         <label>Database Name: <input name="DB_NAME" /></label>
