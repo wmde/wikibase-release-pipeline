@@ -81,6 +81,7 @@
   <div id="log-area"><pre id="log">Loading logs...</pre></div>
 
   <script>
+    const WAIT_TIMEOUT_MS = 60000 * 10
     const form = document.getElementById('configForm');
     const shutdownBtn = document.getElementById('shutdown');
     const statusEl = document.getElementById('status');
@@ -120,7 +121,7 @@
       }
     };
 
-    async function waitForMainPage(host, timeout = 120000) {
+    async function waitForMainPage(host, timeout = WAIT_TIMEOUT_MS) {
       const start = Date.now();
       const url = `https://${host}/wiki/Main_Page`;
 
