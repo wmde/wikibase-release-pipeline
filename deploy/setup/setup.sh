@@ -8,7 +8,6 @@ for arg in "$@"; do
   [[ "$arg" == "--verbose" ]] && VERBOSE=true
 done
 
-# Allow verbosity via env var too
 if [[ "$DEPLOY_SETUP_VERBOSE" == "true" ]]; then
   VERBOSE=true
 fi
@@ -16,6 +15,14 @@ fi
 log() {
   if $VERBOSE; then
     echo "$@"
+  fi
+}
+
+log_cmd() {
+  if $VERBOSE; then
+    bash -c "$@"
+  else
+    bash -c "$@" &> /dev/null
   fi
 }
 
@@ -40,27 +47,23 @@ log "Verbose mode enabled"
 
 setup_docker() {
   log "Installing Docker..."
-  curl -fsSL https://get.docker.com | sh
-  log "Docker installed"
-
-  log "Enabling and starting Docker service..."
-  systemctl enable --now docker
+  log_cmd "curl -fsSL https://get.docker.com | sh"
+  log_cmd "systemctl enable --now docker"
 }
 
 install_docker_compose() {
   log "Installing Docker Compose plugin..."
   mkdir -p ~/.docker/cli-plugins
-  curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
-    -o ~/.docker/cli-plugins/docker-compose
+  log_cmd "curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o ~/.docker/cli-plugins/docker-compose"
   chmod +x ~/.docker/cli-plugins/docker-compose
 }
 
 clone_release_pipeline() {
   log "Cloning Wikibase Release Pipeline repository..."
   cd "$WBS_DIR"
-  git clone "$REPO_URL"
+  log_cmd "git clone $REPO_URL"
   cd wikibase-release-pipeline
-  git checkout cloud-config-test  # TODO: Remove once stable
+  log_cmd "git checkout cloud-config-test"
 }
 
 generate_lets_encrypt_cert() {
@@ -79,6 +82,7 @@ generate_lets_encrypt_cert() {
     -p 80:80 \
     certbot/certbot certonly \
       --standalone \
+      --non-interactive \
       --preferred-challenges http \
       --agree-tos \
       --no-eff-email \
@@ -96,15 +100,15 @@ start_setup_wizard_container() {
 
   generate_lets_encrypt_cert
 
-  docker build -t deploy-setup-wizard .
-  docker run -d \
+  log_cmd "docker build -t deploy-setup-wizard ."
+  log_cmd "docker run -d \
     --name deploy-setup-wizard \
     -p $SETUP_PAGE_PORT:443 \
-    -v "$DEPLOY_DIR:/data" \
-    -v "$DEPLOY_DIR/setup/certs:/certs" \
-    -v "$LOG_FILE:/log/deploy-setup.log:ro" \
-    -e SETUP_DOMAIN="$CERT_DOMAIN" \
-    deploy-setup-wizard
+    -v $DEPLOY_DIR:/data \
+    -v $DEPLOY_DIR/setup/certs:/certs \
+    -v $LOG_FILE:/log/deploy-setup.log:ro \
+    -e SETUP_DOMAIN=$CERT_DOMAIN \
+    deploy-setup-wizard"
 }
 
 wait_for_env_file() {
@@ -118,7 +122,7 @@ wait_for_env_file() {
 launch_wikibase() {
   log "Launching Wikibase Suite containers..."
   cd "$DEPLOY_DIR"
-  docker compose --ansi always up -d
+  log_cmd "docker compose --ansi always up -d"
 }
 
 final_message() {
