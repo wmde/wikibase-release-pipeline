@@ -4,12 +4,25 @@ set -e
 # --- Config ---
 
 VERBOSE=false
+EMAIL="wbs-setup@wikimedia.de"
 for arg in "$@"; do
   [[ "$arg" == "--verbose" ]] && VERBOSE=true
+  [[ "$arg" == --email=* ]] && EMAIL="${arg#*=}"
 done
 
+# Allow verbosity and email via env
 if [[ "$DEPLOY_SETUP_VERBOSE" == "true" ]]; then
   VERBOSE=true
+fi
+if [[ -n "$DEPLOY_SETUP_EMAIL" ]]; then
+  EMAIL="$DEPLOY_SETUP_EMAIL"
+fi
+
+# Require a real email
+if [[ -z "$EMAIL" ]]; then
+  echo "❌ Error: No email provided for Let's Encrypt."
+  echo "Use --email=you@example.com or set DEPLOY_SETUP_EMAIL"
+  exit 1
 fi
 
 log() {
@@ -76,6 +89,9 @@ generate_lets_encrypt_cert() {
 
   log "Using domain: $CERT_DOMAIN"
 
+  # Pre-pull certbot image to suppress output
+  log_cmd "docker pull certbot/certbot"
+
   docker run --rm \
     -v "$DEPLOY_DIR/setup/letsencrypt:/etc/letsencrypt" \
     -v "$DEPLOY_DIR/setup/certs:/certs" \
@@ -85,8 +101,7 @@ generate_lets_encrypt_cert() {
       --non-interactive \
       --preferred-challenges http \
       --agree-tos \
-      --no-eff-email \
-      --email you@example.com \
+      --email "$EMAIL" \
       -d "$CERT_DOMAIN"
 
   CERT_PATH="$DEPLOY_DIR/setup/letsencrypt/live/$CERT_DOMAIN"
