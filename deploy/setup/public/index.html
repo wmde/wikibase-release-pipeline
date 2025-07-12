@@ -1,42 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <title>Wikibase Installer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css"
+  />
   <style>
     body {
-      font-family: sans-serif;
       display: flex;
-      height: 100vh;
-      margin: 0;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 1rem;
     }
-    #form-area, #log-area {
-      width: 50%;
-      padding: 1em;
-      box-sizing: border-box;
-    }
-    #log-area {
-      background: #111;
-      color: #eee;
-      overflow-y: scroll;
-      white-space: pre-wrap;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-    }
-    input, button {
+    main {
+      flex: 1;
+      max-width: 800px;
+      margin: auto;
       width: 100%;
-      padding: 0.5em;
     }
-    button {
-      margin-top: 1em;
-    }
-    #status {
-      margin-top: 1em;
+    #log-wrapper {
+      background-color: #111;
+      color: #eee;
+      font-family: monospace;
       padding: 1em;
-      background: #eef;
-      border: 1px solid #99c;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      border-radius: 0.5rem;
+      white-space: pre-wrap;
+      margin-top: 1rem;
+    }
+    #toggle-log {
+      margin-top: 1.5rem;
+    }
+
+    #optional-config {
+      font-size: 0.8em;
+      padding: 2em;
+      border-width: 1px;
+      border-color: rgb(230,230,230);
+      margin-bottom: 1em;
+      border-radius: 1em;
     }
 
     /* ansi_up class-based styles */
@@ -61,31 +68,46 @@
   <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.0.0/ansi_up.min.js"></script>
 </head>
 <body>
-  <div id="form-area">
-    <h2>Configure Wikibase</h2>
+  <main>
+    <h2>Wikibase Suite Deploy Setup</h2>
+    <h3>Configuration</h3>
     <form id="configForm">
-      <label>Admin Email (required): <input name="MW_ADMIN_EMAIL" required /></label>
-      <label>Wikibase Host: <input name="WIKIBASE_PUBLIC_HOST" /></label>
-      <label>WDQS Host: <input name="WDQS_PUBLIC_HOST" /></label>
-      <label>Admin Name: <input name="MW_ADMIN_NAME" /></label>
-      <label>Admin Password: <input name="MW_ADMIN_PASS" type="password" /></label>
-      <label>DB Name: <input name="DB_NAME" /></label>
-      <label>DB User: <input name="DB_USER" /></label>
-      <label>DB Password: <input name="DB_PASS" type="password" /></label>
-      <label>Metadata Callback Opt-In? <input name="METADATA_CALLBACK" type="checkbox" checked /></label>
-      <button type="submit">Submit</button>
+      <label>Admin Email Address (required, used for MediaWiki Admin user, etc): <input name="MW_ADMIN_EMAIL" required /></label>
+      <label>Wikibase Host (defaults to &#x3C;SERVER-IP&#x3E;.nip.io): <input name="WIKIBASE_PUBLIC_HOST" /></label>
+      <label>Query Service Host (defaults to query.&#x3C;SERVER-IP&#x3E;.nip.io: <input name="WDQS_PUBLIC_HOST" /></label>
+      <label>
+        <input type="checkbox" name="METADATA_CALLBACK" checked role="switch" />
+        This Wikibase should be visible in the global Wikibase directory
+      </label>
+      <br />
+      <details name="config">
+        <summary role="secondary">Advanced</summary>
+        <label>MediaWiki Admin Name: <input name="MW_ADMIN_NAME" /></label>
+        <label>MediaWiki Admin Password: <input name="MW_ADMIN_PASS" type="password" /></label>
+        <label>Database Name: <input name="DB_NAME" /></label>
+        <label>Database User: <input name="DB_USER" /></label>
+        <label>Database Password: <input name="DB_PASS" type="password" /></label>
+      </details>
+      <button type="submit">Save</button>
     </form>
+
     <div id="status" style="display: none;"></div>
     <button id="shutdown" style="display:none;">Stop Install Webserver</button>
-  </div>
-  <div id="log-area"><pre id="log">Loading logs...</pre></div>
+    <button id="toggle-log">Show Logs</button>
+
+    <div id="log-wrapper">
+      <div id="log">Loading logs...</div>
+    </div>
+  </main>
 
   <script>
-    const WAIT_TIMEOUT_MS = 60000 * 10
+    const WAIT_TIMEOUT_MS = 60000 * 10;
     const form = document.getElementById('configForm');
     const shutdownBtn = document.getElementById('shutdown');
     const statusEl = document.getElementById('status');
     const logEl = document.getElementById('log');
+    const logWrapper = document.getElementById('log-wrapper');
+    const toggleLog = document.getElementById('toggle-log');
     const ansi_up = new AnsiUp();
     ansi_up.use_classes = true;
 
@@ -105,16 +127,16 @@
         const host = json.generated.WIKIBASE_PUBLIC_HOST;
 
         form.querySelectorAll('input').forEach(i => i.disabled = true);
-        shutdownBtn.style.display = 'block';
+        shutdownBtn.style.display = 'inline-block';
 
         statusEl.style.display = 'block';
-        statusEl.textContent = `Waiting for your Wikibase to become available at https://${host}/wiki/Main_Page...`;
+        statusEl.innerHTML = `Waiting for your Wikibase to become available at <a href="https://${host}" target="_blank">https://${host}</a>...`;
 
         try {
           await waitForMainPage(host);
           statusEl.innerHTML = `✅ Your Wikibase is ready! <a href="https://${host}" target="_blank">Go to your Wikibase</a>`;
         } catch (err) {
-          statusEl.textContent = '⚠️ Timeout: Wikibase did not respond in time. You may try refreshing manually.';
+          statusEl.innerHTML = '⚠️ Timeout: Wikibase did not respond in time. You may try refreshing manually.';
         }
       } else {
         alert('Failed to save environment. See console for details.');
@@ -141,13 +163,19 @@
       await fetch('/shutdown', { method: 'POST' });
     };
 
+    toggleLog.onclick = () => {
+      const isVisible = logWrapper.style.display === 'block';
+      logWrapper.style.display = isVisible ? 'none' : 'block';
+      toggleLog.textContent = isVisible ? 'Show Logs' : 'Hide Logs';
+    };
+
     async function updateLogs() {
       try {
         const res = await fetch('/log');
         const text = await res.text();
         const html = ansi_up.ansi_to_html(text);
         logEl.innerHTML = html;
-        logEl.parentElement.scrollTop = logEl.parentElement.scrollHeight;
+        logWrapper.scrollTop = logWrapper.scrollHeight;
       } catch {
         logEl.textContent = 'Error fetching log.';
       }
