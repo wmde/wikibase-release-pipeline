@@ -32,6 +32,12 @@
     button {
       margin-top: 1em;
     }
+    #status {
+      margin-top: 1em;
+      padding: 1em;
+      background: #eef;
+      border: 1px solid #99c;
+    }
 
     /* ansi_up class-based styles */
     .ansi-black { color: #000; }
@@ -69,6 +75,7 @@
       <label>Metadata Callback Opt-In? <input name="METADATA_CALLBACK" type="checkbox" checked /></label>
       <button type="submit">Submit</button>
     </form>
+    <div id="status" style="display: none;"></div>
     <button id="shutdown" style="display:none;">Stop Install Webserver</button>
   </div>
   <div id="log-area"><pre id="log">Loading logs...</pre></div>
@@ -76,6 +83,7 @@
   <script>
     const form = document.getElementById('configForm');
     const shutdownBtn = document.getElementById('shutdown');
+    const statusEl = document.getElementById('status');
     const logEl = document.getElementById('log');
     const ansi_up = new AnsiUp();
     ansi_up.use_classes = true;
@@ -84,17 +92,49 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
       data.METADATA_CALLBACK = form.METADATA_CALLBACK.checked ? "true" : "false";
+
       const res = await fetch('/write-env', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+
       if (res.ok) {
-        alert('Saved. You can stop the installer after setup.');
+        const json = await res.json();
+        const host = json.generated.WIKIBASE_PUBLIC_HOST;
+
         form.querySelectorAll('input').forEach(i => i.disabled = true);
         shutdownBtn.style.display = 'block';
+
+        statusEl.style.display = 'block';
+        statusEl.textContent = `Waiting for your Wikibase to become available at https://${host}/wiki/Main_Page...`;
+
+        try {
+          await waitForMainPage(host);
+          statusEl.innerHTML = `✅ Your Wikibase is ready! <a href="https://${host}" target="_blank">Go to your Wikibase</a>`;
+        } catch (err) {
+          statusEl.textContent = '⚠️ Timeout: Wikibase did not respond in time. You may try refreshing manually.';
+        }
+      } else {
+        alert('Failed to save environment. See console for details.');
       }
     };
+
+    async function waitForMainPage(host, timeout = 120000) {
+      const start = Date.now();
+      const url = `https://${host}/wiki/Main_Page`;
+
+      while (Date.now() - start < timeout) {
+        try {
+          const res = await fetch(url, { method: 'HEAD' });
+          if (res.status === 200) return true;
+        } catch {
+          // Ignore and retry
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+      throw new Error('Timed out');
+    }
 
     shutdownBtn.onclick = async () => {
       await fetch('/shutdown', { method: 'POST' });
