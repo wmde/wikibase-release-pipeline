@@ -47,7 +47,7 @@ Steps to Launch a New Wikibase Suite Deploy Instance
 1. Provision a VPS with the minimum recommended specification or greater
 2. SSH in to your new VPS instance as root user and copy/paste this command:
 
-    `curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/cloud-config-test/deploy/setup/setup.sh | bash`
+    `curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash`
 
 3. Open the setup URL printed in the terminal (based on your server’s IP)
 4. Once prompted on the web page, enter your MediaWiki admin email, choose whether to advertise your instance, and fill in any optional fields including custom domain names (if preconfigured in DNS)
