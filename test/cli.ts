@@ -11,6 +11,7 @@ import * as path from 'path';
 const targetDirectory = './suites/';
 const allContents = fs.readdirSync( targetDirectory );
 export const allSuiteNames = allContents.filter( ( content ) =>
+	// eslint-disable-next-line security/detect-non-literal-fs-filename
 	fs.statSync( path.join( targetDirectory, content ) ).isDirectory()
 );
 
