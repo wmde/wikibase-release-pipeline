@@ -107,7 +107,7 @@ clone_repo() {
   cd "$WBS_DIR"
   log_cmd "git clone $REPO_URL"
   cd wikibase-release-pipeline
-  log_cmd "git checkout cloud-config-test"
+  log_cmd "git checkout deploy-setup-script"
 }
 
 generate_ssl_cert_for_setup_webserver() {
