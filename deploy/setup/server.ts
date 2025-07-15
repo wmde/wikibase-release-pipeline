@@ -1,11 +1,11 @@
-// server.ts
-import express from 'express';
+/* eslint-disable n/no-missing-import */
 import { writeFile, readFile } from 'fs/promises';
 import { existsSync, readFileSync } from 'fs';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import https, { request } from 'https';
+import express from 'express';
 import { Eta } from 'eta';
 
 const fileName = fileURLToPath( import.meta.url );
