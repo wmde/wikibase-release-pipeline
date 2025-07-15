@@ -149,7 +149,7 @@
             </p>
           </div>
           <div id="config-final-wrapper">
-            <p><strong>⚠️📋 Please download or copy and save these configuration values somewhere secure. They won't be shown again.</strong></p>
+            <p><strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong></p>
             <pre id="config-final"></pre>
             <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as .env file</a>
             <button id="copy-config">Copy</button>
