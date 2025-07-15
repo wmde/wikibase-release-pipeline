@@ -17,7 +17,8 @@
 		"*.yml",
 		"*.yaml",
 		"*.json",
-		"*.png"
+		"*.png",
+		"*.ico"
 	],
 	"rules": {
 		"eol-last": [ "error", "always" ]
