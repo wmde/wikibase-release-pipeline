@@ -88,7 +88,7 @@ services:
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
   elasticsearch:
-    image: wikibase/elasticsearch:1
+    image: wikibase/elasticsearch:latest
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -101,7 +101,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs:2
+    image: wikibase/wdqs:latest
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -122,8 +122,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: wikibase/wdqs:2
-    command: /runUpdate.sh
+    image: wikibase/wdqs:latest
     depends_on:
       wdqs:
         condition: service_healthy
@@ -139,7 +138,7 @@ services:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:2
+    image: wikibase/wdqs-frontend:latest
     restart: unless-stopped
     volumes:
       - ./config:/config:z
@@ -152,7 +151,7 @@ services:
       start_period: 2m
 
   quickstatements:
-    image: wikibase/quickstatements:1
+    image: wikibase/quickstatements:latest
     depends_on:
       wikibase:
         condition: service_healthy
@@ -168,51 +167,26 @@ services:
       start_period: 2m
 
   # --------------------------------------------------
-  # C. REVERSE PROXY AND SSL SERVICES
+  # C. REVERSE PROXY
   # --------------------------------------------------
 
-  # This is the reverse proxy and SSL service
-  traefik:
-    image: traefik:3
-    command:
-      # traefik static configuration via command line
-      # enable accesslog
-      - "--accesslog.format=common"
-      # http endpoint
-      - "--entrypoints.web.address=:80"
-      # https endpoint
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asdefault"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      # http to https redirect
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # ACME SSL certificate generation
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # additionial traefik dynamic configuration via config file
-      - "--providers.file.filename=/etc/traefik/dynamic.yml"
-      # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      # Uncomment the following line for debugging, also expose port 8080 below
-      # - "--api.dashboard=true"
-      # - "--api.insecure=true"
-      # - "--log.level=DEBUG"
-    restart: unless-stopped
+  nginx:
+    image: wikibase/deploy-reverse-proxy
+    build:
+      context: ./deploy-reverse-proxy
+    depends_on:
+      - quickstatements
+      - wikibase
+      - wdqs-frontend
     ports:
-      - 80:80
-      - 443:443
-      # traefik dashboard
-      # - 8080:8080
-    volumes:
-      - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
-      - traefik-letsencrypt-data:/letsencrypt
+      - "80:80"
+      - "443:443"
     environment:
-      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
-      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+      DOMAIN: ${WIKIBASE_PUBLIC_HOST}
+      EMAIL: ${MW_ADMIN_EMAIL}
+    volumes:
+      - ./certs:/certs:z
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
@@ -222,5 +196,3 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  # C. REVERSE PROXY AND SSL SERVICES DATA
-  traefik-letsencrypt-data:
