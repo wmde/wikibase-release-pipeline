@@ -113,6 +113,7 @@ function getTemplateConfig(): Record<string, string> {
 	return env;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getStatusPayload() {
 	const configSaved = isConfigSaved();
 	const booted = isBooted();
@@ -196,6 +197,7 @@ app.get( '/status/stream', ( req, res ) => {
 	} );
 	res.flushHeaders();
 
+	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 	const sendStatus = () => {
 		res.write( `data: ${ JSON.stringify( getStatusPayload() ) }\n\n` );
 	};
