@@ -1,3 +1,10 @@
+## 4.2.1 (2025-07-11)
+
+
+### 🩹 Fixes
+
+- do not require METADATA_CALLBACK for now
+
 ## 4.2.0 (2025-07-03)
 
 
