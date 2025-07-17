@@ -49,6 +49,8 @@ if [[ -z "$WBS_SETUP_DETACHED" ]]; then
   mkdir -p "$WBS_DIR"
   touch "$LOG_PATH"
   nohup bash "$0" "$@" >> "$LOG_PATH" 2>&1 &
+  sleep 1
+  tail -f "$LOG_PATH"
   exit 0
 fi
 
