@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-# --- Config CLI ---
+# --- Global Config ---
 
-# Default values (can be overridden by CLI)
+WBS_DIR="/opt/wbs"
+LOG_PATH="$WBS_DIR/setup.log"
+
+# CLI options (can be overridden by env or args)
 VERBOSE="${VERBOSE:-false}"
 SKIP_DOCKER_INSTALL="${SKIP_DOCKER_INSTALL:-false}"
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
@@ -23,6 +26,7 @@ for arg in "$@"; do
   esac
 done
 
+# Logging functions
 log() {
   if $VERBOSE; then
     echo "$@"
@@ -35,30 +39,36 @@ log_cmd() {
   else
     bash -c "$@" &> /dev/null
   fi
-
-  return $?  # Pass the exit code back to caller
+  return $?
 }
 
-# Constants
-WBS_DIR="/opt/wbs"
-LOG_PATH="$WBS_DIR/setup.log"
+# --- Run detached so closing terminal will not terminate setup process---
+
+if [[ -z "$WBS_SETUP_DETACHED" ]]; then
+  export WBS_SETUP_DETACHED=1
+  mkdir -p "$WBS_DIR"
+  touch "$LOG_PATH"
+  nohup bash "$0" "$@" >> "$LOG_PATH" 2>&1 &
+  exit 0
+fi
+
+# --- Begin main execution (detached) ---
+
+exec > >(tee -a "$LOG_PATH") 2>&1
+
+log "Verbose mode enabled"
+
+# --- Constants ---
+
 REPO_URL="https://github.com/wmde/wikibase-release-pipeline.git"
 DEPLOY_DIR="$WBS_DIR/wikibase-release-pipeline/deploy"
 SETUP_DIR="$DEPLOY_DIR/setup"
 ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
 PUBLIC_IP=$(curl --silent --show-error --fail https://api.ipify.org)
-# Random suffix keeps Let's Encrypt from rate limiting
 SETUP_SUBDOMAIN=wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)
 SETUP_HOST=$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io
 SETUP_PORT=8888
-
-# Setup logging
-mkdir -p "$WBS_DIR"
-touch $LOG_PATH
-exec > >(tee -a "$LOG_PATH") 2>&1
-
-log "Verbose mode enabled"
 
 # --- Functions ---
 
@@ -134,7 +144,6 @@ generate_ssl_cert_for_setup_webserver() {
     CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
     cp "$CERT_PATH/fullchain.pem" "$SETUP_DIR/certs/cert.pem"
     cp "$CERT_PATH/privkey.pem" "$SETUP_DIR/certs/key.pem"
-
   else
     echo "Let's Encrypt challenge failed, falling back to self-signed certificate."
 
@@ -168,7 +177,7 @@ start_config_webserver() {
     -v $LOG_PATH:/app/setup.log \
     wikibase/deploy-setup-webserver"
   echo
-  echo "To complete setup navigate to:"
+  echo "To complete setup, navigate to:"
   echo
   echo "https://$SETUP_HOST:$SETUP_PORT"
   echo
@@ -189,13 +198,11 @@ launch_wikibase() {
 
 final_message() {
   echo
-  echo "Setup is Complete!"
+  echo "✅ Setup is Complete!"
   echo
 
   if [[ -f "$ENV_FILE_PATH" ]]; then
-    # Load key=value pairs from .env into current shell (safe since we control the format)
     while IFS= read -r line; do
-      # Ignore comments and blank lines
       [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
       eval "export $line"
     done < "$ENV_FILE_PATH"
