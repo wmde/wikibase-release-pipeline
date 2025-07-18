@@ -1,5 +1,5 @@
 packages:
   - "build/*"
   - "test/**"
-  - "deploy"
+  - deploy
   - "!deploy/*/**"
