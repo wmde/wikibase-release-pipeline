@@ -7,22 +7,6 @@ services:
 
   wikibase:
     image: wikibase/wikibase:4
-    entrypoint:
-      - bash
-      - -c
-      - |
-        # TODO: enable in 5.0.0
-        # if ! [ -v METADATA_CALLBACK  ] || ! [ -n "$METADATA_CALLBACK" ]; then
-        #   echo "*** ERROR ***"
-        #   echo "METADATA_CALLBACK not configured. Please set it in your .env file."
-        #   echo "Find more information about METADATA_CALLBACK in ./template.env and on "
-        #   echo "https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md"
-        #   echo "Exiting Wikibase container now."
-        #   exit 1
-        if [ -v METADATA_CALLBACK  ] && [ "$METADATA_CALLBACK" = "true" ]; then
-          bash /callback.sh
-        fi
-        exec bash /entrypoint.sh
     depends_on:
       mysql:
         condition: service_healthy
@@ -33,7 +17,6 @@ services:
       - ./config:/config:z
       - ./config/extensions:/var/www/html/extensions/extensions:z
       - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
-      - ./callback.sh:/callback.sh:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
@@ -48,7 +31,8 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
-      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+      WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
