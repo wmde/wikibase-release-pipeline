@@ -6,7 +6,7 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: wikibase/wikibase
+    image: wikibase/wikibase:4
     depends_on:
       mysql:
         condition: service_healthy
@@ -39,7 +39,7 @@ services:
       start_period: 5m
 
   wikibase-jobrunner:
-    image: wikibase/wikibase
+    image: wikibase/wikibase:4
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -72,7 +72,7 @@ services:
   # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
   # at the top of this file.
   elasticsearch:
-    image: wikibase/elasticsearch
+    image: wikibase/elasticsearch:1
     restart: unless-stopped
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -85,7 +85,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs
+    image: wikibase/wdqs:2
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -106,7 +106,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: wikibase/wdqs
+    image: wikibase/wdqs:2
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -123,7 +123,7 @@ services:
       WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend
+    image: wikibase/wdqs-frontend:2
     restart: unless-stopped
     volumes:
       - ./config:/config:z
@@ -136,7 +136,7 @@ services:
       start_period: 2m
 
   quickstatements:
-    image: wikibase/quickstatements
+    image: wikibase/quickstatements:1
     depends_on:
       wikibase:
         condition: service_healthy
