@@ -11,7 +11,7 @@ fi
 # Exit immediate on errors or unset variables from here onwards
 set -eu
 
-if ! [ -v METADATA_CALLBACK  ] || ! [ -n "$METADATA_CALLBACK" ]; then
+if ! [ -v METADATA_CALLBACK  ] || [ -z "$METADATA_CALLBACK" ]; then
   echo "*** ERROR ***"
   echo "METADATA_CALLBACK not configured."
   echo "https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wikibase/README.md"
