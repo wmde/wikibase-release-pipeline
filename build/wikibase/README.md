@@ -41,7 +41,7 @@ The Wikibase Suite Wikibase Image has a Call Back feature. This initiative will 
 
 You can join this initiative by setting `METADATA_CALLBACK=true` or disable the feature by setting `METADATA_CALLBACK=false` in your `.env` file. If you enable the feature, your hostnames configured in `.env` will be shared and added to the list. We will then be able to periodically analyze publicly available information on your Wikibase instance. It is important to note that we can only access publicly visible information. If your Wikibase instance requires a login to view data, we will not be able to collect statistics.
 
-You can disable the feature at any time by setting `METADATA_CALLBACK=false` in your `.env` file or by sending an E-Mail to [wikibase-suite-support@wikimedia.de](mailto:wikibase-suite-support@wikimedia.de) containing your hostname to remove your instance from the listing and stop periodic analysis.
+You can disable the feature at any time by setting `METADATA_CALLBACK=false` in your `.env` file and by sending an E-Mail to [wikibase-suite-support@wikimedia.de](mailto:wikibase-suite-support@wikimedia.de) containing your hostname to remove your instance from the listing and stop periodic analysis.
  
 Let's build the Linked Open Data Web together!
 
