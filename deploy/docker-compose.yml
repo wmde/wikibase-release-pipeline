@@ -167,53 +167,6 @@ services:
       interval: 10s
       start_period: 2m
 
-  # --------------------------------------------------
-  # C. REVERSE PROXY AND SSL SERVICES
-  # --------------------------------------------------
-
-  # This is the reverse proxy and SSL service
-  traefik:
-    image: traefik:3
-    command:
-      # traefik static configuration via command line
-      # enable accesslog
-      - "--accesslog.format=common"
-      # http endpoint
-      - "--entrypoints.web.address=:80"
-      # https endpoint
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asdefault"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      # http to https redirect
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # ACME SSL certificate generation
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # additionial traefik dynamic configuration via config file
-      - "--providers.file.filename=/etc/traefik/dynamic.yml"
-      # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      # Uncomment the following line for debugging, also expose port 8080 below
-      # - "--api.dashboard=true"
-      # - "--api.insecure=true"
-      # - "--log.level=DEBUG"
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-      # traefik dashboard
-      # - 8080:8080
-    volumes:
-      - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
-      - traefik-letsencrypt-data:/letsencrypt
-    environment:
-      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
-      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
-
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA
   wikibase-image-data:
@@ -222,5 +175,3 @@ volumes:
   wdqs-data:
   elasticsearch-data:
   quickstatements-data:
-  # C. REVERSE PROXY AND SSL SERVICES DATA
-  traefik-letsencrypt-data:
