@@ -42,11 +42,30 @@ You need two DNS records that resolve to your machine's IP address:
 - Wikibase, e.g., "wikibase.example"
 - QueryService, e.g., "query.wikibase.example"
 
-## Setup
+## Installation
+
+### Option 1: Web-based Setup (Recommended for New Users)
+
+If you're setting up a new instance on a fresh VPS, you can use our web-based installer to simplify the process. This method installs all required dependencies, configures your environment, and launches the full Wikibase Suite via a browser-based setup wizard.
+
+1. **Log in to your VPS as root.**
+2. **Run the following one-liner:**
+
+   ```sh
+   curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash
+   ```
+
+3. **Follow the on-screen instructions.** The setup script will guide you through the rest of the process and provide a link to open the web-based installer in your browser.
+
+Once setup is complete, the installer shuts down automatically and your Wikibase Suite instance will be up and running.
+
+> 💡 This method takes care of installing Docker, Docker Compose, Git, and configuring everything correctly, making it ideal for first-time deployments.
 
 > 💡 If you want to run a quick test on a machine that has no public IP address (such as your local machine), check our [FAQ entry](#can-i-host-wbs-deploy-locally) below.
 
-### Download WBS Deploy
+### Option 2: Manually Setup
+
+#### Download WBS Deploy
 
 Check out the files from Github, move to the subdirectory `deploy`.
 
@@ -55,7 +74,7 @@ git clone https://github.com/wmde/wikibase-release-pipeline
 cd wikibase-release-pipeline/deploy
 ```
 
-### Initial configuration
+#### Configuration
 
 Make a copy of the [configuration template](./template.env) in the `wikibase-release-pipeline/deploy` directory.
 
@@ -65,7 +84,7 @@ cp template.env .env
 
 Follow the instructions in the comments in your newly created `.env` file to set domain names, usernames and passwords.
 
-### Starting
+#### Starting
 
 Run the following command from within `wikibase-release-pipeline/deploy`:
 
@@ -79,6 +98,8 @@ The first start can take a couple of minutes. You can check the status of the st
 
 > 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages.
 
+## Operating Deploy
+
 ### Stopping
 
 To stop, use
@@ -89,7 +110,7 @@ docker compose stop
 
 ### Resetting the configuration
 
-Most values set in `.env` are written into the respective containers after you run `docker compose up` for the first time.
+Most values set in `.env` are written into the respective containers after you run `docker compose up` for the first time, but will not reflect changes in the containers afterwards without resetting your configuration.
 
 If you want to reset the configuration while retaining your existing data:
 

@@ -1,0 +1,10 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - git
+
+runcmd:
+  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wikibase Installer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css"
+  />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: auto;
+      width: 100%;
+    }
+
+    #header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #header img {
+      height: 80px;
+    }
+
+    #log-wrapper {
+      background-color: #111;
+      color: #eee;
+      font-size: 0.6em;
+      font-family: monospace;
+      padding: 1em;
+      max-height: 600px;
+      overflow-y: auto;
+      display: none;
+      border-radius: 0.5rem;
+      white-space: pre-wrap;
+      margin-top: 1rem;
+    }
+
+    #toggle-log {
+      margin-top: 1.5rem;
+    }
+
+    #config-final-wrapper {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    #config-final {
+      background-color: #111;
+      color: #eee;
+      font-size: 0.6em;
+      font-family: monospace;
+      padding: 1em;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+    }
+
+    #log::-moz-selection,
+    #log::selection,
+    #config-final::-moz-selection,
+    #config-final::selection {
+      background-color: #eee;
+      color: #111;
+    }
+
+    #copy-config, #download-config {
+      margin-top: 0.5rem;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="header">
+      <img src="/Wikibase_Suite_(RGB).png" alt="Wikibase Logo" />
+      <h2>Deploy Setup</h2>
+    </div>
+    <div class="grid">
+      <div id="config-section">
+        <form id="config-form" data-disabled="<%= isConfigSaved %>">
+          <label>Admin Email Address (<em>required, used for MediaWiki Admin user, etc</em>):
+            <input name="MW_ADMIN_EMAIL" required />
+          </label>
+          <label>Wikibase Host (<em>e.g. wikibase.example.com. default: <pre style="display: inline;">&lt;SERVER-IP&gt;.nip.io</pre></em>):
+            <input name="WIKIBASE_PUBLIC_HOST" />
+          </label>
+          <label>
+            <input type="checkbox" name="METADATA_CALLBACK" checked role="switch" />
+            I want this Wikibase to be visible in the global Wikibase directory
+          </label>
+          <br />
+          <details name="config">
+            <summary role="secondary">Advanced Options</summary>
+            <label>Query Service Host (<em>default: <pre style="display: inline;">query.&lt;WIKIBASE_PUBLIC_HOST&gt;</pre></em>):
+              <input name="WDQS_PUBLIC_HOST" />
+            </label>
+            <label>MediaWiki Admin Name:
+              <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
+            </label>
+            <label>MediaWiki Admin Password:
+              <input name="MW_ADMIN_PASS" type="password" />
+            </label>
+            <label>Database Name:
+              <input name="DB_NAME" value="<%= DB_NAME %>" />
+            </label>
+            <label>Database User:
+              <input name="DB_USER" value="<%= DB_USER %>" />
+            </label>
+            <label>Database Password:
+              <input name="DB_PASS" type="password" />
+            </label>
+          </details>
+          <button type="submit">Save</button>
+        </form>
+      </div>
+
+      <div id="status-section">
+        <div id="status">
+          <div id="status-waiting" style="display: none;">
+            <span aria-busy="true">Waiting for services to start. Generally takes 2-6 minutes...</span>
+          </div>
+          <div id="status-complete" style="display: <%= isBooted ? 'block' : 'none' %>;">
+            <p>
+              <strong>✅ Services started successfully!</strong>
+              <br /><br />
+              MediaWiki/Wikibase:
+              <br />
+              <a id="wikibase-final-url" target="_blank"></a>
+              <br /><br />
+              Query Service:
+              <br />
+              <a id="wdqs-final-url" target="_blank"></a>
+              <br /><br />
+              QuickStatements:
+              <br />
+              <a id="quickstatements-final-url" target="_blank"></a>
+            </p>
+          </div>
+          <div id="config-final-wrapper">
+            <p><strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong></p>
+            <pre id="config-final"></pre>
+            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as .env file</a>
+            <button id="copy-config">Copy</button>
+          </div>
+          <div id="status-finalize" style="display: none; margin-top: 1em;">
+            <button id="finalize-btn" style="border-color: rgb(217, 53, 38); color: rgb(217, 53, 38)" class="outline">Shut Down Installer</button>
+            <p id="finalize-message" style="margin-top: 0.5em;"></p>
+          </div>
+        </div>
+        <button id="toggle-log">Show Logs</button>
+        <div id="log-wrapper"><div id="log">Loading logs...</div></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('config-form');
+    const statusWaiting = document.getElementById('status-waiting');
+    const statusComplete = document.getElementById('status-complete');
+    const statusSuccess = document.getElementById('status-success');
+    const wikibaseFinalUrlEl = document.getElementById('wikibase-final-url');
+    const wdqsFinalUrlEl = document.getElementById('wdqs-final-url');
+    const quickstatementsFinalUrlEl = document.getElementById('quickstatements-final-url');
+    const configFinalBox = document.getElementById('config-final');
+    const configFinalWrapper = document.getElementById('config-final-wrapper');
+    const copyBtn = document.getElementById('copy-config');
+    const downloadLink = document.getElementById('download-config');
+    const finalizeSection = document.getElementById('status-finalize');
+    const finalizeBtn = document.getElementById('finalize-btn');
+    const finalizeMsg = document.getElementById('finalize-message');
+
+    const logEl = document.getElementById('log');
+    const logWrapper = document.getElementById('log-wrapper');
+    const toggleLog = document.getElementById('toggle-log');
+
+    let parsedHost = null;
+    let logStream = null;
+    let alreadyHandledBootedState = false;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (form.dataset.disabled === 'true') {
+        form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+      }
+
+      const statusStream = new EventSource('/status/stream');
+      statusStream.onmessage = (e) => {
+        const { isBooted, config } = JSON.parse(e.data);
+        if (isBooted && !alreadyHandledBootedState) {
+          alreadyHandledBootedState = true;
+
+          finalizeSection.style.display = 'block';
+          
+          statusWaiting.style.display = 'none';
+          statusComplete.style.display = 'block';
+
+          const wikibaseFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/wiki/Main_Page`;
+          wikibaseFinalUrlEl.href = wikibaseFinalUrl;
+          wikibaseFinalUrlEl.textContent = wikibaseFinalUrl;
+
+          const wdqsFinalUrl = `https://${config?.WDQS_PUBLIC_HOST}`;
+          wdqsFinalUrlEl.href = wdqsFinalUrl;
+          wdqsFinalUrlEl.textContent = wdqsFinalUrl;
+
+          const quickstatementsFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/tools/quickstatements`;
+          quickstatementsFinalUrlEl.href = quickstatementsFinalUrl;
+          quickstatementsFinalUrlEl.textContent = quickstatementsFinalUrl;
+
+          // Show final config values
+          const envVars = Object.entries(config)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('\n');
+
+          configFinalBox.textContent = envVars;
+          configFinalWrapper.style.display = 'block';
+
+          // Copy button
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(envVars).then(() => {
+              copyBtn.textContent = "Copied!";
+              setTimeout(() => copyBtn.textContent = "Copy", 2000);
+            }).catch(() => {
+              alert("⚠️ Failed to copy. Please do it manually.");
+            });
+          };
+
+          // Download link
+          if (downloadLink.href.startsWith('blob:')) {
+            URL.revokeObjectURL(downloadLink.href);
+          }
+          const blob = new Blob([envVars], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          downloadLink.href = url;
+        }
+      };
+    });
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.METADATA_CALLBACK = form.METADATA_CALLBACK.checked ? "true" : "false";
+
+      const res = await fetch('/write-env', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        form.querySelectorAll('input, button').forEach(i => i.disabled = true);
+        statusWaiting.style.display = 'block';
+        statusComplete.style.display = 'none';
+      } else {
+        alert('Failed to save environment. See console for details.');
+      }
+    };
+
+    toggleLog.onclick = async () => {
+      const isVisible = logWrapper.style.display === 'block';
+
+      if (isVisible) {
+        if (logStream) {
+          logStream.close();
+          logStream = null;
+        }
+        logEl.innerHTML = '';
+        logWrapper.style.display = 'none';
+        toggleLog.textContent = 'Show Logs';
+      } else {
+        logWrapper.style.display = 'block';
+        toggleLog.textContent = 'Hide Logs';
+
+        try {
+          const res = await fetch('/log');
+          const text = await res.text();
+          appendToLog(text);
+        } catch (err) {
+          appendToLog('\n⚠️ Could not load initial log.\n');
+        }
+
+        logStream = new EventSource('/log/stream');
+        logStream.onmessage = (e) => {
+          if (!e.data.trim()) return;
+          appendToLog(e.data);
+        };
+
+        logStream.onerror = () => {
+          appendToLog('\n⚠️ Log stream disconnected.\n');
+        };
+      }
+    };
+
+    finalizeBtn.onclick = async () => {
+      finalizeBtn.disabled = true;
+      finalizeMsg.textContent = '⏳ Finalizing setup...';
+
+      try {
+        const res = await fetch('/finalize-setup', { method: 'POST' });
+        if (res.ok) {
+          finalizeMsg.textContent = '✅ Finalized. The installer will shut down shortly.';
+        } else {
+          const errText = await res.text();
+          finalizeMsg.textContent = '❌ Finalize failed – Try again';
+          finalizeBtn.disabled = false;
+          console.error(errText);
+        }
+      } catch (err) {
+        finalizeMsg.textContent = `❌ Error: ${err.message}`;
+        finalizeBtn.disabled = false;
+      }
+    };
+
+    function appendToLog(text) {
+      logEl.insertAdjacentHTML('beforeend', text + '<br>');
+      logWrapper.scrollTop = logWrapper.scrollHeight;
+    }
+  </script>
+</body>
+</html>
