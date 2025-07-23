@@ -3,17 +3,13 @@ set -e
 
 echo "🔧 Wikibase Deploy CLI Installer"
 
-# --- Parse args passed from go.sh ---
-for arg in "$@"; do
-  case $arg in
-    --verbose=*) VERBOSE="${arg#*=}" ;;
-    --deploy-dir=*) DEPLOY_DIR="${arg#*=}" ;;
-    --log-path=*) LOG_PATH="${arg#*=}" ;;
-    --local=*) LOCALHOST="${arg#*=}" ;;
-  esac
-done
+# --- Expected env vars ---
+DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
+LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
+VERBOSE="${VERBOSE:-false}"
+LOCALHOST="${LOCALHOST:-false}"
 
-# -- Setup logging -- 
+# --- Setup logging ---
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
 
@@ -83,9 +79,3 @@ DB_NAME=$DB_NAME
 DB_USER=$DB_USER
 METADATA_CALLBACK=$METADATA_CALLBACK
 EOF
-
-echo
-cat "$ENV_FILE_PATH"
-echo
-
-echo "✅ Configuration saved."

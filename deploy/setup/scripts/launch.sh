@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# --- Parse CLI arguments ---
-for arg in "$@"; do
-  case $arg in
-    --deploy-dir=*) DEPLOY_DIR="${arg#*=}" ;;
-    --verbose=*) VERBOSE="${arg#*=}" ;;
-    --log-path=*) LOG_PATH="${arg#*=}" ;;
-  esac
-done
+# --- Expected env vars ---
+DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
+VERBOSE="${VERBOSE:-false}"
 
-# -- Setup logging -- 
+# -- Setup logging --
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/_logging.sh"
@@ -18,7 +13,7 @@ source "$SCRIPT_DIR/_logging.sh"
 ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
 wait_for_env_file() {
-  # -s .env exists and is not empty
+  # -s: file exists AND is not empty
   until [ -s "$ENV_FILE_PATH" ]; do
     sleep 2
   done

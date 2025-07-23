@@ -3,40 +3,37 @@ set -e
 
 echo "🔧 Starting web-based configuration wizard..."
 
-# --- Parse args passed from go.sh ---
-for arg in "$@"; do
-  case $arg in
-    --verbose=*) VERBOSE="${arg#*=}" ;;
-    --deploy-dir=*) DEPLOY_DIR="${arg#*=}" ;;
-    --log-path=*) LOG_PATH="${arg#*=}" ;;
-    --local=*) LOCALHOST="${arg#*=}" ;;
-  esac
-done
-
-# -- Setup logging -- 
-# shellcheck disable=SC1091
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
-
-SETUP_PORT=8888
+# --- Expected env vars ---
+DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
+LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
+VERBOSE="${VERBOSE:-false}"
+LOCALHOST="${LOCALHOST:-false}"
+CLOUD_INIT="${CLOUD_INIT:-false}"
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
 
+# -- Script specific env vars --
+SETUP_PORT=8888
 SETUP_DIR="$DEPLOY_DIR/setup"
 CERTS_DIR="$SETUP_DIR/certs"
 VIEWS_DIR="$SETUP_DIR/views"
 
+# -- Setup logging --
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
+
 generate_cert_for_setup_webserver() {
-  log "Generating Let's Encrypt TLS certificate for setup page..."
+  log "Generating TLS certificate for setup page..."
 
   if [ "$LOCALHOST" = true ]; then
-    SETUP_HOST=localhost
+    SETUP_HOST="localhost"
   else
     PUBLIC_IP=$(curl --silent --show-error --fail https://api.ipify.org)
     if [[ -z "$SETUP_HOST" ]]; then
-      if [[ "$CLOUD_INIT" = "true" ]]; then
-        SETUP_HOST=$PUBLIC_IP.nip.io
+      if [[ "$CLOUD_INIT" = true ]]; then
+        SETUP_HOST="$PUBLIC_IP.nip.io"
       else
-        SETUP_SUBDOMAIN=wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)
-        SETUP_HOST=$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io
+        SETUP_SUBDOMAIN="wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
+        SETUP_HOST="$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io"
       fi
     fi
   fi
@@ -48,7 +45,7 @@ generate_cert_for_setup_webserver() {
 
   if log_cmd "docker run --rm \
     -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
-    -v $SETUP_DIR/certs:/certs \
+    -v $CERTS_DIR:/certs \
     -p 80:80 \
     certbot/certbot certonly \
       --standalone \
@@ -58,16 +55,14 @@ generate_cert_for_setup_webserver() {
       --email $CERT_EMAIL \
       -d $SETUP_HOST"; then
 
-    CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
-    cp "$CERT_PATH/fullchain.pem" "$SETUP_DIR/certs/cert.pem"
-    cp "$CERT_PATH/privkey.pem" "$SETUP_DIR/certs/key.pem"
-
+    LE_CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
+    cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
+    cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
   else
-    echo "Let's Encrypt challenge failed, falling back to self-signed certificate."
-
+    echo "⚠️ Let's Encrypt challenge failed, falling back to self-signed certificate."
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-      -out "$SETUP_DIR/certs/cert.pem" \
-      -keyout "$SETUP_DIR/certs/key.pem" \
+      -out "$CERTS_DIR/cert.pem" \
+      -keyout "$CERTS_DIR/key.pem" \
       -subj "/CN=$SETUP_HOST"
   fi
 }
