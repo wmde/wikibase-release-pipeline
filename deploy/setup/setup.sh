@@ -53,7 +53,11 @@ SCRIPTS_DIR="$SETUP_DIR/scripts"
 LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
 
 # -- Setup logging --
-
+# NOTE: This logging functionality should be kept in sync
+# with the scripts/_logging.sh library used in the other setup
+# scripts. That library can't otherwise be directly used here as
+# this script is designed to be initiated before the repo is
+# cloned or available.
 mkdir -p "$(dirname "$LOG_PATH")"
 touch "$LOG_PATH" 2>/dev/null || true
 
@@ -134,6 +138,8 @@ if ! $SKIP_CLONE; then
 fi
 
 # -- Run web or CLI config depending on what was selected--
+
+export DEPLOY_DIR VERBOSE LOG_PATH LOCALHOST
 
 if $USE_WEB; then
   exec "$SCRIPTS_DIR/web-config.sh" 
