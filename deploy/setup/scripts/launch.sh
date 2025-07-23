@@ -34,7 +34,7 @@ launch_wikibase() {
 
 final_message() {
   echo
-  echo "Setup is Complete!"
+  echo "✅ Setup is Complete!"
   echo
 
   if [[ -f "$ENV_FILE_PATH" ]]; then
@@ -44,16 +44,24 @@ final_message() {
     done < "$ENV_FILE_PATH"
 
     if [[ -n "$WIKIBASE_PUBLIC_HOST" ]]; then
-      echo "Access your MediaWiki / Wikibase instance at:"
+      echo Your Wikibase Suite services can be found at:
       echo
-      echo "  https://$WIKIBASE_PUBLIC_HOST"
+      echo MediaWiki/Wikibase: 
+      echo https://$WIKIBASE_PUBLIC_HOST
+      echo
+      echo Query Service:
+      echo https://$WDQS_PUBLIC_HOST/tools/quickstatements
+      echo 
+      echo QuickStatements:
+      echo https://$WIKIBASE_PUBLIC_HOST/tools/quickstatements
+      echo 
     else
       echo "⚠️ Could not determine WIKIBASE_PUBLIC_HOST from .env"
     fi
 
     echo
-    echo "The following configuration was generated during setup."
-    echo "Please copy and save these credentials and settings securely:"
+    echo "The following configuration saved during setup."
+    echo "Please save these credentials and settings securely:"
     echo
     sed 's/^/  /' "$ENV_FILE_PATH"
     echo
