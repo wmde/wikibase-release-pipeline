@@ -137,11 +137,6 @@ fi
 
 if $USE_WEB; then
   exec "$SCRIPTS_DIR/web-config.sh" 
-    # \
-    # --verbose="$VERBOSE" \
-    # --deploy-dir="$DEPLOY_DIR" \
-    # --log-path="$LOG_PATH" \
-    # --local="$LOCALHOST"
 else
   exec "$SCRIPTS_DIR/cli-config.sh"
 fi
