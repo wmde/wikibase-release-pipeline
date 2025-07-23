@@ -136,14 +136,14 @@ fi
 # -- Run web or CLI config depending on what was selected--
 
 if $USE_WEB; then
-  bash "$SCRIPTS_DIR/web-config.sh" 
+  exec "$SCRIPTS_DIR/web-config.sh" 
     # \
     # --verbose="$VERBOSE" \
     # --deploy-dir="$DEPLOY_DIR" \
     # --log-path="$LOG_PATH" \
     # --local="$LOCALHOST"
 else
-  bash "$SCRIPTS_DIR/cli-config.sh"
+  exec "$SCRIPTS_DIR/cli-config.sh"
 fi
 
 if ! $SKIP_LAUNCH; then
