@@ -3,9 +3,6 @@
 # Originally inspired by Brennen Bearnes jobrunner entrypoint
 # https://gerrit.wikimedia.org/r/plugins/gitiles/releng/dev-images/+/refs/heads/master/common/jobrunner/entrypoint.sh
 
-IS_JOBRUNNER=true
-export IS_JOBRUNNER
-
 kill_runner() {
 	kill "$PID" 2> /dev/null
 }
