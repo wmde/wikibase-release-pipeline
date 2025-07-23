@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-# Depends on the following vars being already defined:
-# $DEPLOY_DIR
-# $VERBOSE
+# --- Parse CLI arguments ---
+for arg in "$@"; do
+  case $arg in
+    --deploy-dir=*) DEPLOY_DIR="${arg#*=}" ;;
+    --verbose=*) VERBOSE="${arg#*=}" ;;
+    --log-path=*) LOG_PATH="${arg#*=}" ;;
+  esac
+done
+
+# -- Setup logging -- 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/_logging.sh"
+
 ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
 wait_for_env_file() {
@@ -11,7 +22,7 @@ wait_for_env_file() {
   until [ -s "$ENV_FILE_PATH" ]; do
     sleep 2
   done
-  echo "Configuration saved."
+  log "Configuration saved."
 }
 
 launch_wikibase() {
