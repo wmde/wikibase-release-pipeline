@@ -2,6 +2,7 @@
 set -e
 
 echo "🔧 Wikibase Deploy CLI Installer"
+echo
 
 # --- Expected env vars ---
 DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"

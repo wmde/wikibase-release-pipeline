@@ -2,6 +2,7 @@
 set -e
 
 echo "🔧 Starting web-based configuration wizard..."
+echo
 
 # --- Expected env vars ---
 DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
