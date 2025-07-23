@@ -1,3 +1,10 @@
+## 4.1.1 (2025-07-17)
+
+
+### 🏡 Chore
+
+- bump mediawiki to 1.43.3, update extensions
+
 ## 4.1.0 (2025-06-13)
 
 

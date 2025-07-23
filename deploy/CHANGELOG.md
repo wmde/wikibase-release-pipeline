@@ -1,3 +1,18 @@
+## 4.2.1 (2025-07-11)
+
+
+### 🩹 Fixes
+
+- do not require METADATA_CALLBACK for now
+
+## 4.2.0 (2025-07-03)
+
+
+### 🚀 Features
+
+- Adds a [Call Back](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md#call-back) feature to allow instances to share publicly available data to analyze the use of Wikibase and increase discoverability.
+
+
 ## 4.0.1 (2025-03-21)
 
 

@@ -36,6 +36,7 @@ services:
       DB_USER:
       DB_PASS:
       DB_NAME: client_wiki
+      METADATA_CALLBACK: false
     healthcheck:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s

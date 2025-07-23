@@ -21,6 +21,7 @@ services:
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
+      METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
@@ -31,7 +32,8 @@ services:
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
       QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
-
+      WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s

@@ -5,7 +5,7 @@ ARG COMPOSER_IMAGE_URL
 # ###########################################################################
 # Based on https://github.com/wikimedia/mediawiki-docker/blob/1161796f04d6a6bcbec9fb4c67a8ce7248392403/1.41/apache/Dockerfile
 # hadolint ignore=DL3006
-FROM ${PHP_IMAGE_URL} as mediawiki
+FROM ${PHP_IMAGE_URL} AS mediawiki
 
 SHELL ["/bin/bash", "-exu", "-c"]
 
@@ -107,24 +107,12 @@ RUN set -eux; \
 
 # ###########################################################################
 # hadolint ignore=DL3006
-FROM ${COMPOSER_IMAGE_URL} as composer
+FROM ${COMPOSER_IMAGE_URL} AS composer
 
 COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
 COPY composer.local.json composer.local.json
-
-# WORKAROUND for https://phabricator.wikimedia.org/T372458
-# Take wikibase submodules from github as phabricator rate limits us
-COPY --chown=nobody:nogroup --chmod=755 \
-  wikibase-submodules-from-github-instead-of-phabricator.patch \
-  /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
-
-# WORKAROUND for oauth on same domain problem introduced 
-# by https://phabricator.wikimedia.org/T299737#8171169
-COPY --chown=nobody:nogroup --chmod=755 \
-  mediawiki-extensions-OAuth-same-domain.patch \
-  /tmp/mediawiki-extensions-OAuth-same-domain.patch
 
 USER root
 RUN apt-get update; \
@@ -134,18 +122,8 @@ RUN apt-get update; \
     rm -rf /var/lib/apt/lists/*
 USER nobody
 
+ARG WMF_EXTENSIONS="Wikibase,Babel,cldr,CirrusSearch,Elastica,EntitySchema,OAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest"
 ARG WIKIBASE_COMMIT
-SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
-RUN set -x; \
-    git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase /var/www/html/extensions/Wikibase && \
-    git -C /var/www/html/extensions/Wikibase checkout ${WIKIBASE_COMMIT} && \
-    patch -d /var/www/html/extensions/Wikibase -Np1 </tmp/wikibase-submodules-from-github-instead-of-phabricator.patch && \
-    rm /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch && \
-    git -C /var/www/html/extensions/Wikibase submodule update --init --recursive && \
-    rm -f /var/www/html/extensions/Wikibase/.travis.yml && \
-    find /var/www/html/extensions/Wikibase -name ".git*" -exec rm -rf {} +
-
-ARG ALL_EXTENSIONS="Babel,cldr,CirrusSearch,Elastica,EntitySchema,OAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest"
 ARG BABEL_COMMIT
 ARG CLDR_COMMIT
 ARG CIRRUSSEARCH_COMMIT
@@ -155,37 +133,59 @@ ARG OAUTH_COMMIT
 ARG UNIVERSALLANGUAGESELECTOR_COMMIT
 ARG WIKIBASECIRRUSSEARCH_COMMIT
 ARG WIKIBASEMANIFEST_COMMIT
+
+# third-party extensions
 ARG WIKIBASEEDTF_COMMIT
 ARG WIKIBASELOCALMEDIA_COMMIT
 
+# WORKAROUND for https://phabricator.wikimedia.org/T372458
+# Take wikibase submodules from github as phabricator rate limits us
+COPY --chown=nobody:nogroup --chmod=755 \
+  wikibase-submodules-from-github-instead-of-phabricator.patch \
+  /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
+
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 RUN set -x; \
-    IFS=',' read -ra EXTENSIONS <<< ${ALL_EXTENSIONS}; \
+    IFS=',' read -ra EXTENSIONS <<< ${WMF_EXTENSIONS}; \
     for EXTENSION in "${EXTENSIONS[@]}"; do \
-        rm -rf "extensions/${EXTENSION}"; \
-        git clone "https://gerrit.wikimedia.org/r/mediawiki/extensions/${EXTENSION}" "extensions/${EXTENSION}"; \
+        rm -rf "extensions/${EXTENSION}" && \
+        mkdir -p "extensions/${EXTENSION}" && \
+        pushd "extensions/${EXTENSION}" && \
+        git init . && \
+        git remote add origin "https://gerrit.wikimedia.org/r/mediawiki/extensions/${EXTENSION}" && \
         EXTENSION_COMMIT_VAR="${EXTENSION^^}_COMMIT"; \
         EXTENSION_COMMIT="${!EXTENSION_COMMIT_VAR}"; \
-        git -C "extensions/${EXTENSION}" checkout "${EXTENSION_COMMIT}"; \
-        git -C "extensions/${EXTENSION}" submodule update --init --recursive; \
-        rm -rf "extensions/${EXTENSION}/.git*"; \
-        find "extensions/${EXTENSION}" -name ".git*" -exec rm -rf {} +; \
-    done; \
+        git fetch origin --depth 1 ${EXTENSION_COMMIT} && \
+        git checkout ${EXTENSION_COMMIT} && \
+        \
+        if [ "${EXTENSION}" = "Wikibase" ]; then \
+            patch -d /var/www/html/extensions/Wikibase -Np1 </tmp/wikibase-submodules-from-github-instead-of-phabricator.patch; \
+        fi && \
+        \
+        git submodule update --init --recursive --depth 1 && \
+        find . -name ".git*" -exec rm -rf {} + && \
+        popd; \
+    done && \
     \
-    git clone "https://github.com/ProfessionalWiki/WikibaseEdtf.git" "extensions/WikibaseEdtf"; \
-    git -C "extensions/WikibaseEdtf" checkout "${WIKIBASEEDTF_COMMIT}"; \
-    rm -rf "extensions/WikibaseEdtf/.git*"; \
+    git clone "https://github.com/ProfessionalWiki/WikibaseEdtf.git" "extensions/WikibaseEdtf" && \
+    git -C "extensions/WikibaseEdtf" checkout "${WIKIBASEEDTF_COMMIT}" && \
+    rm -rf "extensions/WikibaseEdtf/.git*" && \
     \
-    git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia"; \
-    git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}"; \
-    rm -rf "extensions/WikibaseLocalMedia/.git*"; \
-    \
-    patch -d /var/www/html/extensions/OAuth -Np1 </tmp/mediawiki-extensions-OAuth-same-domain.patch && \
+    git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia" && \
+    git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}" && \
+    rm -rf "extensions/WikibaseLocalMedia/.git*" && \
     \
     rm -rf vendor && \
     rm -rf composer.lock && \
     ls -la && pwd && \
     composer install --no-dev -vv -n
+
+# WORKAROUND for oauth on same domain problem introduced 
+# by https://phabricator.wikimedia.org/T299737#8171169
+COPY --chown=nobody:nogroup --chmod=755 \
+  mediawiki-extensions-OAuth-same-domain.patch \
+  /tmp/mediawiki-extensions-OAuth-same-domain.patch
+RUN patch -d /var/www/html/extensions/OAuth -Np1 </tmp/mediawiki-extensions-OAuth-same-domain.patch
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -213,6 +213,7 @@ RUN chmod o-w /var/www/html && \
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
+COPY callback.sh /callback.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
