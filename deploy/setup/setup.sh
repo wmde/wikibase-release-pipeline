@@ -107,6 +107,7 @@ install_docker() {
 
 clone_repo() {
   echo "Cloning Wikibase Release Pipeline repository..."
+  mkdir -p "$WBS_DIR"
   cd "$WBS_DIR"
   log_cmd "git clone $REPO_URL"
   cd wikibase-release-pipeline
