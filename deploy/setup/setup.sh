@@ -49,21 +49,22 @@ done
 
 PUBLIC_IP=$(curl --silent --show-error --fail https://api.ipify.org)
 SETUP_PORT=8888
-# Random suffix keeps Let's Encrypt from rate limiting
-# but not in CLOUD_INIT so that the setup webserver address
-# remains known (https://<SERVER-IP>.nip.io:8888) in that case. 
-if [[ "$CLOUD_INIT" = "true" ]]; then
-  SETUP_HOST=$PUBLIC_IP.nip.io
-else
-  SETUP_SUBDOMAIN=wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)
-  SETUP_HOST=$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io
+if [[ -z "$SETUP_HOST" ]]; then
+  # Random suffix keeps Let's Encrypt from rate limiting
+  # but not in CLOUD_INIT so that the setup webserver address
+  # remains known (https://<SERVER-IP>.nip.io:8888) in that case. 
+  if [[ "$CLOUD_INIT" = "true" ]]; then
+    SETUP_HOST=$PUBLIC_IP.nip.io
+  else
+    SETUP_SUBDOMAIN=wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)
+    SETUP_HOST=$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io
+  fi
 fi
 
 # -- Setup logging --
 
 mkdir -p "$WBS_DIR"
 touch "$LOG_PATH"
-
 
 log() {
   if $VERBOSE; then
@@ -184,6 +185,7 @@ if ! $LAUNCH_MODE; then
     log_cmd "docker run -d \
       -p $SETUP_PORT:443 \
       -v $DEPLOY_DIR:/app/deploy \
+      -v $DEPLOY_DIR/setup/views:/app/views \
       -v $SETUP_DIR/certs:/app/certs \
       -v $LOG_PATH:/app/setup.log \
       wikibase/deploy-setup-webserver"
