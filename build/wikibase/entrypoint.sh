@@ -2,6 +2,9 @@
 
 # This file is provided by the wikibase/wikibase docker image.
 
+IS_JOBRUNNER=false
+export IS_JOBRUNNER
+
 # Exit immediately with message if no /config volume is available
 if [ ! -d "/config" ]; then
     echo "A volume mapped to /config is required."
