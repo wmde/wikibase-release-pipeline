@@ -150,9 +150,13 @@ else
 fi
 
 if ! $SKIP_LAUNCH; then
-  setsid env \
-    DEPLOY_DIR="$DEPLOY_DIR" \
-    VERBOSE="$VERBOSE" \
-    bash "$SCRIPTS_DIR/launch.sh" >> "$LOG_PATH" 2>&1 < /dev/null &
-  exit 0
+  if $USE_WEB; then
+    setsid env \
+      DEPLOY_DIR="$DEPLOY_DIR" \
+      VERBOSE="$VERBOSE" \
+      bash "$SCRIPTS_DIR/launch.sh" >> "$LOG_PATH" 2>&1 < /dev/null &
+    exit 0
+  else
+    bash "$SCRIPTS_DIR/launch.sh"
+  fi
 fi
