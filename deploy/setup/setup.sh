@@ -50,7 +50,7 @@ WBS_DIR="${WBS_DIR:-/opt/wbs}"
 DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
 SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
 SCRIPTS_DIR="$SETUP_DIR/scripts"
-LOG_PATH="${LOG_PATH:-$WBS_DIR/wbs-deploy-setup.log}"
+LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
 
 # -- Setup logging --
 

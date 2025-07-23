@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-echo "in logging and seeing LOG_PATH: $LOG_PATH"
-
 if [ -z "$LOG_PATH" ]; then
-  CALLING_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[1]}")/../.." && pwd)"
-  LOG_PATH="$CALLING_SCRIPT_DIR/wbs-deploy-setup.log"
+  LOG_PATH="/tmp/wbs-deploy-setup.log"
 fi
 
 mkdir -p "$(dirname "$LOG_PATH")"
