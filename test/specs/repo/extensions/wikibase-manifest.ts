@@ -18,8 +18,14 @@ describe( 'WikibaseManifest', function () {
 			testEnv.vars.WIKIBASE_URL + '/wiki/Special:OAuthConsumerRegistration'
 		);
 
-		expect( data.external_services.queryservice ).toEqual( testEnv.vars.WDQS_URL + "/sparql" );
-		expect( data.external_services.queryservice_ui ).toEqual( testEnv.vars.WDQS_URL );
-		expect( data.external_services.quickstatements ).toEqual( testEnv.vars.QUICKSTATEMENTS_URL );
+		expect( data.external_services.queryservice ).toEqual(
+		  testEnv.vars.WDQS_URL + '/sparql'
+		);
+		expect( data.external_services.queryservice_ui ).toEqual(
+		  testEnv.vars.WDQS_URL
+		);
+		expect( data.external_services.quickstatements ).toEqual(
+		  testEnv.vars.QUICKSTATEMENTS_URL
+		);
 	} );
 } );
