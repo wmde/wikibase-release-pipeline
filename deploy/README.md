@@ -52,7 +52,7 @@ If you're setting up a new instance on a fresh VPS, you can use our web-based in
 2. **Run the following one-liner:**
 
    ```sh
-   curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh)"
    ```
 
 3. **Follow the on-screen instructions.** The setup script will guide you through the rest of the process and provide a link to open the web-based installer in your browser.

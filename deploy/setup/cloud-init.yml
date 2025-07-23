@@ -7,4 +7,4 @@ packages:
   - git
 
 runcmd:
-  - curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | CLOUD_INIT=true bash
+  - bash -c "$(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh)" -- --cloud-init --verbose
