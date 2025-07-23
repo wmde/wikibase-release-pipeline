@@ -8,6 +8,7 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css"
   />
+  <script src="https://cdn.jsdelivr.net/npm/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
   <style>
     body {
       display: flex;
@@ -78,6 +79,28 @@
       margin-top: 0.5rem;
       margin-right: 1rem;
     }
+
+    label:has(.field-help) input {
+      margin-bottom: 1rem;
+    }
+
+    label:has(.just-validate-error-label) .field-help {
+      margin-bottom: 0.1rem;
+    }
+
+    .field-help {
+      font-size: 0.75rem;
+      color: #555;
+      /* margin-bottom: 1.25rem; */
+    }
+
+    .just-validate-error-label {
+      font-size: 0.75rem;
+    }
+
+    .just-validate-error-field {
+      border: solid 1px red;
+    }
   </style>
 </head>
 <body>
@@ -86,41 +109,52 @@
       <img src="/Wikibase_Suite_(RGB).png" alt="Wikibase Logo" />
       <h2>Deploy Setup</h2>
     </div>
+
     <div class="grid">
       <div id="config-section">
         <form id="config-form" data-disabled="<%= isConfigSaved %>">
-          <label>Admin Email Address (<em>required, used for MediaWiki Admin user, etc</em>):
-            <input name="MW_ADMIN_EMAIL" required />
+          <label>
+            MediaWiki Admin Email Address:
+            <div class="field-help">Used for MediaWiki admin and alerts.</div>
+            <input name="MW_ADMIN_EMAIL" type="email" required />
           </label>
-          <label>Wikibase Host (<em>e.g. wikibase.example.com. default: <pre style="display: inline;">&lt;SERVER-IP&gt;.nip.io</pre></em>):
-            <input name="WIKIBASE_PUBLIC_HOST" />
+          <label>
+            Wikibase Host:
+            <div class="field-help"><em>e.g. wikibase.example.com. default: <pre style="display: inline;">&lt;SERVER-IP&gt;.nip.io</pre></em></div>
+            <input name="WIKIBASE_PUBLIC_HOST" type="url" />
           </label>
+          <details name="config">
+            <summary role="secondary" style="font-weight: bold;">Advanced Options</summary>
+            <label>Query Service Host:
+              <div class="field-help"><em>default: <pre style="display: inline;">query.&lt;WIKIBASE_PUBLIC_HOST&gt;</pre></em></div>
+              <input name="WDQS_PUBLIC_HOST" type="url" />
+            </label>
+            <label>MediaWiki Admin Name:
+              <div class="field-help">Will be the login name for the MediaWiki admin</div>
+              <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
+            </label>
+            <label>MediaWiki Admin Password:
+              <div class="field-help">Minimum 10 characters. <em>default: generated and revealed at end of install</em></div>
+              <input name="MW_ADMIN_PASS" type="password" />
+            </label>
+            <label>Database Name:
+              <div class="field-help"><em>default: my_wiki</em></div>
+              <input name="DB_NAME" value="<%= DB_NAME %>" />
+            </label>
+            <label>Database User:
+              <div class="field-help">Used by MediaWiki to connect to the database. <em>default: sqluser</em></div>
+              <input name="DB_USER" value="<%= DB_USER %>" />
+            </label>
+            <label>Database Password:
+              <div class="field-help">Minimum 10 characters. <em>default: generated and revealed at end of install</em></div>
+              <input name="DB_PASS" type="password" />
+            </label>
+          </details>
           <label>
             <input type="checkbox" name="METADATA_CALLBACK" checked role="switch" />
             I want this Wikibase to be visible in the global Wikibase directory
           </label>
           <br />
-          <details name="config">
-            <summary role="secondary">Advanced Options</summary>
-            <label>Query Service Host (<em>default: <pre style="display: inline;">query.&lt;WIKIBASE_PUBLIC_HOST&gt;</pre></em>):
-              <input name="WDQS_PUBLIC_HOST" />
-            </label>
-            <label>MediaWiki Admin Name:
-              <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
-            </label>
-            <label>MediaWiki Admin Password:
-              <input name="MW_ADMIN_PASS" type="password" />
-            </label>
-            <label>Database Name:
-              <input name="DB_NAME" value="<%= DB_NAME %>" />
-            </label>
-            <label>Database User:
-              <input name="DB_USER" value="<%= DB_USER %>" />
-            </label>
-            <label>Database Password:
-              <input name="DB_PASS" type="password" />
-            </label>
-          </details>
           <button type="submit">Save</button>
         </form>
       </div>
@@ -158,13 +192,66 @@
             <p id="finalize-message" style="margin-top: 0.5em;"></p>
           </div>
         </div>
-        <button id="toggle-log">Show Logs</button>
+        <button id="toggle-log" class="outline secondary">Show Log</button>
         <div id="log-wrapper"><div id="log">Loading logs...</div></div>
       </div>
     </div>
   </main>
 
   <script>
+  const validate = new JustValidate('#config-form');
+
+  validate
+    .addField('[name=MW_ADMIN_EMAIL]', [
+      { rule: 'required' },
+      { rule: 'email' }
+    ])
+    .addField('[name=WIKIBASE_PUBLIC_HOST]', [
+      {
+        rule: 'customRegexp',
+        value: /^https?:\/\//,
+        errorMessage: 'Must be a valid URL.'
+      }
+    ])
+    .addField('[name=WDQS_PUBLIC_HOST]', [
+      {
+        rule: 'customRegexp',
+        value: /^https?:\/\//,
+        errorMessage: 'Must be a valid URL.'
+      }
+    ])
+    .addField('[name=MW_ADMIN_PASS]', [
+      {
+        validator: (value) => value.length === 0 || value.length >= 10,
+        errorMessage: 'Password must be at least 10 characters or left blank',
+      }
+    ])
+    .addField('[name=DB_PASS]', [
+      {
+        validator: (value) => value.length === 0 || value.length >= 10,
+        errorMessage: 'Password must be at least 10 characters or left blank',
+      }
+    ])
+    .onSuccess(async (event) => {
+      const form = event.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.METADATA_CALLBACK = form.METADATA_CALLBACK?.checked ? "true" : "false";
+
+      const res = await fetch('/write-env', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        form.querySelectorAll('input, button').forEach(i => i.disabled = true);
+        document.getElementById('status-waiting').style.display = 'block';
+        document.getElementById('status-complete').style.display = 'none';
+      } else {
+        alert('Failed to save environment. See console for details.');
+      }
+    });
+
     const form = document.getElementById('config-form');
     const statusWaiting = document.getElementById('status-waiting');
     const statusComplete = document.getElementById('status-complete');
@@ -244,26 +331,6 @@
         }
       };
     });
-
-    form.onsubmit = async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
-      data.METADATA_CALLBACK = form.METADATA_CALLBACK.checked ? "true" : "false";
-
-      const res = await fetch('/write-env', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        form.querySelectorAll('input, button').forEach(i => i.disabled = true);
-        statusWaiting.style.display = 'block';
-        statusComplete.style.display = 'none';
-      } else {
-        alert('Failed to save environment. See console for details.');
-      }
-    };
 
     toggleLog.onclick = async () => {
       const isVisible = logWrapper.style.display === 'block';

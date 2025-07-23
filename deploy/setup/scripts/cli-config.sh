@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+echo
 echo "🔧 Wikibase Deploy CLI Installer"
 echo
 
