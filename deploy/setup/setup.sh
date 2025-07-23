@@ -101,12 +101,50 @@ install_git() {
 
 install_docker() {
   echo "Installing Docker..."
-  log_cmd "curl -fsSL https://get.docker.com | sh"
-  log_cmd "systemctl enable --now docker"
-  echo "Installing Docker Compose plugin..."
-  mkdir -p ~/.docker/cli-plugins
-  log_cmd "curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o ~/.docker/cli-plugins/docker-compose"
-  chmod +x ~/.docker/cli-plugins/docker-compose
+
+  . /etc/os-release
+  case "$ID" in
+    ubuntu|debian)
+      log "Detected OS: $ID"
+
+      log_cmd "apt-get update"
+      log_cmd "apt-get install -y ca-certificates curl gnupg lsb-release"
+
+      log_cmd "mkdir -p /etc/apt/keyrings"
+      curl -fsSL https://download.docker.com/linux/$ID/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+        https://download.docker.com/linux/$ID $(lsb_release -cs) stable" | \
+        tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+      log_cmd "apt-get update"
+      log_cmd "apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+      ;;
+
+    fedora)
+      log "Detected OS: Fedora"
+
+      log_cmd "dnf install -y dnf-plugins-core"
+      log_cmd "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
+      log_cmd "dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+      log_cmd "systemctl enable --now docker"
+      ;;
+
+    centos)
+      log "Detected OS: CentOS"
+
+      log_cmd "yum install -y yum-utils"
+      log_cmd "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+      log_cmd "yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+      log_cmd "systemctl enable --now docker"
+      ;;
+
+    *)
+      echo "⚠️ Unsupported OS: $ID. Please install Docker manually."
+      exit 1
+      ;;
+  esac
 }
 
 clone_repo() {
@@ -142,9 +180,9 @@ fi
 export DEPLOY_DIR VERBOSE LOG_PATH LOCALHOST
 
 if $USE_WEB; then
-  exec "$SCRIPTS_DIR/web-config.sh" 
+  bash "$SCRIPTS_DIR/web-config.sh" 
 else
-  exec "$SCRIPTS_DIR/cli-config.sh"
+  bash "$SCRIPTS_DIR/cli-config.sh"
 fi
 
 if ! $SKIP_LAUNCH; then
@@ -155,6 +193,6 @@ if ! $SKIP_LAUNCH; then
       bash "$SCRIPTS_DIR/launch.sh" >> "$LOG_PATH" 2>&1 < /dev/null &
     exit 0
   else
-    exec "$SCRIPTS_DIR/launch.sh"
+    bash "$SCRIPTS_DIR/launch.sh"
   fi
 fi
