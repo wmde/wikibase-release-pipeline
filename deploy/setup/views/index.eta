@@ -46,10 +46,7 @@
       border-radius: 0.5rem;
       white-space: pre-wrap;
       margin-top: 1rem;
-    }
-
-    #toggle-log {
-      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
     }
 
     #config-final-wrapper {
@@ -192,8 +189,8 @@
             <p id="finalize-message" style="margin-top: 0.5em;"></p>
           </div>
         </div>
-        <button id="toggle-log" class="outline secondary">Show Log</button>
         <div id="log-wrapper"><div id="log">Loading logs...</div></div>
+        <button id="toggle-log" class="outline secondary">Show Log</button>
       </div>
     </div>
   </main>
@@ -343,10 +340,10 @@
         }
         logEl.innerHTML = '';
         logWrapper.style.display = 'none';
-        toggleLog.textContent = 'Show Logs';
+        toggleLog.textContent = 'Show Log';
       } else {
         logWrapper.style.display = 'block';
-        toggleLog.textContent = 'Hide Logs';
+        toggleLog.textContent = 'Hide Log';
 
         try {
           const res = await fetch('/log');
