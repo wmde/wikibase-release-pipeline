@@ -129,27 +129,27 @@ MW_SCRIPT_PATH=/w
 
 For more information on testing, see the [README](./test/README.md).
 
-## Release and Publish Process
+## 🚚 Release and Publish Process
 
 WBS Deploy and WBS Images are released and published using this repository. 
 
 Major releases and those containing significant changes are announced to the community.
 
-### Changes to be Released
+### 🛠 Changes to be Released
 
 Different kinds of changes can make a release desirable. All of them should be reviewed and merged to the `main` branch in order to be part of a release.
 
-#### Upstream Version Bumps
+#### ⏬ Upstream Version Bumps
 
 Changing the version of an upstream component can trigger a version bump on our side. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/). Upstream versions are changed in the `build/*/build.env` files. Some of our images support updating some of the version references automatically using `./nx run wikibase:update-commits`, `./nx run quickstatements:update-commits`, and `./nx run wdqs-frontend:update-commits`.
 
 MediaWiki Minor versions, that is moving from 1.41 to 1.42, are a special case. They always lead to a major version bump in Wikibase Image.
 
-#### Local Changes
+#### 🔨 Local Changes
 
 Changes to our products implemented locally also lead to version bumps. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/).
 
-### Building and Testing
+### ⚙️ Building and Testing
 
 Changes need to be built and tested. This is done by CI as implemented in `./github/workflows/` and automatically triggered in every PR and every commit on `main`.
 
@@ -161,37 +161,33 @@ git pull
 ./nx test -- all --headed
 ```
 
-### Preparing a Release
+### 🧐 Preparing a Release
+Preparing a release involves verifying the version number and changelog files generated. 
+#### 🏭 Preparing a Release in CI
+This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch as it contains reviewed changes that are releasable. Choose "Dry run, don't do it yet" to generate versions and changelogs without saving it. In the actions' output, on the `release` job, there is a step called `Create release`. Its logs will show you what changelogs would be generated as well as which version bumps were inferred.
 
-Preparing a release involves verifying the version number and changelog files generated. This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch. This contains reviewed changed that are releasable. Choose "Dry run, don't do it yet" to generate versions and changelogs without saving it. On the `release` job, there is a step called `Create release`. Its logs will show you what changelogs would be generated as well as which version bumps were inferred.
-
+#### 📦 Preparing a Release locally
 The same thing can be done locally. This can come in handy for testing and is often faster.
 
-To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes:
+To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes, do:
 ```bash
 git checkout main
 git pull
 ./nx release --dry-run
 ```
 
-### Preparing the Announcement
-Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
+### 📣 Preparing the Announcement
+Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on 🕑 timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
 
 
-### Releasing and Publishing
-Doing a release involves generating the version number bump and changelog files. 
+### 🚚 Releasing and Publishing
+Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository.
 
-Publishing Images involves pushing them to DockerHub. 
+#### 🤖 Releasing and Publishing using CI
 
-Publishing Deploy is currently just done by pushing a new git tag to our repository.
+ It can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run, don't do it yet" to actually do a release. This will change version numbers in `package.json` files, update changelog files, and `git tag` these new versions. This changes will be then automatically pushed back into the repository. Pushing the new tags (such as `wikibase@1.2.3`) will trigger another CI action that publishes new images on DockerHub.
 
-#### Releasing and Publishing using CI
-
- This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run, don't do it yet" to actually do a release. This will change version numbers in `package.json` files, update changelog files, and `git tag` these new versions.
-
-This changes will be then automatically pushed back into the repository. Pushing the new tags (such as `wikibase@1.2.3`) will trigger another CI action that publishes new images on DockerHub.
-
-#### Releasing and Publishing locally
+#### 💻 Releasing and Publishing locally
 
 Releasing can also be done (semi-)locally. To do a release of a single project do:
 ```sh
@@ -210,4 +206,4 @@ git push --tags origin wikibase@1.2.3
 Pushing `deploy@X.Y.Z` tags does not trigger any further actions.
 
 
-You`re done. **Congratulations!**
+### 🥇 You`re done. Congratulations!
