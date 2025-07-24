@@ -196,7 +196,7 @@
   </main>
 
   <script>
-    const hostNameRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/
+    const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/
     const passwordValidator = value => value.length === 0 || value.length >= 10
     const validate = new JustValidate('#config-form');
     validate
