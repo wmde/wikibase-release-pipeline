@@ -129,53 +129,85 @@ MW_SCRIPT_PATH=/w
 
 For more information on testing, see the [README](./test/README.md).
 
-## Release process
+## Release and Publish Process
 
-WBS Deploy and WBS Images are released using this repository. The process involves updating upstream component versions, building images, testing all the images together, releasing them by generating a changelog, git tagging the new version and finally publishing it.
+WBS Deploy and WBS Images are released and published using this repository. 
 
-### Preparing a release
+Major releases and those containing significant changes are announced to the community.
 
+### Changes to be Released
+
+Different kinds of changes can make a release desirable. All of them should be reviewed and merged to the `main` branch in order to be part of a release.
+
+#### Upstream Version Bumps
+
+Changing the version of an upstream component can trigger a version bump on our side. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/). Upstream versions are changed in the `build/*/build.env` files. Some of our images support updating some of the version references automatically using `./nx run wikibase:update-commits`, `./nx run quickstatements:update-commits`, and `./nx run wdqs-frontend:update-commits`.
+
+MediaWiki Minor versions, that is moving from 1.41 to 1.42, are a special case. They always lead to a major version bump in Wikibase Image.
+
+#### Local Changes
+
+Changes to our products implemented locally also lead to version bumps. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/).
+
+### Building and Testing
+
+Changes need to be built and tested. This is done by CI as implemented in `./github/workflows/` and automatically triggered in every PR and every commit on `main`.
+
+Alternatively, to run build and test locally, do:
+```sh
+git checkout main
+git pull
+./nx run-many -t build -p "build/**"
+./nx test -- all --headed
+```
+
+### Preparing a Release
+
+Preparing a release involves verifying the version number and changelog files generated. This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch. This contains reviewed changed that are releasable. Choose "Dry run, don't do it yet" to generate versions and changelogs without saving it. On the `release` job, there is a step called `Create release`. Its logs will show you what changelogs would be generated as well as which version bumps were inferred.
+
+The same thing can be done locally. This can come in handy for testing and is often faster.
+
+To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes:
 ```bash
-# Do a release dry-run (nothing but informative output will happen)
-# for all projects with unreleased changes
+git checkout main
+git pull
 ./nx release --dry-run
+```
 
-# Do a release (bump version, generate changelog and git tag it) for a single
-# project (e.g. wikibase).
-# Nothing will be pushed or published with this command, but a new commit with
-# changelog and package.json adjustments will be created locally. This should
-# happen  on `main`. Also, a new git tag with the new version of the released
-# project will be created locally.
+### Preparing the Announcement
+Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
+
+
+### Releasing and Publishing
+Doing a release involves generating the version number bump and changelog files. 
+
+Publishing Images involves pushing them to DockerHub. 
+
+Publishing Deploy is currently just done by pushing a new git tag to our repository.
+
+#### Releasing and Publishing using CI
+
+ This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run, don't do it yet" to actually do a release. This will change version numbers in `package.json` files, update changelog files, and `git tag` these new versions.
+
+This changes will be then automatically pushed back into the repository. Pushing the new tags (such as `wikibase@1.2.3`) will trigger another CI action that publishes new images on DockerHub.
+
+#### Releasing and Publishing locally
+
+Releasing can also be done (semi-)locally. To do a release of a single project do:
+```sh
+git checkout main
+git pull
 ./nx release -p wikibase
-
-# Push the changelog and package.json changes to Github.
-# Yes, we push to `main` here ¯\_(ツ)_/¯
-# ATTENTION!!! THIS DOES NOT PUSH THE NEW GIT TAG
-# ATTENTION!!! PUSHING ALSO THE NEW GIT TAG WOULD PUBLISH IMAGE RELEASES TO DOCKERHUB
-git push
 ```
 
-### Publishing a release
+Running locally also allows you to modify the resulting version number manually as well as to customize the changelog file. Use `./nx release --help` to learn more about that.
 
-Deploy releases are currently just published in this git repo via a git tag. Pushing the tag to Github effectively publishes a deploy version.
-
-Image releases are published on Dockerhub. The actual push to Dockerhub is handled by Github Actions and is triggered by pushing a git tag to Github.
-
-For example `./nx release -p wikibase` would tag the next wikibase version with a git tag such as `wikibase@1.2.3`. Pushing this tag with `git push origin wikibase@1.2.3` will trigger Github Actions to publish the `wikibase` project from this tag to Dockerhub.
-
-### Release checklist Phabricator template
-
+When you are done, you can publish the release by pushing the tag to Github. For images, this will trigger a Github Actions to publish on DockerHub.
 ```
-- [ ] **Pending issues as subtasks**. If any open tickets need to be resolved and/or related changes need to be included in the release, add them as subtasks of this release ticket.
-  - [ ] **Update `build/*/build.env`** bump upstream versions by changing `build.env` files. You can find further instructions in the `build.env` files themselves.
-- [ ] **Merge all pending changes to `main`** releases are always done from the `main` branch.
-- [ ] **Verify CI on `main` is green**
-- [ ] **Do a sanity check by manually reviewing a running instance using your build**. This can be done locally on your machine or on a public server. You can find built images from your release preparation branch on the [GitHub Container Registry](https://github.com/wmde/wikibase-release-pipeline/pkgs/container/wikibase%2Fwikibase) tagged with `dev-GITHUB_ACTIONS_RUN_NUMBER`, e.g., `dev-123456789`. This tag can be used to set up an instance running your release preparation version.
-- [ ] **Release Dry Run** by running the Github Action [Create a WBS Release](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) in Dry Run mode. Check the output and review version and changelog generated.
-- [ ] **Prepare communication** by creating a [release announcement](https://drive.google.com/drive/folders/1iZMbdXGPsG0pLs-_HrniT5ac28aw1Edu).
-- [ ] **Coordinate with ComCom on timing the publication of the release**. Talk to SCoT (ComCom, technical writer) about this.
-- [ ] **Publish the release** by running the Github Action [Create a WBS Release](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) **ATTENTION: This will automatically push images to Docker Hub!**
-- [ ] **Update Dockerhub README** (from `./build/*/dockerhub.md`) if required (e.g. major versions changed).
+git push --tags origin wikibase@1.2.3
+```
+
+Pushing `deploy@X.Y.Z` tags does not trigger any further actions.
+
 
 You`re done. **Congratulations!**
-```
