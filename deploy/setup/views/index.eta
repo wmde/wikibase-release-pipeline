@@ -199,58 +199,59 @@
   </main>
 
   <script>
-  const validate = new JustValidate('#config-form');
+    const hostNameRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/
+    const passwordValidator = value => value.length === 0 || value.length >= 10
+    const validate = new JustValidate('#config-form');
+    validate
+      .addField('[name=MW_ADMIN_EMAIL]', [
+        { rule: 'required' },
+        { rule: 'email' }
+      ])
+      .addField('[name=WIKIBASE_PUBLIC_HOST]', [
+        {
+          rule: 'customRegexp',
+          value: hostNameRegex,
+          errorMessage: 'Must be a valid hostname (e.g. example.com)',
+        }
+      ])
+      .addField('[name=WDQS_PUBLIC_HOST]', [
+        {
+          rule: 'customRegexp',
+          value: hostNameRegex,
+          errorMessage: 'Must be a valid hostname (e.g. query.example.com)',
+        }
+      ])
+      .addField('[name=MW_ADMIN_PASS]', [
+        {
+          validator: passwordValidator,
+          errorMessage: 'Password must be at least 10 characters or left blank',
+        }
+      ])
+      .addField('[name=DB_PASS]', [
+        {
+          validator: passwordValidator,
+          errorMessage: 'Password must be at least 10 characters or left blank',
+        }
+      ])
+      .onSuccess(async (event) => {
+        const form = event.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.METADATA_CALLBACK = form.METADATA_CALLBACK?.checked ? "true" : "false";
 
-  validate
-    .addField('[name=MW_ADMIN_EMAIL]', [
-      { rule: 'required' },
-      { rule: 'email' }
-    ])
-    .addField('[name=WIKIBASE_PUBLIC_HOST]', [
-      {
-        rule: 'customRegexp',
-        value: /^https?:\/\//,
-        errorMessage: 'Must be a valid URL.'
-      }
-    ])
-    .addField('[name=WDQS_PUBLIC_HOST]', [
-      {
-        rule: 'customRegexp',
-        value: /^https?:\/\//,
-        errorMessage: 'Must be a valid URL.'
-      }
-    ])
-    .addField('[name=MW_ADMIN_PASS]', [
-      {
-        validator: (value) => value.length === 0 || value.length >= 10,
-        errorMessage: 'Password must be at least 10 characters or left blank',
-      }
-    ])
-    .addField('[name=DB_PASS]', [
-      {
-        validator: (value) => value.length === 0 || value.length >= 10,
-        errorMessage: 'Password must be at least 10 characters or left blank',
-      }
-    ])
-    .onSuccess(async (event) => {
-      const form = event.target;
-      const data = Object.fromEntries(new FormData(form).entries());
-      data.METADATA_CALLBACK = form.METADATA_CALLBACK?.checked ? "true" : "false";
+        const res = await fetch('/write-env', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
 
-      const res = await fetch('/write-env', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        if (res.ok) {
+          form.querySelectorAll('input, button').forEach(i => i.disabled = true);
+          document.getElementById('status-waiting').style.display = 'block';
+          document.getElementById('status-complete').style.display = 'none';
+        } else {
+          alert('Failed to save environment. See console for details.');
+        }
       });
-
-      if (res.ok) {
-        form.querySelectorAll('input, button').forEach(i => i.disabled = true);
-        document.getElementById('status-waiting').style.display = 'block';
-        document.getElementById('status-complete').style.display = 'none';
-      } else {
-        alert('Failed to save environment. See console for details.');
-      }
-    });
 
     const form = document.getElementById('config-form');
     const statusWaiting = document.getElementById('status-waiting');
