@@ -1,3 +1,22 @@
+# 5.0.0 (2025-07-24)
+
+
+### 💅 Refactors
+
+- ⚠️  move callback to wikibase image
+
+
+### 📖 Documentation
+
+- suggest METADATA_CALLBACK settings
+
+- notes about upgrade from 4 to 5
+
+
+#### ⚠️  Breaking Changes
+
+- ⚠️  move callback to wikibase image
+
 ## 4.2.1 (2025-07-11)
 
 
