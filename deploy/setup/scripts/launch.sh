@@ -47,13 +47,13 @@ final_message() {
       echo Your Wikibase Suite services can be found at:
       echo
       echo MediaWiki/Wikibase: 
-      echo https://$WIKIBASE_PUBLIC_HOST
+      echo https://"$WIKIBASE_PUBLIC_HOST"
       echo
       echo Query Service:
-      echo https://$WDQS_PUBLIC_HOST/tools/quickstatements
+      echo https://"$WDQS_PUBLIC_HOST"/tools/quickstatements
       echo 
       echo QuickStatements:
-      echo https://$WIKIBASE_PUBLIC_HOST/tools/quickstatements
+      echo https://"$WIKIBASE_PUBLIC_HOST"/tools/quickstatements
       echo 
     else
       echo "⚠️ Could not determine WIKIBASE_PUBLIC_HOST from .env"
