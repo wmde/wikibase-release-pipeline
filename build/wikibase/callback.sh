@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u
 
-# This script is part of Wikibase Suite Deploy
+# This file is provided by the wikibase/wikibase docker image.
 #
 # This is part of an initiative to maintain an index of Wikibases. The goal of
 # this index is to gather more quantitative data to learn more about how
@@ -22,17 +22,12 @@ set -u
 
 
 if ! [ -v METADATA_CALLBACK  ] || ! [ "$METADATA_CALLBACK" = "true" ]; then
-  echo "METADATA_CALLBACK not enabled. Exiting."
+  echo "METADATA_CALLBACK not enabled."
   exit 1
 fi
 
 if [ -z "$MW_WG_SERVER" ]; then
   echo "Callback Error: MW_WG_SERVER environment variable not set."
-  exit 1
-fi
-
-if [ -z "$WDQS_PUBLIC_HOST" ]; then
-  echo "Callback Error: WDQS_PUBLIC_HOST environment variable not set."
   exit 1
 fi
 
@@ -47,14 +42,34 @@ if [[ "$MW_WG_SERVER" == *.localhost ]]; then
 fi
 
 GRAPHQL_URL="https://wikibase-metadata.toolforge.org/graphql"
+
+PAYLOAD_WDQS_ENDPOINT=""
+if [ -v WDQS_PUBLIC_ENDPOINT_URL ] && [ -n "$WDQS_PUBLIC_ENDPOINT_URL" ]; then
+  PAYLOAD_WDQS_ENDPOINT="\
+          sparqlEndpointUrl: \\\"$WDQS_PUBLIC_ENDPOINT_URL\\\", \
+  "
+else
+  echo "Callback Warning: WDQS_PUBLIC_ENDPOINT_URL not set, will not report WDQS endpoint URL"
+fi
+
+PAYLOAD_WDQS_FRONTEND=""
+if [ -v WDQS_PUBLIC_FRONTEND_URL ] && [ -n "$WDQS_PUBLIC_FRONTEND_URL" ]; then
+  PAYLOAD_WDQS_FRONTEND="\
+          sparqlFrontendUrl: \\\"$WDQS_PUBLIC_FRONTEND_URL\\\", \
+  "
+else
+  echo "Callback Warning: WDQS_PUBLIC_FRONTEND_URL not set, will not report WDQS frontend URL"
+fi
+
+
 PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
       wikibaseName: \\\"$MW_WG_SERVER\\\", \
       urls: {\
         baseUrl: \\\"$MW_WG_SERVER\\\", \
         articlePath: \\\"/wiki\\\", \
         scriptPath: \\\"/w\\\", \
-        sparqlFrontendUrl: \\\"https://$WDQS_PUBLIC_HOST\\\", \
-        sparqlEndpointUrl: \\\"https://$WDQS_PUBLIC_HOST/sparql\\\", \
+        $PAYLOAD_WDQS_ENDPOINT \
+        $PAYLOAD_WDQS_FRONTEND \
       } \
     }) { \
       id \

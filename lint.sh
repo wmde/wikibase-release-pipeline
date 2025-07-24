@@ -86,8 +86,15 @@ else
 fi
 
 echo "ℹ️ Running shellcheck on *.sh files"
-find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name "*.sh" -print0 | xargs -0 \
-  shellcheck -x
+find "$path" \
+  -type d \( \
+    -name node_modules \
+    -o -name .git \
+    -o -path "$path/deploy/config/extensions" \
+  \) \
+  -prune -o \
+  -type f -name "*.sh" -print0 | xargs -0 shellcheck -x
+
 # Always check nx script...
 shellcheck -x ./nx
 

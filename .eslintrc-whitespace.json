@@ -2,12 +2,14 @@
 	"root": true,
 	"parser": "any-eslint-parser",
 	"ignorePatterns": [
+		"node_modules",
 		"test/**/results",
 		"!.github",
-		"!deploy",
 		"package-lock.json",
 		"pnpm/**/**",
 		"pnpm-lock.yaml",
+		"deploy/config/extensions",
+		"cloud-init.yml",
 		"*.properties",
 		"*.ts",
 		"*.js",
@@ -15,7 +17,8 @@
 		"*.yml",
 		"*.yaml",
 		"*.json",
-		"*.png"
+		"*.png",
+		"*.ico"
 	],
 	"rules": {
 		"eol-last": [ "error", "always" ]
