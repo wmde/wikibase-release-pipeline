@@ -80,6 +80,7 @@
 
     label {
       font-weight: bold;
+      font-size: 0.9rem;
     }
 
     label:has(.field-help) input {
@@ -91,14 +92,15 @@
     }
 
     .field-help {
+      line-height: 0.7rem;
       font-weight: normal;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #555;
     }
 
     .just-validate-error-label {
       font-weight: normal;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     .just-validate-error-field {
