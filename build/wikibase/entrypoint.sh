@@ -11,6 +11,16 @@ fi
 # Exit immediate on errors or unset variables from here onwards
 set -eu
 
+if ! [ -v METADATA_CALLBACK  ] || [ -z "$METADATA_CALLBACK" ]; then
+  echo "*** ERROR ***"
+  echo "METADATA_CALLBACK not configured."
+  echo "https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wikibase/README.md"
+  echo "Exiting Wikibase container now."
+  exit 1
+fi
+
+bash /callback.sh || true
+
 # Take wikibase-php.ini from user config if present
 if [ -e "/config/wikibase-php.ini" ]; then
     cp /config/wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
