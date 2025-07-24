@@ -102,6 +102,7 @@ install_git() {
 install_docker() {
   echo "Installing Docker..."
 
+  # shellcheck disable=SC1091
   . /etc/os-release
   case "$ID" in
     ubuntu|debian)
