@@ -64,39 +64,46 @@
       overflow-x: auto;
     }
 
-    #log::-moz-selection,
+    #log *::selection,
     #log::selection,
-    #config-final::-moz-selection,
+    #config-final *::selection,
     #config-final::selection {
-      background-color: #eee;
-      color: #111;
+      background-color: var(--primary);
+      color: var(--primary-inverse);
     }
 
-    #copy-config, #download-config {
+    #copy-config,
+    #download-config {
       margin-top: 0.5rem;
       margin-right: 1rem;
+    }
+
+    label {
+      font-weight: bold;
     }
 
     label:has(.field-help) input {
       margin-bottom: 1rem;
     }
 
-    label:has(.just-validate-error-label) .field-help {
-      margin-bottom: 0.1rem;
+    label:has(.just-validate-error-label) input {
+      margin-bottom: 0;
     }
 
     .field-help {
+      font-weight: normal;
       font-size: 0.75rem;
       color: #555;
-      /* margin-bottom: 1.25rem; */
     }
 
     .just-validate-error-label {
+      font-weight: normal;
       font-size: 0.75rem;
     }
 
     .just-validate-error-field {
-      border: solid 1px red;
+      border: solid 3px;
+      border-color: rgb(197, 47, 33);
     }
   </style>
 </head>
