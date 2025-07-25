@@ -1,3 +1,26 @@
+# 5.0.0 (2025-07-24)
+
+
+### 💅 Refactors
+
+- ⚠️  move callback to wikibase image
+
+
+### 📦 Build
+
+- depth 1 checkouts in wikibase-image build
+
+
+### 🏡 Chore
+
+- ⚠️  bump mediawiki to 1.44.0
+
+
+#### ⚠️  Breaking Changes
+
+- ⚠️  move callback to wikibase image
+- ⚠️  bump mediawiki to 1.44.0
+
 ## 4.1.1 (2025-07-17)
 
 

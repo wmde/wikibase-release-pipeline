@@ -290,6 +290,14 @@ Look for changes in the new `template.env` that you might want to apply to your 
 
 #### Apply any migrations for your version
 
+<details><summary><strong>WBS Deploy 4.x.x to 5.x.x</strong></summary><p>
+
+Wikibase Image switched from version 4.x.x to 5.x.x; this upgrades MediaWiki from 1.43 to 1.44. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_44/UPGRADE).
+
+Please, note that the `.env` file now requires setting `METADATA_CALLBACK`. Find more details about it in `template.env`.
+
+</p></details>
+
 <details><summary><strong>WBS Deploy 3.x.x to 4.x.x</strong></summary><p>
 
 Wikibase Image switched from version 3.x.x to 4.x.x; this upgrades MediaWiki from 1.42 to 1.43. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE).
