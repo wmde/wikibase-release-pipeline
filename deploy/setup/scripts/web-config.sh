@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 echo
 echo "🔧 Starting web-based configuration wizard..."
@@ -8,9 +8,8 @@ echo
 # --- Expected env vars ---
 DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
 LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
-VERBOSE="${VERBOSE:-false}"
+DEBUG="${DEBUG:-false}"
 LOCALHOST="${LOCALHOST:-false}"
-CLOUD_INIT="${CLOUD_INIT:-false}"
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
 
 # -- Script specific env vars --
@@ -18,34 +17,30 @@ SETUP_PORT=8888
 SETUP_DIR="$DEPLOY_DIR/setup"
 CERTS_DIR="$SETUP_DIR/certs"
 VIEWS_DIR="$SETUP_DIR/views"
+SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 
 # -- Setup logging --
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
 
 generate_cert_for_setup_webserver() {
-  log "Generating TLS certificate for setup page..."
+  debug "Generating TLS certificate for setup page..."
 
   if [ "$LOCALHOST" = true ]; then
     SETUP_HOST="localhost"
   else
-    PUBLIC_IP=$(curl --silent --show-error --fail https://api.ipify.org)
-    if [[ -z "$SETUP_HOST" ]]; then
-      if [[ "$CLOUD_INIT" = true ]]; then
-        SETUP_HOST="$PUBLIC_IP.nip.io"
-      else
-        SETUP_SUBDOMAIN="wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
-        SETUP_HOST="$SETUP_SUBDOMAIN.$PUBLIC_IP.nip.io"
-      fi
-    fi
+    # Extra random suffix is to keep Let's Encrypt from rate limiting on cert generation
+    # after repeated runs (in dev, testing, and debugging cases in particular)
+    SETUP_SUBDOMAIN="wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
+    SETUP_HOST="$SETUP_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
 
-  log_cmd "mkdir -p $SETUP_DIR/letsencrypt $CERTS_DIR"
-  log "Using domain: $SETUP_HOST"
+  run "mkdir -p $SETUP_DIR/letsencrypt $CERTS_DIR"
+  debug "Using domain: $SETUP_HOST"
 
-  log_cmd "docker pull certbot/certbot"
+  run "docker pull certbot/certbot"
 
-  if log_cmd "docker run --rm \
+  if run "docker run --rm \
     -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
     -v $CERTS_DIR:/certs \
     -p 80:80 \
@@ -80,8 +75,9 @@ start_setup_webserver() {
     LOAD_FLAG=""
   fi
 
-  log_cmd "docker build $LOAD_FLAG -t wikibase/deploy-setup-webserver ."
-  log_cmd "docker run -d \
+  run "docker build $LOAD_FLAG -t wikibase/deploy-setup-webserver ."
+  run "docker run -d \
+    -e SERVER_IP=$SERVER_IP \
     -p $SETUP_PORT:443 \
     -v $DEPLOY_DIR:/app/deploy \
     -v $VIEWS_DIR:/app/views \
@@ -96,7 +92,7 @@ start_setup_webserver() {
   echo
 }
 
-log "Starting setup page webserver container..."
+debug "Starting setup page webserver container..."
 cd "$SETUP_DIR"
 
 generate_cert_for_setup_webserver

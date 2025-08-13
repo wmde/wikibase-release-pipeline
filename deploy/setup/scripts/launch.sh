@@ -1,76 +1,132 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# --- Expected env vars ---
-DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
-VERBOSE="${VERBOSE:-false}"
+# --- Expected Variables ---
 
-# -- Setup logging --
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck disable=SC1091
-source "$SCRIPT_DIR/_logging.sh"
+export LOCALHOST
+export USE_CLI
+export DEBUG
+export LOG_PATH
+export DEPLOY_DIR
+export SCRIPTS_DIR
+export SETUP_DIR
+export SKIP_DEPENDENCY_INSTALLS
+export SKIP_LAUNCH
 
+# --- New Variables ---
+
+# Internal re-entry flag used when ran detached
+LAUNCH_ONLY=$([ "${1-}" = "--launch-only" ] && echo true || echo false)
 ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
+# shellcheck disable=SC1091
+source "$SCRIPTS_DIR/_logging.sh"
+
+# --- Config step (web or CLI) ---
+
+run_config() {
+  if $USE_CLI; then
+    bash "$SCRIPTS_DIR/cli-config.sh"
+  else
+    bash "$SCRIPTS_DIR/web-config.sh"
+  fi
+}
+
+# --- Launch sequence pieces ---
+
 wait_for_env_file() {
-  # -s: file exists AND is not empty
-  until [ -s "$ENV_FILE_PATH" ]; do
-    sleep 2
-  done
-  log "Configuration saved."
+  until [ -s "$ENV_FILE_PATH" ]; do sleep 2; done
+  status "Configuration saved."
 }
 
 launch_wikibase() {
-  echo "Launching Wikibase Suite Docker containers..."
+  status "Waiting for services to start. Generally takes 2–6 minutes..."
   cd "$DEPLOY_DIR"
-
-  COMPOSE_OPTIONS=(-d)
-  if [ "$VERBOSE" != true ]; then
-    COMPOSE_OPTIONS+=(--quiet-pull)
-  fi
-
-  docker compose up "${COMPOSE_OPTIONS[@]}"
+  local opts=(-d)
+  if [ "$DEBUG" != true ]; then opts+=(--quiet-pull); fi
+  run "docker compose up ${opts[*]}"
 }
 
+# NOTE: final_message intentionally uses echo+tee for a clean human banner on stdout.
+# The block is also appended to the log via tee, but WITHOUT timestamps/levels.
 final_message() {
-  echo
-  echo "✅ Setup is Complete!"
-  echo
+  {
+    echo
+    echo "✅ Setup is Complete!"
+    echo
+    if [[ -f "$ENV_FILE_PATH" ]]; then
+      while IFS= read -r line; do
+        [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+        eval "export $line"
+      done < "$ENV_FILE_PATH"
 
-  if [[ -f "$ENV_FILE_PATH" ]]; then
-    while IFS= read -r line; do
-      [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
-      eval "export $line"
-    done < "$ENV_FILE_PATH"
+      if [[ -n "${WIKIBASE_PUBLIC_HOST:-}" ]]; then
+        echo "Your Wikibase Suite services can be found at:"
+        echo
+        echo "MediaWiki/Wikibase:"
+        echo "https://$WIKIBASE_PUBLIC_HOST"
+        echo
+        echo "Query Service:"
+        echo "https://${WDQS_PUBLIC_HOST:-query.$WIKIBASE_PUBLIC_HOST}"
+        echo
+        echo "QuickStatements:"
+        echo "https://$WIKIBASE_PUBLIC_HOST/tools/quickstatements"
+        echo
+      else
+        echo "⚠️ Could not determine WIKIBASE_PUBLIC_HOST from .env"
+      fi
 
-    if [[ -n "$WIKIBASE_PUBLIC_HOST" ]]; then
-      echo Your Wikibase Suite services can be found at:
       echo
-      echo MediaWiki/Wikibase: 
-      echo https://"$WIKIBASE_PUBLIC_HOST"
+      echo "The following configuration was saved during setup."
+      echo "Please save these credentials and settings securely:"
       echo
-      echo Query Service:
-      echo https://"$WDQS_PUBLIC_HOST"/tools/quickstatements
-      echo 
-      echo QuickStatements:
-      echo https://"$WIKIBASE_PUBLIC_HOST"/tools/quickstatements
-      echo 
+      sed 's/^/  /' "$ENV_FILE_PATH"
+      echo
     else
-      echo "⚠️ Could not determine WIKIBASE_PUBLIC_HOST from .env"
+      echo "⚠️ .env file not found at $ENV_FILE_PATH"
+      echo
     fi
-
-    echo
-    echo "The following configuration saved during setup."
-    echo "Please save these credentials and settings securely:"
-    echo
-    sed 's/^/  /' "$ENV_FILE_PATH"
-    echo
-  else
-    echo "⚠️ .env file not found at $ENV_FILE_PATH"
-    echo
-  fi
+  } | tee -a "$LOG_PATH"
 }
 
-wait_for_env_file
-launch_wikibase
-final_message
+launch() {
+  wait_for_env_file
+  launch_wikibase
+  final_message
+  exit 0
+}
+
+# --- Main orchestration ---
+
+if $LAUNCH_ONLY; then
+  launch
+fi
+
+if ! $SKIP_DEPENDENCY_INSTALLS; then
+  bash "$SCRIPTS_DIR/install-docker.sh"
+fi
+
+run_config
+
+if $SKIP_LAUNCH; then
+  status "SKIP_LAUNCH=true; not starting services."
+  exit 0
+fi
+
+# Launch behavior by mode:
+# 1. Remote web mode (default): detach after web-config so HTTP can respond and avoid accidental interruption.
+# 2. Local installs: avoid background task launching, which also helps platform independence.
+# 3. CLI mode: run inline so user can enter configuration interactively.
+if ! $USE_CLI && ! $LOCALHOST; then
+  setsid env \
+    DEPLOY_DIR="$DEPLOY_DIR" \
+    LOG_PATH="$LOG_PATH" \
+    DEBUG="$DEBUG" \
+    USE_CLI="$USE_CLI" \
+    LOCALHOST="$LOCALHOST" \
+    bash "$0" --launch-only >/dev/null 2>&1 </dev/null &
+  debug "Launching services in background…"
+  exit 0
+fi
+
+launch

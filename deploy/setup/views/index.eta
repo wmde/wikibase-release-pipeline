@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <title>Wikibase Installer</title>
+  <title>Wikibase Suite Deploy Setup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link
     rel="stylesheet"
@@ -32,6 +32,16 @@
 
     #header img {
       height: 80px;
+    }
+
+    /* Collapse right column until saved */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .grid.two-col {
+      grid-template-columns: 1fr 1fr;
     }
 
     #log-wrapper {
@@ -92,10 +102,13 @@
     }
 
     .field-help {
-      line-height: 0.7rem;
       font-weight: normal;
       font-size: 0.7rem;
       color: #555;
+    }
+
+    .field-help .help-actions {
+      float: right;
     }
 
     .just-validate-error-label {
@@ -107,6 +120,59 @@
       border: solid 3px;
       border-color: rgb(197, 47, 33);
     }
+
+    /* Status waiting messages (inlined) */
+    #status-waiting {
+      margin-top: 0.5rem;
+      font-size: 0.9em;
+      color: var(--muted, #666);
+      white-space: pre-wrap;
+    }
+    .status-line {
+      margin: 0.15rem 0;
+    }
+
+    /* Log dialog styling */
+    #log-dialog article {
+      max-width: 960px;
+      max-height: initial;
+    }
+    #log-dialog pre {
+      background-color: #111;
+      color: #eee;
+      font-family: monospace;
+      font-size: 0.8rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      max-height: 60vh;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    #log-dialog pre *::selection, #log-dialog pre::selection {
+      background-color: var(--primary);
+      color: var(--primary-inverse);
+    }
+
+    /* Show Log link aligned to the right within the header */
+
+    #toggle-log {
+      display: flex;
+      justify-content: flex-end;
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.8rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #toggle-log:hover,
+    #toggle-log:focus {
+      text-decoration: none;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -114,50 +180,72 @@
     <div id="header">
       <img src="/Wikibase_Suite_(RGB).png" alt="Wikibase Logo" />
       <h2>Deploy Setup</h2>
+      <button id="toggle-log" type="button">Show Log</button>
     </div>
-
-    <div class="grid">
+    <div class="grid" id="main-grid">
       <div id="config-section">
         <form id="config-form" data-disabled="<%= isConfigSaved %>">
           <label>
             MediaWiki Admin Email Address:
             <div class="field-help">Used for MediaWiki admin and alerts.</div>
-            <input name="MW_ADMIN_EMAIL" type="email" required />
+            <input name="MW_ADMIN_EMAIL" type="email" required value="<%= MW_ADMIN_EMAIL || '' %>" />
           </label>
           <label>
             Wikibase Host:
-            <div class="field-help"><em>e.g. wikibase.example.com. default: <pre style="display: inline;">&lt;SERVER-IP&gt;.nip.io</pre></em></div>
-            <input name="WIKIBASE_PUBLIC_HOST" type="url" />
+            <div class="field-help">
+              A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+              <span class="help-actions">
+                <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
+              </span>
+            </div>
+            <input name="WIKIBASE_PUBLIC_HOST" type="url" value="<%= WIKIBASE_PUBLIC_HOST || '' %>" />
           </label>
           <details name="config">
             <summary role="secondary" style="font-weight: bold;">Advanced Options</summary>
-            <label>Query Service Host:
-              <div class="field-help"><em>default: <pre style="display: inline;">query.&lt;WIKIBASE_PUBLIC_HOST&gt;</pre></em></div>
-              <input name="WDQS_PUBLIC_HOST" type="url" />
+            <label>
+              Query Service Host:
+              <div class="field-help">
+                A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+                <br />
+                <em>default: <pre style="display: inline;">query.&lt;Wikibase Host&gt;</pre></em>
+                <span class="help-actions">
+                  <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
+                </span>
+              </div>
+              <input name="WDQS_PUBLIC_HOST" type="url" value="<%= WDQS_PUBLIC_HOST || '' %>" />
             </label>
-            <label>MediaWiki Admin Name:
+            <label>
+              MediaWiki Admin Name:
               <div class="field-help">Will be the login name for the MediaWiki admin</div>
               <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
             </label>
-            <label>MediaWiki Admin Password:
-              <div class="field-help">Minimum 10 characters. <em>default: generated and revealed at end of install</em></div>
+            <label>
+              MediaWiki Admin Password:
+              <div class="field-help">Minimum 10 characters. <em>default: randomly generated and revealed at end of install</em></div>
               <input name="MW_ADMIN_PASS" type="password" />
             </label>
-            <label>Database Name:
+            <label>
+              Database Name:
               <div class="field-help"><em>default: my_wiki</em></div>
               <input name="DB_NAME" value="<%= DB_NAME %>" />
             </label>
-            <label>Database User:
+            <label>
+              Database User:
               <div class="field-help">Used by MediaWiki to connect to the database. <em>default: sqluser</em></div>
               <input name="DB_USER" value="<%= DB_USER %>" />
             </label>
             <label>Database Password:
-              <div class="field-help">Minimum 10 characters. <em>default: generated and revealed at end of install</em></div>
+              <div class="field-help">Minimum 10 characters. <em>default: randomly generated and revealed at end of install</em></div>
               <input name="DB_PASS" type="password" />
             </label>
           </details>
           <label>
-            <input type="checkbox" name="METADATA_CALLBACK" checked role="switch" />
+            <input
+              type="checkbox"
+              name="METADATA_CALLBACK"
+              <%= (typeof METADATA_CALLBACK === 'undefined' || METADATA_CALLBACK === true || METADATA_CALLBACK === 'true') ? 'checked' : '' %>
+              role="switch"
+            />
             I want this Wikibase to be visible in the global Wikibase directory
           </label>
           <br />
@@ -167,9 +255,7 @@
 
       <div id="status-section">
         <div id="status">
-          <div id="status-waiting" style="display: none;">
-            <span aria-busy="true">Waiting for services to start. Generally takes 2-6 minutes...</span>
-          </div>
+          <div id="status-waiting" style="display: none;"></div>
           <div id="status-complete" style="display: <%= isBooted ? 'block' : 'none' %>;">
             <p>
               <strong>✅ Services started successfully!</strong>
@@ -198,206 +284,407 @@
             <p id="finalize-message" style="margin-top: 0.5em;"></p>
           </div>
         </div>
-        <div id="log-wrapper"><div id="log">Loading logs...</div></div>
-        <button id="toggle-log" class="outline secondary">Show Log</button>
+
+        <!-- Show Log button moved to top-right; no button here -->
       </div>
     </div>
   </main>
 
+  <dialog id="dns-help-dialog">
+    <article>
+      <h3>How to register a domain and point it here</h3>
+      <p>Server public IP: <code><%= SERVER_IP %></code></p>
+      <ol>
+        <li>Buy a domain from any registrar (e.g., Namecheap, Gandi, Cloudflare).</li>
+        <li>Open your domain’s DNS settings.</li>
+        <li>Create an <strong>A record</strong>:
+          <ul>
+            <li><strong>Type</strong>: <code>A</code></li>
+            <li><strong>Name/Host</strong>: <code>wikibase</code> (or blank/<code>@</code> for root)</li>
+            <li><strong>Value</strong>: <code><%= SERVER_IP %></code></li>
+          </ul>
+        </li>
+        <li>Create another A record for <code>query</code> pointing to the same IP.</li>
+        <li>It may take a few minutes for new DNS entries to propagate.</li>
+      </ol>
+      <p class="help-small">
+        <em>
+          Alternatively and for testing only, you can use the host addresses of <code><%= SERVER_IP %>.nip.io</code> and <code>query.<%= SERVER_IP %>.nip.io</code>
+          which will automatically resolve to this server's IP address. ⚠️ However, use with caution as the magical addresses are appropriate only for testing as there is currently no simple way to
+          reset these addresses for an already setup Deploy instance.
+        </em>
+      </p>
+      <footer>
+        <button data-modal-close class="secondary">Close</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <!-- Log dialog -->
+  <dialog id="log-dialog">
+    <article>
+      <pre id="log-content">Loading logs...</pre>
+      <footer style="display:flex; justify-content:flex-end; gap:.5rem;">
+        <button id="hide-log" class="secondary">Close</button>
+      </footer>
+    </article>
+  </dialog>
+
   <script>
-    const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/
-    const passwordValidator = value => value.length === 0 || value.length >= 10
-    const validate = new JustValidate('#config-form');
-    validate
-      .addField('[name=MW_ADMIN_EMAIL]', [
-        { rule: 'required' },
-        { rule: 'email' }
-      ])
-      .addField('[name=WIKIBASE_PUBLIC_HOST]', [
-        {
-          rule: 'customRegexp',
-          value: hostNameRegex,
-          errorMessage: 'Must be a valid hostname (e.g. example.com)',
+    (function () {
+      'use strict';
+
+      const STATUS_LOG_ENTRY_REGEX = /\[status\]\s*(.*)$/i;
+
+      // ---------- Utilities ----------
+      const el = (id) => document.getElementById(id);
+      const on = (node, type, handler) => node && node.addEventListener(type, handler);
+
+      // ---------- SSE helper ----------
+      function openSSE(url, { onOpen, onMessage, onError, events } = {}) {
+        const es = new EventSource(url, { withCredentials: false });
+        if (onOpen) es.onopen = onOpen;
+        if (onMessage) es.onmessage = onMessage;
+        if (onError) es.onerror = onError;
+        if (events) {
+          Object.entries(events).forEach(([type, fn]) => es.addEventListener(type, fn));
         }
-      ])
-      .addField('[name=WDQS_PUBLIC_HOST]', [
-        {
-          rule: 'customRegexp',
-          value: hostNameRegex,
-          errorMessage: 'Must be a valid hostname (e.g. query.example.com)',
-        }
-      ])
-      .addField('[name=MW_ADMIN_PASS]', [
-        {
-          validator: passwordValidator,
-          errorMessage: 'Password must be at least 10 characters or left blank',
-        }
-      ])
-      .addField('[name=DB_PASS]', [
-        {
-          validator: passwordValidator,
-          errorMessage: 'Password must be at least 10 characters or left blank',
-        }
-      ])
-      .onSuccess(async (event) => {
-        const form = event.target;
-        const data = Object.fromEntries(new FormData(form).entries());
-        data.METADATA_CALLBACK = form.METADATA_CALLBACK?.checked ? "true" : "false";
-
-        const res = await fetch('/write-env', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-          form.querySelectorAll('input, button').forEach(i => i.disabled = true);
-          document.getElementById('status-waiting').style.display = 'block';
-          document.getElementById('status-complete').style.display = 'none';
-        } else {
-          alert('Failed to save environment. See console for details.');
-        }
-      });
-
-    const form = document.getElementById('config-form');
-    const statusWaiting = document.getElementById('status-waiting');
-    const statusComplete = document.getElementById('status-complete');
-    const statusSuccess = document.getElementById('status-success');
-    const wikibaseFinalUrlEl = document.getElementById('wikibase-final-url');
-    const wdqsFinalUrlEl = document.getElementById('wdqs-final-url');
-    const quickstatementsFinalUrlEl = document.getElementById('quickstatements-final-url');
-    const configFinalBox = document.getElementById('config-final');
-    const configFinalWrapper = document.getElementById('config-final-wrapper');
-    const copyBtn = document.getElementById('copy-config');
-    const downloadLink = document.getElementById('download-config');
-    const finalizeSection = document.getElementById('status-finalize');
-    const finalizeBtn = document.getElementById('finalize-btn');
-    const finalizeMsg = document.getElementById('finalize-message');
-
-    const logEl = document.getElementById('log');
-    const logWrapper = document.getElementById('log-wrapper');
-    const toggleLog = document.getElementById('toggle-log');
-
-    let parsedHost = null;
-    let logStream = null;
-    let alreadyHandledBootedState = false;
-
-    window.addEventListener('DOMContentLoaded', async () => {
-      if (form.dataset.disabled === 'true') {
-        form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+        return es;
       }
 
-      const statusStream = new EventSource('/status/stream');
-      statusStream.onmessage = (e) => {
-        const { isBooted, config } = JSON.parse(e.data);
-        if (isBooted && !alreadyHandledBootedState) {
-          alreadyHandledBootedState = true;
+      // ---------- Element Refs ----------
+      const form = el('config-form');
+      const elStatusWaiting = el('status-waiting');
+      const elStatusComplete = el('status-complete');
+      const elWikibaseFinalUrl = el('wikibase-final-url');
+      const elWdqsFinalUrl = el('wdqs-final-url');
+      const elQuickStatementsUrl = el('quickstatements-final-url');
+      const elConfigFinalBox = el('config-final');
+      const elConfigFinalWrapper = el('config-final-wrapper');
+      const elCopyBtn = el('copy-config');
+      const elDownloadLink = el('download-config');
+      const elFinalizeSection = el('status-finalize');
+      const elFinalizeBtn = el('finalize-btn');
+      const elFinalizeMsg = el('finalize-message');
 
-          finalizeSection.style.display = 'block';
-          
-          statusWaiting.style.display = 'none';
-          statusComplete.style.display = 'block';
+      const elMainGrid = el('main-grid');
+      const elToggleLogBtn = el('toggle-log');
+      const elLogDialog = el('log-dialog');
+      const elLogContent = el('log-content');
+      const elHideLogBtn = el('hide-log');
 
-          const wikibaseFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/wiki/Main_Page`;
-          wikibaseFinalUrlEl.href = wikibaseFinalUrl;
-          wikibaseFinalUrlEl.textContent = wikibaseFinalUrl;
+      // ---------- State ----------
+      let logStream = null;
+      let alreadyHandledBootedState = false;
+      let isLogDialogOpen = false;
 
-          const wdqsFinalUrl = `https://${config?.WDQS_PUBLIC_HOST}`;
-          wdqsFinalUrlEl.href = wdqsFinalUrl;
-          wdqsFinalUrlEl.textContent = wdqsFinalUrl;
+      // ---------- Grid helpers ----------
+      function setGridTwoCol(enabled) {
+        if (!elMainGrid) return;
+        elMainGrid.classList.toggle('two-col', !!enabled);
+      }
 
-          const quickstatementsFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/tools/quickstatements`;
-          quickstatementsFinalUrlEl.href = quickstatementsFinalUrl;
-          quickstatementsFinalUrlEl.textContent = quickstatementsFinalUrl;
-
-          // Show final config values
-          const envVars = Object.entries(config)
-            .map(([key, value]) => `${key}=${value}`)
-            .join('\n');
-
-          configFinalBox.textContent = envVars;
-          configFinalWrapper.style.display = 'block';
-
-          // Copy button
-          copyBtn.onclick = () => {
-            navigator.clipboard.writeText(envVars).then(() => {
-              copyBtn.textContent = "Copied!";
-              setTimeout(() => copyBtn.textContent = "Copy", 2000);
-            }).catch(() => {
-              alert("⚠️ Failed to copy. Please do it manually.");
-            });
-          };
-
-          // Download link
-          if (downloadLink.href.startsWith('blob:')) {
-            URL.revokeObjectURL(downloadLink.href);
-          }
-          const blob = new Blob([envVars], { type: 'text/plain' });
-          const url = URL.createObjectURL(blob);
-          downloadLink.href = url;
-        }
-      };
-    });
-
-    toggleLog.onclick = async () => {
-      const isVisible = logWrapper.style.display === 'block';
-
-      if (isVisible) {
-        if (logStream) {
-          logStream.close();
-          logStream = null;
-        }
-        logEl.innerHTML = '';
-        logWrapper.style.display = 'none';
-        toggleLog.textContent = 'Show Log';
-      } else {
-        logWrapper.style.display = 'block';
-        toggleLog.textContent = 'Hide Log';
-
+      // ---------- Log helpers ----------
+      async function openLog() {
         try {
           const res = await fetch('/log');
           const text = await res.text();
-          appendToLog(text);
+          elLogContent.textContent = text || '';
+          elLogContent.scrollTop = elLogContent.scrollHeight;
         } catch (err) {
           appendToLog('\n⚠️ Could not load initial log.\n');
         }
-
-        logStream = new EventSource('/log/stream');
-        logStream.onmessage = (e) => {
-          if (!e.data.trim()) return;
-          appendToLog(e.data);
-        };
-
-        logStream.onerror = () => {
-          appendToLog('\n⚠️ Log stream disconnected.\n');
-        };
+        // Ensure the shared log stream is running
+        startLogStream();
+        // Mark dialog open so incoming chunks mirror into the log view
+        isLogDialogOpen = true;
+        elLogDialog.showModal();
       }
-    };
 
-    finalizeBtn.onclick = async () => {
-      finalizeBtn.disabled = true;
-      finalizeMsg.textContent = '⏳ Finalizing setup...';
+      function closeLog() {
+        isLogDialogOpen = false;
+        elLogDialog.close();
+      }
 
-      try {
-        const res = await fetch('/finalize-setup', { method: 'POST' });
-        if (res.ok) {
-          finalizeMsg.textContent = '✅ Finalized. The installer will shut down shortly.';
-        } else {
-          const errText = await res.text();
-          finalizeMsg.textContent = '❌ Finalize failed – Try again';
-          finalizeBtn.disabled = false;
-          console.error(errText);
+      function appendToLog(text) {
+        elLogContent.insertAdjacentText('beforeend', (text.endsWith('\n') ? text : text + '\n'));
+        elLogContent.scrollTop = elLogContent.scrollHeight;
+      }
+
+      function appendStatusLine(text) {
+        if (!text || !elStatusWaiting) return;
+        const div = document.createElement('div');
+        div.className = 'status-line';
+        div.textContent = text;
+        elStatusWaiting.appendChild(div);
+      }
+
+      function startLogStream() {
+        if (logStream) return; // already running
+        // Local helper to extract all [status] lines from text
+        function getStatusLines(text) {
+          if (!text) return [];
+          return text
+            .split('\n')
+            .map((line) => {
+              const m = line.match(STATUS_LOG_ENTRY_REGEX);
+              return (m && m[1]) ? m[1].trim() : null;
+            })
+            .filter(Boolean);
         }
-      } catch (err) {
-        finalizeMsg.textContent = `❌ Error: ${err.message}`;
-        finalizeBtn.disabled = false;
+        // One-time parse of the entire current log so we show earlier [status] lines
+        fetch('/log', { cache: 'no-store' })
+          .then((res) => res.text())
+          .then((text) => {
+            if (!text) return;
+            getStatusLines(text).forEach(appendStatusLine);
+          })
+          .catch(() => { /* ignore backfill errors */ });
+        logStream = openSSE('/log/stream', {
+          onMessage: (e) => {
+            if (!e.data) return;
+            // Always parse for [status] log lines and show them under waiting
+            getStatusLines(e.data).forEach(appendStatusLine);
+            // Always mirror raw log text into the dialog's <pre> (dialog may be closed)
+            if (elLogContent) {
+              const txt = e.data.endsWith('\n') ? e.data : e.data + '\n';
+              elLogContent.insertAdjacentText('beforeend', txt);
+              // TODO: Don't follow log for now, but maybe provide optional "follow" checkbox later
+              // elLogContent.scrollTop = elLogContent.scrollHeight;
+            }
+          },
+          onError: () => {
+            console.log('Error in parsing incoming log stream')
+          }
+        });
       }
-    };
 
-    function appendToLog(text) {
-      logEl.insertAdjacentHTML('beforeend', text + '<br>');
-      logWrapper.scrollTop = logWrapper.scrollHeight;
-    }
+      // ---------- Validation ----------
+      function extractHost(value) {
+        try {
+          return new URL(value).hostname;
+        } catch {
+          return value;
+        }
+      }
+
+      function initValidation() {
+        const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/;
+        const passwordValidator = (value) => value.length === 0 || value.length >= 10;
+
+        // Host resolves to server IP rule
+        const hostResolvesToServerIPRule = {
+          validator: value => async () => {
+            console.log(value)
+            const hostname = (value || '').trim();
+            if (!hostname) return true; // allow empty; earlier rules handle format
+            try {
+              const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(hostname)}&type=A`);
+              if (!res.ok) return false;
+              const json = await res.json();
+              const answers = Array.isArray(json?.Answer) ? json.Answer : [];
+              return answers.some(a => a.type === 1 && a.data === '<%= SERVER_IP %>');
+            } catch {
+              return false;
+            }
+          },
+          errorMessage: `Doesn't resolve to <%= SERVER_IP %>`
+        };
+
+        const validate = new JustValidate('#config-form');
+
+        validate
+          .addField('[name=MW_ADMIN_EMAIL]', [
+            { rule:'required' },
+            { rule:'email' }
+          ])
+          .addField('[name=WIKIBASE_PUBLIC_HOST]', [
+            { rule:'customRegexp', value: hostNameRegex, errorMessage: 'Must be a valid hostname (e.g. example.com)' },
+            hostResolvesToServerIPRule
+          ])
+          .addField('[name=WDQS_PUBLIC_HOST]', [
+            { rule:'customRegexp', value: hostNameRegex, errorMessage: 'Must be a valid hostname (e.g. query.example.com)' },
+            hostResolvesToServerIPRule
+          ])
+          .addField('[name=MW_ADMIN_PASS]', [
+            { validator: passwordValidator, errorMessage: 'Password must be at least 10 characters or left blank' }
+          ])
+          .addField('[name=DB_PASS]', [
+            { validator: passwordValidator, errorMessage: 'Password must be at least 10 characters or left blank' }
+          ])
+          .onSuccess(async (event) => {
+            const f = event.target;
+            const data = Object.fromEntries(new FormData(f).entries());
+            data.METADATA_CALLBACK = f.METADATA_CALLBACK?.checked ? 'true' : 'false';
+
+            const res = await fetch('/write-env', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+              f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
+              // Switch to waiting state and start streaming status immediately
+              elStatusWaiting.innerHTML = '';
+              showWaitingState();
+            } else {
+              alert('Failed to save environment. See console for details.');
+            }
+          });
+      }
+
+            // ---------- Boot helpers ----------
+      function showWaitingState() {
+        elFinalizeSection.style.display = 'none';
+        elStatusWaiting.style.display = 'block';
+        elStatusComplete.style.display = 'none';
+        setGridTwoCol(true);
+        startLogStream();
+      }
+
+      function showBootedState(config) {
+        alreadyHandledBootedState = true;
+
+        elFinalizeSection.style.display = 'block';
+        elStatusWaiting.style.display = 'none';
+        elStatusComplete.style.display = 'block';
+
+        const wikibaseFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/wiki/Main_Page`;
+        elWikibaseFinalUrl.href = wikibaseFinalUrl;
+        elWikibaseFinalUrl.textContent = wikibaseFinalUrl;
+
+        const wdqsFinalUrl = `https://${config?.WDQS_PUBLIC_HOST}`;
+        elWdqsFinalUrl.href = wdqsFinalUrl;
+        elWdqsFinalUrl.textContent = wdqsFinalUrl;
+
+        const quickStatementsFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/tools/quickstatements`;
+        elQuickStatementsUrl.href = quickStatementsFinalUrl;
+        elQuickStatementsUrl.textContent = quickStatementsFinalUrl;
+
+        const envVars = Object.entries(config)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('\n');
+
+        elConfigFinalBox.textContent = envVars;
+        elConfigFinalWrapper.style.display = 'block';
+
+        elCopyBtn.onclick = () => {
+          navigator.clipboard.writeText(envVars).then(() => {
+            elCopyBtn.textContent = 'Copied!';
+            setTimeout(() => (elCopyBtn.textContent = 'Copy'), 2000);
+          }).catch(() => {
+            alert('⚠️ Failed to copy. Please do it manually.');
+          });
+        };
+
+        if (elDownloadLink.href && elDownloadLink.href.startsWith('blob:')) {
+          URL.revokeObjectURL(elDownloadLink.href);
+        }
+        const blob = new Blob([envVars], { type: 'text/plain' });
+        elDownloadLink.href = URL.createObjectURL(blob);
+
+        setGridTwoCol(true);
+      }
+
+      // ---------- Dialog open/close (generic) ----------
+      document.addEventListener('click', (e) => {
+        // OPEN
+        const openBtn = e.target.closest('[data-modal-open]');
+        if (openBtn) {
+          e.preventDefault();
+          const id = openBtn.getAttribute('data-modal-target');
+          const dlg = id && el(id);
+          if (dlg?.showModal) dlg.showModal();
+          return;
+        }
+
+        // CLOSE
+        const closeBtn = e.target.closest('[data-modal-close]');
+        if (closeBtn) {
+          e.preventDefault();
+          const dlg = closeBtn.closest('dialog');
+          if (dlg) dlg.close();
+          return;
+        }
+      });
+
+      // Optional: click backdrop to close
+      document.querySelectorAll('dialog').forEach((dlg) => {
+        dlg.addEventListener('click', (e) => {
+          const rect = dlg.getBoundingClientRect();
+          const clickedInBackdrop =
+            e.clientX < rect.left || e.clientX > rect.right ||
+            e.clientY < rect.top  || e.clientY > rect.bottom;
+          if (clickedInBackdrop) dlg.close();
+        });
+      });
+
+      // ---------- Log bindings ----------
+      on(elToggleLogBtn, 'click', (e) => {
+        e.preventDefault();
+        openLog();
+      });
+      on(elHideLogBtn, 'click', (e) => {
+        e.preventDefault();
+        closeLog();
+      });
+      on(elLogDialog, 'close', () => {
+        isLogDialogOpen = false;
+      });
+
+      // ---------- Boot-time init ----------
+      window.addEventListener('DOMContentLoaded', async () => {
+        if (form.dataset.disabled === 'true') {
+          // Env already saved: disable inputs and use two-col layout
+          form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
+          setGridTwoCol(true);
+        }
+
+        initValidation();
+
+        // On reload, immediately set visible state using a one-time /status check (if available)
+        const hasEnv = form.dataset.disabled === 'true';
+        if (hasEnv) {
+          try {
+            const res = await fetch('/status', { cache: 'no-store' });
+            if (res.ok) {
+              const { isBooted, config } = await res.json();
+              if (isBooted) {
+                showBootedState(config);
+              } else {
+                elStatusWaiting.innerHTML = '';
+                showWaitingState();
+              }
+            } else {
+              // Fallback: show waiting if env exists but status endpoint not ok
+              elStatusWaiting.innerHTML = '';
+              showWaitingState();
+            }
+          } catch {
+            // Network/endpoint missing—fallback
+            elStatusWaiting.innerHTML = '';
+            showWaitingState();
+          }
+        } else {
+          // No env yet: ensure single-column & hide right status
+          setGridTwoCol(false);
+          elStatusWaiting.style.display = 'none';
+          elStatusComplete.style.display = 'none';
+          elFinalizeSection.style.display = 'none';
+        }
+
+        // Keep SSE to react to state changes going forward
+        openSSE('/status/stream', {
+          onMessage: (e) => {
+            const { isBooted, config } = JSON.parse(e.data);
+            if (isBooted && !alreadyHandledBootedState) {
+              showBootedState(config);
+            }
+          }
+        });
+      });
+    })();
   </script>
 </body>
 </html>

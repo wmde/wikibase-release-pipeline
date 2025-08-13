@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # --- Parse CLI Arguments ---
 
 for arg in "$@"; do
   case "$arg" in
-    --cloud-init)
-      CLOUD_INIT=true
-      ;;
     --dev)
       SKIP_CLONE=true
       SKIP_DEPENDENCY_INSTALLS=true
@@ -27,173 +24,85 @@ for arg in "$@"; do
     --skip-launch)
       SKIP_LAUNCH=true
       ;;
-    --verbose)
-      VERBOSE=true
+    --debug)
+      DEBUG=true
       ;;
-    --web)
-      USE_WEB=true
+    --cli)
+      USE_CLI=true
       ;;
   esac
 done
 
-# --- Assign Vars with Defaults ---
+# --- Setup variables (including defaults) ---
 
-CLOUD_INIT="${CLOUD_INIT:-false}"
-LOCALHOST="${LOCALHOST:-false}"
-SKIP_CLONE="${SKIP_CLONE:-false}"
-SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
-SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
 REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
-USE_WEB="${USE_WEB:-false}"
-VERBOSE="${VERBOSE:-false}"
-WBS_DIR="${WBS_DIR:-/opt/wbs}"
-DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
-SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
-SCRIPTS_DIR="$SETUP_DIR/scripts"
-LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
+SKIP_CLONE="${SKIP_CLONE:-false}"
+WBS_DIR="${WBS_DIR:-$HOME/wbs}"
+export LOCALHOST="${LOCALHOST:-false}"
+export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
+export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
+export USE_CLI="${USE_CLI:-false}"
+export DEBUG="${DEBUG:-false}"
+export DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
+export SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
+export SCRIPTS_DIR="$SETUP_DIR/scripts"
+export LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
 
-# -- Setup logging --
-# NOTE: This logging functionality should be kept in sync
-# with the scripts/_logging.sh library used in the other setup
-# scripts. That library can't otherwise be directly used here as
-# this script is designed to be initiated before the repo is
-# cloned or available.
-mkdir -p "$(dirname "$LOG_PATH")"
-touch "$LOG_PATH" 2>/dev/null || true
-
-log() {
-  if $VERBOSE; then
-    echo "$@"
-  fi
-}
-
-log_cmd() {
-  if $VERBOSE; then
-    bash -c "$@"
-  else
-    bash -c "$@" &> /dev/null
-  fi
-  return $?
-}
+# --- Functions ---
 
 install_git() {
-  if command -v git &>/dev/null; then
-    log "Git already installed"
+  if command -v git >/dev/null 2>&1; then
     return
   fi
-
   echo "Installing Git..."
-  if command -v apt-get &>/dev/null; then
-    log_cmd "apt-get update && apt-get install -y git"
-  elif command -v dnf &>/dev/null; then
-    log_cmd "dnf install -y git"
-  elif command -v yum &>/dev/null; then
-    log_cmd "yum install -y git"
-  elif command -v apk &>/dev/null; then
-    log_cmd "apk add git"
-  elif command -v pacman &>/dev/null; then
-    log_cmd "pacman -Sy --noconfirm git"
+  if command -v apt-get >/dev/null 2>&1; then
+    apt-get update >/dev/null 2>&1 || true
+    apt-get install -y git >/dev/null 2>&1
+  elif command -v dnf >/dev/null 2>&1; then
+    dnf install -y git >/dev/null 2>&1
+  elif command -v yum >/dev/null 2>&1; then
+    yum install -y git >/dev/null 2>&1
+  elif command -v apk >/dev/null 2>&1; then
+    apk add git >/dev/null 2>&1
+  elif command -v pacman >/dev/null 2>&1; then
+    pacman -Sy --noconfirm git >/dev/null 2>&1
   else
-    echo "\u26a0\ufe0f Unsupported package manager. Please install Git manually."
+    echo "⚠️ Unsupported package manager. Please install Git manually."
     exit 1
   fi
 }
 
-install_docker() {
-  echo "Installing Docker..."
-
-  # shellcheck disable=SC1091
-  . /etc/os-release
-  case "$ID" in
-    ubuntu|debian)
-      log "Detected OS: $ID"
-
-      log_cmd "apt-get update"
-      log_cmd "apt-get install -y ca-certificates curl gnupg lsb-release"
-
-      log_cmd "mkdir -p /etc/apt/keyrings"
-      curl -fsSL https://download.docker.com/linux/$ID/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-      echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-        https://download.docker.com/linux/$ID $(lsb_release -cs) stable" | \
-        tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-      log_cmd "apt-get update"
-      log_cmd "apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-      ;;
-
-    fedora)
-      log "Detected OS: Fedora"
-
-      log_cmd "dnf install -y dnf-plugins-core"
-      log_cmd "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
-      log_cmd "dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-      log_cmd "systemctl enable --now docker"
-      ;;
-
-    centos)
-      log "Detected OS: CentOS"
-
-      log_cmd "yum install -y yum-utils"
-      log_cmd "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
-      log_cmd "yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-      log_cmd "systemctl enable --now docker"
-      ;;
-
-    *)
-      echo "⚠️ Unsupported OS: $ID. Please install Docker manually."
-      exit 1
-      ;;
-  esac
-}
-
 clone_repo() {
-  echo "Cloning Wikibase Release Pipeline repository..."
+  if $SKIP_CLONE; then
+    echo "Skipping clone (dev mode)"
+    return
+  fi
+  echo "Cloning repository to $WBS_DIR ..."
   mkdir -p "$WBS_DIR"
   cd "$WBS_DIR"
-  log_cmd "git clone $REPO_URL"
-  cd wikibase-release-pipeline
-  log_cmd "git checkout deploy-setup-script"
+  if [ ! -d wikibase-release-pipeline/.git ]; then
+    git clone "$REPO_URL" >/dev/null 2>&1
+    # TODO: !!!! For testing, remove before delivery !!!
+    cd wikibase-release-pipeline
+    git checkout deploy-setup-script >/dev/null 2>&1
+  else
+    echo "An existing git repository found at $WBS_DIR/wikibase-release-pipeline, using what is there ..."
+  fi
+  
 }
 
-# -- Start Setup --
-
-exec > >(tee -a "$LOG_PATH") 2>&1
+# --- Execution ---
 
 echo
-echo "Wikibase Suite Deploy Setup"
+echo "Wikibase Suite Deploy Setup (bootstrap)"
 echo
 
 if ! $SKIP_DEPENDENCY_INSTALLS; then
   install_git
-  install_docker
-else
-  echo "Skipping dependency checks and installations..."
 fi
 
 if ! $SKIP_CLONE; then
   clone_repo
 fi
 
-# -- Run web or CLI config depending on what was selected--
-
-export DEPLOY_DIR VERBOSE LOG_PATH LOCALHOST
-
-if $USE_WEB; then
-  bash "$SCRIPTS_DIR/web-config.sh" 
-else
-  bash "$SCRIPTS_DIR/cli-config.sh"
-fi
-
-if ! $SKIP_LAUNCH; then
-  if $USE_WEB; then
-    setsid env \
-      DEPLOY_DIR="$DEPLOY_DIR" \
-      VERBOSE="$VERBOSE" \
-      bash "$SCRIPTS_DIR/launch.sh" >> "$LOG_PATH" 2>&1 < /dev/null &
-    exit 0
-  else
-    bash "$SCRIPTS_DIR/launch.sh"
-  fi
-fi
+exec bash "$SCRIPTS_DIR/launch.sh" "$@"
