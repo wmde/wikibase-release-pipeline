@@ -10,6 +10,8 @@
 		"**/results/result.json",
 		"!.github/**/**",
 		"deploy/config/extensions",
+		"deploy/setup/letsencrypt",
+		"deploy/setup/certs",
 		"cloud-init.yml",
 		"package-lock.json",
 		"pnpm/**/**",
