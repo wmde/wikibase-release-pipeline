@@ -276,7 +276,7 @@
           <div id="config-final-wrapper">
             <p><strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong></p>
             <pre id="config-final"></pre>
-            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as .env file</a>
+            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
             <button id="copy-config">Copy</button>
           </div>
           <div id="status-finalize" style="display: none; margin-top: 1em;">
@@ -631,6 +631,33 @@
       });
       on(elLogDialog, 'close', () => {
         isLogDialogOpen = false;
+      });
+
+      // ---------- Finalize binding ----------
+      on(elFinalizeBtn, 'click', async (e) => {
+        e.preventDefault();
+        if (!elFinalizeBtn) return;
+
+        elFinalizeBtn.disabled = true;
+        elFinalizeMsg.textContent = 'Shutting down installer…';
+
+        try {
+          const res = await fetch('/finalize-setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (res.ok) {
+            elFinalizeMsg.textContent = '✅ Finalized. The installer will stop shortly.';
+          } else {
+            elFinalizeMsg.textContent = `❌ Finalize failed (HTTP ${res.status}). Check logs.`;
+            elFinalizeBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          elFinalizeMsg.textContent = '❌ Network error while finalizing. See console/logs.';
+          elFinalizeBtn.disabled = false;
+        }
       });
 
       // ---------- Boot-time init ----------

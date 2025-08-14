@@ -9,7 +9,7 @@ for arg in "$@"; do
       SKIP_CLONE=true
       SKIP_DEPENDENCY_INSTALLS=true
       SKIP_LAUNCH=true
-      # Root directory above repo
+      # Root directory above repo. Assumes running directly in repo in deploy/setup directory
       WBS_DIR=../../..
       ;;
     --local)
@@ -36,13 +36,14 @@ done
 # --- Setup variables (including defaults) ---
 
 REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
+REPO_BRANCH="${REPO_BRANCH:-main}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 WBS_DIR="${WBS_DIR:-$HOME/wbs}"
 export LOCALHOST="${LOCALHOST:-false}"
-export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
 export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
-export USE_CLI="${USE_CLI:-false}"
+export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
 export DEBUG="${DEBUG:-false}"
+export USE_CLI="${USE_CLI:-false}"
 export DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
 export SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
 export SCRIPTS_DIR="$SETUP_DIR/scripts"
@@ -54,18 +55,21 @@ install_git() {
   if command -v git >/dev/null 2>&1; then
     return
   fi
+
   echo "Installing Git..."
+
   if command -v apt-get >/dev/null 2>&1; then
+    # Debian / Ubuntu
     apt-get update >/dev/null 2>&1 || true
     apt-get install -y git >/dev/null 2>&1
   elif command -v dnf >/dev/null 2>&1; then
+    # Fedora / RHEL 8+ / Rocky / Alma
     dnf install -y git >/dev/null 2>&1
   elif command -v yum >/dev/null 2>&1; then
+    # CentOS 7 / Amazon Linux 2 / older RHEL-family (yum-based)
+    # - Legacy yum path; installs Git from the default repos.
+    #   On older CentOS 7 this will be an older Git version, but usually fine.
     yum install -y git >/dev/null 2>&1
-  elif command -v apk >/dev/null 2>&1; then
-    apk add git >/dev/null 2>&1
-  elif command -v pacman >/dev/null 2>&1; then
-    pacman -Sy --noconfirm git >/dev/null 2>&1
   else
     echo "⚠️ Unsupported package manager. Please install Git manually."
     exit 1
@@ -77,14 +81,13 @@ clone_repo() {
     echo "Skipping clone (dev mode)"
     return
   fi
+
   echo "Cloning repository to $WBS_DIR ..."
   mkdir -p "$WBS_DIR"
   cd "$WBS_DIR"
+
   if [ ! -d wikibase-release-pipeline/.git ]; then
-    git clone "$REPO_URL" >/dev/null 2>&1
-    # TODO: !!!! For testing, remove before delivery !!!
-    cd wikibase-release-pipeline
-    git checkout deploy-setup-script >/dev/null 2>&1
+    git clone --branch "$REPO_BRANCH" --single-branch "$REPO_URL" >/dev/null 2>&1
   else
     echo "An existing git repository found at $WBS_DIR/wikibase-release-pipeline, using what is there ..."
   fi

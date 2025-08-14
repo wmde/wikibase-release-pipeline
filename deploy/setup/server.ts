@@ -79,7 +79,7 @@ function buildConfig( input: Record<string, string> = {} ): Record<string, strin
 		DB_NAME: input.DB_NAME || templateEnv.DB_NAME,
 		DB_USER: input.DB_USER || templateEnv.DB_USER,
 		DB_PASS: input.DB_PASS || generatePassword(),
-		METADATA_CALLBACK: input.METADATA_CALLBACK === 'true'
+		METADATA_CALLBACK: true
 	};
 }
 

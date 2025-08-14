@@ -11,47 +11,25 @@ if command -v docker >/dev/null 2>&1; then
   exit 0
 fi
 
-debug "Installing Docker..."
-
-# Resolve OS fields once to avoid unbound var issues under set -u
-if [ -r /etc/os-release ]; then
-  # shellcheck disable=SC1091
-  . /etc/os-release
-fi
-OS_ID="${ID:-debian}"
-CODENAME="$(lsb_release -cs 2>/dev/null || echo stable)"
+debug "Installing Docker (using distro packages)..."
 
 if command -v apt-get >/dev/null 2>&1; then
+  # Debian/Ubuntu: use distro packages
   run "sudo apt-get update -y"
-  run "sudo apt-get install -y ca-certificates curl gnupg lsb-release"
-  run "sudo install -m 0755 -d /etc/apt/keyrings"
-  run "curl -fsSL https://download.docker.com/linux/${OS_ID}/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
-  run "sh -c 'echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${OS_ID} ${CODENAME} stable\" > /etc/apt/sources.list.d/docker.list'"
-  run "sudo apt-get update -y"
-  run "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-
+  run "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-buildx-plugin docker-compose-plugin"
 elif command -v dnf >/dev/null 2>&1; then
-  run "sudo dnf -y install dnf-plugins-core"
-  run "sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
-  run "sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-
+  # Fedora: use Fedora-maintained Moby packages (works on newer and older supported Fedoras)
+  run "sudo dnf -y install moby-engine moby-cli docker-compose-plugin docker-buildx-plugin"
 elif command -v yum >/dev/null 2>&1; then
+  # CentOS / RHEL / Amazon Linux 2
   run "sudo yum install -y yum-utils"
   run "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
   run "sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
-
-elif command -v apk >/dev/null 2>&1; then
-  run "sudo apk add --no-cache docker docker-cli-compose"
-
-elif command -v pacman >/dev/null 2>&1; then
-  run "sudo pacman -Sy --noconfirm docker docker-compose"
-
 else
   status "⚠️ Unsupported package manager. Please install Docker manually."
   exit 1
 fi
 
 debug "Enabling and starting Docker..."
-run "sudo systemctl enable docker"
-run "sudo systemctl start docker"
+run "sudo systemctl enable --now docker"
 status "Docker installation complete."
