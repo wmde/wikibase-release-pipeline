@@ -93,15 +93,19 @@ clone_repo() {
 
 # --- Execution ---
 
+# Clear screen
+clear || printf "\033c"
+
 echo
 echo "Wikibase Suite Deploy Setup"
 echo
-echo "To start we will:"
+echo "→ Installs Git if it is no already installed"
+echo "→ Checks-out the wikibase-release-pipeline repository"
+echo "→ Installs Docker if it is no already installed"
+echo "→ Starts a Web-based setup tool where you can complete configuration"
+echo "→ Launches the Wikibase Suite of services, letting you know when they are available"
 echo
-echo "→ Check for Git and install if missing"
-echo "→ Download the Wikibase Release Pipeline repository"
-echo "→ Check for Docker and install if missing"
-echo "→ Launch the web-based setup tool where you will complete configuration"
+echo "Let's get started!"
 echo
 
 if ! $SKIP_DEPENDENCY_INSTALLS; then

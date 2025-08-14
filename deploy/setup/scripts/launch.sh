@@ -105,7 +105,6 @@ fi
 # Launch behavior by mode:
 # 1. Remote web mode (default): detach after web-config so HTTP can respond and avoid accidental interruption.
 # 2. Local installs: avoid background task launching, which also helps platform independence.
-# 3. CLI mode: run inline so user can enter configuration interactively.
 if ! $LOCALHOST; then
   setsid env \
     DEPLOY_DIR="$DEPLOY_DIR" \
