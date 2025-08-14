@@ -1,5 +1,3 @@
----
-
 # REMAINING TODOs:
 
 - [ ] Test/fix updated Docker install script on Debian, Fedora, and CentOS
