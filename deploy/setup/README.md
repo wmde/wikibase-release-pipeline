@@ -6,7 +6,7 @@
 - [ ] "Generate" link for passwords or keep auto generated if ignored?
 - [ ] Review Web Setup UI inline docs and refine or add/enhance to finalize
 - [ ] Documentation diligence, refinement, and alignment from deploy/README.md through to deploy/setup/README.md (et al)
-
+---
 - [ ] Review CLI options for setup.sh and make sure they are coherent and not too overlapping (--dev in particular)
 - [ ] Look into and better define intention and next steps for --local / LOCALHOST CLI flag
 - [ ] Keep or remove password removal feature? Add it to the de-prioritized CLI version?
