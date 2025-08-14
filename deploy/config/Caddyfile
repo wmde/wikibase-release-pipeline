@@ -1,0 +1,80 @@
+{
+  email {$MW_ADMIN_EMAIL}
+  # For testing against LE staging, uncomment:
+  # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# --------- Reusable snippets ---------
+
+# WDQS headers + preflight + upstream headers
+(wdqs_headers) {
+  @preflight method OPTIONS
+  handle @preflight {
+    header {
+      Access-Control-Allow-Origin "*"
+      Access-Control-Allow-Methods "GET,OPTIONS,POST"
+      Access-Control-Allow-Headers "*"
+    }
+    respond 204
+  }
+
+  header {
+    Vary "Accept"
+    Access-Control-Allow-Origin "*"
+    Access-Control-Allow-Methods "GET,OPTIONS,POST"
+    Access-Control-Allow-Headers "*"
+  }
+
+  reverse_proxy wdqs:9999 {
+    header_up X-BIGDATA-READ-ONLY "yes"
+    header_up X-BIGDATA-MAX-QUERY-MILLIS "300000"
+  }
+}
+
+# /sparql -> /bigdata/namespace/wdq/sparql{...}, else -> frontend
+(wdqs_route) {
+  @sparql path /sparql*
+  handle @sparql {
+    uri replace /sparql /bigdata/namespace/wdq/sparql
+    import wdqs_headers
+  }
+
+  # everything else -> WDQS frontend
+  handle {
+    reverse_proxy wdqs-frontend:80
+  }
+}
+
+# QuickStatements under /tools/quickstatements
+(quickstatements_route) {
+  # redirect noslash to trailing slash (parity with Traefik redirectRegex)
+  @qs_noslash path /tools/quickstatements
+  redir @qs_noslash /tools/quickstatements/ 308
+
+  @qs path /tools/quickstatements*
+  handle @qs {
+    uri strip_prefix /tools/quickstatements
+    reverse_proxy quickstatements:80
+  }
+}
+
+# --------- TLS indirection (toggle via /etc/caddy/tls.caddy mount) ---------
+# This file defines a snippet called (tls_for), which we import per host below.
+import tls.caddy
+
+# ---------------- Sites ----------------
+
+{$WIKIBASE_PUBLIC_HOST} {
+  import tls_for {$WIKIBASE_PUBLIC_HOST}
+  import quickstatements_route
+
+  # Everything else (MediaWiki/Wikibase)
+  handle {
+    reverse_proxy wikibase:80
+  }
+}
+
+{$WDQS_PUBLIC_HOST} {
+  import tls_for {$WDQS_PUBLIC_HOST}
+  import wdqs_route
+}
