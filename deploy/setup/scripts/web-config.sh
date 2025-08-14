@@ -85,11 +85,11 @@ start_setup_webserver() {
     -v $LOG_PATH:/app/setup.log \
     wikibase/deploy-setup-webserver"
 
-  echo
   echo "To continue setup navigate to:"
   echo
   echo "  https://$SETUP_HOST:$SETUP_PORT"
   echo
+  echo  It is now safe to close this terminal session.
 }
 
 debug "Starting setup page webserver container..."

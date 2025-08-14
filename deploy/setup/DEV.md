@@ -1,18 +1,36 @@
 ## Remaining TODOs:
 
-- [ ] Test/fix updated Docker install script on Debian, Fedora, and CentOS (* the only distros supported by Deploy)
-- [ ] Double check Password validations to make sure they follow more tightly MediaWiki + MariaDB requirements,
-      consider incorporating the common words dictionary lookup here.
-- [ ] "Generate" link for passwords or keep auto generated if ignored?
+- [x] Test/fix updated Docker install script on Debian, Fedora, and CentOS (* the only distros supported by Deploy)
 - [ ] Review Web Setup UI inline docs and refine or add/enhance to finalize
+- [ ] Double check Password validations to make sure they follow more tightly MediaWiki + MariaDB requirements,
+      consider incorporating the common words dictionary lookup here. Have a "Generate" link for passwords or keep
+      auto generated if ignored?
 - [ ] Documentation diligence, refinement, and alignment from deploy/README.md through to deploy/setup/README.md (et al)
+- [ ] Test and better define intention for --local CLI flag
 ---
-- [ ] Review CLI options for setup.sh and make sure they are coherent and not too overlapping (--dev in particular)
-- [ ] Look into and better define intention and next steps for --local / LOCALHOST CLI flag
-- [ ] Keep or remove password removal feature? Add it to the de-prioritized CLI version?
-- [ ] Very brief pass on Beta CLI Setup feature to make sure it is not fundamentally broken after recent updates
+- [x] Review CLI options for setup.sh and make sure they are coherent and not too overlapping (--dev in particular)
 - [X] Refine content for creating DNS entry for server (Make SERVER_IP visible, etc)
 - [X] Add validation that the entered DNS entry actually points to the expected SERVER_IP
+
+---
+
+## Testing:
+
+Full setup process has been tested all the way to running services on Hetzner with the following distros:
+
+- Debian 11
+- Debian 12
+- Ubuntu 22.04
+- Ubuntu 24.04
+- Fedora 41
+- Fedora 42
+- CentOS Stream 9
+- CentOS Stream 10
+
+**Note:**
+
+- Assuming support for the above distros and versions, and nothing else at this time.
+- Earlier testing was completed on DigitalOcean VPSs and I didn't find any differences with results on Hetzner, but it hasn't been tried again since substantial updates, nor has it been tried on other popular providers (e.g. Linode, et al)
 
 ---
 

@@ -4,7 +4,6 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export LOCALHOST
-export USE_CLI
 export DEBUG
 export LOG_PATH
 export DEPLOY_DIR
@@ -21,16 +20,6 @@ ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
-
-# --- Config step (web or CLI) ---
-
-run_config() {
-  if $USE_CLI; then
-    bash "$SCRIPTS_DIR/cli-config.sh"
-  else
-    bash "$SCRIPTS_DIR/web-config.sh"
-  fi
-}
 
 # --- Launch sequence pieces ---
 
@@ -106,7 +95,7 @@ if ! $SKIP_DEPENDENCY_INSTALLS; then
   bash "$SCRIPTS_DIR/install-docker.sh"
 fi
 
-run_config
+bash "$SCRIPTS_DIR/web-config.sh"
 
 if $SKIP_LAUNCH; then
   status "SKIP_LAUNCH=true; not starting services."
@@ -117,15 +106,14 @@ fi
 # 1. Remote web mode (default): detach after web-config so HTTP can respond and avoid accidental interruption.
 # 2. Local installs: avoid background task launching, which also helps platform independence.
 # 3. CLI mode: run inline so user can enter configuration interactively.
-if ! $USE_CLI && ! $LOCALHOST; then
+if ! $LOCALHOST; then
   setsid env \
     DEPLOY_DIR="$DEPLOY_DIR" \
     LOG_PATH="$LOG_PATH" \
     DEBUG="$DEBUG" \
-    USE_CLI="$USE_CLI" \
     LOCALHOST="$LOCALHOST" \
     bash "$0" --launch-only >/dev/null 2>&1 </dev/null &
-  debug "Launching services in background…"
+  debug "Starting background process..."
   exit 0
 fi
 

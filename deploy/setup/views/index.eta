@@ -639,7 +639,7 @@
         if (!elFinalizeBtn) return;
 
         elFinalizeBtn.disabled = true;
-        elFinalizeMsg.textContent = 'Shutting down installer…';
+        elFinalizeMsg.textContent = 'Shutting down installer...';
 
         try {
           const res = await fetch('/finalize-setup', {

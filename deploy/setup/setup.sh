@@ -12,9 +12,6 @@ for arg in "$@"; do
       # Root directory above repo. Assumes running directly in repo in deploy/setup directory
       WBS_DIR=../../..
       ;;
-    --local)
-      LOCALHOST=true
-      ;;
     --skip-clone)
       SKIP_CLONE=true
       ;;
@@ -27,8 +24,8 @@ for arg in "$@"; do
     --debug)
       DEBUG=true
       ;;
-    --cli)
-      USE_CLI=true
+    --local)
+      LOCALHOST=true
       ;;
   esac
 done
@@ -36,14 +33,14 @@ done
 # --- Setup variables (including defaults) ---
 
 REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
-REPO_BRANCH="${REPO_BRANCH:-main}"
+# TODO: Change back to main branch default once released
+REPO_BRANCH="${REPO_BRANCH:-deploy-setup-script}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 WBS_DIR="${WBS_DIR:-$HOME/wbs}"
 export LOCALHOST="${LOCALHOST:-false}"
 export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
 export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
 export DEBUG="${DEBUG:-false}"
-export USE_CLI="${USE_CLI:-false}"
 export DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
 export SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
 export SCRIPTS_DIR="$SETUP_DIR/scripts"
@@ -82,7 +79,7 @@ clone_repo() {
     return
   fi
 
-  echo "Cloning repository to $WBS_DIR ..."
+  echo "Cloning repository to $WBS_DIR..."
   mkdir -p "$WBS_DIR"
   cd "$WBS_DIR"
 
@@ -97,7 +94,14 @@ clone_repo() {
 # --- Execution ---
 
 echo
-echo "Wikibase Suite Deploy Setup (bootstrap)"
+echo "Wikibase Suite Deploy Setup"
+echo
+echo "To start we will:"
+echo
+echo "→ Check for Git and install if missing"
+echo "→ Download the Wikibase Release Pipeline repository"
+echo "→ Check for Docker and install if missing"
+echo "→ Launch the web-based setup tool where you will complete configuration"
 echo
 
 if ! $SKIP_DEPENDENCY_INSTALLS; then

@@ -14,17 +14,42 @@ fi
 debug "Installing Docker (using distro packages)..."
 
 if command -v apt-get >/dev/null 2>&1; then
-  # Debian/Ubuntu: use distro packages
+  # Debian/Ubuntu: install Docker from official Docker APT repo for consistent versioning
+
+  # Detect OS and codename
+  OS_ID="$(. /etc/os-release 2>/dev/null; echo "${ID:-debian}")"
+  CODENAME="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-}")"
+  if [ -z "$CODENAME" ] && command -v lsb_release >/dev/null 2>&1; then
+    CODENAME="$(lsb_release -cs 2>/dev/null || true)"
+  fi
+  if [ -z "$CODENAME" ]; then
+    echo "❌ Could not determine distro codename" >&2
+    exit 1
+  fi
+
+  run "echo 'Using Docker APT repo for $OS_ID ($CODENAME)'"
   run "sudo apt-get update -y"
-  run "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-buildx-plugin docker-compose-plugin"
+  run "sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg"
+  run "sudo install -m 0755 -d /etc/apt/keyrings"
+  run "curl -fsSL https://download.docker.com/linux/$OS_ID/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+  run "sudo apt-get remove -y docker.io docker-compose docker-compose-v2 2>/dev/null || true"
+  run "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$OS_ID $CODENAME stable\" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null"
+  run "sudo apt-get update -y"
+  run "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
 elif command -v dnf >/dev/null 2>&1; then
-  # Fedora: use Fedora-maintained Moby packages (works on newer and older supported Fedoras)
-  run "sudo dnf -y install moby-engine moby-cli docker-compose-plugin docker-buildx-plugin"
-elif command -v yum >/dev/null 2>&1; then
-  # CentOS / RHEL / Amazon Linux 2
-  run "sudo yum install -y yum-utils"
-  run "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
-  run "sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+  # Distinguish Fedora vs RHEL-family (CentOS Stream, RHEL, Rocky, Alma)
+  OS_ID="$(. /etc/os-release 2>/dev/null; echo "${ID:-}")"
+
+  if [ "$OS_ID" = "fedora" ]; then
+    # Fedora: use Fedora-maintained Moby packages
+    run "sudo dnf -y install moby-engine moby-cli docker-compose-plugin docker-buildx-plugin"
+  else
+    # RHEL-family (CentOS Stream / RHEL / Rocky / Alma): use Docker's official repo
+    run "sudo dnf -y install dnf-plugins-core"
+    run "sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+    run "sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || \
+         (echo '❌ Docker CE packages not available for this release yet.' >&2; exit 1)"
+  fi
 else
   status "⚠️ Unsupported package manager. Please install Docker manually."
   exit 1
@@ -33,3 +58,5 @@ fi
 debug "Enabling and starting Docker..."
 run "sudo systemctl enable --now docker"
 status "Docker installation complete."
+run "docker --version" || true
+run "docker compose version" || true

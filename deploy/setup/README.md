@@ -5,7 +5,7 @@ This script bootstraps a Wikibase Suite Deploy installation handling or guiding 
 1. **Check for Git** – Installs Git if it is not already available on the system.  
 2. **Clone the repository** – Downloads the Wikibase Suite Deploy code from the official repository.  
 3. **Check for Docker** – Installs Docker if it is not already available on the system.  
-4. **Prompt for configuration** – Collects all required setup values interactively through a web interface (use `--cli` for terminal-based config).  
+4. **Prompt for configuration** – Collects all required setup values interactively through a web interface.  
 5. **Launch deployment** – Starts the deployment process once configuration is complete and notifies you once your new Suite instance is available.
 
 ## Installation
@@ -13,7 +13,7 @@ This script bootstraps a Wikibase Suite Deploy installation handling or guiding 
 1. Setup on a new VPS instance that meets the following criteria:
 
   - Has minimum required specs (see https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#requirements)
-  - Is running one of these officially supported Linux distributions: Ubuntu, Debian, Fedora, and CentOS
+  - Is running one of these officially supported Linux distributions: Ubuntu (22, 24), Debian (11, 12), Fedora, and CentOS
   - You have root level SSH access to the instance
 
 2. SSH as root into your new VPS instance and enter the following, following instructions from there:
@@ -40,13 +40,12 @@ cd deploy/setup
 | `--skip-deps`    | Skip dependency installation (assumes Git & Docker are already installed). |
 | `--skip-launch`  | Do not launch services after configuration completes. |
 
-### Dev-only or in beta
+### Dev-only
 
 | Option           | Description |
 |------------------|-------------|
 | `--dev`          | Development mode: skips clone, dependency installs, and launch; uses a relative repo path for local development. |
-| `--local`        | Mark this run as local (affects background/interactive behavior).|
-| `--cli`          | Use a CLI (terminal) flow for configuration instead of the web UI. |
+| `--local`        | Mark this run as local which launches setup on localhost:8888 and runs the interactive instead of as a background process. Useful only for dev/testing at this stage.|
 
 These options can be applied using the following command formats:
 
