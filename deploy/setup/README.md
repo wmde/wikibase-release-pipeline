@@ -1,15 +1,16 @@
-# REMAINING TODOs:
+## REMAINING TODOs:
 
 - [ ] Test/fix updated Docker install script on Debian, Fedora, and CentOS
-- [ ] Keep or remove password removal feature? Add it to the de-prioritized CLI version?
 - [ ] Double check Password validations to make sure they follow more tightly MediaWiki + MariaDB requirements,
       consider incorporating the common words dictionary lookup here.
 - [ ] "Generate" link for passwords or keep auto generated if ignored?
-- [ ] Double check Web UI docs and refine or add/enhance to finalize
-- [ ] Very brief pass on Beta CLI Setup feature to make sure it is not fundamentally broken after recent updates
+- [ ] Review Web Setup UI inline docs and refine or add/enhance to finalize
+- [ ] Documentation diligence, refinement, and alignment from deploy/README.md through to deploy/setup/README.md (et al)
+
 - [ ] Review CLI options for setup.sh and make sure they are coherent and not too overlapping (--dev in particular)
-- [ ] Look into and better define intention and next steps for --local / LOCALHOST CLI flag 
-- [ ] Documentation diligence, refinement, and checking from deploy/README.md through to deploy/setup/README.md
+- [ ] Look into and better define intention and next steps for --local / LOCALHOST CLI flag
+- [ ] Keep or remove password removal feature? Add it to the de-prioritized CLI version?
+- [ ] Very brief pass on Beta CLI Setup feature to make sure it is not fundamentally broken after recent updates
 - [X] Refine content for creating DNS entry for server (Make SERVER_IP visible, etc)
 - [X] Add validation that the entered DNS entry actually points to the expected SERVER_IP
 
