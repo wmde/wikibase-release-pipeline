@@ -31,7 +31,7 @@ generate_cert_for_setup_webserver() {
   else
     # Extra random suffix is to keep Let's Encrypt from rate limiting on cert generation
     # after repeated runs (in dev, testing, and debugging cases in particular)
-    SETUP_SUBDOMAIN="wbs-setup-$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 6)"
+    SETUP_SUBDOMAIN="wbs-setup-$(hexdump -n 3 -v -e '/1 "%02x"' /dev/urandom)"
     SETUP_HOST="$SETUP_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
 
