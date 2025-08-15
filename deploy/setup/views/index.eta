@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wikibase Suite Deploy Setup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: auto;
+      width: 100%;
+    }
+
+    #header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #header img {
+      height: 80px;
+    }
+
+    /* Collapse right column until saved */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .grid.two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    #log-wrapper {
+      background-color: #111;
+      color: #eee;
+      font-size: 0.6em;
+      font-family: monospace;
+      padding: 1em;
+      max-height: 600px;
+      overflow-y: auto;
+      display: none;
+      border-radius: 0.5rem;
+      white-space: pre-wrap;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #config-final-wrapper {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    #config-final {
+      background-color: #111;
+      color: #eee;
+      font-size: 0.6em;
+      font-family: monospace;
+      padding: 1em;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+    }
+
+    #log *::selection,
+    #log::selection,
+    #config-final *::selection,
+    #config-final::selection {
+      background-color: var(--primary);
+      color: var(--primary-inverse);
+    }
+
+    #copy-config,
+    #download-config {
+      margin-top: 0.5rem;
+      margin-right: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    label:has(.field-help) input {
+      margin-bottom: 1rem;
+    }
+
+    label:has(.just-validate-error-label) input {
+      margin-bottom: 0;
+    }
+
+    .field-help {
+      font-weight: normal;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    .field-help .help-actions {
+      float: right;
+    }
+
+    .just-validate-error-label {
+      font-weight: normal;
+      font-size: 0.7rem;
+    }
+
+    .just-validate-error-field {
+      border: solid 3px;
+      border-color: rgb(197, 47, 33);
+    }
+
+    /* Status waiting messages (inlined) */
+    #status-waiting {
+      margin-top: 0.5rem;
+      font-size: 0.9em;
+      color: var(--muted, #666);
+      white-space: pre-wrap;
+    }
+    .status-line {
+      margin: 0.15rem 0;
+    }
+
+    /* Log dialog styling */
+    #log-dialog article {
+      max-width: 960px;
+      max-height: initial;
+    }
+    #log-dialog pre {
+      background-color: #111;
+      color: #eee;
+      font-family: monospace;
+      font-size: 0.8rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      max-height: 60vh;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    #log-dialog pre *::selection, #log-dialog pre::selection {
+      background-color: var(--primary);
+      color: var(--primary-inverse);
+    }
+
+    /* Show Log link aligned to the right within the header */
+
+    #toggle-log {
+      display: flex;
+      justify-content: flex-end;
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.8rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #toggle-log:hover,
+    #toggle-log:focus {
+      text-decoration: none;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div id="header">
+      <img src="/Wikibase_Suite_(RGB).png" alt="Wikibase Logo" />
+      <h2>Deploy Setup</h2>
+      <button id="toggle-log" type="button">Show Log</button>
+    </div>
+    <div class="grid" id="main-grid">
+      <div id="config-section">
+        <form id="config-form" data-disabled="<%= isConfigSaved %>">
+          <label>
+            MediaWiki Admin Email Address:
+            <div class="field-help">Used for MediaWiki admin and alerts.</div>
+            <input name="MW_ADMIN_EMAIL" type="email" required value="<%= MW_ADMIN_EMAIL || '' %>" />
+          </label>
+          <label>
+            Wikibase Host:
+            <div class="field-help">
+              A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+              <span class="help-actions">
+                <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
+              </span>
+            </div>
+            <input name="WIKIBASE_PUBLIC_HOST" type="url" value="<%= WIKIBASE_PUBLIC_HOST || '' %>" />
+          </label>
+          <details name="config">
+            <summary role="secondary" style="font-weight: bold;">Advanced Options</summary>
+            <label>
+              Query Service Host:
+              <div class="field-help">
+                A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+                <br />
+                <em>default: <pre style="display: inline;">query.&lt;Wikibase Host&gt;</pre></em>
+                <span class="help-actions">
+                  <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
+                </span>
+              </div>
+              <input name="WDQS_PUBLIC_HOST" type="url" value="<%= WDQS_PUBLIC_HOST || '' %>" />
+            </label>
+            <label>
+              MediaWiki Admin Name:
+              <div class="field-help">Will be the login name for the MediaWiki admin</div>
+              <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
+            </label>
+            <label>
+              MediaWiki Admin Password:
+              <div class="field-help">Minimum 10 characters. <em>default: randomly generated and revealed at end of install</em></div>
+              <input name="MW_ADMIN_PASS" type="password" />
+            </label>
+            <label>
+              Database Name:
+              <div class="field-help"><em>default: my_wiki</em></div>
+              <input name="DB_NAME" value="<%= DB_NAME %>" />
+            </label>
+            <label>
+              Database User:
+              <div class="field-help">Used by MediaWiki to connect to the database. <em>default: sqluser</em></div>
+              <input name="DB_USER" value="<%= DB_USER %>" />
+            </label>
+            <label>Database Password:
+              <div class="field-help">Minimum 10 characters. <em>default: randomly generated and revealed at end of install</em></div>
+              <input name="DB_PASS" type="password" />
+            </label>
+          </details>
+          <label>
+            <input
+              type="checkbox"
+              name="METADATA_CALLBACK"
+              <%= (typeof METADATA_CALLBACK === 'undefined' || METADATA_CALLBACK === true || METADATA_CALLBACK === 'true') ? 'checked' : '' %>
+              role="switch"
+            />
+            I want this Wikibase to be visible in the global Wikibase directory
+          </label>
+          <br />
+          <button type="submit">Save</button>
+        </form>
+      </div>
+
+      <div id="status-section">
+        <div id="status">
+          <div id="status-waiting" style="display: none;"></div>
+          <div id="status-complete" style="display: <%= isBooted ? 'block' : 'none' %>;">
+            <p>
+              <strong>✅ Services started successfully!</strong>
+              <br /><br />
+              MediaWiki/Wikibase:
+              <br />
+              <a id="wikibase-final-url" target="_blank"></a>
+              <br /><br />
+              Query Service:
+              <br />
+              <a id="wdqs-final-url" target="_blank"></a>
+              <br /><br />
+              QuickStatements:
+              <br />
+              <a id="quickstatements-final-url" target="_blank"></a>
+            </p>
+          </div>
+          <div id="config-final-wrapper">
+            <p><strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong></p>
+            <pre id="config-final"></pre>
+            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
+            <button id="copy-config">Copy</button>
+          </div>
+        </div>
+
+        <!-- Show Log button moved to top-right; no button here -->
+      </div>
+    </div>
+  </main>
+
+  <dialog id="dns-help-dialog">
+    <article>
+      <h3>How to register a domain and point it here</h3>
+      <p>Server public IP: <code><%= SERVER_IP %></code></p>
+      <ol>
+        <li>Buy a domain from any registrar (e.g., Namecheap, Gandi, Cloudflare).</li>
+        <li>Open your domain’s DNS settings.</li>
+        <li>Create an <strong>A record</strong>:
+          <ul>
+            <li><strong>Type</strong>: <code>A</code></li>
+            <li><strong>Name/Host</strong>: <code>wikibase</code> (or blank/<code>@</code> for root)</li>
+            <li><strong>Value</strong>: <code><%= SERVER_IP %></code></li>
+          </ul>
+        </li>
+        <li>Create another A record for <code>query</code> pointing to the same IP.</li>
+        <li>It may take a few minutes for new DNS entries to propagate.</li>
+      </ol>
+      <p class="help-small">
+        <em>
+          Alternatively and for testing only, you can use the host addresses of <code><%= SERVER_IP %>.nip.io</code> and <code>query.<%= SERVER_IP %>.nip.io</code>
+          which will automatically resolve to this server's IP address. ⚠️ However, use with caution as the magical addresses are appropriate only for testing as there is currently no simple way to
+          reset these addresses for an already setup Deploy instance.
+        </em>
+      </p>
+      <footer>
+        <button data-modal-close class="secondary">Close</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <!-- Log dialog -->
+  <dialog id="log-dialog">
+    <article>
+      <pre id="log-content">Loading logs...</pre>
+      <footer style="margin-top: 0">
+        <div style="display:flex; justify-content: space-between; gap:20rem;">
+          <button id="shutdown-btn" style="border-color: rgb(217, 53, 38); color: rgb(217, 53, 38)" class="outline">Shut Down Installer</button>
+          <button id="hide-log" class="secondary">Close</button>
+        </div>
+        <p id="shutdown-msg" style="text-align: left;"></p>
+      </footer>
+    </article>
+  </dialog>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const STATUS_LOG_ENTRY_REGEX = /\[status\]\s*(.*)$/i;
+
+      // ---------- Utilities ----------
+      const el = (id) => document.getElementById(id);
+      const on = (node, type, handler) => node && node.addEventListener(type, handler);
+
+      // ---------- SSE helper ----------
+      function openSSE(url, { onOpen, onMessage, onError, events } = {}) {
+        const es = new EventSource(url, { withCredentials: false });
+        if (onOpen) es.onopen = onOpen;
+        if (onMessage) es.onmessage = onMessage;
+        if (onError) es.onerror = onError;
+        if (events) {
+          Object.entries(events).forEach(([type, fn]) => es.addEventListener(type, fn));
+        }
+        return es;
+      }
+
+      // ---------- Element Refs ----------
+      const form = el('config-form');
+      const elStatusWaiting = el('status-waiting');
+      const elStatusComplete = el('status-complete');
+      const elWikibaseFinalUrl = el('wikibase-final-url');
+      const elWdqsFinalUrl = el('wdqs-final-url');
+      const elQuickStatementsUrl = el('quickstatements-final-url');
+      const elConfigFinalBox = el('config-final');
+      const elConfigFinalWrapper = el('config-final-wrapper');
+      const elCopyBtn = el('copy-config');
+      const elDownloadLink = el('download-config');
+      const elShutdownBtn = el('shutdown-btn');
+      const elShutdownMsg = el('shutdown-msg');
+
+      const elMainGrid = el('main-grid');
+      const elToggleLogBtn = el('toggle-log');
+      const elLogDialog = el('log-dialog');
+      const elLogContent = el('log-content');
+      const elHideLogBtn = el('hide-log');
+
+      // ---------- State ----------
+      let logStream = null;
+      let alreadyHandledBootedState = false;
+      let isLogDialogOpen = false;
+
+      // ---------- Grid helpers ----------
+      function setGridTwoCol(enabled) {
+        if (!elMainGrid) return;
+        elMainGrid.classList.toggle('two-col', !!enabled);
+      }
+
+      // ---------- Log helpers ----------
+      async function openLog() {
+        try {
+          const res = await fetch('/log');
+          const text = await res.text();
+          elLogContent.textContent = text || '';
+          elLogContent.scrollTop = elLogContent.scrollHeight;
+        } catch (err) {
+          appendToLog('\n⚠️ Could not load initial log.\n');
+        }
+        // Ensure the shared log stream is running
+        startLogStream();
+        // Mark dialog open so incoming chunks mirror into the log view
+        isLogDialogOpen = true;
+        elLogDialog.showModal();
+      }
+
+      function closeLog() {
+        isLogDialogOpen = false;
+        elLogDialog.close();
+      }
+
+      function appendToLog(text) {
+        elLogContent.insertAdjacentText('beforeend', (text.endsWith('\n') ? text : text + '\n'));
+        elLogContent.scrollTop = elLogContent.scrollHeight;
+      }
+
+      function appendStatusLine(text) {
+        if (!text || !elStatusWaiting) return;
+        const div = document.createElement('div');
+        div.className = 'status-line';
+        div.textContent = text;
+        elStatusWaiting.appendChild(div);
+      }
+
+      function startLogStream() {
+        if (logStream) return; // already running
+        // Local helper to extract all [status] lines from text
+        function getStatusLines(text) {
+          if (!text) return [];
+          return text
+            .split('\n')
+            .map((line) => {
+              const m = line.match(STATUS_LOG_ENTRY_REGEX);
+              return (m && m[1]) ? m[1].trim() : null;
+            })
+            .filter(Boolean);
+        }
+        // One-time parse of the entire current log so we show earlier [status] lines
+        fetch('/log', { cache: 'no-store' })
+          .then((res) => res.text())
+          .then((text) => {
+            if (!text) return;
+            getStatusLines(text).forEach(appendStatusLine);
+          })
+          .catch(() => { /* ignore backfill errors */ });
+        logStream = openSSE('/log/stream', {
+          onMessage: (e) => {
+            if (!e.data) return;
+            // Always parse for [status] log lines and show them under waiting
+            getStatusLines(e.data).forEach(appendStatusLine);
+            // Always mirror raw log text into the dialog's <pre> (dialog may be closed)
+            if (elLogContent) {
+              const txt = e.data.endsWith('\n') ? e.data : e.data + '\n';
+              elLogContent.insertAdjacentText('beforeend', txt);
+              // TODO: Don't follow log for now, but maybe provide optional "follow" checkbox later
+              // elLogContent.scrollTop = elLogContent.scrollHeight;
+            }
+          },
+          onError: () => {
+            console.log('Error in parsing incoming log stream')
+          }
+        });
+      }
+
+      // ---------- Validation ----------
+      function extractHost(value) {
+        try {
+          return new URL(value).hostname;
+        } catch {
+          return value;
+        }
+      }
+
+      function initValidation() {
+        const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/;
+        const passwordValidator = (value) => value.length === 0 || value.length >= 10;
+
+        // Host resolves to server IP rule
+        const hostResolvesToServerIPRule = {
+          validator: value => async () => {
+            const hostname = (value || '').trim();
+            // allow empty; earlier rules handle format
+            if (!hostname) return true;
+            if (hostname === 'localhost') return true;
+            try {
+              const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(hostname)}&type=A`);
+              if (!res.ok) return false;
+              const json = await res.json();
+              const answers = Array.isArray(json?.Answer) ? json.Answer : [];
+              return answers.some(a => a.type === 1 && a.data === '<%= SERVER_IP %>');
+            } catch {
+              return false;
+            }
+          },
+          errorMessage: `Doesn't resolve to <%= SERVER_IP %>`
+        };
+
+        const validate = new JustValidate('#config-form');
+
+        validate
+          .addField('[name=MW_ADMIN_EMAIL]', [
+            { rule:'required' },
+            { rule:'email' }
+          ])
+          .addField('[name=WIKIBASE_PUBLIC_HOST]', [
+            { rule:'customRegexp', value: hostNameRegex, errorMessage: 'Must be a valid hostname (e.g. example.com)' },
+            hostResolvesToServerIPRule
+          ])
+          .addField('[name=WDQS_PUBLIC_HOST]', [
+            { rule:'customRegexp', value: hostNameRegex, errorMessage: 'Must be a valid hostname (e.g. query.example.com)' },
+            hostResolvesToServerIPRule
+          ])
+          .addField('[name=MW_ADMIN_PASS]', [
+            { validator: passwordValidator, errorMessage: 'Password must be at least 10 characters or left blank' }
+          ])
+          .addField('[name=DB_PASS]', [
+            { validator: passwordValidator, errorMessage: 'Password must be at least 10 characters or left blank' }
+          ])
+          .onSuccess(async (event) => {
+            const f = event.target;
+            const data = Object.fromEntries(new FormData(f).entries());
+            data.METADATA_CALLBACK = f.METADATA_CALLBACK?.checked ? 'true' : 'false';
+
+            const res = await fetch('/write-env', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+              f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
+              // Switch to waiting state and start streaming status immediately
+              elStatusWaiting.innerHTML = '';
+              showWaitingState();
+            } else {
+              alert('Failed to save environment. See console for details.');
+            }
+          });
+      }
+
+            // ---------- Boot helpers ----------
+      function showWaitingState() {
+        elStatusWaiting.style.display = 'block';
+        elStatusComplete.style.display = 'none';
+        setGridTwoCol(true);
+        startLogStream();
+      }
+
+      function showBootedState(config) {
+        alreadyHandledBootedState = true;
+
+        elFinalizeSection.style.display = 'block';
+        elStatusWaiting.style.display = 'none';
+        elStatusComplete.style.display = 'block';
+
+        const wikibaseFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/wiki/Main_Page`;
+        elWikibaseFinalUrl.href = wikibaseFinalUrl;
+        elWikibaseFinalUrl.textContent = wikibaseFinalUrl;
+
+        const wdqsFinalUrl = `https://${config?.WDQS_PUBLIC_HOST}`;
+        elWdqsFinalUrl.href = wdqsFinalUrl;
+        elWdqsFinalUrl.textContent = wdqsFinalUrl;
+
+        const quickStatementsFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/tools/quickstatements`;
+        elQuickStatementsUrl.href = quickStatementsFinalUrl;
+        elQuickStatementsUrl.textContent = quickStatementsFinalUrl;
+
+        const envVars = Object.entries(config)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('\n');
+
+        elConfigFinalBox.textContent = envVars;
+        elConfigFinalWrapper.style.display = 'block';
+
+        elCopyBtn.onclick = () => {
+          navigator.clipboard.writeText(envVars).then(() => {
+            elCopyBtn.textContent = 'Copied!';
+            setTimeout(() => (elCopyBtn.textContent = 'Copy'), 2000);
+          }).catch(() => {
+            alert('⚠️ Failed to copy. Please do it manually.');
+          });
+        };
+
+        if (elDownloadLink.href && elDownloadLink.href.startsWith('blob:')) {
+          URL.revokeObjectURL(elDownloadLink.href);
+        }
+        const blob = new Blob([envVars], { type: 'text/plain' });
+        elDownloadLink.href = URL.createObjectURL(blob);
+
+        setGridTwoCol(true);
+      }
+
+      // ---------- Dialog open/close (generic) ----------
+      document.addEventListener('click', (e) => {
+        // OPEN
+        const openBtn = e.target.closest('[data-modal-open]');
+        if (openBtn) {
+          e.preventDefault();
+          const id = openBtn.getAttribute('data-modal-target');
+          const dlg = id && el(id);
+          if (dlg?.showModal) dlg.showModal();
+          return;
+        }
+
+        // CLOSE
+        const closeBtn = e.target.closest('[data-modal-close]');
+        if (closeBtn) {
+          e.preventDefault();
+          const dlg = closeBtn.closest('dialog');
+          if (dlg) dlg.close();
+          return;
+        }
+      });
+
+      // Optional: click backdrop to close
+      document.querySelectorAll('dialog').forEach((dlg) => {
+        dlg.addEventListener('click', (e) => {
+          const rect = dlg.getBoundingClientRect();
+          const clickedInBackdrop =
+            e.clientX < rect.left || e.clientX > rect.right ||
+            e.clientY < rect.top  || e.clientY > rect.bottom;
+          if (clickedInBackdrop) dlg.close();
+        });
+      });
+
+      // ---------- Log bindings ----------
+      on(elToggleLogBtn, 'click', (e) => {
+        e.preventDefault();
+        openLog();
+      });
+      on(elHideLogBtn, 'click', (e) => {
+        e.preventDefault();
+        closeLog();
+      });
+      on(elLogDialog, 'close', () => {
+        isLogDialogOpen = false;
+      });
+
+      // ---------- Finalize binding ----------
+      on(elShutdownBtn, 'click', async (e) => {
+        e.preventDefault();
+        if (!elShutdownBtn) return;
+
+        elShutdownBtn.disabled = true;
+        elShutdownMsg.textContent = 'Shutting down installer...';
+
+        try {
+          const res = await fetch('/finalize-setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (res.ok) {
+            elShutdownMsg.textContent = '✅ Finalized. The installer will stop shortly.';
+          } else {
+            elShutdownMsg.textContent = `❌ Finalize failed (HTTP ${res.status}). Check logs.`;
+            elShutdownBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          elShutdownMsg.textContent = '❌ Network error while finalizing. See console/logs.';
+          elShutdownBtn.disabled = false;
+        }
+      });
+
+      // ---------- Boot-time init ----------
+      window.addEventListener('DOMContentLoaded', async () => {
+        if (form.dataset.disabled === 'true') {
+          // Env already saved: disable inputs and use two-col layout
+          form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
+          setGridTwoCol(true);
+        }
+
+        initValidation();
+
+        // On reload, immediately set visible state using a one-time /status check (if available)
+        const hasEnv = form.dataset.disabled === 'true';
+        if (hasEnv) {
+          try {
+            const res = await fetch('/status', { cache: 'no-store' });
+            if (res.ok) {
+              const { isBooted, config } = await res.json();
+              if (isBooted) {
+                showBootedState(config);
+              } else {
+                elStatusWaiting.innerHTML = '';
+                showWaitingState();
+              }
+            } else {
+              // Fallback: show waiting if env exists but status endpoint not ok
+              elStatusWaiting.innerHTML = '';
+              showWaitingState();
+            }
+          } catch {
+            // Network/endpoint missing—fallback
+            elStatusWaiting.innerHTML = '';
+            showWaitingState();
+          }
+        } else {
+          // No env yet: ensure single-column & hide right status
+          setGridTwoCol(false);
+          elStatusWaiting.style.display = 'none';
+          elStatusComplete.style.display = 'none';
+          elFinalizeSection.style.display = 'none';
+        }
+
+        // Keep SSE to react to state changes going forward
+        openSSE('/status/stream', {
+          onMessage: (e) => {
+            const { isBooted, config } = JSON.parse(e.data);
+            if (isBooted && !alreadyHandledBootedState) {
+              showBootedState(config);
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
