@@ -7,7 +7,6 @@ source "$SCRIPTS_DIR/_logging.sh"
 debug "Checking for Docker..."
 
 if command -v docker >/dev/null 2>&1; then
-  status "Docker already installed."
   exit 0
 fi
 

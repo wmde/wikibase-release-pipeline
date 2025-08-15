@@ -279,10 +279,6 @@
             <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
             <button id="copy-config">Copy</button>
           </div>
-          <div id="status-finalize" style="display: none; margin-top: 1em;">
-            <button id="finalize-btn" style="border-color: rgb(217, 53, 38); color: rgb(217, 53, 38)" class="outline">Shut Down Installer</button>
-            <p id="finalize-message" style="margin-top: 0.5em;"></p>
-          </div>
         </div>
 
         <!-- Show Log button moved to top-right; no button here -->
@@ -324,8 +320,12 @@
   <dialog id="log-dialog">
     <article>
       <pre id="log-content">Loading logs...</pre>
-      <footer style="display:flex; justify-content:flex-end; gap:.5rem;">
-        <button id="hide-log" class="secondary">Close</button>
+      <footer style="margin-top: 0">
+        <div style="display:flex; justify-content: space-between; gap:20rem;">
+          <button id="shutdown-btn" style="border-color: rgb(217, 53, 38); color: rgb(217, 53, 38)" class="outline">Shut Down Installer</button>
+          <button id="hide-log" class="secondary">Close</button>
+        </div>
+        <p id="shutdown-msg" style="text-align: left;"></p>
       </footer>
     </article>
   </dialog>
@@ -363,9 +363,8 @@
       const elConfigFinalWrapper = el('config-final-wrapper');
       const elCopyBtn = el('copy-config');
       const elDownloadLink = el('download-config');
-      const elFinalizeSection = el('status-finalize');
-      const elFinalizeBtn = el('finalize-btn');
-      const elFinalizeMsg = el('finalize-message');
+      const elShutdownBtn = el('shutdown-btn');
+      const elShutdownMsg = el('shutdown-msg');
 
       const elMainGrid = el('main-grid');
       const elToggleLogBtn = el('toggle-log');
@@ -475,9 +474,10 @@
         // Host resolves to server IP rule
         const hostResolvesToServerIPRule = {
           validator: value => async () => {
-            console.log(value)
             const hostname = (value || '').trim();
-            if (!hostname) return true; // allow empty; earlier rules handle format
+            // allow empty; earlier rules handle format
+            if (!hostname) return true;
+            if (hostname === 'localhost') return true;
             try {
               const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(hostname)}&type=A`);
               if (!res.ok) return false;
@@ -536,7 +536,6 @@
 
             // ---------- Boot helpers ----------
       function showWaitingState() {
-        elFinalizeSection.style.display = 'none';
         elStatusWaiting.style.display = 'block';
         elStatusComplete.style.display = 'none';
         setGridTwoCol(true);
@@ -634,12 +633,12 @@
       });
 
       // ---------- Finalize binding ----------
-      on(elFinalizeBtn, 'click', async (e) => {
+      on(elShutdownBtn, 'click', async (e) => {
         e.preventDefault();
-        if (!elFinalizeBtn) return;
+        if (!elShutdownBtn) return;
 
-        elFinalizeBtn.disabled = true;
-        elFinalizeMsg.textContent = 'Shutting down installer...';
+        elShutdownBtn.disabled = true;
+        elShutdownMsg.textContent = 'Shutting down installer...';
 
         try {
           const res = await fetch('/finalize-setup', {
@@ -648,15 +647,15 @@
           });
 
           if (res.ok) {
-            elFinalizeMsg.textContent = '✅ Finalized. The installer will stop shortly.';
+            elShutdownMsg.textContent = '✅ Finalized. The installer will stop shortly.';
           } else {
-            elFinalizeMsg.textContent = `❌ Finalize failed (HTTP ${res.status}). Check logs.`;
-            elFinalizeBtn.disabled = false;
+            elShutdownMsg.textContent = `❌ Finalize failed (HTTP ${res.status}). Check logs.`;
+            elShutdownBtn.disabled = false;
           }
         } catch (err) {
           console.error(err);
-          elFinalizeMsg.textContent = '❌ Network error while finalizing. See console/logs.';
-          elFinalizeBtn.disabled = false;
+          elShutdownMsg.textContent = '❌ Network error while finalizing. See console/logs.';
+          elShutdownBtn.disabled = false;
         }
       });
 

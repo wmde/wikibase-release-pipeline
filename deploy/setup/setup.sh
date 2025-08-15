@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Clear screen
+clear || printf "\033c"
+echo
+echo "Wikibase Suite Deploy Setup"
+echo
+echo "→ Installs Git if not already installed"
+echo "→ Checks-out the wikibase-release-pipeline repository"
+echo "→ Installs Docker if not already installed"
+echo "→ Starts a Web-based setup tool where you can complete configuration"
+echo "→ Launches Wikibase Suite, notifying when the services are available"
+echo
+echo "Let's get started!"
+echo
+
 # --- Parse CLI Arguments ---
 
 for arg in "$@"; do
@@ -29,6 +43,12 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+if [[ "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" == */deploy/setup ]]; then
+  SKIP_CLONE=true
+  WBS_DIR=../../..
+  echo "Detected running from inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
+fi
 
 # --- Setup variables (including defaults) ---
 
@@ -74,11 +94,6 @@ install_git() {
 }
 
 clone_repo() {
-  if $SKIP_CLONE; then
-    echo "Skipping clone (dev mode)"
-    return
-  fi
-
   echo "Cloning repository to $WBS_DIR..."
   mkdir -p "$WBS_DIR"
   cd "$WBS_DIR"
@@ -92,21 +107,6 @@ clone_repo() {
 }
 
 # --- Execution ---
-
-# Clear screen
-clear || printf "\033c"
-
-echo
-echo "Wikibase Suite Deploy Setup"
-echo
-echo "→ Installs Git if it is no already installed"
-echo "→ Checks-out the wikibase-release-pipeline repository"
-echo "→ Installs Docker if it is no already installed"
-echo "→ Starts a Web-based setup tool where you can complete configuration"
-echo "→ Launches the Wikibase Suite of services, letting you know when they are available"
-echo
-echo "Let's get started!"
-echo
 
 if ! $SKIP_DEPENDENCY_INSTALLS; then
   install_git

@@ -1,36 +1,39 @@
-## Remaining TODOs:
+## Remaining TODOs
 
-- [x] Test/fix updated Docker install script on Debian, Fedora, and CentOS (* the only distros supported by Deploy)
-- [ ] Review Web Setup UI inline docs and refine or add/enhance to finalize
+- [ ] Test/fix and better define intention for `--local` CLI flag
+- [ ] Fix some occasional status line loading duplication in `index.eta`
 - [ ] Double check Password validations to make sure they follow more tightly MediaWiki + MariaDB requirements,
       consider incorporating the common words dictionary lookup here. Have a "Generate" link for passwords or keep
       auto generated if ignored?
-- [ ] Documentation diligence, refinement, and alignment from deploy/README.md through to deploy/setup/README.md (et al)
-- [ ] Test and better define intention for --local CLI flag
----
-- [x] Review CLI options for setup.sh and make sure they are coherent and not too overlapping (--dev in particular)
-- [X] Refine content for creating DNS entry for server (Make SERVER_IP visible, etc)
-- [X] Add validation that the entered DNS entry actually points to the expected SERVER_IP
+- [ ] Develop a Troubleshooting section in deploy/setup/README.md which informs user how to move past possible "invalid certificate" warnings on the setup wizard Web page, and on what to do if this same warning appears when the services are setup.
+- [ ] Documentation diligence, refinement, and alignment from `deploy/README.md` through to `deploy/setup/README.md`
+  - [ ] Review and refine Web Setup UI inline docs (including validation messages, host help, etc)
+  - [ ] Submit for team review (Deepesha, Dan, et al)
 
 ---
 
-## Testing:
+## Testing notes
 
-Full setup process has been tested all the way to running services on Hetzner with the following distros:
-
-- Debian 11
-- Debian 12
-- Ubuntu 22.04
-- Ubuntu 24.04
-- Fedora 41
-- Fedora 42
-- CentOS Stream 9
-- CentOS Stream 10
-
-**Note:**
-
-- Assuming support for the above distros and versions, and nothing else at this time.
+- Running `./setup.sh` directly from the repo’s `deploy/setup` directory skips Git install and repo clone.
+To test those steps locally you have a few options:
+  - Copy the script elsewhere and run it to trigger a fresh clone into ~/wbs/wikibase-release-pipeline
+  - Use the curl command from the README (gets the pushed version from GitHub)
+  - Temporarily comment out the “in repo” check in setup.sh
+- Full setup process has been tested all the way to running services on Hetzner with the following distros: Ubuntu 22/24, Debian 11/12, Fedora 41/42, and CentOS 9/10
 - Earlier testing was completed on DigitalOcean VPSs and I didn't find any differences with results on Hetzner, but it hasn't been tried again since substantial updates, nor has it been tried on other popular providers (e.g. Linode, et al)
+- For now assuming official support for only the distros and versions mentioned (both for the setup script and in general for the Deploy product)
+
+---
+
+# Troubleshooting section notes
+
+"Invalid Certifcate" warnings:
+
+- Let's Encrypt rate limiting for *.nip.ip domains used for the setup installer means we may need to an "invalid cert" warning arising from self-signed SSL/TLS certificates when trying to access the page. This warning will also always appear when using --local option as all certificates in that scenario are self-signed, including as well for the WBS services.
+
+- If for any reason you repeat the setup numerous times using the same values for Wikibase Public Host and/or Query Service Public Host, you may also see this invalid certificate warning for your site. If you want to continue to use those host names you will need to wait (how long?) before trying again so the certficate provider (Let's Encrypt) will unblock certificate provision for your designated hosts.
+  
+In the setup case it is safe and fully functional to bypass the warning and continue. See https://docs.vultr.com/how-to-bypass-the-https-warning-for-self-signed-ssl-tls-certificates for some guidance on how to do so.
 
 ---
 

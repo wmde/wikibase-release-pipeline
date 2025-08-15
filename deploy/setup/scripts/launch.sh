@@ -102,18 +102,13 @@ if $SKIP_LAUNCH; then
   exit 0
 fi
 
-# Launch behavior by mode:
-# 1. Remote web mode (default): detach after web-config so HTTP can respond and avoid accidental interruption.
-# 2. Local installs: avoid background task launching, which also helps platform independence.
-if ! $LOCALHOST; then
-  setsid env \
-    DEPLOY_DIR="$DEPLOY_DIR" \
-    LOG_PATH="$LOG_PATH" \
-    DEBUG="$DEBUG" \
-    LOCALHOST="$LOCALHOST" \
-    bash "$0" --launch-only >/dev/null 2>&1 </dev/null &
-  debug "Starting background process..."
-  exit 0
-fi
-
-launch
+# Detach after web-config to avoid accidental interruption
+debug "Starting background process..."
+run nohup env \
+  DEPLOY_DIR="$DEPLOY_DIR" \
+  LOG_PATH="$LOG_PATH" \
+  DEBUG="$DEBUG" \
+  LOCALHOST="$LOCALHOST" \
+  bash "$0" --launch-only \
+  >/dev/null 2>&1 &
+exit 0

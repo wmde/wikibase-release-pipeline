@@ -26,7 +26,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
 generate_cert_for_setup_webserver() {
   debug "Generating TLS certificate for setup page..."
 
-  if [ "$LOCALHOST" = true ]; then
+  if $LOCALHOST; then
     SETUP_HOST="localhost"
   else
     # Extra random suffix is to keep Let's Encrypt from rate limiting on cert generation
@@ -88,8 +88,10 @@ start_setup_webserver() {
   echo "To continue setup navigate to:"
   echo
   echo "  https://$SETUP_HOST:$SETUP_PORT"
-  echo
-  echo  It is now safe to close this terminal session.
+  if $LOCALHOST; then
+    echo
+    echo  It is now safe to close this terminal session.
+  fi
 }
 
 debug "Starting setup page webserver container..."

@@ -12,7 +12,7 @@ This script bootstraps a Wikibase Suite Deploy installation handling or guiding 
 
 1. Setup on a new VPS instance that meets the following criteria:
 
-  - Has minimum required specs (see https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#requirements)
+  - Meets minimum hardware requirements (see https://github.com/wmde/wikibase-release-pipeline/tree/main/deploy#requirements)
   - Is running one of these officially supported Linux distributions: Ubuntu (22, 24), Debian (11, 12), Fedora, and CentOS
   - You have root level SSH access to the instance
 
