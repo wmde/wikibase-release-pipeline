@@ -44,7 +44,8 @@ for arg in "$@"; do
   esac
 done
 
-if [[ "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" == */deploy/setup ]]; then
+# When running from a file (not curl/stdin)
+if [[ "${BASH_SOURCE[0]:-$0}" != "-" ]]; then
   SKIP_CLONE=true
   WBS_DIR=../../..
   echo "Detected running from inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
