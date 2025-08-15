@@ -24,7 +24,7 @@ SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
 
 generate_cert_for_setup_webserver() {
-  debug "Generating TLS certificate for setup page..."
+  debug "Requesting a trusted HTTPS certificate for the setup page (ACME via Let’s Encrypt)..."
 
   if $LOCALHOST; then
     SETUP_HOST="localhost"
@@ -56,11 +56,11 @@ generate_cert_for_setup_webserver() {
     cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
     cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
   else
-    echo "⚠️ Let's Encrypt challenge failed, falling back to self-signed certificate."
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    run openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
       -out "$CERTS_DIR/cert.pem" \
       -keyout "$CERTS_DIR/key.pem" \
       -subj "/CN=$SETUP_HOST"
+    SELF_SIGNED_CERT=true
   fi
 }
 
@@ -88,6 +88,13 @@ start_setup_webserver() {
   echo "To continue setup navigate to:"
   echo
   echo "  https://$SETUP_HOST:$SETUP_PORT"
+  if [[ "${SELF_SIGNED_CERT:-false}" == true ]]; then
+    echo
+    echo "⚠️ This setup page is using a temporary self-signed HTTPS certificate."
+    echo "Your browser will likely show a warning before loading the page."
+    echo "See the Troubleshooting section of the Deploy Setup README for help"
+    echo "if you want to bypass the warning or replace it with a trusted cert."
+  fi
   if $LOCALHOST; then
     echo
     echo  It is now safe to close this terminal session.
