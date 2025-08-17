@@ -18,6 +18,7 @@ SETUP_DIR="$DEPLOY_DIR/setup"
 CERTS_DIR="$SETUP_DIR/certs"
 VIEWS_DIR="$SETUP_DIR/views"
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
+CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
 
 # -- Setup logging --
 # shellcheck disable=SC1091
@@ -42,7 +43,7 @@ generate_cert_for_setup_webserver() {
       -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
       -v $CERTS_DIR:/certs \
       -p 80:80 \
-      certbot/certbot:v4 certonly \
+      $CERTBOT_IMAGE certonly \
         --standalone \
         --non-interactive \
         --preferred-challenges http \
