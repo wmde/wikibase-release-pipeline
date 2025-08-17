@@ -104,7 +104,7 @@ fi
 
 # Detach after web-config to avoid accidental interruption
 debug "Starting background process..."
-run nohup env \
+nohup env \
   DEPLOY_DIR="$DEPLOY_DIR" \
   LOG_PATH="$LOG_PATH" \
   DEBUG="$DEBUG" \

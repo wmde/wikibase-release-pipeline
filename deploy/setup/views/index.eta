@@ -61,12 +61,7 @@
       margin-bottom: 0.5rem;
     }
 
-    /* Config (now inside #complete) */
-    #config {
-      margin-top: 2rem;
-    }
-
-    #config-final {
+    #config-content {
       background-color: #111;
       color: #eee;
       font-size: 0.6em;
@@ -79,8 +74,8 @@
 
     #log *::selection,
     #log::selection,
-    #config-final *::selection,
-    #config-final::selection {
+    #config-content *::selection,
+    #config-content::selection {
       background-color: var(--primary);
       color: var(--primary-inverse);
     }
@@ -149,7 +144,6 @@
       border-radius: 0.5rem;
       max-height: 60vh;
       overflow: auto;
-      white-space: pre-wrap;
     }
     #log-dialog pre *::selection, #log-dialog pre::selection {
       background-color: var(--primary);
@@ -288,17 +282,7 @@
             <p>
               <strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong>
             </p>
-<pre id="config-final">
-WIKIBASE_PUBLIC_HOST=<%= WIKIBASE_PUBLIC_HOST %>
-WDQS_PUBLIC_HOST=<%= WDQS_PUBLIC_HOST %>
-MW_ADMIN_NAME=<%= MW_ADMIN_NAME %>
-MW_ADMIN_EMAIL=<%= MW_ADMIN_EMAIL %>
-MW_ADMIN_PASS=<%= MW_ADMIN_PASS %>
-DB_NAME=<%= DB_NAME %>
-DB_USER=<%= DB_USER %>
-DB_PASS=<%= DB_PASS %>
-METADATA_CALLBACK=<%= METADATA_CALLBACK %>
-</pre>
+            <pre id="config-content"></pre>
             <button id="copy-config">Copy</button>
             <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
           </section>
@@ -373,7 +357,7 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       const form = el('config-form');
       const elWaiting = el('waiting');
       const elComplete = el('complete');
-      const elConfigFinalBox = el('config-final');
+      const elConfigContent = el('config-content');
       const elCopyBtn = el('copy-config');
       const elDownloadLink = el('download-config');
       const elLogContent = el('log-content');
@@ -411,10 +395,10 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       }
 
       function wireCopyAndDownload() {
-        const envText = elConfigFinalBox.textContent || '';
+        const configContent = elConfigContent.textContent || '';
 
         elCopyBtn.onclick = () => {
-          navigator.clipboard.writeText(envText).then(() => {
+          navigator.clipboard.writeText(configContent).then(() => {
             elCopyBtn.textContent = 'Copied!';
             setTimeout(() => (elCopyBtn.textContent = 'Copy'), 2000);
           }).catch(() => {
@@ -509,7 +493,7 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
             const data = Object.fromEntries(new FormData(f).entries());
             data.METADATA_CALLBACK = f.METADATA_CALLBACK?.checked ? 'true' : 'false';
 
-            const res = await fetch('/write-env', {
+            const res = await fetch('/config', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(data)
@@ -517,7 +501,9 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
 
             if (res.ok) {
               f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
+              const { configText } = await res.json();
 
+              elConfigContent.textContent = await res.json();
               elWaiting.hidden = false;
               elWaiting.innerHTML = '';
               elComplete.hidden = true;
@@ -567,12 +553,11 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
         }
       });
 
-      // Boot-time init
-      window.addEventListener('DOMContentLoaded', () => {
+      const initializePage = async () => {
         initValidation();
 
         if (form.dataset.disabled === 'true') {
-          // Env already saved: disable inputs
+          // .env config file already saved, disable inputs
           form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
 
           // If server didn't render #complete (not booted), start in waiting mode
@@ -581,12 +566,23 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
           }
 
           startLogStream();
+
+          // Fetch current .env file content
+          const res = await fetch('/config');
+          if (res.ok) {
+            const { configText } = await res.json();
+            elConfigContent.textContent = configText;
+          } else {
+            // ignore
+          }
         } else {
           // Fresh start: nothing in status yet
           elWaiting.hidden = true;
           elComplete.hidden = true;
         }
-      });
+      }
+
+      window.addEventListener('DOMContentLoaded', initializePage);
     })();
   </script>
 </body>
