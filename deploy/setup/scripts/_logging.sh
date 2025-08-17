@@ -8,14 +8,35 @@
 LOG_PATH=${LOG_PATH:=/tmp/wbs-deploy-setup.log}
 DEBUG=${DEBUG:=false}
 
-mkdir -p "$(dirname "$LOG_PATH")" 2>/dev/null || true
-touch "$LOG_PATH" 2>/dev/null || true
-
 # Are we attached to a terminal?
 INTERACTIVE=false
 [ -t 1 ] && INTERACTIVE=true
 
 _timestamp() { date -u +"%FT%TZ"; }
+
+# --- one-shot init that rotates the previous file and starts clean -----------
+log_init() {
+  if [ "${WBS_LOG_INITIALIZED:-}" = "1" ]; then
+    return
+  fi
+  export WBS_LOG_INITIALIZED=1
+
+  mkdir -p "$(dirname "$LOG_PATH")" 2>/dev/null || true
+
+  if [ -f "$LOG_PATH" ] && [ -s "$LOG_PATH" ]; then
+    ts=$(date -u +"%Y%m%d-%H%M%S")
+    backup="${LOG_PATH}.${ts}"
+    # Prefer mv; fall back to cp if moving across devices fails
+    mv -- "$LOG_PATH" "$backup" 2>/dev/null || {
+      cp --preserve=mode,timestamps -- "$LOG_PATH" "$backup" 2>/dev/null || true
+      touch "$LOG_PATH"
+    }
+  fi
+  touch "$LOG_PATH"
+}
+
+# run init immediately
+log_init
 
 # status "Message..."
 # - stdout: "Message..."
@@ -27,7 +48,7 @@ status() {
 
 # debug "Message..."
 # - stdout: shown only if DEBUG=true (clean)
-# - log   : "2025-08-12T10:00:00Z [DEBUG] Message..."
+# - log   : "2025-08-12T10:00:00Z [debug] Message..."
 debug() {
   printf '%s [debug] %s\n' "$(_timestamp)" "$*" >> "$LOG_PATH"
   if [ "$DEBUG" = true ]; then
@@ -38,11 +59,11 @@ debug() {
 # run "command string"
 # Always logs. Mirrors to stdout only if INTERACTIVE && DEBUG.
 # Log format:
-#   2025-... [DEBUG] $ command string
+#   2025-... [debug] $ command string
 #   <raw command output...>
 run() {
   local cmd="$*"
-  printf '%s [debug] $ %s\n' "$(_timestamp)" "$cmd" >> "$LOG_PATH"
+  printf '%s [debug] $ %s\n' "$(_timestamp)" "BEGIN RUN: $cmd" >> "$LOG_PATH"
 
   if $INTERACTIVE && [ "$DEBUG" = true ]; then
     # mirror to screen and append to log
@@ -51,4 +72,5 @@ run() {
     # log only
     bash -c "$cmd" >>"$LOG_PATH" 2>&1
   fi
+  printf '%s [debug] $ %s\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
 }

@@ -38,9 +38,7 @@ generate_cert_for_setup_webserver() {
   run "mkdir -p $SETUP_DIR/letsencrypt $CERTS_DIR"
   debug "Using domain: $SETUP_HOST"
 
-  run "docker pull certbot/certbot"
-
-  if run "docker run --rm \
+  if ! $LOCALHOST && run "docker run --rm \
     -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
     -v $CERTS_DIR:/certs \
     -p 80:80 \
@@ -88,16 +86,17 @@ start_setup_webserver() {
   echo "To continue setup navigate to:"
   echo
   echo "  https://$SETUP_HOST:$SETUP_PORT"
+  echo
   if [[ "${SELF_SIGNED_CERT:-false}" == true ]]; then
-    echo
     echo "⚠️ This setup page is using a temporary self-signed HTTPS certificate."
     echo "Your browser will likely show a warning before loading the page."
     echo "See the Troubleshooting section of the Deploy Setup README for help"
     echo "if you want to bypass the warning or replace it with a trusted cert."
+    echo
   fi
   if $LOCALHOST; then
-    echo
     echo  It is now safe to close this terminal session.
+    echo
   fi
 }
 

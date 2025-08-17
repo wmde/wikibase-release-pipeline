@@ -73,7 +73,12 @@ function buildConfig( input: Record<string, string> = {} ): Record<string, strin
 
 	return {
 		WIKIBASE_PUBLIC_HOST: input.WIKIBASE_PUBLIC_HOST,
-		WDQS_PUBLIC_HOST: input.WDQS_PUBLIC_HOST || input.WIKIBASE_PUBLIC_HOST ? `query.${ input.WIKIBASE_PUBLIC_HOST }` : '',
+		// No solution here for localhost case/s
+		WDQS_PUBLIC_HOST: input.WDQS_PUBLIC_HOST ?
+			input.WDQS_PUBLIC_HOST :
+			input.WIKIBASE_PUBLIC_HOST ?
+				`query.${ input.WIKIBASE_PUBLIC_HOST }` :
+				'',
 		MW_ADMIN_NAME: input.MW_ADMIN_NAME || templateEnv.MW_ADMIN_NAME,
 		MW_ADMIN_EMAIL: input.MW_ADMIN_EMAIL,
 		MW_ADMIN_PASS: input.MW_ADMIN_PASS || generatePassword(),

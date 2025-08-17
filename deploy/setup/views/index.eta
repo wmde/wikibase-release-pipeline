@@ -455,16 +455,18 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
           onMessage: (e) => {
             if (!e.data) return;
 
+            const lines = JSON.parse(e.data); // always unwraps the quotes
+
             // Show status lines while waiting
-            extractStatusLines(e.data).forEach(appendStatusLine);
+            extractStatusLines(lines).forEach(appendStatusLine);
 
             // Detect "Setup is Complete!"
-            if (BOOT_COMPLETE_REGEX.test(e.data)) {
+            if (BOOT_COMPLETE_REGEX.test(lines)) {
               handleBootCompleteOnce();
             }
 
             // Mirror raw log to buffer/dialog
-            appendToLog(e.data);
+            appendToLog(lines);
           },
           onError: () => {
             console.log('SSE error (will auto-reconnect)');
