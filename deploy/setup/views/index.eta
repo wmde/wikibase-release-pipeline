@@ -60,6 +60,10 @@
       margin-top: 1rem;
       margin-bottom: 0.5rem;
     }
+    
+    #log-content {
+      white-space: pre-wrap;
+    }
 
     #config-content {
       background-color: #111;
