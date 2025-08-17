@@ -45,7 +45,7 @@ for arg in "$@"; do
 done
 
 # When running from a file (not curl/stdin)
-if [[ "${BASH_SOURCE[0]:-$0}" != "-" ]]; then
+if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
   SKIP_CLONE=true
   WBS_DIR=../../..
   echo "Detected running from inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
