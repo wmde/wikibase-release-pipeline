@@ -182,7 +182,7 @@
     <div id="header">
       <img src="/Wikibase_Suite_(RGB).png" alt="Wikibase Logo" />
       <h2>Deploy Setup</h2>
-      <button id="toggle-log" type="button">Show Log</button>
+      <a href="#" id="toggle-log" data-modal-open data-modal-target="log-dialog">Show Log</a>
     </div>
 
     <div class="grid" id="main-grid">
@@ -344,7 +344,7 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       <footer style="margin-top: 0">
         <div style="display:flex; justify-content: space-between; gap:20rem;">
           <button id="shutdown-btn" style="border-color: rgb(217, 53, 38); color: rgb(217, 53, 38)" class="outline">Shut Down Installer</button>
-          <button id="hide-log" class="secondary">Close</button>
+          <button id="hide-log" data-modal-close class="secondary">Close</button>
         </div>
         <p id="shutdown-msg" style="text-align: left;"></p>
       </footer>
@@ -371,18 +371,12 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       }
 
       const form = el('config-form');
-
       const elWaiting = el('waiting');
       const elComplete = el('complete');
       const elConfigFinalBox = el('config-final');
       const elCopyBtn = el('copy-config');
       const elDownloadLink = el('download-config');
-
-      const elToggleLogBtn = el('toggle-log');
-      const elLogDialog = el('log-dialog');
       const elLogContent = el('log-content');
-      const elHideLogBtn = el('hide-log');
-
       const elShutdownBtn = el('shutdown-btn');
       const elShutdownMsg = el('shutdown-msg');
 
@@ -394,10 +388,7 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       function appendToLog(text) {
         const t = text.endsWith('\n') ? text : text + '\n';
         logBuffer += t;
-        if (isLogDialogOpen && elLogContent) {
-          elLogContent.insertAdjacentText('beforeend', t);
-          elLogContent.scrollTop = elLogContent.scrollHeight;
-        }
+        elLogContent.insertAdjacentText('beforeend', t);
       }
 
       function appendStatusLine(text) {
@@ -474,19 +465,6 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
         });
       }
 
-      function openLog() {
-        elLogContent.textContent = logBuffer || 'Loading logs...';
-        elLogContent.scrollTop = elLogContent.scrollHeight;
-        startLogStream();
-        isLogDialogOpen = true;
-        elLogDialog.showModal();
-      }
-
-      function closeLog() {
-        isLogDialogOpen = false;
-        elLogDialog.close();
-      }
-
       function initValidation() {
         const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/;
         const passwordValidator = (value) => value.length === 0 || value.length >= 10;
@@ -508,6 +486,8 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
           },
           errorMessage: `Doesn't resolve to <%= SERVER_IP %>`
         };
+        
+        startLogStream();
 
         const validate = new JustValidate('#config-form');
 
@@ -544,8 +524,6 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
               elWaiting.hidden = false;
               elWaiting.innerHTML = '';
               elComplete.hidden = true;
-
-              startLogStream();
             } else {
               alert('Failed to save environment. See console for details.');
             }
@@ -553,9 +531,23 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
       }
 
       // Bindings
-      on(elToggleLogBtn, 'click', (e) => { e.preventDefault(); openLog(); });
-      on(elHideLogBtn, 'click', (e) => { e.preventDefault(); closeLog(); });
-      on(elLogDialog, 'close', () => { isLogDialogOpen = false; });
+      // Minimal wiring for Pico-styled dialogs using data attributes
+      document.addEventListener('click', (e) => {
+        const opener = e.target.closest('[data-modal-open]');
+        if (opener) {
+          e.preventDefault();
+          const id = opener.getAttribute('data-modal-target');
+          const dlg = id && document.getElementById(id);
+          if (dlg) dlg.showModal();
+          return;
+        }
+        const closer = e.target.closest('[data-modal-close]');
+        if (closer) {
+          e.preventDefault();
+          const dlg = closer.closest('dialog');
+          if (dlg) dlg.close();
+        }
+      });
 
       on(elShutdownBtn, 'click', async (e) => {
         e.preventDefault();
