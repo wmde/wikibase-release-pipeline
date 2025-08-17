@@ -39,7 +39,7 @@ generate_cert_for_setup_webserver() {
   debug "Using domain: $SETUP_HOST"
 
   if ! $LOCALHOST; then
-    run "docker run --rm \
+    if run "docker run --rm \
       -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
       -v $CERTS_DIR:/certs \
       -p 80:80 \
@@ -49,13 +49,15 @@ generate_cert_for_setup_webserver() {
         --preferred-challenges http \
         --agree-tos \
         --email $CERT_EMAIL \
-        -d $SETUP_HOST"
+        -d $SETUP_HOST"; then
 
-    LE_CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
-    if [ -f "$LE_CERT_PATH/fullchain.pem" ] && [ -f "$LE_CERT_PATH/privkey.pem" ]; then
-      cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
-      cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
-      return 0
+      LE_CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
+
+      if [ -f "$LE_CERT_PATH/fullchain.pem" ] && [ -f "$LE_CERT_PATH/privkey.pem" ]; then
+        cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
+        cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
+        return 0
+      fi
     fi
   fi
 
