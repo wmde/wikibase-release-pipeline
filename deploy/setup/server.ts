@@ -1,12 +1,13 @@
-/* eslint-disable n/no-missing-import */
-import { writeFile, readFile } from 'fs/promises';
-import { existsSync, readFileSync } from 'fs';
+import { createSession, createChannel } from 'better-sse';
 import crypto from 'crypto';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import https, { request } from 'https';
-import express from 'express';
 import { Eta } from 'eta';
+import express from 'express';
+import { existsSync, readFileSync, createReadStream } from 'fs';
+import { writeFile, readFile } from 'fs/promises';
+import https, { request } from 'https';
+import { dirname, join } from 'path';
+import readline from 'readline';
+import { fileURLToPath } from 'url';
 
 const fileName = fileURLToPath( import.meta.url );
 const dirName = dirname( fileName );
@@ -59,7 +60,7 @@ function isBooted(): boolean {
 	return log.includes( 'Setup is Complete!' );
 }
 
-// Note: Returns a default config when called without input (some transcribe from templat.env)
+// Note: Returns a default config when called without input (some transcribe from template.env)
 function buildConfig( input: Record<string, string> = {} ): Record<string, string | boolean> {
 	const templateLines = readFileSync( ENV_TEMPLATE_FILE_PATH, 'utf8' ).split( '\n' );
 	const templateEnv: Record<string, string> = {};
@@ -106,7 +107,7 @@ function getStatusPayload() {
 	return { isConfigSaved: configSaved, isBooted: booted, config };
 }
 
-// Routes
+// ---------- Routes ----------
 app.get( '/', async ( req, res ) => {
 	try {
 		const config = isConfigSaved() ? getCurrentConfig() : buildConfig();
@@ -126,71 +127,26 @@ app.get( '/', async ( req, res ) => {
 	}
 } );
 
-app.get( '/log', ( req, res ) => {
-	if ( !existsSync( LOG_PATH ) ) {
-		return res.status( 404 ).send( 'Log file not found' );
+const logChannel = createChannel();
+
+// Single log endpoint with backfill of the entire file on fresh page load
+app.get( '/log/stream', async ( req, res ) => {
+	const session = await createSession( req, res ); // sets SSE headers, heartbeats, ids
+	logChannel.register( session );
+
+	// Backfill ENTIRE log only on a fresh page load (skip on auto-reconnects)
+	const isReconnect = typeof req.headers[ 'last-event-id' ] === 'string' && req.headers[ 'last-event-id' ] !== '';
+	if ( !isReconnect && existsSync( LOG_PATH ) ) {
+		const rs = createReadStream( LOG_PATH, { encoding: 'utf8' } );
+		const rl = readline.createInterface( { input: rs, crlfDelay: Infinity } );
+		await session.batch( async ( buffer ) => {
+			for await ( const line of rl ) {
+				if ( line ) {
+					buffer.push( line ); // one SSE message per log line
+				}
+			}
+		} );
 	}
-	try {
-		const log = readFileSync( LOG_PATH, 'utf8' );
-		res.type( 'text/plain' ).send( log );
-	} catch ( err ) {
-		console.error( 'Failed to read log file:', err );
-		res.status( 500 ).send( 'Error reading log file' );
-	}
-} );
-
-app.get( '/log/stream', ( req, res ) => {
-	res.set( {
-		'Content-Type': 'text/event-stream',
-		'Cache-Control': 'no-cache',
-		Connection: 'keep-alive'
-	} );
-	res.flushHeaders();
-
-	if ( !existsSync( LOG_PATH ) ) {
-		res.write( 'data: Log file not found\n\n' );
-		res.end();
-		return;
-	}
-
-	const logStream = readFileSync( LOG_PATH, 'utf8' ).split( '\n' );
-	let lastIndex = logStream.length;
-	res.write( `data: ${ logStream.slice( -20 ).join( '\n' ) }\n\n` );
-
-	const interval = setInterval( () => {
-		if ( !existsSync( LOG_PATH ) ) {
-			return;
-		}
-		const currentLines = readFileSync( LOG_PATH, 'utf8' ).split( '\n' );
-		if ( currentLines.length > lastIndex ) {
-			res.write( `data: ${ currentLines.slice( lastIndex ).join( '\n' ) }\n\n` );
-			lastIndex = currentLines.length;
-		}
-	}, 1000 );
-
-	req.on( 'close', () => clearInterval( interval ) );
-} );
-
-app.get( '/status', ( req, res ) => {
-	res.json( getStatusPayload() );
-} );
-
-app.get( '/status/stream', ( req, res ) => {
-	res.set( {
-		'Content-Type': 'text/event-stream',
-		'Cache-Control': 'no-cache',
-		Connection: 'keep-alive'
-	} );
-	res.flushHeaders();
-
-	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-	const sendStatus = () => {
-		res.write( `data: ${ JSON.stringify( getStatusPayload() ) }\n\n` );
-	};
-
-	sendStatus();
-	const interval = setInterval( sendStatus, 2000 );
-	req.on( 'close', () => clearInterval( interval ) );
 } );
 
 app.post( '/write-env', async ( req, res ): Promise<void> => {
@@ -205,16 +161,14 @@ app.post( '/write-env', async ( req, res ): Promise<void> => {
 	}
 } );
 
-// TODO: Implement call or timer on front-end or here in server to run this
-// it should only run when the services have successfully booted, and after
-// some timeout period (10 mins?), or when manually initiated from a front end
-// user interaction (option not yet added in front end)
+// Finalize endpoint unchanged
 app.post( '/finalize-setup', async ( req, res ) => {
 	try {
 		if ( existsSync( ENV_FILE_PATH ) ) {
 			const lines = ( await readFile( ENV_FILE_PATH, 'utf8' ) ).split( '\n' );
+			// blank password values
 			const sanitized = lines.map( ( line ) =>
-				line.replace( /^(.*_PASS(?:WORD)?=).+$/, '$1' ) // blank password values
+				line.replace( /^(.*_PASS(?:WORD)?=).+$/, '$1' )
 			);
 			await writeFile( ENV_FILE_PATH, sanitized.join( '\n' ) );
 			console.log( '🧼 Passwords sanitized' );
@@ -234,6 +188,32 @@ app.post( '/finalize-setup', async ( req, res ) => {
 		res.status( 500 ).send( 'Failed to finalize setup' );
 	}
 } );
+
+// --- Broadcasters ---
+// Log tailer: every 1s read lines and broadcast only the new ones
+{
+	let lastCount = 0;
+	setInterval( () => {
+		if ( !existsSync( LOG_PATH ) ) {
+			return;
+		}
+		try {
+			const lines = readFileSync( LOG_PATH, 'utf8' ).split( '\n' );
+			if ( lines.length < lastCount ) {
+				lastCount = 0;
+			} // file truncated/cleared
+			for ( let i = lastCount; i < lines.length; i++ ) {
+				const line = lines[ i ];
+				if ( line ) {
+					logChannel.broadcast( line );
+				}
+			}
+			lastCount = lines.length;
+		} catch ( e ) {
+			// ignore transient read errors
+		}
+	}, 1000 );
+}
 
 if ( !existsSync( SSL_CERT_PATH ) || !existsSync( SSL_CERT_KEY_PATH ) ) {
 	throw new Error( 'Not able to access SSL certificate or key in /app/certs' );

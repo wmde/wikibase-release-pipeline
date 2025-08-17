@@ -34,13 +34,15 @@
       height: 80px;
     }
 
-    /* Collapse right column until saved */
+    /* Single column by default; auto-switch to two columns when status has content */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1.25rem;
     }
-    .grid.two-col {
+    /* When either #waiting or #complete is visible (not [hidden]), make it two columns */
+    .grid:has(#status-section #waiting:not([hidden])),
+    .grid:has(#status-section #complete:not([hidden])) {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -59,8 +61,8 @@
       margin-bottom: 0.5rem;
     }
 
-    #config-final-wrapper {
-      display: none;
+    /* Config (now inside #complete) */
+    #config {
       margin-top: 2rem;
     }
 
@@ -72,6 +74,7 @@
       padding: 1em;
       border-radius: 0.5rem;
       overflow-x: auto;
+      white-space: pre;
     }
 
     #log *::selection,
@@ -121,8 +124,8 @@
       border-color: rgb(197, 47, 33);
     }
 
-    /* Status waiting messages (inlined) */
-    #status-waiting {
+    /* Waiting messages (inline) */
+    #waiting {
       margin-top: 0.5rem;
       font-size: 0.9em;
       color: var(--muted, #666);
@@ -154,7 +157,6 @@
     }
 
     /* Show Log link aligned to the right within the header */
-
     #toggle-log {
       display: flex;
       justify-content: flex-end;
@@ -182,7 +184,9 @@
       <h2>Deploy Setup</h2>
       <button id="toggle-log" type="button">Show Log</button>
     </div>
+
     <div class="grid" id="main-grid">
+      <!-- Left: Configuration -->
       <div id="config-section">
         <form id="config-form" data-disabled="<%= isConfigSaved %>">
           <label>
@@ -253,35 +257,52 @@
         </form>
       </div>
 
+      <!-- Right: Status + Complete -->
       <div id="status-section">
-        <div id="status">
-          <div id="status-waiting" style="display: none;"></div>
-          <div id="status-complete" style="display: <%= isBooted ? 'block' : 'none' %>;">
-            <p>
-              <strong>✅ Services started successfully!</strong>
-              <br /><br />
-              MediaWiki/Wikibase:
-              <br />
-              <a id="wikibase-final-url" target="_blank"></a>
-              <br /><br />
-              Query Service:
-              <br />
-              <a id="wdqs-final-url" target="_blank"></a>
-              <br /><br />
-              QuickStatements:
-              <br />
-              <a id="quickstatements-final-url" target="_blank"></a>
-            </p>
-          </div>
-          <div id="config-final-wrapper">
-            <p><strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong></p>
-            <pre id="config-final"></pre>
-            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
-            <button id="copy-config">Copy</button>
-          </div>
-        </div>
+        <div id="waiting" hidden></div>
 
-        <!-- Show Log button moved to top-right; no button here -->
+        <div id="complete" <%= isBooted ? '' : 'hidden' %>>
+          <p>
+            <strong>✅ Services started successfully!</strong>
+            <br /><br />
+            MediaWiki/Wikibase:
+            <br />
+            <a target="_blank" href="https://<%= WIKIBASE_PUBLIC_HOST %>">
+              https://<%= WIKIBASE_PUBLIC_HOST %>
+            </a>
+            <br /><br />
+            Query Service:
+            <br />
+            <a target="_blank" href="https://<%= WDQS_PUBLIC_HOST %>">
+              https://<%= WDQS_PUBLIC_HOST %>
+            </a>
+            <br /><br />
+            QuickStatements:
+            <br />
+            <a target="_blank" href="https://<%= WIKIBASE_PUBLIC_HOST %>/tools/quickstatements">
+              https://<%= WIKIBASE_PUBLIC_HOST %>/tools/quickstatements
+            </a>
+          </p>
+
+          <section id="config">
+            <p>
+              <strong>⚠️ Please save this configuration somewhere secure. The passwords will be removed after this installation is complete.</strong>
+            </p>
+<pre id="config-final">
+WIKIBASE_PUBLIC_HOST=<%= WIKIBASE_PUBLIC_HOST %>
+WDQS_PUBLIC_HOST=<%= WDQS_PUBLIC_HOST %>
+MW_ADMIN_NAME=<%= MW_ADMIN_NAME %>
+MW_ADMIN_EMAIL=<%= MW_ADMIN_EMAIL %>
+MW_ADMIN_PASS=<%= MW_ADMIN_PASS %>
+DB_NAME=<%= DB_NAME %>
+DB_USER=<%= DB_USER %>
+DB_PASS=<%= DB_PASS %>
+METADATA_CALLBACK=<%= METADATA_CALLBACK %>
+</pre>
+            <button id="copy-config">Copy</button>
+            <a id="download-config" href="#" download="wbs-deploy-setup.env">Download as a wbs-deploy-setup.env file</a>
+          </section>
+        </div>
       </div>
     </div>
   </main>
@@ -335,67 +356,126 @@
       'use strict';
 
       const STATUS_LOG_ENTRY_REGEX = /\[status\]\s*(.*)$/i;
+      const BOOT_COMPLETE_REGEX = /setup is complete!?/i;
 
-      // ---------- Utilities ----------
       const el = (id) => document.getElementById(id);
       const on = (node, type, handler) => node && node.addEventListener(type, handler);
 
-      // ---------- SSE helper ----------
       function openSSE(url, { onOpen, onMessage, onError, events } = {}) {
         const es = new EventSource(url, { withCredentials: false });
         if (onOpen) es.onopen = onOpen;
         if (onMessage) es.onmessage = onMessage;
         if (onError) es.onerror = onError;
-        if (events) {
-          Object.entries(events).forEach(([type, fn]) => es.addEventListener(type, fn));
-        }
+        if (events) Object.entries(events).forEach(([t, fn]) => es.addEventListener(t, fn));
         return es;
       }
 
-      // ---------- Element Refs ----------
       const form = el('config-form');
-      const elStatusWaiting = el('status-waiting');
-      const elStatusComplete = el('status-complete');
-      const elWikibaseFinalUrl = el('wikibase-final-url');
-      const elWdqsFinalUrl = el('wdqs-final-url');
-      const elQuickStatementsUrl = el('quickstatements-final-url');
+
+      const elWaiting = el('waiting');
+      const elComplete = el('complete');
       const elConfigFinalBox = el('config-final');
-      const elConfigFinalWrapper = el('config-final-wrapper');
       const elCopyBtn = el('copy-config');
       const elDownloadLink = el('download-config');
-      const elShutdownBtn = el('shutdown-btn');
-      const elShutdownMsg = el('shutdown-msg');
 
-      const elMainGrid = el('main-grid');
       const elToggleLogBtn = el('toggle-log');
       const elLogDialog = el('log-dialog');
       const elLogContent = el('log-content');
       const elHideLogBtn = el('hide-log');
 
-      // ---------- State ----------
+      const elShutdownBtn = el('shutdown-btn');
+      const elShutdownMsg = el('shutdown-msg');
+
       let logStream = null;
+      let logBuffer = '';
       let alreadyHandledBootedState = false;
       let isLogDialogOpen = false;
 
-      // ---------- Grid helpers ----------
-      function setGridTwoCol(enabled) {
-        if (!elMainGrid) return;
-        elMainGrid.classList.toggle('two-col', !!enabled);
+      function appendToLog(text) {
+        const t = text.endsWith('\n') ? text : text + '\n';
+        logBuffer += t;
+        if (isLogDialogOpen && elLogContent) {
+          elLogContent.insertAdjacentText('beforeend', t);
+          elLogContent.scrollTop = elLogContent.scrollHeight;
+        }
       }
 
-      // ---------- Log helpers ----------
-      async function openLog() {
-        try {
-          const res = await fetch('/log');
-          const text = await res.text();
-          elLogContent.textContent = text || '';
-          elLogContent.scrollTop = elLogContent.scrollHeight;
-        } catch (err) {
-          appendToLog('\n⚠️ Could not load initial log.\n');
+      function appendStatusLine(text) {
+        if (!text) return;
+        const div = document.createElement('div');
+        div.className = 'status-line';
+        div.textContent = text;
+        elWaiting.appendChild(div);
+      }
+
+      function extractStatusLines(text) {
+        if (!text) return [];
+        return text
+          .split('\n')
+          .map((line) => {
+            const m = line.match(STATUS_LOG_ENTRY_REGEX);
+            return (m && m[1]) ? m[1].trim() : null;
+          })
+          .filter(Boolean);
+      }
+
+      function wireCopyAndDownload() {
+        const envText = elConfigFinalBox.textContent || '';
+
+        elCopyBtn.onclick = () => {
+          navigator.clipboard.writeText(envText).then(() => {
+            elCopyBtn.textContent = 'Copied!';
+            setTimeout(() => (elCopyBtn.textContent = 'Copy'), 2000);
+          }).catch(() => {
+            alert('⚠️ Failed to copy. Please do it manually.');
+          });
+        };
+
+        if (elDownloadLink.href && elDownloadLink.href.startsWith('blob:')) {
+          URL.revokeObjectURL(elDownloadLink.href);
         }
-        // Ensure the shared log stream is running
+        const blob = new Blob([envText], { type: 'text/plain' });
+        elDownloadLink.href = URL.createObjectURL(blob);
+      }
+
+      function handleBootCompleteOnce() {
+        if (alreadyHandledBootedState) return;
+
+        alreadyHandledBootedState = true;
+        elWaiting.hidden = true;
+        elComplete.hidden = false;
+
+        wireCopyAndDownload();
+      }
+
+      function startLogStream() {
+        if (logStream) return;
+
+        logStream = openSSE('/log/stream', {
+          onMessage: (e) => {
+            if (!e.data) return;
+
+            // Show status lines while waiting
+            extractStatusLines(e.data).forEach(appendStatusLine);
+
+            // Detect "Setup is Complete!"
+            if (BOOT_COMPLETE_REGEX.test(e.data)) {
+              handleBootCompleteOnce();
+            }
+
+            // Mirror raw log to buffer/dialog
+            appendToLog(e.data);
+          },
+          onError: () => {
+            console.log('SSE error (will auto-reconnect)');
+          }
+        });
+      }
+
+      function openLog() {
+        elLogContent.textContent = logBuffer || 'Loading logs...';
+        elLogContent.scrollTop = elLogContent.scrollHeight;
         startLogStream();
-        // Mark dialog open so incoming chunks mirror into the log view
         isLogDialogOpen = true;
         elLogDialog.showModal();
       }
@@ -405,77 +485,13 @@
         elLogDialog.close();
       }
 
-      function appendToLog(text) {
-        elLogContent.insertAdjacentText('beforeend', (text.endsWith('\n') ? text : text + '\n'));
-        elLogContent.scrollTop = elLogContent.scrollHeight;
-      }
-
-      function appendStatusLine(text) {
-        if (!text || !elStatusWaiting) return;
-        const div = document.createElement('div');
-        div.className = 'status-line';
-        div.textContent = text;
-        elStatusWaiting.appendChild(div);
-      }
-
-      function startLogStream() {
-        if (logStream) return; // already running
-        // Local helper to extract all [status] lines from text
-        function getStatusLines(text) {
-          if (!text) return [];
-          return text
-            .split('\n')
-            .map((line) => {
-              const m = line.match(STATUS_LOG_ENTRY_REGEX);
-              return (m && m[1]) ? m[1].trim() : null;
-            })
-            .filter(Boolean);
-        }
-        // One-time parse of the entire current log so we show earlier [status] lines
-        fetch('/log', { cache: 'no-store' })
-          .then((res) => res.text())
-          .then((text) => {
-            if (!text) return;
-            getStatusLines(text).forEach(appendStatusLine);
-          })
-          .catch(() => { /* ignore backfill errors */ });
-        logStream = openSSE('/log/stream', {
-          onMessage: (e) => {
-            if (!e.data) return;
-            // Always parse for [status] log lines and show them under waiting
-            getStatusLines(e.data).forEach(appendStatusLine);
-            // Always mirror raw log text into the dialog's <pre> (dialog may be closed)
-            if (elLogContent) {
-              const txt = e.data.endsWith('\n') ? e.data : e.data + '\n';
-              elLogContent.insertAdjacentText('beforeend', txt);
-              // TODO: Don't follow log for now, but maybe provide optional "follow" checkbox later
-              // elLogContent.scrollTop = elLogContent.scrollHeight;
-            }
-          },
-          onError: () => {
-            console.log('Error in parsing incoming log stream')
-          }
-        });
-      }
-
-      // ---------- Validation ----------
-      function extractHost(value) {
-        try {
-          return new URL(value).hostname;
-        } catch {
-          return value;
-        }
-      }
-
       function initValidation() {
         const hostNameRegex = /^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})$/;
         const passwordValidator = (value) => value.length === 0 || value.length >= 10;
 
-        // Host resolves to server IP rule
         const hostResolvesToServerIPRule = {
           validator: value => async () => {
             const hostname = (value || '').trim();
-            // allow empty; earlier rules handle format
             if (!hostname) return true;
             if (hostname === 'localhost') return true;
             try {
@@ -494,10 +510,7 @@
         const validate = new JustValidate('#config-form');
 
         validate
-          .addField('[name=MW_ADMIN_EMAIL]', [
-            { rule:'required' },
-            { rule:'email' }
-          ])
+          .addField('[name=MW_ADMIN_EMAIL]', [{ rule:'required' }, { rule:'email' }])
           .addField('[name=WIKIBASE_PUBLIC_HOST]', [
             { rule:'customRegexp', value: hostNameRegex, errorMessage: 'Must be a valid hostname (e.g. example.com)' },
             hostResolvesToServerIPRule
@@ -525,114 +538,23 @@
 
             if (res.ok) {
               f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
-              // Switch to waiting state and start streaming status immediately
-              elStatusWaiting.innerHTML = '';
-              showWaitingState();
+
+              elWaiting.hidden = false;
+              elWaiting.innerHTML = '';
+              elComplete.hidden = true;
+
+              startLogStream();
             } else {
               alert('Failed to save environment. See console for details.');
             }
           });
       }
 
-            // ---------- Boot helpers ----------
-      function showWaitingState() {
-        elStatusWaiting.style.display = 'block';
-        elStatusComplete.style.display = 'none';
-        setGridTwoCol(true);
-        startLogStream();
-      }
+      // Bindings
+      on(elToggleLogBtn, 'click', (e) => { e.preventDefault(); openLog(); });
+      on(elHideLogBtn, 'click', (e) => { e.preventDefault(); closeLog(); });
+      on(elLogDialog, 'close', () => { isLogDialogOpen = false; });
 
-      function showBootedState(config) {
-        alreadyHandledBootedState = true;
-
-        elFinalizeSection.style.display = 'block';
-        elStatusWaiting.style.display = 'none';
-        elStatusComplete.style.display = 'block';
-
-        const wikibaseFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/wiki/Main_Page`;
-        elWikibaseFinalUrl.href = wikibaseFinalUrl;
-        elWikibaseFinalUrl.textContent = wikibaseFinalUrl;
-
-        const wdqsFinalUrl = `https://${config?.WDQS_PUBLIC_HOST}`;
-        elWdqsFinalUrl.href = wdqsFinalUrl;
-        elWdqsFinalUrl.textContent = wdqsFinalUrl;
-
-        const quickStatementsFinalUrl = `https://${config?.WIKIBASE_PUBLIC_HOST}/tools/quickstatements`;
-        elQuickStatementsUrl.href = quickStatementsFinalUrl;
-        elQuickStatementsUrl.textContent = quickStatementsFinalUrl;
-
-        const envVars = Object.entries(config)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('\n');
-
-        elConfigFinalBox.textContent = envVars;
-        elConfigFinalWrapper.style.display = 'block';
-
-        elCopyBtn.onclick = () => {
-          navigator.clipboard.writeText(envVars).then(() => {
-            elCopyBtn.textContent = 'Copied!';
-            setTimeout(() => (elCopyBtn.textContent = 'Copy'), 2000);
-          }).catch(() => {
-            alert('⚠️ Failed to copy. Please do it manually.');
-          });
-        };
-
-        if (elDownloadLink.href && elDownloadLink.href.startsWith('blob:')) {
-          URL.revokeObjectURL(elDownloadLink.href);
-        }
-        const blob = new Blob([envVars], { type: 'text/plain' });
-        elDownloadLink.href = URL.createObjectURL(blob);
-
-        setGridTwoCol(true);
-      }
-
-      // ---------- Dialog open/close (generic) ----------
-      document.addEventListener('click', (e) => {
-        // OPEN
-        const openBtn = e.target.closest('[data-modal-open]');
-        if (openBtn) {
-          e.preventDefault();
-          const id = openBtn.getAttribute('data-modal-target');
-          const dlg = id && el(id);
-          if (dlg?.showModal) dlg.showModal();
-          return;
-        }
-
-        // CLOSE
-        const closeBtn = e.target.closest('[data-modal-close]');
-        if (closeBtn) {
-          e.preventDefault();
-          const dlg = closeBtn.closest('dialog');
-          if (dlg) dlg.close();
-          return;
-        }
-      });
-
-      // Optional: click backdrop to close
-      document.querySelectorAll('dialog').forEach((dlg) => {
-        dlg.addEventListener('click', (e) => {
-          const rect = dlg.getBoundingClientRect();
-          const clickedInBackdrop =
-            e.clientX < rect.left || e.clientX > rect.right ||
-            e.clientY < rect.top  || e.clientY > rect.bottom;
-          if (clickedInBackdrop) dlg.close();
-        });
-      });
-
-      // ---------- Log bindings ----------
-      on(elToggleLogBtn, 'click', (e) => {
-        e.preventDefault();
-        openLog();
-      });
-      on(elHideLogBtn, 'click', (e) => {
-        e.preventDefault();
-        closeLog();
-      });
-      on(elLogDialog, 'close', () => {
-        isLogDialogOpen = false;
-      });
-
-      // ---------- Finalize binding ----------
       on(elShutdownBtn, 'click', async (e) => {
         e.preventDefault();
         if (!elShutdownBtn) return;
@@ -641,14 +563,9 @@
         elShutdownMsg.textContent = 'Shutting down installer...';
 
         try {
-          const res = await fetch('/finalize-setup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-          });
-
-          if (res.ok) {
-            elShutdownMsg.textContent = '✅ Finalized. The installer will stop shortly.';
-          } else {
+          const res = await fetch('/finalize-setup', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+          if (res.ok) elShutdownMsg.textContent = '✅ Finalized. The installer will stop shortly.';
+          else {
             elShutdownMsg.textContent = `❌ Finalize failed (HTTP ${res.status}). Check logs.`;
             elShutdownBtn.disabled = false;
           }
@@ -659,56 +576,25 @@
         }
       });
 
-      // ---------- Boot-time init ----------
-      window.addEventListener('DOMContentLoaded', async () => {
-        if (form.dataset.disabled === 'true') {
-          // Env already saved: disable inputs and use two-col layout
-          form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
-          setGridTwoCol(true);
-        }
-
+      // Boot-time init
+      window.addEventListener('DOMContentLoaded', () => {
         initValidation();
 
-        // On reload, immediately set visible state using a one-time /status check (if available)
-        const hasEnv = form.dataset.disabled === 'true';
-        if (hasEnv) {
-          try {
-            const res = await fetch('/status', { cache: 'no-store' });
-            if (res.ok) {
-              const { isBooted, config } = await res.json();
-              if (isBooted) {
-                showBootedState(config);
-              } else {
-                elStatusWaiting.innerHTML = '';
-                showWaitingState();
-              }
-            } else {
-              // Fallback: show waiting if env exists but status endpoint not ok
-              elStatusWaiting.innerHTML = '';
-              showWaitingState();
-            }
-          } catch {
-            // Network/endpoint missing—fallback
-            elStatusWaiting.innerHTML = '';
-            showWaitingState();
-          }
-        } else {
-          // No env yet: ensure single-column & hide right status
-          setGridTwoCol(false);
-          elStatusWaiting.style.display = 'none';
-          elStatusComplete.style.display = 'none';
-          elFinalizeSection.style.display = 'none';
-        }
+        if (form.dataset.disabled === 'true') {
+          // Env already saved: disable inputs
+          form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
 
-        // Keep SSE to react to state changes going forward
-        openSSE('/status/stream', {
-          onMessage: (e) => {
-            const { isBooted, config } = JSON.parse(e.data);
-            if (isBooted && !alreadyHandledBootedState) {
-              showBootedState(config);
-            }
+          // If server didn't render #complete (not booted), start in waiting mode
+          if (elComplete.hasAttribute('hidden')) {
+            if (elWaiting) elWaiting.hidden = false;
           }
-        });
+
+          startLogStream();
+        } else {
+          // Fresh start: nothing in status yet
+          elWaiting.hidden = true;
+          elComplete.hidden = true;
+        }
       });
     })();
   </script>
