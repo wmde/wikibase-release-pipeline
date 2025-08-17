@@ -503,7 +503,7 @@
               f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
               const { configText } = await res.json();
 
-              elConfigContent.textContent = await res.json();
+              elConfigContent.textContent = configText;
               elWaiting.hidden = false;
               elWaiting.innerHTML = '';
               elComplete.hidden = true;
