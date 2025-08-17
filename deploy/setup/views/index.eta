@@ -409,7 +409,7 @@
         if (elDownloadLink.href && elDownloadLink.href.startsWith('blob:')) {
           URL.revokeObjectURL(elDownloadLink.href);
         }
-        const blob = new Blob([envText], { type: 'text/plain' });
+        const blob = new Blob([configContent], { type: 'text/plain' });
         elDownloadLink.href = URL.createObjectURL(blob);
       }
 
