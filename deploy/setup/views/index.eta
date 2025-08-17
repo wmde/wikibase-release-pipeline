@@ -448,15 +448,12 @@ METADATA_CALLBACK=<%= METADATA_CALLBACK %>
 
             const lines = JSON.parse(e.data); // always unwraps the quotes
 
-            // Show status lines while waiting
             extractStatusLines(lines).forEach(appendStatusLine);
 
-            // Detect "Setup is Complete!"
             if (BOOT_COMPLETE_REGEX.test(lines)) {
               handleBootCompleteOnce();
             }
 
-            // Mirror raw log to buffer/dialog
             appendToLog(lines);
           },
           onError: () => {

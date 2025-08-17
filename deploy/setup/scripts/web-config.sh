@@ -29,8 +29,7 @@ generate_cert_for_setup_webserver() {
   if $LOCALHOST; then
     SETUP_HOST="localhost"
   else
-    # Extra random suffix is to keep Let's Encrypt from rate limiting on cert generation
-    # after repeated runs (in dev, testing, and debugging cases in particular)
+    # Extra random suffix helps avoid LE rate limits during repeated runs
     SETUP_SUBDOMAIN="wbs-setup-$(hexdump -n 3 -v -e '/1 "%02x"' /dev/urandom)"
     SETUP_HOST="$SETUP_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
@@ -38,28 +37,33 @@ generate_cert_for_setup_webserver() {
   run "mkdir -p $SETUP_DIR/letsencrypt $CERTS_DIR"
   debug "Using domain: $SETUP_HOST"
 
-  if ! $LOCALHOST && run "docker run --rm \
-    -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
-    -v $CERTS_DIR:/certs \
-    -p 80:80 \
-    certbot/certbot certonly \
-      --standalone \
-      --non-interactive \
-      --preferred-challenges http \
-      --agree-tos \
-      --email $CERT_EMAIL \
-      -d $SETUP_HOST"; then
+  if ! $LOCALHOST; then
+    run "docker run --rm \
+      -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
+      -v $CERTS_DIR:/certs \
+      -p 80:80 \
+      certbot/certbot:v4 certonly \
+        --standalone \
+        --non-interactive \
+        --preferred-challenges http \
+        --agree-tos \
+        --email $CERT_EMAIL \
+        -d $SETUP_HOST"
 
     LE_CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
-    cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
-    cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
-  else
-    run openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-      -out "$CERTS_DIR/cert.pem" \
-      -keyout "$CERTS_DIR/key.pem" \
-      -subj "/CN=$SETUP_HOST"
-    SELF_SIGNED_CERT=true
+    if [ -f "$LE_CERT_PATH/fullchain.pem" ] && [ -f "$LE_CERT_PATH/privkey.pem" ]; then
+      cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
+      cp "$LE_CERT_PATH/privkey.pem" "$CERTS_DIR/key.pem"
+      return 0
+    fi
   fi
+
+  # Fallback: self-signed cert
+  run "openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out $CERTS_DIR/cert.pem \
+    -keyout $CERTS_DIR/key.pem \
+    -subj /CN=$SETUP_HOST"
+  SELF_SIGNED_CERT=true
 }
 
 start_setup_webserver() {

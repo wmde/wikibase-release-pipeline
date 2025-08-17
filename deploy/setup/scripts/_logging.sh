@@ -43,7 +43,9 @@ log_init
 # - log   : "2025-08-12T10:00:00Z [status] Message..."
 status() {
   printf '%s [status] %s\n' "$(_timestamp)" "$*" >> "$LOG_PATH"
-  printf '%s\n' "$*"                                   # clean stdout
+  if $INTERACTIVE; then
+    printf '%s\n' "$*"
+  fi
 }
 
 # debug "Message..."
@@ -66,7 +68,7 @@ run() {
   printf '%s [debug] $ %s\n' "$(_timestamp)" "BEGIN RUN: $cmd" >> "$LOG_PATH"
 
   if $INTERACTIVE && [ "$DEBUG" = true ]; then
-    # mirror to screen and append to log
+    # output to screen and log
     bash -c "$cmd" 2>&1 | tee -a "$LOG_PATH"
   else
     # log only
