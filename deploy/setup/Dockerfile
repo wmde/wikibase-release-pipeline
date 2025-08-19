@@ -5,8 +5,8 @@ WORKDIR /app
 COPY package.json package-lock.json tsconfig.json ./
 COPY public ./public
 COPY views ./views
-COPY getConfig.ts ./getConfig.ts
 COPY server.ts ./server.ts
+COPY serverHelpers.ts ./serverHelpers.ts
 
 RUN apk add --no-cache bash
 RUN npm ci && npx tsc

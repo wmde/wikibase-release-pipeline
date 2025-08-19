@@ -7,14 +7,19 @@ import https, { request } from 'https';
 import { dirname, join } from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
-import { getConfig } from './getConfig.js';
+import {
+	ENV_FILE_PATH,
+	LOG_PATH,
+	isBooted,
+	isConfigSaved,
+	isLocalhostSetup,
+	getConfig
+} from './serverHelpers.js';
 
 const fileName = fileURLToPath( import.meta.url );
 const dirName = dirname( fileName );
 
 // Constants
-const ENV_FILE_PATH = '/app/deploy/.env';
-const LOG_PATH = '/app/setup.log';
 const SSL_CERT_KEY_PATH = '/app/certs/key.pem';
 const SSL_CERT_PATH = '/app/certs/cert.pem';
 // 10 minutes
@@ -32,23 +37,13 @@ const eta = new Eta( {
 	useWith: true
 } );
 
-// Helpers
-function isBooted(): boolean {
-	if ( !existsSync( LOG_PATH ) ) {
-		return false;
-	}
-	const log = readFileSync( LOG_PATH, 'utf8' );
-	return log.includes( 'Setup is Complete!' );
-}
-
 // ---------- Routes ----------
 app.get( '/', async ( req, res ) => {
 	try {
-		const { config, isConfigSaved } = getConfig();
 		const html = eta.render( 'index.eta', {
-			...config,
-			isConfigSaved,
+			isConfigSaved: isConfigSaved(),
 			isBooted: isBooted(),
+			isLocalhostSetup: isLocalhostSetup(),
 			SERVER_IP: process.env.SERVER_IP
 		} );
 		if ( !html ) {

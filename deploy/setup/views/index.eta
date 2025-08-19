@@ -521,7 +521,7 @@
           validator: value => async () => {
             const hostname = (value || '').trim();
             if (!hostname) return true;
-            if (hostname === 'localhost') return true;
+            if (hostname === 'localhost' || /\.test$/i.test(hostname)) return true;
             try {
               const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(hostname)}&type=A`);
               if (!res.ok) return false;
