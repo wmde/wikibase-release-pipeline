@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Clear screen
-clear || printf "\033c"
 echo
 echo "Wikibase Suite Deploy Setup"
 echo
@@ -44,8 +42,9 @@ for arg in "$@"; do
   esac
 done
 
-# When running from a file (not curl/stdin)
-if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+# When running within a repository assume it is wikibase-release-pipeline
+# and use files in that repo
+if [[ -d "$(dirname "${BASH_SOURCE[0]:-}")/../../.git" ]]; then
   SKIP_CLONE=true
   WBS_DIR=../../..
   echo "Detected running from inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
@@ -54,7 +53,7 @@ fi
 # --- Setup variables (including defaults) ---
 
 REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
-# TODO: Change back to main branch default once released
+# TODO: Change to default to latest deploy version tag once released
 REPO_BRANCH="${REPO_BRANCH:-deploy-setup-script}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 WBS_DIR="${WBS_DIR:-$HOME/wbs}"
@@ -97,14 +96,15 @@ install_git() {
 clone_repo() {
   echo "Cloning repository to $WBS_DIR..."
   mkdir -p "$WBS_DIR"
-  cd "$WBS_DIR"
+  pushd "$WBS_DIR" >/dev/null || return 1
 
   if [ ! -d wikibase-release-pipeline/.git ]; then
-    git clone --branch "$REPO_BRANCH" --single-branch "$REPO_URL" >/dev/null 2>&1
+    git clone --branch "$REPO_BRANCH" --single-branch "$REPO_URL" --depth 1 >/dev/null 2>&1
   else
     echo "An existing git repository found at $WBS_DIR/wikibase-release-pipeline, using what is there ..."
   fi
-  
+
+  popd >/dev/null || return 1
 }
 
 # --- Execution ---
