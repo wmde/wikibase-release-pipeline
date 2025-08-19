@@ -18,7 +18,6 @@ echo
 for arg in "$@"; do
   case "$arg" in
     --dev)
-      DEV=true
       LOCALHOST=true
       SKIP_DEPENDENCY_INSTALLS=true
       ;;
@@ -60,7 +59,6 @@ SKIP_CLONE="${SKIP_CLONE:-false}"
 WBS_DIR="${WBS_DIR:-$HOME/wbs}"
 
 export DEBUG="${DEBUG:-false}"
-export DEV=${DEV:-false}
 export LOCALHOST="${LOCALHOST:-false}"
 export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
 export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"

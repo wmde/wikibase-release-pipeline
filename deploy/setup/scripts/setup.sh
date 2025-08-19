@@ -4,7 +4,6 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export DEBUG
-export DEV
 export LOCALHOST
 export SKIP_DEPENDENCY_INSTALLS
 export SKIP_LAUNCH

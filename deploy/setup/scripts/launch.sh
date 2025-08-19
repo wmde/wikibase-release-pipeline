@@ -4,7 +4,6 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export DEBUG
-export DEV
 export LOCALHOST
 export LOG_PATH
 export DEPLOY_DIR
@@ -31,7 +30,7 @@ launch_wikibase() {
   local compose_opts=()
   local compose_up_opts=(-d)
 
-  if $DEV && [ -f "docker-compose.local.yml" ]; then
+  if [ -f "docker-compose.local.yml" ]; then
     compose_opts+=(-f docker-compose.yml -f docker-compose.local.yml)
   fi
 
@@ -44,11 +43,7 @@ launch_wikibase() {
     run "rm -f config/LocalSettings.php"
 
     status "Taking down any existing wbs-deploy services and data (RESET=true)"
-    if $DEV && [ -f "docker-compose.local.yml" ]; then
-      run "docker compose ${compose_opts[*]} down --volumes"
-    else
-      run "docker compose ${compose_opts[*]} down --volumes"
-    fi
+    run "docker compose ${compose_opts[*]} down --volumes"
   fi
 
   status "Waiting for services to start. Generally takes 2–6 minutes..."
