@@ -7,16 +7,10 @@ export DEBUG
 export DEV
 export LOCALHOST
 export LOG_PATH
-export SKIP_DEPENDENCY_INSTALLS
-export SKIP_LAUNCH
 export DEPLOY_DIR
 export SCRIPTS_DIR
 export SETUP_DIR
 
-# --- New Variables ---
-
-# Internal re-entry flag used when ran detached
-LAUNCH_ONLY=$([ "${1-}" = "--launch-only" ] && echo true || echo false)
 ENV_FILE_PATH="$DEPLOY_DIR/.env"
 
 # shellcheck disable=SC1091
@@ -94,41 +88,9 @@ final_message() {
   } | tee -a "$LOG_PATH"
 }
 
-launch() {
-  wait_for_env_file
-  launch_wikibase
-  final_message
-  exit 0
-}
-
 # --- Main orchestration ---
 
-if $LAUNCH_ONLY; then
-  launch
-fi
-
-if ! $SKIP_DEPENDENCY_INSTALLS; then
-  bash "$SCRIPTS_DIR/install-docker.sh"
-fi
-
-bash "$SCRIPTS_DIR/web-config.sh"
-
-if $SKIP_LAUNCH; then
-  status "SKIP_LAUNCH=true; not starting services."
-  exit 0
-fi
-
-# Detach after web-config to avoid accidental interruption
-debug "Starting background process..."
-nohup env \
-  DEPLOY_DIR="$DEPLOY_DIR" \
-  LOG_PATH="$LOG_PATH" \
-  DEBUG="$DEBUG" \
-  LOCALHOST="$LOCALHOST" \
-  bash "$0" --launch-only \
-  >/dev/null 2>&1 &
-
-echo "It is now safe to close this terminal session."
-echo
-
+wait_for_env_file
+launch_wikibase
+final_message
 exit 0

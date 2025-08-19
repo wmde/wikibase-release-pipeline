@@ -19,19 +19,19 @@ This script bootstraps a Wikibase Suite Deploy installation handling or guiding 
 2. SSH as root into your new VPS instance and enter the following, following instructions from there:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/start.sh | bash
 ```
 
 Alternatively, if you already have cloned the repository you can run do start setup running the following commands:
 
 ```bash
 cd deploy/setup
-./setup.sh --skip-clone
+./start.sh --skip-clone
 ```
 
 ## CLI Options
 
-`setup.sh` also has some CLI options available for special cases, debugging, and development:
+`start.sh` also has some CLI options available for special cases, debugging, and development:
 
 | Option           | Description |
 |------------------|-------------|
@@ -50,7 +50,7 @@ cd deploy/setup
 These options can be applied using the following command formats:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/setup.sh | bash -s -- [OPTIONS]
+curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-release-pipeline/refs/heads/deploy-setup-script/deploy/setup/start.sh | bash -s -- [OPTIONS]
 ```
 
 Or, from within the deploy/setup directory of an already cloned repository:
