@@ -118,4 +118,4 @@ if ! $SKIP_CLONE; then
   clone_repo
 fi
 
-exec bash "$SCRIPTS_DIR/launch.sh" "$@"
+exec bash "$SCRIPTS_DIR/setup.sh" "$@"
