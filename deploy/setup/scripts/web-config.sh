@@ -70,7 +70,7 @@ generate_cert_for_setup_webserver() {
   SELF_SIGNED_CERT=true
 }
 
-stop_existing_setup_webserver() {
+remove_any_existing_setup_webserver() {
   # Remove any existing container with our fixed name (running or exited)
   run "docker rm -fv $SETUP_CONTAINER_NAME >/dev/null 2>&1 || true"
 
@@ -84,7 +84,7 @@ stop_existing_setup_webserver() {
 
 start_setup_webserver() {
   # Ensure old container is gone before build/run
-  stop_existing_setup_webserver
+  remove_any_existing_setup_webserver
 
   # BuildKit (via buildx with the docker-container driver) does not load images
   # into the local Docker image store by default. --load ensures it's available

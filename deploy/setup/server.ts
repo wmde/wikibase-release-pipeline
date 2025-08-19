@@ -85,10 +85,10 @@ app.get( '/log/stream', async ( req, res ) => {
 
 app.post( '/config', async ( req, res ): Promise<void> => {
 	try {
-		const { configText } = getConfig( req.body );
+		const { config, configText } = getConfig( req.body );
 		await writeFile( ENV_FILE_PATH, configText );
 		console.log( '.env file written successfully' );
-		res.status( 200 ).json( { status: 'ok', configText } );
+		res.status( 200 ).json( { status: 'ok', config, configText } );
 	} catch ( err ) {
 		console.error( 'Failed to write .env:', err );
 		res.status( 500 ).send( 'Failed to write .env' );
@@ -97,8 +97,8 @@ app.post( '/config', async ( req, res ): Promise<void> => {
 
 app.get( '/config', async ( req, res ): Promise<void> => {
 	try {
-		const configText = await readFile( ENV_FILE_PATH, 'utf8' );
-		res.status( 200 ).json( { configText } );
+		const { config, configText } = await getConfig();
+		res.status( 200 ).json( { config, configText } );
 	} catch ( err ) {
 		console.error( 'Failed to read .env:', err );
 		res.status( 500 ).send( 'Failed to read .env' );

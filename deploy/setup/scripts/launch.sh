@@ -16,7 +16,7 @@ ENV_FILE_PATH="$DEPLOY_DIR/.env"
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
 
-# --- Launch sequence pieces ---
+# --- Functions ---
 
 wait_for_env_file() {
   until [ -s "$ENV_FILE_PATH" ]; do sleep 2; done
@@ -88,9 +88,8 @@ final_message() {
   } | tee -a "$LOG_PATH"
 }
 
-# --- Main orchestration ---
+# --- Execution ---
 
 wait_for_env_file
 launch_wikibase
 final_message
-exit 0
