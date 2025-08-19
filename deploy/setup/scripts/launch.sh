@@ -44,10 +44,8 @@ final_message() {
     echo "✅ Setup is Complete!"
     echo
     if [[ -f "$ENV_FILE_PATH" ]]; then
-      while IFS= read -r line; do
-        [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
-        eval "export $line"
-      done < "$ENV_FILE_PATH"
+      # shellcheck disable=SC1090
+      source "$ENV_FILE_PATH"
 
       if [[ -n "${WIKIBASE_PUBLIC_HOST:-}" ]]; then
         echo "Your Wikibase Suite services can be found at:"
