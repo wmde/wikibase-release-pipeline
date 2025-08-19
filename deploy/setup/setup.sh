@@ -114,6 +114,11 @@ if ! $SKIP_DEPENDENCY_INSTALLS; then
   install_git
 fi
 
+if $DEV; then
+  echo
+  echo "⛔️ Will remove any existing running setup Web service and WBS Deploy services AND data (DEV=true)"
+fi
+
 if ! $SKIP_CLONE; then
   clone_repo
 fi
