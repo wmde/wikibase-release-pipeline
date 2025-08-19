@@ -141,7 +141,6 @@ if $RESET; then
   echo
   case "${reset_data:-n}" in
     y|Y)
-      echo "Will reset data..."
       ;;
     *)
       export RESET=false

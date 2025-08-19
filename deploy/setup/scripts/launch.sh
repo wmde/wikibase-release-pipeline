@@ -40,8 +40,10 @@ launch_wikibase() {
   fi
 
   if $RESET; then
+    status "Removing config/LocalSettings.php (RESET=true)"
     run "rm -f config/LocalSettings.php"
 
+    status "Taking down any existing wbs-deploy services and data (RESET=true)"
     if $DEV && [ -f "docker-compose.local.yml" ]; then
       run "docker compose ${compose_opts[*]} down --volumes"
     else
