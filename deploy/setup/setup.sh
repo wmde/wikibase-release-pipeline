@@ -18,11 +18,9 @@ echo
 for arg in "$@"; do
   case "$arg" in
     --dev)
-      SKIP_CLONE=true
+      DEV=true
+      LOCALHOST=true
       SKIP_DEPENDENCY_INSTALLS=true
-      SKIP_LAUNCH=true
-      # Root directory above repo. Assumes running directly in repo in deploy/setup directory
-      WBS_DIR=../../..
       ;;
     --skip-clone)
       SKIP_CLONE=true
@@ -47,7 +45,7 @@ done
 if [[ -d "$(dirname "${BASH_SOURCE[0]:-}")/../../.git" ]]; then
   SKIP_CLONE=true
   WBS_DIR=../../..
-  echo "Detected running from inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
+  echo "⚠️ Running inside repo (SKIP_CLONE=true, WBS_DIR=$WBS_DIR)"
 fi
 
 # --- Setup variables (including defaults) ---
@@ -57,14 +55,17 @@ REPO_URL="${REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
 REPO_BRANCH="${REPO_BRANCH:-deploy-setup-script}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 WBS_DIR="${WBS_DIR:-$HOME/wbs}"
+
+export DEBUG="${DEBUG:-false}"
+export DEV=${DEV:-false}
 export LOCALHOST="${LOCALHOST:-false}"
 export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
 export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
-export DEBUG="${DEBUG:-false}"
+
 export DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
+export LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
 export SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
 export SCRIPTS_DIR="$SETUP_DIR/scripts"
-export LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
 
 # --- Functions ---
 
@@ -101,7 +102,7 @@ clone_repo() {
   if [ ! -d wikibase-release-pipeline/.git ]; then
     git clone --branch "$REPO_BRANCH" --single-branch "$REPO_URL" --depth 1 >/dev/null 2>&1
   else
-    echo "An existing git repository found at $WBS_DIR/wikibase-release-pipeline, using what is there ..."
+    echo "⚠️ An existing git repository found at $WBS_DIR/wikibase-release-pipeline, using what is there ..."
   fi
 
   popd >/dev/null || return 1

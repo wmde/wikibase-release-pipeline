@@ -10,7 +10,7 @@ if command -v docker >/dev/null 2>&1; then
   exit 0
 fi
 
-debug "Installing Docker (using distro packages)..."
+debug "Installing Docker..."
 
 if command -v apt-get >/dev/null 2>&1; then
   # Debian/Ubuntu: install Docker from official Docker APT repo for consistent versioning

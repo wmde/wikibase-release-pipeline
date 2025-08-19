@@ -13,6 +13,7 @@ LOCALHOST="${LOCALHOST:-false}"
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
 
 # -- Script specific env vars --
+SETUP_CONTAINER_NAME=wbs-deploy-setup-webserver
 SETUP_PORT=8888
 SETUP_DIR="$DEPLOY_DIR/setup"
 CERTS_DIR="$SETUP_DIR/certs"
@@ -81,8 +82,11 @@ start_setup_webserver() {
   fi
 
   run "docker build $LOAD_FLAG -t wikibase/deploy-setup-webserver ."
+
   run "docker run -d \
+    --name $SETUP_CONTAINER_NAME \
     -e SERVER_IP=$SERVER_IP \
+    -e LOCALHOST=$LOCALHOST \
     -p $SETUP_PORT:443 \
     -v $DEPLOY_DIR:/app/deploy \
     -v $VIEWS_DIR:/app/views \
@@ -99,10 +103,6 @@ start_setup_webserver() {
     echo "Your browser will likely show a warning before loading the page."
     echo "See the Troubleshooting section of the Deploy Setup README for help"
     echo "if you want to bypass the warning or replace it with a trusted cert."
-    echo
-  fi
-  if $LOCALHOST; then
-    echo  It is now safe to close this terminal session.
     echo
   fi
 }

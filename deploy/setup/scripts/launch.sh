@@ -3,14 +3,15 @@ set -euo pipefail
 
 # --- Expected Variables ---
 
-export LOCALHOST
 export DEBUG
+export DEV
+export LOCALHOST
 export LOG_PATH
+export SKIP_DEPENDENCY_INSTALLS
+export SKIP_LAUNCH
 export DEPLOY_DIR
 export SCRIPTS_DIR
 export SETUP_DIR
-export SKIP_DEPENDENCY_INSTALLS
-export SKIP_LAUNCH
 
 # --- New Variables ---
 
@@ -28,13 +29,30 @@ wait_for_env_file() {
   debug "Configuration saved."
 }
 
-launch_wikibase() {
-  status "Waiting for services to start. Generally takes 2–6 minutes..."
-  cd "$DEPLOY_DIR"
+launch_wikibase() (
+  pushd "$DEPLOY_DIR" >/dev/null || return 1
+
   local opts=(-d)
+
   if [ "$DEBUG" != true ]; then opts+=(--quiet-pull); fi
-  run "docker compose up ${opts[*]}"
-}
+
+  if $DEV && [ -f "docker-compose.local.yml" ]; then
+    status "⛔️ Any existing wbs-deploy services are now being removed including any data and configuration (DEV=true)"
+    run "rm -f config/LocalSettings.php"
+    run "docker compose -f docker-compose.yml -f docker-compose.local.yml down --volumes"
+    run "docker compose down --volumes"
+  fi
+
+  status "Waiting for services to start. Generally takes 2–6 minutes..."
+
+  if $DEV && [ -f "docker-compose.local.yml" ]; then
+    run "docker compose -f docker-compose.yml -f docker-compose.local.yml up ${opts[*]}"
+  else
+    run "docker compose up ${opts[*]}"
+  fi
+
+  popd >/dev/null || return 1
+)
 
 # NOTE: final_message intentionally uses echo+tee for a clean human banner on stdout.
 # The block is also appended to the log via tee, but WITHOUT timestamps/levels.
@@ -109,4 +127,8 @@ nohup env \
   LOCALHOST="$LOCALHOST" \
   bash "$0" --launch-only \
   >/dev/null 2>&1 &
+
+echo "It is now safe to close this terminal session."
+echo
+
 exit 0
