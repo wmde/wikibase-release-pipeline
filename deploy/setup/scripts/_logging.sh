@@ -5,7 +5,8 @@
 # - log   : ISO8601 timestamp + [LEVEL]
 # -----------------------------------------------------------------------------
 
-LOG_PATH=${LOG_PATH:=/tmp/wbs-deploy-setup.log}
+export LOG_PATH=${LOG_PATH:=/tmp/wbs-deploy-setup.log}
+
 DEBUG=${DEBUG:=false}
 
 # Are we attached to a terminal?

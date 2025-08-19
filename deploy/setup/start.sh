@@ -22,6 +22,9 @@ for arg in "$@"; do
       LOCALHOST=true
       SKIP_DEPENDENCY_INSTALLS=true
       ;;
+    --reset)
+      RESET=true
+      ;;
     --skip-clone)
       SKIP_CLONE=true
       ;;
@@ -61,9 +64,10 @@ export DEV=${DEV:-false}
 export LOCALHOST="${LOCALHOST:-false}"
 export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
 export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
+export RESET="${RESET:-false}"
 
 export DEPLOY_DIR="${DEPLOY_DIR:-$WBS_DIR/wikibase-release-pipeline/deploy}"
-export LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
+export ENV_FILE_PATH="$DEPLOY_DIR/.env"
 export SETUP_DIR="${SETUP_DIR:-$DEPLOY_DIR/setup}"
 export SCRIPTS_DIR="$SETUP_DIR/scripts"
 
@@ -116,6 +120,34 @@ fi
 
 if ! $SKIP_CLONE; then
   clone_repo
+fi
+
+if $RESET; then
+  echo
+  if [[ -f "$ENV_FILE_PATH" ]]; then
+    printf "Delete the current configuration found in .env? [y/N]: "
+    read -n 1 -r reset_config
+    echo
+    case "${reset_config:-n}" in
+      y|Y)
+        rm -f "$ENV_FILE_PATH"
+        ;;
+    esac
+    echo 
+  fi
+
+  printf "⛔️ Delete any existing wbs-deploy services AND data? [y/N]: "
+  read -n 1 -r reset_data
+  echo
+  case "${reset_data:-n}" in
+    y|Y)
+      echo "Will reset data..."
+      ;;
+    *)
+      export RESET=false
+      ;;
+  esac
+  echo
 fi
 
 exec bash "$SCRIPTS_DIR/setup.sh" "$@"

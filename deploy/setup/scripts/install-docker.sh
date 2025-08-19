@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --- Expected Variables ---
+
+export SCRIPTS_DIR
+
+# --- Bootstrap Logging ---
+
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
+
+# --- Main Script ---
 
 debug "Checking for Docker..."
 

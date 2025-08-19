@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- Expected Variables from environment ---
+# --- Expected Variables ---
 
 export DEBUG
 export DEV
 export LOCALHOST
-export LOG_PATH
 export SKIP_DEPENDENCY_INSTALLS
 export SKIP_LAUNCH
 export DEPLOY_DIR
+export ENV_FILE_PATH
 export SCRIPTS_DIR
 export SETUP_DIR
 
-# --- Bootstrap logging ---
+# --- Bootstrap Logging ---
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"

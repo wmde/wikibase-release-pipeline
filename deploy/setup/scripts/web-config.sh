@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo
-echo "🔧 Starting web-based configuration wizard..."
-echo
+# --- Expected Variables ---
 
-# --- Expected env vars ---
-DEPLOY_DIR="${DEPLOY_DIR:?DEPLOY_DIR not set}"
-LOG_PATH="${LOG_PATH:-/tmp/wbs-deploy-setup.log}"
-DEBUG="${DEBUG:-false}"
-LOCALHOST="${LOCALHOST:-false}"
+export DEPLOY_DIR
+export DEBUG
+export LOCALHOST
+export SCRIPTS_DIR
+export SETUP_DIR
+
+# --- Bootstrap Logging ---
+
+# shellcheck disable=SC1091
+source "$SCRIPTS_DIR/_logging.sh"
+
+# -- Script Specific Variables --
+
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
-
-# -- Script specific env vars --
 SETUP_CONTAINER_NAME=wbs-deploy-setup-webserver
 SETUP_PORT=8888
-SETUP_DIR="$DEPLOY_DIR/setup"
 CERTS_DIR="$SETUP_DIR/certs"
 VIEWS_DIR="$SETUP_DIR/views"
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
 
-# -- Setup logging --
-# shellcheck disable=SC1091
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_logging.sh"
+# --- Functions ---
 
 generate_cert_for_setup_webserver() {
   debug "Requesting a trusted HTTPS certificate for the setup page (ACME via Let’s Encrypt)..."
@@ -121,6 +122,10 @@ start_setup_webserver() {
     echo
   fi
 }
+
+echo
+echo "🔧 Starting web-based configuration wizard..."
+echo
 
 debug "Starting setup page webserver container..."
 cd "$SETUP_DIR"
