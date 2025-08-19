@@ -27,26 +27,26 @@ if command -v apt-get >/dev/null 2>&1; then
   fi
 
   run "echo 'Using Docker APT repo for $OS_ID ($CODENAME)'"
-  run "sudo apt-get update -y"
-  run "sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg"
-  run "sudo install -m 0755 -d /etc/apt/keyrings"
-  run "curl -fsSL https://download.docker.com/linux/$OS_ID/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
-  run "sudo apt-get remove -y docker.io docker-compose docker-compose-v2 2>/dev/null || true"
-  run "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$OS_ID $CODENAME stable\" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null"
-  run "sudo apt-get update -y"
-  run "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+  run "apt-get update -y"
+  run "apt-get install -y --no-install-recommends ca-certificates curl gnupg"
+  run "install -m 0755 -d /etc/apt/keyrings"
+  run "curl -fsSL https://download.docker.com/linux/$OS_ID/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+  run "apt-get remove -y docker.io docker-compose docker-compose-v2 2>/dev/null || true"
+  run "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$OS_ID $CODENAME stable\" | tee /etc/apt/sources.list.d/docker.list >/dev/null"
+  run "apt-get update -y"
+  run "apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
 elif command -v dnf >/dev/null 2>&1; then
   # Distinguish Fedora vs RHEL-family (CentOS Stream, RHEL, Rocky, Alma)
   OS_ID="$(. /etc/os-release 2>/dev/null; echo "${ID:-}")"
 
   if [ "$OS_ID" = "fedora" ]; then
     # Fedora: use Fedora-maintained Moby packages
-    run "sudo dnf -y install moby-engine moby-cli docker-compose-plugin docker-buildx-plugin"
+    run "dnf -y install moby-engine moby-cli docker-compose-plugin docker-buildx-plugin"
   else
     # RHEL-family (CentOS Stream / RHEL / Rocky / Alma): use Docker's official repo
-    run "sudo dnf -y install dnf-plugins-core"
-    run "sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
-    run "sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || \
+    run "dnf -y install dnf-plugins-core"
+    run "dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+    run "dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || \
          (echo '❌ Docker CE packages not available for this release yet.' >&2; exit 1)"
   fi
 else
@@ -55,7 +55,7 @@ else
 fi
 
 debug "Enabling and starting Docker..."
-run "sudo systemctl enable --now docker"
+run "systemctl enable --now docker"
 status "Docker installation complete."
 run "docker --version" || true
 run "docker compose version" || true
