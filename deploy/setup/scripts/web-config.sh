@@ -70,7 +70,22 @@ generate_cert_for_setup_webserver() {
   SELF_SIGNED_CERT=true
 }
 
+remove_any_existing_setup_webserver() {
+  # Remove any existing container with our fixed name (running or exited)
+  run "docker rm -fv $SETUP_CONTAINER_NAME >/dev/null 2>&1 || true"
+
+  # Optional: warn if the host port is already taken (by something else)
+  if command -v lsof >/dev/null 2>&1; then
+    if lsof -iTCP:"$SETUP_PORT" -sTCP:LISTEN >/dev/null 2>&1; then
+      status "⛔️ Port $SETUP_PORT required for setup appears already in use on this server"
+    fi
+  fi
+}
+
 start_setup_webserver() {
+  # Ensure old container is gone before build/run
+  remove_any_existing_setup_webserver
+
   # BuildKit (via buildx with the docker-container driver) does not load images
   # into the local Docker image store by default. --load ensures it's available
   # to `docker run`.

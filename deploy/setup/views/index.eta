@@ -190,7 +190,7 @@
           <label>
             MediaWiki Admin Email Address:
             <div class="field-help">Used for MediaWiki admin and alerts.</div>
-            <input name="MW_ADMIN_EMAIL" type="email" required value="<%= MW_ADMIN_EMAIL || '' %>" />
+            <input name="MW_ADMIN_EMAIL" type="email" required />
           </label>
           <label>
             Wikibase Host:
@@ -200,7 +200,7 @@
                 <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
               </span>
             </div>
-            <input name="WIKIBASE_PUBLIC_HOST" type="url" value="<%= WIKIBASE_PUBLIC_HOST || '' %>" />
+            <input name="WIKIBASE_PUBLIC_HOST" type="url" />
           </label>
           <details name="config">
             <summary role="secondary" style="font-weight: bold;">Advanced Options</summary>
@@ -214,12 +214,12 @@
                   <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
                 </span>
               </div>
-              <input name="WDQS_PUBLIC_HOST" type="url" value="<%= WDQS_PUBLIC_HOST || '' %>" />
+              <input name="WDQS_PUBLIC_HOST" type="url" />
             </label>
             <label>
               MediaWiki Admin Name:
               <div class="field-help">Will be the login name for the MediaWiki admin</div>
-              <input name="MW_ADMIN_NAME" value="<%= MW_ADMIN_NAME %>" />
+              <input name="MW_ADMIN_NAME" />
             </label>
             <label>
               MediaWiki Admin Password:
@@ -229,12 +229,12 @@
             <label>
               Database Name:
               <div class="field-help"><em>default: my_wiki</em></div>
-              <input name="DB_NAME" value="<%= DB_NAME %>" />
+              <input name="DB_NAME" />
             </label>
             <label>
               Database User:
               <div class="field-help">Used by MediaWiki to connect to the database. <em>default: sqluser</em></div>
-              <input name="DB_USER" value="<%= DB_USER %>" />
+              <input name="DB_USER" />
             </label>
             <label>Database Password:
               <div class="field-help">Minimum 10 characters. <em>default: randomly generated and revealed at end of install</em></div>
@@ -245,7 +245,6 @@
             <input
               type="checkbox"
               name="METADATA_CALLBACK"
-              <%= (typeof METADATA_CALLBACK === 'undefined' || METADATA_CALLBACK === true || METADATA_CALLBACK === 'true') ? 'checked' : '' %>
               role="switch"
             />
             I want this Wikibase to be visible in the global Wikibase directory
@@ -265,21 +264,15 @@
             <br /><br />
             MediaWiki/Wikibase:
             <br />
-            <a target="_blank" href="https://<%= WIKIBASE_PUBLIC_HOST %>">
-              https://<%= WIKIBASE_PUBLIC_HOST %>
-            </a>
+            <a target="_blank" data-bind="WIKIBASE_PUBLIC_HOST" data-prefix="https://">https://</a>
             <br /><br />
             Query Service:
             <br />
-            <a target="_blank" href="https://<%= WDQS_PUBLIC_HOST %>">
-              https://<%= WDQS_PUBLIC_HOST %>
-            </a>
+            <a target="_blank" data-bind="WDQS_PUBLIC_HOST" data-prefix="https://">https://</a>
             <br /><br />
             QuickStatements:
             <br />
-            <a target="_blank" href="https://<%= WIKIBASE_PUBLIC_HOST %>/tools/quickstatements">
-              https://<%= WIKIBASE_PUBLIC_HOST %>/tools/quickstatements
-            </a>
+            <a target="_blank" data-bind="WIKIBASE_PUBLIC_HOST" data-prefix="https://" data-suffix="/tools/quickstatements">https:///tools/quickstatements</a>
           </p>
 
           <section id="config">
@@ -373,6 +366,73 @@
       let alreadyHandledBootedState = false;
       let isLogDialogOpen = false;
 
+      // --- New: shared page state & hydrators ---
+
+      const pageState = { config: null, configText: '' };
+
+      async function fetchConfig() {
+        try {
+          const res = await fetch('/config');
+          if (!res.ok) return;
+          const { config, configText } = await res.json();
+          pageState.config = config || {};
+          pageState.configText = configText || '';
+        } catch {}
+      }
+
+      function hydrateFormFromConfig(form, cfg) {
+        if (!form || !cfg) return;
+        form.querySelectorAll('input, select, textarea').forEach(el => {
+          const name = el.getAttribute('name');
+          if (!name || !(name in cfg)) return;
+          const val = cfg[name];
+
+          // switches/checkboxes
+          if (el.type === 'checkbox' || el.getAttribute('role') === 'switch') {
+            const on = (typeof val === 'boolean') ? val : String(val).toLowerCase() === 'true' || String(val) === '1';
+            el.checked = on;
+            return;
+          }
+
+          // don't overwrite password with empty
+          if (el.type === 'password' && (val == null || String(val) === '')) return;
+
+          el.value = (val ?? '');
+        });
+      }
+
+      function hydrateBindingsFromConfig(cfg) {
+        document.querySelectorAll('[data-bind]').forEach(node => {
+          const key = node.dataset.bind;
+          const prefix = node.dataset.prefix || '';
+          const suffix = node.dataset.suffix || '';
+          const v = cfg && cfg[key];
+
+          if (!v) {
+            // keep formatting placeholder text present but inert
+            if (node.tagName === 'A') node.removeAttribute('href');
+            // leave existing text (like "https://" scaffolding) as-is
+            return;
+          }
+
+          const rendered = `${prefix}${v}${suffix}`;
+
+          // text preserves the "final URL" formatting exactly
+          node.textContent = rendered;
+
+          if (node.tagName === 'A') {
+            node.setAttribute('href', rendered);
+          }
+        });
+      }
+
+      function renderConfigTextBlock(preEl) {
+        if (!preEl) return;
+        preEl.textContent = pageState.configText || '';
+      }
+
+      // --- existing helpers ---
+
       function appendToLog(text) {
         const t = text.endsWith('\n') ? text : text + '\n';
         logBuffer += t;
@@ -398,8 +458,21 @@
           .filter(Boolean);
       }
 
-      function wireCopyAndDownload() {
-        const configContent = elConfigContent.textContent || '';
+      async function handleBootComplete() {
+        if (alreadyHandledBootedState) return;
+
+        alreadyHandledBootedState = true;
+
+        // refresh config and hydrate UI
+        await fetchConfig();
+        hydrateFormFromConfig(form, pageState.config);
+        hydrateBindingsFromConfig(pageState.config);
+        renderConfigTextBlock(elConfigContent);
+
+        elWaiting.hidden = true;
+        elComplete.hidden = false;
+
+        const configContent = pageState.configText || '';
 
         elCopyBtn.onclick = () => {
           navigator.clipboard.writeText(configContent).then(() => {
@@ -417,16 +490,6 @@
         elDownloadLink.href = URL.createObjectURL(blob);
       }
 
-      function handleBootCompleteOnce() {
-        if (alreadyHandledBootedState) return;
-
-        alreadyHandledBootedState = true;
-        elWaiting.hidden = true;
-        elComplete.hidden = false;
-
-        wireCopyAndDownload();
-      }
-
       function startLogStream() {
         if (logStream) return;
 
@@ -439,7 +502,7 @@
             extractStatusLines(lines).forEach(appendStatusLine);
 
             if (BOOT_COMPLETE_REGEX.test(lines)) {
-              handleBootCompleteOnce();
+              handleBootComplete();
             }
 
             appendToLog(lines);
@@ -504,10 +567,18 @@
             });
 
             if (res.ok) {
+              // lock form
               f.querySelectorAll('input, button').forEach((i) => (i.disabled = true));
-              const { configText } = await res.json();
 
-              elConfigContent.textContent = configText;
+              // echo back saved config for coherence
+              const { config, configText } = await res.json();
+              pageState.config = config || {};
+              pageState.configText = configText || '';
+
+              hydrateFormFromConfig(f, pageState.config);
+              hydrateBindingsFromConfig(pageState.config);
+              renderConfigTextBlock(elConfigContent);
+
               elWaiting.hidden = false;
               elWaiting.innerHTML = '';
               elComplete.hidden = true;
@@ -560,6 +631,13 @@
       const initializePage = async () => {
         initValidation();
 
+        // get config once and hydrate everything
+        await fetchConfig();
+
+        hydrateFormFromConfig(form, pageState.config);
+        hydrateBindingsFromConfig(pageState.config);
+        renderConfigTextBlock(elConfigContent);
+
         if (form.dataset.disabled === 'true') {
           // .env config file already saved, disable inputs
           form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
@@ -567,17 +645,6 @@
           // If server didn't render #complete (not booted), start in waiting mode
           if (elComplete.hasAttribute('hidden')) {
             if (elWaiting) elWaiting.hidden = false;
-          }
-
-          startLogStream();
-
-          // Fetch current .env file content
-          const res = await fetch('/config');
-          if (res.ok) {
-            const { configText } = await res.json();
-            elConfigContent.textContent = configText;
-          } else {
-            // ignore
           }
         } else {
           // Fresh start: nothing in status yet
