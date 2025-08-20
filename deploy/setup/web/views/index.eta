@@ -195,26 +195,26 @@
           <label>
             Wikibase Host:
             <div class="field-help">
-              A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+              A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record, localhost, or any .test domain
               <span class="help-actions">
                 <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
               </span>
             </div>
-            <input name="WIKIBASE_PUBLIC_HOST" type="url" />
+            <input name="WIKIBASE_PUBLIC_HOST" type="text" />
           </label>
           <details name="config">
             <summary role="secondary" style="font-weight: bold;">Advanced Options</summary>
             <label>
               Query Service Host:
               <div class="field-help">
-                A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via an A record.
+                A DNS entry which points to <span class="inline-pre"><%= SERVER_IP %></span> via a DNS A record, localhost, or any .test domain
                 <br />
                 <em>default: <pre style="display: inline;">query.&lt;Wikibase Host&gt;</pre></em>
                 <span class="help-actions">
                   <a href="#" data-modal-open data-modal-target="dns-help-dialog" aria-label="DNS help">Help</a>
                 </span>
               </div>
-              <input name="WDQS_PUBLIC_HOST" type="url" />
+              <input name="WDQS_PUBLIC_HOST" type="text" />
             </label>
             <label>
               MediaWiki Admin Name:
@@ -291,9 +291,9 @@
   <dialog id="dns-help-dialog">
     <article>
       <h3>How to register a domain and point it here</h3>
-      <p>Server public IP: <code><%= SERVER_IP %></code></p>
+      <p>This server's public IP address is: <code><%= SERVER_IP %></code></p>
       <ol>
-        <li>Buy a domain from any registrar (e.g., Namecheap, Gandi, Cloudflare).</li>
+        <li>Register a domain name with any common registrar (e.g., Cloudflare, Namecheap, etc).</li>
         <li>Open your domain’s DNS settings.</li>
         <li>Create an <strong>A record</strong>:
           <ul>
@@ -307,9 +307,10 @@
       </ol>
       <p class="help-small">
         <em>
-          Alternatively and for testing only, you can use the host addresses of <code><%= SERVER_IP %>.nip.io</code> and <code>query.<%= SERVER_IP %>.nip.io</code>
-          which will automatically resolve to this server's IP address. ⚠️ However, use with caution as the magical addresses are appropriate only for testing as there is currently no simple way to
-          reset these addresses for an already setup Deploy instance.
+          For testing and development <code>localhost</code> or <code>.test</code> domains (e.g. <code>wikibase.test</code>) are allowed.
+          Another option is to use <code><%= SERVER_IP %>.nip.io</code> and <code>query.<%= SERVER_IP %>.nip.io</code> "magic" addresses
+          which will automatically resolve to this server's IP address. In all cases use with caution as it is currently not easy
+          to change these host names after initial WBS Deploy setup. 
         </em>
       </p>
       <footer>
@@ -362,7 +363,6 @@
       const elShutdownMsg = el('shutdown-msg');
 
       let logStream = null;
-      let logBuffer = '';
       let alreadyHandledBootedState = false;
       let isLogDialogOpen = false;
 
@@ -435,7 +435,6 @@
 
       function appendToLog(text) {
         const t = text.endsWith('\n') ? text : text + '\n';
-        logBuffer += t;
         elLogContent.insertAdjacentText('beforeend', t);
       }
 

@@ -2,18 +2,20 @@ import { createSession, createChannel } from 'better-sse';
 import { Eta } from 'eta';
 import express from 'express';
 import { existsSync, readFileSync, createReadStream } from 'fs';
-import { writeFile, readFile } from 'fs/promises';
 import https, { request } from 'https';
 import { dirname, join } from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
+import { createLogStreamer } from './logStreamer.js';
 import {
-	ENV_FILE_PATH,
 	LOG_PATH,
 	isBooted,
 	isConfigSaved,
 	isLocalhostSetup,
-	getConfig
+	getConfig,
+	saveConfigText,
+	clearLog,
+	sanitizeConfig
 } from './serverHelpers.js';
 
 const fileName = fileURLToPath( import.meta.url );
@@ -37,6 +39,8 @@ const eta = new Eta( {
 	useWith: true
 } );
 
+const logChannel = createChannel();
+
 // ---------- Routes ----------
 app.get( '/', async ( req, res ) => {
 	try {
@@ -56,32 +60,21 @@ app.get( '/', async ( req, res ) => {
 	}
 } );
 
-const logChannel = createChannel();
-
-// Single log endpoint with backfill of the entire file on fresh page load
+// create and start the log streamer
+const streamer = createLogStreamer( LOG_PATH );
+streamer.start();
 app.get( '/log/stream', async ( req, res ) => {
 	const session = await createSession( req, res );
-	logChannel.register( session );
-
-	// Backfill ENTIRE log only on a fresh page load (skip on auto-reconnects)
-	const isReconnect = typeof req.headers[ 'last-event-id' ] === 'string' && req.headers[ 'last-event-id' ] !== '';
-	if ( !isReconnect && existsSync( LOG_PATH ) ) {
-		const rs = createReadStream( LOG_PATH, { encoding: 'utf8' } );
-		const rl = readline.createInterface( { input: rs, crlfDelay: Infinity } );
-		await session.batch( async ( buffer ) => {
-			for await ( const line of rl ) {
-				if ( line ) {
-					buffer.push( line ); // one SSE message per log line
-				}
-			}
-		} );
-	}
+	const lastId = typeof req.headers[ 'last-event-id' ] === 'string' ?
+		req.headers[ 'last-event-id' ] : undefined;
+	const unsubscribe = await streamer.register( session, lastId );
+	req.on( 'close', unsubscribe );
 } );
 
 app.post( '/config', async ( req, res ): Promise<void> => {
 	try {
 		const { config, configText } = getConfig( req.body );
-		await writeFile( ENV_FILE_PATH, configText );
+		saveConfigText( configText );
 		console.log( '.env file written successfully' );
 		res.status( 200 ).json( { status: 'ok', config, configText } );
 	} catch ( err ) {
@@ -92,7 +85,7 @@ app.post( '/config', async ( req, res ): Promise<void> => {
 
 app.get( '/config', async ( req, res ): Promise<void> => {
 	try {
-		const { config, configText } = await getConfig();
+		const { config, configText } = getConfig();
 		res.status( 200 ).json( { config, configText } );
 	} catch ( err ) {
 		console.error( 'Failed to read .env:', err );
@@ -100,22 +93,10 @@ app.get( '/config', async ( req, res ): Promise<void> => {
 	}
 } );
 
-app.post( '/finalize-setup', async ( req, res ) => {
+app.post( '/finalize-setup', async ( req, res ): Promise<void> => {
 	try {
-		if ( existsSync( ENV_FILE_PATH ) ) {
-			const lines = ( await readFile( ENV_FILE_PATH, 'utf8' ) ).split( '\n' );
-			// blank password values
-			const sanitized = lines.map( ( line ) =>
-				line.replace( /^(.*_PASS(?:WORD)?=).+$/, '$1' )
-			);
-			await writeFile( ENV_FILE_PATH, sanitized.join( '\n' ) );
-			console.log( '🧼 Passwords sanitized' );
-		}
-
-		if ( existsSync( LOG_PATH ) ) {
-			await writeFile( LOG_PATH, '' );
-			console.log( '🧹 Log cleared' );
-		}
+		sanitizeConfig();
+		clearLog();
 
 		res.status( 200 ).json( { status: 'finalized' } );
 		console.log( '💤 Setup finalized. Exiting...' );
@@ -126,32 +107,6 @@ app.post( '/finalize-setup', async ( req, res ) => {
 		res.status( 500 ).send( 'Failed to finalize setup' );
 	}
 } );
-
-// --- Broadcasters ---
-// Log tailer: every 1s read lines and broadcast only the new ones
-{
-	let lastCount = 0;
-	setInterval( () => {
-		if ( !existsSync( LOG_PATH ) ) {
-			return;
-		}
-		try {
-			const lines = readFileSync( LOG_PATH, 'utf8' ).split( '\n' );
-			if ( lines.length < lastCount ) {
-				lastCount = 0;
-			} // file truncated/cleared
-			for ( let i = lastCount; i < lines.length; i++ ) {
-				const line = lines[ i ];
-				if ( line ) {
-					logChannel.broadcast( line );
-				}
-			}
-			lastCount = lines.length;
-		} catch ( e ) {
-			// ignore transient read errors
-		}
-	}, 1000 );
-}
 
 if ( !existsSync( SSL_CERT_PATH ) || !existsSync( SSL_CERT_KEY_PATH ) ) {
 	throw new Error( 'Not able to access SSL certificate or key in /app/certs' );

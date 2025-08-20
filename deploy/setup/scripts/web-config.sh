@@ -19,10 +19,13 @@ source "$SCRIPTS_DIR/_logging.sh"
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
 SETUP_CONTAINER_NAME=wbs-deploy-setup-webserver
 SETUP_PORT=8888
-CERTS_DIR="$SETUP_DIR/certs"
-VIEWS_DIR="$SETUP_DIR/views"
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
+WEB_IMAGE_NAME="${WEB_IMAGE_NAME:-wikibase/deploy-setup-webserver}"
+WEB_DIR="$SETUP_DIR/web"
+LE_DIR="$WEB_DIR/letsencrypt"
+CERTS_DIR="$WEB_DIR/certs"
+VIEWS_DIR="$WEB_DIR/views"
 
 # --- Functions ---
 
@@ -37,12 +40,12 @@ generate_cert_for_setup_webserver() {
     SETUP_HOST="$SETUP_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
 
-  run "mkdir -p $SETUP_DIR/letsencrypt $CERTS_DIR"
+  run "mkdir -p $LE_DIR $CERTS_DIR"
   debug "Using domain: $SETUP_HOST"
 
   if ! $LOCALHOST; then
     if run "docker run --rm \
-      -v $SETUP_DIR/letsencrypt:/etc/letsencrypt \
+      -v $LE_DIR:/etc/letsencrypt \
       -v $CERTS_DIR:/certs \
       -p 80:80 \
       $CERTBOT_IMAGE certonly \
@@ -53,7 +56,7 @@ generate_cert_for_setup_webserver() {
         --email $CERT_EMAIL \
         -d $SETUP_HOST"; then
 
-      LE_CERT_PATH="$SETUP_DIR/letsencrypt/live/$SETUP_HOST"
+      LE_CERT_PATH="$LE_DIR/live/$SETUP_HOST"
 
       if [ -f "$LE_CERT_PATH/fullchain.pem" ] && [ -f "$LE_CERT_PATH/privkey.pem" ]; then
         cp "$LE_CERT_PATH/fullchain.pem" "$CERTS_DIR/cert.pem"
@@ -97,8 +100,9 @@ start_setup_webserver() {
     LOAD_FLAG=""
   fi
 
-  run "docker build $LOAD_FLAG -t wikibase/deploy-setup-webserver ."
+  run "docker build $LOAD_FLAG -t $WEB_IMAGE_NAME -f $WEB_DIR/Dockerfile $WEB_DIR"
 
+  # Run with volumes mapped as before
   run "docker run -d \
     --name $SETUP_CONTAINER_NAME \
     -e SERVER_IP=$SERVER_IP \
@@ -108,7 +112,7 @@ start_setup_webserver() {
     -v $VIEWS_DIR:/app/views \
     -v $CERTS_DIR:/app/certs \
     -v $LOG_PATH:/app/setup.log \
-    wikibase/deploy-setup-webserver"
+    $WEB_IMAGE_NAME"
 
   echo "To continue setup navigate to:"
   echo
@@ -128,7 +132,7 @@ echo "🔧 Starting web-based configuration wizard..."
 echo
 
 debug "Starting setup page webserver container..."
-cd "$SETUP_DIR"
 
+# No need to cd; we reference absolute paths for build context and Dockerfile
 generate_cert_for_setup_webserver
 start_setup_webserver
