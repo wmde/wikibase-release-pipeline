@@ -19,6 +19,33 @@ source "$SCRIPTS_DIR/_logging.sh"
 
 # --- Setup Phase ---
 
+if $RESET; then
+  echo
+  if [[ -f "$ENV_FILE_PATH" ]]; then
+    printf "Delete the current configuration found in .env? [y/N]: "
+    read -n 1 -r reset_config
+    echo
+    case "${reset_config:-n}" in
+      y|Y)
+        rm -f "$ENV_FILE_PATH"
+        ;;
+    esac
+    echo 
+  fi
+
+  printf "⛔️ Delete any existing wbs-deploy services AND data? [y/N]: "
+  read -n 1 -r reset_data
+  echo
+  case "${reset_data:-n}" in
+    y|Y)
+      ;;
+    *)
+      export RESET=false
+      ;;
+  esac
+  echo
+fi
+
 if ! $SKIP_DEPENDENCY_INSTALLS; then
   bash "$SCRIPTS_DIR/install-docker.sh"
 fi
