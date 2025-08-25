@@ -1,0 +1,7 @@
+
+config/*.ini
+config/*.json
+config/*.php
+config/extensions
+docker-compose.local.yml
+log
