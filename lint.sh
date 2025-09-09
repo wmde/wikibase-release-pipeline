@@ -25,6 +25,7 @@ usage() {
 }
 
 # Error handler to capture errors
+# shellcheck disable=SC2329 # spell check does not see the usage in the trap
 error_handler() {
   # shellcheck disable=SC2317
   exit_code=1
