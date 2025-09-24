@@ -1,0 +1,12 @@
+{
+	"name": "wikibase",
+	"version": "5.0.0",
+	"nx": {
+		"targets": {
+			"lint": {},
+			"build": {},
+			"nx-release-publish": {},
+			"update-commits": {}
+		}
+	}
+}

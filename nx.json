@@ -1,0 +1,62 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"installation": {
+		"version": "19.5.0",
+		"plugins": {
+			"@nx/js": "19.5.0",
+			"nx/plugins/package-json": "19.5.0"
+		}
+	},
+	"release": {
+		"conventionalCommits": {
+			"types": {
+				"build": true,
+				"chore": true,
+				"ci": true,
+				"docs": true,
+				"feat": true,
+				"fix": true,
+				"perf": true,
+				"refactor": true,
+				"style": true,
+				"test": true
+			}
+		},
+		"groups": {
+			"images": {
+				"projects": [ "build/*" ]
+			},
+			"deploy": {
+				"projects": [ "deploy" ]
+			}
+		},
+		"projectsRelationship": "independent",
+		"version": {
+			"conventionalCommits": true
+		},
+		"changelog": {
+			"projectChangelogs": {
+				"renderOptions": {
+					"authors": false
+				}
+			}
+		}
+	},
+	"targetDefaults": {
+		"lint": {
+			"command": "./lint.sh {projectRoot}"
+		},
+		"test": {
+			"command": "test/test.sh"
+		},
+		"build": {
+			"command": "build/build.sh {projectName}"
+		},
+		"update-commits": {
+			"command": "build/update-commits.sh {projectName}"
+		},
+		"nx-release-publish": {
+			"command": "build/build.sh {projectName} --publish"
+		}
+	}
+}

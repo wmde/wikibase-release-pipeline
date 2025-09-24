@@ -1,0 +1,27 @@
+{
+	"api": {
+		"sparql": {
+			"uri": "$WDQS_PUBLIC_URL"
+		},
+		"wikibase": {
+			"uri": "$WIKIBASE_PUBLIC_URL"
+		},
+		"examples": {
+			"server": "https://www.wikidata.org/",
+			"endpoint": "api/rest_v1/page/html/",
+			"pageTitle": "Wikidata:SPARQL_query_service/queries/examples",
+			"pagePathElement": "wiki/"
+		},
+		"urlShortener": "tinyurl",
+		"query-builder": {
+			"server": "https://gerrit.wikimedia.org/g/wikidata/query-builder"
+		}
+	},
+	"brand": {
+		"title": "WBS Query Service",
+		"logo": "logo.svg",
+		"favicon": "favicon.ico",
+		"copyrightUrl": "",
+		"index": "./index.html"
+	}
+}

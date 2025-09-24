@@ -1,4 +1,0 @@
-services:
-  wikibase:
-    volumes:
-      - ./confirm_edit/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.confirm_edit.php

@@ -13,17 +13,9 @@ import loadEnvFiles from './load-env-files.js';
 
 export const ONE_DAY_IN_MS = 86400000;
 
-export const defaultTestSettings = {
-	envFiles: [
-		'../deploy/template.env',
-		'../variables.env',
-		'./test-services.env',
-		'../local.env'
-	],
-	composeFiles: [
-		'../deploy/docker-compose.yml',
-		'suites/docker-compose.override.yml'
-	],
+export const baseTestSettings = {
+	envFiles: [],
+	composeFiles: [],
 	waitForUrls: (): string[] => [],
 	onPrepare: async (): Promise<void> => {
 		await testEnv.up();
@@ -70,7 +62,7 @@ export const makeTestSettings = (
 	// NOTE: The values from these env files are put in testEnv.vars
 	// to better isolate the test-service testEnv from the parent process
 	const testEnvVars = loadEnvFiles(
-		settings.envFiles || defaultTestSettings.envFiles
+		settings.envFiles || baseTestSettings.envFiles
 	);
 	const testSuiteSettings: TestSuiteSettings = {
 		name: settings.name,
@@ -92,19 +84,19 @@ export const makeTestSettings = (
 			ONE_DAY_IN_MS :
 			parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances: parseInt( process.env.MAX_INSTANCES ),
-		pwd: process.env.HOST_PWD || process.cwd()
+		pwd: process.env.HOST_PWD ? `${ process.env.HOST_PWD }/test` : process.cwd()
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
-		composeFiles: settings.composeFiles || defaultTestSettings.composeFiles,
-		waitForUrls: settings.waitForUrls || defaultTestSettings.waitForUrls,
-		envFiles: settings.envFiles || defaultTestSettings.envFiles,
+		composeFiles: settings.composeFiles || baseTestSettings.composeFiles,
+		waitForUrls: settings.waitForUrls || baseTestSettings.waitForUrls,
+		envFiles: settings.envFiles || baseTestSettings.envFiles,
 		vars: testEnvVars
 	};
 	const testHooks: TestHooks = {
-		onPrepare: settings.onPrepare || defaultTestSettings.onPrepare,
-		before: settings.before || defaultTestSettings.before,
-		afterTest: settings.afterTest || defaultTestSettings.afterTest,
-		onComplete: settings.onComplete || defaultTestSettings.onComplete
+		onPrepare: settings.onPrepare || baseTestSettings.onPrepare,
+		before: settings.before || baseTestSettings.before,
+		afterTest: settings.afterTest || baseTestSettings.afterTest,
+		onComplete: settings.onComplete || baseTestSettings.onComplete
 	};
 
 	return {
@@ -113,4 +105,16 @@ export const makeTestSettings = (
 		...testEnvironmentSettings,
 		...testHooks
 	} as TestSettings;
+};
+
+export const defaultSettings: Partial<TestSettings> = {
+	envFiles: [
+		'../deploy/template.env',
+		'./test-services.env',
+		'../local.env'
+	],
+	composeFiles: [
+		'../deploy/docker-compose.yml',
+		'suites/docker-compose.override.yml'
+	]
 };

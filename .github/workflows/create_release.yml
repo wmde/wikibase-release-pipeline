@@ -1,0 +1,81 @@
+name: 📦 Create a WBS Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: 'Project to release'
+        type: choice
+        required: true
+        default: 'wikibase'
+        options:
+          - deploy
+          - elasticsearch
+          - quickstatements
+          - wdqs
+          - wdqs-frontend
+          - wikibase
+          - All projects with unreleased changes
+      dry_run:
+        description: "Dry run, don't do it yet."
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build_and_test:
+    uses: ./.github/workflows/_build_and_test.yml
+    secrets: inherit
+
+  release:
+    needs: build_and_test
+    if: needs.build_and_test.result == 'success'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_WBS_BOT_TOKEN }}
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+
+      - name: Create release
+        run: |
+          set -e # abort on error
+          set -x # show commands
+
+          git config --global user.name 'wikibase-suite-bot'
+          git config --global user.email 'wikibase-suite-engineers@wikimedia.de'
+
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          else
+            DRY_RUN_FLAG=""
+          fi
+
+          if [ "${{ inputs.project_name }}" == "All projects with unreleased changes" ]; then
+            PROJECT_ARG=""
+          else
+            PROJECT_ARG="-p ${{ inputs.project_name }}"
+          fi
+
+          ./nx release $PROJECT_ARG $DRY_RUN_FLAG --skip-publish --verbose
+
+          BRANCH="$(git branch | grep '^\*' | sed 's/^\* //')"
+          echo "Target branch is $BRANCH"
+
+          # Temporary workaround for nx issue: https://github.com/nrwl/nx/issues/22073#
+          if [ $? -eq 0 ] && [ -z "$DRY_RUN_FLAG" ]; then
+            git push origin $BRANCH --tags
+          fi
+

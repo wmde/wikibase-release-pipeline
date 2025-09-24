@@ -5,17 +5,15 @@ import chalk from 'chalk';
 import lodash from 'lodash';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const allSuiteNames = [
-	'repo',
-	'fedprops',
-	'repo_client',
-	'quickstatements',
-	'pingback',
-	'confirm_edit',
-	'elasticsearch',
-	'deploy'
-];
+const targetDirectory = './suites/';
+const allContents = fs.readdirSync( targetDirectory );
+export const allSuiteNames = allContents.filter( ( content ) =>
+	// eslint-disable-next-line security/detect-non-literal-fs-filename
+	fs.statSync( path.join( targetDirectory, content ) ).isDirectory()
+);
 
 const y = yargs( hideBin( process.argv ) );
 
@@ -77,7 +75,7 @@ const runCLI = async (): Promise<{
 	} );
 
 	y.version( '1.0.0' );
-	y.scriptName( './test.sh' );
+	y.scriptName( './nx test' );
 	y.wrap( 120 );
 	y.demandCommand();
 	y.showHelpOnFail( true );
@@ -150,8 +148,8 @@ export async function runWdio(
 ): Promise<number> {
 	try {
 		// `logger` is a singleton and without this line the `<suiteName>/results/wdio.log` of the
-		// first suite in a multiple suite test ran (e.g. `./test.sh all`) is appended for all the
-		// suites in the run
+		// first suite in a multiple suite test ran (e.g. `./nx test -- all`) is appended for all
+		// the suites in the run
 		logger.clearLogger();
 
 		const wdio = new Launcher( configFilePath, wdioOpts );

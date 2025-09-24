@@ -1,7 +1,7 @@
 import logger, { Logger } from '@wdio/logger';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
-import { mkdirSync, rmSync } from 'fs';
+import { existsSync, mkdirSync, rmSync } from 'fs';
 import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../types/test-settings.js';
@@ -20,11 +20,8 @@ export default class TestEnv {
 
 	public baseDockerComposeCmd: string;
 
-	public static createWithDefaults(
-		providedSettings: Partial<TestSettings>
-	): TestEnv {
-		const settings = makeTestSettings( providedSettings );
-		return new this( settings );
+	public static create( settings: Partial<TestSettings> ): TestEnv {
+		return new this( makeTestSettings( settings ) );
 	}
 
 	public constructor( settings?: TestSettings ) {
@@ -95,9 +92,9 @@ export default class TestEnv {
 			shell: true,
 			encoding: 'utf-8',
 			env: {
+				...process.env,
 				...this.vars,
-				OUTPUT_DIR: this.settings.outputDir,
-				PATH: process.env.PATH
+				OUTPUT_DIR: this.settings.outputDir
 			}
 		} );
 
@@ -204,8 +201,10 @@ export default class TestEnv {
 	protected makeBaseDockerComposeCmd(): string {
 		const dockerComposeCmdArray: string[] = [
 			'docker compose',
+			'--env-file test-runner.env',
+			existsSync( '../local.env' ) ? '--env-file ../local.env' : '',
 			`--project-directory ${ this.settings.pwd }/suites`,
-			'-p wikibase-suite-test-services'
+			'-p wbs-dev-test-services'
 		];
 
 		this.settings.composeFiles.forEach( ( composeFile ) =>

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Create a local.env if it doesn't already exist
+[ -f "local.env" ] || touch local.env
+source local.env
+
+# # Execute nx directly if locally flagged to run in node or running inside a Docker container
+if [[ -f /.dockerenv || "$NX_RUN_LOCAL" == true  ]]; then
+  exec pnpm exec nx "$@"
+fi
+
+# Otherwise, set up and run the Docker container
+
+# Create the expected Docker network if it doesn't exist
+docker network create wbs-dev > /dev/null 2>&1 || true
+
+exec docker compose --progress quiet run --build --rm runner -c 'pnpm exec nx "$@"' -- "$@"

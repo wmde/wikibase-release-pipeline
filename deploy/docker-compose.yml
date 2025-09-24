@@ -6,21 +6,21 @@ services:
   # --------------------------------------------------
 
   wikibase:
-    image: wikibase/wikibase:3
+    image: wikibase/wikibase:5
     depends_on:
       mysql:
         condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     restart: unless-stopped
-    ports:
-      - 8880:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`${WIKIBASE_PUBLIC_HOST}`)"
     volumes:
-      - ./config:/config
+      - ./config:/config:z
+      - ./config/extensions:/var/www/html/extensions/extensions:z
+      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     environment:
+      METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
       MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
@@ -30,14 +30,16 @@ services:
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       ELASTICSEARCH_HOST: elasticsearch
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost/wiki/Main_Page
       interval: 10s
       start_period: 5m
 
   wikibase-jobrunner:
-    image: wikibase/wikibase:3
+    image: wikibase/wikibase:5
     command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
@@ -83,7 +85,7 @@ services:
       start_period: 2m
 
   wdqs:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runBlazegraph.sh
     depends_on:
       wikibase:
@@ -104,7 +106,7 @@ services:
       start_period: 2m
 
   wdqs-updater:
-    image: wikibase/wdqs:1
+    image: wikibase/wdqs:2
     command: /runUpdate.sh
     depends_on:
       wdqs:
@@ -117,26 +119,17 @@ services:
       nofile:
         soft: 32768
         hard: 32768
-
-  wdqs-proxy:
-    image: wikibase/wdqs-proxy:1
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
+    environment:
+      WIKIBASE_CONCEPT_URI: https://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend:1
-    depends_on:
-      - wdqs-proxy
+    image: wikibase/wdqs-frontend:2
     restart: unless-stopped
-    ports:
-      - 8834:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`${WDQS_FRONTEND_PUBLIC_HOST}`)"
+    volumes:
+      - ./config:/config:z
     environment:
-      WDQS_HOST: wdqs-proxy
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
     healthcheck:
       test: curl --silent --fail localhost
       interval: 10s
@@ -148,15 +141,10 @@ services:
       wikibase:
         condition: service_healthy
     restart: unless-stopped
-    ports:
-      - 8840:80
     volumes:
       - quickstatements-data:/quickstatements/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`${QUICKSTATEMENTS_PUBLIC_HOST}`)"
     environment:
-      QUICKSTATEMENTS_PUBLIC_URL: https://${QUICKSTATEMENTS_PUBLIC_HOST}
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
     healthcheck:
       test: curl --silent --fail localhost
@@ -167,12 +155,13 @@ services:
   # C. REVERSE PROXY AND SSL SERVICES
   # --------------------------------------------------
 
+  # This is the reverse proxy and SSL service
   traefik:
-    image: traefik:3.1
+    image: traefik:3
     command:
-      # Basic setup
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      # traefik static configuration via command line
+      # enable accesslog
+      - "--accesslog.format=common"
       # http endpoint
       - "--entrypoints.web.address=:80"
       # https endpoint
@@ -188,14 +177,26 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # additionial traefik dynamic configuration via config file
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
       # Uncomment this line to only test ssl generation first, makes sure you don't run into letsencrypt rate limits
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # Uncomment the following line for debugging, also expose port 8080 below
+      # - "--api.dashboard=true"
+      # - "--api.insecure=true"
+      # - "--log.level=DEBUG"
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
+      # traefik dashboard
+      # - 8080:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
       - traefik-letsencrypt-data:/letsencrypt
+    environment:
+      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
 
 volumes:
   # A. CORE WIKIBASE SUITE SERVICES DATA

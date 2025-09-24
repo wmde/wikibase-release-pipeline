@@ -16,6 +16,11 @@ export function defaultFunctions(): void {
 	// ======
 	// Use in a test as `browser.options.<key>`.
 
+	// As of v8 of WDIO the browser.config object is deprecated in preference to browser.options
+	// This reassignment of options to config is necessary until the upstream WMDE and WikiMedia
+	// WDIO helper modules catch-up
+	browser.config = browser.options;
+
 	// Base for browser.url() and Page#openTitle()
 	browser.options.baseUrl =
 		testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
@@ -140,7 +145,7 @@ export function defaultFunctions(): void {
 			await browser.waitUntil(
 				async () => {
 					const commandTextArray = await Promise.all(
-						commands.map( async ( command ) => command.getText() )
+						await commands.map( async ( command ) => command.getText() )
 					);
 					return commandTextArray.every(
 						( commandText ) => commandText === 'done'
@@ -279,6 +284,30 @@ export function defaultFunctions(): void {
 						} seconds.`
 				}
 			);
+		}
+	);
+
+	browser.addCommand(
+		'getMediaWikiVersion',
+		async (
+			serverURL: string = testEnv.vars.WIKIBASE_URL
+		): Promise<string> => {
+			const result = await browser.makeRequest(
+				`${ serverURL }/w/api.php?action=query&meta=siteinfo&siprop=general&format=json`,
+				{ validateStatus: false },
+				{}
+			);
+			const generatorString = result.data.query.general.generator;
+			const regex = /MediaWiki\s+(\d+\.\d+\.\d+)/i;
+			const match = generatorString.match( regex );
+
+			if ( !match || !match[ 1 ] ) {
+				throw new Error(
+					`Cannot get MediaWiki Version via ActionAPI serverURL=${ serverURL }, generatorString=${ generatorString }`
+				);
+			}
+
+			return match[ 1 ];
 		}
 	);
 }

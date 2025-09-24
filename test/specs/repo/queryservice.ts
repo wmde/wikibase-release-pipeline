@@ -7,25 +7,25 @@ import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', function () {
+	it( 'Should be able to get sparql endpoint', async function () {
+		const result = await browser.makeRequest(
+			`${ testEnv.vars.WDQS_URL }/sparql`
+		);
+		expect( result.status ).toEqual( 200 );
+	} );
+
 	it( 'Should not be able to post to sparql endpoint', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`,
+			`${ testEnv.vars.WDQS_URL }/sparql`,
 			{ validateStatus: false },
 			{}
 		);
 		expect( result.status ).toEqual( 405 );
 	} );
 
-	it( 'Should be able to get sparql endpoint', async function () {
-		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/sparql`
-		);
-		expect( result.status ).toEqual( 200 );
-	} );
-
 	it( 'Should not be possible to reach blazegraph ldf api that is not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/ldf`,
+			`${ testEnv.vars.WDQS_URL }/ldf`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );
@@ -33,15 +33,7 @@ describe( 'QueryService', function () {
 
 	it( 'Should not be possible to reach blazegraph ldf assets thats not enabled', async function () {
 		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/namespace/wdq/assets`,
-			{ validateStatus: false }
-		);
-		expect( result.status ).toEqual( 404 );
-	} );
-
-	it( 'Should not be possible to reach blazegraph workbench', async function () {
-		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_PROXY_URL }/bigdata/#query`,
+			`${ testEnv.vars.WDQS_URL }/assets`,
 			{ validateStatus: false }
 		);
 		expect( result.status ).toEqual( 404 );
@@ -69,7 +61,7 @@ describe( 'QueryService', function () {
 		const itemId = await WikibaseApi.createItem( getTestString( itemLabel ), data );
 
 		// query the item using wd: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -114,7 +106,7 @@ describe( 'QueryService', function () {
 		).resolves.toEqual( true );
 
 		// query the property using wdt: prefix
-		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s wdt:${ propertyId } ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ ?s <http://wikibase.example/prop/direct/${ propertyId }> ?o }` );
 
 		await QueryServiceUIPage.submit();
 		await QueryServiceUIPage.resultTable;
@@ -146,7 +138,7 @@ describe( 'QueryService', function () {
 		).replace( /[()]/g, '' );
 
 		// Check it shows up after creation
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause
@@ -172,7 +164,7 @@ describe( 'QueryService', function () {
 		);
 		await $( '.oo-ui-flaggedElement-destructive button' ).click();
 
-		await QueryServiceUIPage.open( `SELECT * WHERE{ wd:${ itemId } ?p ?o }` );
+		await QueryServiceUIPage.open( `SELECT * WHERE{ <http://wikibase.example/entity/${ itemId }> ?p ?o }` );
 
 		// wait for WDQS-updater
 		// eslint-disable-next-line wdio/no-pause

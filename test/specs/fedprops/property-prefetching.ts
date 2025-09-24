@@ -48,7 +48,7 @@ describe( 'Property Prefetching', function () {
 	it( 'should delete all statements and generate individual changes', async function () {
 		const statements = await $$( '.wikibase-statementview' );
 		const propertyGuids = await Promise.all(
-			statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
+			await statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
 		);
 
 		expect( propertyGuids ).toHaveLength( NUM_PROPERTIES );

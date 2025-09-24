@@ -1,0 +1,107 @@
+on:
+  workflow_call:
+
+jobs:
+  skip_check:
+    runs-on: ubuntu-24.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Check for duplicate successful runs
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
+          skip_after_successful_duplicate: true
+          cancel_others: true
+          do_not_skip: '["schedule"]'
+
+  lint:
+    needs:
+      - skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - run: ./nx lint
+
+  build:
+    needs:
+      - skip_check
+    if: needs.skip_check.outputs.should_skip != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        imageName:
+          - wikibase
+          - elasticsearch
+          - wdqs
+          - wdqs-frontend
+          - quickstatements
+
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Build and push ${{ matrix.imageName }}
+        run: ./nx build ${{ matrix.imageName }} --push
+
+  test:
+    needs:
+      - skip_check
+      - build
+    if: needs.skip_check.outputs.should_skip != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - repo
+          - fedprops
+          - repo_client
+          - quickstatements
+          - pingback
+          - elasticsearch
+
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: "Pull images from GHCR"
+        uses: ./.github/actions/pull-ghcr
+
+      - name: "Run ${{ matrix.suite }} test suite"
+        run: ./nx test -- ${{ matrix.suite }}
+
+      - name: Show logs
+        run: |
+          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
+          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
+          path: test/suites/**/results
