@@ -77,6 +77,12 @@ if $fix; then
   find "$path" -path "$path/node_modules" -prune -o -name '*.py' -print0 | xargs -0 -r \
     python3 -m black --quiet
 else
+  if $prettier; then
+    echo "ℹ️ Running Prettier (without --write) on Markdown and YAML files"
+      prettier "$path/**/*.md" --log-level error --config .prettierrc.json --check
+      prettier "$path/**/*.{yml,yaml}" --log-level error --config .prettierrc.json --check
+  fi
+
   echo "ℹ️ Running ESLint (without --fix)"
   eslint "$path"
   eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json
