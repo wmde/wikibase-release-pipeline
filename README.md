@@ -1,6 +1,6 @@
 # Wikibase Suite
 
-Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
+Wikibase Suite (WBS) is a software stack that eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). You can customize it as per your requirements and be a part of the Linked Open Data initiative!
 
 If you want to host your own WBS instance, head over to the [WBS Deploy documentation](./deploy/README.md).
 
