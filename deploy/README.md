@@ -77,9 +77,7 @@ The first start can take a couple of minutes. You can check the status of the st
 
 🎉 Congratulations! You can now access your instance via https://wikibase.example. Make sure to adjust your domain name accordingly.
 
-> 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages.
-
-> In case you run into some issues in this step, please make sure to [reset the configuration](#resetting-the-configuration) after fixing the error.
+> 💡 If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages. In case you run into some issues in this step, please make sure to [reset the configuration] (#resetting-the-configuration) after fixing the error.
 
 ### Stopping
 

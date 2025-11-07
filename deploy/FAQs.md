@@ -1,4 +1,4 @@
-## FAQ
+## Frequently Asked Questions
 
 ### Can I host WBS Deploy locally?
 
