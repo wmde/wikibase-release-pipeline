@@ -21,7 +21,7 @@ The service orchestration is implemented using Docker Compose V2.
 > 💡 This document presumes familiarity with basic Linux administration tasks and with [Docker](https://docs.docker.com/get-started/) and [Docker Compose](https://docs.docker.com/compose/).
 
 ### Index
-- [Installation](#requirements)
+- [Installation](#installation)
   - [Requirements](#requirements)
   - [Setup](#setup)
   - [Initial Configuration](#initial-configuration)
@@ -39,6 +39,8 @@ The service orchestration is implemented using Docker Compose V2.
 - [Frequently Asked Questions](#frequently-asked-questions)
 - [Removing Wikibase Suite Completely with all its Data](#removing-wikibase-suite-completely-with-all-its-data)
 - [WDQS](#wdqs)
+
+## Installation
 
 ### Requirements
 
@@ -139,7 +141,7 @@ WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS Deploy 
 
 WBS Deploy always references the latest minor and patch releases of the compatible WBS images' major versions using the Docker images' major version tag. For example, WBS Deploy 2.0.1 might reference `wikibase/wikibase:3`, a tag that always points to the latest image Wikibase 3.x.x image.
 
-#### Minor and patch updates for WBS images
+### Minor and patch updates for WBS images
 
 Because WBS Deploy always references the latest minor and patch releases of compatible WBS images, non-breaking changes (including security updates) can be pulled at any time.
 
