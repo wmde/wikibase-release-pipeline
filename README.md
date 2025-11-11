@@ -9,6 +9,7 @@ If you want to host your own WBS instance, here are some helpful links:
 - [Telegram Community Channel for Wikibase Suite](https://t.me/wikibasesuite)
 - [Telegram Community Channel for Wikibase](https://t.me/+WBsf9-C9KPuMZCDT)
 - [Our Phabricator Board for what we are currently working on](https://phabricator.wikimedia.org/project/board/5755/)
+- [Mastodon for Wikibase](https://wikis.world/@Wikibase)
 - [Wikibase Suite Team Mail](wikibase-suite@wikimedia.de)
 - [Our mailing list](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
 
