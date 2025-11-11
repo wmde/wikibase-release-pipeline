@@ -4,14 +4,13 @@ Wikibase Suite (WBS) is a software stack that eases self-hosting [Wikibase](http
 
 If you want to host your own WBS instance, here are some helpful links:
 - [Installation Guide and Maintenance](./deploy/README.md)
+- [Individual WBS images](https://hub.docker.com/u/wikibase)
 - [Our Website](https://wikiba.se/)
 - [Telegram Community Channel for Wikibase Suite](https://t.me/wikibasesuite)
 - [Telegram Community Channel for Wikibase](https://t.me/+WBsf9-C9KPuMZCDT)
 - [Our Phabricator Board for what we are currently working on](https://phabricator.wikimedia.org/project/board/5755/)
 - [Wikibase Suite Team Mail](wikibase-suite@wikimedia.de)
-- - [Our mailing list](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
-
-If you're looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+- [Our mailing list](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
 
 > 🔧 This document is intended for people developing WBS.
 
