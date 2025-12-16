@@ -18,7 +18,7 @@
 		}
 	},
 	"brand": {
-		"title": "WBS Query Service",
+		"title": "Wikibase Query Service",
 		"logo": "logo.svg",
 		"favicon": "favicon.ico",
 		"copyrightUrl": "",
