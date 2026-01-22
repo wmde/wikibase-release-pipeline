@@ -29,11 +29,11 @@ The service orchestration is implemented using Docker Compose V2.
   - [Stopping instance](#stopping)
   - [Resetting the configuration](#resetting-the-configuration)
 - [Call Back](#call-back)
-- [Updating and Versioning](updating_and_versioning.md)
-- [Advanced Configuration](advanced_configuration.md)
-- [Managing your data](manage_your_data.md)
+- [Updating and Versioning](updating-and-versioning.md)
+- [Advanced Configuration](advanced-configuration.md)
+- [Managing your data](manage-your-data.md)
 - [Frequently Asked Questions](FAQs.md)
-- [Removing Wikibase Suite Completely with all its Data](removing_wikibase.md)
+- [Removing Wikibase Suite Completely with all its Data](removing-wikibase.md)
 - [WDQS](wdqs.md)
 
 ## Installation
