@@ -51,7 +51,7 @@ Here are some official installation guides for commonly used hosting providers:
 - [Akamai](https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance)
 - [Vultr](https://docs.vultr.com/products/compute/cloud-compute/provisioning)
 
-These are the requirements for your server: 
+These are the minimum requirements for your server: 
 - Network connection with a public IP address
 - x86_64 (AMD64) architecture
 - 8 GB RAM
