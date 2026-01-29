@@ -19,8 +19,7 @@ WBS Deploy consists of the following services:
 The service orchestration is implemented using Docker Compose V2.
 
 > [!NOTE]
-> 🔧 This document is for people wanting to self-host the full Wikibase Suite using Wikibase Suite Deploy. If you are looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
-> 💡 This document presumes familiarity with basic Linux administration tasks and with [Docker](https://docs.docker.com/get-started/) and [Docker Compose](https://docs.docker.com/compose/).
+> This document is for people wanting to self-host the full Wikibase Suite using Wikibase Suite Deploy. If you are looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase). This document presumes familiarity with basic Linux administration tasks and with [Docker](https://docs.docker.com/get-started/) and [Docker Compose](https://docs.docker.com/compose/).
 
 ### Index
 - [Installation](#installation)
@@ -126,7 +125,7 @@ docker compose up
 
 The first start can take a couple of minutes. You can check the status of the stack by running `docker ps` from another terminal. When your WBS Deploy instance is ready, the `wbs-deploy-wikibase-1` container will be marked `healthy`.
 
-🎉 Congratulations! You can now access your instance via https://wikibase.example. Make sure to adjust your domain name accordingly.
+🎉 Congratulations! You can now access your instance via your domain name.
 
 > [!NOTE]
 > If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages. In case you run into some issues in this step, please make sure to [reset the configuration](#resetting-the-configuration) after fixing the error.
