@@ -110,9 +110,11 @@ Here are the common commands you will need to edit the file:
 * :wq to save and quit.
 * :q! to quit without saving. 
 
-#### Editing the File
+---
 
-**a. Call Back:**
+### 4. Editing the File
+
+#### a. Call Back:
 This is an initiative to maintain an index of Wikibases. You can find more information [here](#call-back). You need to
 set `true` to opt-in and `false` to opt out.
 
@@ -123,19 +125,19 @@ METADATA_CALLBACK=true
 > [!NOTE]
 > Please note that if you do not set a value, the container will not run successfully.
 
-**b. Public hostname configuration:**
+#### b. Public hostname configuration:
 These domain names for your Wikibase Suite services should be configured on your DNS server to point to the public IP address 
 of the server being deployed to. Note that you need two distinct names, e.g. two different subdomains. Otherwise the traefik 
 reverse proxy cannot route properly.
 
-**c. MediaWiki / Wikibase user configuration:**
+#### c. MediaWiki / Wikibase user configuration:
 Please enter the relevant details.
 
 > [!NOTE]
 > Password must be at least 10 characters, different from your username and not appear in the list of commonly used passwords 
 > this project uses. If these conditions are not met, the container won't run successfully.
 
-**d. MediaWiki / Wikibase database configuration:**
+#### d. MediaWiki / Wikibase database configuration:
 Those settings are used by the MariaDB container when creating a new database and by MediaWiki when generating a new `LocalSettings.php`. 
 They will not be set on an existing database, nor will MediaWiki update those settings in your `LocalSettings.php`. To change those settings, 
 either adjust them manually in MariaDB and your LocalSettings.php, or delete your MariaDB volume `mysql-data` and your `LocalSettings.php` 
@@ -143,7 +145,7 @@ from the `./config` directory and restart.
 
 ---
 
-### 4. Starting
+### 5. Starting
 
 Run the following command from within `wikibase-release-pipeline/deploy`:
 
@@ -160,7 +162,7 @@ The first start can take a couple of minutes. You can check the status of the st
 
 ---
 
-### 5. Stopping
+### 6. Stopping
 
 To stop, use
 
