@@ -2,7 +2,7 @@
 
 Wikibase Suite (WBS) Deploy is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). 
 
-This installation guide is to walk you through how to get a production-ready Wikibase and not for local hosting.
+This installation guide walks you through how to set up a production-ready Wikibase. This guide isn't for hosting Wikibase locally.
 
 WBS Deploy consists of the following services:
 
@@ -45,13 +45,13 @@ The service orchestration is implemented using Docker Compose V2.
 
 #### Hardware
 
-Here are some official installation guides for commonly used hosting providers:
+Most Wikibase production installs are on cloud-based servers. Below we list the official installation guides for some commonly used hosting providers:
 - [Hetzner](https://docs.hetzner.com/cloud/servers/getting-started/creating-a-server/)
-- [Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu)
+- [DigitalOcean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu)
 - [Akamai](https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance)
 - [Vultr](https://docs.vultr.com/products/compute/cloud-compute/provisioning)
 
-These are the minimum requirements for your server: 
+The minimum requirements for your server are as follows: 
 - Network connection with a public IP address
 - x86_64 (AMD64) architecture
 - 8 GB RAM
@@ -59,19 +59,17 @@ These are the minimum requirements for your server:
 
 #### Software
 
-- Docker 22.0 or greater ([upgrading documentation](https://docs.docker.com/engine/install/ubuntu/#installation-methods))
-- Docker Compose 2.10 or greater ([upgrading documentation](https://docs.docker.com/compose/install/))
+- Docker 22.0 or greater ([install documentation](https://docs.docker.com/engine/install/ubuntu/#installation-methods))
+- Docker Compose 2.10 or greater ([install documentation](https://docs.docker.com/compose/install/))
 - [git](https://git-scm.com/install/) 
 
 #### Domain names
 
-You need two DNS records that resolve to your machine's IP address:
+You'll need to configure two DNS records with fully qualified domain names that resolve to your server's IP address, one for Wikibase itself and one for the query service (WDQS). Many Wikibase users configure the query service as a subdomain of the main address:
 
-- Wikibase, e.g., "wikibase.example"
-- QueryService, e.g., "query.wikibase.example"
-
-> [!NOTE]
-> Please note that you only have to set up an A record not AA.
+Examples:
+- Wikibase: "yourdomain.example"
+- WDQS: "query.yourdomain.example"
 
 ---
 
@@ -79,7 +77,7 @@ You need two DNS records that resolve to your machine's IP address:
 
 #### Download WBS Deploy
 
-Check out the files from Github, move to the subdirectory `deploy`.
+Check out the files from Github, then change to the subdirectory `deploy`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
@@ -96,75 +94,58 @@ Make a copy of the [configuration template](./template.env) in the `wikibase-rel
 cp template.env .env
 ```
 
-While you can choose an editor of your choice to make changes to the `.env` file, here is the way to do it using `Vim`:
-
-```sh
-vim .env
-```
-
-Here are the common commands you will need to edit the file:
-* i to enter insert mode (for typing text).
-* Esc to return to normal (command) mode.
-* :w to save the file.
-* :q to quit (fails if changes were made).
-* :wq to save and quit.
-* :q! to quit without saving. 
+Open the file in the text editor of your choice. (Options include but are not limited to vim, nano, kedit, Sublime Text, and VSCode.)
 
 ---
 
-### 4. Editing the File
+### 4. Editing the file
 
-#### a. Call Back:
-This is an initiative to maintain an index of Wikibases. You can find more information [here](#call-back). You need to
-set `true` to opt-in and `false` to opt out.
+#### Callback
+The callback function allows for maintaining an index of Wikibases. You can find more information [here](#call-back). Set this variable to `true` to opt in or `false` to opt out.
 
 ```sh
 METADATA_CALLBACK=true
 ```
 
 > [!NOTE]
-> Please note that if you do not set a value, the container will not run successfully.
+> If this variable is not set, the container will not run successfully.
 
-#### b. Public hostname configuration:
-These domain names for your Wikibase Suite services should be configured on your DNS server to point to the public IP address 
-of the server being deployed to. Note that you need two distinct names, e.g. two different subdomains. Otherwise the traefik 
-reverse proxy cannot route properly.
+#### Public hostnames
+The domain names for your Wikibase Suite services should be configured on your DNS host to point to the public IP address 
+of the server you are deploying to. Note that you need two distinct names, i.e., two different fully qualified domain names. Without them, the traefik reverse proxy cannot route properly.
 
-#### c. MediaWiki / Wikibase user configuration:
-Please enter the relevant details.
+#### MediaWiki (Wikibase) user
+Please enter the username, email address and password you would like to use to log into the Wikibase web interface.
 
 > [!NOTE]
-> Password must be at least 10 characters, different from your username and not appear in the list of commonly used passwords 
+> Password must be at least 10 characters, different from your username, and must not appear in the list of commonly used passwords 
 > this project uses. If these conditions are not met, the container won't run successfully.
 
-#### d. MediaWiki / Wikibase database configuration:
-Those settings are used by the MariaDB container when creating a new database and by MediaWiki when generating a new `LocalSettings.php`. 
-They will not be set on an existing database, nor will MediaWiki update those settings in your `LocalSettings.php`. To change those settings, 
-either adjust them manually in MariaDB and your LocalSettings.php, or delete your MariaDB volume `mysql-data` and your `LocalSettings.php` 
-from the `./config` directory and restart.
+#### Database configuration:
+These settings are used to configure the MariaDB container when creating a new database, and by MediaWiki when generating a new `LocalSettings.php` file. They won't be set on an existing database, nor will MediaWiki update those settings in your `LocalSettings.php`. To change those settings, adjust them manually in MariaDB and your `LocalSettings.php` file. Alternatively, delete your MariaDB volume `mysql-data` (all data will be lost) and the `LocalSettings.php` file from the `./config` directory, then restart.
 
 ---
 
-### 5. Starting
+### 5. Starting Wikibase
 
-Run the following command from within `wikibase-release-pipeline/deploy`:
+Run the following command from within the `wikibase-release-pipeline/deploy` directory:
 
 ```sh
 docker compose up
 ```
 
-The first start can take a couple of minutes. You can check the status of the stack by running `docker ps` from another terminal. When your WBS Deploy instance is ready, the `wbs-deploy-wikibase-1` container will be marked `healthy`.
+The first start may take a couple of minutes. You can check the status of the stack by running `docker ps` from another terminal. When your WBS Deploy instance is ready, the `wbs-deploy-wikibase-1` container will be marked `healthy`.
 
 🎉 Congratulations! You can now access your instance via your domain name.
 
 > [!NOTE]
-> If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages. In case you run into some issues in this step, please make sure to [reset the configuration](#resetting-the-configuration) after fixing the error.
+> If anything goes wrong, you can run `docker logs <CONTAINER_NAME>` to see some helpful error messages. Should you run into some issues in this step, make sure to [reset the configuration](#resetting-the-configuration) after you fix the error.
 
 ---
 
 ### 6. Stopping
 
-To stop, use
+To stop Wikibase, run:
 
 ```sh
 docker compose stop
@@ -176,24 +157,14 @@ docker compose stop
 
 Most values set in `.env` are written into the respective containers after you run `docker compose up` for the first time.
 
-If you want to reset the configuration while retaining your existing data:
+To reset the configuration while retaining your existing data:
 
 1. Make any needed changes to the values in `.env`.
-   NOTE: Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
-2. Remove your `LocalSettings.php` file from the `deploy/config` directory. (Create a backup if you made any changes.)
-3. Remove and re-create containers:
+> [!NOTE] Do not change `DB_*` values unless you are also [re-creating the database](#removing-wikibase-suite-completely-with-all-its-data).
+2. Back up and then remove the `LocalSettings.php` file from the `deploy/config` directory.
+3. Remove and re-create the containers by running:
 
 ```sh
 docker compose down
 docker compose up
 ```
-
----
-
-## Call Back
-
-This initiative will help maintain an index of Wikibases. The goal of this index is to gather more quantitative data to learn more about how Wikibase is being used. It eventually also aims to be a central hub for data re-use and federation initiatives between Wikibases, where users can discover other Wikibases easily. 
-
-You can join this initiative by setting `METADATA_CALLBACK=true` or disable the feature by setting `METADATA_CALLBACK=false` in your `.env` file. 
-
-For more information, you can check out [this FAQ](./FAQs.md#what-are-the-future-plans-for-the-call-back-feature-and-what-information-does-it-collect).
