@@ -59,8 +59,8 @@ The minimum requirements for your server are as follows:
 
 #### Software
 
-- Docker 22.0 or greater ([install documentation](https://docs.docker.com/engine/install/ubuntu/#installation-methods))
-- Docker Compose 2.10 or greater ([install documentation](https://docs.docker.com/compose/install/))
+- Docker 22.0 or greater ([installation documentation](https://docs.docker.com/engine/install/ubuntu/#installation-methods))
+- Docker Compose 2.10 or greater ([installation documentation](https://docs.docker.com/compose/install/))
 - [git](https://git-scm.com/install/) 
 
 #### Domain names
