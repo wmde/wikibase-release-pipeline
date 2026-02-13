@@ -1,10 +1,17 @@
 # Wikibase Suite
 
-Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
+Wikibase Suite (WBS) is a software stack that eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). You can customize it as per your requirements and be a part of the Linked Open Data initiative!
 
-If you want to host your own WBS instance, head over to the [WBS Deploy documentation](./deploy/README.md).
-
-If you're looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
+If you want to host your own WBS instance, here are some helpful links:
+- [Installation Guide and Maintenance](./deploy/README.md)
+- [Individual WBS images](https://hub.docker.com/u/wikibase)
+- [Our Website](https://wikiba.se/)
+- [Telegram Community Channel for Wikibase Suite](https://t.me/wikibasesuite)
+- [Telegram Community Channel for Wikibase](https://t.me/+WBsf9-C9KPuMZCDT)
+- [Our Phabricator Board for what we are currently working on](https://phabricator.wikimedia.org/project/board/5755/)
+- [Mastodon for Wikibase](https://wikis.world/@Wikibase)
+- [Wikibase Suite Team Mail](wikibase-suite@wikimedia.de)
+- [Our mailing list](https://lists.wikimedia.org/postorius/lists/wikibaseug.lists.wikimedia.org/?source=post_page---------------------------)
 
 > 🔧 This document is intended for people developing WBS.
 

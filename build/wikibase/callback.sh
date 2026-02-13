@@ -10,7 +10,7 @@ set -u
 # other Wikibases easily.
 #
 # This script takes the configured URLs for Wikibase and WDQS and sends them to
-# https://wikibase-metadata.toolforge.org in the form of a graphql request. The
+# https://wikibase-metadata.wmcloud.org/ in the form of a graphql request. The
 # service running there will then periodically collect publicly accessible
 # information from the instance. We can only access publicly visible
 # information. If Wikibase requires a login to view data, we will not be able
@@ -41,7 +41,7 @@ if [[ "$MW_WG_SERVER" == *.localhost ]]; then
   exit 1
 fi
 
-GRAPHQL_URL="https://wikibase-metadata.toolforge.org/graphql"
+GRAPHQL_URL="https://wikibase-metadata.wmcloud.org/graphql"
 
 PAYLOAD_WDQS_ENDPOINT=""
 if [ -v WDQS_PUBLIC_ENDPOINT_URL ] && [ -n "$WDQS_PUBLIC_ENDPOINT_URL" ]; then
