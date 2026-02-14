@@ -1,10 +1,9 @@
 {
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
 	"installation": {
-		"version": "19.5.0",
+		"version": "22.5.0",
 		"plugins": {
-			"@nx/js": "19.5.0",
-			"nx/plugins/package-json": "19.5.0"
+			"nx/plugins/package-json": "22.5.0"
 		}
 	},
 	"release": {
@@ -24,10 +23,16 @@
 		},
 		"groups": {
 			"images": {
-				"projects": [ "build/*" ]
+				"projects": [ "build/*" ],
+				"releaseTag": {
+					"pattern": "{projectName}@{version}"
+				}
 			},
 			"deploy": {
-				"projects": [ "deploy" ]
+				"projects": [ "deploy" ],
+				"releaseTag": {
+					"pattern": "{projectName}@{version}"
+				}
 			}
 		},
 		"projectsRelationship": "independent",
@@ -44,19 +49,34 @@
 	},
 	"targetDefaults": {
 		"lint": {
-			"command": "./lint.sh {projectRoot}"
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "./lint.sh {projectRoot}"
+			}
 		},
 		"test": {
-			"command": "test/test.sh"
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test/test.sh"
+			}
 		},
 		"build": {
-			"command": "build/build.sh {projectName}"
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "build/build.sh {projectName}"
+			}
 		},
 		"update-commits": {
-			"command": "build/update-commits.sh {projectName}"
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "build/update-commits.sh {projectName}"
+			}
 		},
 		"nx-release-publish": {
-			"command": "build/build.sh {projectName} --publish"
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "build/build.sh {projectName} --publish"
+			}
 		}
 	}
 }

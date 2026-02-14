@@ -6,6 +6,12 @@ set -e
 [ -f "local.env" ] || touch local.env
 source local.env
 
+# `nx release` loads TypeScript config and can attempt SWC first.
+# In the Docker runner this can fail due native bindings from mounted host deps.
+if [[ "${1:-}" == "release" ]]; then
+  export NX_PREFER_TS_NODE=true
+fi
+
 # # Execute nx directly if locally flagged to run in node or running inside a Docker container
 if [[ -f /.dockerenv || "$NX_RUN_LOCAL" == true  ]]; then
   exec pnpm exec nx "$@"
@@ -15,5 +21,9 @@ fi
 
 # Create the expected Docker network if it doesn't exist
 docker network create wbs-dev > /dev/null 2>&1 || true
+
+if [[ "${1:-}" == "release" ]]; then
+  exec docker compose --progress quiet run --build --rm -e NX_PREFER_TS_NODE=true runner -c 'pnpm exec nx "$@"' -- "$@"
+fi
 
 exec docker compose --progress quiet run --build --rm runner -c 'pnpm exec nx "$@"' -- "$@"
