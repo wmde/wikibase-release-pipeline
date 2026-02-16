@@ -1,3 +1,14 @@
+# 6.0.0 (2026-02-16)
+
+Upgrades to MediaWiki from 1.44 to 1.45 including updates to compatible packaged extensions
+
+- MediaWiki updated from 1.44.0 to 1.45.0 (see https://www.mediawiki.org/wiki/MediaWiki_1.45 and https://github.com/wikimedia/mediawiki/compare/1.44.0...1.45.0)
+- Bundled extension pins updated from REL1_44 to REL1_45-compatible commits in build/wikibase/build.env.
+- OAuth same-domain patch updated for MW 1.45 compatibility in build/wikibase/mediawiki-extensions-OAuth-same-domain.patch.
+- "repo" suite E2E specs were stabilized for MW 1.45, and an OAuth consumer creation smoke test was added.
+
+Analysis revealed breaking changes expected for a MediaWiki major-version upgrade.
+
 # 5.0.0 (2025-07-24)
 
 
