@@ -1,3 +1,13 @@
+## 2.1.0 (2026-02-16)
+
+### 🚀 Features
+
+Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
+
+- WDQS Query GUI updated from 7638030 to dd58b26 (see https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/gui/+/7638030f312c21cc5a4fccd05e16d6ffffdd9220..dd58b265363e654ab2c8a6ec553aced2637fec18)
+
+Analysis revealed localization updates, routine maintenance, and feature additions, with no breaking changes detected.
+
 # 2.0.0 (2025-03-20)
 
 ### 🚀 Features
