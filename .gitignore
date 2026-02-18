@@ -8,6 +8,8 @@ pnpm
 local.env
 **/.env
 
+docker-compose.local.yml
+
 deploy/log
 deploy/config/*.ini
 deploy/config/*.json
