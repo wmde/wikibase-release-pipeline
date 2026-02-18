@@ -7,7 +7,7 @@ set -e
 source local.env
 
 # `nx release` loads TypeScript config and can attempt SWC first.
-# In the Docker runner this can fail due native bindings from mounted host deps.
+# In the Docker runner this can fail due to native bindings from mounted host deps.
 if [[ "${1:-}" == "release" ]]; then
   export NX_PREFER_TS_NODE=true
 fi
