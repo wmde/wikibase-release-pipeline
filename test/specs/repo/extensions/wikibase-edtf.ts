@@ -77,7 +77,7 @@ describe( 'WikibaseEdtf', function () {
 			async () =>
 				await propertySuggestionById.isExisting() ||
 				await propertySuggestionByDescription.isExisting(),
-			{ timeout: 15_000, timeoutMsg: 'Property suggestion did not appear.' }
+			{ timeout: 15000, timeoutMsg: 'Property suggestion did not appear.' }
 		);
 		if ( await propertySuggestionById.isExisting() ) {
 			await propertySuggestionById.click();
