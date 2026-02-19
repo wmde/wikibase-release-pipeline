@@ -70,6 +70,12 @@ Variables in **bold** are required on first launch without `LocalSettings.php` i
 | `WDQS_PUBLIC_ENDPOINT_URL`   | undefined  | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration.                                                |
 | `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Leave undefined to disable WDQS integration.                                             |
 
+### Wikibase Suite version reporting
+
+This image adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
+
+The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
+
 ### Job runner
 
 MediaWiki/Wikibase depends on [jobs being run in the background](https://www.mediawiki.org/wiki/Manual:Job_queue). This can be either done on HTTP request or by a dedicated job runner. The default configuration of this image requires an external job runner like this.

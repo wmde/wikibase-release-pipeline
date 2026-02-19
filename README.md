@@ -187,7 +187,7 @@ git pull
 Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on 🕑 timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
 
 ### 🚚 Releasing and Publishing
-Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository.
+Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository. You will need to make sure to update DEPLOY_VERSION in `deploy/docker-compose.yml` to match the version in `deploy/package.json` otherwise a related CI test will fail and not allow the release.
 
 #### 🤖 Releasing and Publishing using CI
 
