@@ -6,6 +6,7 @@ Upgrades to MediaWiki from 1.44 to 1.45 including updates to compatible packaged
 - Bundled extension pins updated from REL1_44 to REL1_45-compatible commits in build/wikibase/build.env.
 - OAuth same-domain patch updated for MW 1.45 compatibility in build/wikibase/mediawiki-extensions-OAuth-same-domain.patch.
 - "repo" suite E2E specs were stabilized for MW 1.45, and an OAuth consumer creation smoke test was added.
+- Adds version reporting of Wikibase Image, Deploy, and the Build Tools (git SHA) to Special:Version page and action API.
 
 Analysis revealed breaking changes expected for a MediaWiki major-version upgrade.
 
