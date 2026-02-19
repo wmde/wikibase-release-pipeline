@@ -64,6 +64,7 @@ fi
 
 PAYLOAD="{\"query\": \"mutation m { addWikibase(wikibaseInput: {\
       wikibaseName: \\\"$MW_WG_SERVER\\\", \
+      wikibaseType: \\\"SUITE"\\\,
       urls: {\
         baseUrl: \\\"$MW_WG_SERVER\\\", \
         articlePath: \\\"/wiki\\\", \
