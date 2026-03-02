@@ -38,9 +38,10 @@ done
 
 # === Setup tags
 
+IMAGE_VERSION=$(jq -r '.version' package.json)
+
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
-	IMAGE_VERSION=$(jq -r '.version' package.json)
 	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
 	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
 	TAGS+=(
@@ -93,6 +94,15 @@ IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE}/${IMAGE_NAME}
 for TAG in "${TAGS[@]}"; do
 	BUILD_ARGS+=("--tag ${IMAGE_URL}:${TAG}")
 done
+
+# === Wikibase Suite version metadata build args
+if [ "$IMAGE_NAME" = "wikibase" ]; then
+	BUILD_ARGS+=("--build-arg" "WIKIBASE_IMAGE_VERSION=$IMAGE_VERSION")
+	BUILD_TOOLS_GIT_SHA="$(git rev-parse --short HEAD 2>/dev/null || true)"
+	if [ -n "$BUILD_TOOLS_GIT_SHA" ]; then
+		BUILD_ARGS+=("--build-arg" "BUILD_TOOLS_GIT_SHA=$BUILD_TOOLS_GIT_SHA")
+	fi
+fi
 
 # === Transform vars in build.env to build args
 

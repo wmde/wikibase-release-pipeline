@@ -10,9 +10,14 @@ import * as path from 'path';
 
 const targetDirectory = './suites/';
 const allContents = fs.readdirSync( targetDirectory );
+const getSuiteConfigFilePath = ( suiteName: string ): string =>
+	path.join( targetDirectory, suiteName, `${ suiteName }.conf.ts` );
+
 export const allSuiteNames = allContents.filter( ( content ) =>
 	// eslint-disable-next-line security/detect-non-literal-fs-filename
-	fs.statSync( path.join( targetDirectory, content ) ).isDirectory()
+	fs.statSync( path.join( targetDirectory, content ) ).isDirectory() &&
+	// eslint-disable-next-line security/detect-non-literal-fs-filename
+	fs.existsSync( getSuiteConfigFilePath( content ) )
 );
 
 const y = yargs( hideBin( process.argv ) );
@@ -77,7 +82,6 @@ const runCLI = async (): Promise<{
 	y.version( '1.0.0' );
 	y.scriptName( './nx test' );
 	y.wrap( 120 );
-	y.demandCommand();
 	y.showHelpOnFail( true );
 	y.help();
 
@@ -101,13 +105,14 @@ function prepareWdioRunCommandOptions( argv ): Record<string, string> {
 }
 
 const commandHandler = async ( argv ): Promise<void> => {
-	if ( argv._.length < 1 ) {
+	if ( argv.setup && argv._.length === 0 ) {
 		y.showHelp();
-		return;
+		throw new Error( 'A suite name is required when using --setup.' );
 	}
+
 	const wdioRunCommandOptions = prepareWdioRunCommandOptions( argv );
 	const suiteNames =
-		argv._[ 0 ] === 'all' ?
+		argv._.length === 0 || argv._[ 0 ] === 'all' ?
 			allSuiteNames :
 			argv._.map( ( suiteName ) => suiteName.toString() );
 	let exitCode;
@@ -129,7 +134,13 @@ const commandHandler = async ( argv ): Promise<void> => {
 			);
 		}
 		for ( const suiteName of suiteNames ) {
-			const configFilePath = `./suites/${ suiteName }/${ suiteName }.conf.ts`;
+			const configFilePath = getSuiteConfigFilePath( suiteName );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
+			if ( !fs.existsSync( configFilePath ) ) {
+				throw new Error(
+					`Test suite "${ suiteName }" is missing config file: ${ configFilePath }`
+				);
+			}
 			console.log(
 				chalk.bgWhiteBright.black.bold(
 					`\n"${ suiteName }" test suite ${ ' '.repeat( 96 - suiteName.length ) }`
