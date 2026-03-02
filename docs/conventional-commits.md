@@ -1,12 +1,16 @@
 # Conventional commits
 
-[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) are human and machine readable commit messages. We use them to automatically generate changelog items and [semantic version (SemVer)](https://semver.org/) bumps on release using [NX](https://nx.dev). Here is an example of a commit message describing a bug fix in a backup script. Releasing this change would bump the project's patch version number:
+[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) are human and machine readable commit messages. We use them with [NX](https://nx.dev) to preview changelog items and [semantic version (SemVer)](https://semver.org/) bumps while preparing releases.
+
+The CI `Create Release` workflow is tag-only and does not run `nx release` or generate changelogs. Final changelogs are reviewed and committed as part of the release PR.
+
+Here is an example of a commit message describing a bug fix in a backup script. In Nx preview output, this would bump the project's patch version number:
 
 ```
 fix(backup-script): report error if no space left on device
 ```
 
-On release of a project, NX collects all commit messages from git for the project's directory (e.g. `build/wdqs`) since last release (e.g. `wdqs@1.0.1`). For this to work well we need to follow a certain procedure in our Pull requests:
+When generating local Nx release previews, NX collects commit messages for the project's directory (e.g. `build/wdqs`) since last release (e.g. `wdqs@1.0.1`). For this to work well we need to follow a certain procedure in our Pull requests:
 
 - Use conventional commit syntax for the PR title, then squash merge the PR, so that the squashed commit will contain the conventional commit message from the PR title on the target branch. The PR body will become the commit message body.
 - Or: Merge with merge commit so that all commits from the PR are retained on the target branch. All commits in the PR should follow conventional commit syntax then.
