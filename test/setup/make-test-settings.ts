@@ -115,6 +115,7 @@ export const defaultSettings: Partial<TestSettings> = {
 	],
 	composeFiles: [
 		'../deploy/docker-compose.yml',
+		'../deploy/docker-compose.override.yml',
 		'suites/docker-compose.override.yml'
 	]
 };
