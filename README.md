@@ -169,44 +169,47 @@ git pull
 ```
 
 ### 🧐 Preparing a Release
-Preparing a release involves verifying the version number and changelog files generated. 
+Preparing a release involves verifying and committing the target version numbers and changelog files before tags are created.
 #### 🏭 Preparing a Release in CI
-This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch as it contains reviewed changes that are releasable. Choose "Dry run, don't do it yet" to generate versions and changelogs without saving it. In the actions' output, on the `release` job, there is a step called `Create release`. Its logs will show you what changelogs would be generated as well as which version bumps were inferred.
+This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch as it contains reviewed changes that are releasable.
+
+The workflow is intentionally tag-only:
+- It derives release tags from committed `package.json` versions.
+- It does not run `nx release`.
+- It does not generate changelog files.
+
+Choose "Dry run" to only display which tags would be created.
 
 #### 📦 Preparing a Release locally
-The same thing can be done locally. This can come in handy for testing and is often faster.
+You can still use Nx locally to preview conventional-commit-based version/changelog suggestions while preparing a release.
 
-To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes, do:
+To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes:
 ```bash
 git checkout main
 git pull
 ./nx release --dry-run
 ```
 
+Treat this output as draft guidance. In our release process, changelog files are reviewed for correctness and completeness before they are committed.
+
 ### 📣 Preparing the Announcement
 Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on 🕑 timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
 
 ### 🚚 Releasing and Publishing
-Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository. You will need to make sure to update DEPLOY_VERSION in `deploy/docker-compose.yml` to match the version in `deploy/package.json` otherwise a related CI test will fail and not allow the release.
+Doing a release involves tagging an already-prepared commit. That commit should already contain the desired version numbers and changelog updates. Publishing images involves pushing image release tags to GitHub, which triggers DockerHub publishing workflows. Publishing Deploy is currently just done by pushing a new `deploy@X.Y.Z` git tag to this repository. You will need to make sure to update `DEPLOY_VERSION` in `deploy/docker-compose.yml` to match the version in `deploy/package.json`, otherwise a related CI test will fail and not allow the release.
 
 #### 🤖 Releasing and Publishing using CI
 
- It can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run, don't do it yet" to actually do a release. This will change version numbers in `package.json` files, update changelog files, and `git tag` these new versions. This changes will be then automatically pushed back into the repository. Pushing the new tags (such as `wikibase@1.2.3`) will trigger another CI action that publishes new images on DockerHub.
+ It can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run" to actually do a release. The workflow creates missing release tags from the committed package versions and pushes them one by one. Pushing image tags (such as `wikibase@1.2.3`) triggers another CI action that publishes new images on DockerHub.
 
 #### 💻 Releasing and Publishing locally
 
-Releasing can also be done (semi-)locally. To do a release of a single project do:
+Releasing can also be done locally by creating and pushing specific tags after reviewing version/changelog files:
 ```sh
 git checkout main
 git pull
-./nx release -p wikibase
-```
-
-Running locally also allows you to modify the resulting version number manually as well as to customize the changelog file. Use `./nx release --help` to learn more about that.
-
-When you are done, you can publish the release by pushing the tag to Github. For images, this will trigger a Github Actions to publish on DockerHub.
-```
-git push --tags origin wikibase@1.2.3
+git tag wikibase@1.2.3
+git push origin wikibase@1.2.3
 ```
 
 Pushing `deploy@X.Y.Z` tags does not trigger any further actions.
