@@ -25,7 +25,7 @@ This repository contains the Wikibase Suite toolset used for [building](./build)
 
 ```
 # Build all Wikibase Suite images
-$ ./nx run-many -t build -p "build/**"
+$ ./nx build
 
 # Build only the MediaWiki/Wikibase containers
 $ ./nx build wikibase
@@ -37,17 +37,17 @@ $ ./nx build wdqs --no-cache
 $ ./nx run wikibase:update-commits
 
 # Update upstream commit hashes for all images
-$ ./nx run-many -t update-commits
+$ ./nx update-commits
 ```
 
 ### Test
 
 ```
 # Show help for the test CLI, including the various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
-$ ./nx test
+$ ./nx test -- --help
 
 # Runs all test suites (defined in `test/suites`)
-$ ./nx test -- all
+$ ./nx test
 
 # Runs the `repo` test suite
 $ ./nx test -- repo
@@ -186,9 +186,8 @@ git pull
 ### 📣 Preparing the Announcement
 Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on 🕑 timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
 
-
 ### 🚚 Releasing and Publishing
-Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository.
+Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository. You will need to make sure to update DEPLOY_VERSION in `deploy/docker-compose.yml` to match the version in `deploy/package.json` otherwise a related CI test will fail and not allow the release.
 
 #### 🤖 Releasing and Publishing using CI
 

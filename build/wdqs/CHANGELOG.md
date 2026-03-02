@@ -1,3 +1,11 @@
+# 2.1.0 (2026-02-16)
+
+Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
+
+- WDQS updated from 0.3.142 to 0.3.156 (see https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.142...query-service-parent-0.3.156)
+
+Analysis revealed bug fixes and feature additions, with no breaking changes detected.
+
 ## 2.0.2 (2025-03-20)
 
 ### 🩹 Fixes

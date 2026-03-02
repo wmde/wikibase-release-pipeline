@@ -195,6 +195,11 @@ FROM mediawiki AS wikibase
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 
 ARG GIT_CURRENT_REVISION
+ARG WIKIBASE_IMAGE_VERSION
+ARG BUILD_TOOLS_GIT_SHA
+
+ENV WIKIBASE_IMAGE_VERSION=${WIKIBASE_IMAGE_VERSION} \
+    BUILD_TOOLS_GIT_SHA=${BUILD_TOOLS_GIT_SHA}
 
 # Set error_reporting PHP.ini settings
 # This is needed with PHP8+ and MediaWiki 1.39, as Wikibase contains deprecated code
