@@ -1,9 +1,18 @@
+import { createRequire } from 'module';
 import page from '../../helpers/pages/page.js';
 
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
 	deployVersion: string;
 	buildToolsGitSha: string;
+};
+
+type DockerComposeConfig = {
+	services?: {
+		wikibase?: {
+			environment?: Record<string, string> | string[];
+		};
+	};
 };
 
 const getInstalledSoftwareVersionForProduct = async (
@@ -18,6 +27,42 @@ const getVersionOrEmpty = (
 	source: Record<string, string>,
 	key: string
 ): string => source[ key ] ?? '';
+const require = createRequire( import.meta.url );
+const getDeployPackageVersion = (): string => {
+	const deployPackageJson = require( '../../../deploy/package.json' ) as {
+		version?: string;
+	};
+
+	return deployPackageJson.version ?? '';
+};
+const getDeployVersionFromComposeWikibaseService =
+	async (): Promise<string> => {
+		const dockerComposeConfigOutput = await testEnv.runDockerComposeCmd(
+			'config --format json'
+		);
+		const dockerComposeConfig = JSON.parse(
+			dockerComposeConfigOutput
+		) as DockerComposeConfig;
+		const services = dockerComposeConfig.services || {};
+		const wikibaseService = services.wikibase || {};
+		const environment = wikibaseService.environment;
+
+		if ( !environment ) {
+			return '';
+		}
+
+		if ( Array.isArray( environment ) ) {
+			const deployVersionEntry = environment.find( ( entry ) =>
+				entry.startsWith( 'DEPLOY_VERSION=' )
+			);
+
+			return deployVersionEntry ?
+				deployVersionEntry.split( '=' )[ 1 ] :
+				'';
+		}
+
+		return environment.DEPLOY_VERSION || '';
+	};
 
 const getRuntimeVersionsFromWikibaseContainer =
 	async (): Promise<WikibaseSuiteVersions> => {
@@ -59,9 +104,11 @@ const getWikibaseSuiteApiVersions =
 
 describe( 'Wikibase Suite version reporting', function () {
 	let runtimeVersions: WikibaseSuiteVersions;
+	let composeDeployVersion: string;
 
 	before( async function () {
 		runtimeVersions = await getRuntimeVersionsFromWikibaseContainer();
+		composeDeployVersion = await getDeployVersionFromComposeWikibaseService();
 	} );
 
 	it( 'Should expose suite versions through action API', async function () {
@@ -101,6 +148,13 @@ describe( 'Wikibase Suite version reporting', function () {
 		);
 		expect( normalizeVersionValue( deployValue ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.deployVersion )
+		);
+	} );
+
+	it( 'Should keep deploy package version in sync with DEPLOY_VERSION in wikibase compose service', function () {
+		const deployPackageVersion = getDeployPackageVersion();
+		expect( normalizeVersionValue( composeDeployVersion ) ).toEqual(
+			normalizeVersionValue( deployPackageVersion )
 		);
 	} );
 } );

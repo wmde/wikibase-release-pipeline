@@ -1,21 +1,33 @@
-# Conventional commits
+# Conventional Commits
 
-[Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) are human and machine readable commit messages. We use them to automatically generate changelog items and [semantic version (SemVer)](https://semver.org/) bumps on release using [NX](https://nx.dev). Here is an example of a commit message describing a bug fix in a backup script. Releasing this change would bump the project's patch version number:
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) are used here to help generate local draft release suggestions with Nx.
 
-```
-fix(backup-script): report error if no space left on device
-```
+In this repository they are used for:
 
-On release of a project, NX collects all commit messages from git for the project's directory (e.g. `build/wdqs`) since last release (e.g. `wdqs@1.0.1`). For this to work well we need to follow a certain procedure in our Pull requests:
+- local preview of possible version bumps
+- local preview of draft changelog entries
 
-- Use conventional commit syntax for the PR title, then squash merge the PR, so that the squashed commit will contain the conventional commit message from the PR title on the target branch. The PR body will become the commit message body.
-- Or: Merge with merge commit so that all commits from the PR are retained on the target branch. All commits in the PR should follow conventional commit syntax then.
+They are not the final release source of truth by themselves:
 
-## Supported types
+- the CI `Create Release` workflow is tag-only
+- CI does not run `nx release`
+- CI does not generate changelogs
+- final changelog text is curated and committed in the release PR
 
-NX supports [a number of](https://github.com/nrwl/nx/blob/db10812da789cd48d3a722628a00feda9d0e3810/packages/nx/src/command-line/release/config/conventional-commits.ts) conventional commit types. We use the following for changelog generation as configured in our [nx.json](https://github.com/wmde/wikibase-release-pipeline/blob/main/nx.json):
+Typical local preparation uses `nx release version` plus per-project `nx release changelog <version>`. A full `nx release --dry-run` is also useful as a preview path.
 
-| Type     | SemVer Bump | Changelog Title  |
+## How to Use in PRs
+
+To preserve conventional-commit metadata on `main`, use one of these:
+
+- set the PR title to conventional-commit format and squash merge
+- or merge without squashing and keep conventional-commit format in commits
+
+## Supported Types
+
+Configured in [`nx.json`](https://github.com/wmde/wikibase-release-pipeline/blob/main/nx.json):
+
+| Type     | SemVer bump | Changelog title  |
 | -------- | ----------- | ---------------- |
 | build    | patch       | 📦 Build         |
 | chore    | patch       | 🏡 Chore         |
@@ -28,60 +40,12 @@ NX supports [a number of](https://github.com/nrwl/nx/blob/db10812da789cd48d3a722
 | style    | patch       | 🎨 Styles        |
 | test     | patch       | ✅ Tests         |
 
-## Examples
+Any type can be a breaking change with `!`, which implies a major bump.
 
-### Feature
+## Quick Examples
 
-A new feature implementation bumping the minor version:
-
-```
-feat: added support for cats
-```
-
-Will generate the following changelog entry:
-
-#### 🚀 Features
-
-- added support for cats
-
-### Documentation update
-
-Some update to the docs bumping a minor version:
-
-```
-docs: describe how to work around sleeping cats
-```
-
-Will generate the following changelog entry:
-
-#### 📖 Documentation
-
-- describe how to work around sleeping cats
-
-### Breaking change
-
-All types can be breaking changes. Here is an example for a breaking refactor, bumping a major version.
-
-```
+```text
+fix(backup-script): report error if no space left on device
+feat: add support for cats
 refactor!: remove support for sabre-toothed tiger
 ```
-
-Will generate the following changelog entry:
-
-#### 💅 Refactors
-
-- remove support for sabre-toothed tiger
-
-### Performance change for a certain component
-
-Noting that a change is specific to a component or subsystem in a project.
-
-```
-pref(food-dispenser): improved speed
-```
-
-Will generate the following changelog entry:
-
-#### 🔥 Performance
-
-- food-dispenser: improved speed

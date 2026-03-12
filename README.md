@@ -3,6 +3,7 @@
 Wikibase Suite (WBS) is a software stack that eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). You can customize it as per your requirements and be a part of the Linked Open Data initiative!
 
 If you want to host your own WBS instance, here are some helpful links:
+
 - [Installation Guide and Maintenance](./deploy/README.md)
 - [Individual WBS images](https://hub.docker.com/u/wikibase)
 - [Our Website](https://wikiba.se/)
@@ -88,6 +89,8 @@ Tests are organized in suites, which can be found in `test/suites`. Each suite r
 
 All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
 
+_⚠️ Note: Builds are currently not performed automatically by tests. Make sure you have built against current changes before running tests. See [Build](#build) above._
+
 You can run the tests in the Docker container locally exactly as they are run in CI by using `./nx test`.
 
 ## Examples usage of `./nx test`:
@@ -138,78 +141,59 @@ For more information on testing, see the [README](./test/README.md).
 
 ## 🚚 Release and Publish Process
 
-WBS Deploy and WBS Images are released and published using this repository. 
+### 📄 Overview
 
-Major releases and those containing significant changes are announced to the community.
+Releasing WBS has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then derive WBS version bumps and changelog drafts from commit history, refine that output into final release notes, and open a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create/push tags and trigger DockerHub image publishing.
 
-### 🛠 Changes to be Released
+### ✅ Release Flow
 
-Different kinds of changes can make a release desirable. All of them should be reviewed and merged to the `main` branch in order to be part of a release.
+1. Prepare the release implementation changes (substantive release work):
+   - create a release branch from a freshly updated `main`
+     ```bash
+     git checkout main
+     git pull
+     git checkout -b <release-branch-name>
+     ```
+   - update `MEDIAWIKI_VERSION` in `build/wikibase/build.env` to the target MediaWiki version
+   - run `./nx update-commits` to refresh upstream commit pins across the build images (including Wikibase, WDQS, WDQS frontend, and QuickStatements) for the selected MediaWiki line:
+     ```bash
+     ./nx update-commits
+     ```
+   - build and test locally:
+     ```bash
+     ./nx build
+     ./nx test
+     ```
+   - fix any breakages caused by the MediaWiki bump or dependency updates, then repeat build/test until green
 
-#### ⏬ Upstream Version Bumps
+2. Derive target versions locally:
+   ```bash
+   ./nx release version
+   ```
 
-Changing the version of an upstream component can trigger a version bump on our side. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/). Upstream versions are changed in the `build/*/build.env` files. Some of our images support updating some of the version references automatically using `./nx run wikibase:update-commits`, `./nx run quickstatements:update-commits`, and `./nx run wdqs-frontend:update-commits`.
+3. Derive and refine changelog entries for each changed project:
+   ```bash
+   ./nx release changelog <version-from-package-json> -p <project-name> --git-commit=false --git-tag=false
+   ```
+   Generated changelog entries are a starting draft. Review and refine them so they accurately reflect the changes since the last release, and are useful for consolidation into release announcements.
 
-MediaWiki Minor versions, that is moving from 1.41 to 1.42, are a special case. They always lead to a major version bump in Wikibase Image.
+4. Update `DEPLOY_VERSION` in `deploy/docker-compose.yml` to exactly match the version specified in `deploy/package.json`. *As a safeguard CI fails on the version reporting test if there is any divergence.*
 
-#### 🔨 Local Changes
+5. Once the version/changelog changes are finalized, push the release branch to Github and open a new PR with target branch of `main`. Once the CI tests pass on that PR, tag the "wikibase-suite" team as reviewers.
 
-Changes to our products implemented locally also lead to version bumps. Depending on the change, this may lead to a major, minor, or patch version following [Semantic Versioning](https://semver.org/).
+6. Once PR is reviewed and approved, merge to `main`.
 
-### ⚙️ Building and Testing
+7. All releases should be announced to the community before finalized, coordinate timing with the Developer Advocate BEFORE completing Step 8 below so the announcement follows the publish closely.
 
-Changes need to be built and tested. This is done by CI as implemented in `./github/workflows/` and automatically triggered in every PR and every commit on `main`.
-
-Alternatively, to run build and test locally, do:
-```sh
-git checkout main
-git pull
-./nx run-many -t build -p "build/**"
-./nx test -- all --headed
-```
-
-### 🧐 Preparing a Release
-Preparing a release involves verifying the version number and changelog files generated. 
-#### 🏭 Preparing a Release in CI
-This can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). This is basically always done for the `main` branch as it contains reviewed changes that are releasable. Choose "Dry run, don't do it yet" to generate versions and changelogs without saving it. In the actions' output, on the `release` job, there is a step called `Create release`. Its logs will show you what changelogs would be generated as well as which version bumps were inferred.
-
-#### 📦 Preparing a Release locally
-The same thing can be done locally. This can come in handy for testing and is often faster.
-
-To do a release dry-run (nothing but informative output will happen) for all projects with unreleased changes, do:
-```bash
-git checkout main
-git pull
-./nx release --dry-run
-```
-
-### 📣 Preparing the Announcement
-Major releases and those containing significant changes are announced to the community. Plan with the Developer Advocate. Sync specifically on 🕑 timing as the announcement should go out shortly after the actual publish. Ideally within a couple of hours.
-
-### 🚚 Releasing and Publishing
-Doing a release involves generating the version number bump and changelog files. Publishing images involves pushing them to DockerHub. Publishing Deploy is currently just done by pushing a new git tag to our repository. You will need to make sure to update DEPLOY_VERSION in `deploy/docker-compose.yml` to match the version in `deploy/package.json` otherwise a related CI test will fail and not allow the release.
-
-#### 🤖 Releasing and Publishing using CI
-
- It can be done on CI using the [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml). Releases are basically always done from the `main` branch. Disable "Dry run, don't do it yet" to actually do a release. This will change version numbers in `package.json` files, update changelog files, and `git tag` these new versions. This changes will be then automatically pushed back into the repository. Pushing the new tags (such as `wikibase@1.2.3`) will trigger another CI action that publishes new images on DockerHub.
-
-#### 💻 Releasing and Publishing locally
-
-Releasing can also be done (semi-)locally. To do a release of a single project do:
-```sh
-git checkout main
-git pull
-./nx release -p wikibase
-```
-
-Running locally also allows you to modify the resulting version number manually as well as to customize the changelog file. Use `./nx release --help` to learn more about that.
-
-When you are done, you can publish the release by pushing the tag to Github. For images, this will trigger a Github Actions to publish on DockerHub.
-```
-git push --tags origin wikibase@1.2.3
-```
-
-Pushing `deploy@X.Y.Z` tags does not trigger any further actions.
-
-
-### 🥇 You`re done. Congratulations!
+8. Run `Create Release` on `main`:
+   - run [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) after the release PR has been finalized, reviewed, approved, and merged
+   - `dry_run=true` to audit tags only.
+   - `dry_run=false` to create and push missing tags.
+   - workflow behavior:
+     - derives tags from committed `package.json` values (`<name>@<version>`)
+     - creates only tags that do not already exist on `origin`
+     - pushes tags one by one so each tag emits its own push event
+   - does not run `nx release`, infer/rewrite versions, or generate changelogs
+   - publishing behavior:
+     - image tags (for example `wikibase@1.2.3`) trigger DockerHub publish workflows
+     - `deploy@X.Y.Z` tags do not trigger DockerHub image publishing
