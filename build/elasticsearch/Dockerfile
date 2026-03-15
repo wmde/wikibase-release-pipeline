@@ -12,6 +12,7 @@ RUN \
     org.wikimedia.search:extra:${ELASTICSEARCH_PLUGIN_WIKIMEDIA_EXTRA} && \
   ./bin/elasticsearch-plugin install \
     org.wikimedia.search.highlighter:experimental-highlighter-elasticsearch-plugin:${ELASTICSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER}
+COPY healthcheck.sh /healthcheck.sh
 COPY default.jvm.options /default.jvm.options
 RUN cat /default.jvm.options >> /usr/share/elasticsearch/config/jvm.options && \
     rm /default.jvm.options
