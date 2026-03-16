@@ -12,7 +12,7 @@ RUN \
     git -C /tmp/quickstatements checkout ${QUICKSTATEMENTS_COMMIT} && \
     git -C /tmp/quickstatements submodule update --init --recursive && \
     \
-    git clone https://bitbucket.org/magnusmanske/magnustools.git /tmp/magnustools && \
+    git clone https://codeberg.org/magnusmanske/magnustools.git /tmp/magnustools && \
     git -C /tmp/magnustools checkout ${MAGNUSTOOLS_COMMIT}
 
 WORKDIR /tmp/quickstatements
