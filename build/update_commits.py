@@ -1,8 +1,14 @@
 import os, json, re, requests
+from typing import Callable
 from bs4 import BeautifulSoup
 
 
-def get_commit(variable: str, url: str, parse_commit: callable, previous_commit: str):
+def get_commit(
+    variable: str,
+    url: str,
+    parse_commit: Callable[[requests.Response], str],
+    previous_commit: str,
+):
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
     try:
@@ -51,6 +57,17 @@ def parse_bitbucket_commit(response: requests.Response) -> str:
     """Fetch from API"""
     data = json.loads(response.content)
     return data["values"][0]["hash"]
+
+
+codeberg_pattern = re.compile(
+    r"# (https://codeberg\.org/([^/\s]+/[^/\s]+?)/commits/branch/master)[ \t\r\n]*([A-Z_]+_COMMIT)=([0-9a-f]+)"
+)
+
+
+def parse_codeberg_commit(response: requests.Response) -> str:
+    """Fetch from API"""
+    data = json.loads(response.content)
+    return data["commit"]["id"]
 
 
 def run(file_path):
@@ -107,6 +124,20 @@ def run(file_path):
             variable_contents = re.sub(
                 f"{bitbucket_commit[2]}=[0-9a-f]+",
                 f"{bitbucket_commit[2]}={commit}",
+                variable_contents,
+            )
+
+    for codeberg_commit in re.findall(codeberg_pattern, variable_contents):
+        repo_path = codeberg_commit[1].removesuffix(".git")
+        if commit := get_commit(
+            codeberg_commit[2],
+            f"https://codeberg.org/api/v1/repos/{repo_path}/branches/master",
+            parse_codeberg_commit,
+            codeberg_commit[3],
+        ):
+            variable_contents = re.sub(
+                f"{codeberg_commit[2]}=[0-9a-f]+",
+                f"{codeberg_commit[2]}={commit}",
                 variable_contents,
             )
 
