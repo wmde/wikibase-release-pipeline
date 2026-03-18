@@ -3,7 +3,7 @@
 Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
 
 - QuickStatements updated from c4b2c6b to 1764ac7 (see https://github.com/magnusmanske/quickstatements/compare/c4b2c6b...1764ac7)
-- magnustools updated from 5b8cea4 to 40a4b1d (see https://bitbucket.org/magnusmanske/magnustools/branches/compare/5b8cea4..40a4b1d)
+- magnustools updated from 5b8cea4 to 40a4b1d (see https://codeberg.org/magnusmanske/magnustools/compare/5b8cea4..40a4b1d)
 
 Analysis revealed bug fixes and features added but no breaking changes.
 
