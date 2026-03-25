@@ -90,11 +90,7 @@ describe( 'Property', function () {
 
 			it( 'Should display the added properties on the "Recent changes" page', async function () {
 				await browser.waitForJobs();
-				const mediaWikiVersion = await browser.getMediaWikiVersion();
-				if ( parseSemVer( mediaWikiVersion ).minor > 39 ) {
-					await $( '.vector-main-menu-dropdown' ).click();
-				}
-				await $( '=Recent changes' ).click();
+				await page.open( '/wiki/Special:RecentChanges' );
 				await expect( $( `=(${ propertyId })` ) ).toExist();
 				await expect( $( `=(${ stringPropertyId })` ) ).toExist();
 			} );
