@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       project_name:
-        description: 'Project to release'
+        description: 'Project(s) to tag for release'
         type: choice
         required: true
         default: 'wikibase'
@@ -17,7 +17,7 @@ on:
           - wikibase
           - All projects with unreleased changes
       dry_run:
-        description: "Dry run, don't do it yet."
+        description: "Preview tags that would be created, without creating or pushing them."
         type: boolean
         required: true
         default: true
@@ -43,39 +43,116 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GH_WBS_BOT_TOKEN }}
 
-      - uses: ./.github/actions/setup-environment
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
-
-
-      - name: Create release
+      - name: Determine release tags from package versions
+        id: collect-tags
+        env:
+          PROJECT_NAME: ${{ inputs.project_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          set -e # abort on error
-          set -x # show commands
+          set -euo pipefail
+
+          # This workflow is intentionally tag-only.
+          # It does not run `nx release` and does not generate changelog files.
+          # It expects version numbers/changelogs to already be committed.
+          all_projects=(deploy elasticsearch quickstatements wdqs wdqs-frontend wikibase)
+          if [ "$PROJECT_NAME" = "All projects with unreleased changes" ]; then
+            selected_projects=("${all_projects[@]}")
+          else
+            selected_projects=("$PROJECT_NAME")
+          fi
+
+          tags_to_create=()
+          existing_on_origin=()
+          selected_tags=()
+
+          for project in "${selected_projects[@]}"; do
+            case "$project" in
+              deploy)
+                package_path="deploy/package.json"
+                ;;
+              elasticsearch|quickstatements|wdqs|wdqs-frontend|wikibase)
+                package_path="build/$project/package.json"
+                ;;
+              *)
+                echo "Unknown project: $project"
+                exit 1
+                ;;
+            esac
+
+            tag_name="$(jq -r '.name + "@" + .version' "$package_path")"
+            if [ -z "$tag_name" ] || [ "$tag_name" = "null@null" ]; then
+              echo "Could not derive a tag from $package_path"
+              exit 1
+            fi
+
+            selected_tags+=("$tag_name")
+            if git ls-remote --tags --refs origin "refs/tags/$tag_name" | grep -q "refs/tags/$tag_name"; then
+              existing_on_origin+=("$tag_name")
+            else
+              tags_to_create+=("$tag_name")
+            fi
+          done
+
+          {
+            echo "tags_to_create<<EOF"
+            printf '%s\n' "${tags_to_create[@]}"
+            echo "EOF"
+            echo "selected_tags<<EOF"
+            printf '%s\n' "${selected_tags[@]}"
+            echo "EOF"
+            echo "existing_on_origin<<EOF"
+            printf '%s\n' "${existing_on_origin[@]}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Create Release Tag Audit"
+            echo ""
+            echo "- Input: \`$PROJECT_NAME\`"
+            echo "- Dry run: \`$DRY_RUN\`"
+            echo "- Behavior: tag-only audit/create (no changelog generation)"
+            echo ""
+            echo "Selected tags:"
+            for tag in "${selected_tags[@]}"; do
+              echo "- \`$tag\`"
+            done
+            echo ""
+            if [ "${#tags_to_create[@]}" -eq 0 ]; then
+              echo "No new tags to create."
+            else
+              echo "Tags to create:"
+              for tag in "${tags_to_create[@]}"; do
+                echo "- \`$tag\`"
+              done
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create and push release tags one by one
+        if: inputs.dry_run == false
+        env:
+          TAGS_TO_CREATE: ${{ steps.collect-tags.outputs.tags_to_create }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$TAGS_TO_CREATE" ]; then
+            echo "No new tags to create or push."
+            exit 0
+          fi
 
           git config --global user.name 'wikibase-suite-bot'
           git config --global user.email 'wikibase-suite-engineers@wikimedia.de'
 
-          if [ "${{ inputs.dry_run }}" == "true" ]; then
-            DRY_RUN_FLAG="--dry-run"
-          else
-            DRY_RUN_FLAG=""
-          fi
+          while IFS= read -r tag_name; do
+            if [ -z "$tag_name" ]; then
+              continue
+            fi
 
-          if [ "${{ inputs.project_name }}" == "All projects with unreleased changes" ]; then
-            PROJECT_ARG=""
-          else
-            PROJECT_ARG="-p ${{ inputs.project_name }}"
-          fi
+            if git rev-parse -q --verify "refs/tags/$tag_name" > /dev/null; then
+              echo "Local tag already exists: $tag_name"
+            else
+              git tag "$tag_name"
+            fi
 
-          ./nx release $PROJECT_ARG $DRY_RUN_FLAG --skip-publish --verbose
-
-          BRANCH="$(git branch | grep '^\*' | sed 's/^\* //')"
-          echo "Target branch is $BRANCH"
-
-          # Temporary workaround for nx issue: https://github.com/nrwl/nx/issues/22073#
-          if [ $? -eq 0 ] && [ -z "$DRY_RUN_FLAG" ]; then
-            git push origin $BRANCH --tags
-          fi
-
+            # Push one by one so each tag emits its own push event.
+            git push origin "refs/tags/$tag_name:refs/tags/$tag_name"
+          done <<< "$TAGS_TO_CREATE"

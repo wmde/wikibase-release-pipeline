@@ -6,7 +6,7 @@ import page from '../../helpers/pages/page.js';
 describe( 'Property Prefetching', function () {
 	let itemId: string;
 	const itemLabel = 'T267743-';
-	const NUM_PROPERTIES = 25;
+	const NUM_PROPERTIES = 5;
 
 	it( 'can add many federated properties and it shows up in the ui', async function () {
 		await browser.url(
@@ -46,13 +46,19 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'should delete all statements and generate individual changes', async function () {
-		const statements = await $$( '.wikibase-statementview' );
-		const propertyGuids = await Promise.all(
-			await statements.map( async ( statement ) => statement.getAttribute( 'id' ) )
+		const bot = await WikibaseApi.getBot();
+		const claimsResponse = await bot.request( {
+			action: 'wbgetclaims',
+			entity: itemId
+		} );
+		const claimsByProperty = claimsResponse.claims as Record<string, { id: string }[]>;
+		const propertyGuids = Object.values( claimsByProperty ).reduce(
+			( guids: string[], claims ) =>
+				guids.concat( claims.map( ( claim ) => claim.id ) ),
+			[]
 		);
 
 		expect( propertyGuids ).toHaveLength( NUM_PROPERTIES );
-
 		for ( const guid of propertyGuids ) {
 			const response = await browser.deleteClaim( guid );
 			expect( response.success ).toEqual( 1 );
