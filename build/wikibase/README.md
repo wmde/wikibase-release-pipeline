@@ -20,6 +20,8 @@ This image contains the Wikibase extension running on top of MediaWiki. Wikibase
 | [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)                                                                                                                                                | Adds support for local media files to Wikibase via a new data type.                                                            |
 | [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)                                                                                                                                               | API-provided metadata for structured data repository.                                                                          |
 
+Temporary Accounts are also enabled by default via MediaWiki core configuration. Operators can override `$wgAutoCreateTempUser` in their LocalSettings-based configuration if needed.
+
 ## Requirements
 
 In order to run Wikibase, you need:
