@@ -23,6 +23,7 @@ describe( 'Special:Version', function () {
 		other: [
 			'CLDR',
 			'CirrusSearch',
+			'DiscussionTools',
 			'Elastica',
 			'OAuth',
 			'Parsoid',
@@ -31,7 +32,7 @@ describe( 'Special:Version', function () {
 		parserhook: [ 'Babel', 'Scribunto' ],
 		editor: [ 'VisualEditor' ],
 		antispam: [ 'ConfirmEdit' ],
-		specialpage: [ 'Nuke' ]
+		specialpage: [ 'Echo', 'Linter', 'Nuke' ]
 	};
 
 	// should be disabled for dynamic tests
