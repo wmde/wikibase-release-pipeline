@@ -11,6 +11,11 @@ describe( 'Special:Version', function () {
 		);
 	} );
 
+	it( 'Should not contain Wikibase EDTF by default', async function () {
+		await page.open( '/wiki/Special:Version' );
+		await expect( $( '#mw-version-ext-other-Wikibase_EDTF' ) ).not.toExist();
+	} );
+
 	const extensions = {
 		wikibase: [
 			'EntitySchema',
