@@ -17,20 +17,20 @@ describe( 'Special:NewItem', function () {
 
 		await SpecialEntityPage.addStatementLink;
 
-		await expect( $( '.wikibase-entitytermsforlanguageview-label' ) ).toHaveText(
-			label
-		);
+		await expect(
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-labelview-text' )
+		).toHaveText( label );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-description' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-descriptionview-text' )
 		).toHaveText( description );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-aliases li:nth-child(1)' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-aliasesview-list-item:nth-child(1)' )
 		).toHaveText( firstAlias );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-aliases li:nth-child(2)' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-aliasesview-list-item:nth-child(2)' )
 		).toHaveText( secondAlias );
 	} );
 } );
