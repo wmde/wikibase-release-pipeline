@@ -113,7 +113,8 @@ FROM ${COMPOSER_IMAGE_URL} AS composer
 COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
-COPY composer.local.json composer.local.json
+# Ensure relaxed permissions so that the file is readable by the container user
+COPY --chown=nobody:nogroup --chmod=755 composer.local.json composer.local.json
 
 USER root
 RUN apt-get update; \
