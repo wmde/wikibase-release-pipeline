@@ -26,3 +26,4 @@ Current ADRs include:
 - [15 - security fixes non wmde software](0015-security-fixes-non-wmde-software.md)
 - [16 - updating non wmde software](0016-updating-non-wmde-software.md)
 - [17 - using mediawiki docker image](0017-using-mediawiki-docker-image.md)
+- [18 - anonymous access defaults for the wikibase image](0018-anonymous-access-defaults.md)

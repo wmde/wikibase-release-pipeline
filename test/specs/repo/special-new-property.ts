@@ -1,3 +1,4 @@
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import SpecialListPropertiesPage from '../../helpers/pages/special/list-properties.page.js';
 import SpecialNewPropertyPage from '../../helpers/pages/special/new-property.page.js';
 import {
@@ -14,6 +15,13 @@ const dataTypes = [
 ];
 
 describe( 'Special:NewProperty', function () {
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
+
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
