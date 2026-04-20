@@ -4,7 +4,6 @@ import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../../helpers/pages/entity/item.page.js';
-import RepoClientLoginPage from '../../../helpers/pages/repo-client-login.page.js';
 import { utf8 } from '../../../helpers/read-file-encoding.js';
 import ExternalChange from '../../../types/external-change.js';
 
@@ -53,13 +52,6 @@ describe( 'Scribunto Item', function () {
 			.toString()
 			.replace( '<ITEM_ID>', itemId )
 			.replace( '<LANG>', 'en' );
-
-		// Authenticate here so client-side setup edits do not trip temporary
-		// account rate limiting in the test.
-		await RepoClientLoginPage.login(
-			testEnv.vars.MW_ADMIN_NAME,
-			testEnv.vars.MW_ADMIN_PASS
-		);
 
 		await browser.editPage(
 			testEnv.vars.WIKIBASE_CLIENT_URL,
