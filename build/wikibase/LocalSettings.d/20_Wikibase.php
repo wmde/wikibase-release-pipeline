@@ -3,6 +3,7 @@
 # Wikibase Repository
 wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.json" );
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
+$wgWBRepoSettings['enableMulLanguageCode'] = true;
 
 // Match Wikidata's default statement grouping for item identifiers and
 // property constraints.
