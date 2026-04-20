@@ -7,6 +7,13 @@ import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
 describe( 'QueryService', function () {
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
+
 	it( 'Should be able to get sparql endpoint', async function () {
 		const result = await browser.makeRequest(
 			`${ testEnv.vars.WDQS_URL }/sparql`

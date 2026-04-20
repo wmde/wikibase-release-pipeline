@@ -1,10 +1,18 @@
 import { readFile } from 'fs/promises';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 // Test the installation and function of lua in the Wikibase Docker image
 describe( 'Scribunto', function () {
 	beforeEach( async function () {
 		await browser.skipIfExtensionNotPresent( this, 'Scribunto' );
+	} );
+
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
 	} );
 
 	it( 'Should be able to execute lua module', async function () {

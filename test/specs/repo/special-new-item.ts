@@ -1,7 +1,15 @@
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
 describe( 'Special:NewItem', function () {
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
+
 	it( 'Should be able to create a new item', async function () {
 		const label = 'Cool label';
 		const description = 'Cool description';

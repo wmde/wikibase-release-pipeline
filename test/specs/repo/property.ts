@@ -1,3 +1,4 @@
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { parseSemVer } from 'semver-parser';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../helpers/pages/entity/property.page.js';
@@ -18,6 +19,13 @@ const referenceText = 'REFERENCE';
 const undoSummaryText = 'UNDO_SUMMARY';
 
 describe( 'Property', function () {
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
+
 	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		// eslint-disable-next-line mocha/no-setup-in-describe
@@ -90,11 +98,7 @@ describe( 'Property', function () {
 
 			it( 'Should display the added properties on the "Recent changes" page', async function () {
 				await browser.waitForJobs();
-				const mediaWikiVersion = await browser.getMediaWikiVersion();
-				if ( parseSemVer( mediaWikiVersion ).minor > 39 ) {
-					await $( '.vector-main-menu-dropdown' ).click();
-				}
-				await $( '=Recent changes' ).click();
+				await page.open( '/wiki/Special:RecentChanges' );
 				await expect( $( `=(${ propertyId })` ) ).toExist();
 				await expect( $( `=(${ stringPropertyId })` ) ).toExist();
 			} );
