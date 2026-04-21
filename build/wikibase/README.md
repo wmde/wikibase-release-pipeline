@@ -55,6 +55,7 @@ Variables in **bold** are required on first launch without `LocalSettings.php` i
 
 | Variable                     | Default    | Description                                                                                                                                                                                                  |
 | ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`IS_JOBRUNNER`**              | false  | If set to true the container will only run `maintenance/runJobs.php` instead of MediaWiki                                                                                                                                       |
 | **`DB_SERVER`**              | undefined  | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                                                                       |
 | **`DB_USER`**                | undefined  | Username to use for the MySQL server                                                                                                                                                                         |
 | **`DB_PASS`**                | undefined  | Password to use for the MySQL server                                                                                                                                                                         |
@@ -82,7 +83,7 @@ The same values are also exposed through the Action API metadata endpoint: `/w/a
 
 MediaWiki/Wikibase depends on [jobs being run in the background](https://www.mediawiki.org/wiki/Manual:Job_queue). This can be either done on HTTP request or by a dedicated job runner. The default configuration of this image requires an external job runner like this.
 
-To set up an external job runner, use this image for a second container, overwrite the command to `/jobrunner-entrypoint.sh` and share the same configuration volume with it.
+To set up an external job runner, use this image for a second container, set the environment variable `IS_JOBRUNNER` to "true" and share the same configuration volume with it.
 
 ## Example
 
@@ -106,24 +107,25 @@ services:
       DB_NAME: "my_wiki"
       DB_USER: "mariadb-user"
       DB_PASS: "change-this-password"
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
     depends_on:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: /healthcheck.sh
+      interval: 10s
+      start_period: 5m
 
   wikibase-jobrunner:
     image: wikibase/wikibase
     volumes_from:
       - wikibase
-    command: /jobrunner-entrypoint.sh
     depends_on:
       wikibase:
         condition: service_healthy
     restart: always
+    environment:
+      IS_JOBRUNNER: true
 
   mysql:
     image: mariadb:10.11
@@ -179,6 +181,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 | File                               | Description                                                                                                                                                                                    |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/healthcheck.sh`                  | Optional healthcheck script                                                                                                                                                                    |
 | `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
 | `/extra-install.sh`                | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                  |
 | `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions.                                                                                                                         |
