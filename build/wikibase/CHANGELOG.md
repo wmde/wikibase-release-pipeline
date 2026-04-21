@@ -1,3 +1,8 @@
+# 6.0.1 (2026-04-21)
+
+### 🩹 Fixes
+- Include the wikibaseType field inside the callback payload
+
 # 6.0.0 (2026-02-16)
 
 Upgrades to MediaWiki from 1.44 to 1.45 including updates to compatible packaged extensions
