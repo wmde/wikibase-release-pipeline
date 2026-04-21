@@ -1,7 +1,15 @@
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import SpecialEntityPage from 'wdio-wikibase/pageobjects/item.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 
 describe( 'Special:NewItem', function () {
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
+
 	it( 'Should be able to create a new item', async function () {
 		const label = 'Cool label';
 		const description = 'Cool description';
@@ -17,20 +25,20 @@ describe( 'Special:NewItem', function () {
 
 		await SpecialEntityPage.addStatementLink;
 
-		await expect( $( '.wikibase-entitytermsforlanguageview-label' ) ).toHaveText(
-			label
-		);
+		await expect(
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-labelview-text' )
+		).toHaveText( label );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-description' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-descriptionview-text' )
 		).toHaveText( description );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-aliases li:nth-child(1)' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-aliasesview-list-item:nth-child(1)' )
 		).toHaveText( firstAlias );
 
 		await expect(
-			$( '.wikibase-entitytermsforlanguageview-aliases li:nth-child(2)' )
+			$( '.wikibase-entitytermsforlanguageview-en .wikibase-aliasesview-list-item:nth-child(2)' )
 		).toHaveText( secondAlias );
 	} );
 } );

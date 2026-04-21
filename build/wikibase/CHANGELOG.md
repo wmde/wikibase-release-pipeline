@@ -1,7 +1,16 @@
-# 6.0.1 (2026-04-21)
+# 7.0.0 (2026-04-20)
 
-### 🩹 Fixes
-- Include the wikibaseType field inside the callback payload
+Updates MediaWiki and bundled extensions within the 1.45 release line and adds several new default capabilities to the Wikibase image.
+
+- MediaWiki updated from 1.45.0 to 1.45.3 (see https://github.com/wikimedia/mediawiki/compare/1.45.0...1.45.3 and https://www.mediawiki.org/wiki/Release_notes/1.45).
+- Bundled extension versions were updated to current MediaWiki 1.45-compatible code in `build/wikibase/build.env`.
+- Enables `mul` language code by default. Existing standalone Wikibase image installations that reuse an older CirrusSearch/Elasticsearch index must recreate the search index configuration and reindex after upgrade for `mul` values to appear in search typeahead.
+- Enables Wikidata-style statement grouping for item identifiers and property constraints by default.
+- Adds Echo, DiscussionTools, and the required Linter extension to the default image configuration.
+- Keeps anonymous read access enabled, but disables anonymous writes and anonymous self-service account creation by default in the bundled image configuration.
+- Refactors bundled LocalSettings loading so image-managed bootstrap logic lives in dedicated image files while preserving supported operator override points in generated `LocalSettings.php`.
+- Wikibase EDTF remains bundled in the image but is no longer loaded by default. Installations that require EDTF should explicitly load `WikibaseEdtf` in local configuration.
+- Fixes `composer.local.json` permissions in the image build.
 
 # 6.0.0 (2026-02-16)
 
