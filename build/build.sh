@@ -39,23 +39,49 @@ done
 # === Setup tags
 
 IMAGE_VERSION=$(jq -r '.version' package.json)
+IMAGE_VERSION_RELEASE="${IMAGE_VERSION%%-*}"
+IMAGE_VERSION_PRERELEASE=""
+
+if [[ "$IMAGE_VERSION" == *-* ]]; then
+	IMAGE_VERSION_PRERELEASE="${IMAGE_VERSION#*-}"
+fi
 
 # publish to Dockerhub
 if [ "$PUBLISH" == true ]; then
-	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
-	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
-	TAGS+=(
-		"${IMAGE_VERSION}"
-		"${IMAGE_VERSION_MAJOR}"
-		"${IMAGE_VERSION_MINOR}"
-	)
+	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION_RELEASE" | cut -d '.' -f 1)
+	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION_RELEASE" | cut -d '.' -f 1,2)
+
+	if [ -n "$IMAGE_VERSION_PRERELEASE" ]; then
+		TAGS+=(
+			"${IMAGE_VERSION}"
+			"${IMAGE_VERSION_MINOR}-${IMAGE_VERSION_PRERELEASE}"
+			"${IMAGE_VERSION_MAJOR}-${IMAGE_VERSION_PRERELEASE}"
+		)
+	else
+		TAGS+=(
+			"${IMAGE_VERSION}"
+			"${IMAGE_VERSION_MAJOR}"
+			"${IMAGE_VERSION_MINOR}"
+		)
+	fi
+
 	# get image specific tags
+	IMAGE_TAGS=()
 	# shellcheck disable=SC1090
 	source "$BUILD_ENV_FILE"
-	eval "$(declare -p IMAGE_TAGS)"
-	TAGS+=(
-		"${IMAGE_TAGS[@]}"
-	)
+	for IMAGE_TAG in "${IMAGE_TAGS[@]}"; do
+		# Pre-release images should not claim the canonical MediaWiki-version tag.
+		if [ -n "$IMAGE_VERSION_PRERELEASE" ] &&
+			[ -n "${MEDIAWIKI_VERSION:-}" ] &&
+			[ "$IMAGE_TAG" = "mw${MEDIAWIKI_VERSION}" ]; then
+			continue
+		fi
+
+		TAGS+=(
+			"${IMAGE_TAG}"
+		)
+	done
+
 	BUILD_ARGS+=("--push")
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
