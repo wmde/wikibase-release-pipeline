@@ -1,3 +1,7 @@
+# 7.0.1 (2026-04-23)
+
+- Fixes a `7.0.0` regression in the opt-in metadata callback that caused Wikibase startup to fail for instances with `METADATA_CALLBACK=true`.
+
 # 7.0.0 (2026-04-20)
 
 Updates MediaWiki and bundled extensions within the 1.45 release line and adds several new default capabilities to the Wikibase image.
