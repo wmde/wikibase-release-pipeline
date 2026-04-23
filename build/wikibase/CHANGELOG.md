@@ -4,7 +4,8 @@ Updates MediaWiki and bundled extensions within the 1.45 release line and adds s
 
 - MediaWiki updated from 1.45.0 to 1.45.3 (see https://github.com/wikimedia/mediawiki/compare/1.45.0...1.45.3 and https://www.mediawiki.org/wiki/Release_notes/1.45).
 - Bundled extension versions were updated to current MediaWiki 1.45-compatible code in `build/wikibase/build.env`.
-- Enables `mul` language code by default. Existing standalone Wikibase image installations that reuse an older CirrusSearch/Elasticsearch index must recreate the search index configuration and reindex after upgrade for `mul` values to appear in search typeahead.
+- Enables `mul` language code by default.
+  - BREAKING CHANGE: Upgrading standalone Wikibase image users must re-index Elasticsearch to see `mul` results in Typeahead searches. See the [CirrusSearch documentation](https://www.mediawiki.org/wiki/Extension:CirrusSearch) for how to recreate and reindex.
 - Enables Wikidata-style statement grouping for item identifiers and property constraints by default.
 - Adds Echo, DiscussionTools, and the required Linter extension to the default image configuration.
 - Keeps anonymous read access enabled, but disables anonymous writes and anonymous self-service account creation by default in the bundled image configuration.
