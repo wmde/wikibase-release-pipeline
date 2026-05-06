@@ -35,7 +35,14 @@ This is the database MediaWiki will connect to and store all its data in. Techni
 
 ### Configuration volume
 
-MediaWiki will generate a `LocalSettings.php` file on first launch. Once this file has been generated, you own and control it. This file is stored in the configuration volume.
+MediaWiki setup creates a `LocalSettings.php` file on first launch. Once this file has been created, you own and control it. This file is stored in the configuration volume.
+
+A configuration volume mounted at `/config` is required. The presence of `/config/LocalSettings.php` controls whether the image starts from existing configuration or runs MediaWiki setup:
+
+- If `/config/LocalSettings.php` exists, the image uses that file.
+- If `/config/LocalSettings.php` is missing, the image runs MediaWiki setup using the current image and environment.
+
+Environment variables for initial settings are only used during MediaWiki setup. After that first launch, do not change those variables and restart the container to reconfigure an existing wiki. For Wikibase Suite Deploy, `METADATA_CALLBACK` is the exception and may be changed after initial setup.
 
 ### Call Back
 
@@ -49,7 +56,7 @@ Let's build the Linked Open Data Web together!
 
 ### Environment variables for initial settings
 
-These variables are only respected on first launch in order to generate MediaWiki's `LocalSettings.php` file. When launching the image with a `LocalSettings.php` file present in the configuration volume, environment variables will not be taken into account.
+These variables are only respected on first launch when the image runs MediaWiki setup. When launching the image with a `LocalSettings.php` file present in the configuration volume, environment variables will not be taken into account.
 
 Variables in **bold** are required on first launch without `LocalSettings.php` in the configuration volume. The image will fail to start if one of those variables does not have a value. Default values do not need to be overwritten.
 
@@ -86,65 +93,7 @@ To set up an external job runner, use this image for a second container, overwri
 
 ## Example
 
-Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
-
-```yml
-services:
-  wikibase:
-    image: wikibase/wikibase
-    ports:
-      - 80:80
-    volumes:
-      - ./config:/config
-      - wikibase-image-data:/var/www/html/images
-    environment:
-      MW_ADMIN_NAME: "admin"
-      MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@wikibase.example"
-      MW_WG_SERVER: http://localhost
-      DB_SERVER: mysql:3306
-      DB_NAME: "my_wiki"
-      DB_USER: "mariadb-user"
-      DB_PASS: "change-this-password"
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-
-  wikibase-jobrunner:
-    image: wikibase/wikibase
-    volumes_from:
-      - wikibase
-    command: /jobrunner-entrypoint.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: always
-
-  mysql:
-    image: mariadb:10.11
-    volumes:
-      - mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: "my_wiki"
-      MYSQL_USER: "mariadb-user"
-      MYSQL_PASSWORD: "change-this-password"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-    healthcheck:
-      test: healthcheck.sh --connect --innodb_initialized
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
-    restart: unless-stopped
-
-volumes:
-  wikibase-image-data:
-  mysql-data:
-```
+For an integrated Docker Compose example showing how to run this image with the other published Wikibase Suite images, see the WBS Deploy configuration: [deploy/docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/docker-compose.yml).
 
 ## Releases
 
@@ -180,10 +129,10 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | File                               | Description                                                                                                                                                                                    |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
-| `/extra-install.sh`                | Optional script for custom functionality to be ran with MediaWiki install (when generating LocalSettings.php)                                                                                  |
+| `/extra-install.sh`                | Optional script for custom functionality to be run during MediaWiki setup                                                                                                                      |
 | `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions.                                                                                                                         |
 | `/LocalSettings.Extensions.php` | Image-managed loader for bundled extension configuration in `/var/www/html/LocalSettings.d`.                                                                                                 |
-| `/templates/LocalSettings.wbs.php` | Wikibase-specific settings appended to the MediaWiki install generated `LocalSettings.php`. It provides the stable `require_once` lines for the image-managed MediaWiki and extension loading phases. |
+| `/templates/LocalSettings.wbs.php` | Wikibase-specific settings appended during MediaWiki setup. It provides the stable `require_once` lines for the image-managed MediaWiki and extension loading phases. |
 
 ## Source
 
