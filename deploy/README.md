@@ -82,6 +82,7 @@ Check out the files from Github, then change to the subdirectory `deploy`.
 
 ```sh
 git clone https://github.com/wmde/wikibase-release-pipeline
+git checkout test-alpha-deployment
 cd wikibase-release-pipeline/deploy
 ```
 
