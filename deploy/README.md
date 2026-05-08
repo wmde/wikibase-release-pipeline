@@ -1,42 +1,14 @@
-# Wikibase Suite Deploy
-
-Wikibase Suite (WBS) Deploy is a containerized, production-ready [Wikibase](https://wikiba.se) system that allows you to self-host a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page). 
-
-This installation guide walks you through how to set up a production-ready Wikibase. This guide isn't for hosting Wikibase locally.
-
-WBS Deploy consists of the following services:
-
-- **[Wikibase](https://hub.docker.com/r/wikibase/wikibase):** MediaWiki packaged with the Wikibase extension and other commonly used extensions.
-- **Job Runner:** The MediaWiki [JobRunner](https://www.mediawiki.org/wiki/Manual:Job_queue#Cron) service which uses the same Wikibase container as above.
-- **[MariaDB](https://hub.docker.com/_/mariadb):** Database service for MediaWiki and Wikibase.
-- **[Elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch):** Search service used by MediaWiki.
-- **[WDQS](https://hub.docker.com/r/wikibase/wdqs):** Wikidata Query Service to process SPARQL queries.
-- **[WDQS Frontend](https://hub.docker.com/r/wikibase/wdqs-frontend)** Web front end for SPARQL queries.
-- **[WDQS Updater](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#runUpdate.sh):** Keeps the WDQS data in sync with Wikibase.
-- **[Quickstatements](https://hub.docker.com/r/wikibase/quickstatements):** A web-based tool to import and manipulate large amounts of data.
-- **[Traefik](https://hub.docker.com/_/traefik):** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
-
-The service orchestration is implemented using Docker Compose V2.
+# Federated Statements Alpha Version
+In federated statements, the local instance refers to data on a remote instance. We are currently in our Alpha version for Federated Statements. This allows you to add Wikidata items as values (objects) to your Wikibase instance.
 
 > [!NOTE]
-> This document is for people wanting to self-host the full Wikibase Suite using Wikibase Suite Deploy. If you are looking for individual WBS images, head over to [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase). This document presumes familiarity with basic Linux administration tasks and with [Docker](https://docs.docker.com/get-started/) and [Docker Compose](https://docs.docker.com/compose/).
+> This feature is not stable yet. We are actively collecting feedback and plan to add more functionality throughout the year.
 
-### Index
-- [Installation](#installation)
-  - [Requirements](#1-requirements)
-  - [Setup](#2-setup)
-  - [Initial Configuration](#3-initial-configuration)
-  - [Editing environment variables](#4-editing-environment-variables)
-  - [Starting instance](#5-starting-wikibase)
-  - [Stopping instance](#6-stopping)
-  - [Resetting the configuration](#resetting-the-configuration)
-- [Call Back](./4-FAQs.md#what-are-the-future-plans-for-the-call-back-feature-and-what-information-does-it-collect)
-- [Updating and Versioning](./1-updating-and-versioning.md)
-- [Advanced Configuration](./2-advanced-configuration.md)
-- [Managing your data](./3-manage-your-data.md)
-- [Frequently Asked Questions](./4-FAQs.md)
-- [Removing Wikibase Suite Completely with all its Data](./5-removing-wikibase.md)
-- [WDQS](./6-wdqs.md)
+There are also some limitations we would like to make you aware of for the alpha version:
+* The representation of federated statements in the API has not been worked on, yet. It will be part of one of upcoming work packages and we would like to get feedback on API requirements.
+* Reconciling the QueryService with the newly added Wikidata items is under active investigation and development.
+
+This guide is for those who want to install a fresh Wikibase instance for testing. You can use [this guide](7-updating-existing-wikibase.md) to update your existing Wikibase to the alpha version.
 
 ---
 
@@ -46,13 +18,7 @@ The service orchestration is implemented using Docker Compose V2.
 
 #### Hardware
 
-Most Wikibase production installs are on cloud-based servers. Below we list the official installation guides for some commonly used hosting providers:
-- [Hetzner](https://docs.hetzner.com/cloud/servers/getting-started/creating-a-server/)
-- [DigitalOcean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu)
-- [Akamai](https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance)
-- [Vultr](https://docs.vultr.com/products/compute/cloud-compute/provisioning)
-
-The minimum requirements for your server are as follows: 
+Most Wikibase production installs are on cloud-based servers. The minimum requirements for your server are as follows: 
 - Network connection with a public IP address
 - x86_64 (AMD64) architecture
 - 8 GB RAM
