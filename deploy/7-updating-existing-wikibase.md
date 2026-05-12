@@ -19,7 +19,7 @@ docker compose down
 ### 2. Pulling new changes to install the feature
 
 ```sh
-git checkout test-alpha-deployment
+git fetch origin && git checkout test-alpha-deployment
 ```
 ---
 
