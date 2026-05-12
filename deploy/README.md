@@ -1,11 +1,11 @@
-# Federated Statements Alpha Version
-In federated statements, the local instance refers to data on a remote instance. We are currently in our Alpha version for Federated Statements. This allows you to add Wikidata items as values (objects) to your Wikibase instance.
+# Federated Items Alpha Version
+In federated items, the local instance refers to data on a remote instance. We are currently in our Alpha version for Federated Items. This allows you to add Wikidata items as values (objects) to your Wikibase instance.
 
 > [!NOTE]
 > This feature is not stable yet. We are actively collecting feedback and plan to add more functionality throughout the year.
 
 There are also some limitations we would like to make you aware of for the alpha version:
-* The representation of federated statements in the API has not been worked on, yet. It will be part of one of upcoming work packages and we would like to get feedback on API requirements.
+* The representation of federated items in the API has not been worked on, yet. It will be part of one of upcoming work packages and we would like to get feedback on API requirements.
 * Reconciling the QueryService with the newly added Wikidata items is under active investigation and development.
 
 This guide is for those who want to install a fresh Wikibase instance for testing. You can use [this guide](7-updating-existing-wikibase.md) to update your existing Wikibase to the alpha version.
