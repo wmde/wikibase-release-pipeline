@@ -2,19 +2,26 @@
 
 This guide will help you update your current Wikibase to use the new Federated Statements feature which is in its Alpha Version. If you need to install a fresh Wikibase to try out the feature, please refer to our [other installation guide](./README.md).
 
+---
+
 ### 1. Taking down your current instance
 
-In order to take down your current Wikibase instance, you will need to SSH into your server. Once you've done that, run:
+In order to take down your current Wikibase instance, you will need to SSH into your server. 
+
+Once you've done that, run:
 
 ```sh
 docker compose down
 ```
+
+---
 
 ### 2. Pulling new changes to install the feature
 
 ```sh
 git checkout test-alpha-deployment
 ```
+---
 
 ### 3. Restart your instance
 
