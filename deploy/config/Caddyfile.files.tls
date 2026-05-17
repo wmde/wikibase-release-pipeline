@@ -1,0 +1,3 @@
+(tls_for) {
+  tls /certs/{args.0}.crt /certs/{args.0}.key
+}
