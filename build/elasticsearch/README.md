@@ -8,7 +8,7 @@ and
 [org.wikimedia.search.highlighter/experimental-highlighter-elasticsearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/experimental-highlighter-elasticsearch-plugin)
 plugins for [Wikibase](https://wikiba.se).
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of Wikibase Suite (WBS). The [full Wikibase Suite configuration](../../deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 ## Requirements
 
@@ -25,31 +25,27 @@ Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase co
 
 ## Example
 
-For an integrated Docker Compose example showing how to run this image with the other published Wikibase Suite images, see the WBS Deploy configuration: [deploy/docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch).
 
-## Tags and Versioning
+## Versioning
 
-This Elasticsearch image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
-We provide several tags that relate to the versioning semantics.
+In addition to the standard tags, this image also publishes a tag that includes the bundled Elasticsearch version.
 
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION*         | 3.1.7_es7.20.2            | Same as above, but also mentioning the current Elasticsearch version.                                                                                                                                                                      |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| Tag | Example | Description |
+| --- | --- | --- |
+| _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION* | 3.1.7_es7.20.2 | Same as the standard patch-version tag, but also mentions the bundled Elasticsearch version. |
 
 ## Source
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/elasticsearch/Dockerfile).
 
-## Authors & Contact
+## Authors & contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 

@@ -4,7 +4,9 @@
 
 This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those hipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of Wikibase Suite (WBS). The [full Wikibase Suite configuration](../../deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+
+## Bundled extensions
 
 | Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -42,21 +44,11 @@ A configuration volume mounted at `/config` is required. The presence of `/confi
 - If `/config/LocalSettings.php` exists, the image uses that file.
 - If `/config/LocalSettings.php` is missing, the image runs MediaWiki setup using the current image and environment.
 
-Environment variables for initial settings are only used during MediaWiki setup. After that first launch, do not change those variables and restart the container to reconfigure an existing wiki. For Wikibase Suite Deploy, `METADATA_CALLBACK` is the exception and may be changed after initial setup.
+The image reads setup environment variables when it creates `LocalSettings.php`. After `LocalSettings.php` exists, the image starts from that existing configuration.
 
-### Call Back
+### Environment variables
 
-The Wikibase Suite Wikibase Image has a Call Back feature. This initiative will help maintain an index of Wikibases. The goal of this index is to gather more quantitative data to learn more about how Wikibase is being used. It eventually also aims to be a central hub for data re-use and federation initiatives between Wikibases, where users can discover other Wikibases easily. In the near future, we expect to have a proper showcase of all the Wikibases that have opted in so as to increase discoverability. For now, however, this data will remain only with Wikimedia Deutschland.
-
-You can join this initiative by setting `METADATA_CALLBACK=true` or disable the feature by setting `METADATA_CALLBACK=false` as environment variable. If you enable the feature, your hostnames configured as environment variables will be shared and added to the list. We will then be able to periodically analyze publicly available information on your Wikibase instance. It is important to note that we can only access publicly visible information. If your Wikibase instance requires a login to view data, we will not be able to collect statistics.
-
-You can disable the feature at any time by setting `METADATA_CALLBACK=false` in your environment variables and by sending an E-Mail to [wikibase-suite-support@wikimedia.de](mailto:wikibase-suite-support@wikimedia.de) containing your hostname to remove your instance from the listing and stop periodic analysis.
- 
-Let's build the Linked Open Data Web together!
-
-### Environment variables for initial settings
-
-These variables are only respected on first launch when the image runs MediaWiki setup. When launching the image with a `LocalSettings.php` file present in the configuration volume, environment variables will not be taken into account.
+These values are used for initial setup only and should not be changed without recreating the instance. `METADATA_CALLBACK` is the exception and may be changed after initial setup.
 
 Variables in **bold** are required on first launch without `LocalSettings.php` in the configuration volume. The image will fail to start if one of those variables does not have a value. Default values do not need to be overwritten.
 
@@ -72,18 +64,12 @@ Variables in **bold** are required on first launch without `LocalSettings.php` i
 | **`MW_WG_SERVER`**           | undefined  | `$wgServer` to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                                                                            |
 | **`MW_WG_SITENAME`**         | "wikibase" | `$wgSitename` to use for MediaWiki                                                                                                                                                                           |
 | **`MW_WG_LANGUAGE_CODE`**    | "en"       | `$wgLanguageCode` to use for MediaWiki                                                                                                                                                                       |
-| **`METADATA_CALLBACK`**      | undefined  | Wikibase Suite Call Back, join an index of known publicly accessible wikibase instances. Set to `true` or `false`.                                                                                               |
+| **`METADATA_CALLBACK`**      | undefined  | Wikibase Suite Call Back, join an index of known publicly accessible wikibase instances. Set to `true` or `false`. May be changed after initial setup.                                                           |
 | `ELASTICSEARCH_HOST`         | undefined  | Hostname of an Elasticsearch server with the Wikibase extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable Elasticsearch. |
 | `ELASTICSEARCH_PORT`         | 9200       | Port on which Elasticsearch is available                                                                                                                                                                     |
 | `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the QuickStatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 | `WDQS_PUBLIC_ENDPOINT_URL`   | undefined  | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration.                                                |
 | `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Leave undefined to disable WDQS integration.                                             |
-
-### Wikibase Suite version reporting
-
-This image adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
-
-The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 
 ### Job runner
 
@@ -93,25 +79,37 @@ To set up an external job runner, use this image for a second container, overwri
 
 ## Example
 
-For an integrated Docker Compose example showing how to run this image with the other published Wikibase Suite images, see the WBS Deploy configuration: [deploy/docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+
+## Wikibase Suite Call Back
+
+The Wikibase Suite Wikibase Image has a Call Back feature. This initiative will help maintain an index of Wikibases. The goal of this index is to gather more quantitative data to learn more about how Wikibase is being used. It eventually also aims to be a central hub for data re-use and federation initiatives between Wikibases, where users can discover other Wikibases easily. In the near future, we expect to have a proper showcase of all the Wikibases that have opted in so as to increase discoverability. For now, however, this data will remain only with Wikimedia Deutschland.
+
+You can join this initiative by setting `METADATA_CALLBACK=true` or disable the feature by setting `METADATA_CALLBACK=false` as environment variable. If you enable the feature, your hostnames configured as environment variables will be shared and added to the list. We will then be able to periodically analyze publicly available information on your Wikibase instance. It is important to note that we can only access publicly visible information. If your Wikibase instance requires a login to view data, we will not be able to collect statistics.
+
+You can disable the feature at any time by setting `METADATA_CALLBACK=false` in your environment variables and by sending an E-Mail to [wikibase-suite-support@wikimedia.de](mailto:wikibase-suite-support@wikimedia.de) containing your hostname to remove your instance from the listing and stop periodic analysis.
+
+Let's build the Linked Open Data Web together!
+
+## Version reporting
+
+This image adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
+
+The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/wikibase](https://hub.docker.com/r/wikibase/wikibase).
 
-## Tags and versioning
+## Versioning
 
-This Wikibase image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
-We provide several tags that relate to the versioning semantics.
+In addition to the standard tags, this image also publishes a tag that includes the bundled MediaWiki version.
 
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION*         | 3.1.7_mw1.41.1            | Same as above, but also mentioning the current MediaWiki version.                                                                                                                                                                          |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| Tag | Example | Description |
+| --- | --- | --- |
+| _MAJOR_._MINOR_._PATCH_\_mw*MW-VERSION* | 3.1.7_mw1.41.1 | Same as the standard patch-version tag, but also mentions the bundled MediaWiki version. |
 
 ## Internal filesystem layout
 

@@ -1,4 +1,4 @@
-## Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
+# Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
@@ -10,7 +10,7 @@ For general instructions on using WDQS, building SPARQL queries, and additional 
 - [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
 - [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of Wikibase Suite (WBS). The [full Wikibase Suite configuration](../../deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
 
 ## Requirements
 
@@ -51,24 +51,15 @@ Variables in **bold** are required.
 
 ## Example
 
-For an integrated Docker Compose example showing how to run this image with the other published Wikibase Suite images, see the WBS Deploy configuration: [deploy/docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend).
 
-## Tags and versioning
+## Versioning
 
-This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
-
-We provide several tags that relate to the versioning semantics.
-
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
 ## Internal filesystem layout
 
@@ -84,7 +75,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs-frontend/Dockerfile).
 
-## Authors
+## Authors & contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
