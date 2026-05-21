@@ -4,7 +4,7 @@
 
 This image contains QuickStatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a Wikibase Suite Wikibase image.
 
-> 💡 This image is part of Wikibase Suite (WBS). The [full Wikibase Suite configuration](../../deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
