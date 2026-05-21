@@ -1,4 +1,4 @@
-## Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
+# Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
@@ -10,7 +10,7 @@ For general instructions on using WDQS, building SPARQL queries, and additional 
 - [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
 - [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -51,158 +51,15 @@ Variables in **bold** are required.
 
 ## Example
 
-Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) and [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs) behind a [Traefik](https://hub.docker.com/_/traefik) reverse proxy using Docker Compose.
-
-```yml
-services:
-  wikibase:
-    image: wikibase/wikibase
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - 8880:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
-      - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
-    volumes:
-      - ./config:/config
-      - wikibase-image-data:/var/www/html/images
-    environment:
-      MW_ADMIN_NAME: "admin"
-      MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@wikibase.example"
-      MW_WG_SERVER: https://wikibase.example
-      DB_SERVER: mysql:3306
-      DB_NAME: "my_wiki"
-      DB_USER: "mariadb-user"
-      DB_PASS: "change-this-password"
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
-
-  wikibase-jobrunner:
-    image: wikibase/wikibase
-    command: /jobrunner-entrypoint.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: always
-    volumes_from:
-      - wikibase
-
-  mysql:
-    image: mariadb:10.11
-    restart: unless-stopped
-    volumes:
-      - mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: "my_wiki"
-      MYSQL_USER: "mariadb-user"
-      MYSQL_PASSWORD: "change-this-password"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-    healthcheck:
-      test: healthcheck.sh --connect --innodb_initialized
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
-
-  wdqs:
-    image: wikibase/wdqs
-    command: /runBlazegraph.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
-    volumes:
-      - wdqs-data:/wdqs/data
-    healthcheck:
-      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
-      interval: 10s
-      start_period: 2m
-
-  wdqs-updater:
-    image: wikibase/wdqs
-    command: /runUpdate.sh
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
-
-  wdqs-frontend:
-    image: wikibase/wdqs-frontend
-    restart: unless-stopped
-    ports:
-      - 8834:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wdqs-frontend.rule=Host(`query.wikibase.example`)"
-      - "traefik.http.routers.wdqs-frontend.entrypoints=websecure"
-      - "traefik.http.routers.wdqs-frontend.tls.certresolver=letsencrypt"
-    environment:
-      WDQS_PUBLIC_URL: https://query.wikibase.example/sparql
-      WIKIBASE_PUBLIC_URL: https://wikibase.example/w/api.php
-    healthcheck:
-      test: curl --silent --fail localhost
-      interval: 10s
-      start_period: 2m
-
-  traefik:
-    image: traefik:3.1
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt-data:/letsencrypt
-
-volumes:
-  wikibase-image-data:
-  mysql-data:
-  wdqs-data:
-  traefik-letsencrypt-data:
-```
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend).
 
-## Tags and versioning
+## Versioning
 
-This WDQS Frontend image is using [semantic versioning](https://semver.org/spec/v2.0.0.html).
-
-We provide several tags that relate to the versioning semantics.
-
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
 ## Internal filesystem layout
 
@@ -218,7 +75,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs-frontend/Dockerfile).
 
-## Authors
+## Authors & contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 

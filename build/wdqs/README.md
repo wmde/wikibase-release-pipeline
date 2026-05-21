@@ -2,7 +2,7 @@
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ You can send `GET` requests with your SPARQL query to the WDQS endpoint (followi
 
 You'll need one instance of the image to execute the updater started using `/runUpdate.sh`. This polls changes from Wikibase.
 
-### Proxy for public facing setups
+### Reverse proxy
 
 By default, WDQS exposes some endpoints and methods that reveal internal details or functionality that might not be intended in every setup, especially when running as a public service. The example below includes a traefik proxy configuration limiting the functionality WDQS exposes.
 
@@ -53,178 +53,21 @@ Variables in **bold** are required.
 
 ## Example
 
-Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
-
-```yml
-services:
-  wikibase:
-    image: wikibase/wikibase
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - 8880:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
-      - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
-    volumes:
-      - ./config:/config
-      - wikibase-image-data:/var/www/html/images
-    environment:
-      MW_ADMIN_NAME: "admin"
-      MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@wikibase.example"
-      MW_WG_SERVER: https://wikibase.example
-      DB_SERVER: mysql:3306
-      DB_NAME: "my_wiki"
-      DB_USER: "mariadb-user"
-      DB_PASS: "change-this-password"
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
-
-  wikibase-jobrunner:
-    image: wikibase/wikibase
-    command: /jobrunner-entrypoint.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: always
-    volumes_from:
-      - wikibase
-
-  mysql:
-    image: mariadb:10.11
-    restart: unless-stopped
-    volumes:
-      - mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: "my_wiki"
-      MYSQL_USER: "mariadb-user"
-      MYSQL_PASSWORD: "change-this-password"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-    healthcheck:
-      test: healthcheck.sh --connect --innodb_initialized
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
-
-  wdqs:
-    image: wikibase/wdqs
-    command: /runBlazegraph.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
-    volumes:
-      - wdqs-data:/wdqs/data
-    healthcheck:
-      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
-      interval: 10s
-      start_period: 2m
-    labels:
-      - "traefik.enable=true"
-      # Define router rules for WDQS service, including limits to HTTP methods
-      - "traefik.http.routers.wdqs-router.rule=Host(`query.wikibase.example`) && PathPrefix(`/sparql`) && Method(`GET`, `OPTIONS`, `POST`)"
-      # Add prefix to path before forwarding to upstream service
-      - "traefik.http.middlewares.wdqs-prefix.addprefix.prefix=/bigdata/namespace/wdq/"
-      # Announce limited HTTP methods in preflight requests
-      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
-      - "traefik.http.middlewares.wdqs-headers.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
-      # Announce Accept header can lead to varying responses
-      # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary
-      - "traefik.http.middlewares.wdqs-headers.headers.customresponseheaders.VARY=Accept"
-      # WDQS/blazegraph config headers
-      # https://github.com/blazegraph/database/commit/fcecfd46d616735b651ccebf44116d6702f2b545
-      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-READ-ONLY=yes"
-      # https://github.com/blazegraph/database/wiki/REST_API#query
-      - "traefik.http.middlewares.wdqs-headers.headers.customrequestheaders.X-BIGDATA-MAX-QUERY-MILLIS=300000"
-      # CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin#sect 
-      # Allow unauthenticated requests from any origin
-      - "traefik.http.middlewares.wdqs-cors-headers.headers.accesscontrolallowheaders=*"
-      # Define middleware for rate limiting
-      # https://doc.traefik.io/traefik-hub/api-gateway/reference/routing/http/middlewares/ref-rate-limit#rate-and-burst
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.burst=30"
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.average=60"
-      - "traefik.http.middlewares.wdqs-rate-limit.ratelimit.period=1m"
-      # Apply middlewares to the wdqs router
-      - "traefik.http.routers.wdqs-router.middlewares=wdqs-prefix,wdqs-headers,wdqs-cors-headers,wdqs-rate-limit"
-
-  wdqs-updater:
-    image: wikibase/wdqs
-    command: /runUpdate.sh
-    depends_on:
-      wdqs:
-        condition: service_healthy
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 32768
-        hard: 32768
-    environment:
-      WIKIBASE_CONCEPT_URI: https://wikibase.example
-
-  traefik:
-    image: traefik:3.1
-    command:
-      # Basic setup
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      # http endpoint
-      - "--entrypoints.web.address=:80"
-      # https endpoint
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asdefault"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      # http to https redirect
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      # ACME SSL certificate generation
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt-data:/letsencrypt
-
-volumes:
-  wikibase-image-data:
-  mysql-data:
-  wdqs-data:
-  traefik-letsencrypt-data:
-```
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs).
 
-## Tags and Versioning
+## Versioning
 
-This image uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
-We provide several tags that relate to the versioning semantics.
+In addition to the standard tags, this image also publishes a tag that includes the bundled WDQS version.
 
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_wdqs*WDQS-VERSION*     | 3.1.7_wdqs0.1.317         | Same as above, but also mentioning the current WDQS version.                                                                                                                                                                               |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
+| Tag | Example | Description |
+| --- | --- | --- |
+| _MAJOR_._MINOR_._PATCH_\_wdqs*WDQS-VERSION* | 3.1.7_wdqs0.1.317 | Same as the standard patch-version tag, but also mentions the bundled WDQS version. |
 
 ## Upgrading
 
@@ -257,7 +100,7 @@ In some situations the WDQS Updater enters a restart loop, e.g., when restarted 
 
 A workaround is to start the updater once with manual `--init` `--start` parameters. This forces it to sync data from MediaWiki for the current day.
 
-In the Docker Compose example provided above, you might use the commands and instructions supplied below. This will also fix the problem in a Wikibase Suite Deploy instance.
+In the full Wikibase Suite configuration, or another Docker Compose setup with a `wdqs-updater` service, use the commands below.
 
 ```sh
 # Stop the stock updater
@@ -278,7 +121,7 @@ As soon as the updater has synced the first entity from MediaWiki, the issue sho
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs/Dockerfile).
 
-## Authors & Contact
+## Authors & contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 
