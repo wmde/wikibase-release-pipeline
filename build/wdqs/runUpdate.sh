@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This file is provided by the wikibase/wdqs docker image.
-
+# this is a test
 set +u
 if [ -z "$WIKIBASE_CONCEPT_URI" ]; then
   echo "WIKIBASE_CONCEPT_URI is required but isn't set.";
