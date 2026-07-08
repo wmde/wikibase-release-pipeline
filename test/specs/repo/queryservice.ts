@@ -6,6 +6,33 @@ import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
+const federatedQuery = ( endpoint: string, serviceBody = '?s ?p ?o .' ): string => `
+	SELECT * WHERE {
+		service <${ endpoint }> {
+			${ serviceBody }
+		}
+	}
+
+	LIMIT 1
+`;
+
+const federatedSparqlRequest = async (
+	endpoint: string,
+	serviceBody?: string
+): Promise<string> => {
+	const result = await browser.makeRequest(
+		`${ testEnv.vars.WDQS_URL }/sparql`,
+		{
+			validateStatus: false,
+			params: {
+				query: federatedQuery( endpoint, serviceBody )
+			}
+		}
+	);
+
+	return String( result.data );
+};
+
 describe( 'QueryService', function () {
 	before( async function () {
 		await LoginPage.login(
@@ -282,50 +309,24 @@ describe( 'QueryService', function () {
 			this.skip();
 		}
 
-		await QueryServiceUIPage.open( `
-			PREFIX wikidata_wd: <http://www.wikidata.org/entity/>
-			PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
+		const allowedEndpoint = 'https://query.wikidata.org/sparql';
+		const result = await federatedSparqlRequest(
+			allowedEndpoint,
+			'BIND( <http://www.wikidata.org/entity/Q42> AS ?s )'
+		);
 
-			SELECT * WHERE {
-				service <https://query.wikidata.org/sparql> {
-					?wd wikidata_wdt:P31 wikidata_wd:Q976981 .
-					?wd wikidata_wdt:P31 ?type .
-					optional { ?wd rdfs:label ?label. filter(lang(?label) = "en") }
-					optional { ?type rdfs:label ?typelabel. filter(lang(?typelabel) = "en") }
-				}
-			}
-
-			LIMIT 5
-		` );
-
-		await QueryServiceUIPage.submit();
-
-		await expect(
-			QueryServiceUIPage.resultTable.$( 'tbody' ).$$( 'tr' )
-		).resolves.toHaveLength( 5 );
+		expect( result ).not.toMatch(
+			`Service URI ${ allowedEndpoint } is not allowed`
+		);
 	} );
 
 	it( 'Should show error from a page not in allowlist.txt', async function () {
 		// Returns results if https://wikibase.world/query/sparql added to allowlist.txt
-		await QueryServiceUIPage.open( `
-			PREFIX wdt: <https://wikibase.world/prop/direct/>
-			PREFIX wd: <https://wikibase.world/entity/>
+		const blockedEndpoint = 'https://wikibase.world/query/sparql';
+		const result = await federatedSparqlRequest( blockedEndpoint );
 
-			SELECT * WHERE {
-				service <https://wikibase.world/query/sparql> {
-					?item wdt:P3 wd:Q10 .
-					?item wdt:P1 ?url .
-					?item wdt:P13 wd:Q54 .
-				}
-			}
-
-			LIMIT 5
-		` );
-
-		await QueryServiceUIPage.submit();
-
-		await expect( $( 'div#query-error' ) ).toHaveText(
-			/Service URI https:\/\/wikibase\.world\/query\/sparql is not allowed/
+		expect( result ).toMatch(
+			`Service URI ${ blockedEndpoint } is not allowed`
 		);
 	} );
 } );

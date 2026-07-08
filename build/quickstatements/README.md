@@ -2,9 +2,9 @@
 
 [QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
-This image contains Quickstatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a WBS Wikibase image.
+This image contains QuickStatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a Wikibase Suite Wikibase image.
 
-> 💡 This image is part of Wikibase Suite (WBS). [WBS Deploy](https://github.com/wmde/wikibase-release-pipeline/deploy/README.md) provides everything you need to self-host a Wikibase instance out of the box.
+> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -15,15 +15,15 @@ This image contains Quickstatements and the required Magnustools library. It is 
 - DNS domain name resolution for QuickStatements and Wikibase
 - Configuration via environment variables
 
-### MediaWiki/Wikibase instance with
-
-#### Official WBS Wikibase image
+### MediaWiki/Wikibase instance
 
 We suggest to use the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
 
-#### Other Wikibase instances
+Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually.
 
-Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually:
+### OAuth consumer
+
+QuickStatements needs to be set up as an OAuth consumer on your Wikibase instance. If you are setting up QuickStatements manually, create the OAuth consumer on Wikibase:
 
 ```sh
 php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
@@ -41,7 +41,7 @@ If QuickStatements and Wikibase are running on the same IP address, a reverse pr
 
 ### DNS resolution
 
-In order to authorize QuickStatements against Wikibase via OAuth, both services need to be accessible via DNS domain names, both from within the Docker network as well as from the user's browser. The easiest way to archive this is by connecting both Wikibase and Quickstatements to the internet and letting them use public DNS domain names.
+In order to authorize QuickStatements against Wikibase via OAuth, both services need to be accessible via DNS domain names, both from within the Docker network as well as from the user's browser. The easiest way to achieve this is by connecting both Wikibase and QuickStatements to the internet and letting them use public DNS domain names.
 
 ### Environment variables
 
@@ -52,7 +52,7 @@ Variables in **bold** are required.
 | **`WIKIBASE_PUBLIC_URL`**        | undefined   | Host and port of Wikibase as seen by the user's browser (required)                                     |
 | **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined   | Host and port of QuickStatements as seen by the user's browser (required)                              |
 | **`OAUTH_CONSUMER_KEY`**         | undefined   | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
-| **`OAUTH_CONSUMER_SECRET`**      | undefined   | OAuth consumer secret (from MediaWiki) , required on initial setup, stored in `/quickstatements/data`. |
+| **`OAUTH_CONSUMER_SECRET`**      | undefined   | OAuth consumer secret (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.  |
 | `WB_ITEM_NAMESPACE`              | 120         | Wikibase Item namespace                                                                                |
 | `WB_PROPERTY_NAMESPACE`          | 122         | Wikibase Property namespace                                                                            |
 | `WB_ITEM_PREFIX`                 | "Item:"     | Wikibase Item prefix                                                                                   |
@@ -63,145 +63,21 @@ Variables in **bold** are required.
 
 ## Example
 
-Here's an example of how to run this image together with the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) using Docker Compose.
-
-```yml
-services:
-  wikibase:
-    image: wikibase/wikibase
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - 8880:80
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wikibase.rule=Host(`wikibase.example`)"
-      - "traefik.http.routers.wikibase.entrypoints=websecure"
-      - "traefik.http.routers.wikibase.tls.certresolver=letsencrypt"
-    volumes:
-      - ./config:/config
-      - wikibase-image-data:/var/www/html/images
-      - quickstatements-data:/quickstatements/data
-    environment:
-      MW_ADMIN_NAME: "admin"
-      MW_ADMIN_PASS: "change-this-password"
-      MW_ADMIN_EMAIL: "admin@wikibase.example"
-      MW_WG_SERVER: https://wikibase.example
-      DB_SERVER: mysql:3306
-      DB_NAME: "my_wiki"
-      DB_USER: "mariadb-user"
-      DB_PASS: "change-this-password"
-      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
-    healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
-      interval: 10s
-      start_period: 5m
-
-  wikibase-jobrunner:
-    image: wikibase/wikibase
-    command: /jobrunner-entrypoint.sh
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: always
-    volumes_from:
-      - wikibase
-
-  mysql:
-    image: mariadb:10.11
-    restart: unless-stopped
-    volumes:
-      - mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: "my_wiki"
-      MYSQL_USER: "mariadb-user"
-      MYSQL_PASSWORD: "change-this-password"
-      MYSQL_RANDOM_ROOT_PASSWORD: yes
-    healthcheck:
-      test: healthcheck.sh --connect --innodb_initialized
-      start_period: 1m
-      interval: 20s
-      timeout: 5s
-
-  quickstatements:
-    image: wikibase/quickstatements
-    depends_on:
-      wikibase:
-        condition: service_healthy
-    restart: unless-stopped
-    ports:
-      - 8840:80
-    volumes:
-      - quickstatements-data:/quickstatements/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.quickstatements.rule=Host(`quickstatements.example`)"
-      - "traefik.http.routers.quickstatements.entrypoints=websecure"
-      - "traefik.http.routers.quickstatements.tls.certresolver=letsencrypt"
-    environment:
-      WB_PROPERTY_NAMESPACE: 122
-      WB_PROPERTY_PREFIX: "Property:"
-      WB_ITEM_NAMESPACE: 120
-      WB_ITEM_PREFIX: "Item:"
-      QUICKSTATEMENTS_PUBLIC_URL: https://quickstatements.example
-      WIKIBASE_PUBLIC_URL: https://wikibase.example
-    healthcheck:
-      test: curl --silent --fail localhost
-      interval: 10s
-      start_period: 2m
-
-  traefik:
-    image: traefik:3.1
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@wikibase.example"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-letsencrypt-data:/letsencrypt
-
-volumes:
-  wikibase-image-data:
-  mysql-data:
-  quickstatements-data:
-  traefik-letsencrypt-data:
-```
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements).
 
-## Tags and Versioning
+## Versioning
 
-This image uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
+This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
-We provide several tags that relate to the versioning semantics.
-
-| Tag                                             | Example                   | Description                                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| _MAJOR_                                         | 3                         | Tags the latest image with this major version. Gets overwritten whenever a new version is released with this major version. This will include new builds triggered by base image changes, patch version updates and minor version updates. |
-| _MAJOR_._MINOR_                                 | 3.1                       | Tags the latest image with this major and minor version. Gets overwritten whenever a new version is released with this major and minor version. This will include new builds triggered by base image changes and patch version updates.    |
-| _MAJOR_._MINOR_._PATCH_                         | 3.1.7                     | Tags the latest image with this major, minor and patch version. Gets overwritten whenever a new version is released with this major, minor and patch version. This only happens for new builds triggered by base image changes.            |
-| _MAJOR_._MINOR_._PATCH_\_build*BUILD-TIMESTAMP* | 3.1.7_build20240530103941 | Tag that never gets overwritten. Every image will have this tag with a unique build timestamp. Can be used to reference images explicitly for reproducibility.                                                                             |
-
-## Known Issues
+## Known issues
 
 QuickStatements' "Run in background" option is not supported by this image.
 
-QuickStatements' "Batches" require an database and are not supported by this image.
+QuickStatements' "Batches" require a database and are not supported by this image.
 
 ## Troubleshooting
 
@@ -229,7 +105,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/quickstatements/Dockerfile).
 
-## Authors
+## Authors & contact
 
 This image is maintained by the Wikibase Suite Team at [Wikimedia Germany (WMDE)](https://wikimedia.de).
 

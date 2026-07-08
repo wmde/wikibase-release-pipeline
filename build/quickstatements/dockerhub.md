@@ -4,4 +4,4 @@ Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in product
 
 Find more documentation about this image here https://github.com/wmde/wikibase-release-pipeline/tree/main/build/quickstatements/README.md
 
-If you want to host your own WBS instance, head over to the [WBS Deploy documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md).
+If you want to host your own WBS instance, head over to the [WBS documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md).
