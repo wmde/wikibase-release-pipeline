@@ -6,15 +6,32 @@ import QueryServiceUIPage from '../../helpers/pages/queryservice-ui/queryservice
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import { wikibasePropertyString } from '../../helpers/wikibase-property-types.js';
 
-const federatedQuery = ( endpoint: string ): string => `
+const federatedQuery = ( endpoint: string, serviceBody = '?s ?p ?o .' ): string => `
 	SELECT * WHERE {
 		service <${ endpoint }> {
-			?s ?p ?o .
+			${ serviceBody }
 		}
 	}
 
 	LIMIT 1
 `;
+
+const federatedSparqlRequest = async (
+	endpoint: string,
+	serviceBody?: string
+): Promise<string> => {
+	const result = await browser.makeRequest(
+		`${ testEnv.vars.WDQS_URL }/sparql`,
+		{
+			validateStatus: false,
+			params: {
+				query: federatedQuery( endpoint, serviceBody )
+			}
+		}
+	);
+
+	return String( result.data );
+};
 
 describe( 'QueryService', function () {
 	before( async function () {
@@ -293,31 +310,23 @@ describe( 'QueryService', function () {
 		}
 
 		const allowedEndpoint = 'https://query.wikidata.org/sparql';
-		const result = await browser.makeRequest(
-			`${ testEnv.vars.WDQS_URL }/sparql`,
-			{
-				validateStatus: false,
-				params: {
-					query: federatedQuery( allowedEndpoint )
-				}
-			}
+		const result = await federatedSparqlRequest(
+			allowedEndpoint,
+			'BIND( <http://www.wikidata.org/entity/Q42> AS ?s )'
 		);
 
-		expect( result.data ).not.toMatch(
+		expect( result ).not.toMatch(
 			`Service URI ${ allowedEndpoint } is not allowed`
 		);
 	} );
 
 	it( 'Should show error from a page not in allowlist.txt', async function () {
 		// Returns results if https://wikibase.world/query/sparql added to allowlist.txt
-		await QueryServiceUIPage.open(
-			federatedQuery( 'https://wikibase.world/query/sparql' )
-		);
+		const blockedEndpoint = 'https://wikibase.world/query/sparql';
+		const result = await federatedSparqlRequest( blockedEndpoint );
 
-		await QueryServiceUIPage.submit();
-
-		await expect( $( 'div#query-error' ) ).toHaveText(
-			/Service URI https:\/\/wikibase\.world\/query\/sparql is not allowed/
+		expect( result ).toMatch(
+			`Service URI ${ blockedEndpoint } is not allowed`
 		);
 	} );
 } );
