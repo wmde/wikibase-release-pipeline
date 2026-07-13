@@ -92,30 +92,11 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | `/wdqs/RWStore.properties`   | Properties for the service                                                                     |
 | `/templates/mwservices.json` | Template for MediaWiki services (populated and placed into `/wdqs/mwservices.json` at runtime) |
 
-## Known issues
+## Empty-store updater initialization
 
-### Updater keeps restarting
+Before starting, `/runUpdate.sh` checks whether WDQS contains any entities. When WDQS is empty, it initializes the updater checkpoint from the beginning of the UTC day containing the oldest available RecentChanges entry in the configured Wikibase entity namespaces. This allows a freshly installed or previously affected instance to leave a restart loop and import all entities still represented in RecentChanges. If there are no retained RecentChanges entries, it initializes the checkpoint at the beginning of the current UTC day.
 
-In some situations the WDQS Updater enters a restart loop, e.g., when restarted without containing any entities. When you restart a freshly installed instance, you will encounter this issue.
-
-A workaround is to start the updater once with manual `--init` `--start` parameters. This forces it to sync data from MediaWiki for the current day.
-
-In the full Wikibase Suite configuration, or another Docker Compose setup with a `wdqs-updater` service, use the commands below.
-
-```sh
-# Stop the stock updater
-docker compose stop wdqs-updater
-
-# Start an updater with force sync settings
-docker compose run --rm wdqs-updater /wdqs/runUpdate.sh -h http://\$WDQS_HOST:\$WDQS_PORT -- --wikibaseUrl \$WIKIBASE_SCHEME://\$WIKIBASE_HOST --conceptUri \$WIKIBASE_CONCEPT_URI --entityNamespaces \$WDQS_ENTITY_NAMESPACES --init --start $(date +%Y%m%d000000)
-
-# As soon as you see "Sleeping for 10 secs" in the logs, press CTRL-C to stop it again
-
-# Start the stock updater again
-docker compose start wdqs-updater
-```
-
-As soon as the updater has synced the first entity from MediaWiki, the issue should disappear.
+The initialization is guarded: if WDQS contains an entity, or if either service check fails or returns an unexpected response, the updater starts normally without changing its checkpoint. Entities no longer represented in RecentChanges require a full reload as described in [Upgrading](#upgrading).
 
 ## Source
 
