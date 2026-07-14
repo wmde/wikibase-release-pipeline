@@ -1,3 +1,9 @@
+# 2.1.1 (2026-07-14)
+
+- Loads query examples from the local Wikibase `Project:SPARQL/examples` page instead of Wikidata, migrating the previous Wikidata configuration when present.
+- Removes the hardcoded Wikidata tools and Query Builder navbar links.
+- Adds an image-owned health check for the frontend service.
+
 ## 2.1.0 (2026-02-16)
 
 ### 🚀 Features
