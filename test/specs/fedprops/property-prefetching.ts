@@ -79,15 +79,15 @@ describe( 'Property Prefetching', function () {
 		);
 	} );
 
-	it( 'Should render recent changes list within threshold', async function () {
+	it( 'Should render recent changes for the created item', async function () {
 		await page.open(
 			'/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2&enhanced=0'
 		);
 		await $( 'ul.special' );
 
 		// +1 for the initial item creation
-		// +1 for the Main Page creation?
-		// +1 for ?
-		await expect( $$( 'ul.special li' ) ).resolves.toHaveLength( NUM_PROPERTIES + 3 );
+		await expect(
+			$$( `ul.special li a[href="/wiki/Item:${ itemId }"]` )
+		).resolves.toHaveLength( NUM_PROPERTIES + 1 );
 	} );
 } );
