@@ -1,0 +1,39 @@
+diff --git a/index.html b/index.html
+index 668a94e..58a5152 100644
+--- a/index.html
++++ b/index.html
+@@ -93,34 +93,6 @@
+ 								</ul>
+ 							</div>
+ 						</li>
+-						<li class="dropdown">
+-							<div class="btn-group navbar-btn">
+-								<a href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools" target="_blank" class="btn btn-default">
+-									<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> <span data-i18n="wdqs-app-button-more-tools" id="tools-label"></span>
+-								</a>
+-								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" id="tools-toggle">
+-									<span class="caret"></span>
+-								</button>
+-								<ul class="dropdown-menu">
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/Edit_items" data-i18n="wdqs-app-tools-edit-items"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/Query_data" data-i18n="wdqs-app-tools-query-data"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/Enhance_user_interface" data-i18n="wdqs-app-tools-enhance-ui"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/Visualize_data" data-i18n="wdqs-app-tools-visualize-data"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:List_of_properties" data-i18n="wdqs-app-tools-list-properties"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/Lexicographical_data" data-i18n="wdqs-app-tools-lexicographical-data"></a></li>
+-									<li><a target="_blank" rel="noopener" href="https://www.wikidata.org/wiki/Special:MyLanguage/Wikidata:Tools/For_programmers" data-i18n="wdqs-app-tools-for-programmers"></a></li>
+-									<li role="separator" class="divider"></li>
+-									<li><a target="_blank" rel="noopener" href="https://tools.wmflabs.org/hay/directory/#/search/wikidata">Wikimedia Toolforge</a></li>
+-								</ul>
+-							</div>
+-						</li>
+-						<li class="dropdown">
+-							<div class="btn-group navbar-btn">
+-								<a target="_blank" href="https://query.wikidata.org/querybuilder/" class="btn btn-default dropdown-toggle query-builder-toggle" id="query-builder-toggle">
+-									<span data-i18n="wdqs-app-query-builder-name" id="query-builder-label"></span>
+-								</a>
+-							</div>
+-						</li>
+ 					</ul>
+ 					<ul class="nav navbar-nav navbar-right" id="right-navbar">
+ 						<li>
