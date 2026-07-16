@@ -19,11 +19,10 @@ RUN patch -Np1 </tmp/remove-wikidata-tools.patch && \
 # don't install chromium, it is not used
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# TODO: what if we use the package lock? #reprobuilds
-# we need dev dependencies to run 'npm run build'
-RUN sed -i "/npm: '--production --no-package-lock'/c\npm: '--no-package-lock'" Gruntfile.js && \
-    npm install && \
-    npm run build
+# Install the upstream's locked dependency set, including development dependencies
+# needed by Grunt, then skip its auto_install task to retain that dependency set.
+RUN npm ci && \
+    npx grunt clean only_build
 
 # ###########################################################################
 # hadolint ignore=DL3006
