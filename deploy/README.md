@@ -99,9 +99,11 @@ Edit `.env` and set the values below.
 | `DB_USER` | `sqluser` | The MariaDB user created for MediaWiki. The default value can be used for a new install. |
 | `DB_PASS` | `change-this-password` | The MariaDB password for `DB_USER`. Set this to something other than the default value before first start. |
 | `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. Unlike the other `.env` values, this value may be changed after initial setup; restart the services for the change to take effect. |
+| `WIKIMEDIA_OAUTH_CONSUMER_KEY` (optional) | None | Wikimedia OAuth consumer key. See [Wikimedia OAuth login](../build/wikibase/README.md#wikimedia-oauth-login). |
+| `WIKIMEDIA_OAUTH_CONSUMER_SECRET` (optional) | None | Wikimedia OAuth consumer secret. |
 
 > [!WARNING]
-> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./docs/resetting.md)).
+> With the exception of `METADATA_CALLBACK` and the two `WIKIMEDIA_OAUTH_*` values, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./docs/resetting.md)).
 
 ---
 
