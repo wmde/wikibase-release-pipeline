@@ -18,6 +18,7 @@ WBS is a supported and tested Docker Compose configuration that facilitates depl
 - **[Traefik](https://hub.docker.com/_/traefik):** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 
 ### Index
+
 - [Installation](#installation)
 - [Upgrading](./docs/updating.md)
 - [Uninstalling](./docs/uninstalling.md)
@@ -37,6 +38,7 @@ WBS is a supported and tested Docker Compose configuration that facilitates depl
 Start by provisioning a Linux VPS or cloud server for your WBS instance. Most Wikibase production installs are on cloud-based servers. Follow your provider's documentation to create a server that meets the requirements below.
 
 The minimum requirements for your server are as follows:
+
 - 64-bit x86 architecture (`amd64` / `x86_64`); ARM servers are not currently supported by the published WBS images
 - 8 GB RAM
 - 20 GB free disk space to start, with more needed as your wiki data grows
@@ -49,13 +51,13 @@ You need a domain you own or control, and access to that domain provider's DNS s
 Choose two hostnames for your WBS services: one for Wikibase itself and one for the query service. These are the web addresses where people will access your Wikibase and query service. Many Wikibase users configure the query service as a subdomain of the main address.
 
 Examples:
+
 - Wikibase: `yourdomain.example`
 - Query service: `query.yourdomain.example`
 
 In your DNS provider's control panel, create two records of either `A` or `CNAME` type, one for each hostname. Point both records to your server's public IP address. Note that DNS record changes may take a few minutes to propagate.
 
-> [!NOTE]
-> Your DNS provider may call the IP address field `value`, `content`, `address`, or `points to`. Use only the server's public IP address as the value.
+> [!NOTE] Your DNS provider may call the IP address field `value`, `content`, `address`, or `points to`. Use only the server's public IP address as the value.
 
 To learn more about DNS records, see [DNS basics](https://developer.mozilla.org/en-US/docs/Glossary/DNS) or [Understanding DNS records](https://learn.wordpress.org/lesson/domain-management-understanding-dns-records/). Common provider guides are also available for [Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/), [GoDaddy](https://www.godaddy.com/help/add-an-a-record-19238), and [Namecheap](https://www.namecheap.com/support/knowledgebase/article.aspx/319/2237/how-can-i-set-up-an-a-address-record-for-my-domain/).
 
@@ -102,9 +104,14 @@ Edit `.env` and set the values below.
 | `DB_USER` | `sqluser` | The MariaDB user created for MediaWiki. The default value can be used for a new install. |
 | `DB_PASS` | `change-this-password` | The MariaDB password for `DB_USER`. Set this to something other than the default value before first start. |
 | `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. Unlike the other `.env` values, this value may be changed after initial setup; restart the services for the change to take effect. |
+| `WIKIMEDIA_OAUTH_CONSUMER_KEY` | None | Client application key for a Meta-Wiki OAuth 1.0a consumer registered with the callback URL `https://<WIKIBASE_PUBLIC_HOST>/w/index.php?title=Special:PluggableAuthLogin`. Wikimedia login is active only when this and the secret below are configured. This value may be added after initial setup. |
+| `WIKIMEDIA_OAUTH_CONSUMER_SECRET` | None | Secret for that consumer. Keep it outside version control. This value may be added after initial setup. |
 
 > [!WARNING]
-> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./docs/resetting.md)).
+> With the exception of `METADATA_CALLBACK` and the two `WIKIMEDIA_OAUTH_*` values, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./docs/resetting.md)).
+
+> [!NOTE]
+> The two `WIKIMEDIA_OAUTH_*` values are runtime configuration. After creating the Meta-Wiki OAuth consumer, add them to `.env` and run `docker compose up -d` to recreate the Wikibase service. The login option appears without resetting the instance.
 
 ---
 
@@ -125,8 +132,7 @@ You can now access your services using the hostnames you set in `.env`:
 - Query service SPARQL endpoint: `https://<WDQS_PUBLIC_HOST>/sparql`
 - QuickStatements: `https://<WIKIBASE_PUBLIC_HOST>/tools/quickstatements`
 
-> [!NOTE]
-> If anything goes wrong, see [Troubleshooting](./docs/troubleshooting.md).
+> [!NOTE] If anything goes wrong, see [Troubleshooting](./docs/troubleshooting.md).
 
 ---
 

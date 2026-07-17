@@ -8,20 +8,21 @@ This image contains the Wikibase extension running on top of MediaWiki. Wikibase
 
 ## Bundled extensions
 
-| Bundled Extension                                                                                                                                                                                                           | Description                                                                                                                    |
+| Bundled Extension | Description |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [Babel](https://www.mediawiki.org/wiki/Extension:Babel)                                                                                                                                                                     | Adds a parser function to inform other users about language proficiency and categorize users of the same levels and languages. |
-| [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR)                                                                                                                                                                       | Provides functions to localize the names of languages, countries, currencies, and time units based on their language code.     |
-| [DiscussionTools](https://www.mediawiki.org/wiki/Extension:DiscussionTools)                                                                                                                                                 | Adds modern discussion features such as reply links and add-topic workflows on talk pages.                                      |
+| [Babel](https://www.mediawiki.org/wiki/Extension:Babel) | Adds a parser function to inform other users about language proficiency and categorize users of the same levels and languages. |
+| [CLDR](https://www.mediawiki.org/wiki/Extension:CLDR) | Provides functions to localize the names of languages, countries, currencies, and time units based on their language code. |
+| [DiscussionTools](https://www.mediawiki.org/wiki/Extension:DiscussionTools) | Adds modern discussion features such as reply links and add-topic workflows on talk pages. |
 | [Elastica](https://www.mediawiki.org/wiki/Extension:Elastica), [CirrusSearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch), [WikibaseCirrusSearch](https://www.mediawiki.org/wiki/Extension:WikibaseCirrusSearch) | Elasticsearch integration for MediaWiki and Wikibase. See the [CirrusSearch documentation](https://www.mediawiki.org/wiki/Extension:CirrusSearch) for index maintenance and reindexing. |
-| [Echo](https://www.mediawiki.org/wiki/Extension:Echo)                                                                                                                                                                       | Provides notifications for user mentions, page activity, and other wiki events.                                                |
-| [EntitySchema](https://www.mediawiki.org/wiki/Extension:EntitySchema)                                                                                                                                                       | Allows to store Shape Expression Schemas on wiki pages.                                                                        |
-| [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth)                                                                                                                                                                     | Allow users to safely authorize another application ("consumer") to use the MediaWiki action API on their behalf.              |
-| [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)                                                                                                                             | Tool that allows users to select a language and configure its support in an easy way.                                          |
+| [Echo](https://www.mediawiki.org/wiki/Extension:Echo) | Provides notifications for user mentions, page activity, and other wiki events. |
+| [EntitySchema](https://www.mediawiki.org/wiki/Extension:EntitySchema) | Allows to store Shape Expression Schemas on wiki pages. |
+| [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) | Allow users to safely authorize another application ("consumer") to use the MediaWiki action API on their behalf. |
+| [PluggableAuth](https://www.mediawiki.org/wiki/Extension:PluggableAuth) and [WSOAuth](https://www.mediawiki.org/wiki/Extension:WSOAuth) | Let users authenticate to the Wikibase with their Wikimedia account through a Meta-Wiki OAuth 1.0a consumer. |
+| [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector) | Tool that allows users to select a language and configure its support in an easy way. |
 | [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)                                                                                                                                                            | Adds support for the Extended Date/Time Format (EDTF) Specification via a new data type.<br />*NOTE: Not loaded by default, to enable add `wfLoadExtension('WikibaseEdtf');` in your local configuration.*|
-| [WikibaseInWikitext](https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext)                                                                                                                                     | Adds a `<sparql>` tag for writing local query service examples on wiki pages.                                                  |
-| [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)                                                                                                                                                | Adds support for local media files to Wikibase via a new data type.                                                            |
-| [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)                                                                                                                                               | API-provided metadata for structured data repository.                                                                          |
+| [WikibaseInWikitext](https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext) | Adds a `<sparql>` tag for writing local query service examples on wiki pages. |
+| [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia) | Adds support for local media files to Wikibase via a new data type. |
+| [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest) | API-provided metadata for structured data repository. |
 
 ## Requirements
 
@@ -56,24 +57,27 @@ These values are used for initial setup only and should not be changed without r
 
 Variables in **bold** are required on first launch without `LocalSettings.php` in the configuration volume. The image will fail to start if one of those variables does not have a value. Default values do not need to be overwritten.
 
-| Variable                     | Default    | Description                                                                                                                                                                                                  |
+| Variable | Default | Description |
 | ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`DB_SERVER`**              | undefined  | Hostname and port for the MySQL server to use for MediaWiki & Wikibase                                                                                                                                       |
-| **`DB_USER`**                | undefined  | Username to use for the MySQL server                                                                                                                                                                         |
-| **`DB_PASS`**                | undefined  | Password to use for the MySQL server                                                                                                                                                                         |
-| **`DB_NAME`**                | "my_wiki"  | Database name to use for the MySQL server                                                                                                                                                                    |
-| **`MW_ADMIN_NAME`**          | undefined  | Admin username to create on MediaWiki first install                                                                                                                                                          |
-| **`MW_ADMIN_PASS`**          | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
-| **`MW_ADMIN_EMAIL`**         | undefined  | Admin password to use for admin account on first install                                                                                                                                                     |
-| **`MW_WG_SERVER`**           | undefined  | `$wgServer` to use for MediaWiki. A value matching how this site is accessed from the user's browser is required.                                                                                            |
-| **`MW_WG_SITENAME`**         | "wikibase" | `$wgSitename` to use for MediaWiki                                                                                                                                                                           |
-| **`MW_WG_LANGUAGE_CODE`**    | "en"       | `$wgLanguageCode` to use for MediaWiki                                                                                                                                                                       |
-| **`METADATA_CALLBACK`**      | undefined  | Wikibase Suite Call Back, join an index of known publicly accessible wikibase instances. Set to `true` or `false`. May be changed after initial setup.                                                           |
-| `ELASTICSEARCH_HOST`         | undefined  | Hostname of an Elasticsearch server with the Wikibase extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable Elasticsearch. |
-| `ELASTICSEARCH_PORT`         | 9200       | Port on which Elasticsearch is available                                                                                                                                                                     |
-| `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the QuickStatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
-| `WDQS_PUBLIC_ENDPOINT_URL`   | undefined  | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration.                                                |
-| `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Used by WikibaseManifest and by `<sparql tryit="1">` links. Leave undefined to disable WDQS integration. |
+| **`DB_SERVER`** | undefined | Hostname and port for the MySQL server to use for MediaWiki & Wikibase |
+| **`DB_USER`** | undefined | Username to use for the MySQL server |
+| **`DB_PASS`** | undefined | Password to use for the MySQL server |
+| **`DB_NAME`** | "my_wiki" | Database name to use for the MySQL server |
+| **`MW_ADMIN_NAME`** | undefined | Admin username to create on MediaWiki first install |
+| **`MW_ADMIN_PASS`** | undefined | Admin password to use for admin account on first install |
+| **`MW_ADMIN_EMAIL`** | undefined | Admin password to use for admin account on first install |
+| **`MW_WG_SERVER`** | undefined | `$wgServer` to use for MediaWiki. A value matching how this site is accessed from the user's browser is required. |
+| **`MW_WG_SITENAME`** | "wikibase" | `$wgSitename` to use for MediaWiki |
+| **`MW_WG_LANGUAGE_CODE`** | "en" | `$wgLanguageCode` to use for MediaWiki |
+| **`METADATA_CALLBACK`** | undefined | Wikibase Suite Call Back, join an index of known publicly accessible wikibase instances. Set to `true` or `false`. May be changed after initial setup. |
+| `ELASTICSEARCH_HOST` | undefined | Hostname of an Elasticsearch server with the Wikibase extension installed, such as [wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch). Leave this undefined to disable Elasticsearch. |
+| `ELASTICSEARCH_PORT` | 9200 | Port on which Elasticsearch is available |
+| `QUICKSTATEMENTS_PUBLIC_URL` | undefined | Public URL of the QuickStatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality. |
+| `WDQS_PUBLIC_ENDPOINT_URL` | undefined | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration. |
+| `WDQS_PUBLIC_FRONTEND_URL` | undefined | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Used by WikibaseManifest and by `<sparql tryit="1">` links. Leave undefined to disable WDQS integration. |
+
+| `WIKIMEDIA_OAUTH_CONSUMER_KEY` | undefined | Client application key from a Meta-Wiki OAuth 1.0a consumer registered for this Wikibase. Wikimedia login is active only when this and the secret below are provided. This value is read at every container start. |
+| `WIKIMEDIA_OAUTH_CONSUMER_SECRET` | undefined | Client application secret from that Meta-Wiki OAuth 1.0a consumer. Supply it through a secret manager or equivalent protected environment configuration; never commit it. This value is read at every container start. |
 
 ### Job runner
 
@@ -119,23 +123,24 @@ In addition to the standard tags, this image also publishes a tag that includes 
 
 Hooking into the internal filesystem can extend the functionality of this image.
 
-| Directory                       | Description                                                                                                    |
+| Directory | Description |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `/var/www/html`                 | Base MediaWiki directory                                                                                       |
-| `/var/www/html/images`          | MediaWiki image and media upload directory                                                                     |
-| `/var/www/html/skins`           | MediaWiki skins directory                                                                                      |
-| `/var/www/html/extensions`      | MediaWiki extensions directory                                                                                 |
+| `/var/www/html` | Base MediaWiki directory |
+| `/var/www/html/images` | MediaWiki image and media upload directory |
+| `/var/www/html/skins` | MediaWiki skins directory |
+| `/var/www/html/extensions` | MediaWiki extensions directory |
 | `/var/www/html/LocalSettings.d` | Bundled extension configuration directory, loaded in alphabetical order by the image-managed extension loader |
-| `/post-mediawiki-update.d`      | Image-managed hooks run in lexical order after MediaWiki setup or `update.php`, before the service is ready   |
-| `/templates/`                   | Directory containing templates                                                                                 |
+| `/post-mediawiki-update.d` | Image-managed hooks run in lexical order after MediaWiki setup or `update.php`, before the service is ready |
+| `/templates/` | Directory containing templates |
 
-| File                               | Description                                                                                                                                                                                    |
+| File | Description |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/healthcheck.sh`                  | Verifies that MediaWiki is serving requests.                                                                                                                                                   |
-| `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
-| `/extra-install.sh`                | Optional script for custom functionality to be run during MediaWiki setup                                                                                                                      |
-| `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions.                                                                                                                         |
-| `/LocalSettings.Extensions.php` | Image-managed loader for bundled extension configuration in `/var/www/html/LocalSettings.d`.                                                                                                 |
+| `/healthcheck.sh` | Verifies that post-MediaWiki-update hooks have completed and MediaWiki is serving requests. |
+| `/default-extra-install.sh` | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements |
+| `/extra-install.sh` | Optional script for custom functionality to be run during MediaWiki setup |
+| `/run/wbs-ready` | Created after post-MediaWiki-update hooks complete; used by the Compose healthcheck |
+| `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions. |
+| `/LocalSettings.Extensions.php` | Image-managed loader for bundled extension configuration in `/var/www/html/LocalSettings.d`. |
 | `/templates/LocalSettings.wbs.php` | Wikibase-specific settings appended during MediaWiki setup. It provides the stable `require_once` lines for the image-managed MediaWiki and extension loading phases. |
 
 ## Source
