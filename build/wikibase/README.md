@@ -131,10 +131,9 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 | File                               | Description                                                                                                                                                                                    |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/healthcheck.sh`                  | Verifies that post-MediaWiki-update hooks have completed and MediaWiki is serving requests.                                                                                                   |
+| `/healthcheck.sh`                  | Verifies that MediaWiki is serving requests.                                                                                                                                                   |
 | `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
 | `/extra-install.sh`                | Optional script for custom functionality to be run during MediaWiki setup                                                                                                                      |
-| `/run/wbs-ready`                  | Created after post-MediaWiki-update hooks complete; used by the Compose healthcheck                                                                                                            |
 | `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions.                                                                                                                         |
 | `/LocalSettings.Extensions.php` | Image-managed loader for bundled extension configuration in `/var/www/html/LocalSettings.d`.                                                                                                 |
 | `/templates/LocalSettings.wbs.php` | Wikibase-specific settings appended during MediaWiki setup. It provides the stable `require_once` lines for the image-managed MediaWiki and extension loading phases. |
