@@ -21,7 +21,7 @@ services:
       - quickstatements-data:/quickstatements/data
     environment:
       # Keep in sync with deploy/package.json version
-      DEPLOY_VERSION: "7.0.0"
+      DEPLOY_VERSION: "7.1.0"
       METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}
@@ -36,7 +36,7 @@ services:
       WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
     healthcheck:
-      test: curl --silent --fail localhost/wiki/Main_Page
+      test: /healthcheck.sh
       interval: 10s
       start_period: 5m
 
@@ -133,7 +133,7 @@ services:
       WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
     healthcheck:
-      test: curl --silent --fail localhost
+      test: /healthcheck.sh
       interval: 10s
       start_period: 2m
 

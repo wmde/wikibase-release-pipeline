@@ -140,6 +140,7 @@ ARG WIKIBASEMANIFEST_COMMIT
 # third-party extensions
 ARG WIKIBASEEDTF_COMMIT
 ARG WIKIBASELOCALMEDIA_COMMIT
+ARG WIKIBASEINWIKITEXT_COMMIT
 
 # WORKAROUND for https://phabricator.wikimedia.org/T372458
 # Take wikibase submodules from github as phabricator rate limits us
@@ -177,6 +178,10 @@ RUN set -x; \
     git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia" && \
     git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}" && \
     rm -rf "extensions/WikibaseLocalMedia/.git*" && \
+    \
+    git clone "https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext.git" "extensions/WikibaseInWikitext" && \
+    git -C "extensions/WikibaseInWikitext" checkout "${WIKIBASEINWIKITEXT_COMMIT}" && \
+    rm -rf "extensions/WikibaseInWikitext/.git*" && \
     \
     rm -rf vendor && \
     rm -rf composer.lock && \
@@ -223,11 +228,13 @@ COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY entrypoint.sh /entrypoint.sh
 COPY callback.sh /callback.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
+COPY --chmod=755 healthcheck.sh /healthcheck.sh
 COPY htaccess /var/www/html/.htaccess
 COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.MediaWiki.php /LocalSettings.MediaWiki.php
 COPY LocalSettings.Extensions.php /LocalSettings.Extensions.php
 COPY default-extra-install.sh /default-extra-install.sh
+COPY post-mediawiki-update.d /post-mediawiki-update.d
 COPY oauth.ini /templates/oauth.ini
 COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 
