@@ -11,18 +11,6 @@ fi
 # Exit immediate on errors or unset variables from here onwards
 set -eu
 
-rm -f /run/wbs-ready
-
-run_post_mediawiki_update_hooks() {
-    local hook
-
-    for hook in /post-mediawiki-update.d/*.sh; do
-        [ -e "$hook" ] || continue
-        echo "Running post-MediaWiki-update hook: $hook"
-        bash "$hook"
-    done
-}
-
 if ! [ -v METADATA_CALLBACK  ] || [ -z "$METADATA_CALLBACK" ]; then
   echo "*** ERROR ***"
   echo "METADATA_CALLBACK not configured."
@@ -120,9 +108,6 @@ else
         bash /extra-install.sh
     fi
 fi
-
-run_post_mediawiki_update_hooks
-touch /run/wbs-ready
 
 # Run the actual entry point
 docker-php-entrypoint apache2-foreground
