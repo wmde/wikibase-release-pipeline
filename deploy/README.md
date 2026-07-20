@@ -7,7 +7,7 @@ WBS is a supported and tested Docker Compose configuration that facilitates depl
 - **[Wikibase](../build/wikibase/README.md):** MediaWiki service with the Wikibase extension included for creating and managing your Wikibase data.
 - **Job Runner:** Background job service used by Wikibase.
 - **[MariaDB](https://hub.docker.com/_/mariadb):** Database service used by Wikibase.
-- **[Elasticsearch](../build/elasticsearch/README.md):** Search service used by Wikibase.
+- **[OpenSearch](../build/opensearch/README.md):** Search service used by Wikibase.
 - **[Query service](../build/wdqs/README.md):** SPARQL service for querying Wikibase data.
 - **[Query service frontend](../build/wdqs-frontend/README.md):** Web interface for SPARQL queries.
 - **[Query service updater](../build/wdqs/README.md):** Keeps query service data in sync with Wikibase.

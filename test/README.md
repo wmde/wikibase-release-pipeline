@@ -38,7 +38,7 @@
   - [x] Verify it is available with the correct rdf through the Entity page
   - [x] Verify it is available through the WDQS-frontend with the correct prefixes
 
-## Elasticsearch
+## OpenSearch
 
 - [x] Create item with an alias and search by item alias
 - [x] Case-insensitive search should work through Wikibase

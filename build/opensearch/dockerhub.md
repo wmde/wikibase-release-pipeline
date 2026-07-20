@@ -1,7 +1,7 @@
-# Wikibase Suite Elasticsearch Image
+# Wikibase Suite OpenSearch Image
 
 Wikibase Suite (WBS) eases self-hosting [Wikibase](https://wikiba.se) in production, allowing you to maintain a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page).
 
-Find more documentation about this image here https://github.com/wmde/wikibase-release-pipeline/tree/main/build/elasticsearch/README.md
+Find more documentation about this image here https://github.com/wmde/wikibase-release-pipeline/tree/main/build/opensearch/README.md
 
 If you want to host your own WBS instance, head over to the [WBS documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md).

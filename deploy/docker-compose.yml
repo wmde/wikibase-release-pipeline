@@ -70,17 +70,29 @@ services:
   # B. EXTRA WIKIBASE SUITE SERVICES
   # --------------------------------------------------
 
-  # To disable Elasticsearch and use default MediaWiki search functionality remove
-  # the elasticsearch service, and the MW_ELASTIC_* vars from wikibase_variables
-  # at the top of this file.
+  # To disable OpenSearch and use default MediaWiki search functionality, remove
+  # the elasticsearch service and the ELASTICSEARCH_HOST variable from wikibase.
+  # The legacy service name is retained for existing generated LocalSettings.php files.
   elasticsearch:
-    image: wikibase/elasticsearch:1
+    image: wikibase/opensearch:1
     restart: unless-stopped
     volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+      # Retain this legacy volume name so existing installations keep their search data.
+      - elasticsearch-data:/usr/share/opensearch/data
     environment:
       discovery.type: single-node
-      ES_JAVA_OPTS: -Xms512m -Xmx512m -Dlog4j2.formatMsgNoLookups=true
+      bootstrap.memory_lock: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_PERFORMANCE_ANALYZER_AGENT_CLI: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     healthcheck:
       test: curl --silent --fail localhost:9200
       interval: 10s

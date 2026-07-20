@@ -24,7 +24,7 @@ services:
     image: wikibase/wikibase
 
   elasticsearch:
-    image: wikibase/elasticsearch
+    image: wikibase/opensearch
 
   wdqs:
     image: wikibase/wdqs

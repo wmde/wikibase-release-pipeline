@@ -46,7 +46,7 @@ jobs:
       matrix:
         imageName:
           - wikibase
-          - elasticsearch
+          - opensearch
           - wdqs
           - wdqs-frontend
           - quickstatements
@@ -79,7 +79,7 @@ jobs:
           - repo_client
           - quickstatements
           - pingback
-          - elasticsearch
+          - opensearch
 
     steps:
       - uses: actions/checkout@v4

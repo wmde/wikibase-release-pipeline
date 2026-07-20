@@ -3,7 +3,7 @@ name: 📦 Build and Publish a WBS Image Release to Dockerhub
 on:
   push:
     tags:
-      - 'elasticsearch@*'
+      - 'opensearch@*'
       - 'quickstatements@*'
       - 'wdqs@*'
       - 'wdqs-frontend@*'
