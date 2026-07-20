@@ -50,7 +50,7 @@
 			"update-commits": {
 				"executor": "nx:run-commands",
 				"options": {
-					"command": "./nx run-many -t update-commits"
+					"command": "./nx run-many -t update-commits -p \"build/**\" --parallel=1"
 				}
 			}
 		}

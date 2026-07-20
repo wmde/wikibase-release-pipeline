@@ -23,7 +23,7 @@ $ ./nx build wdqs --no-cache
 # Update upstream commit hashes for wikibase
 $ ./nx run wikibase:update-commits
 
-# Update upstream commit hashes for all images
+# Update upstream commit hashes for all projects that support it
 $ ./nx update-commits
 ```
 
@@ -142,10 +142,12 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
      git checkout -b <release-branch-name>
      ```
    - update `MEDIAWIKI_VERSION` in `build/wikibase/build.env` to the target MediaWiki version
-   - run `./nx update-commits` to refresh upstream commit pins across the build images (including Wikibase, WDQS, WDQS frontend, and QuickStatements) for the selected MediaWiki line:
+   - run `./nx update-commits` to refresh upstream commit pins for Wikibase, WDQS frontend, and QuickStatements for the selected MediaWiki line:
      ```bash
      ./nx update-commits
      ```
+   - verify the OpenSearch version supported by that MediaWiki/CirrusSearch line and update `OPENSEARCH_VERSION` and its Wikimedia plugin versions in `build/opensearch/build.env` when required
+   - separately check the latest published WDQS service artifact and update `WDQS_VERSION` in `build/wdqs/build.env` when a newer usable version is available
    - build and test locally:
      ```bash
      ./nx build

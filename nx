@@ -6,6 +6,16 @@ set -e
 [ -f "local.env" ] || touch local.env
 source local.env
 
+# Reuse an existing GitHub CLI login for update-commits API requests.
+# If gh is unavailable or unauthenticated, the updater falls back to anonymous access.
+if [[ " $* " == *" update-commits "* ]] &&
+  [[ -z "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]] &&
+  command -v gh > /dev/null 2>&1; then
+  if github_api_token="$(gh auth token 2> /dev/null)"; then
+    export GITHUB_TOKEN="$github_api_token"
+  fi
+fi
+
 # `nx release` loads TypeScript config and can attempt SWC first.
 # In the Docker runner this can fail due to native bindings from mounted host deps.
 if [[ "${1:-}" == "release" ]]; then
