@@ -24,3 +24,5 @@ services:
       - local.env
     environment:
       HOST_PWD: $PWD
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GH_TOKEN: ${GH_TOKEN:-}

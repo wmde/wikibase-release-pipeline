@@ -3,6 +3,21 @@ from typing import Callable
 from bs4 import BeautifulSoup
 
 
+def get_request_headers(url: str) -> dict[str, str]:
+    if not url.startswith("https://api.github.com/"):
+        return {}
+
+    token = os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
+    if not token:
+        return {}
+
+    return {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+
 def get_commit(
     variable: str,
     url: str,
@@ -12,7 +27,8 @@ def get_commit(
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=get_request_headers(url))
+        response.raise_for_status()
         commit = parse_commit(response)
         if previous_commit != commit:
             print(f"\tOld Commit:\t{previous_commit}")
