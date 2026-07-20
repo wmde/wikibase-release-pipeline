@@ -117,7 +117,9 @@ WORKDIR /var/www/html
 COPY --chown=nobody:nogroup --chmod=755 composer.local.json composer.local.json
 
 USER root
-RUN apt-get update; \
+RUN set -eux; \
+    sed -i 's|http://mirrors.wikimedia.org/debian/|http://deb.debian.org/debian/|g' /etc/apt/sources.list; \
+    apt-get update; \
     apt-get install -y --no-install-recommends \
         patch \
         ; \

@@ -93,13 +93,13 @@ describe( 'QuickStatements Service', function () {
 
 	it( 'Should be able to click batch button and be taken to the next page', async function () {
 		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#` );
-		await $( 'a[tt="new_batch"]=New batch' ).click();
+		await $( '.qs-intro-card__action' ).click();
 
-		await expect( $( 'span=Create new command batch for' ) ).toExist();
+		await expect( $( '#qs-command-editor' ) ).toExist();
 	} );
 
 	it( 'Should be able to create two items', async function () {
-		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 		await browser.executeQuickStatement( 'CREATE\nCREATE' );
 
@@ -111,7 +111,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create item with label', async function () {
-		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 		await browser.executeQuickStatement( 'CREATE\nLAST|Len|"Best label"' );
 
@@ -120,7 +120,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to create an item with statement', async function () {
-		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 		const stringPropertyId = await WikibaseApi.createProperty( 'string' );
 
@@ -312,7 +312,7 @@ describe( 'QuickStatements Service', function () {
 	} );
 
 	it( 'Should be able to merge two items', async function () {
-		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 		await browser.executeQuickStatement( 'MERGE|Q1|Q2' );
 
@@ -320,11 +320,11 @@ describe( 'QuickStatements Service', function () {
 		expect( responseQ2Data.entities.Q1.id ).toEqual( 'Q1' );
 	} );
 
-	it( 'Should have a Last Batches button', async function () {
-		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+	it( 'Should have a Your batches link', async function () {
+		await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#` );
 
-		await $( 'a[tt="show_your_last_batches"]=Your last batches' ).click();
+		await $( 'a.qs-nav-link[href^="#/batches/"]' ).click();
 
-		await expect( $( 'span[tt="show_last_batches"]=Last batches' ) ).toExist();
+		await expect( $( '.qs-batches-page h1' ) ).toHaveText( /Latest batches/ );
 	} );
 } );

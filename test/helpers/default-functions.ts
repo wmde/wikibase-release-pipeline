@@ -123,16 +123,17 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'executeQuickStatement',
 		async ( theQuery: string ): Promise<void> => {
-			await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch` );
+			await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/` );
+			await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 			// create a batch
-			await $( '.create_batch_box textarea' ).setValue( theQuery );
+			await $( '#qs-command-editor' ).setValue( theQuery );
 
 			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
 
 			// click import
-			await $( "button[tt='dialog_import_v1']" ).click();
+			await $( '.qs-new-batch-form button[type="submit"]' ).click();
 
 			// eslint-disable-next-line wdio/no-pause
 			await browser.pause( 1000 );
@@ -140,15 +141,17 @@ export function defaultFunctions(): void {
 			// click run
 			await $( "button[tt='run']" ).click();
 
-			const commands = await $$( '.command_status' );
+			const commands = await $$( '.command_state' );
 
 			await browser.waitUntil(
 				async () => {
-					const commandTextArray = await Promise.all(
-						await commands.map( async ( command ) => command.getText() )
+					const commandStateArray = await Promise.all(
+						await commands.map( async ( command ) =>
+							command.getAttribute( 'aria-label' )
+						)
 					);
-					return commandTextArray.every(
-						( commandText ) => commandText === 'done'
+					return commandStateArray.every(
+						( commandState ) => commandState.toLowerCase().startsWith( 'done' )
 					);
 				},
 				{
