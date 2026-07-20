@@ -24,6 +24,9 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 		hostname: 'browser',
 		port: 4444,
 		path: '/wd/hub',
+		baseUrl: `${ testEnv.vars.WIKIBASE_URL }${ testEnv.vars.MW_SCRIPT_PATH }`,
+		mwUser: testEnv.vars.MW_ADMIN_NAME,
+		mwPwd: testEnv.vars.MW_ADMIN_PASS,
 		// ============
 		// Capabilities
 		// ============
