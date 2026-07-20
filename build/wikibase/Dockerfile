@@ -234,7 +234,6 @@ COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.MediaWiki.php /LocalSettings.MediaWiki.php
 COPY LocalSettings.Extensions.php /LocalSettings.Extensions.php
 COPY default-extra-install.sh /default-extra-install.sh
-COPY post-mediawiki-update.d /post-mediawiki-update.d
 COPY oauth.ini /templates/oauth.ini
 COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 

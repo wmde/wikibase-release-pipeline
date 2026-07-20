@@ -1,8 +1,3 @@
-## 7.1.0 (2026-07-14)
-
-- Points the default WDQS frontend configuration at the local Wikibase `Project:SPARQL/examples` page instead of Wikidata, ignoring the old default without replacing non-Wikidata examples sources.
-- Waits for post-MediaWiki-update hooks before marking Wikibase healthy.
-
 ## 7.0.0 (2026-04-20)
 
 Updates in concert with Wikibase image v7.0.0 (mw-1.45.3) release
