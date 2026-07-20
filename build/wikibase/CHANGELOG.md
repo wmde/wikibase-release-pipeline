@@ -1,8 +1,7 @@
 # 7.1.0 (2026-07-14)
 
 - Adds WikibaseInWikitext so administrators can write local query service examples with `<sparql>` tags.
-- Adds a post-MediaWiki-update hook phase and uses it to create the local `Project:SPARQL/examples` page.
-- Adds an image-owned health check that waits for post-update hooks before reporting the service healthy.
+- Adds an image-owned health check that reports healthy when MediaWiki is serving requests.
 
 # 7.0.2 (2026-07-08)
 
