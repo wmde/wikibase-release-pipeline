@@ -10,7 +10,7 @@ on:
         default: 'wikibase'
         options:
           - deploy
-          - elasticsearch
+          - opensearch
           - quickstatements
           - wdqs
           - wdqs-frontend
@@ -54,7 +54,7 @@ jobs:
           # This workflow is intentionally tag-only.
           # It does not run `nx release` and does not generate changelog files.
           # It expects version numbers/changelogs to already be committed.
-          all_projects=(deploy elasticsearch quickstatements wdqs wdqs-frontend wikibase)
+          all_projects=(deploy opensearch quickstatements wdqs wdqs-frontend wikibase)
           if [ "$PROJECT_NAME" = "All projects with unreleased changes" ]; then
             selected_projects=("${all_projects[@]}")
           else
@@ -70,7 +70,7 @@ jobs:
               deploy)
                 package_path="deploy/package.json"
                 ;;
-              elasticsearch|quickstatements|wdqs|wdqs-frontend|wikibase)
+              opensearch|quickstatements|wdqs|wdqs-frontend|wikibase)
                 package_path="build/$project/package.json"
                 ;;
               *)

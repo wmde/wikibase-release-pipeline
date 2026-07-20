@@ -1,18 +1,18 @@
-# Wikibase Suite Elasticsearch Image
+# Wikibase Suite Search Image
 
-[Elasticsearch](https://en.wikipedia.org/wiki/Elasticsearch) is a search engine based on the Lucene library.
+[OpenSearch](https://opensearch.org/) is a search engine based on the Lucene library.
 
-This image contains the Elasticsearch server with the
-[org.wikimedia.search/extra](https://central.sonatype.com/artifact/org.wikimedia.search/extra)
+This image contains the OpenSearch server with the
+[org.wikimedia.search/opensearch-extra](https://central.sonatype.com/artifact/org.wikimedia.search/opensearch-extra)
 and
-[org.wikimedia.search.highlighter/experimental-highlighter-elasticsearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/experimental-highlighter-elasticsearch-plugin)
+[org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin)
 plugins for [Wikibase](https://wikiba.se).
 
 > 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
-In order to run Wikibase Elasticsearch, you need:
+In order to run Wikibase search, you need:
 
 - MediaWiki/Wikibase instance
 
@@ -21,7 +21,7 @@ In order to run Wikibase Elasticsearch, you need:
 We suggest using the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
 run all our tests against. Follow the setup instructions over there to get it up and running.
 
-Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase container.
+Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase container. This legacy variable name is retained so existing Wikibase configuration remains compatible.
 
 ## Example
 
@@ -29,21 +29,21 @@ For an integrated Docker Compose example showing how this image is used in the f
 
 ## Releases
 
-Official releases of this image can be found on [Docker Hub wikibase/elasticsearch](https://hub.docker.com/r/wikibase/elasticsearch).
+Official releases of this image can be found on [Docker Hub wikibase/opensearch](https://hub.docker.com/r/wikibase/opensearch).
 
 ## Versioning
 
 This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](../../docs/versioning.md).
 
-In addition to the standard tags, this image also publishes a tag that includes the bundled Elasticsearch version.
+In addition to the standard tags, this image also publishes a tag that includes the bundled OpenSearch version.
 
 | Tag | Example | Description |
 | --- | --- | --- |
-| _MAJOR_._MINOR_._PATCH_\_es*ES-VERSION* | 3.1.7_es7.20.2 | Same as the standard patch-version tag, but also mentions the bundled Elasticsearch version. |
+| os*OPENSEARCH-VERSION* | os1.3.20 | Points to the latest image release containing that OpenSearch version. |
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/elasticsearch/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/opensearch/Dockerfile).
 
 ## Authors & contact
 

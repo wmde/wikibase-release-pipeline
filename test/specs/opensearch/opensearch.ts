@@ -8,7 +8,7 @@ import SearchResult from '../../types/search-result.js';
 const itemAlias: string = getTestString( 'alias' );
 const itemLabel: string = getTestString( 'testItem' );
 
-describe( 'ElasticSearch', function () {
+describe( 'OpenSearch', function () {
 	let itemId: string;
 
 	before( async function () {
@@ -65,7 +65,7 @@ describe( 'ElasticSearch', function () {
 			},
 			{
 				timeout: 20 * 1000,
-				timeoutMsg: 'Elasticsearch should have updated the label by now.'
+				timeoutMsg: 'OpenSearch should have updated the label by now.'
 			}
 		);
 
@@ -94,7 +94,7 @@ describe( 'ElasticSearch', function () {
 			},
 			{
 				timeout: 20 * 1000,
-				timeoutMsg: 'Elasticsearch should have updated the alias by now.'
+				timeoutMsg: 'OpenSearch should have updated the alias by now.'
 			}
 		);
 

@@ -23,7 +23,7 @@ To install or maintain Wikibase Suite on your own server, start here: [Wikibase 
 Each individual service packaged by Wikibase Suite is published as a Docker image on Docker Hub. For custom setups outside Wikibase Suite, you can run these images independently or combine them in your own orchestration layer, such as Kubernetes. See the documentation for each Docker image for setup requirements and configuration options:
 
 - [Wikibase](./build/wikibase/README.md)
-- [Elasticsearch](./build/elasticsearch/README.md)
+- [OpenSearch](./build/opensearch/README.md)
 - [Query service](./build/wdqs/README.md)
 - [Query service frontend](./build/wdqs-frontend/README.md)
 - [QuickStatements](./build/quickstatements/README.md)

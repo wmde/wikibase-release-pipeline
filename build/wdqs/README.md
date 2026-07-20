@@ -67,7 +67,7 @@ In addition to the standard tags, this image also publishes a tag that includes 
 
 | Tag | Example | Description |
 | --- | --- | --- |
-| _MAJOR_._MINOR_._PATCH_\_wdqs*WDQS-VERSION* | 3.1.7_wdqs0.1.317 | Same as the standard patch-version tag, but also mentions the bundled WDQS version. |
+| wdqs*WDQS-VERSION* | wdqs0.3.156 | Points to the latest image release containing that WDQS version. |
 
 ## Upgrading
 

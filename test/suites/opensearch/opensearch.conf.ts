@@ -4,8 +4,8 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
-	name: 'elasticsearch',
-	specs: [ 'specs/elasticsearch/*.ts' ]
+	name: 'opensearch',
+	specs: [ 'specs/opensearch/*.ts' ]
 } );
 
 export const config = wdioConfig( testEnv );

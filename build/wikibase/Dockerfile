@@ -241,8 +241,7 @@ COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 
 ENV DB_NAME=my_wiki \
     MW_WG_SITENAME=wikibase \
-    MW_WG_LANGUAGE_CODE=en \
-    ELASTICSEARCH_PORT=9200
+    MW_WG_LANGUAGE_CODE=en
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/entrypoint.sh"]

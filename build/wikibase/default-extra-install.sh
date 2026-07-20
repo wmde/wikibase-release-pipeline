@@ -2,9 +2,9 @@
 
 set -ex
 
-# Enables and configures elasticsearch index
+# Enables and configures the OpenSearch index.
 if [ -z "${ELASTICSEARCH_HOST:-}" ] ; then
-    echo "Skipping Elasticsearch setup ..."
+    echo "Skipping OpenSearch setup ..."
 else
     # shellcheck disable=2153 # do not warn about unused variables
     php /var/www/html/extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
