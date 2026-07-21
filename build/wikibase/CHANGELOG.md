@@ -1,3 +1,10 @@
+# 8.0.0 (2026-07-20)
+
+- Upgrades MediaWiki from 1.45.4 to 1.46.0.
+- Updates Wikibase, Babel, cldr, CirrusSearch, Elastica, Echo, EntitySchema, OAuth, UniversalLanguageSelector, WikibaseCirrusSearch, and WikibaseManifest to the latest commits in their respective MediaWiki 1.46-compatible branches.
+- Updates WikibaseLocalMedia and Wikibase EDTF to their latest upstream commits (not version bound).
+- Configures OAuth to use the MediaWiki 1.46-compatible local user source.
+
 # 7.1.0 (2026-07-14)
 
 - Adds WikibaseInWikitext so administrators can write local query service examples with `<sparql>` tags.

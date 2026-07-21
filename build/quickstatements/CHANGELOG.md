@@ -1,3 +1,9 @@
+# 1.2.0 (2026-07-20)
+
+- Updates QuickStatements to its latest upstream commit, adding full lexeme support, `LAST_FORM` and `LAST_SENSE`, automatic import-format detection, and interface improvements alongside fixes.
+- Updates MagnusTools to its latest upstream commit, including compatibility, security, API retry, and modernization work.
+- No breaking changes were identified.
+
 ## 1.1.0 (2026-02-16)
 
 Updates in concert with Wikibase image v6.0.0 (mw-1.45) release

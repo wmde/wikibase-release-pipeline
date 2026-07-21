@@ -1,3 +1,11 @@
+# 8.0.0 (2026-07-20)
+
+Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
+
+- Moves the Wikibase and Wikibase jobrunner services to the `wikibase/wikibase:8` image.
+- Moves the search service to the new `wikibase/opensearch:1` image, based on OpenSearch 1.3.20 and required by MediaWiki 1.46.
+- See `build/wikibase/CHANGELOG.md` for the paired Wikibase image changes in this release.
+
 ## 7.0.0 (2026-04-20)
 
 Updates in concert with Wikibase image v7.0.0 (mw-1.45.3) release
