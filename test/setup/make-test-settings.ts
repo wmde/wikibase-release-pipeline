@@ -109,7 +109,7 @@ export const makeTestSettings = (
 
 export const defaultSettings: Partial<TestSettings> = {
 	envFiles: [
-		'../deploy/template.env',
+		'../deploy/.env.example',
 		'./test-services.env',
 		'../local.env'
 	],

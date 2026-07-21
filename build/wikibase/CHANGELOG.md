@@ -1,3 +1,12 @@
+# 7.1.0 (2026-07-14)
+
+- Adds WikibaseInWikitext so administrators can write local query service examples with `<sparql>` tags.
+- Adds an image-owned health check that reports healthy when MediaWiki is serving requests.
+
+# 7.0.2 (2026-07-08)
+
+- Upgrades to MediaWiki 1.45.4 due to a critical security update.
+
 # 7.0.1 (2026-04-23)
 
 - Fixes a `7.0.0` regression in the opt-in metadata callback that caused Wikibase startup to fail for instances with `METADATA_CALLBACK=true`.
