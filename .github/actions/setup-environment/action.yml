@@ -19,9 +19,11 @@ runs:
       with:
         node-version: 20
         cache: "pnpm"
+        cache-dependency-path: development/pnpm-lock.yaml
 
     - name: Install Javascript dependencies (PNPM)
       shell: bash
+      working-directory: development
       run: pnpm install
 
     - name: Setup QEMU

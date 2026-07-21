@@ -1,16 +1,47 @@
-# Wikibase Suite release pipeline
+# Wikibase Suite
 
-This repository contains both Wikibase Suite and the tools used to update, build, test, publish, and release it.
+Wikibase Suite is a production-ready Wikibase software bundle that allows you to self-host a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, QuickStatements, Query Service, and an SSL certificate for your public instance.
 
-## Install Wikibase Suite
+**What's Included**
 
-Wikibase Suite is a supported configuration for running your own [Wikibase](https://wikiba.se) on your own server and maintaining a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) as part of the Linked Open Data initiative.
+- Wikibase and MediaWiki for creating and managing structured linked data.
+- Query Service and Query Service UI for SPARQL queries.
+- Query Service Updater to keep query data in sync.
+- QuickStatements for batch imports and edits.
+- MariaDB, OpenSearch, Job Runner, and Traefik.
 
-To install or maintain Wikibase Suite on your own server, start here: [Wikibase Suite guide](./deploy/README.md).
+## Installing Wikibase Suite
 
-## Community and support
+For a new server, start with the [Wikibase Suite installation guide](./docs/installation.md).
 
-- [Wikibase Suite guide](./deploy/README.md)
+## Updating Wikibase Suite
+
+Use [Updating](./docs/updating.md) for minor updates, patch updates, and major version upgrades.
+
+> [!IMPORTANT]
+> If your existing installation runs from the `deploy/` subdirectory, see [Moving an existing Wikibase Suite installation to the repository root](./docs/migrating-from-wikibase-suite-deploy-to-wikibase-suite.md) before updating.
+
+## Operating Wikibase Suite
+
+Use these guides for help in maintaining, operating, and customizing an existing Wikibase Suite instance:
+
+- [Advanced configuration](./docs/advanced-configuration.md)
+- [Backup and restore](./docs/backup-and-restore.md)
+- [Resetting](./docs/resetting.md)
+- [Uninstalling](./docs/uninstalling.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Glossary](./docs/glossary.md)
+
+## Wikibase Suite images
+
+Wikibase Suite uses a set of published container images which can also be used independently. See the [image documentation](./docs/images/README.md) for their configuration options and release notes.
+
+## Development
+
+Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most Wikibase Suite users do not need these tools. They are available for contributors and advanced users who want to build customized images.
+
+## Community and Support
+
 - [Wikibase website](https://wikiba.se/)
 - [Wikibase Telegram community channel](https://t.me/+WBsf9-C9KPuMZCDT)
 - [Wikibase Mastodon](https://wikis.world/@Wikibase)
@@ -18,18 +49,4 @@ To install or maintain Wikibase Suite on your own server, start here: [Wikibase 
 - [Wikibase Suite Phabricator board](https://phabricator.wikimedia.org/project/board/5755/)
 - [Wikibase Suite team email](mailto:wikibase-suite-support@wikimedia.de)
 
-## Advanced: Docker images
-
-Each individual service packaged by Wikibase Suite is published as a Docker image on Docker Hub. For custom setups outside Wikibase Suite, you can run these images independently or combine them in your own orchestration layer, such as Kubernetes. See the documentation for each Docker image for setup requirements and configuration options:
-
-- [Wikibase](./build/wikibase/README.md)
-- [OpenSearch](./build/opensearch/README.md)
-- [Query service](./build/wdqs/README.md)
-- [Query service frontend](./build/wdqs-frontend/README.md)
-- [QuickStatements](./build/quickstatements/README.md)
-
-## Repository development
-
-This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images and the deployment setup in [deploy](./deploy).
-
-For development setup, build and test commands, and release process notes, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+If something is not working as expected, start with [Troubleshooting](./docs/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.

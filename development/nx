@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# Create a local.env if it doesn't already exist
+[ -f "local.env" ] || touch local.env
+source local.env
+
+# Reuse an existing GitHub CLI login for update-commits API requests.
+# If gh is unavailable or unauthenticated, the updater falls back to anonymous access.
+if [[ " $* " == *" update-commits "* ]] &&
+  [[ -z "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]] &&
+  command -v gh > /dev/null 2>&1; then
+  if github_api_token="$(gh auth token 2> /dev/null)"; then
+    export GITHUB_TOKEN="$github_api_token"
+  fi
+fi
+
+# `nx release` loads TypeScript config and can attempt SWC first.
+# In the Docker runner this can fail due to native bindings from mounted host deps.
+if [[ "${1:-}" == "release" ]]; then
+  export NX_PREFER_TS_NODE=true
+fi
+
+# # Execute nx directly if locally flagged to run in node or running inside a Docker container
+if [[ -f /.dockerenv || "$NX_RUN_LOCAL" == true  ]]; then
+  exec pnpm exec nx "$@"
+fi
+
+# Otherwise, set up and run the Docker container
+
+# Create the expected Docker network if it doesn't exist
+docker network create wbs-dev > /dev/null 2>&1 || true
+
+if [[ "${1:-}" == "release" ]]; then
+  exec docker compose --progress quiet run --build --rm -e NX_PREFER_TS_NODE=true runner -c 'pnpm exec nx "$@"' -- "$@"
+fi
+
+exec docker compose --progress quiet run --build --rm runner -c 'pnpm exec nx "$@"' -- "$@"

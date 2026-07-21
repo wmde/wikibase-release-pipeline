@@ -54,3 +54,12 @@ jobs:
           set -x # show commands
 
           ./nx release publish -p $IMAGE_NAME
+        working-directory: development
+
+      - name: Publish image documentation to Docker Hub
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: wmdetravisbot
+          password: ${{ secrets.WBS_PUBLISH_TOKEN }}
+          repository: wikibase/${{ env.IMAGE_NAME }}
+          readme-filepath: docs/images/${{ env.IMAGE_NAME }}/README.md

@@ -33,6 +33,7 @@ jobs:
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - run: ./nx lint
+        working-directory: development
 
   build:
     needs:
@@ -61,6 +62,7 @@ jobs:
 
       - name: Build and push ${{ matrix.imageName }}
         run: ./nx build ${{ matrix.imageName }} --push
+        working-directory: development
 
   test:
     needs:
@@ -94,14 +96,15 @@ jobs:
 
       - name: "Run ${{ matrix.suite }} test suite"
         run: ./nx test -- ${{ matrix.suite }}
+        working-directory: development
 
       - name: Show logs
         run: |
-          ls -lahr test/suites/${{ matrix.suite }}/results test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 test/suites/${{ matrix.suite }}/results/*.log
+          ls -lahr development/test/suites/${{ matrix.suite }}/results development/test/suites/${{ matrix.suite }}/results/*
+          tail -n +1 development/test/suites/${{ matrix.suite }}/results/*.log
         continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         with:
           name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
-          path: test/suites/**/results
+          path: development/test/suites/**/results

@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# --- Parse CLI Arguments ---
+
+INSTALL_ARGS=("$@")
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --cli)
+      CLI=true
+      ;;
+    --web)
+      CLI=false
+      ;;
+    --dev)
+      DEV=true
+      LOCALHOST=true
+      SKIP_DEPENDENCY_INSTALLS=true
+      ;;
+    --reset)
+      RESET=true
+      ;;
+    --skip-clone)
+      SKIP_CLONE=true
+      ;;
+    --skip-deps)
+      SKIP_DEPENDENCY_INSTALLS=true
+      ;;
+    --skip-launch)
+      SKIP_LAUNCH=true
+      ;;
+    --wbs-ref)
+      if [[ -z "${2:-}" ]]; then
+        echo "⚠️ --wbs-ref requires a branch or tag name."
+        exit 1
+      fi
+      WBS_REF="$2"
+      shift
+      ;;
+    --wbs-ref=*)
+      WBS_REF="${1#*=}"
+      if [[ -z "$WBS_REF" ]]; then
+        echo "⚠️ --wbs-ref requires a branch or tag name."
+        exit 1
+      fi
+      ;;
+    --debug)
+      DEBUG=true
+      ;;
+    --local)
+      LOCALHOST=true
+      ;;
+  esac
+  shift
+done
+
+# When this script is run from a Wikibase Suite checkout, use that checkout
+# instead of cloning again.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCAL_WBS_DIR="$SCRIPT_DIR"
+if [[ -d "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/installer" ]]; then
+  WBS_DIR="$LOCAL_WBS_DIR"
+  SKIP_CLONE=true
+fi
+
+# --- Installer variables (including defaults) ---
+
+WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
+WBS_REF="${WBS_REF:-main}"
+SKIP_CLONE="${SKIP_CLONE:-false}"
+
+export WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
+
+export CLI="${CLI:-false}"
+export DEV="${DEV:-false}"
+export DEBUG="${DEBUG:-false}"
+export LOCALHOST="${LOCALHOST:-false}"
+export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
+export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
+export RESET="${RESET:-false}"
+
+export INSTALLER_DIR="${INSTALLER_DIR:-$WBS_DIR/installer}"
+export ENV_FILE_PATH="$WBS_DIR/.env"
+export SCRIPTS_DIR="$INSTALLER_DIR/scripts"
+
+# --- Functions ---
+
+display_path() {
+  local path="$1"
+
+  if [[ "$path" == "$HOME" ]]; then
+    printf '~'
+  elif [[ "$path" == "$HOME/"* ]]; then
+    printf '~/%s' "${path#"$HOME/"}"
+  else
+    printf '%s' "$path"
+  fi
+}
+
+suite_version() {
+  if [[ ! -f "$WBS_DIR/package.json" ]]; then
+    return
+  fi
+
+  sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$WBS_DIR/package.json" | head -n 1
+}
+
+checkout_status() {
+  local version
+  local ref_name="$WBS_REF"
+
+  version="$(suite_version)"
+
+  if [[ "$ref_name" == "main" ]]; then
+    ref_name="main branch"
+  fi
+
+  if [[ -n "$version" ]]; then
+    echo "✅ Checked out $ref_name (Wikibase Suite $version)"
+  else
+    echo "✅ Checked out $ref_name"
+  fi
+}
+
+install_git() {
+  if command -v git >/dev/null 2>&1; then
+    echo "✅ Git installed"
+    return
+  fi
+
+  if command -v apt-get >/dev/null 2>&1; then
+    # Debian / Ubuntu
+    apt-get update >/dev/null 2>&1 || true
+    apt-get install -y git >/dev/null 2>&1
+  elif command -v dnf >/dev/null 2>&1; then
+    # Fedora / RHEL 8+ / Rocky / Alma
+    dnf install -y git >/dev/null 2>&1
+  elif command -v yum >/dev/null 2>&1; then
+    # CentOS 7 / Amazon Linux 2 / older RHEL-family (yum-based)
+    # - Legacy yum path; installs Git from the default repos.
+    #   On older CentOS 7 this will be an older Git version, but usually fine.
+    yum install -y git >/dev/null 2>&1
+  else
+    echo "⚠️ Unsupported package manager. Please install Git manually."
+    exit 1
+  fi
+
+  echo "✅ Git installed"
+}
+
+clone_repo() {
+  local wbs_parent_dir
+  local wbs_target_dir
+
+  wbs_parent_dir="$(dirname "$WBS_DIR")"
+  wbs_target_dir="$(basename "$WBS_DIR")"
+
+  mkdir -p "$wbs_parent_dir"
+  pushd "$wbs_parent_dir" >/dev/null || return 1
+
+  if [ ! -d "$wbs_target_dir/.git" ]; then
+    git clone --branch "$WBS_REF" --single-branch --depth 1 "$WBS_REPO_URL" "$wbs_target_dir" >/dev/null 2>&1
+    echo "✅ Wikibase Suite cloned to $(display_path "$WBS_DIR")"
+    checkout_status
+  else
+    echo "✅ Wikibase Suite already present at $(display_path "$WBS_DIR")"
+  fi
+
+  popd >/dev/null || return 1
+}
+
+# --- Execution ---
+
+echo
+echo "Wikibase Suite"
+echo
+if ! $SKIP_DEPENDENCY_INSTALLS; then
+  echo "🔧 Installing dependencies..."
+  echo
+  install_git
+fi
+
+if ! $SKIP_CLONE; then
+  clone_repo
+fi
+
+exec bash "$SCRIPTS_DIR/install.sh" "${INSTALL_ARGS[@]}"

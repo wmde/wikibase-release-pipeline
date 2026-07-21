@@ -1,6 +1,0 @@
-# Add files here to ignore them from prettier formatting
-/.nx/cache
-/.nx/workspace-data
-package-lock.json
-pnpm/**/**
-pnpm-lock.yaml

@@ -9,7 +9,7 @@ newIssueWelcomeComment: |
   Your input is valuable in making our project better for everyone. If you have any questions, do not hesitate to ask. We're here to help and support you along the way!
 
   Here are a few links to get you started:
-  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md)
+  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/README.md)
   * [Telegram Community Channel](https://t.me/+WBsf9-C9KPuMZCDT)
   * [Phabricator Tickets](https://phabricator.wikimedia.org/project/board/5755/)
   * [Contact form](https://wikiba.se/contact/)
@@ -31,7 +31,7 @@ newPRWelcomeComment: |
   Your work helps make our project better, and we are here to support you. If you have any questions or need any guidance, please feel free to reach out. We are all here to help make this process as smooth as possible for you.
 
   Here are a few links you might want to check out:
-  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/deploy/README.md)
+  * [Documentation](https://github.com/wmde/wikibase-release-pipeline/blob/main/README.md)
   * [Telegram Community Channel](https://t.me/+WBsf9-C9KPuMZCDT)
   * [Phabricator Tickets](https://phabricator.wikimedia.org/project/board/5755/)
   * [Contact form](https://wikiba.se/contact/)

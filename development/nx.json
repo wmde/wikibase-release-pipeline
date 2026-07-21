@@ -1,0 +1,76 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"installation": {
+		"version": "22.5.0",
+		"plugins": {
+			"nx/plugins/package-json": "22.5.0"
+		}
+	},
+	"release": {
+		"conventionalCommits": {
+			"types": {
+				"build": true,
+				"chore": true,
+				"ci": true,
+				"docs": true,
+				"feat": true,
+				"fix": true,
+				"perf": true,
+				"refactor": true,
+				"style": true,
+				"test": true
+			}
+		},
+		"groups": {
+			"images": {
+				"projects": [ "images/*" ],
+				"releaseTag": {
+					"pattern": "{projectName}@{version}"
+				}
+			}
+		},
+		"projectsRelationship": "independent",
+		"version": {
+			"conventionalCommits": true
+		},
+		"changelog": {
+			"projectChangelogs": {
+				"renderOptions": {
+					"authors": false
+				}
+			}
+		}
+	},
+	"targetDefaults": {
+		"lint": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "./lint.sh {projectRoot}"
+			}
+		},
+		"test": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test/test.sh"
+			}
+		},
+		"build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tooling/build-images.sh {projectName}"
+			}
+		},
+		"update-commits": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tooling/update-commits.sh {projectName}"
+			}
+		},
+		"nx-release-publish": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "tooling/build-images.sh {projectName} --publish"
+			}
+		}
+	}
+}

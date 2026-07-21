@@ -10,16 +10,20 @@ local.env
 
 docker-compose.local.yml
 
-deploy/log
-deploy/config/*.ini
-deploy/config/*.json
-deploy/config/*.php
-deploy/config/extensions
+log
+config/*.ini
+config/*.json
+config/*.php
+!config/Extensions.php
+config/extensions
 
-test/log
-test/mwlog
-test/suites/config
-test/suites/**/results/
+# Keep the pre-8.0 product directory ignored while installations migrate to root
+deploy/
+
+development/test/log
+development/test/mwlog
+development/test/suites/config
+development/test/suites/**/results/
 
 # dependencies
 node_modules
@@ -38,5 +42,5 @@ npm-debug.log
 .DS_Store
 Thumbs.db
 
-.nx/cache
-.nx/workspace-data
+**/.nx/cache
+**/.nx/workspace-data
