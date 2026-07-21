@@ -2,7 +2,7 @@
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 
-> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -53,7 +53,7 @@ Variables in **bold** are required.
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [wikibase-suite/docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Releases
 

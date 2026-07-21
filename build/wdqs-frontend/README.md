@@ -10,7 +10,7 @@ For general instructions on using WDQS, building SPARQL queries, and additional 
 - [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
 - [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
-> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -55,7 +55,7 @@ By default, the frontend loads query examples from the local Wikibase page `Proj
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [wikibase-suite/docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Releases
 

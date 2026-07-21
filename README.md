@@ -1,16 +1,16 @@
 # Wikibase Suite release pipeline
 
-This repository contains both Wikibase Suite and the tools used to update, build, test, publish, and release it.
+This repository contains the tools used to update, build, test, publish, and release Wikibase Suite Docker images.
 
 ## Install Wikibase Suite
 
 Wikibase Suite is a supported configuration for running your own [Wikibase](https://wikiba.se) on your own server and maintaining a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) as part of the Linked Open Data initiative.
 
-To install or maintain Wikibase Suite on your own server, start here: [Wikibase Suite guide](./deploy/README.md).
+To install or maintain Wikibase Suite on your own server, start here: [Wikibase Suite](https://github.com/wmde/wikibase-suite).
 
 ## Community and support
 
-- [Wikibase Suite guide](./deploy/README.md)
+- [Wikibase Suite](https://github.com/wmde/wikibase-suite)
 - [Wikibase website](https://wikiba.se/)
 - [Wikibase Telegram community channel](https://t.me/+WBsf9-C9KPuMZCDT)
 - [Wikibase Mastodon](https://wikis.world/@Wikibase)
@@ -30,6 +30,6 @@ Each individual service packaged by Wikibase Suite is published as a Docker imag
 
 ## Repository development
 
-This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images and the deployment setup in [deploy](./deploy).
+This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images. The deployable Wikibase Suite product, installer, and user documentation live in [wmde/wikibase-suite](https://github.com/wmde/wikibase-suite).
 
 For development setup, build and test commands, and release process notes, see [DEVELOPMENT.md](./DEVELOPMENT.md).

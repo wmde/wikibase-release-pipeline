@@ -27,12 +27,6 @@
 				"releaseTag": {
 					"pattern": "{projectName}@{version}"
 				}
-			},
-			"deploy": {
-				"projects": [ "deploy" ],
-				"releaseTag": {
-					"pattern": "{projectName}@{version}"
-				}
 			}
 		},
 		"projectsRelationship": "independent",

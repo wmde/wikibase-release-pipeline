@@ -4,7 +4,7 @@
 
 This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those hipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
 
-> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Bundled extensions
 
@@ -49,7 +49,7 @@ The image reads setup environment variables when it creates `LocalSettings.php`.
 
 ### Environment variables
 
-These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [resetting an instance](../../deploy/docs/resetting.md) procedure.
+These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [resetting an instance](https://github.com/wmde/wikibase-suite/blob/main/docs/resetting.md) procedure.
 
 > [!NOTE]
 > `METADATA_CALLBACK` is an exception and may be changed after initial setup.
@@ -82,7 +82,7 @@ To set up an external job runner, use this image for a second container, overwri
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [wikibase-suite/docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Wikibase Suite Call Back
 
@@ -96,7 +96,7 @@ Let's build the Linked Open Data Web together!
 
 ## Version reporting
 
-This image adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
+This image adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and Wikibase Suite versions.
 
 The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 

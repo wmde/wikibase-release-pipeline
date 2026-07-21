@@ -1,10 +1,10 @@
 # Development
 
-This document is for people developing and testing this repository, including the Wikibase Suite Docker images and the deployment configuration in `deploy`.
+This document is for people developing and testing the Wikibase Suite Docker images and release-pipeline tooling in this repository.
 
 ## Overview
 
-This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images and the Docker Compose deployment configuration in [deploy](./deploy).
+This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images. The deployable Wikibase Suite product, installer, and user documentation live in [wmde/wikibase-suite](https://github.com/wmde/wikibase-suite).
 
 ## Quick reference
 
@@ -52,14 +52,9 @@ $ ./nx test -- repo --headed
 $ ./nx test -- repo --setup
 ```
 
-### Deployment configuration
+### Wikibase Suite configuration
 
-For installation and maintenance of a Wikibase Suite instance, use the [Wikibase Suite documentation](./deploy/README.md). For a quick developer/tester run of the deployment configuration checked out in this repository:
-
-```bash
-$ cd deploy
-$ docker compose up --wait
-```
+For installation and maintenance of a Wikibase Suite instance, use the [Wikibase Suite documentation](https://github.com/wmde/wikibase-suite).
 
 ## Development setup
 
@@ -73,7 +68,7 @@ $ git config core.hooksPath .githooks
 
 Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run by default in each suite are specified in the `.config.ts` file in each suite directory under the `specs` key.
 
-All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. The `deploy` test suite runs against the remote Docker images specified in the configuration in the `./deploy` directory.
+All test suites are run against the most recently built local Docker images, those with the `:latest` tag, which are also selected when no tag is specified. Integration tests depend on configuration from [wmde/wikibase-suite](https://github.com/wmde/wikibase-suite); the cross-repository checkout mechanism is being finalized as part of the repository transition.
 
 _Note: Builds are currently not performed automatically by tests. Make sure you have built against current changes before running tests. See [Build](#build) above._
 
@@ -125,11 +120,13 @@ MW_SCRIPT_PATH=/w
 
 For more information on testing, see the [README](./test/README.md).
 
-## Release and Publish Process
+## Image Release and Publish Process
 
 ### Overview
 
-Releasing WBS has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then derive WBS version bumps and changelog drafts from commit history, refine that output into final release notes, and open a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create/push tags and trigger DockerHub image publishing.
+Releasing Wikibase Suite Docker images has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then derive image version bumps and changelog drafts from commit history, refine that output into final release notes, and open a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create and push tags that trigger Docker Hub image publishing.
+
+Wikibase Suite product releases are handled separately in [wmde/wikibase-suite](https://github.com/wmde/wikibase-suite). Prepare the product version, Docker Compose configuration, changelog, and user documentation there, then merge and tag the release in that repository.
 
 ### Release Flow
 
@@ -169,15 +166,13 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
 
    Generated changelog entries are a starting draft. Review and refine them so they accurately reflect the changes since the last release, and are useful for consolidation into release announcements.
 
-4. Update `DEPLOY_VERSION` in `deploy/docker-compose.yml` to exactly match the version specified in `deploy/package.json`. _As a safeguard CI fails on the version reporting test if there is any divergence._
+4. Once the version/changelog changes are finalized, push the release branch to GitHub and open a new PR with target branch of `main`. Once the CI tests pass on that PR, tag the "wikibase-suite" team as reviewers.
 
-5. Once the version/changelog changes are finalized, push the release branch to GitHub and open a new PR with target branch of `main`. Once the CI tests pass on that PR, tag the "wikibase-suite" team as reviewers.
+5. Once PR is reviewed and approved, merge to `main`.
 
-6. Once PR is reviewed and approved, merge to `main`.
+6. All releases should be announced to the community before finalized, coordinate timing with the Developer Advocate BEFORE completing Step 7 below so the announcement follows the publish closely.
 
-7. All releases should be announced to the community before finalized, coordinate timing with the Developer Advocate BEFORE completing Step 8 below so the announcement follows the publish closely.
-
-8. Run `Create Release` on `main`:
+7. Run `Create Release` on `main`:
    - run [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) after the release PR has been finalized, reviewed, approved, and merged
    - `dry_run=true` to audit tags only.
    - `dry_run=false` to create and push missing tags.
@@ -187,5 +182,4 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
      - pushes tags one by one so each tag emits its own push event
    - does not run `nx release`, infer/rewrite versions, or generate changelogs
    - publishing behavior:
-     - image tags (for example `wikibase@1.2.3`) trigger DockerHub publish workflows
-     - `deploy@X.Y.Z` tags do not trigger DockerHub image publishing
+     - image tags (for example `wikibase@1.2.3`) trigger Docker Hub publish workflows

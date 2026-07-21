@@ -8,7 +8,7 @@ and
 [org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin)
 plugins for [Wikibase](https://wikiba.se).
 
-> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase co
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [wikibase-suite/docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Releases
 

@@ -4,7 +4,7 @@
 
 This image contains QuickStatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a Wikibase Suite Wikibase image.
 
-> 💡 This image is part of [Wikibase Suite (WBS)](../../deploy/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -63,7 +63,7 @@ Variables in **bold** are required.
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [deploy/docker-compose.yml](../../deploy/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see [wikibase-suite/docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Releases
 
