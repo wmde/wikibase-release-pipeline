@@ -47,7 +47,11 @@ Variables in **bold** are required.
 | ------------------------- | ---------------------------- | -------------------------------|
 | `LANGUAGE`                | "en"                         | Language to use in the UI      |
 | **`WDQS_PUBLIC_URL`**     |                              | Hostname of the WDQS host      |
-| **`WIKIBASE_PUBLIC_URL`** |                              | Hostname of the Wikibase host  |
+| **`WIKIBASE_PUBLIC_URL`** |                              | Public URL of the Wikibase API, for example `https://wikibase.example/w/api.php` |
+
+## Local query examples
+
+By default, the frontend loads query examples from the local Wikibase page `Project:SPARQL/examples`. Create that page on the Wikibase side and add examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 
 ## Example
 
@@ -68,6 +72,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | File                                         | Description                                |
 | -------------------------------------------- | ------------------------------------------ |
 | `/config/wdqs-frontend-config.json`          | Configuration file for the WDQS frontend.  |
+| `/healthcheck.sh`                            | Verifies that the frontend is serving requests. |
 | `/templates/nginx-default.conf.template`     | Nginx config template.                     |
 
 

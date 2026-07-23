@@ -18,7 +18,7 @@ If the problem was caused by incorrect `.env` values, fix the values and then fo
 
 ## Query service updater keeps restarting
 
-If the `wdqs-updater` service keeps restarting, check the query service logs:
+If using Wikibase Suite 7.0.0 or before and the `wdqs-updater` service keeps restarting, check the query service logs:
 
 ```sh
 docker compose logs wdqs-updater
@@ -26,7 +26,7 @@ docker compose logs wdqs-updater
 
 This can happen on a fresh or empty instance if the updater is restarted before query service has synced any entity data. The updater can enter a restart loop and needs a manual `--init --start` run before the regular updater can continue.
 
-Follow the recovery procedure in the WDQS image README: [Updater keeps restarting](../../build/wdqs/README.md#updater-keeps-restarting).
+Follow the recovery procedure in the WDQS image README for the latest affected WDQS image version: [Updater keeps restarting](https://github.com/wmde/wikibase-release-pipeline/blob/wdqs%402.1.0/build/wdqs/README.md#updater-keeps-restarting).
 
 Once the updater has synced the first entity from Wikibase, normal restarts should not trigger this same failure mode.
 

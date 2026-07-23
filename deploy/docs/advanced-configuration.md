@@ -13,7 +13,9 @@ The presence of `config/LocalSettings.php` controls whether WBS starts from exis
 
 This is why changing `.env` and restarting is not a supported way to reconfigure an existing setup. With the exception of `METADATA_CALLBACK`, `.env` values are first-start inputs that were already written into `LocalSettings.php`, the database volume, or other generated state.
 
-If you need to reset, follow [Resetting an instance](./resetting.md). For a major version upgrade, follow the [major upgrade procedure](./updating.md#major-upgrades). Always keep a backup of your old `LocalSettings.php`, and copy local customizations into the file created during reset rather than restoring the old file wholesale.
+If you need to change first-start setup values, follow [Resetting an instance](./resetting.md). During a reset, keep a backup of your old `LocalSettings.php` and copy local customizations into the newly generated file rather than restoring the old file wholesale.
+
+For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](./updating.md#major-upgrades).
 
 ## `config/wikibase-php.ini`
 
@@ -22,6 +24,8 @@ This is Wikibase's `php.ini` override file, a good place for tuning PHP configur
 ## `config/wdqs-frontend-config.json`
 
 This configuration file allows you to control `wdqs-frontend`, the GUI for the query service.
+
+By default, query examples are loaded from the local Wikibase page `Project:SPARQL/examples`. Administrators can create that page and add local examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 
 ## docker-compose.yml
 

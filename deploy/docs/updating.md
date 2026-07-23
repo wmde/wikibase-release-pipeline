@@ -24,11 +24,13 @@ If you installed user-defined extensions in `config/extensions`, update those re
 
 ## Minor and patch updates for WBS
 
-WBS versions are tagged in git with tags such as `deploy@2.0.1`. Switching to a tag with the same major version will never trigger breaking changes. These updates are **always** considered safe. If you made no changes to `docker-compose.yml`, you may update simply by switching the git tag.
+WBS versions are tagged in git with tags such as `deploy@2.0.1`. Switching to a tag with the same major version will never trigger breaking changes. These updates are **always** considered safe. If you made no changes to `docker-compose.yml`, you may update by switching the git tag and pulling the compatible image updates.
 
 ```sh
 git remote update
 git checkout deploy@2.0.2
+docker compose pull
+docker compose up -d
 ```
 
 > 💡 If you made any changes to `docker-compose.yml`, commit them. Merge with upstream changes as you see fit.
@@ -40,7 +42,7 @@ Major version upgrades are performed by updating the WBS major version. This is 
 > [!NOTE]  
 > WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 1.x.x to 3.x.x, you must first upgrade from 1.x.x to 2.x.x and then to 3.x.x.
 
-Major upgrades use the data-preserving reset procedure in [Resetting an instance](./resetting.md). Read the version-specific notes below before starting that procedure, then follow the reset procedure and use the target WBS version tag when you reach its "Update setup values" step.
+Before performing a major upgrade, follow [Backup and restore](./backup-and-restore.md) to back up your data and Docker volumes as a precaution in case the upgrade process fails. Read the version-specific notes below before continuing.
 
 > 💡 If you made changes to `docker-compose.yml`, merge them as you see fit.
 
@@ -49,7 +51,7 @@ Look for any new required values in `.env.example` that you may need to add to y
 > [!NOTE]  
 > With the exception of `METADATA_CALLBACK`, do not change existing `.env` values during an upgrade. They are setup values, and changing them while preserving existing data can break your instance. `METADATA_CALLBACK` may be changed after initial setup and takes effect after restarting the services.
 
-Before the final start in the reset procedure, apply any relevant version-specific notes below and update any user-defined extensions installed in `config/extensions`.
+Before starting the upgraded services, apply any relevant version-specific notes below and update any user-defined extensions installed in `config/extensions`.
 
 ### Version-specific notes
 

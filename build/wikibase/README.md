@@ -19,6 +19,7 @@ This image contains the Wikibase extension running on top of MediaWiki. Wikibase
 | [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth)                                                                                                                                                                     | Allow users to safely authorize another application ("consumer") to use the MediaWiki action API on their behalf.              |
 | [UniversalLanguageSelector](https://www.mediawiki.org/wiki/Extension:UniversalLanguageSelector)                                                                                                                             | Tool that allows users to select a language and configure its support in an easy way.                                          |
 | [WikibaseEdtf](https://github.com/ProfessionalWiki/WikibaseEdtf)                                                                                                                                                            | Adds support for the Extended Date/Time Format (EDTF) Specification via a new data type.<br />*NOTE: Not loaded by default, to enable add `wfLoadExtension('WikibaseEdtf');` in your local configuration.*|
+| [WikibaseInWikitext](https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext)                                                                                                                                     | Adds a `<sparql>` tag for writing local query service examples on wiki pages.                                                  |
 | [WikibaseLocalMedia](https://github.com/ProfessionalWiki/WikibaseLocalMedia)                                                                                                                                                | Adds support for local media files to Wikibase via a new data type.                                                            |
 | [WikibaseManifest](https://www.mediawiki.org/wiki/Extension:WikibaseManifest)                                                                                                                                               | API-provided metadata for structured data repository.                                                                          |
 
@@ -72,7 +73,7 @@ Variables in **bold** are required on first launch without `LocalSettings.php` i
 | `ELASTICSEARCH_PORT`         | 9200       | Port on which Elasticsearch is available                                                                                                                                                                     |
 | `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the QuickStatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 | `WDQS_PUBLIC_ENDPOINT_URL`   | undefined  | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration.                                                |
-| `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Leave undefined to disable WDQS integration.                                             |
+| `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Used by WikibaseManifest and by `<sparql tryit="1">` links. Leave undefined to disable WDQS integration. |
 
 ### Job runner
 
@@ -125,10 +126,12 @@ Hooking into the internal filesystem can extend the functionality of this image.
 | `/var/www/html/skins`           | MediaWiki skins directory                                                                                      |
 | `/var/www/html/extensions`      | MediaWiki extensions directory                                                                                 |
 | `/var/www/html/LocalSettings.d` | Bundled extension configuration directory, loaded in alphabetical order by the image-managed extension loader |
+| `/post-mediawiki-update.d`      | Image-managed hooks run in lexical order after MediaWiki setup or `update.php`, before the service is ready   |
 | `/templates/`                   | Directory containing templates                                                                                 |
 
 | File                               | Description                                                                                                                                                                                    |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/healthcheck.sh`                  | Verifies that MediaWiki is serving requests.                                                                                                                                                   |
 | `/default-extra-install.sh`        | Script for automatically creating Elasticsearch indices and creating OAuth consumer for QuickStatements                                                                                        |
 | `/extra-install.sh`                | Optional script for custom functionality to be run during MediaWiki setup                                                                                                                      |
 | `/LocalSettings.MediaWiki.php` | Image-managed core MediaWiki defaults loaded before bundled extensions.                                                                                                                         |
