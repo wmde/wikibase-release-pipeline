@@ -111,6 +111,8 @@ This image adds entries to the `Special:Version` page under the “Installed sof
 
 The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 
+When Wikimedia login is enabled, its aggregate linked-user count is exposed through the public metrics endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=publicmetrics&format=json`. The `publicmetrics` object is empty when Wikimedia login is not enabled.
+
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/wikibase](https://hub.docker.com/r/wikibase/wikibase).
