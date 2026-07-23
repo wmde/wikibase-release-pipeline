@@ -234,6 +234,7 @@ COPY callback.sh /callback.sh
 COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 COPY htaccess /var/www/html/.htaccess
+COPY extensions/WikibaseSuite /var/www/html/extensions/WikibaseSuite
 COPY LocalSettings.d LocalSettings.d
 COPY LocalSettings.MediaWiki.php /LocalSettings.MediaWiki.php
 COPY LocalSettings.Extensions.php /LocalSettings.Extensions.php
