@@ -7,6 +7,10 @@ type WikibaseSuiteVersions = {
 	buildToolsGitSha: string;
 };
 
+type WikibaseSuitePublicMetrics = {
+	wikimediaLinkedUserCount?: number;
+};
+
 type DockerComposeConfig = {
 	services?: {
 		wikibase?: {
@@ -102,6 +106,18 @@ const getWikibaseSuiteApiVersions =
 		};
 	};
 
+const getWikibaseSuiteApiPublicMetrics =
+	async (): Promise<WikibaseSuitePublicMetrics> => {
+		const result = await browser.makeRequest(
+			testEnv.vars.WIKIBASE_URL + '/w/api.php?action=query&meta=wikibasesuite&wbsprop=publicmetrics&format=json'
+		);
+
+		const apiMetrics = result.data.query.wikibasesuite.publicmetrics;
+		return {
+			wikimediaLinkedUserCount: apiMetrics.wikimedia_linked_user_count
+		};
+	};
+
 describe( 'Wikibase Suite version reporting', function () {
 	let runtimeVersions: WikibaseSuiteVersions;
 	let composeDeployVersion: string;
@@ -149,6 +165,12 @@ describe( 'Wikibase Suite version reporting', function () {
 		expect( normalizeVersionValue( deployValue ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.deployVersion )
 		);
+	} );
+
+	it( 'Should expose Wikimedia linked user count through public metrics', async function () {
+		const metrics = await getWikibaseSuiteApiPublicMetrics();
+
+		expect( metrics.wikimediaLinkedUserCount ).toEqual( 0 );
 	} );
 
 	it( 'Should keep deploy package version in sync with DEPLOY_VERSION in wikibase compose service', function () {
