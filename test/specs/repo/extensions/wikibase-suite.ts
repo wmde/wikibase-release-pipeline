@@ -1,5 +1,5 @@
 import { createRequire } from 'module';
-import page from '../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
@@ -33,7 +33,7 @@ const getVersionOrEmpty = (
 ): string => source[ key ] ?? '';
 const require = createRequire( import.meta.url );
 const getDeployPackageVersion = (): string => {
-	const deployPackageJson = require( '../../../deploy/package.json' ) as {
+	const deployPackageJson = require( '../../../../deploy/package.json' ) as {
 		version?: string;
 	};
 
@@ -112,13 +112,14 @@ const getWikibaseSuiteApiPublicMetrics =
 			testEnv.vars.WIKIBASE_URL + '/w/api.php?action=query&meta=wikibasesuite&wbsprop=publicmetrics&format=json'
 		);
 
+		expect( result.data.error ).toBeUndefined();
 		const apiMetrics = result.data.query.wikibasesuite.publicmetrics;
 		return {
 			wikimediaLinkedUserCount: apiMetrics.wikimedia_linked_user_count
 		};
 	};
 
-describe( 'Wikibase Suite version reporting', function () {
+describe( 'Wikibase Suite extension', function () {
 	let runtimeVersions: WikibaseSuiteVersions;
 	let composeDeployVersion: string;
 
@@ -165,6 +166,12 @@ describe( 'Wikibase Suite version reporting', function () {
 		expect( normalizeVersionValue( deployValue ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.deployVersion )
 		);
+	} );
+
+	it( 'Should be listed on Special:Version with its extension version', async function () {
+		await page.open( '/wiki/Special:Version' );
+		const extensionInfo = await $( '#mw-version-ext-other-WikibaseSuite' ).getText();
+		await expect( extensionInfo ).toMatch( /Wikibase Suite.*1\.0\.0/ );
 	} );
 
 	it( 'Should expose Wikimedia linked user count through public metrics', async function () {
