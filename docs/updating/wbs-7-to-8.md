@@ -14,13 +14,15 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
    - [OpenSearch image 1.0.0](../../development/images/opensearch/CHANGELOG.md#100-2026-07-20)
    - [QuickStatements image 1.2.0](../../development/images/quickstatements/CHANGELOG.md#120-2026-07-20)
 
-2. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md).
+2. Prepare MediaWiki 1.46-compatible versions of any user-defined extensions. Do not replace files under `deploy/config/extensions` while Wikibase Suite is running, because that directory is mounted into the running container.
 
-3. If you modified the tracked `deploy/docker-compose.yml`, commit those changes before switching versions. After checking out WBS 8, reconcile them with the new root `docker-compose.yml`.
+3. If you modified the tracked `deploy/docker-compose.yml`, commit those changes before switching versions.
+
+4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
 
 ## Migrate
 
-1. Stop Wikibase Suite from the old directory.
+1. Ensure Wikibase Suite services are stopped.
 
    ```sh
    cd /path/to/wikibase-release-pipeline/deploy
@@ -35,25 +37,23 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
    git checkout wikibase-suite@8.0.0
    ```
 
-3. Move the existing environment file from `deploy/.env` to the repository root, where WBS 8 expects it.
+3. Reconcile any committed `deploy/docker-compose.yml` customizations with the new root `docker-compose.yml`.
+
+4. Move the existing environment file from `deploy/.env` to the repository root, where WBS 8 expects it.
 
    ```sh
    mv deploy/.env .env
    ```
 
-4. Copy all contents of the existing `deploy/config/` directory into the new root `config/` directory.
+5. Copy all contents of the existing `deploy/config/` directory into the new root `config/` directory.
 
    ```sh
    cp -a deploy/config/. config/
    ```
 
-   The repository tracks the shipped configuration scaffolding. Generated and user-owned `.php`, `.ini`, `.json`, and extension contents under `config/` remain ignored by Git.
+6. Replace user-defined extensions copied to `config/extensions` with the MediaWiki 1.46-compatible versions prepared earlier.
 
-5. Prepare the configuration for MediaWiki 1.46.
-
-   The Wikibase image moves from MediaWiki 1.45 to MediaWiki 1.46. Read the [MediaWiki 1.46 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_46/UPGRADE) and update any user-defined extensions copied to `config/extensions` to versions compatible with MediaWiki 1.46.
-
-6. Start Wikibase Suite from the repository root.
+7. Start Wikibase Suite from the repository root.
 
    ```sh
    docker compose pull
@@ -61,6 +61,13 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
    docker compose ps
    ```
 
-The Docker Compose project name remains `wbs-deploy`, so the existing named database, media, query-service, QuickStatements, and certificate volumes continue to be used after the directory move.
+8. After confirming that the upgraded services are up and healthy, remove the obsolete `deploy/` directory.
 
-Update any scripts, scheduled jobs, or service definitions that previously ran Docker Compose from `wikibase-release-pipeline/deploy` so that they run it from the repository root.
+   ```sh
+   rm -r deploy
+   ```
+
+   The Docker Compose project name remains wbs-deploy, so the existing named database, media, query-service, QuickStatements, and certificate volumes continue to be used after the directory move.
+
+> [!NOTE]
+> If you have custom scripts, scheduled jobs, or service definitions that previously ran Docker Compose from `wikibase-release-pipeline/deploy`, they must now reference `wikibase-release-pipeline/`.

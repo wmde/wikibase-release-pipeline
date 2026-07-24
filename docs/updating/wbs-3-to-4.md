@@ -16,13 +16,35 @@ This upgrade follows the standard major-version procedure and preserves the exis
    - [Query service frontend image 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wdqs-frontend/CHANGELOG.md#200-2025-03-20)
    - [QuickStatements image 1.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/quickstatements/CHANGELOG.md#102-2025-03-20)
 
-2. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). Run the backup commands from the existing `deploy/` directory.
+2. In `deploy/.env`, add `WDQS_PUBLIC_HOST` using the existing value of `WDQS_FRONTEND_PUBLIC_HOST`.
 
-3. If you modified tracked files such as `deploy/docker-compose.yml` or files under `deploy/config`, commit those changes before switching versions. After checking out WBS 4, reconcile them with the files in the new release.
+   ```dotenv
+   WDQS_PUBLIC_HOST=query.wikibase.example
+   ```
+
+   Replace the example with the wiki's existing query frontend hostname. `WDQS_FRONTEND_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST` are no longer used and may be removed; QuickStatements now runs under the existing `WIKIBASE_PUBLIC_HOST`. Preserve all other existing values.
+
+3. Review the routing changes.
+
+   Default service URLs changed in WBS 4:
+
+   - `https://wikibase.example` — Wikibase on MediaWiki
+   - `https://wikibase.example/w/rest.php` — MediaWiki REST API, including the Wikibase REST API
+   - `https://query.wikibase.example` — query service web interface
+   - `https://query.wikibase.example/sparql` — query service SPARQL endpoint
+   - `https://wikibase.example/tools/quickstatements` — QuickStatements
+
+   The `wdqs-proxy` image was removed. Traefik now routes query service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [query service frontend environment-variable documentation](../images/wdqs-frontend/README.md#environment-variables).
+
+4. Read the [MediaWiki 1.43 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while Wikibase Suite is running, because that directory is mounted into the running container.
+
+5. If you modified tracked files such as `deploy/docker-compose.yml` or files under `deploy/config`, commit those changes before switching versions.
+
+6. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
 
 ## Migrate
 
-1. Stop Wikibase Suite from the `deploy/` directory if it is still running.
+1. Ensure Wikibase Suite services are stopped.
 
    ```sh
    cd /path/to/wikibase-release-pipeline/deploy
@@ -38,31 +60,11 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. In `deploy/.env`, add `WDQS_PUBLIC_HOST` using the existing value of `WDQS_FRONTEND_PUBLIC_HOST`.
+3. Reconcile any committed customizations with the files in the new release.
 
-   ```dotenv
-   WDQS_PUBLIC_HOST=query.wikibase.example
-   ```
+4. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.43.
 
-   Replace the example with the wiki's existing query frontend hostname. `WDQS_FRONTEND_PUBLIC_HOST` and `QUICKSTATEMENTS_PUBLIC_HOST` are no longer used and may be removed; QuickStatements now runs under the existing `WIKIBASE_PUBLIC_HOST`. Preserve all other existing values.
-
-4. Review the routing changes.
-
-   Default service URLs changed in WBS 4:
-
-   - `https://wikibase.example` — Wikibase on MediaWiki
-   - `https://wikibase.example/w/rest.php` — MediaWiki REST API, including the Wikibase REST API
-   - `https://query.wikibase.example` — query service web interface
-   - `https://query.wikibase.example/sparql` — query service SPARQL endpoint
-   - `https://wikibase.example/tools/quickstatements` — QuickStatements
-
-   The `wdqs-proxy` image was removed. Traefik now routes query service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [query service frontend environment-variable documentation](../images/wdqs-frontend/README.md#environment-variables).
-
-5. Prepare the configuration for MediaWiki 1.43.
-
-   Read the [MediaWiki 1.43 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE) and update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.43.
-
-6. Pull the new images and start Wikibase Suite.
+5. Pull the new images and start Wikibase Suite.
 
    ```sh
    docker compose pull

@@ -9,13 +9,17 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 1. Read the [WBS and image release notes for WBS 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%402.0.0/CHANGES.md#wikibase-release-pipeline-200).
 
-2. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). Run the backup commands from the existing `deploy/` directory.
+2. Read the [MediaWiki 1.41.2 UPGRADE file](https://github.com/wikimedia/mediawiki/blob/1.41.2/UPGRADE) and prepare any applicable customizations for MediaWiki 1.41.2.
 
-3. If you modified tracked files such as `deploy/docker-compose.yml`, commit those changes before switching versions. After checking out WBS 2, reconcile them with the files in the new release.
+   This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
+
+3. If you modified tracked files such as `deploy/docker-compose.yml`, commit those changes before switching versions.
+
+4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
 
 ## Migrate
 
-1. Stop Wikibase Suite from the `deploy/` directory if it is still running.
+1. Ensure Wikibase Suite services are stopped.
 
    ```sh
    cd /path/to/wikibase-release-pipeline/deploy
@@ -31,11 +35,9 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Read the [MediaWiki 1.41.2 UPGRADE file](https://github.com/wikimedia/mediawiki/blob/1.41.2/UPGRADE) and prepare any applicable customizations for MediaWiki 1.41.2.
+3. Reconcile any committed customizations with the files in the new release.
 
-4. This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
-
-5. Pull the new images and start Wikibase Suite.
+4. Pull the new images and start Wikibase Suite.
 
    ```sh
    docker compose pull

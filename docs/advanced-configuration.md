@@ -15,7 +15,7 @@ This is why changing `.env` and restarting is not a supported way to reconfigure
 
 If you need to change first-start setup values, follow [Resetting an instance](./resetting.md). During a reset, keep a backup of your old `LocalSettings.php` and copy local customizations into the newly generated file rather than restoring the old file wholesale.
 
-For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](./updating.md#major-upgrades).
+For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](./updating.md#major-version-upgrades).
 
 ## `config/wikibase-php.ini`
 

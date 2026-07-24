@@ -15,13 +15,17 @@ This upgrade follows the standard major-version procedure and preserves the exis
    - [Query service frontend image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs-frontend/CHANGELOG.md#210-2026-02-16)
    - [QuickStatements image 1.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/quickstatements/CHANGELOG.md#110-2026-02-16)
 
-2. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). Run the backup commands from the existing `deploy/` directory.
+2. Read the [MediaWiki 1.45 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_45/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while Wikibase Suite is running, because that directory is mounted into the running container.
 
-3. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions. After checking out WBS 6, reconcile them with the files in the new release.
+   This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
+
+3. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
+
+4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
 
 ## Migrate
 
-1. Stop Wikibase Suite from the `deploy/` directory if it is still running.
+1. Ensure Wikibase Suite services are stopped.
 
    ```sh
    cd /path/to/wikibase-release-pipeline/deploy
@@ -37,13 +41,11 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Prepare the configuration for MediaWiki 1.45.
+3. Reconcile any committed customizations with the files in the new release.
 
-   Read the [MediaWiki 1.45 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_45/UPGRADE) and update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.45.
+4. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.45.
 
-   This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
-
-4. Pull the new images and start Wikibase Suite.
+5. Pull the new images and start Wikibase Suite.
 
    ```sh
    docker compose pull
