@@ -18,9 +18,6 @@ For a new server, start with the [Wikibase Suite installation guide](./docs/inst
 
 Use [Updating](./docs/updating.md) for minor updates, patch updates, and major version upgrades.
 
-> [!IMPORTANT]
-> If your existing installation runs from the `deploy/` subdirectory, see [Moving an existing Wikibase Suite installation to the repository root](./docs/migrating-from-wikibase-suite-deploy-to-wikibase-suite.md) before updating.
-
 ## Operating Wikibase Suite
 
 Use these guides for help in maintaining, operating, and customizing an existing Wikibase Suite instance:
@@ -32,14 +29,6 @@ Use these guides for help in maintaining, operating, and customizing an existing
 - [Troubleshooting](./docs/troubleshooting.md)
 - [Glossary](./docs/glossary.md)
 
-## Wikibase Suite images
-
-Wikibase Suite uses a set of published container images which can also be used independently. See the [image documentation](./docs/images/README.md) for their configuration options and release notes.
-
-## Development
-
-Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most Wikibase Suite users do not need these tools. They are available for contributors and advanced users who want to build customized images.
-
 ## Community and Support
 
 - [Wikibase website](https://wikiba.se/)
@@ -50,3 +39,11 @@ Image sources and the build, integration-test, and release tooling are maintaine
 - [Wikibase Suite team email](mailto:wikibase-suite-support@wikimedia.de)
 
 If something is not working as expected, start with [Troubleshooting](./docs/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+
+## Wikibase Suite images
+
+Wikibase Suite uses a set of published container images which can also be used independently. See the [image documentation](./docs/images/README.md) for their configuration options and release notes.
+
+## Development
+
+Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most Wikibase Suite users do not need these tools. They are available for contributors and advanced users who want to build customized images.

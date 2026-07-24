@@ -1,4 +1,4 @@
-# Upgrading
+# Updating Wikibase Suite
 
 Wikibase Suite (WBS) uses [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS and each WBS image have individual version numbers.
 
@@ -6,25 +6,11 @@ WBS references the latest minor and patch releases of compatible WBS image major
 
 For the tag formats used by WBS images, see [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
 
-If you are upgrading an installation that currently runs from `wikibase-release-pipeline/deploy`, first follow [Moving an existing Wikibase Suite installation to the repository root](./migrating-from-wikibase-suite-deploy-to-wikibase-suite.md).
+## Minor and patch updates
 
-## Minor and patch updates for WBS images
+Minor and patch updates may be announced for WBS itself or for an individual WBS image. A WBS release updates the product configuration and requires switching to its new git tag. An image release updates one of the bundled services and is installed by pulling the image through the compatible major-version tag already referenced by WBS.
 
-Because WBS references the latest minor and patch releases of compatible WBS images, non-breaking changes, including security updates, can be pulled at any time.
-
-For a production instance, take a backup first if you need a rollback point. Then run:
-
-```sh
-docker compose down
-docker compose pull
-docker compose up -d
-```
-
-You can also choose to always pull WBS image updates when starting the stack. See [Managing updates](#managing-updates).
-
-If you installed user-defined extensions in `config/extensions`, update those regularly too. See [User-defined extension docs](../config/extensions/README.md) for more information.
-
-## Minor and patch updates for WBS
+### Update WBS
 
 WBS versions are tagged in git with tags such as `wikibase-suite@8.0.1`. Switching to a tag with the same major version will never trigger breaking changes. These updates are **always** considered safe. If you made no changes to `docker-compose.yml`, you may update simply by switching the git tag.
 
@@ -37,89 +23,46 @@ docker compose up -d
 
 > 💡 If you made any changes to `docker-compose.yml`, commit them. Merge with upstream changes as you see fit.
 
-## Major upgrades
+### Update WBS images
 
-Major version upgrades are performed by updating the WBS major version. This is done by changing your git checkout to the new major version tag. This may reference new major versions of WBS images and involve breaking changes. In turn, those may require additional steps as described below.
+Because WBS references the latest minor and patch releases of compatible WBS images, non-breaking changes, including security updates, can be pulled at any time.
 
-> [!NOTE]  
-> WBS only supports updating from one major version to the next version in sequence. In order to upgrade from 1.x.x to 3.x.x, you must first upgrade from 1.x.x to 2.x.x and then to 3.x.x.
+For a production instance, take a backup first if you need a rollback point. Then run:
 
-Before performing a major upgrade, follow [Backup and restore](./backup-and-restore.md) to back up your data and Docker volumes as a precaution in case the upgrade process fails. Read the version-specific notes below before continuing.
+```sh
+docker compose down
+docker compose pull
+docker compose up -d
+```
 
-> 💡 If you made changes to `docker-compose.yml`, merge them as you see fit.
+If you installed user-defined extensions in `config/extensions`, update those regularly too. See [User-defined extension docs](../config/extensions/README.md) for more information.
 
-Look for any new required values in `.env.example` that you may need to add to your `.env` file.
+### Automatically update WBS images
 
-> [!NOTE]  
-> With the exception of `METADATA_CALLBACK`, do not change existing `.env` values during an upgrade. They are setup values, and changing them while preserving existing data can break your instance. `METADATA_CALLBACK` may be changed after initial setup and takes effect after restarting the services.
-
-Before starting the upgraded services, apply any relevant version-specific notes below and update any user-defined extensions installed in `config/extensions`.
-
-### Version-specific notes
-
-<details><summary><strong>WBS 7.x.x to 8.x.x</strong></summary><p>
-
-Wikibase Suite now runs from the repository root instead of the `deploy/` subdirectory. Follow [Moving an existing Wikibase Suite installation to the repository root](./migrating-from-wikibase-suite-deploy-to-wikibase-suite.md) as part of this upgrade.
-
-The Wikibase image moves from MediaWiki 1.45 to MediaWiki 1.46. Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_46/UPGRADE).
-
-The search service moves from Elasticsearch to OpenSearch. The Compose service and volume retain their legacy names so that existing generated configuration and volume identity remain compatible.
-
-</p></details>
-
-<details><summary><strong>WBS 4.x.x to 5.x.x</strong></summary><p>
-
-The Wikibase image switched from version 4.x.x to 5.x.x. This upgrades the MediaWiki version used by Wikibase from 1.43 to 1.44. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_44/UPGRADE).
-
-Please, note that the `.env` file now requires setting `METADATA_CALLBACK`. Find more details about it in `.env.example`.
-
-</p></details>
-
-<details><summary><strong>WBS 3.x.x to 4.x.x</strong></summary><p>
-
-The Wikibase image switched from version 3.x.x to 4.x.x. This upgrades the MediaWiki version used by Wikibase from 1.42 to 1.43. Please read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE).
-
-Note that URLs changed with Deploy 4 to the following defaults:
-- https://wikibase.example MediaWiki with Wikibase extension
-- https://wikibase.example/w/rest.php MediaWiki REST API including Wikibase REST API
-- https://query.wikibase.example query service web interface
-- https://query.wikibase.example/sparql query service SPARQL endpoint
-- https://wikibase.example/tools/quickstatements QuickStatements tool
-
-Note that the `wdqs-proxy` image has been removed. Routing of query service HTTP traffic is now done by central Traefik.
-
-Note that `wdqs-frontend` environment variables changed. Read more on https://github.com/wmde/wikibase-release-pipeline/tree/main/docs/images/wdqs-frontend#environment-variables
-
-</p></details>
-
-<details><summary><strong>WBS 2.x.x to 3.x.x</strong></summary><p>
-
-Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_42/UPGRADE).
-
-No Wikibase-specific migrations are necessary.
-
-</p></details>
-
-<details><summary><strong>WBS 1.x.x to 2.x.x</strong></summary><p>
-
-Read the [MediaWiki UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_41/UPGRADE).
-
-No Wikibase-specific migrations are necessary.
-
-</p></details>
-
-## Managing updates
-
-You can automatically pull minor and patch updates for WBS images by starting the stack with:
+To always pull WBS image updates when starting the stack, run:
 
 ```sh
 docker compose up -d --pull always
 ```
 
-You can run that command manually, or schedule it with a systemd timer, cron job, or similar.
+You can run this command manually or schedule it with a systemd timer, cron job, or similar. It updates only the WBS images referenced by the current `docker-compose.yml`; it does not update the WBS version tag, apply major upgrades, or update user-defined extensions.
 
-This only covers minor and patch updates for the WBS images referenced by your current `docker-compose.yml`. It does not update your WBS version tag, apply major upgrades, or update user-defined extensions.
+## Major version upgrades
 
-## Downgrades
+Unlike minor and patch updates, major version upgrades require additional steps. WBS supports upgrading only one major version at a time because MediaWiki and its extensions may require intermediate database and configuration changes. For example, upgrading from WBS 5 to WBS 8 requires following the 5-to-6, 6-to-7, and 7-to-8 guides.
 
-Downgrades are not supported. In order to revert an update, restore your data from a backup made prior to the upgrade.
+Each guide below provides the step-by-step procedure for upgrading from each version to the next.
+
+*Note that downgrading WBS versions is not supported. For recovery options after an unsuccessful upgrade, see [Backup and restore](./backup-and-restore.md).*
+
+### Upgrade guides
+
+Follow the guide for each major-version transition:
+
+- [WBS 7.x.x to 8.x.x](./updating/wbs-7-to-8.md) — follows the standard upgrade procedure with extra steps to migrate to the new repository name and the collapse of `deploy/` directory into the repository root.
+- [WBS 6.x.x to 7.x.x](./updating/wbs-6-to-7.md) — follows the standard upgrade procedure with release-specific configuration and search-index considerations.
+- [WBS 5.x.x to 6.x.x](./updating/wbs-5-to-6.md) — follows the standard upgrade procedure.
+- [WBS 4.x.x to 5.x.x](./updating/wbs-4-to-5.md) — follows the standard upgrade procedure and adds a required environment setting.
+- [WBS 3.x.x to 4.x.x](./updating/wbs-3-to-4.md) — follows the standard upgrade procedure with routing and service changes.
+- [WBS 2.x.x to 3.x.x](./updating/wbs-2-to-3.md) — follows the standard upgrade procedure with query-service and routing changes.
+- [WBS 1.x.x to 2.x.x](./updating/wbs-1-to-2.md) — follows the standard upgrade procedure.
