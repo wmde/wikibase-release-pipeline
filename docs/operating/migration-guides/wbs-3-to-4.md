@@ -2,6 +2,8 @@
 
 This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.42 to MediaWiki 1.43 and changes routing for several services.
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
@@ -34,7 +36,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    - `https://query.wikibase.example/sparql` — query service SPARQL endpoint
    - `https://wikibase.example/tools/quickstatements` — QuickStatements
 
-   The `wdqs-proxy` image was removed. Traefik now routes query service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [query service frontend environment-variable documentation](../images/wdqs-frontend/README.md#environment-variables).
+   The `wdqs-proxy` image was removed. Traefik now routes query service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [query service frontend environment-variable documentation](../../images/wdqs-frontend/README.md#environment-variables).
 
 4. Read the [MediaWiki 1.43 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while Wikibase Suite is running, because that directory is mounted into the running container.
 
@@ -44,10 +46,9 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 ## Migrate
 
-1. Ensure Wikibase Suite services are stopped.
+1. From your Wikibase Suite directory, ensure the services are stopped.
 
    ```sh
-   cd /path/to/wikibase-release-pipeline/deploy
    docker compose down
    ```
 

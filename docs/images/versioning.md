@@ -2,7 +2,7 @@
 
 Wikibase Suite (WBS) and the WBS Docker images use [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS and each WBS image have individual version numbers.
 
-The full WBS configuration has its own version tags and update process. For updating a WBS instance, see [Upgrading](../updating.md).
+The full WBS configuration has its own version tags and update process. For updating a WBS instance, see [Upgrading](../operating/updating.md).
 
 ## Image tags
 

@@ -2,6 +2,8 @@
 
 Resetting an instance deletes generated state so Wikibase Suite (WBS) can run setup again. Resetting is required when changes are made to the `.env` file after initial setup. With the exception of `METADATA_CALLBACK`, `.env` values are setup values and should not be changed after initial setup without resetting again.
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+
 ## 1. Back up data and configuration
 
 If you are resetting a failed initial installation or otherwise do not want to keep existing data or local configuration changes, skip to [step 2](#2-reset-data-and-configuration).
@@ -18,7 +20,7 @@ Remove containers and Docker volumes:
 docker compose down --volumes
 ```
 
-> [!WARNING]  
+> [!WARNING]
 > This deletes the live Docker volumes. Do not run this command unless your backup is complete or you do not need to keep existing data.
 
 Remove the generated configuration files:

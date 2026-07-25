@@ -12,7 +12,7 @@ Start by provisioning a Linux VPS or cloud server for your WBS instance. Most Wi
 The minimum requirements for your server are as follows:
 - 64-bit x86 architecture (`amd64` / `x86_64`); ARM servers are not currently supported by the published WBS images
 - 8 GB RAM
-- 20 GB free disk space to start, with more needed as your wiki data grows
+- 4 GB free disk space to start, with more needed as your wiki data grows
 - inbound HTTP and HTTPS traffic allowed on ports 80 and 443
 
 ### 2. Prepare domain names
@@ -48,7 +48,7 @@ Most bare VPS instances do not have current versions of Docker, Docker Compose, 
 Check out the files from GitHub, then change to the repository directory.
 
 ```sh
-git clone https://github.com/wmde/wikibase-release-pipeline wikibase-suite
+git clone https://github.com/wmde/wikibase-suite
 cd wikibase-suite
 ```
 
@@ -77,7 +77,7 @@ Edit `.env` and set the values below.
 | `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. Unlike the other `.env` values, this value may be changed after initial setup; restart the services for the change to take effect. |
 
 > [!WARNING]
-> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./resetting.md)).
+> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./operating/resetting.md)).
 
 ---
 
@@ -99,7 +99,7 @@ You can now access your services using the hostnames you set in `.env`:
 - QuickStatements: `https://<WIKIBASE_PUBLIC_HOST>/tools/quickstatements`
 
 > [!NOTE]
-> If anything goes wrong, see [Troubleshooting](./troubleshooting.md).
+> If anything goes wrong, see [Troubleshooting](./operating/troubleshooting.md).
 
 ---
 
@@ -119,4 +119,4 @@ docker compose up -d
 
 ## Support
 
-If something is not working as expected, start with [Troubleshooting](./troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If something is not working as expected, start with [Troubleshooting](./operating/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.

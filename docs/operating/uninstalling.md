@@ -2,6 +2,8 @@
 
 Uninstalling removes the containers, Docker volumes, and generated configuration files for the instance.
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+
 If there is anything you want to keep, follow [Back up your data](./backup-and-restore.md#back-up-your-data) or [Back up your configuration](./backup-and-restore.md#back-up-your-configuration) before continuing.
 
 Run these commands from the Wikibase Suite directory:

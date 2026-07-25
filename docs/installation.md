@@ -51,7 +51,7 @@ ssh root@SERVER_IP_ADDRESS
 <br>
 
 ```sh
-bash <(curl -fsSL https://github.com/wmde/wikibase-release-pipeline/raw/main/install) --web
+bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install) --web
 ```
 
 <br>
@@ -116,4 +116,4 @@ Note: **Download the configuration file.**
 
 ## Support
 
-If something is not working as expected, start with [Troubleshooting](./troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If something is not working as expected, start with [Troubleshooting](./operating/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.

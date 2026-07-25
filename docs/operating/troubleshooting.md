@@ -1,5 +1,7 @@
 # Troubleshooting
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+
 ## Wikibase or other services don't start or show as "unhealthy" or "restarting"
 
 Check the current status of the WBS services:

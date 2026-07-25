@@ -6,7 +6,7 @@ The installer currently supports first-time Wikibase Suite installation through 
 
 ## Versioning and releases
 
-For now, the installer is versioned as part of Wikibase Suite. Changes to installer behavior, setup tooling, or future `wbs` maintenance commands should be released through a Wikibase Suite patch or minor release, even when the deploy configuration or image versions do not otherwise change.
+For now, the installer is versioned as part of Wikibase Suite. Changes to installer behavior, setup tooling, or future `wbs` maintenance commands should be released through a Wikibase Suite patch or minor release, even when the WBS configuration or image versions do not otherwise change.
 
 This intentionally couples tooling updates to Wikibase Suite releases until there is a separately distributed `wbs` operations tool. Avoid maintaining release branches solely for installer updates unless the project defines a support policy for those branches.
 
@@ -16,7 +16,7 @@ The branch and tag model is:
 
 - `main` is the latest stable public install channel. The public install command uses `raw/main/install`.
 - `dev` is the integration branch for the next release.
-- Semantic version tags such as `7.0.0` are immutable release snapshots.
+- Wikibase Suite release tags use the format `wikibase-suite@X.Y.Z`.
 - New development should happen on `dev` or feature branches, then merge to `main` only when ready to become the public installer path.
 
 ## Running locally
@@ -24,7 +24,7 @@ The branch and tag model is:
 Clone the repository and run from the directory that contains `install`:
 
 ```bash
-git clone https://github.com/wmde/wikibase-release-pipeline wikibase-suite
+git clone https://github.com/wmde/wikibase-suite
 cd wikibase-suite
 ./install [OPTIONS]
 ```

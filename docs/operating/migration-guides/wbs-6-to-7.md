@@ -2,6 +2,8 @@
 
 This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It updates MediaWiki and the bundled extensions within the MediaWiki 1.45 release line.
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
@@ -34,10 +36,9 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 ## Migrate
 
-1. Ensure Wikibase Suite services are stopped.
+1. From your Wikibase Suite directory, ensure the services are stopped.
 
    ```sh
-   cd /path/to/wikibase-release-pipeline/deploy
    docker compose down
    ```
 

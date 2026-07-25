@@ -2,6 +2,8 @@
 
 On first launch, Wikibase Suite (WBS) will create files in the `config` directory. This is your instance configuration. **You own and control these files.** Be sure to include them in your backups.
 
+If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+
 ## `config/LocalSettings.php`
 
 This file is created by the [MediaWiki installer script](https://www.mediawiki.org/wiki/Manual:Install.php) and supplemented by the Wikibase container's `entrypoint.sh` script on first launch. Once this file has been created, you own and control it. You may _need_ to make changes to it for [MediaWiki major version updates](https://www.mediawiki.org/wiki/Manual:Upgrading#Adapt_your_LocalSettings.php).
@@ -42,4 +44,4 @@ This way, your changes are kept separate from the original WBS code. If you use 
 
 ## User-defined extensions
 
-It is possible to add extensions to MediaWiki in WBS. To learn how this works, consult the [README in `config/extensions`](../config/extensions/README.md).
+It is possible to add extensions to MediaWiki in WBS. To learn how this works, consult the [README in `config/extensions`](../../config/extensions/README.md).
