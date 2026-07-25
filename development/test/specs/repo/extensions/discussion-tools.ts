@@ -16,7 +16,7 @@ const waitForDiscussionTools = async (): Promise<void> => {
 
 const getVisibleAddTopicButton = async (): Promise<WebdriverIO.Element | null> => {
 	const selectors = [
-		'#ca-addsection',
+		'#ca-addsection a, a#ca-addsection',
 		'#ca-more-addsection a',
 		'#ca-addsection-sticky-header'
 	];
