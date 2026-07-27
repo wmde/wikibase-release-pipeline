@@ -2,19 +2,19 @@
 
 This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It updates MediaWiki and the bundled extensions within the MediaWiki 1.45 release line.
 
-If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
-
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. Read the changelog entries for the target WBS release and images changed by this upgrade:
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+
+2. Read the changelog entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 7.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%407.0.0/deploy/CHANGELOG.md#700-2026-04-20)
    - [Wikibase image 7.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%407.0.0/build/wikibase/CHANGELOG.md#700-2026-04-20)
 
-2. Prepare the configuration for WBS 7.
+3. Prepare the configuration for WBS 7.
 
    This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
 
@@ -28,15 +28,15 @@ If you have not already, [log in to your server and change to your Wikibase Suit
    $wgGroupPermissions['*']['createaccount'] = false;
    ```
 
-   Do not change `deploy/config/Extensions.php` while Wikibase Suite is running, because it is mounted directly into the running container.
+   Do not change `deploy/config/Extensions.php` while WBS is running, because it is mounted directly into the running container.
 
-3. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
+4. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
 
-4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
+5. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration.
 
 ## Migrate
 
-1. From your Wikibase Suite directory, ensure the services are stopped.
+1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down

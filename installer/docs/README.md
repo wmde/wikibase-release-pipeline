@@ -16,7 +16,7 @@ The branch and tag model is:
 
 - `main` is the latest stable public install channel. The public install command uses `raw/main/install`.
 - `dev` is the integration branch for the next release.
-- Wikibase Suite release tags use the format `wikibase-suite@X.Y.Z`.
+- Wikibase Suite release tags use the format `wbs@X.Y.Z`.
 - New development should happen on `dev` or feature branches, then merge to `main` only when ready to become the public installer path.
 
 ## Running locally

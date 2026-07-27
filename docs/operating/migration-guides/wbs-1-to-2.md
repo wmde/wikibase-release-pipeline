@@ -2,26 +2,26 @@
 
 This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.39.8 to MediaWiki 1.41.2.
 
-If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
-
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. Read the [WBS and image release notes for WBS 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%402.0.0/CHANGES.md#wikibase-release-pipeline-200).
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
 
-2. Read the [MediaWiki 1.41.2 UPGRADE file](https://github.com/wikimedia/mediawiki/blob/1.41.2/UPGRADE) and prepare any applicable customizations for MediaWiki 1.41.2.
+2. Read the [WBS and image release notes for WBS 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%402.0.0/CHANGES.md#wikibase-release-pipeline-200).
+
+3. Read the [MediaWiki 1.41.2 UPGRADE file](https://github.com/wikimedia/mediawiki/blob/1.41.2/UPGRADE) and prepare any applicable customizations for MediaWiki 1.41.2.
 
    This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
 
-3. If you modified tracked files such as `deploy/docker-compose.yml`, commit those changes before switching versions.
+4. If you modified tracked files such as `deploy/docker-compose.yml`, commit those changes before switching versions.
 
-4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
+5. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration.
 
 ## Migrate
 
-1. From your Wikibase Suite directory, ensure the services are stopped.
+1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down

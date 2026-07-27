@@ -1,12 +1,6 @@
-# Updating Wikibase Suite (WBS)
+# Updating Wikibase Suite
 
-WBS uses [semantic versioning](https://semver.org/spec/v2.0.0.html). WBS and each WBS image have individual version numbers.
-
-WBS references the latest minor and patch releases of compatible WBS image major versions using Docker image major-version tags. For example, WBS 2.0.1 might reference `wikibase/wikibase:3`, a tag that points to the latest Wikibase 3.x.x image.
-
-If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
-
-For the tag formats used by WBS images, see [Wikibase Suite image versioning](../images/versioning.md).
+Wikibase Suite (WBS) and its images are updated separately. Before continuing, see [Versions](../versions.md) to identify whether an available update is a patch, minor, or major update and whether it applies to WBS or to an individual image.
 
 ## Minor and patch updates
 
@@ -16,43 +10,51 @@ Minor and patch updates may be announced for WBS itself or for an individual WBS
 
 Switching to a WBS tag within the same major version will never trigger breaking changes. These updates are **always** considered safe. If you made no changes to `docker-compose.yml`, you may update simply by switching the git tag.
 
-The commands below are for installations that have not changed `docker-compose.yml`. If you customized that file, commit your changes and reconcile them with the target release instead.
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
 
-> [!NOTE]
-> WBS 7 and earlier releases use `deploy@…` tags; WBS 8 and later releases use `wikibase-suite@…` tags.
+2. If you customized `docker-compose.yml`, commit your changes and reconcile them with the target release. Otherwise, continue to the next step.
 
-Replace the example `wikibase-suite@8.0.1` tag below with the tag for the release you are updating to:
+3. Replace the example `wbs@8.0.1` tag below with the tag for the release you are updating to, then fetch the tag, check it out, pull the images, and start the services.
 
-```sh
-git remote update
-git checkout wikibase-suite@8.0.1
-docker compose pull
-docker compose up -d
-```
+   > [!NOTE]
+   > WBS 7 and earlier releases use `deploy@…` tags; WBS 8 and later releases use `wbs@…` tags.
+
+   ```sh
+   git remote update
+   git checkout wbs@8.0.1
+   docker compose pull
+   docker compose up -d
+   ```
 
 ### Update WBS images
 
 Because WBS references the latest minor and patch releases of compatible WBS images, non-breaking changes, including security updates, can be pulled at any time.
 
-For a production instance, take a backup first if you need a rollback point. Then run:
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
 
-```sh
-docker compose down
-docker compose pull
-docker compose up -d
-```
+2. For a production instance, [back up your data](./backup-and-restore.md#back-up-your-data) if you need a rollback point. The backup procedure stops WBS; continue directly with the next step.
 
-If you installed user-defined extensions in `config/extensions`, update those regularly too. See [User-defined extension docs](../../config/extensions/README.md) for more information.
+3. Stop WBS if it is running, pull the images, and start WBS again.
+
+   ```sh
+   docker compose down
+   docker compose pull
+   docker compose up -d
+   ```
+
+4. If you installed user-defined extensions in `config/extensions`, update those regularly too. See [User-defined extension docs](../../config/extensions/README.md) for more information.
 
 ### Automatically update WBS images
 
-To always pull WBS image updates when starting the stack, run:
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
 
-```sh
-docker compose up -d --pull always
-```
+2. To pull WBS image updates whenever you start the stack, run:
 
-You can run this command manually or schedule it with a systemd timer, cron job, or similar. It updates only the WBS images referenced by the current `docker-compose.yml`; it does not update the WBS version tag, apply major upgrades, or update user-defined extensions.
+   ```sh
+   docker compose up -d --pull always
+   ```
+
+   You can run this command manually or schedule it with a systemd timer, cron job, or similar. It updates only the WBS images referenced by the current `docker-compose.yml`; it does not update the WBS version tag, apply major upgrades, or update user-defined extensions.
 
 ## Major version upgrades
 

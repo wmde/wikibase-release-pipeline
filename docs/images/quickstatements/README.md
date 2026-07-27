@@ -1,8 +1,8 @@
-# Wikibase Suite QuickStatements Image
+# Wikibase Suite QuickStatements image
 
 [QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
-This image contains QuickStatements and the required Magnustools library. It is ready to be hooked up to MediaWiki OAuth on a Wikibase Suite Wikibase image.
+This image contains QuickStatements and the required Magnustools library. It is ready to be connected to MediaWiki OAuth on a Wikibase image.
 
 > 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-release-pipeline/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
@@ -17,7 +17,7 @@ This image contains QuickStatements and the required Magnustools library. It is 
 
 ### MediaWiki/Wikibase instance
 
-We suggest to use the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions there to get it running.
 
 Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually.
 
@@ -73,7 +73,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
+This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 ## Known issues
 

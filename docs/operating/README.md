@@ -1,7 +1,8 @@
-# Operating Wikibase Suite (WBS)
+# Operating Wikibase Suite
 
-Use these guides for help in maintaining, operating, and customizing an existing Wikibase Suite instance:
+Use these guides for help in maintaining, operating, and customizing an existing Wikibase Suite (WBS) instance:
 
+- [Versions](../versions.md)
 - [Updating and upgrading](./updating.md)
 - [Backup and restore](./backup-and-restore.md)
 - [Resetting](./resetting.md)

@@ -1,4 +1,4 @@
-# Wikibase Suite Wikibase Image
+# Wikibase Suite Wikibase image
 
 [Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository.
 
@@ -86,7 +86,7 @@ For an integrated Docker Compose example showing how this image is used in the f
 
 ## Wikibase Suite Call Back
 
-The Wikibase Suite Wikibase Image has a Call Back feature. This initiative will help maintain an index of Wikibases. The goal of this index is to gather more quantitative data to learn more about how Wikibase is being used. It eventually also aims to be a central hub for data re-use and federation initiatives between Wikibases, where users can discover other Wikibases easily. In the near future, we expect to have a proper showcase of all the Wikibases that have opted in so as to increase discoverability. For now, however, this data will remain only with Wikimedia Deutschland.
+The Wikibase image has a Call Back feature. This initiative will help maintain an index of Wikibases. The goal of this index is to gather more quantitative data to learn more about how Wikibase is being used. It eventually also aims to be a central hub for data re-use and federation initiatives between Wikibases, where users can discover other Wikibases easily. In the near future, we expect to have a proper showcase of all the Wikibases that have opted in so as to increase discoverability. For now, however, this data will remain only with Wikimedia Deutschland.
 
 You can join this initiative by setting `METADATA_CALLBACK=true` or disable the feature by setting `METADATA_CALLBACK=false` as environment variable. If you enable the feature, your hostnames configured as environment variables will be shared and added to the list. We will then be able to periodically analyze **publicly available information on your Wikibase instance**. It is important to note that we can only access publicly visible information. If your Wikibase instance requires a login to view data, we will not be able to collect statistics.
 
@@ -108,7 +108,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
+This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 In addition to the standard tags, this image also publishes a tag that includes the bundled MediaWiki version.
 

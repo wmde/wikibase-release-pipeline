@@ -10,4 +10,4 @@ Wikibase Suite uses the following published container images. These images are t
 
 The Dockerfiles and supporting build inputs are maintained under [`development/images`](../../development/images). See [Wikibase Suite development](../../development/README.md) if you need to build customized images.
 
-For the shared tag policy, see [image versioning](./versioning.md).
+For an explanation of how the images are versioned and how they relate to WBS versions, see [Versions](../versions.md).

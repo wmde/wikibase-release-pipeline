@@ -190,4 +190,4 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
    - does not run `nx release`, infer/rewrite versions, or generate changelogs
    - publishing behavior:
      - image tags (for example `wikibase@1.2.3`) trigger DockerHub publish workflows
-     - `wikibase-suite@X.Y.Z` tags do not trigger Docker Hub image publishing
+     - `wbs@X.Y.Z` tags do not trigger Docker Hub image publishing

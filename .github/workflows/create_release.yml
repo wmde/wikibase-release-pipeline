@@ -9,7 +9,7 @@ on:
         required: true
         default: 'wikibase'
         options:
-          - wikibase-suite
+          - wbs
           - opensearch
           - quickstatements
           - wdqs
@@ -54,7 +54,7 @@ jobs:
           # This workflow is intentionally tag-only.
           # It does not run `nx release` and does not generate changelog files.
           # It expects version numbers/changelogs to already be committed.
-          all_projects=(wikibase-suite opensearch quickstatements wdqs wdqs-frontend wikibase)
+          all_projects=(wbs opensearch quickstatements wdqs wdqs-frontend wikibase)
           if [ "$PROJECT_NAME" = "All projects with unreleased changes" ]; then
             selected_projects=("${all_projects[@]}")
           else
@@ -67,7 +67,7 @@ jobs:
 
           for project in "${selected_projects[@]}"; do
             case "$project" in
-              wikibase-suite)
+              wbs)
                 package_path="package.json"
                 ;;
               opensearch|quickstatements|wdqs|wdqs-frontend|wikibase)

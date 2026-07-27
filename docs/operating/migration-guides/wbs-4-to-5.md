@@ -2,19 +2,19 @@
 
 This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.43 to MediaWiki 1.44 and moves metadata callback handling into the Wikibase image.
 
-If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
-
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. Read the changelog entries for the target WBS release and images changed by this upgrade:
+1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+
+2. Read the changelog entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 5.0.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%405.0.1/deploy/CHANGELOG.md#501-2025-08-26)
    - [Wikibase image 5.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%405.0.1/build/wikibase/CHANGELOG.md#500-2025-07-24)
 
-2. Set `METADATA_CALLBACK` in the existing `deploy/.env` file. Choose `true` to opt in or `false` to opt out.
+3. Set `METADATA_CALLBACK` in the existing `deploy/.env` file. Choose `true` to opt in or `false` to opt out.
 
    ```dotenv
    METADATA_CALLBACK=false
@@ -22,17 +22,17 @@ If you have not already, [log in to your server and change to your Wikibase Suit
 
    Do not replace the existing `.env` file or change its other setup values.
 
-3. Read the [MediaWiki 1.44 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_44/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while Wikibase Suite is running, because that directory is mounted into the running container.
+4. Read the [MediaWiki 1.44 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_44/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while WBS is running, because that directory is mounted into the running container.
 
    This upgrade requires no other new `.env` values. Preserve the other values in `deploy/.env`.
 
-4. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
+5. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
 
-5. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops Wikibase Suite; continue directly with the migration.
+6. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration.
 
 ## Migrate
 
-1. From your Wikibase Suite directory, ensure the services are stopped.
+1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down

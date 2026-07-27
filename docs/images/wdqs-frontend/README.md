@@ -1,4 +1,4 @@
-# Wikibase Suite Wikidata Query Service Frontend (wdqs-frontend) Image
+# Wikibase Suite Query Service frontend image
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
@@ -25,15 +25,15 @@ In order to run WDQS Frontend, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions there to get it running.
 
 ### WDQS as server
 
-We suggest using the [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs).
+We suggest using the [Query Service image](https://hub.docker.com/r/wikibase/wdqs).
 
 ### WDQS as updater
 
-We suggest using the [WBS WDQS image](https://hub.docker.com/r/wikibase/wdqs), the same as used for WDQS server. Check out the [documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
+We suggest using the [Query Service image](https://hub.docker.com/r/wikibase/wdqs), the same image used for the Query Service server. See the [Query Service documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
 
 ### Reverse proxy
 
@@ -65,7 +65,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
+This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 ## Internal filesystem layout
 

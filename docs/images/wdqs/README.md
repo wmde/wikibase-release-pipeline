@@ -1,4 +1,4 @@
-# Wikibase Suite Wikidata Query Service (wdqs) image
+# Wikibase Suite Query Service image
 
 The [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service) provides a way for tools to access Wikibase data, via a SPARQL API. It is based on [Blazegraph](https://github.com/blazegraph/database/wiki/Main_Page).
 
@@ -17,7 +17,7 @@ In order to run WDQS, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest using the [WBS Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions over there to get it up and running.
+We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions there to get it running.
 
 ### WDQS as server
 
@@ -63,7 +63,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
+This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 In addition to the standard tags, this image also publishes a tag that includes the bundled WDQS version.
 

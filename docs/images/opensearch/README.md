@@ -1,4 +1,4 @@
-# Wikibase Suite Search Image
+# Wikibase Suite OpenSearch image
 
 [OpenSearch](https://opensearch.org/) is a search engine based on the Lucene library.
 
@@ -18,7 +18,7 @@ In order to run Wikibase search, you need:
 
 ### MediaWiki/Wikibase instance
 
-We suggest using the [WBS Wikibase Image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
+We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
 run all our tests against. Follow the setup instructions over there to get it up and running.
 
 Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase container. This legacy variable name is retained so existing Wikibase configuration remains compatible.
@@ -35,7 +35,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Wikibase Suite image versioning](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/versioning.md).
+This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 In addition to the standard tags, this image also publishes a tag that includes the bundled OpenSearch version.
 
