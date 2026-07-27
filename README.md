@@ -1,6 +1,6 @@
 # Wikibase Suite
 
-Wikibase Suite is a production-ready Wikibase software bundle that allows you to self-host a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, QuickStatements, Query Service, and an SSL certificate for your public instance.
+Wikibase Suite (WBS) is a production-ready Wikibase software bundle that allows you to self-host a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, QuickStatements, Query Service, and an SSL certificate for your public instance.
 
 **What's Included**
 
@@ -11,13 +11,13 @@ Wikibase Suite is a production-ready Wikibase software bundle that allows you to
 - Reverse-proxy service (Traefik) for routing your domain names to Wikibase and the Query Service UI.
 - Required services: job runner, database (MariaDB), and search server (OpenSearch).
 
-## Installing Wikibase Suite
+## Installing WBS
 
-For a new server, start with the [Wikibase Suite installation guide](./docs/install.md).
+For a new server, start with the [WBS installation guide](./docs/install.md).
 
-## Operating Wikibase Suite
+## Operating WBS
 
-For an existing server installation, start with the [Wikibase Suite operations guide](./docs/operating/README.md).
+For an existing server installation, start with the [WBS operations guide](./docs/operating/README.md).
 
 ## Community and Support
 
@@ -30,10 +30,10 @@ For an existing server installation, start with the [Wikibase Suite operations g
 
 If something is not working as expected, start with [Troubleshooting](./docs/operating/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
 
-## Wikibase Suite images
+## WBS images
 
-Wikibase Suite uses a set of published container images which can also be used independently. See the [image documentation](./docs/images/README.md) for their configuration options and release notes.
+WBS uses a set of published container images which can also be used independently. See the [image documentation](./docs/images/README.md) for their configuration options and release notes.
 
 ## Development
 
-Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most Wikibase Suite users do not need these tools. They are available for contributors and advanced users who want to build customized images.
+Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most WBS users do not need these tools. They are available for contributors and advanced users who want to build customized images.
