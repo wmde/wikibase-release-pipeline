@@ -4,6 +4,11 @@
 	"nx": {
 		"targets": {
 			"build": {},
+			"test": {
+				"options": {
+					"command": "images/wbs-tools/test/install-bootstrap.sh"
+				}
+			},
 			"nx-release-publish": {}
 		}
 	}

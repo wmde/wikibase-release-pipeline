@@ -67,7 +67,7 @@ fi
 # --- Installer variables (including defaults) ---
 
 WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
-WBS_REF="${WBS_REF:-main}"
+WBS_REF="${WBS_REF:-}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 
 export WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
@@ -149,6 +149,59 @@ install_git() {
   echo "✅ Git installed"
 }
 
+latest_stable_wbs_ref() {
+  git ls-remote --tags --refs "$WBS_REPO_URL" 'refs/tags/wbs@*' |
+    awk '
+      $2 ~ /^refs\/tags\/wbs@[0-9]+\.[0-9]+\.[0-9]+$/ {
+        ref = $2
+        sub(/^refs\/tags\//, "", ref)
+        version = ref
+        sub(/^wbs@/, "", version)
+        split(version, part, ".")
+
+        if (!found ||
+            part[1] + 0 > major ||
+            (part[1] + 0 == major && part[2] + 0 > minor) ||
+            (part[1] + 0 == major && part[2] + 0 == minor && part[3] + 0 > patch)) {
+          found = 1
+          latest = ref
+          major = part[1] + 0
+          minor = part[2] + 0
+          patch = part[3] + 0
+        }
+      }
+
+      END {
+        if (found) {
+          print latest
+        }
+      }
+    '
+}
+
+resolve_wbs_ref() {
+  local latest_ref
+
+  if [[ -n "$WBS_REF" ]]; then
+    return
+  fi
+
+  echo "🔎 Finding the latest stable Wikibase Suite release..."
+  if ! latest_ref="$(latest_stable_wbs_ref)"; then
+    echo "⚠️ Could not query Wikibase Suite releases from $WBS_REPO_URL."
+    exit 1
+  fi
+
+  if [[ -z "$latest_ref" ]]; then
+    echo "⚠️ No stable Wikibase Suite release was found."
+    echo "Specify a release or development branch with --wbs-ref REF."
+    exit 1
+  fi
+
+  WBS_REF="$latest_ref"
+  echo "✅ Latest stable release: $WBS_REF"
+}
+
 clone_repo() {
   local wbs_parent_dir
   local wbs_target_dir
@@ -160,6 +213,7 @@ clone_repo() {
   pushd "$wbs_parent_dir" >/dev/null || return 1
 
   if [ ! -d "$wbs_target_dir/.git" ]; then
+    resolve_wbs_ref
     git clone --branch "$WBS_REF" --single-branch --depth 1 "$WBS_REPO_URL" "$wbs_target_dir" >/dev/null 2>&1
     echo "✅ Wikibase Suite cloned to $(display_path "$WBS_DIR")"
     checkout_status

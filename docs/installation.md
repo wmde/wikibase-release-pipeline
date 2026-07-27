@@ -54,6 +54,8 @@ ssh root@SERVER_IP_ADDRESS
 bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install) --web
 ```
 
+This command installs the latest stable Wikibase Suite release identified by a `wbs@MAJOR.MINOR.PATCH` tag.
+
 <br>
 
 ## 3. Configure and Install Wikibase Suite

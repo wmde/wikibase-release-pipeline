@@ -14,7 +14,7 @@ Use Conventional Commits for changes in this repository so future release toolin
 
 The branch and tag model is:
 
-- `main` is the latest stable public install channel. The public install command uses `raw/main/install`.
+- `main` hosts the public bootstrap script at `raw/main/install`. The bootstrap discovers and installs the latest stable `wbs@…` tag.
 - `dev` is the integration branch for the next release.
 - Wikibase Suite release tags use the format `wbs@X.Y.Z`.
 - WBS tools image release tags use the format `wbs-tools@X.Y.Z`.
@@ -57,12 +57,12 @@ Add those hosts to your system hosts file before launching the stack.
 | `--skip-clone` | Do not clone the Wikibase Suite repository. Assumes it is already present. |
 | `--skip-deps` | Skip installing Git and Docker. Assumes both are installed and Docker is running. |
 | `--skip-launch` | Run through configuration but exit before `docker compose up`. |
-| `--wbs-ref REF` | Checkout a specific Wikibase Suite branch or tag. Defaults to `main`. |
+| `--wbs-ref REF` | Checkout a specific Wikibase Suite branch or tag instead of the latest stable `wbs@…` release. |
 | `--debug` | Enable verbose logging and disable quiet Docker pulls. |
 
 ## Runtime behavior
 
-- Remote installs clone Wikibase Suite to `~/wikibase-suite` by default. Set `WBS_DIR` to use a custom checkout path.
+- Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
 - Normal installations pull the exact WBS tools image selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
 - `--dev` builds the WBS tools image from `development/images/wbs-tools` instead of pulling it, so local source changes are included.
 - The installer web server runs on port `8888` for browser UI installations.
