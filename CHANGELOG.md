@@ -6,6 +6,7 @@ Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
 - Moves the search service to the new `wikibase/opensearch:1` image, based on OpenSearch 1.3.20 and required by MediaWiki 1.46.
 - Moves the Wikibase Suite Compose configuration from `deploy/` to the repository root. Existing installations must move their `.env`, complete `config/` contents, and any Compose override to the root during the upgrade.
 - Adds the Wikibase Suite installer at the repository root.
+- Adds optional login with Wikimedia accounts. See [Enable Wikimedia login](./docs/images/wikibase/README.md#wikimedia-oauth-login).
 - Makes Suite and image documentation part of the root product documentation and moves image sources, integration tests, and release tooling under `development/`.
 - See the [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md#800-2026-07-20) for the paired image changes in this release.
 
