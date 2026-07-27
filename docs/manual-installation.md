@@ -19,11 +19,11 @@ The minimum requirements for your server are as follows:
 
 You need a domain you own or control, and access to that domain provider's DNS settings.
 
-Choose two hostnames for your WBS services: one for Wikibase itself and one for the query service. These are the web addresses where people will access your Wikibase and query service. Many Wikibase users configure the query service as a subdomain of the main address.
+Choose two hostnames for your WBS services: one for Wikibase itself and one for the Query Service. These are the web addresses where people will access your Wikibase and Query Service. Many Wikibase users configure the Query Service as a subdomain of the main address.
 
 Examples:
 - Wikibase: `yourdomain.example`
-- Query service: `query.yourdomain.example`
+- Query Service: `query.yourdomain.example`
 
 In your DNS provider's control panel, create two records of either `A` or `CNAME` type, one for each hostname. Point both records to your server's public IP address. Note that DNS record changes may take a few minutes to propagate.
 
@@ -67,7 +67,7 @@ Edit `.env` and set the values below.
 | Setting | Default value | Description |
 | --- | --- | --- |
 | `WIKIBASE_PUBLIC_HOST` | None | The public hostname for your Wikibase web interface. Use one of the hostnames from step 2, without `https://` or a trailing slash. |
-| `WDQS_PUBLIC_HOST` | None | The public hostname for the query service web interface and SPARQL endpoint. Use the other hostname from step 2, without `https://` or a trailing slash. This must be different from `WIKIBASE_PUBLIC_HOST`. |
+| `WDQS_PUBLIC_HOST` | None | The public hostname for the Query Service web interface and SPARQL endpoint. Use the other hostname from step 2, without `https://` or a trailing slash. This must be different from `WIKIBASE_PUBLIC_HOST`. |
 | `MW_ADMIN_NAME` | None | The username for the first MediaWiki administrator account. |
 | `MW_ADMIN_EMAIL` | None | The email address for the first MediaWiki administrator account. |
 | `MW_ADMIN_PASS` | None | The password for the first MediaWiki administrator account. It must be at least 10 characters, must be different from `MW_ADMIN_NAME`, and must not appear in the list of commonly used passwords checked by MediaWiki. |
@@ -94,8 +94,8 @@ The first start may take a couple of minutes. You can check the status of the st
 You can now access your services using the hostnames you set in `.env`:
 
 - Wikibase: `https://<WIKIBASE_PUBLIC_HOST>`
-- Query service web interface: `https://<WDQS_PUBLIC_HOST>`
-- Query service SPARQL endpoint: `https://<WDQS_PUBLIC_HOST>/sparql`
+- Query Service web interface: `https://<WDQS_PUBLIC_HOST>`
+- Query Service SPARQL endpoint: `https://<WDQS_PUBLIC_HOST>/sparql`
 - QuickStatements: `https://<WIKIBASE_PUBLIC_HOST>/tools/quickstatements`
 
 > [!NOTE]

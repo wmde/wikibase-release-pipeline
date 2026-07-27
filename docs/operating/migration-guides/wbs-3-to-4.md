@@ -14,8 +14,8 @@ This upgrade follows the standard major-version procedure and preserves the exis
    - [WBS 4.2.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/deploy/CHANGELOG.md#421-2025-07-11)
    - [Wikibase image 4.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wikibase/CHANGELOG.md#410-2025-06-13)
    - [Elasticsearch image 1.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/elasticsearch/CHANGELOG.md#102-2025-03-20)
-   - [Query service image 2.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wdqs/CHANGELOG.md#202-2025-03-20)
-   - [Query service frontend image 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wdqs-frontend/CHANGELOG.md#200-2025-03-20)
+   - [Query Service image 2.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wdqs/CHANGELOG.md#202-2025-03-20)
+   - [Query Service frontend image 2.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/wdqs-frontend/CHANGELOG.md#200-2025-03-20)
    - [QuickStatements image 1.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/quickstatements/CHANGELOG.md#102-2025-03-20)
 
 3. In `deploy/.env`, add `WDQS_PUBLIC_HOST` using the existing value of `WDQS_FRONTEND_PUBLIC_HOST`.
@@ -32,11 +32,11 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
    - `https://wikibase.example` — Wikibase on MediaWiki
    - `https://wikibase.example/w/rest.php` — MediaWiki REST API, including the Wikibase REST API
-   - `https://query.wikibase.example` — query service web interface
-   - `https://query.wikibase.example/sparql` — query service SPARQL endpoint
+   - `https://query.wikibase.example` — Query Service web interface
+   - `https://query.wikibase.example/sparql` — Query Service SPARQL endpoint
    - `https://wikibase.example/tools/quickstatements` — QuickStatements
 
-   The `wdqs-proxy` image was removed. Traefik now routes query service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [query service frontend environment-variable documentation](../../images/wdqs-frontend/README.md#environment-variables).
+   The `wdqs-proxy` image was removed. Traefik now routes Query Service HTTP traffic. The `wdqs-frontend` environment variables also changed; see the [Query Service frontend environment-variable documentation](../../images/wdqs-frontend/README.md#environment-variables).
 
 5. Read the [MediaWiki 1.43 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_43/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while WBS is running, because that directory is mounted into the running container.
 

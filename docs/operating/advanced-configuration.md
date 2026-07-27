@@ -25,7 +25,7 @@ This is Wikibase's `php.ini` override file, a good place for tuning PHP configur
 
 ## `config/wdqs-frontend-config.json`
 
-This configuration file allows you to control `wdqs-frontend`, the GUI for the query service.
+This configuration file allows you to control `wdqs-frontend`, the GUI for the Query Service.
 
 By default, query examples are loaded from the local Wikibase page `Project:SPARQL/examples`. Administrators can create that page and add local examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 

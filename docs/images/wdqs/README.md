@@ -82,7 +82,7 @@ However, [RecentChanges] are periodically purged of older entries, as determined
 If you can't use [RecentChanges], you'll need to reload from an RDF dump:
 
 - [Make an RDF dump from your Wikibase repository using the dumpRdf.php maintenance script.](https://doc.wikimedia.org/Wikibase/master/php/docs_topics_rdf-binding.html)
-- [Load the RDF dump into the query service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
+- [Load the RDF dump into the Query Service](https://github.com/wikimedia/wikidata-query-rdf/blob/master/docs/getting-started.md#load-the-dump)
 
 ## Internal filesystem layout
 

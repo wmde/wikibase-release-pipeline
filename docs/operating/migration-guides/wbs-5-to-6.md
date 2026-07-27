@@ -13,8 +13,8 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
    - [WBS 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/deploy/CHANGELOG.md#600-2026-02-16)
    - [Wikibase image 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wikibase/CHANGELOG.md#600-2026-02-16)
-   - [Query service image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs/CHANGELOG.md#210-2026-02-16)
-   - [Query service frontend image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs-frontend/CHANGELOG.md#210-2026-02-16)
+   - [Query Service image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs/CHANGELOG.md#210-2026-02-16)
+   - [Query Service frontend image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs-frontend/CHANGELOG.md#210-2026-02-16)
    - [QuickStatements image 1.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/quickstatements/CHANGELOG.md#110-2026-02-16)
 
 3. Read the [MediaWiki 1.45 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_45/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while WBS is running, because that directory is mounted into the running container.

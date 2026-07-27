@@ -1,12 +1,24 @@
 # Glossary
 
-## Query service
+## Docker
+
+[Docker](https://docs.docker.com/get-started/docker-overview/) is the software Wikibase Suite uses to download its packaged services and run them as isolated processes called containers. A WBS server requires Docker Engine and the Docker Compose plugin.
+
+## Docker Compose
+
+[Docker Compose](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-docker-compose/) is Docker's standard tool for defining and running applications made up of multiple containers. Wikibase Suite uses a relatively small Compose configuration in the root `docker-compose.yml` file to define the services, images, settings, networks, and persistent data volumes needed to run WBS on a single server.
+
+## Docker image
+
+A [Docker image](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/) is a standardized, read-only package containing an application and the files and dependencies it needs to run. Docker creates a running container from an image. Wikibase Suite publishes its images on Docker Hub.
+
+## Query Service
 
 The SPARQL service for a Wikibase instance. It is often referred to as WDQS, short for Wikidata Query Service.
 
 ## QuickStatements
 
-A web-based tool for importing and editing Wikibase data in batches.
+[QuickStatements](https://github.com/magnusmanske/quickstatements) is an independently developed web tool for importing and editing Wikibase data in batches. Wikibase Suite packages it as an image and configures its connection to Wikibase using OAuth.
 
 ## Wikibase
 
@@ -16,8 +28,8 @@ In Wikibase Suite, the main Wikibase service runs on MediaWiki. These docs usual
 
 ## Wikibase Suite (WBS)
 
-The full deployable Wikibase setup, the related Docker images, and the team at Wikimedia Deutschland that maintains them.
+The full deployable Wikibase product, including its Docker Compose configuration, services, tools, and related images. The Wikimedia Deutschland team that maintains the product is also called the Wikibase Suite Team.
 
-## Wikibase Suite images
+## Wikibase Suite (WBS) images
 
-The published Docker images used by Wikibase Suite, including Wikibase, query service, query service frontend, OpenSearch, QuickStatements, and WBS tools.
+The Docker images published and tested as components of Wikibase Suite, including Wikibase, Query Service, Query Service frontend, OpenSearch, QuickStatements, and WBS tools. Each image is released and versioned separately from WBS.

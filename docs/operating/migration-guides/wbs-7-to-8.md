@@ -63,7 +63,7 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
    docker compose ps
    ```
 
-   WBS 8 automatically uses the existing database, media, query-service, QuickStatements, and certificate data.
+   WBS 8 automatically uses the existing database, media, Query Service, QuickStatements, and certificate data.
 
 7. Once the services show `healthy` and you have confirmed that Wikibase Suite—including any customizations or installed extensions—works as expected, you can safely delete the old `wikibase-release-pipeline` directory to avoid future confusion:
 
