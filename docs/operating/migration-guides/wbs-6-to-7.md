@@ -9,30 +9,14 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
 
-2. Read the changelog entries for the target WBS release and images changed by this upgrade:
+2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 7.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%407.0.0/deploy/CHANGELOG.md#700-2026-04-20)
-   - [Wikibase image 7.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%407.0.0/build/wikibase/CHANGELOG.md#700-2026-04-20)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
 
-3. Prepare the configuration for WBS 7.
+3. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
 
-   This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
-
-   WBS 7 disables anonymous writes and self-service account creation by default for new installations. Existing installations retain their current anonymous-access behavior during an upgrade. To adopt the new defaults, add the following immediately after `# Add configuration values below which should be set after extensions are loaded` in `deploy/config/LocalSettings.php`:
-
-   ```php
-   $wgGroupPermissions['*']['edit'] = false;
-   $wgGroupPermissions['*']['createpage'] = false;
-   $wgGroupPermissions['*']['createtalk'] = false;
-   $wgGroupPermissions['*']['writeapi'] = false;
-   $wgGroupPermissions['*']['createaccount'] = false;
-   ```
-
-   Do not change `deploy/config/Extensions.php` while WBS is running, because it is mounted directly into the running container.
-
-4. If you modified tracked files such as `deploy/docker-compose.yml` or `deploy/config/Extensions.php`, commit those changes before switching versions.
-
-5. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration.
+4. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration.
 
 ## Migrate
 
@@ -42,7 +26,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose down
    ```
 
-2. From the repository root, fetch and check out WBS 7.0.0.
+2. Move to the repository root, fetch and check out WBS 7.0.0.
 
    ```sh
    cd ..
@@ -51,15 +35,31 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Reconcile any committed customizations with the files in the new release.
+3. Reapply any tracked customizations you still need. Keep the WBS 7 files as the base rather than restoring the old files wholesale.
 
-4. WikibaseEdtf remains bundled but is no longer loaded by default. If the wiki uses the EDTF data type, uncomment this line in `deploy/config/Extensions.php`:
+   This upgrade requires no new `.env` values. Preserve `deploy/.env` unchanged.
+
+4. WBS 7 disables anonymous writes and self-service account creation by default for new installations. Existing installations retain their current anonymous-access behavior during an upgrade.
+
+   To adopt the new defaults, add the following immediately after `# Add configuration values below which should be set after extensions are loaded` in `deploy/config/LocalSettings.php`:
+
+   ```php
+   $wgGroupPermissions['*']['edit'] = false;
+   $wgGroupPermissions['*']['createpage'] = false;
+   $wgGroupPermissions['*']['createtalk'] = false;
+   $wgGroupPermissions['*']['writeapi'] = false;
+   $wgGroupPermissions['*']['createaccount'] = false;
+   ```
+
+   Skip this step to retain the existing anonymous-access behavior.
+
+5. WikibaseEdtf remains bundled but is no longer loaded by default. If the wiki uses the EDTF data type, uncomment this line in `deploy/config/Extensions.php`:
 
    ```php
    wfLoadExtension( 'WikibaseEdtf' );
    ```
 
-5. Pull the new images and start Wikibase Suite.
+6. Pull the new images and start Wikibase Suite.
 
    ```sh
    docker compose pull
@@ -67,7 +67,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose ps
    ```
 
-6. If the wiki uses `mul` values, wait for the upgraded services to become healthy, then recreate and repopulate the Elasticsearch index.
+7. If the wiki uses `mul` values, wait for the upgraded services to become healthy, then recreate and repopulate the Elasticsearch index.
 
    WBS 7 enables the `mul` language code. Existing content will not appear in typeahead results for `mul` values until the index is recreated and repopulated.
 

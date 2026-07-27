@@ -9,13 +9,13 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
 
-2. Read the changelog entries for the target WBS release and images changed by this upgrade:
+2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/deploy/CHANGELOG.md#600-2026-02-16)
-   - [Wikibase image 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wikibase/CHANGELOG.md#600-2026-02-16)
-   - [Query Service image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs/CHANGELOG.md#210-2026-02-16)
-   - [Query Service frontend image 2.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/wdqs-frontend/CHANGELOG.md#210-2026-02-16)
-   - [QuickStatements image 1.1.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/build/quickstatements/CHANGELOG.md#110-2026-02-16)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Query Service image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs/CHANGELOG.md)
+   - [Query Service frontend image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs-frontend/CHANGELOG.md)
+   - [QuickStatements image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/quickstatements/CHANGELOG.md)
 
 3. Read the [MediaWiki 1.45 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_45/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while WBS is running, because that directory is mounted into the running container.
 
@@ -33,7 +33,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose down
    ```
 
-2. From the repository root, fetch and check out WBS 6.0.0.
+2. Move to the repository root, fetch and check out WBS 6.0.0.
 
    ```sh
    cd ..
@@ -42,7 +42,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Reconcile any committed customizations with the files in the new release.
+3. Reapply any tracked customizations you still need. Keep the WBS 6 files as the base rather than restoring the old files wholesale.
 
 4. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.45.
 

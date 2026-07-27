@@ -9,12 +9,12 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
 
-2. Read the changelog entries for the target WBS release and images changed by this upgrade:
+2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 5.0.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%405.0.1/deploy/CHANGELOG.md#501-2025-08-26)
-   - [Wikibase image 5.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%405.0.1/build/wikibase/CHANGELOG.md#500-2025-07-24)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
 
-3. Set `METADATA_CALLBACK` in the existing `deploy/.env` file. Choose `true` to opt in or `false` to opt out.
+3. Decide whether to opt into the metadata callback. During the migration, you will set `METADATA_CALLBACK` to `true` to opt in or `false` to opt out.
 
    ```dotenv
    METADATA_CALLBACK=false
@@ -38,7 +38,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose down
    ```
 
-2. From the repository root, fetch and check out WBS 5.0.1. This patch release corrects the Wikibase image reference shipped in WBS 5.0.0.
+2. Move to the repository root, fetch and check out WBS 5.0.1. This patch release corrects the Wikibase image reference shipped in WBS 5.0.0.
 
    ```sh
    cd ..
@@ -47,11 +47,13 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Reconcile any committed customizations with the files in the new release.
+3. Reapply any tracked customizations you still need. Keep the WBS 5 files as the base rather than restoring the old files wholesale.
 
-4. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.44.
+4. Set `METADATA_CALLBACK` in `deploy/.env` to the value you chose during preparation. Preserve every other existing value.
 
-5. Pull the new images and start Wikibase Suite.
+5. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.44.
+
+6. Pull the new images and start Wikibase Suite.
 
    ```sh
    docker compose pull

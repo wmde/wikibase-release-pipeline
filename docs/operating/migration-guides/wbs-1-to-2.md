@@ -27,7 +27,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose down
    ```
 
-2. From the repository root, fetch and check out WBS 2.0.0.
+2. Move to the repository root, fetch and check out WBS 2.0.0.
 
    ```sh
    cd ..
@@ -36,7 +36,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Reconcile any committed customizations with the files in the new release.
+3. Reapply any tracked customizations you still need. Keep the WBS 2 files as the base rather than restoring the old files wholesale.
 
 4. Pull the new images and start Wikibase Suite.
 

@@ -9,11 +9,11 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
 
-2. Read the changelog entries for the target WBS release and images changed by this upgrade:
+2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 3.0.4](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%403.0.4/deploy/CHANGELOG.md#304-2025-02-24)
-   - [Wikibase image 3.0.3](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%403.0.4/build/wikibase/CHANGELOG.md#303-2025-02-24)
-   - [Query Service image 2.0.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%403.0.4/build/wdqs/CHANGELOG.md#201-2025-01-22)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Query Service image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs/CHANGELOG.md)
 
 3. Prepare the configuration for MediaWiki 1.42.5.
 
@@ -39,7 +39,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    docker compose down
    ```
 
-2. From the repository root, fetch and check out WBS 3.0.4 so the installation includes all WBS 3 minor and patch updates.
+2. Move to the repository root, fetch and check out WBS 3.0.4. This target includes all WBS 3 minor and patch updates.
 
    ```sh
    cd ..
@@ -48,7 +48,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
    cd deploy
    ```
 
-3. Reconcile any committed customizations with the files in the new release.
+3. Reapply any tracked customizations you still need. Keep the WBS 3 files as the base rather than restoring the old files wholesale.
 
 4. Pull the new images and start Wikibase Suite.
 

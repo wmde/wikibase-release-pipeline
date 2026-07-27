@@ -189,7 +189,7 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
      - pushes tags one by one so each tag emits its own push event
    - does not run `nx release`, infer/rewrite versions, or generate changelogs
 
-When a WBS release changes the exact `wikibase/wbs-tools` image selected in `tools/scripts/_versions.sh`, publish that tools image before making the corresponding WBS branch the public installation channel. Otherwise, new installations will reference an image tag that is not yet available.
-   - publishing behavior:
-     - image tags (for example `wikibase@1.2.3`) trigger DockerHub publish workflows
-     - `wbs@X.Y.Z` tags do not trigger Docker Hub image publishing
+When a WBS release changes the exact `wikibase/wbs-tools` image selected in `tools/scripts/_versions.sh`, publish that tools image before creating the corresponding `wbs@…` tag. Otherwise, new installations will reference an image tag that is not yet available.
+
+- Image tags such as `wikibase@1.2.3` trigger Docker Hub publishing workflows.
+- `wbs@X.Y.Z` tags make that WBS release discoverable by the installer; they do not publish images.
