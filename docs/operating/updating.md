@@ -1,6 +1,6 @@
-# Updating Wikibase Suite (WBS)
+# Updating and Upgrading Wikibase Suite (WBS)
 
-Wikibase Suite (WBS) and its images are updated separately. Before continuing, see [Versions](../versions.md) to identify whether an available update is a patch, minor, or major update and whether it applies to WBS or to an individual image.
+Wikibase Suite (WBS) and its images are updated separately. Before continuing, see [WBS Versions](../versions.md) to identify whether an available update is a patch, minor, or major update and whether it applies to WBS or to an individual image.
 
 ## Minor and patch updates
 

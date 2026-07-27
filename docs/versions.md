@@ -1,4 +1,4 @@
-# Versions
+# Wikibase Suite (WBS) Versions
 
 Wikibase Suite (WBS) and each of its images have independent version numbers. They all use [semantic versioning](https://semver.org/spec/v2.0.0.html), written as `MAJOR.MINOR.PATCH`.
 
@@ -30,7 +30,7 @@ WBS images publish the following shared tags:
 | `MAJOR.MINOR` | `7.1` | Moves to the latest patch release within that minor version. |
 | `MAJOR.MINOR.PATCH` | `7.1.0` | Identifies a specific image release. |
 
-Some images also publish tags for the version of the software they contain, such as the bundled MediaWiki or Query Service version. See the [individual image documentation](./images/README.md) for details.
+Some images also publish tags for the version of the software they contain, such as the bundled MediaWiki or Query Service version. See the [WBS Images Guide](./images/README.md) for details.
 
 Docker tags can be updated. If you need to pin the exact image contents rather than receive updates through a tag, use the image digest.
 

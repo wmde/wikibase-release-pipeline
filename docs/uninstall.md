@@ -1,4 +1,4 @@
-# Uninstall Wikibase Suite (WBS)
+# Uninstalling Wikibase Suite (WBS)
 
 This procedure removes the Wikibase Suite (WBS) containers, data, configuration, Compose service images, and repository from the server. It does not remove Docker or images unrelated to WBS.
 

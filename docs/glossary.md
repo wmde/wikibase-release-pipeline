@@ -1,4 +1,4 @@
-# Glossary
+# Wikibase Suite (WBS) Glossary
 
 ## Docker
 

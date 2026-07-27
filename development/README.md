@@ -10,7 +10,7 @@ This directory contains the image sources and the build, integration-test, and r
 - [`runner/`](./runner): the Dockerized Nx development environment
 - [`docs/`](./docs): engineering notes and architecture decisions
 
-The user-facing product configuration and documentation live at the [repository root](../README.md). Canonical image usage documentation lives under [`docs/images`](../docs/images/README.md).
+The user-facing product configuration and documentation live at the [repository root](../README.md). Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).
 
 ## Build and test
 

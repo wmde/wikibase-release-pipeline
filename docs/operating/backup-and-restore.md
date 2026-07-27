@@ -1,4 +1,4 @@
-# Backup and restore
+# Backing Up and Restoring Wikibase Suite (WBS)
 
 Wikibase Suite (WBS) stores the parts that make your instance unique in two places: service data in [Docker volumes](https://docs.docker.com/storage/volumes/), and [configuration](./advanced-configuration.md) in the `config` directory and `.env` file. This guide explains how to back up each and how to restore service data when recovering from a failed upgrade or reset.
 

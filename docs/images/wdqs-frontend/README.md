@@ -65,7 +65,7 @@ See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
+This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
 
 ## Internal filesystem layout
 
