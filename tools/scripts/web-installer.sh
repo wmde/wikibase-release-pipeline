@@ -10,12 +10,14 @@ export LOCALHOST
 export LAUNCH_TRIGGER_PATH
 export RESET
 export SCRIPTS_DIR
-export INSTALLER_DIR
+export TOOLS_DIR
 
 # --- Bootstrap Logging ---
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
+# shellcheck disable=SC1091
+source "$SCRIPTS_DIR/_versions.sh"
 
 # -- Script Specific Variables --
 
@@ -24,10 +26,10 @@ INSTALLER_CONTAINER_NAME=wikibase-suite-installer-webserver
 INSTALLER_PORT=8888
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
-WEB_IMAGE_NAME="${WEB_IMAGE_NAME:-wikibase/suite-installer-webserver}"
-WEB_DIR="$INSTALLER_DIR/web"
-LE_DIR="$WEB_DIR/letsencrypt"
-CERTS_DIR="$WEB_DIR/certs"
+WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
+WBS_TOOLS_APP_DIR="$WBS_TOOLS_PROJECT_DIR/app"
+LE_DIR="$TOOLS_DIR/letsencrypt"
+CERTS_DIR="$TOOLS_DIR/certs"
 LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/$(basename "${LAUNCH_TRIGGER_PATH:-.wbs-installer-launch-ready}")"
 EXISTING_INSTALL_STATE="${EXISTING_INSTALL_STATE:-none}"
 
@@ -121,17 +123,21 @@ start_installer_webserver() {
   # Ensure old container is gone before build/run
   remove_any_existing_installer_webserver
 
-  # BuildKit (via buildx with the docker-container driver) does not load images
-  # into the local Docker image store by default. --load ensures it's available
-  # to `docker run`.
-  BUILDKIT_DRIVER=$(docker buildx inspect | grep 'Driver:' | awk '{print $2}')
-  if [ "$BUILDKIT_DRIVER" = "docker-container" ]; then
-    LOAD_FLAG="--load"
-  else
-    LOAD_FLAG=""
-  fi
+  if $DEV; then
+    # BuildKit (via buildx with the docker-container driver) does not load images
+    # into the local Docker image store by default. --load ensures it is available
+    # to `docker run`.
+    BUILDKIT_DRIVER=$(docker buildx inspect | grep 'Driver:' | awk '{print $2}')
+    if [ "$BUILDKIT_DRIVER" = "docker-container" ]; then
+      LOAD_FLAG="--load"
+    else
+      LOAD_FLAG=""
+    fi
 
-  run "docker build $LOAD_FLAG -t $WEB_IMAGE_NAME -f $WEB_DIR/Dockerfile $WEB_DIR"
+    run "docker build $LOAD_FLAG -t $WBS_TOOLS_IMAGE $WBS_TOOLS_PROJECT_DIR"
+  else
+    run "docker pull $WBS_TOOLS_IMAGE"
+  fi
 
   # Run with volumes mapped as before
   if $DEV; then
@@ -146,8 +152,8 @@ start_installer_webserver() {
       -v $WBS_DIR:/app/wbs \
       -v $CERTS_DIR:/app/certs \
       -v $LOG_PATH:/app/installation.log \
-      -v $WEB_DIR:/src \
-      $WEB_IMAGE_NAME \
+      -v $WBS_TOOLS_APP_DIR:/src \
+      $WBS_TOOLS_IMAGE \
       sh -lc 'ln -sfn /app/node_modules /src/node_modules && cd /src && npm run dev:server'"
   else
     run "docker run -d \
@@ -160,7 +166,7 @@ start_installer_webserver() {
       -v $WBS_DIR:/app/wbs \
       -v $CERTS_DIR:/app/certs \
       -v $LOG_PATH:/app/installation.log \
-      $WEB_IMAGE_NAME"
+      $WBS_TOOLS_IMAGE"
   fi
 
   echo "Open the following URL in your browser to continue:"

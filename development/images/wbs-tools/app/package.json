@@ -1,6 +1,6 @@
 {
-	"name": "wikibase-suite-installer",
-	"description": "Wikibase Suite Installer",
+	"name": "wbs-tools-app",
+	"description": "Wikibase Suite installation and operations tools",
 	"main": "dist/server.js",
 	"private": true,
 	"type": "module",

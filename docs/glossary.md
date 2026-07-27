@@ -20,4 +20,4 @@ The full deployable Wikibase setup, the related Docker images, and the team at W
 
 ## Wikibase Suite images
 
-The published Docker images used by Wikibase Suite, including Wikibase, query service, query service frontend, OpenSearch, and QuickStatements.
+The published Docker images used by Wikibase Suite, including Wikibase, query service, query service frontend, OpenSearch, QuickStatements, and WBS tools.

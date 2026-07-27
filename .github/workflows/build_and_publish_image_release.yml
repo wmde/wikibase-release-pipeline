@@ -5,6 +5,7 @@ on:
     tags:
       - 'opensearch@*'
       - 'quickstatements@*'
+      - 'wbs-tools@*'
       - 'wdqs@*'
       - 'wdqs-frontend@*'
       - 'wikibase@*'

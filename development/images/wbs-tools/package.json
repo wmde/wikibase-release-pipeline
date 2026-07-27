@@ -1,0 +1,10 @@
+{
+	"name": "wbs-tools",
+	"version": "1.0.0",
+	"nx": {
+		"targets": {
+			"build": {},
+			"nx-release-publish": {}
+		}
+	}
+}

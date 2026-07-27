@@ -10,8 +10,10 @@ if [ "$#" -lt 1 ]; then
 	exit 1
 fi
 
+IMAGE_PROJECT=$1
+
 # Change to the directory for the specified image project
-cd "../images/$1" || { echo "Failed to change directory to images/$1"; exit 1; }
+cd "../images/$IMAGE_PROJECT" || { echo "Failed to change directory to images/$IMAGE_PROJECT"; exit 1; }
 
 # Remove the first argument, leaving the rest for docker buildx build
 shift
@@ -50,12 +52,14 @@ if [ "$PUBLISH" == true ]; then
 		"${IMAGE_VERSION_MINOR}"
 	)
 	# get image specific tags
-	# shellcheck disable=SC1090
-	source "$BUILD_ENV_FILE"
-	eval "$(declare -p IMAGE_TAGS)"
-	TAGS+=(
-		"${IMAGE_TAGS[@]}"
-	)
+	if [ -f "$BUILD_ENV_FILE" ]; then
+		# shellcheck disable=SC1090
+		source "$BUILD_ENV_FILE"
+		eval "$(declare -p IMAGE_TAGS 2>/dev/null)"
+		TAGS+=(
+			"${IMAGE_TAGS[@]}"
+		)
+	fi
 	BUILD_ARGS+=("--push")
 # build/test in CI
 elif [ "$GITHUB_ACTIONS" == true ]; then
@@ -102,18 +106,22 @@ if [ "$IMAGE_NAME" = "wikibase" ]; then
 	if [ -n "$BUILD_TOOLS_GIT_SHA" ]; then
 		BUILD_ARGS+=("--build-arg" "BUILD_TOOLS_GIT_SHA=$BUILD_TOOLS_GIT_SHA")
 	fi
+elif [ "$IMAGE_NAME" = "wbs-tools" ]; then
+	BUILD_ARGS+=("--build-arg" "WBS_TOOLS_VERSION=$IMAGE_VERSION")
 fi
 
 # === Transform vars in build.env to build args
 
-while IFS='=' read -r key value; do
-	# skip if the line is empty or the key is IMAGE_TAGS
-	[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
+if [ -f "$BUILD_ENV_FILE" ]; then
+	while IFS='=' read -r key value; do
+		# skip if the line is empty or the key is IMAGE_TAGS
+		[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
 
-	if [ -n "$value" ]; then
-		BUILD_ARGS+=("--build-arg" "$key=$value")
-	fi
-done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
+		if [ -n "$value" ]; then
+			BUILD_ARGS+=("--build-arg" "$key=$value")
+		fi
+	done < <(grep -E '^[A-Z_]+=.*' "$BUILD_ENV_FILE")
+fi
 
 # == Run build
 

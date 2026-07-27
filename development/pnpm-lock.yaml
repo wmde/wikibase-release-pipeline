@@ -106,6 +106,8 @@ importers:
 
   images/quickstatements: {}
 
+  images/wbs-tools: {}
+
   images/wdqs: {}
 
   images/wdqs-frontend: {}

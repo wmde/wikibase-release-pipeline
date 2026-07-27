@@ -1,4 +1,4 @@
-# Wikibase Suite Installer Development
+# Wikibase Suite tools development
 
 This document covers local testing, advanced installer options, and the current release model for the installer code.
 
@@ -6,9 +6,9 @@ The installer currently supports first-time Wikibase Suite installation through 
 
 ## Versioning and releases
 
-For now, the installer is versioned as part of Wikibase Suite. Changes to installer behavior, setup tooling, or future `wbs` maintenance commands should be released through a Wikibase Suite patch or minor release, even when the WBS configuration or image versions do not otherwise change.
+The containerized application is released independently as the [`wikibase/wbs-tools` image](../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. Each WBS release selects an exact compatible tools image version.
 
-This intentionally couples tooling updates to Wikibase Suite releases until there is a separately distributed `wbs` operations tool. Avoid maintaining release branches solely for installer updates unless the project defines a support policy for those branches.
+A change to the tools can therefore produce a tools image release without changing the WBS configuration. A WBS release is still required before normal installation selects that new image version.
 
 Use Conventional Commits for changes in this repository so future release tooling can derive semantic version bumps and changelog entries from commit history.
 
@@ -17,6 +17,7 @@ The branch and tag model is:
 - `main` is the latest stable public install channel. The public install command uses `raw/main/install`.
 - `dev` is the integration branch for the next release.
 - Wikibase Suite release tags use the format `wbs@X.Y.Z`.
+- WBS tools image release tags use the format `wbs-tools@X.Y.Z`.
 - New development should happen on `dev` or feature branches, then merge to `main` only when ready to become the public installer path.
 
 ## Running locally
@@ -62,6 +63,8 @@ Add those hosts to your system hosts file before launching the stack.
 ## Runtime behavior
 
 - Remote installs clone Wikibase Suite to `~/wikibase-suite` by default. Set `WBS_DIR` to use a custom checkout path.
+- Normal installations pull the exact WBS tools image selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
+- `--dev` builds the WBS tools image from `development/images/wbs-tools` instead of pulling it, so local source changes are included.
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.

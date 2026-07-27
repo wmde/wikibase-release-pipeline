@@ -5,20 +5,22 @@ set -euo pipefail
 
 export WBS_DIR
 export DEBUG
+export DEV
 export LOCALHOST
 export LOG_PATH
-export INSTALLER_DIR
+export TOOLS_DIR
 
 # --- Bootstrap Logging ---
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
+# shellcheck disable=SC1091
+source "$SCRIPTS_DIR/_versions.sh"
 
 # -- Script Specific Variables --
 
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
-INSTALLER_IMAGE_NAME="${INSTALLER_IMAGE_NAME:-wikibase/suite-installer-runtime}"
-WEB_DIR="$INSTALLER_DIR/web"
+WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
 
 build_installer_runtime() {
   # BuildKit (via buildx with the docker-container driver) does not load images
@@ -31,7 +33,15 @@ build_installer_runtime() {
     LOAD_FLAG=""
   fi
 
-  run "docker build $LOAD_FLAG -t $INSTALLER_IMAGE_NAME -f $WEB_DIR/Dockerfile $WEB_DIR"
+  run "docker build $LOAD_FLAG -t $WBS_TOOLS_IMAGE $WBS_TOOLS_PROJECT_DIR"
+}
+
+prepare_installer_runtime() {
+  if $DEV; then
+    build_installer_runtime
+  else
+    run "docker pull $WBS_TOOLS_IMAGE"
+  fi
 }
 
 run_cli_config() {
@@ -46,7 +56,7 @@ run_cli_config() {
     -e LOCALHOST="$LOCALHOST" \
     -v "$WBS_DIR:/app/wbs" \
     -v "$LOG_PATH:/app/installation.log" \
-    "$INSTALLER_IMAGE_NAME" \
+    "$WBS_TOOLS_IMAGE" \
     node dist/cli.js
 }
 
@@ -55,5 +65,5 @@ echo "🔧 Starting command-line installer..."
 echo
 
 debug "Starting installer runtime container..."
-build_installer_runtime
+prepare_installer_runtime
 run_cli_config

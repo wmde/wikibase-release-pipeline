@@ -59,7 +59,7 @@ done
 # instead of cloning again.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCAL_WBS_DIR="$SCRIPT_DIR"
-if [[ -d "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/installer" ]]; then
+if [[ -d "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/tools" ]]; then
   WBS_DIR="$LOCAL_WBS_DIR"
   SKIP_CLONE=true
 fi
@@ -80,9 +80,9 @@ export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
 export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
 export RESET="${RESET:-false}"
 
-export INSTALLER_DIR="${INSTALLER_DIR:-$WBS_DIR/installer}"
+export TOOLS_DIR="${TOOLS_DIR:-$WBS_DIR/tools}"
 export ENV_FILE_PATH="$WBS_DIR/.env"
-export SCRIPTS_DIR="$INSTALLER_DIR/scripts"
+export SCRIPTS_DIR="$TOOLS_DIR/scripts"
 
 # --- Functions ---
 

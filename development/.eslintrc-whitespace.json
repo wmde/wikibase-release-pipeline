@@ -9,6 +9,7 @@
 		"pnpm/**/**",
 		"pnpm-lock.yaml",
 		"../config/extensions",
+		"images/wbs-tools/app",
 		"cloud-init.yml",
 		"*.properties",
 		"*.ts",

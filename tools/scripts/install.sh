@@ -14,7 +14,7 @@ export WBS_DIR
 export ENV_FILE_PATH
 export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
-export INSTALLER_DIR
+export TOOLS_DIR
 
 # --- Bootstrap Logging ---
 

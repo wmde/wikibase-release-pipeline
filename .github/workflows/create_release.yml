@@ -12,6 +12,7 @@ on:
           - wbs
           - opensearch
           - quickstatements
+          - wbs-tools
           - wdqs
           - wdqs-frontend
           - wikibase
@@ -54,7 +55,7 @@ jobs:
           # This workflow is intentionally tag-only.
           # It does not run `nx release` and does not generate changelog files.
           # It expects version numbers/changelogs to already be committed.
-          all_projects=(wbs opensearch quickstatements wdqs wdqs-frontend wikibase)
+          all_projects=(wbs opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
           if [ "$PROJECT_NAME" = "All projects with unreleased changes" ]; then
             selected_projects=("${all_projects[@]}")
           else
@@ -70,7 +71,7 @@ jobs:
               wbs)
                 package_path="package.json"
                 ;;
-              opensearch|quickstatements|wdqs|wdqs-frontend|wikibase)
+              opensearch|quickstatements|wbs-tools|wdqs|wdqs-frontend|wikibase)
                 package_path="development/images/$project/package.json"
                 ;;
               *)
