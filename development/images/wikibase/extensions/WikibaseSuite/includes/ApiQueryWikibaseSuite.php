@@ -1,5 +1,7 @@
 <?php
 
+namespace MediaWiki\Extension\WikibaseSuite;
+
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -26,13 +28,17 @@ class ApiQueryWikibaseSuite extends ApiQueryBase {
 			];
 		}
 
+		if ( in_array( 'publicmetrics', $props, true ) ) {
+			$data['publicmetrics'] = $this->getPublicMetrics();
+		}
+
 		$this->getResult()->addValue( 'query', $this->getModuleName(), $data );
 	}
 
 	public function getAllowedParams() {
 		return [
 			'prop' => [
-				ParamValidator::PARAM_TYPE => [ 'versions' ],
+				ParamValidator::PARAM_TYPE => [ 'versions', 'publicmetrics' ],
 				ParamValidator::PARAM_ISMULTI => true,
 				ParamValidator::PARAM_DEFAULT => 'versions',
 			],
@@ -51,5 +57,29 @@ class ApiQueryWikibaseSuite extends ApiQueryBase {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Return aggregate values that are safe to expose without authentication.
+	 *
+	 * @return array<string,int>
+	 */
+	private function getPublicMetrics(): array {
+		if ( !\ExtensionRegistry::getInstance()->isLoaded( 'WSOAuth' ) ) {
+			return [];
+		}
+
+		$db = $this->getDB();
+		if ( !$db->tableExists( 'wsoauth_multiauth_mappings', __METHOD__ ) ) {
+			return [];
+		}
+
+		$linkedUserCount = $db->newSelectQueryBuilder()
+			->select( 'COUNT(DISTINCT wsoauth_user)' )
+			->from( 'wsoauth_multiauth_mappings' )
+			->caller( __METHOD__ )
+			->fetchField();
+
+		return [ 'wikimedia_linked_user_count' => (int)$linkedUserCount ];
 	}
 }

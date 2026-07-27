@@ -1,10 +1,14 @@
 import { createRequire } from 'module';
-import page from '../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
 	deployVersion: string;
 	buildToolsGitSha: string;
+};
+
+type WikibaseSuitePublicMetrics = {
+	wikimediaLinkedUserCount?: number;
 };
 
 type DockerComposeConfig = {
@@ -29,7 +33,7 @@ const getVersionOrEmpty = (
 ): string => source[ key ] ?? '';
 const require = createRequire( import.meta.url );
 const getSuitePackageVersion = (): string => {
-	const suitePackageJson = require( '../../../../package.json' ) as {
+	const suitePackageJson = require( '../../../../../package.json' ) as {
 		version?: string;
 	};
 
@@ -102,7 +106,20 @@ const getWikibaseSuiteApiVersions =
 		};
 	};
 
-describe( 'Wikibase Suite version reporting', function () {
+const getWikibaseSuiteApiPublicMetrics =
+	async (): Promise<WikibaseSuitePublicMetrics> => {
+		const result = await browser.makeRequest(
+			testEnv.vars.WIKIBASE_URL + '/w/api.php?action=query&meta=wikibasesuite&wbsprop=publicmetrics&format=json'
+		);
+
+		expect( result.data.error ).toBeUndefined();
+		const apiMetrics = result.data.query.wikibasesuite.publicmetrics;
+		return {
+			wikimediaLinkedUserCount: apiMetrics.wikimedia_linked_user_count
+		};
+	};
+
+describe( 'Wikibase Suite extension', function () {
 	let runtimeVersions: WikibaseSuiteVersions;
 	let composeDeployVersion: string;
 
@@ -149,6 +166,18 @@ describe( 'Wikibase Suite version reporting', function () {
 		expect( normalizeVersionValue( deployValue ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.deployVersion )
 		);
+	} );
+
+	it( 'Should be listed on Special:Version with its extension version', async function () {
+		await page.open( '/wiki/Special:Version' );
+		const extensionInfo = await $( '#mw-version-ext-other-WikibaseSuite' ).getText();
+		await expect( extensionInfo ).toMatch( /Wikibase Suite.*1\.0\.0/ );
+	} );
+
+	it( 'Should expose Wikimedia linked user count through public metrics', async function () {
+		const metrics = await getWikibaseSuiteApiPublicMetrics();
+
+		expect( metrics.wikimediaLinkedUserCount ).toEqual( 0 );
 	} );
 
 	it( 'Should keep deploy package version in sync with DEPLOY_VERSION in wikibase compose service', function () {
