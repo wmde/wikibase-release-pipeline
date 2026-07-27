@@ -16,7 +16,7 @@ If a service does not start, or if the status shows `unhealthy` or `restarting`,
 docker compose logs wikibase
 ```
 
-If the problem was caused by incorrect `.env` values, fix the values and then follow [Resetting an instance](./resetting.md) before starting again.
+If the problem was caused by incorrect `.env` values, fix the values and then follow [Reset Wikibase Suite](./reset.md) before starting again.
 
 ## Browser shows "This site can't be reached" or opens a different site
 

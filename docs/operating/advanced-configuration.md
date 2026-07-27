@@ -15,7 +15,7 @@ The presence of `config/LocalSettings.php` controls whether WBS starts from exis
 
 This is why changing `.env` and restarting is not a supported way to reconfigure an existing setup. With the exception of `METADATA_CALLBACK`, `.env` values are first-start inputs that were already written into `LocalSettings.php`, the database volume, or other generated state.
 
-If you need to change first-start setup values, follow [Resetting an instance](./resetting.md). During a reset, keep a backup of your old `LocalSettings.php` and copy local customizations into the newly generated file rather than restoring the old file wholesale.
+If you need to change first-start setup values, follow [Resetting WBS while keeping its configuration](./reset.md).
 
 For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](./updating.md#major-version-upgrades).
 

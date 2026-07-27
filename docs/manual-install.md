@@ -1,6 +1,6 @@
-# Manual installation
+# Install Wikibase Suite manually
 
-This page describes the manual path for installing Wikibase Suite (WBS) with Docker Compose. For the recommended browser-based setup flow, see [Installation](./installation.md).
+This page describes the manual path for installing Wikibase Suite (WBS) with Docker Compose. For the recommended browser-based setup flow, see [Install Wikibase Suite](./install.md).
 
 > [!IMPORTANT]
 > This guide is for setting up WBS on an internet-reachable Linux server, not on your laptop or desktop. WBS needs public DNS records and HTTPS certificate setup to work correctly. If you are looking for individual WBS images instead of the full setup, see [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
@@ -77,7 +77,7 @@ Edit `.env` and set the values below.
 | `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. Unlike the other `.env` values, this value may be changed after initial setup; restart the services for the change to take effect. |
 
 > [!WARNING]
-> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Resetting an instance](./operating/resetting.md)).
+> With the exception of `METADATA_CALLBACK`, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Reset Wikibase Suite](./operating/reset.md)).
 
 ---
 

@@ -2,6 +2,8 @@
 
 Wikibase Suite is a production-ready Wikibase software bundle for self-hosting a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, Query Service, QuickStatements, and HTTPS routing for a public instance.
 
+For installation without the browser-based installer, see [Install Wikibase Suite manually](./manual-install.md).
+
 ## 1. Requirements: What You Need to Install Wikibase Suite
 
 ### Server (VPS)

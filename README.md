@@ -13,7 +13,7 @@ Wikibase Suite is a production-ready Wikibase software bundle that allows you to
 
 ## Installing Wikibase Suite
 
-For a new server, start with the [Wikibase Suite installation guide](./docs/installation.md).
+For a new server, start with the [Wikibase Suite installation guide](./docs/install.md).
 
 ## Operating Wikibase Suite
 

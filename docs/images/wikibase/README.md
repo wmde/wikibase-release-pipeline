@@ -49,7 +49,7 @@ The image reads setup environment variables when it creates `LocalSettings.php`.
 
 ### Environment variables
 
-These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [resetting an instance](../../operating/resetting.md) procedure.
+These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [Reset Wikibase Suite](../../operating/reset.md) procedure.
 
 > [!NOTE]
 > `METADATA_CALLBACK` is an exception and may be changed after initial setup.
