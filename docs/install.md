@@ -1,14 +1,14 @@
-# Install Wikibase Suite
+# Install Wikibase Suite (WBS)
 
-Wikibase Suite is a production-ready Wikibase software bundle for self-hosting a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, Query Service, QuickStatements, and HTTPS routing for a public instance.
+Wikibase Suite (WBS) is a production-ready Wikibase software bundle for self-hosting a public knowledge graph similar to Wikidata. It includes MediaWiki, Wikibase, Query Service, QuickStatements, and HTTPS routing for a public instance.
 
-For installation without the browser-based installer, see [Install Wikibase Suite manually](./manual-install.md).
+For installation without the browser-based installer, see [Install WBS manually](./manual-install.md).
 
-## 1. Requirements: What You Need to Install Wikibase Suite
+## 1. Requirements: What You Need to Install WBS
 
 ### Server (VPS)
 
-You need to have access to a Virtual Private Server (VPS) to install Wikibase Suite. Either your organization can provide a server or you rent from a provider. The minimum criteria must be fulfilled:
+You need to have access to a Virtual Private Server (VPS) to install WBS. Either your organization can provide a server or you rent from a provider. The minimum criteria must be fulfilled:
 
 - Server with a public IP address
 - Architecture: x86 (AMD/Intel)
@@ -56,11 +56,11 @@ ssh root@SERVER_IP_ADDRESS
 bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install) --web
 ```
 
-This command installs the latest stable Wikibase Suite release identified by a `wbs@MAJOR.MINOR.PATCH` tag.
+This command installs the latest stable WBS release identified by a `wbs@MAJOR.MINOR.PATCH` tag.
 
 <br>
 
-## 3. Configure and Install Wikibase Suite
+## 3. Configure and Install WBS
 
 <img align="right" width="300" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/05/Bildschirmfoto-vom-2026-05-19-11-43-34.png.webp" alt="Wikibase Suite Installer welcome screen">
 
@@ -101,7 +101,7 @@ The installer provides a default database configuration if you do not enter cust
 
 <img align="right" width="300" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/05/Bildschirmfoto-vom-2026-05-19-11-25-01.png.webp" alt="Installation progress screen">
 
-Run the installation for all Wikibase Suite components.
+Run the installation for all WBS components.
 
 This might take a few minutes.
 

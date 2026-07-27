@@ -1,17 +1,17 @@
-# Operating Wikibase Suite
+# Operating Wikibase Suite (WBS)
 
 Use these guides for help in maintaining, operating, and customizing an existing Wikibase Suite (WBS) instance:
 
 - [Versions](../versions.md)
 - [Updating and upgrading](./updating.md)
 - [Backup and restore](./backup-and-restore.md)
-- [Reset Wikibase Suite](./reset.md)
-- [Uninstall Wikibase Suite](../uninstall.md)
+- [Reset WBS](./reset.md)
+- [Uninstall WBS](../uninstall.md)
 - [Advanced configuration](./advanced-configuration.md)
 - [Troubleshooting](./troubleshooting.md)
 - [Glossary](../glossary.md)
 
-## Accessing your Wikibase Suite server
+## Accessing your WBS server
 
 For most operating tasks, first connect to the server where WBS is installed and change to its installation directory.
 

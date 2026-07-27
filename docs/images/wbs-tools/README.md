@@ -1,4 +1,4 @@
-# Wikibase Suite tools image
+# Wikibase Suite (WBS) tools image
 
 The Wikibase Suite (WBS) tools image provides the browser-based and command-line setup applications used to install WBS. The WBS installation scripts run this image with the WBS checkout mounted into the container so the tools can validate configuration and write the instance `.env` file.
 

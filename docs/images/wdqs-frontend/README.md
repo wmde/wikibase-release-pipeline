@@ -1,4 +1,4 @@
-# Wikibase Suite Query Service frontend image
+# Wikibase Suite (WBS) Query Service frontend image
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
@@ -55,7 +55,7 @@ By default, the frontend loads query examples from the local Wikibase page `Proj
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
 
 ## Releases
 

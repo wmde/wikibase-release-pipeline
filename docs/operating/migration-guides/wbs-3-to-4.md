@@ -1,13 +1,13 @@
-# Upgrading from WBS 3 to 4
+# Upgrading Wikibase Suite (WBS) from 3 to 4
 
-This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.42 to MediaWiki 1.43 and changes routing for several services.
+This guide explains how to upgrade Wikibase Suite (WBS) from version 3 to 4 while preserving the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.42 to MediaWiki 1.43 and changes routing for several services.
 
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#accessing-your-wbs-server).
 
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
@@ -46,7 +46,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 ## Migrate
 
-1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
+1. While still in your WBS directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down
@@ -67,7 +67,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 5. Update any user-defined extensions in `deploy/config/extensions` to versions compatible with MediaWiki 1.43.
 
-6. Pull the new images and start Wikibase Suite.
+6. Pull the new images and start WBS.
 
    ```sh
    docker compose pull

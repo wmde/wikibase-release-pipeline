@@ -1,4 +1,4 @@
-# Wikibase Suite Wikibase image
+# Wikibase Suite (WBS) Wikibase image
 
 [Wikibase](https://www.mediawiki.org/wiki/Wikibase) is a MediaWiki extension for working with versioned, semi-structured data in a central repository.
 
@@ -50,7 +50,7 @@ The image reads setup environment variables when it creates `LocalSettings.php`.
 
 ### Environment variables
 
-These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [Reset Wikibase Suite](../../operating/reset.md) procedure.
+These values are used for initial setup only and should not be changed without recreating the instance. To change them after first setup, follow the [Reset WBS](../../operating/reset.md) procedure.
 
 > [!NOTE]
 > `METADATA_CALLBACK`, `WIKIMEDIA_OAUTH_CONSUMER_KEY`, and `WIKIMEDIA_OAUTH_CONSUMER_SECRET` are exceptions and may be changed after initial setup.
@@ -98,7 +98,7 @@ To set up an external job runner, use this image for a second container, overwri
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
 
 ## Wikibase Suite Call Back
 

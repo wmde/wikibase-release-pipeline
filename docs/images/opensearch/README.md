@@ -1,4 +1,4 @@
-# Wikibase Suite OpenSearch image
+# Wikibase Suite (WBS) OpenSearch image
 
 [OpenSearch](https://opensearch.org/) is a search engine based on the Lucene library.
 
@@ -25,7 +25,7 @@ Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase co
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
 
 ## Releases
 

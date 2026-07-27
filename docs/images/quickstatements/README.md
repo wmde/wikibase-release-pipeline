@@ -1,4 +1,4 @@
-# Wikibase Suite QuickStatements image
+# Wikibase Suite (WBS) QuickStatements image
 
 [QuickStatements](https://github.com/magnusmanske/quickstatements) is a tool to batch-edit [Wikibase](https://www.mediawiki.org/wiki/Wikibase).
 
@@ -63,7 +63,7 @@ Variables in **bold** are required.
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full Wikibase Suite configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
 
 ## Releases
 

@@ -1,13 +1,13 @@
-# Upgrading from WBS 7 to 8
+# Upgrading Wikibase Suite (WBS) from 7 to 8
 
-As of Wikibase Suite 8, the source repository has moved from `wikibase-release-pipeline` to `wikibase-suite`, and the contents of the `deploy/` directory—from which Wikibase Suite was previously operated—have moved to the project root. These instructions create a new WBS 8 checkout beside the existing WBS 7 checkout, then copy the local configuration into it. The existing checkout remains available until the upgrade succeeds.
+As of Wikibase Suite (WBS) 8, the source repository has moved from `wikibase-release-pipeline` to `wikibase-suite`, and the contents of the `deploy/` directory—from which WBS was previously operated—have moved to the project root. These instructions create a new WBS 8 checkout beside the existing WBS 7 checkout, then copy the local configuration into it. The existing checkout remains available until the upgrade succeeds.
 
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#accessing-your-wbs-server).
 
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
@@ -20,13 +20,13 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
 
 ## Migrate
 
-1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
+1. While still in your WBS directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down
    ```
 
-2. From the directory above `wikibase-release-pipeline`, clone the Wikibase Suite 8 release, which will create a new `wikibase-suite` directory.
+2. From the directory above `wikibase-release-pipeline`, clone the WBS 8 release, which will create a new `wikibase-suite` directory.
 
    ```sh
    cd ../..
@@ -45,7 +45,7 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
 
 4. If you customized the WBS 7 installation, reconcile those changes with the WBS 8 files. This includes custom extensions, `Extensions.php`, other files under `config`, and `docker-compose.yml`. Keep the WBS 8 files as the base, and update any custom extensions to versions compatible with MediaWiki 1.46.
 
-5. Pull the latest WBS 8 images and start Wikibase Suite from the new repository root.
+5. Pull the latest WBS 8 images and start WBS from the new repository root.
 
    ```sh
    docker compose pull
@@ -55,7 +55,7 @@ As of Wikibase Suite 8, the source repository has moved from `wikibase-release-p
 
    WBS 8 automatically uses the existing database, media, Query Service, QuickStatements, and certificate data.
 
-6. Once the services show `healthy` and you have confirmed that Wikibase Suite—including any customizations or installed extensions—works as expected, you can safely delete the old `wikibase-release-pipeline` directory to avoid future confusion:
+6. Once the services show `healthy` and you have confirmed that WBS—including any customizations or installed extensions—works as expected, you can safely delete the old `wikibase-release-pipeline` directory to avoid future confusion:
 
    ```sh
    cd ..

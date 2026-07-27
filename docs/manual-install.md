@@ -1,6 +1,6 @@
-# Install Wikibase Suite manually
+# Install Wikibase Suite (WBS) manually
 
-This page describes the manual path for installing Wikibase Suite (WBS) with Docker Compose. For the recommended browser-based setup flow, see [Install Wikibase Suite](./install.md).
+This page describes the manual path for installing Wikibase Suite (WBS) with Docker Compose. For the recommended browser-based setup flow, see [Install WBS](./install.md).
 
 > [!IMPORTANT]
 > This guide is for setting up WBS on an internet-reachable Linux server, not on your laptop or desktop. WBS needs public DNS records and HTTPS certificate setup to work correctly. If you are looking for individual WBS images instead of the full setup, see [hub.docker.com/u/wikibase](https://hub.docker.com/u/wikibase).
@@ -56,7 +56,7 @@ cd wikibase-suite
 
 ### 5. Initial configuration
 
-Make a copy of the [example environment file](../.env.example) in the Wikibase Suite directory.
+Make a copy of the [example environment file](../.env.example) in the WBS directory.
 
 ```sh
 cp .env.example .env
@@ -79,13 +79,13 @@ Edit `.env` and set the values below.
 | `WIKIMEDIA_OAUTH_CONSUMER_SECRET` (optional) | None | Wikimedia OAuth consumer secret. |
 
 > [!WARNING]
-> With the exception of `METADATA_CALLBACK` and the two `WIKIMEDIA_OAUTH_*` values, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Reset Wikibase Suite](./operating/reset.md)).
+> With the exception of `METADATA_CALLBACK` and the two `WIKIMEDIA_OAUTH_*` values, `.env` values are setup values. If you need to change them after first start, you also need to reset WBS (see [Reset WBS](./operating/reset.md)).
 
 ---
 
 ### 6. Starting Wikibase
 
-Run the following command from within the Wikibase Suite directory:
+Run the following command from within the WBS directory:
 
 ```sh
 docker compose up -d

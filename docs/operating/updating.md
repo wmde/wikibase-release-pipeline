@@ -1,4 +1,4 @@
-# Updating Wikibase Suite
+# Updating Wikibase Suite (WBS)
 
 Wikibase Suite (WBS) and its images are updated separately. Before continuing, see [Versions](../versions.md) to identify whether an available update is a patch, minor, or major update and whether it applies to WBS or to an individual image.
 
@@ -10,7 +10,7 @@ Minor and patch updates may be announced for WBS itself or for an individual WBS
 
 Switching to a WBS tag within the same major version will never trigger breaking changes. These updates are **always** considered safe. If you made no changes to `docker-compose.yml`, you may update simply by switching the git tag.
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. If you customized `docker-compose.yml`, commit your changes and reconcile them with the target release. Otherwise, continue to the next step.
 
@@ -30,7 +30,7 @@ Switching to a WBS tag within the same major version will never trigger breaking
 
 Because WBS references the latest minor and patch releases of compatible WBS images, non-breaking changes, including security updates, can be pulled at any time.
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. For a production instance, [back up your data](./backup-and-restore.md#back-up-your-data) if you need a rollback point. The backup procedure stops WBS; continue directly with the next step.
 
@@ -46,7 +46,7 @@ Because WBS references the latest minor and patch releases of compatible WBS ima
 
 ### Automatically update WBS images
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. To pull WBS image updates whenever you start the stack, run:
 

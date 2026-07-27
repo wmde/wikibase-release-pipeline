@@ -1,6 +1,6 @@
-# Wikibase Suite images
+# Wikibase Suite (WBS) images
 
-Wikibase Suite uses the following published container images. These images are tested together by Wikibase Suite, but they can also be used independently.
+Wikibase Suite (WBS) uses the following published container images. These images are tested together by WBS, but they can also be used independently.
 
 - [Wikibase](./wikibase/README.md)
 - [OpenSearch](./opensearch/README.md)

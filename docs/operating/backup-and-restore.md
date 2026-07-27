@@ -1,10 +1,10 @@
 # Backup and restore
 
-Wikibase Suite stores the parts that make your instance unique in two places: service data in [Docker volumes](https://docs.docker.com/storage/volumes/), and [configuration](./advanced-configuration.md) in the `config` directory and `.env` file. This guide explains how to back up each and how to restore service data when recovering from a failed upgrade or reset.
+Wikibase Suite (WBS) stores the parts that make your instance unique in two places: service data in [Docker volumes](https://docs.docker.com/storage/volumes/), and [configuration](./advanced-configuration.md) in the `config` directory and `.env` file. This guide explains how to back up each and how to restore service data when recovering from a failed upgrade or reset.
 
 ## Back up your data
 
-Wikibase Suite stores service data in the following Docker volumes:
+WBS stores service data in the following Docker volumes:
 
 - `wikibase-image-data`: MediaWiki image and media file uploads
 - `mysql-data`: MediaWiki/Wikibase MariaDB raw database
@@ -15,9 +15,9 @@ Wikibase Suite stores service data in the following Docker volumes:
 
 To back up these data volumes:
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
-2. Create a `backup` directory one level above the directory from which you operate Wikibase Suite, shut down the instance, and dump the contents of all Docker volumes into `.tar.gz` files there.
+2. Create a `backup` directory one level above the directory from which you operate WBS, shut down the instance, and dump the contents of all Docker volumes into `.tar.gz` files there.
 
    ```sh
    mkdir -p ../backup
@@ -35,7 +35,7 @@ To back up these data volumes:
    done
    ```
 
-3. If you are backing up before an update, reset, or migration, return to that procedure and leave the services stopped. Otherwise, start Wikibase Suite again:
+3. If you are backing up before an update, reset, or migration, return to that procedure and leave the services stopped. Otherwise, start WBS again:
 
    ```sh
    docker compose up -d
@@ -43,7 +43,7 @@ To back up these data volumes:
 
 ## Back up your configuration
 
-Wikibase Suite configuration is contained in the following files:
+WBS configuration is contained in the following files:
 
 - `.env`: installation settings and credentials
 - `config/LocalSettings.php`: MediaWiki and Wikibase configuration
@@ -54,7 +54,7 @@ Wikibase Suite configuration is contained in the following files:
 
 To back up your configuration:
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. Copy the `config` directory and `.env` file into the same backup directory.
 
@@ -68,7 +68,7 @@ To back up your configuration:
 
 ## Restore from a backup
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. Shut down the instance and populate the Docker volumes with data from the `../backup` directory. Only restore these backups when recovering from a failed upgrade or reset.
 
@@ -91,7 +91,7 @@ To back up your configuration:
    done
    ```
 
-3. If another procedure directed you to restore a backup, return to that procedure after the restore is complete. Otherwise, start Wikibase Suite again:
+3. If another procedure directed you to restore a backup, return to that procedure after the restore is complete. Otherwise, start WBS again:
 
    ```sh
    docker compose up -d

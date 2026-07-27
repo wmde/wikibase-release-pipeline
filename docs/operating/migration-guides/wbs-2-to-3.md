@@ -1,13 +1,13 @@
-# Upgrading from WBS 2 to 3
+# Upgrading Wikibase Suite (WBS) from 2 to 3
 
-This upgrade follows the standard major-version procedure and preserves the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.41.2 to MediaWiki 1.42.5 and updates the Query Service and routing configuration.
+This guide explains how to upgrade Wikibase Suite (WBS) from version 2 to 3 while preserving the existing installation and Docker volumes. It upgrades the Wikibase image from MediaWiki 1.41.2 to MediaWiki 1.42.5 and updates the Query Service and routing configuration.
 
 > [!WARNING]
 > On startup, the Wikibase image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
 
 ## Prepare
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](../README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#accessing-your-wbs-server).
 
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
@@ -33,7 +33,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 ## Migrate
 
-1. While still in your Wikibase Suite directory, ensure the services are stopped by running.
+1. While still in your WBS directory, ensure the services are stopped by running.
 
    ```sh
    docker compose down
@@ -50,7 +50,7 @@ This upgrade follows the standard major-version procedure and preserves the exis
 
 3. Reapply any tracked customizations you still need. Keep the WBS 3 files as the base rather than restoring the old files wholesale.
 
-4. Pull the new images and start Wikibase Suite.
+4. Pull the new images and start WBS.
 
    ```sh
    docker compose pull

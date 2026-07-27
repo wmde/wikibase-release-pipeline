@@ -1,8 +1,8 @@
-# Reset Wikibase Suite
+# Reset Wikibase Suite (WBS)
 
 Resetting removes the current Docker volumes and generated configuration, then runs Wikibase Suite (WBS) setup again using the values in `.env`. You can optionally back up and restore data or local configuration that you want to keep.
 
-1. If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+1. If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 2. Back up anything you want to keep:
 

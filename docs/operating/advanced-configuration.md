@@ -1,8 +1,8 @@
-# Advanced configuration
+# Wikibase Suite (WBS) Advanced configuration
 
 On first launch, Wikibase Suite (WBS) will create files in the `config` directory. This is your instance configuration. **You own and control these files.** Be sure to include them in your backups.
 
-If you have not already, [log in to your server and change to your Wikibase Suite directory](./README.md#accessing-your-wikibase-suite-server).
+If you have not already, [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 ## `config/LocalSettings.php`
 

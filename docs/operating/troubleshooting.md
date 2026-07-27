@@ -1,6 +1,6 @@
-# Troubleshooting Wikibase Suite
+# Troubleshooting Wikibase Suite (WBS)
 
-Before troubleshooting Wikibase Suite (WBS), [log in to your server and change to your WBS directory](./README.md#accessing-your-wikibase-suite-server).
+Before troubleshooting Wikibase Suite (WBS), [log in to your server and change to your WBS directory](./README.md#accessing-your-wbs-server).
 
 ## Wikibase or other services don't start or show as "unhealthy" or "restarting"
 
@@ -16,7 +16,7 @@ If a service does not start, or if the status shows `unhealthy` or `restarting`,
 docker compose logs wikibase
 ```
 
-If the problem was caused by incorrect `.env` values, fix the values and then follow [Reset Wikibase Suite](./reset.md) before starting again.
+If the problem was caused by incorrect `.env` values, fix the values and then follow [Reset WBS](./reset.md) before starting again.
 
 ## Browser shows "This site can't be reached" or opens a different site
 
