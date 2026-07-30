@@ -7,6 +7,7 @@
 		"!../.github",
 		"package-lock.json",
 		"pnpm/**/**",
+		"../pnpm/**/**",
 		"pnpm-lock.yaml",
 		"../config/extensions",
 		"images/wbs-tools/app",
