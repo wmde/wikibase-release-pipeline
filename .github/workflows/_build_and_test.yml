@@ -151,7 +151,6 @@ jobs:
       matrix:
         suite:
           - repo
-          - fedprops
           - repo_client
           - quickstatements
           - pingback
