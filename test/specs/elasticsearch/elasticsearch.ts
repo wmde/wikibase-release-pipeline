@@ -1,3 +1,4 @@
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
@@ -9,6 +10,13 @@ const itemLabel: string = getTestString( 'testItem' );
 
 describe( 'ElasticSearch', function () {
 	let itemId: string;
+
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
 
 	it( 'Should create an item', async function () {
 		itemId = await WikibaseApi.createItem( itemLabel );

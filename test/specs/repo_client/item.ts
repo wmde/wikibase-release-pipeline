@@ -4,6 +4,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import ItemPage from '../../helpers/pages/entity/item.page.js';
 import page from '../../helpers/pages/page.js';
+import RepoClientLoginPage from '../../helpers/pages/repo-client-login.page.js';
 import SpecialNewItemPage from '../../helpers/pages/special/new-item.page.js';
 import ExternalChange from '../../types/external-change.js';
 
@@ -14,6 +15,17 @@ describe( 'Item', function () {
 	let propertyId: string = null;
 	const propertyValue = 'PropertyExampleStringValue';
 	const pageTitle = 'Test';
+
+	before( async function () {
+		await LoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+		await RepoClientLoginPage.login(
+			testEnv.vars.MW_ADMIN_NAME,
+			testEnv.vars.MW_ADMIN_PASS
+		);
+	} );
 
 	beforeEach( async function () {
 		await browser.waitForJobs();

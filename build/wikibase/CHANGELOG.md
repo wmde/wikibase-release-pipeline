@@ -1,3 +1,31 @@
+# 7.1.0 (2026-07-14)
+
+- Adds WikibaseInWikitext so administrators can write local query service examples with `<sparql>` tags.
+- Adds an image-owned health check that reports healthy when MediaWiki is serving requests.
+
+# 7.0.2 (2026-07-08)
+
+- Upgrades to MediaWiki 1.45.4 due to a critical security update.
+
+# 7.0.1 (2026-04-23)
+
+- Fixes a `7.0.0` regression in the opt-in metadata callback that caused Wikibase startup to fail for instances with `METADATA_CALLBACK=true`.
+
+# 7.0.0 (2026-04-20)
+
+Updates MediaWiki and bundled extensions within the 1.45 release line and adds several new default capabilities to the Wikibase image.
+
+- MediaWiki updated from 1.45.0 to 1.45.3 (see https://github.com/wikimedia/mediawiki/compare/1.45.0...1.45.3 and https://www.mediawiki.org/wiki/Release_notes/1.45).
+- Bundled extension versions were updated to current MediaWiki 1.45-compatible code in `build/wikibase/build.env`.
+- Enables `mul` language code by default.
+  - BREAKING CHANGE: Upgrading standalone Wikibase image users must re-index Elasticsearch to see `mul` results in Typeahead searches. See the [CirrusSearch documentation](https://www.mediawiki.org/wiki/Extension:CirrusSearch) for how to recreate and reindex.
+- Enables Wikidata-style statement grouping for item identifiers and property constraints by default.
+- Adds Echo, DiscussionTools, and the required Linter extension to the default image configuration.
+- Keeps anonymous read access enabled, but disables anonymous writes and anonymous self-service account creation by default in the bundled image configuration.
+- Refactors bundled LocalSettings loading so image-managed bootstrap logic lives in dedicated image files while preserving supported operator override points in generated `LocalSettings.php`.
+- Wikibase EDTF remains bundled in the image but is no longer loaded by default. Installations that require EDTF should explicitly load `WikibaseEdtf` in local configuration.
+- Fixes `composer.local.json` permissions in the image build.
+
 # 6.0.0 (2026-02-16)
 
 Upgrades to MediaWiki from 1.44 to 1.45 including updates to compatible packaged extensions
@@ -32,6 +60,13 @@ Analysis revealed breaking changes expected for a MediaWiki major-version upgrad
 
 - ⚠️  move callback to wikibase image
 - ⚠️  bump mediawiki to 1.44.0
+
+## 4.1.2 (2026-07-22)
+
+
+### 🩹 Fixes
+
+- Update MediaWiki to 1.43.9 and refresh WMF-maintained extensions on REL1_43
 
 ## 4.1.1 (2025-07-17)
 

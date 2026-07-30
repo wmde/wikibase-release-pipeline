@@ -1,3 +1,9 @@
+# 2.1.1 (2026-07-14)
+
+### 🩹 Fixes
+
+- Initialize the updater checkpoint for empty WDQS stores from Wikibase RecentChanges, avoiding the WDQS updater restart loop ([T354266](https://phabricator.wikimedia.org/T354266)).
+
 # 2.1.0 (2026-02-16)
 
 Updates in concert with Wikibase image v6.0.0 (mw-1.45) release

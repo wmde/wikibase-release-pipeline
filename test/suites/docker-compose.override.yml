@@ -68,6 +68,8 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.asdefault"
       - "--providers.file.filename=/etc/traefik/dynamic.yml"
+    ports: !override
+      - 8081:80
     volumes:
       - ../../deploy/config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
     networks:

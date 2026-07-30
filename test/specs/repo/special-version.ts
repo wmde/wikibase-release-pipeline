@@ -11,6 +11,11 @@ describe( 'Special:Version', function () {
 		);
 	} );
 
+	it( 'Should not contain Wikibase EDTF by default', async function () {
+		await page.open( '/wiki/Special:Version' );
+		await expect( $( '#mw-version-ext-other-Wikibase_EDTF' ) ).not.toExist();
+	} );
+
 	const extensions = {
 		wikibase: [
 			'EntitySchema',
@@ -23,6 +28,7 @@ describe( 'Special:Version', function () {
 		other: [
 			'CLDR',
 			'CirrusSearch',
+			'DiscussionTools',
 			'Elastica',
 			'OAuth',
 			'Parsoid',
@@ -31,7 +37,7 @@ describe( 'Special:Version', function () {
 		parserhook: [ 'Babel', 'Scribunto' ],
 		editor: [ 'VisualEditor' ],
 		antispam: [ 'ConfirmEdit' ],
-		specialpage: [ 'Nuke' ]
+		specialpage: [ 'Echo', 'Linter', 'Nuke' ]
 	};
 
 	// should be disabled for dynamic tests

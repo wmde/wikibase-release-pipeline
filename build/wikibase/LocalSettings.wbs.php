@@ -1,33 +1,17 @@
 <?php
 
-# JobRunner instance is assumed by default, so jobs on request is disabled
-$wgJobRunRate = 0;
+# Managed by the Wikibase image. DO NOT REMOVE OR MOVE THIS LINE.
+require_once '/LocalSettings.MediaWiki.php';
 
-# File Uploads enabled by default
-$wgEnableUploads = true;
+# Add MediaWiki configuration values here that must be set before bundled
+# extensions are loaded.
 
-# Logs
-# TODO: Explore simply logging to stdout/stderr so these appear in Docker logs
-$wgDebugLogGroups = array(
-	'resourceloader' => '/var/log/mediawiki/mw.resourceloader.log',
-	'exception' => '/var/log/mediawiki/mw.exception.log',
-	'error' => '/var/log/mediawiki/mw.error.log',
-	'fatal' => '/var/log/mediawiki/mw.fatal.log',
-);
-$wgDebugLogFile = '/var/log/mediawiki/mw.debug.log';
-
-$wgArticlePath = "/wiki/$1";
-
-# Add configuration values here or above which should be set before extensions are loaded
-
-# Load extensions if present, alphabetically ordered by filename
-foreach (glob("LocalSettings.d/*.php") as $filename)
-{
-	include $filename;
-}
+# Managed by the Wikibase image. DO NOT REMOVE OR MOVE THIS LINE.
+require_once '/LocalSettings.Extensions.php';
 
 ##############################################################################
 # End of generated LocalSettings.php
 ##############################################################################
 
-# Add configuration values below which should be set after extensions are loaded
+# Add MediaWiki or extension configuration values here that should be set after
+# bundled extensions are loaded.

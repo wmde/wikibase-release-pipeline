@@ -1,0 +1,14 @@
+diff --git a/wikibase/queryService/api/QuerySamples.js b/wikibase/queryService/api/QuerySamples.js
+--- a/wikibase/queryService/api/QuerySamples.js
++++ b/wikibase/queryService/api/QuerySamples.js
+@@ -50,4 +50,9 @@ wikibase.queryService/api/QuerySamples.js
+ 		} ).then( function ( response ) {
+ 			return self._parseHTML( response.parse.text );
+-		} );
++		} ).catch( function ( error ) {
++			if ( error.code === 'missingtitle' ) {
++				return [];
++			}
++			throw error;
++		} );
+ 	};
