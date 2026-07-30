@@ -1,17 +1,22 @@
-#!/usr/bin/env bash  
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # === Script setup
 
 # Change to the directory where the script is located
-cd "$(dirname "${BASH_SOURCE[0]}")" || exit
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 if [ "$#" -lt 1 ]; then
-	echo "Usage: $0 <directory> <--dry-run> [docker buildx build arguments...]"
+	echo "Usage: $0 <directory> [--dry-run] [--publish] [docker buildx build arguments...]"
 	exit 1
 fi
 
 # Change to the directory for the specified project
-cd "$1" || { echo "Failed to change directory to $1"; exit 1; }
+cd "$1" || {
+	echo "Failed to change directory to $1"
+	exit 1
+}
 
 # Remove the first argument, leaving the rest for docker buildx build
 shift
@@ -19,6 +24,7 @@ shift
 DRY_RUN=false
 PUBLISH=false
 BUILD_ARGS=()
+TAGS=()
 BUILD_ENV_FILE="build.env"
 DISALLOWED_ARGS=(
 	"--firstRelease=true"
@@ -41,7 +47,7 @@ done
 IMAGE_VERSION=$(jq -r '.version' package.json)
 
 # publish to Dockerhub
-if [ "$PUBLISH" == true ]; then
+if [ "$PUBLISH" = true ]; then
 	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
 	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
 	TAGS+=(
@@ -50,15 +56,17 @@ if [ "$PUBLISH" == true ]; then
 		"${IMAGE_VERSION_MINOR}"
 	)
 	# get image specific tags
-	# shellcheck disable=SC1090
-	source "$BUILD_ENV_FILE"
-	eval "$(declare -p IMAGE_TAGS)"
-	TAGS+=(
-		"${IMAGE_TAGS[@]}"
-	)
+	if [ -f "$BUILD_ENV_FILE" ]; then
+		# shellcheck disable=SC1090
+		source "$BUILD_ENV_FILE"
+		eval "$(declare -p IMAGE_TAGS 2>/dev/null)"
+		TAGS+=(
+			"${IMAGE_TAGS[@]}"
+		)
+	fi
 	BUILD_ARGS+=("--push")
 # build/test in CI
-elif [ "$GITHUB_ACTIONS" == true ]; then
+elif [ "${GITHUB_ACTIONS:-}" = true ]; then
 	TAGS+=(
 		"dev-${GITHUB_RUN_ID}"
 	)
@@ -75,24 +83,29 @@ fi
 IMAGE_NAME=$(jq -r '.name' package.json)
 
 # publish to Dockerhub
-if [ "$PUBLISH" == true ]; then
-	# IMAGE_REGISTRY implies dockerhub if empty
+if [ "$PUBLISH" = true ]; then
+	IMAGE_REGISTRY=""
 	IMAGE_NAMESPACE=wikibase
 
 # build/test in CI
-elif [ "$GITHUB_ACTIONS" == true ]; then
+elif [ "${GITHUB_ACTIONS:-}" = true ]; then
 	IMAGE_REGISTRY=ghcr.io
 	IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
 
 # local build
 else
+	IMAGE_REGISTRY=""
 	IMAGE_NAMESPACE=wikibase
 fi
 
-IMAGE_URL=${IMAGE_REGISTRY+${IMAGE_REGISTRY}/}${IMAGE_NAMESPACE}/${IMAGE_NAME}
+if [ -n "$IMAGE_REGISTRY" ]; then
+	IMAGE_URL="${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}"
+else
+	IMAGE_URL="${IMAGE_NAMESPACE}/${IMAGE_NAME}"
+fi
 
 for TAG in "${TAGS[@]}"; do
-	BUILD_ARGS+=("--tag ${IMAGE_URL}:${TAG}")
+	BUILD_ARGS+=("--tag" "${IMAGE_URL}:${TAG}")
 done
 
 # === Wikibase Suite version metadata build args
@@ -106,24 +119,48 @@ fi
 
 # === Transform vars in build.env to build args
 
-while IFS='=' read -r key value; do
-	# skip if the line is empty or the key is IMAGE_TAGS
-	[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
+if [ -f "$BUILD_ENV_FILE" ]; then
+	while IFS='=' read -r key value; do
+		# skip if the line is empty or the key is IMAGE_TAGS
+		[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
 
-	if [ -n "$value" ]; then
-		BUILD_ARGS+=("--build-arg" "$key=$value")
+		if [ -n "$value" ]; then
+			BUILD_ARGS+=("--build-arg" "$key=$value")
+		fi
+	done < <(grep -E '^[A-Z_]+=.*' "$BUILD_ENV_FILE")
+fi
+
+# === Import and export BuildKit cache
+#
+# CI enables the shared registry cache with the environment variables below.
+# Local builds use BuildKit's local cache automatically, but developers can opt
+# into the registry cache after authenticating Docker with a package token.
+
+if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
+	CACHE_REGISTRY=${BUILD_CACHE_REGISTRY%/}
+	CACHE_REPOSITORY="${CACHE_REGISTRY}/${IMAGE_NAME}"
+	CACHE_REF="${CACHE_REPOSITORY}:buildcache"
+
+	BUILD_ARGS+=("--cache-from" "type=registry,ref=${CACHE_REF}")
+
+	if [ "${BUILD_CACHE_PUSH:-false}" = true ]; then
+		BUILD_ARGS+=(
+			"--cache-to"
+			"type=registry,ref=${CACHE_REF},mode=max,ignore-error=true"
+		)
 	fi
-done < <(grep -E '^[A-Z_]+=.*' $BUILD_ENV_FILE)
+fi
 
 # == Run build
 
-BUILD_COMMAND="docker buildx build ${BUILD_ARGS[*]} ."
+BUILD_COMMAND=(docker buildx build "${BUILD_ARGS[@]}" .)
 
-if [ "$DRY_RUN" == true ]; then
+if [ "$DRY_RUN" = true ]; then
 	echo "Dry-run. This is the build command which would run:"
 	echo
-	echo "$BUILD_COMMAND"
+	printf '%q ' "${BUILD_COMMAND[@]}"
+	echo
 	echo
 else
-	exec $BUILD_COMMAND
+	exec "${BUILD_COMMAND[@]}"
 fi
