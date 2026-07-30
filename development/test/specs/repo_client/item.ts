@@ -102,8 +102,6 @@ describe( 'Item', function () {
 	} );
 
 	it( 'Should be able to see site-link change is dispatched to client', async function () {
-		this.retries( 5 );
-
 		const expectedSiteLinkChange: ExternalChange = {
 			type: 'external',
 			ns: 0,

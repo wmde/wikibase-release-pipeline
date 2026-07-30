@@ -162,20 +162,25 @@ export function defaultFunctions(): void {
 				`${ host }/wiki/Special:RecentChanges?limit=50&days=7&urlversion=2`
 			);
 
-			// get all external changes
 			const apiURL = `${ host }/w/api.php?format=json&action=query&list=recentchanges&rctype=external&rcprop=comment|title`;
-			const result = await browser.makeRequest( apiURL );
-			const changes = result.data.query.recentchanges;
-			const foundResult = lodash.find( changes, expectedChange );
+			let foundResult: ExternalChange;
 
-			expect( result.status ).toEqual( 200 );
-
-			if ( !foundResult ) {
-				testEnv.testLog.error( 'Could not find:' );
-				testEnv.testLog.error( expectedChange );
-				testEnv.testLog.error( 'Response: ' );
-				testEnv.testLog.error( changes );
-			}
+			await browser.waitUntil(
+				async () => {
+					const result = await browser.makeRequest( apiURL );
+					expect( result.status ).toEqual( 200 );
+					const changes = result.data.query.recentchanges;
+					foundResult = lodash.find( changes, expectedChange );
+					return Boolean( foundResult );
+				},
+				{
+					timeout: settings.waitForTimeout,
+					interval: 1000,
+					timeoutMsg: `Could not find dispatched change ${ JSON.stringify(
+						expectedChange
+					) }`
+				}
+			);
 
 			return foundResult;
 		}
