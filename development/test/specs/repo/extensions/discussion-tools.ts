@@ -1,4 +1,4 @@
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
 import page from '../../../helpers/pages/page.js';
 
 const waitForDiscussionTools = async (): Promise<void> => {
@@ -195,7 +195,19 @@ describe( 'DiscussionTools', function () {
 				'.ext-discussiontools-ui-newTopic-sectionTitle .oo-ui-inputWidget-input'
 			);
 			await topicTitleInput.waitForDisplayed( { timeout: 15000 } );
-			await topicTitleInput.setValue( topicTitle );
+			await browser.waitUntil(
+				async () => {
+					const currentInput = $(
+						'.ext-discussiontools-ui-newTopic-sectionTitle .oo-ui-inputWidget-input'
+					);
+					await currentInput.setValue( topicTitle );
+					return await currentInput.getValue() === topicTitle;
+				},
+				{
+					timeout: 15000,
+					timeoutMsg: 'Expected DiscussionTools topic title to be retained'
+				}
+			);
 			await expect( topicTitleInput ).toHaveValue( topicTitle );
 		} else {
 			const topicTitleInput = $( '#wpSummary' );

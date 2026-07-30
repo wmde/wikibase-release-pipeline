@@ -68,6 +68,11 @@ export const makeTestSettings = (
 		name: settings.name,
 		specs: settings.specs
 	};
+	const maxInstances =
+		settings.maxInstances ?? parseInt( process.env.MAX_INSTANCES );
+	// Docker Compose uses this value to configure the Selenium session limit.
+	// Keep it aligned with the number of workers WebdriverIO will start.
+	testEnvVars.MAX_INSTANCES = maxInstances.toString();
 	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';
 	const debugNode = process.env.DEBUG === 'node';
 	const outputDir = `suites/${ settings.name }/results`;
@@ -83,7 +88,7 @@ export const makeTestSettings = (
 		waitForTimeout: debug ?
 			ONE_DAY_IN_MS :
 			parseInt( process.env.WAIT_FOR_TIMEOUT ),
-		maxInstances: parseInt( process.env.MAX_INSTANCES ),
+		maxInstances,
 		pwd: process.env.HOST_PWD ?
 			`${ process.env.HOST_PWD }/development/test` :
 			process.cwd()
