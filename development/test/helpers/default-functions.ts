@@ -11,20 +11,6 @@ import { TestSettings } from '../types/test-settings.js';
 export function defaultFunctions(): void {
 	const settings: TestSettings = testEnv.settings;
 
-	// ======
-	// Custom WDIO config specific to MediaWiki
-	// ======
-	// Use in a test as `browser.options.<key>`.
-
-	// As of v8 of WDIO the browser.config object is deprecated in preference to browser.options
-	// This reassignment of options to config is necessary until the upstream WMDE and WikiMedia
-	// WDIO helper modules catch-up
-	browser.config = browser.options;
-
-	// Base for browser.url() and Page#openTitle()
-	browser.options.baseUrl =
-		testEnv.vars.WIKIBASE_URL + testEnv.vars.MW_SCRIPT_PATH;
-
 	/**
 	 * Execute query on database
 	 */
@@ -61,12 +47,12 @@ export function defaultFunctions(): void {
 	browser.addCommand(
 		'deleteClaim',
 		async ( claimGuid: string ): Promise<BotResponse> => {
-			const bot = await WikibaseApi.getBot();
+			const api = await WikibaseApi.getApi();
 
-			return bot.request( {
+			return api.request( {
 				action: 'wbremoveclaims',
 				claim: claimGuid,
-				token: bot.editToken
+				token: await api.getEditToken()
 			} );
 		}
 	);

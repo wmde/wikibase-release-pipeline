@@ -26,7 +26,7 @@ const openVisualEditor = async (): Promise<void> => {
 
 const appendTextInVisualEditor = async ( text: string ): Promise<void> => {
 	const ready = await browser.execute( () => {
-		const root = document.querySelector( '.ve-ce-attachedRootNode' );
+		const root = document.querySelector<HTMLElement>( '.ve-ce-attachedRootNode' );
 		if ( !root ) {
 			return false;
 		}

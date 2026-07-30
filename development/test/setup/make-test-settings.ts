@@ -32,16 +32,20 @@ export const baseTestSettings = {
 			throw new SevereServiceError( e );
 		}
 	},
-	afterTest: async ( mochaTest: Frameworks.Test ): Promise<void> => {
+	afterTest: async (
+		mochaTest: Frameworks.Test,
+		result: Frameworks.TestResult
+	): Promise<void> => {
+		if ( result.passed || result.skipped ) {
+			return;
+		}
+
 		const testFile = encodeURIComponent(
 			mochaTest.file.match( /.+\/(.+)\.[jt]s$/ )[ 1 ].replace( /\s+/g, '-' )
 		);
 		const screenshotFilename = `${ testFile }__${ mochaTest.title }`;
 		try {
-			saveScreenshot(
-				screenshotFilename,
-				`${ testEnv.settings.outputDir }/screenshots`
-			);
+			await saveScreenshot( screenshotFilename );
 		} catch ( error ) {
 			console.error( 'failed writing screenshot ...' );
 			console.error( error );

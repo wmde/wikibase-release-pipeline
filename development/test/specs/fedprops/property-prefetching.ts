@@ -14,7 +14,10 @@ describe( 'Property Prefetching', function () {
 		);
 		await $( 'ol.special li a' );
 
-		const links = ( await $$( 'ol.special li a' ) ).slice( 0, NUM_PROPERTIES );
+		const links = ( await $$( 'ol.special li a' ).getElements() ).slice(
+			0,
+			NUM_PROPERTIES
+		);
 
 		const claims = await Promise.all(
 			links.map( async ( link ) => {
@@ -46,8 +49,8 @@ describe( 'Property Prefetching', function () {
 	} );
 
 	it( 'should delete all statements and generate individual changes', async function () {
-		const bot = await WikibaseApi.getBot();
-		const claimsResponse = await bot.request( {
+		const api = await WikibaseApi.getApi();
+		const claimsResponse = await api.request( {
 			action: 'wbgetclaims',
 			entity: itemId
 		} );
@@ -74,7 +77,7 @@ describe( 'Property Prefetching', function () {
 		await $( '#pagehistory' );
 
 		// +1 for the initial item creation
-		await expect( $$( '#pagehistory li' ) ).resolves.toHaveLength(
+		expect( await $$( '#pagehistory li' ).getElements() ).toHaveLength(
 			NUM_PROPERTIES + 1
 		);
 	} );
@@ -86,8 +89,10 @@ describe( 'Property Prefetching', function () {
 		await $( 'ul.special' );
 
 		// +1 for the initial item creation
-		await expect(
-			$$( `ul.special li a[href="/wiki/Item:${ itemId }"]` )
-		).resolves.toHaveLength( NUM_PROPERTIES + 1 );
+		expect(
+			await $$(
+				`ul.special li a[href="/wiki/Item:${ itemId }"]`
+			).getElements()
+		).toHaveLength( NUM_PROPERTIES + 1 );
 	} );
 } );

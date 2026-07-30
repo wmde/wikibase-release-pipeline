@@ -201,11 +201,11 @@ describe( 'QueryService', function () {
 			QueryServiceUIPage.resultIncludes( 'schema:version' )
 		).resolves.toBe( true );
 
-		const bot = await WikibaseApi.getBot();
-		await bot.request( {
+		const api = await WikibaseApi.getApi();
+		await api.request( {
 			action: 'delete',
 			title: `Item:${ itemId }`,
-			token: bot.editToken
+			token: await api.getEditToken()
 		} );
 		await browser.waitUntil(
 			async () => ( await WikibaseApi.getEntity( itemId ) ).missing === '',
