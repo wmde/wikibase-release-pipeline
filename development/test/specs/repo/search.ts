@@ -1,12 +1,10 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
-describe( 'Search', function () {
-	it( 'Should be able to create an item and search for it', async function () {
+describe( 'Fallback entity search', function () {
+	it( 'Should find a newly created item without OpenSearch', async function () {
 		const itemLabel = getTestString( 'search-' );
 		const itemId = await WikibaseApi.createItem( itemLabel, {} );
-
-		await browser.waitForJobs();
 
 		let searchResult;
 		await browser.waitUntil(

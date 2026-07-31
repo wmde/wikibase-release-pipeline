@@ -42,6 +42,13 @@ describe( 'OpenSearch', function () {
 		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
+	it( 'Should load the OpenSearch extensions', async function () {
+		await page.open( '/wiki/Special:Version' );
+		await expect( $( '#mw-version-ext-wikibase-WikibaseCirrusSearch' ) ).toExist();
+		await expect( $( '#mw-version-ext-other-CirrusSearch' ) ).toExist();
+		await expect( $( '#mw-version-ext-other-Elastica' ) ).toExist();
+	} );
+
 	it( 'should be able to search case-insensitive', async function () {
 		let searchResult: SearchResult[];
 
