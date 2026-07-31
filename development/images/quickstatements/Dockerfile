@@ -8,14 +8,19 @@ ARG PHP_IMAGE_URL
 FROM --platform=${COMPOSER_IMAGE_PLATFORM} ${COMPOSER_IMAGE_URL} AS composer
 ARG QUICKSTATEMENTS_COMMIT
 ARG MAGNUSTOOLS_COMMIT
+ARG MAGNUSTOOLS_ARCHIVE_SHA
 
 RUN \
     git clone https://github.com/magnusmanske/quickstatements /tmp/quickstatements && \
     git -C /tmp/quickstatements checkout ${QUICKSTATEMENTS_COMMIT} && \
     git -C /tmp/quickstatements submodule update --init --recursive && \
     \
-    git clone https://codeberg.org/magnusmanske/magnustools.git /tmp/magnustools && \
-    git -C /tmp/magnustools checkout ${MAGNUSTOOLS_COMMIT}
+    php -r "exit(copy('https://codeberg.org/magnusmanske/magnustools/archive/${MAGNUSTOOLS_COMMIT}.tar.gz', '/tmp/magnustools.tar.gz') ? 0 : 1);" && \
+    printf '%s  %s\n' "${MAGNUSTOOLS_ARCHIVE_SHA}" /tmp/magnustools.tar.gz > /tmp/magnustools.sha256 && \
+    sha256sum --check --status /tmp/magnustools.sha256 && \
+    mkdir /tmp/magnustools && \
+    tar -xzf /tmp/magnustools.tar.gz --strip-components=1 -C /tmp/magnustools && \
+    rm /tmp/magnustools.tar.gz /tmp/magnustools.sha256
 
 WORKDIR /tmp/quickstatements
 RUN composer install --no-dev

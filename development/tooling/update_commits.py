@@ -1,3 +1,4 @@
+import hashlib
 import os, json, re, requests
 from typing import Callable
 from bs4 import BeautifulSoup
@@ -86,6 +87,12 @@ def parse_codeberg_commit(response: requests.Response) -> str:
     return data["commit"]["id"]
 
 
+def get_codeberg_archive_sha256(repo_path: str, commit: str) -> str:
+    response = requests.get(f"https://codeberg.org/{repo_path}/archive/{commit}.tar.gz")
+    response.raise_for_status()
+    return hashlib.sha256(response.content).hexdigest()
+
+
 def run(file_path):
     if not os.path.exists(file_path):
         print(f"File {file_path} does not exist.")
@@ -156,6 +163,16 @@ def run(file_path):
                 f"{codeberg_commit[2]}={commit}",
                 variable_contents,
             )
+            archive_sha_variable = (
+                codeberg_commit[2].removesuffix("_COMMIT") + "_ARCHIVE_SHA"
+            )
+            if re.search(f"{archive_sha_variable}=[0-9a-f]+", variable_contents):
+                archive_sha256 = get_codeberg_archive_sha256(repo_path, commit)
+                variable_contents = re.sub(
+                    f"{archive_sha_variable}=[0-9a-f]+",
+                    f"{archive_sha_variable}={archive_sha256}",
+                    variable_contents,
+                )
 
     with open(file_path, "w") as variable_file:
         variable_file.write(variable_contents)
