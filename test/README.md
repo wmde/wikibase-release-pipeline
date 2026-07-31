@@ -32,12 +32,6 @@
 - [x] Verify Lua module can be executed
 - [x] Verify Lua module can be executed within time limit
 
-## Wikibase federated properties (using wikidata.org as source wiki)
-
-- [x] Create an item on Wikibase and add a statement using a federated property
-  - [x] Verify it is available with the correct rdf through the Entity page
-  - [x] Verify it is available through the WDQS-frontend with the correct prefixes
-
 ## OpenSearch
 
 - [x] Create item with an alias and search by item alias

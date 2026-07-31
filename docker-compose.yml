@@ -26,3 +26,5 @@ services:
       HOST_PWD: $PWD
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       GH_TOKEN: ${GH_TOKEN:-}
+      WBS_TEST_IMAGE_REGISTRY: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}
+      WBS_TEST_IMAGE_TAG: ${WBS_TEST_IMAGE_TAG:-latest}
