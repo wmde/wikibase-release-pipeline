@@ -7,7 +7,7 @@ networks:
 
 services:
   wikibase:
-    image: wikibase/wikibase
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wikibase:${WBS_TEST_IMAGE_TAG:-latest}
     depends_on: !override
       mysql:
         condition: service_healthy
@@ -27,24 +27,24 @@ services:
       WIKIMEDIA_OAUTH_CONSUMER_SECRET: test-wikimedia-consumer-secret
 
   wikibase-jobrunner:
-    image: wikibase/wikibase
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wikibase:${WBS_TEST_IMAGE_TAG:-latest}
 
   elasticsearch:
-    image: wikibase/opensearch
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/opensearch:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ opensearch ]
 
   wdqs:
-    image: wikibase/wdqs
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ queryservice ]
 
   wdqs-updater:
-    image: wikibase/wdqs
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ queryservice ]
     environment:
       WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
-    image: wikibase/wdqs-frontend
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs-frontend:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ queryservice ]
     volumes:
       - wdqs-frontend-config:/config
@@ -53,7 +53,7 @@ services:
       WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
 
   quickstatements:
-    image: wikibase/quickstatements
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/quickstatements:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ quickstatements ]
     environment:
       WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}

@@ -145,6 +145,9 @@ jobs:
     if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      WBS_TEST_IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
+      WBS_TEST_IMAGE_TAG: dev-${{ github.run_id }}
 
     strategy:
       fail-fast: false
@@ -164,9 +167,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
-
-      - name: "Pull images from GHCR"
-        uses: ./.github/actions/pull-ghcr
 
       - name: "Run ${{ matrix.suite }} test suite"
         run: ./nx test -- ${{ matrix.suite }}
