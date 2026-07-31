@@ -18,6 +18,22 @@ const statementText = 'STATEMENT';
 const referenceText = 'REFERENCE';
 const undoSummaryText = 'UNDO_SUMMARY';
 
+const waitForEntityData = async (
+	propertyId: string,
+	condition: ( claim: Claim ) => boolean,
+	timeoutMsg: string
+): Promise<void> => {
+	await browser.waitUntil(
+		async () => {
+			const responseData = await SpecialEntityDataPage.getData( propertyId );
+			const claims = responseData.entities[ propertyId ].claims;
+			return Object.values( claims )
+				.some( ( propertyClaims ) => propertyClaims.some( condition ) );
+		},
+		{ timeoutMsg }
+	);
+};
+
 const waitForValueInputFocus = async (): Promise<void> => {
 	await browser.waitUntil(
 		async () => browser.execute( () => {
@@ -98,10 +114,15 @@ describe( 'Property', function () {
 				await waitForValueInputFocus();
 				await browser.keys( statementText.split( '' ) );
 				await PropertyPage.saveStatementLink.click();
+				await waitForEntityData(
+					propertyId,
+					( claim ) => claim.mainsnak.property === stringPropertyId &&
+						claim.mainsnak.datavalue.value === statementText,
+					`Expected statement on ${ propertyId } to be persisted`
+				);
 			} );
 
 			it( 'Should be able to see added statement', async function () {
-				this.retries( 4 );
 				await expect( $( `div=${ statementText }` ) ).toExist();
 				await expect( $( `aria/Property:${ stringPropertyId }` ) ).toHaveText(
 					stringPropertyLabel
@@ -124,16 +145,29 @@ describe( 'Property', function () {
 				await waitForValueInputFocus();
 				await browser.keys( referenceText.split( '' ) );
 				await PropertyPage.saveStatementLink.click();
+				await waitForEntityData(
+					propertyId,
+					( claim ) => Boolean(
+						claim.references &&
+						claim.references.some(
+							( reference ) => Boolean(
+								reference.snaks[ stringPropertyId ] &&
+								reference.snaks[ stringPropertyId ].some(
+									( snak ) => snak.datavalue.value === referenceText
+								)
+							)
+						)
+					),
+					`Expected reference on ${ propertyId } to be persisted`
+				);
 			} );
 
 			it( 'Should be able to see added reference', async function () {
-				this.retries( 4 );
 				await $( '=1 reference' ).click();
 				await expect( $( `div=${ referenceText }` ) ).toExist();
 			} );
 
 			it( 'Should contain statement and reference in EntityData', async function () {
-				this.retries( 4 );
 				const responseData = await SpecialEntityDataPage.getData( propertyId );
 				const claim: Claim =
 					responseData.entities[ propertyId ].claims[ stringPropertyId ][ 0 ];
@@ -151,7 +185,6 @@ describe( 'Property', function () {
 			} );
 
 			it( 'Should display the added properties on the "Recent changes" page', async function () {
-				await browser.waitForJobs();
 				await page.open( '/wiki/Special:RecentChanges?limit=500' );
 				await expect(
 					$( `a[href$="/wiki/Property:${ propertyId }"]` )
