@@ -169,38 +169,7 @@ jobs:
         uses: ./.github/actions/pull-ghcr
 
       - name: "Run ${{ matrix.suite }} test suite"
-        run: |
-          if [[ "${{ matrix.suite }}" == "repo" ]]; then
-            echo "Host CPUs: $(nproc)"
-            free -h
-
-            vmstat -w 10 > "$RUNNER_TEMP/repo-vmstat.log" &
-            vmstat_pid=$!
-            (
-              while true; do
-                printf '\n=== %s ===\n' "$(date --iso-8601=seconds)"
-                docker stats --no-stream \
-                  --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}' ||
-                  true
-                sleep 10
-              done
-            ) > "$RUNNER_TEMP/repo-docker-stats.log" &
-            docker_stats_pid=$!
-
-            show_resource_profile() {
-              kill "$vmstat_pid" "$docker_stats_pid" 2>/dev/null || true
-              wait "$vmstat_pid" "$docker_stats_pid" 2>/dev/null || true
-              echo "::group::Repository host resource profile"
-              cat "$RUNNER_TEMP/repo-vmstat.log"
-              echo "::endgroup::"
-              echo "::group::Repository container resource profile"
-              cat "$RUNNER_TEMP/repo-docker-stats.log"
-              echo "::endgroup::"
-            }
-            trap show_resource_profile EXIT
-          fi
-
-          ./nx test -- ${{ matrix.suite }}
+        run: ./nx test -- ${{ matrix.suite }}
         working-directory: development
 
       - name: Show logs
