@@ -1,4 +1,4 @@
-# Notes on Running wbs-dev-runner as current user
+# Notes on Running wbs-build-tools as current user
 
 A work in progress: I had it mostly working as is, but thought it was unnecessarily complex. The Docker engine I use is using my user for things somehow, so the issue of files created with "root" hasn't came-up for me, but this may be something that needs addressing for other dev teams users. 
 
@@ -14,7 +14,7 @@ exec docker compose --progress quiet run --build --rm runner -c "nx ${*}"
 
 ```Dockerfile
 # Base image: Node.js LTS (20) on Debian Bookworm (12)
-FROM node:20-bookworm-slim AS wbs-dev-runner-base
+FROM node:20-bookworm-slim AS wbs-build-tools-base
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -78,7 +78,7 @@ USER root
 FROM ghcr.io/hadolint/hadolint:latest-debian AS hadolint
 
 # Final stage: Build on top of the base image
-FROM wbs-dev-runner-base
+FROM wbs-build-tools-base
 
 # Copy the Dockerfile linter hadolint binary from the hadolint image
 COPY --from=hadolint /bin/hadolint /usr/local/bin/hadolint
