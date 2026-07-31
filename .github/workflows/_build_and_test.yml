@@ -71,14 +71,14 @@ jobs:
       - build
     if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     strategy:
       fail-fast: false
       matrix:
         suite:
           - repo
-          - fedprops
+          - queryservice
           - repo_client
           - quickstatements
           - pingback
