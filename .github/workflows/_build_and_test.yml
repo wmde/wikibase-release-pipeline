@@ -1,6 +1,10 @@
 on:
   workflow_call:
 
+env:
+  BUILD_CACHE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
+  BUILD_CACHE_PUSH: "true"
+
 jobs:
   skip_check:
     runs-on: ubuntu-24.04
@@ -40,10 +44,6 @@ jobs:
     if: needs.skip_check.outputs.should_skip != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    env:
-      BUILD_CACHE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
-      BUILD_CACHE_PUSH: "true"
-
     strategy:
       fail-fast: false
       matrix:
