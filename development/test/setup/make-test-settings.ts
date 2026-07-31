@@ -99,6 +99,7 @@ export const makeTestSettings = (
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || baseTestSettings.composeFiles,
+		composeProfiles: settings.composeProfiles || [],
 		waitForUrls: settings.waitForUrls || baseTestSettings.waitForUrls,
 		envFiles: settings.envFiles || baseTestSettings.envFiles,
 		vars: testEnvVars

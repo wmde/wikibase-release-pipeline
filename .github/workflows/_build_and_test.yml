@@ -151,6 +151,7 @@ jobs:
       matrix:
         suite:
           - repo
+          - queryservice
           - repo_client
           - quickstatements
           - pingback

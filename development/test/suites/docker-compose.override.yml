@@ -30,14 +30,17 @@ services:
 
   wdqs:
     image: wikibase/wdqs
+    profiles: [ queryservice ]
 
   wdqs-updater:
     image: wikibase/wdqs
+    profiles: [ queryservice ]
     environment:
       WIKIBASE_CONCEPT_URI: http://${WIKIBASE_PUBLIC_HOST}
 
   wdqs-frontend:
     image: wikibase/wdqs-frontend
+    profiles: [ queryservice ]
     volumes:
       - wdqs-frontend-config:/config
     environment:
