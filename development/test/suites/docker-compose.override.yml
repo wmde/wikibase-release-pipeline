@@ -49,6 +49,7 @@ services:
 
   quickstatements:
     image: wikibase/quickstatements
+    profiles: [ quickstatements ]
     environment:
       WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}
       QUICKSTATEMENTS_PUBLIC_URL: ${QUICKSTATEMENTS_URL}
