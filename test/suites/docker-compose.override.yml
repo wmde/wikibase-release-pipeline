@@ -65,7 +65,7 @@ services:
       - 5900:5900
       - 7900:7900
     volumes:
-      # Should map to same location as wbs-dev-runner workspace root
+      # Should map to the same location as the build-tools workspace root
       - ../../:/workspace
     shm_size: 2g
     environment:
