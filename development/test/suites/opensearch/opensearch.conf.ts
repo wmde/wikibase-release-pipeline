@@ -5,7 +5,12 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'opensearch',
-	specs: [ 'specs/opensearch/*.ts' ]
+	specs: [ 'specs/opensearch/*.ts' ],
+	composeProfiles: [ 'opensearch' ],
+	composeFiles: [
+		...defaultSettings.composeFiles,
+		'suites/opensearch/docker-compose.override.yml'
+	]
 } );
 
 export const config = wdioConfig( testEnv );
