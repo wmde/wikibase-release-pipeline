@@ -2,7 +2,7 @@ import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
 describe( 'Fallback entity search', function () {
-	it( 'Should find a newly created item without Elasticsearch', async function () {
+	it( 'Should find a newly created item without OpenSearch', async function () {
 		const itemLabel = getTestString( 'search-' );
 		const itemId = await WikibaseApi.createItem( itemLabel, {} );
 

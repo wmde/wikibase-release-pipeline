@@ -42,7 +42,7 @@ describe( 'OpenSearch', function () {
 		await expect( $( '.wikibase-aliasesview-list-item' ) ).toHaveText( itemAlias );
 	} );
 
-	it( 'Should load the Elasticsearch extensions', async function () {
+	it( 'Should load the OpenSearch extensions', async function () {
 		await page.open( '/wiki/Special:Version' );
 		await expect( $( '#mw-version-ext-wikibase-WikibaseCirrusSearch' ) ).toExist();
 		await expect( $( '#mw-version-ext-other-CirrusSearch' ) ).toExist();
