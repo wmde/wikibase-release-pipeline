@@ -24,3 +24,5 @@ services:
       - local.env
     environment:
       HOST_PWD: $PWD
+      WBS_TEST_IMAGE_REGISTRY: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}
+      WBS_TEST_IMAGE_TAG: ${WBS_TEST_IMAGE_TAG:-latest}
