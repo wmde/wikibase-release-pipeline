@@ -25,6 +25,8 @@ shift
 
 DRY_RUN=false
 PUBLISH=false
+NO_CACHE=false
+TARGET_PLATFORMS=""
 BUILD_ARGS=()
 TAGS=()
 BUILD_ENV_FILE="build.env"
@@ -32,9 +34,19 @@ DISALLOWED_ARGS=(
 	"--firstRelease=true"
 )
 
+PREVIOUS_ARG=""
 for arg in "$@"; do
+	if [[ "$PREVIOUS_ARG" == "--platform" ]]; then
+		TARGET_PLATFORMS="$arg"
+	elif [[ "$arg" == --platform=* ]]; then
+		TARGET_PLATFORMS=${arg#--platform=}
+	fi
+
 	if [[ $arg == "--dry-run" || $arg == "--dryRun=true" ]]; then
 		DRY_RUN=true
+	elif [[ $arg == "--no-cache" ]]; then
+		NO_CACHE=true
+		BUILD_ARGS+=("$arg")
 	elif [[ $arg == "--publish" ]]; then
 		PUBLISH=true
 	elif [[ " ${DISALLOWED_ARGS[*]} " =~ $arg ]]; then
@@ -42,6 +54,7 @@ for arg in "$@"; do
 	else
 		BUILD_ARGS+=("$arg")
 	fi
+	PREVIOUS_ARG="$arg"
 done
 
 # === Setup tags
@@ -143,9 +156,25 @@ fi
 if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
 	CACHE_REGISTRY=${BUILD_CACHE_REGISTRY%/}
 	CACHE_REPOSITORY="${CACHE_REGISTRY}/${IMAGE_NAME}"
-	CACHE_REF="${CACHE_REPOSITORY}:buildcache"
+	CACHE_SCOPE=${BUILD_CACHE_SCOPE:-${TARGET_PLATFORMS:-$(docker info --format '{{.OSType}}-{{.Architecture}}')}}
+	CACHE_SCOPE=${CACHE_SCOPE//\//-}
+	CACHE_SCOPE=${CACHE_SCOPE//,/_}
+	CACHE_SCOPE=${CACHE_SCOPE//aarch64/arm64}
+	CACHE_SCOPE=${CACHE_SCOPE//x86_64/amd64}
+	CACHE_REF="${CACHE_REPOSITORY}:buildcache-${CACHE_SCOPE}"
+	LEGACY_CACHE_REF="${CACHE_REPOSITORY}:buildcache"
+	APPLICATION_BUILDER="wbs-application-builder"
 
-	BUILD_ARGS+=("--cache-from" "type=registry,ref=${CACHE_REF}")
+	BUILD_ARGS+=("--builder" "$APPLICATION_BUILDER")
+
+	if [ "$NO_CACHE" = false ]; then
+		# Read the former unscoped cache while platform-specific caches populate.
+		# New cache records are written only to the platform-specific reference.
+		BUILD_ARGS+=(
+			"--cache-from" "type=registry,ref=${CACHE_REF}"
+			"--cache-from" "type=registry,ref=${LEGACY_CACHE_REF}"
+		)
+	fi
 
 	if [ "${BUILD_CACHE_PUSH:-false}" = true ]; then
 		BUILD_ARGS+=(
@@ -166,5 +195,17 @@ if [ "$DRY_RUN" = true ]; then
 	echo
 	echo
 else
+	# Registry cache export requires a BuildKit builder rather than Docker's
+	# default builder. Keep this here so direct local and containerized CI builds
+	# use the same behavior whenever a registry cache is configured.
+	if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
+		if ! docker buildx inspect "$APPLICATION_BUILDER" >/dev/null 2>&1; then
+			docker buildx create \
+				--name "$APPLICATION_BUILDER" \
+				--driver docker-container >/dev/null
+		fi
+		docker buildx inspect "$APPLICATION_BUILDER" --bootstrap >/dev/null
+	fi
+
 	exec "${BUILD_COMMAND[@]}"
 fi
