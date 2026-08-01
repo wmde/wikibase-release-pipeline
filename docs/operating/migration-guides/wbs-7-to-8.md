@@ -12,9 +12,9 @@ As of Wikibase Suite (WBS) 8, the source repository has moved from `wikibase-rel
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 8.0.0](../../../CHANGELOG.md#800-2026-07-20)
-   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
-   - [OpenSearch image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/opensearch/CHANGELOG.md)
-   - [QuickStatements image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/quickstatements/CHANGELOG.md)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [OpenSearch image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/CHANGELOG.md)
+   - [QuickStatements image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/CHANGELOG.md)
 
 3. Back up your data and configuration. See [Backup and restore](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration. Keep the existing WBS 7 checkout and configuration backup until the migration has succeeded and the new instance has been verified.
 

@@ -12,6 +12,24 @@ This directory contains the image sources and the build, integration-test, and r
 
 The user-facing product configuration and documentation live at the [repository root](../README.md). Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).
 
+## Repository and documentation map
+
+This repository contains the installable product configuration, its documentation, the image sources, and the build, test, and release tooling.
+
+Use the documentation according to the task:
+
+| Task | Start here |
+| --- | --- |
+| Install or operate a published WBS release | [WBS documentation](../README.md) |
+| Change product configuration or image sources | [Contributor guide](./CONTRIBUTING.md) |
+| Add or debug an integration test | [Browser test suites](./test/README.md) |
+| Change the installer or operations tools | [Tools development guide](../tools/docs/README.md) |
+| Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
+
+The main development flow is: change the root Compose product or an image under
+`images/`, build it through `./nx`, exercise it through the integration suites,
+and publish approved versions through the repository workflows.
+
 ## Build and test
 
 Run development commands from this directory. The `nx` wrapper runs them in the standard Docker development environment by default.

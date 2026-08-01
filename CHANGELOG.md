@@ -8,7 +8,7 @@ Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
 - Adds the Wikibase Suite installer at the repository root.
 - Adds optional login with Wikimedia accounts. See [Enable Wikimedia login](./docs/images/wikibase/README.md#wikimedia-oauth-login).
 - Makes Suite and image documentation part of the root product documentation and moves image sources, integration tests, and release tooling under `development/`.
-- See the [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md#800-2026-07-20) for the paired image changes in this release.
+- See the [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md#800-2026-07-20) for the paired image changes in this release.
 
 ## 7.0.0 (2026-04-20)
 
@@ -61,7 +61,7 @@ Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
 
 ### 🚀 Features
 
-- Adds a [Call Back](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/images/wikibase/README.md#wikibase-suite-call-back) feature to allow instances to share publicly available data to analyze the use of Wikibase and increase discoverability.
+- Adds a [Call Back](https://github.com/wmde/wikibase-suite/blob/main/docs/images/wikibase/README.md#wikibase-suite-call-back) feature to allow instances to share publicly available data to analyze the use of Wikibase and increase discoverability.
 
 
 ## 4.0.1 (2025-03-21)

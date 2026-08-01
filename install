@@ -66,7 +66,7 @@ fi
 
 # --- Installer variables (including defaults) ---
 
-WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
+WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-suite.git}"
 WBS_REF="${WBS_REF:-}"
 SKIP_CLONE="${SKIP_CLONE:-false}"
 

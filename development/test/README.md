@@ -90,7 +90,45 @@ Put local overrides in `development/local.env`. Defaults come from the root
 
 ## Write more tests
 
-When working on the browser tests, you’ll want to consult the documentation of the following libraries we use:
+### Choose where the test belongs
+
+- Add a browser spec under `test/specs/<suite>/`. Use the suite whose services
+  and configuration match the behavior under test.
+- Put reusable browser interactions in `test/helpers/pages/` and other shared
+  test logic in `test/helpers/`. Keep behavior specific to one test in its spec.
+- Put suite-specific MediaWiki configuration, SQL, fixture extensions, and
+  Compose overrides in `test/suites/<suite>/`.
+- Change shared runner lifecycle code in `test/setup/` only when the behavior
+  should apply to every suite.
+
+An existing suite automatically discovers a new spec only when its
+`<suite>.conf.ts` `specs` patterns include the new path. When a change needs a
+different combination of Compose profiles or overrides, add a suite directory
+with a matching `<suite>.conf.ts` and include it in the CI test matrix.
+
+### Conventions
+
+- Name spec files after the feature or service behavior they cover. Use Mocha
+  `describe` and `it` descriptions that state the observable behavior.
+- Read service URLs and credentials from `testEnv.vars`; do not hard-code local
+  ports, hostnames, or credentials.
+- Create unique test data when practical and do not rely on spec execution
+  order. The `repo` suite can run several WDIO workers concurrently.
+- Prefer page objects for repeated UI flows and WebdriverIO expectations or
+  `browser.waitUntil` for asynchronous behavior. Use a fixed `browser.pause`
+  only when no observable condition is available, and explain why in the spec.
+- Keep assertions in the spec so the behavior being verified remains visible;
+  helpers should primarily arrange state or expose reusable interactions.
+- Run the smallest relevant spec while iterating, then its complete suite before
+  submitting the change. Build every changed image first because tests do not
+  build images automatically.
+
+The test harness in this directory covers browser and service integration tests.
+The installer bootstrap smoke test lives with the WBS tools image at
+`development/images/wbs-tools/test/install-bootstrap.sh` and runs through
+`./nx test wbs-tools`.
+
+When working on the browser tests, consult the documentation of the following libraries:
 
 - [WebdriverIO](https://webdriver.io/docs/api) for controlling the browser (`browser`, `$`, `waitUntil`, …)
 - [Mocha](https://mochajs.org/) as the general testing framework (`describe`, `it`, `before`, …)

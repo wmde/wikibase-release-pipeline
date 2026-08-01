@@ -41,7 +41,7 @@ $ ./nx test
 $ ./nx test -- repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./nx test -- repo --spec specs/repo/special-item.ts
+$ ./nx test -- repo --spec specs/repo/special-new-item.ts
 
 # Start with a headed browser
 $ ./nx test -- repo --headed
@@ -116,8 +116,8 @@ You can run the tests in the Docker container locally exactly as they are run in
 ## Example usage of `./nx test`
 
 ```bash
-# See all`./nx test` CLI options
-./nx test --help
+# See all `./nx test` CLI options
+./nx test -- --help
 
 # Run all test suites
 ./nx test -- all
@@ -214,7 +214,7 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
 7. All releases should be announced to the community before finalized, coordinate timing with the Developer Advocate BEFORE completing Step 8 below so the announcement follows the publish closely.
 
 8. Run `Create Release` on `main`:
-   - run [Create a WBS Release Action](https://github.com/wmde/wikibase-release-pipeline/actions/workflows/create_release.yml) after the release PR has been finalized, reviewed, approved, and merged
+   - run [Create a WBS Release Action](https://github.com/wmde/wikibase-suite/actions/workflows/create_release.yml) after the release PR has been finalized, reviewed, approved, and merged
    - `dry_run=true` to audit tags only.
    - `dry_run=false` to create and push missing tags.
    - workflow behavior:

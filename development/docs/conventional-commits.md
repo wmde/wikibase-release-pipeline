@@ -25,7 +25,7 @@ To preserve conventional-commit metadata on `main`, use one of these:
 
 ## Supported Types
 
-Configured in [`nx.json`](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/nx.json):
+Configured in [`nx.json`](https://github.com/wmde/wikibase-suite/blob/main/development/nx.json):
 
 | Type     | SemVer bump | Changelog title  |
 | -------- | ----------- | ---------------- |
