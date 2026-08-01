@@ -12,45 +12,45 @@ This repository contains the Wikibase Suite toolset used for [building](./images
 
 ```bash
 # Build all Wikibase Suite images
-$ ./nx build
+$ ./wbs-dev build
 
 # Build only the MediaWiki/Wikibase containers
-$ ./nx build wikibase
+$ ./wbs-dev build wikibase
 
 # Build WDQS from fresh base images without reading cached layers
 # (additional arguments are forwarded to `docker buildx build`)
-$ ./nx build wdqs --no-cache --pull
+$ ./wbs-dev build wdqs --no-cache --pull
 
 # Update upstream commit hashes for wikibase
-$ ./nx run wikibase:update-commits
+$ ./wbs-dev update-commits wikibase
 
 # Update upstream commit hashes for all projects that support it
-$ ./nx update-commits
+$ ./wbs-dev update-commits
 ```
 
 ### Test
 
 ```
 # Show help for the test CLI, including the various options available. WDIO command line options are also supported (see https://webdriver.io/docs/testrunner/)
-$ ./nx test -- --help
+$ ./wbs-dev test --help
 
 # Runs all test suites (defined in `test/suites`)
-$ ./nx test
+$ ./wbs-dev test
 
 # Runs the `repo` test suite
-$ ./nx test -- repo
+$ ./wbs-dev test repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./nx test -- repo --spec specs/repo/special-new-item.ts
+$ ./wbs-dev test repo --spec specs/repo/special-new-item.ts
 
 # Start with a headed browser
-$ ./nx test -- repo --headed
+$ ./wbs-dev test repo --headed
 
 # Run the Query Service suite
-$ ./nx test -- queryservice
+$ ./wbs-dev test queryservice
 
 # Start and leave up the test environment for a given test suite without running tests
-$ ./nx test -- repo --setup
+$ ./wbs-dev test repo --setup
 ```
 
 ### Deployment configuration
@@ -65,32 +65,32 @@ $ docker compose up --wait
 ## Development setup
 
 Development requires Git and a current Docker installation with the Compose and
-Buildx plugins. Host installations of Node.js, pnpm, Nx, Python, and the linters
+Buildx plugins. Host installations of Node.js, pnpm, Python, and the linters
 are not required.
 
-Every `./nx` command builds or loads the `wbs-build-tools` image and runs Nx in
-that container. The repository is mounted into the container, while image builds
-and test services use the host Docker daemon. This is the same entry point used
-by CI.
+Every `./wbs-dev` command builds or loads the `wbs-build-tools` image and runs
+the repository's TypeScript command coordinator in that container. The repository
+is mounted into the container, while image builds and test services use the host
+Docker daemon. CI uses the same entry point and underlying scripts.
 
 The first command may take longer while the build-tools image and workspace
 dependencies are prepared. Subsequent commands use Docker's local BuildKit cache.
 CI additionally imports and exports platform-scoped cache records in GHCR.
 
-Optional local overrides belong in `local.env`, which `./nx` creates when it is
+Optional local overrides belong in `local.env`, which `./wbs-dev` creates when it is
 missing.
 
 To rebuild the build-tools image without reading cached layers and refresh its
 base image:
 
 ```bash
-$ WBS_BUILD_TOOLS_NO_CACHE=true ./nx lint
+$ WBS_BUILD_TOOLS_NO_CACHE=true ./wbs-dev lint
 ```
 
 To rebuild both the build-tools image and a product image from fresh base images:
 
 ```bash
-$ WBS_BUILD_TOOLS_NO_CACHE=true ./nx build wikibase --no-cache --pull
+$ WBS_BUILD_TOOLS_NO_CACHE=true ./wbs-dev build wikibase --no-cache --pull
 ```
 
 To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory.
@@ -111,34 +111,34 @@ suite. The suites extend the product configuration from the repository root.
 
 _Note: Builds are currently not performed automatically by tests. Make sure you have built against current changes before running tests. See [Build](#build) above._
 
-You can run the tests in the Docker container locally exactly as they are run in CI by using `./nx test`.
+You can run the tests in the Docker container locally through the same entry point used by CI with `./wbs-dev test`.
 
-## Example usage of `./nx test`
+## Example usage of `./wbs-dev test`
 
 ```bash
-# See all `./nx test` CLI options
-./nx test -- --help
+# See all browser test CLI options
+./wbs-dev test --help
 
 # Run all test suites
-./nx test -- all
+./wbs-dev test
 
 # Only run a single suite (e.g., repo)
-./nx test -- repo
+./wbs-dev test repo
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./nx test -- repo --spec specs/repo/extensions/babel.ts
+./wbs-dev test repo --spec specs/repo/extensions/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:
 
 ```bash
 # '--setup`: starts the test environment for the suite and leaves it running, but does not run any specs
-./nx test -- repo --setup
+./wbs-dev test repo --setup
 
 # Sets test timeouts to 1 day so they don't time out while debugging with `await browser.debug()` calls
 # However, this can have undesirable effects during normal test runs, so only use for actual debugging
 # purposes.
-./nx test -- repo --debug
+./wbs-dev test repo --debug
 ```
 
 WDIO test runner CLI options are also supported. See https://webdriver.io/docs/testrunner .
@@ -163,7 +163,7 @@ For more information on testing, see the [README](./test/README.md).
 
 ### Overview
 
-Releasing WBS has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then derive WBS version bumps and changelog drafts from commit history, refine that output into final release notes, and open a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create/push tags and trigger DockerHub image publishing.
+Releasing WBS has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then choose versions and curate changelogs for every changed releasable project before opening a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create/push tags and trigger DockerHub image publishing.
 
 ### Release Flow
 
@@ -176,34 +176,22 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
      git checkout -b <release-branch-name>
      ```
    - update `MEDIAWIKI_VERSION` in `images/wikibase/build.env` to the target MediaWiki version
-   - run `./nx update-commits` to refresh upstream commit pins for Wikibase, WDQS frontend, and QuickStatements for the selected MediaWiki line:
+   - run `./wbs-dev update-commits` to refresh upstream commit pins for Wikibase, WDQS frontend, and QuickStatements for the selected MediaWiki line:
      ```bash
-     ./nx update-commits
+     ./wbs-dev update-commits
      ```
    - verify the OpenSearch version supported by that MediaWiki/CirrusSearch line and update `OPENSEARCH_VERSION` and its Wikimedia plugin versions in `images/opensearch/build.env` when required
    - separately check the latest published WDQS service artifact and update `WDQS_VERSION` in `images/wdqs/build.env` when a newer usable version is available
    - build and test locally:
      ```bash
-     ./nx build
-     ./nx test
+     ./wbs-dev build
+     ./wbs-dev test
      ```
    - fix any breakages caused by the MediaWiki bump or dependency updates, then repeat build/test until green
 
-2. Derive target image versions locally, and update the root `package.json` version when the Wikibase Suite product version changes:
+2. Set the target version in `images/<project>/package.json` for every image being released. Update the root `../package.json` version when the Wikibase Suite product version changes. Versions are deliberately curated in the release preparation commit; release tooling does not currently infer or rewrite them.
 
-   ```bash
-   ./nx release version
-   ```
-
-   The root Wikibase Suite project is intentionally outside the development Nx workspace. Its version and root `CHANGELOG.md` are maintained directly in the release preparation commit.
-
-3. Derive and refine changelog entries for each changed project:
-
-   ```bash
-   ./nx release changelog <version-from-package-json> -p <project-name> --git-commit=false --git-tag=false
-   ```
-
-   Generated changelog entries are a starting draft. Review and refine them so they accurately reflect the changes since the last release, and are useful for consolidation into release announcements.
+3. Add a release entry to each changed project's `CHANGELOG.md`, including the root `../CHANGELOG.md` when the WBS product changes. Summarize user-visible behavior, important upstream changes, compatibility considerations, and breaking changes rather than copying commit subjects mechanically.
 
 4. Update `DEPLOY_VERSION` in `../docker-compose.yml` to exactly match the version specified in `../package.json`. _As a safeguard CI fails on the version reporting test if there is any divergence._
 
@@ -221,7 +209,7 @@ Releasing WBS has three stages: prepare, review, and publish. In preparation, we
      - derives tags from committed `package.json` values (`<name>@<version>`)
      - creates only tags that do not already exist on `origin`
      - pushes tags one by one so each tag emits its own push event
-   - does not run `nx release`, infer/rewrite versions, or generate changelogs
+   - does not infer/rewrite versions or generate changelogs
 
 When a WBS release changes the exact `wikibase/wbs-tools` image selected in `tools/scripts/_versions.sh`, publish that tools image before creating the corresponding `wbs@…` tag. Otherwise, new installations will reference an image tag that is not yet available.
 

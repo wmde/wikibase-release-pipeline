@@ -53,7 +53,7 @@ jobs:
           set -euo pipefail
 
           # This workflow is intentionally tag-only.
-          # It does not run `nx release` and does not generate changelog files.
+          # It does not infer or rewrite versions and does not generate changelog files.
           # It expects version numbers/changelogs to already be committed.
           all_projects=(wbs opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
           if [ "$PROJECT_NAME" = "All projects with unreleased changes" ]; then

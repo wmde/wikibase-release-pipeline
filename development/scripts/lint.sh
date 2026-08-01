@@ -2,11 +2,13 @@
 
 # Always run in the build-tools container to have the extra dependencies available (currently Python and Hadolint)
 # If not running in Docker, start the build-tools container and run the script again there
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit
+
 if [[ ! -f /.dockerenv  ]]; then
   # Make sure the docker network exists
   docker network create wbs-dev > /dev/null 2>&1 || true
 
-  exec docker compose --progress quiet run --build --rm runner -c './lint.sh "$@"' -- "$@"
+  exec docker compose --progress quiet run --build --rm runner -c 'scripts/lint.sh "$@"' -- "$@"
 fi
 
 [ -f "local.env" ] || touch local.env
@@ -95,9 +97,6 @@ find "$path" \
   \) \
   -prune -o \
   -type f -name "*.sh" -print0 | xargs -0 shellcheck -x
-
-# Always check nx script...
-shellcheck -x ./nx
 
 echo "ℹ️ Running hadolint on all Dockerfiles"
 find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name Dockerfile -print0 | xargs -0 -r \

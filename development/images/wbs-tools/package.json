@@ -1,15 +1,4 @@
 {
 	"name": "wbs-tools",
-	"version": "1.0.0",
-	"nx": {
-		"targets": {
-			"build": {},
-			"test": {
-				"options": {
-					"command": "images/wbs-tools/test/install-bootstrap.sh"
-				}
-			},
-			"nx-release-publish": {}
-		}
-	}
+	"version": "1.0.0"
 }

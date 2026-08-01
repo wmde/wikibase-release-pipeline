@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 BUILD_TOOLS_IMAGE=${WBS_BUILD_TOOLS_IMAGE:-wbs-build-tools:latest}
 BUILD_ARGS=(

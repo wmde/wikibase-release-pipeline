@@ -97,6 +97,15 @@ fi
 
 IMAGE_NAME=$(jq -r '.name' package.json)
 
+if [ "$PUBLISH" = true ] && [[ "${GITHUB_REF:-}" == refs/tags/* ]]; then
+	RELEASE_TAG=${GITHUB_REF#refs/tags/}
+	EXPECTED_RELEASE_TAG="${IMAGE_NAME}@${IMAGE_VERSION}"
+	if [ "$RELEASE_TAG" != "$EXPECTED_RELEASE_TAG" ]; then
+		echo "Release tag $RELEASE_TAG does not match package version $EXPECTED_RELEASE_TAG."
+		exit 1
+	fi
+fi
+
 # publish to Dockerhub
 if [ "$PUBLISH" = true ]; then
 	IMAGE_REGISTRY=""

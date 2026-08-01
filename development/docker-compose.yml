@@ -19,6 +19,9 @@ services:
       - 4211:4211
     volumes:
       - ..:/workspace:z
+      # Installer tests launch nested containers whose bind mounts must use
+      # paths understood by the host Docker daemon.
+      - ${PWD}/..:${PWD}/..:z
       - /var/run/docker.sock:/var/run/docker.sock
     privileged: true
     env_file:

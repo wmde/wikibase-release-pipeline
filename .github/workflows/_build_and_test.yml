@@ -36,7 +36,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - run: ./nx lint
+      - run: ./wbs-dev lint
         working-directory: development
 
   build:
@@ -59,55 +59,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for WBS tools changes
-        if: matrix.imageName == 'wbs-tools'
-        id: wbs_tools_changes
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          set -euo pipefail
-
-          should_run=false
-          if [[ "$GITHUB_REF" == refs/tags/wbs-tools@* ]] ||
-             [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]] ||
-             [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
-            should_run=true
-          elif [[ -z "$BASE_SHA" ]] || [[ "$BASE_SHA" =~ ^0+$ ]]; then
-            should_run=true
-          else
-            git fetch --no-tags --depth=1 origin "$BASE_SHA"
-            if ! git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- \
-              install \
-              tools \
-              development/images/wbs-tools \
-              development/tooling/build-images.sh \
-              .github/workflows/_build_and_test.yml \
-              .github/workflows/build_and_publish_image_release.yml \
-              .github/workflows/create_release.yml; then
-              should_run=true
-            fi
-          fi
-
-          echo "should_run=$should_run" >> "$GITHUB_OUTPUT"
-  
       - uses: ./.github/actions/setup-environment
-        if: matrix.imageName != 'wbs-tools' || steps.wbs_tools_changes.outputs.should_run == 'true'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: Build and push ${{ matrix.imageName }}
-        if: matrix.imageName != 'wbs-tools' || steps.wbs_tools_changes.outputs.should_run == 'true'
-        run: ./nx build ${{ matrix.imageName }} --push
-        working-directory: development
-
-      - name: Test WBS installer bootstrap
-        if: matrix.imageName == 'wbs-tools' && steps.wbs_tools_changes.outputs.should_run == 'true'
-        run: ./nx test wbs-tools
+        run: ./wbs-dev build ${{ matrix.imageName }} --push
         working-directory: development
 
       - name: Smoke test WBS tools image
-        if: matrix.imageName == 'wbs-tools' && steps.wbs_tools_changes.outputs.should_run == 'true'
+        if: matrix.imageName == 'wbs-tools'
         env:
           WBS_TOOLS_IMAGE: ghcr.io/${{ github.repository_owner }}/wikibase/wbs-tools:dev-${{ github.run_id }}
         run: |
@@ -159,17 +121,18 @@ jobs:
           - quickstatements
           - pingback
           - opensearch
+          - wbs-tools
 
     steps:
       - uses: actions/checkout@v4
-  
+
       - uses: ./.github/actions/setup-environment
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
       - name: "Run ${{ matrix.suite }} test suite"
-        run: ./nx test -- ${{ matrix.suite }}
+        run: ./wbs-dev test ${{ matrix.suite }}
         working-directory: development
 
       - name: Show logs

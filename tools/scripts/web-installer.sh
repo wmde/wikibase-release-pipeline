@@ -22,8 +22,8 @@ source "$SCRIPTS_DIR/_versions.sh"
 # -- Script Specific Variables --
 
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
-INSTALLER_CONTAINER_NAME=wikibase-suite-installer-webserver
-INSTALLER_PORT=8888
+INSTALLER_CONTAINER_NAME=${WBS_INSTALLER_CONTAINER_NAME:-wikibase-suite-installer-webserver}
+INSTALLER_PORT=${WBS_INSTALLER_PORT:-8888}
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
 WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
@@ -135,8 +135,11 @@ start_installer_webserver() {
     fi
 
     run "docker build $LOAD_FLAG -t $WBS_TOOLS_IMAGE $WBS_TOOLS_PROJECT_DIR"
-  else
+  elif [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
     run "docker pull $WBS_TOOLS_IMAGE"
+  elif ! docker image inspect "$WBS_TOOLS_IMAGE" >/dev/null 2>&1; then
+    status "⛔️ Required local image $WBS_TOOLS_IMAGE was not found"
+    return 1
   fi
 
   # Run with volumes mapped as before

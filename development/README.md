@@ -6,8 +6,8 @@ This directory contains the image sources and the build, integration-test, and r
 
 - [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
 - [`test/`](./test): integration test runner, suites, and specifications
-- [`tooling/`](./tooling): shared image build and source-update utilities
-- [`runner/`](./runner): the Dockerized Nx development environment
+- [`scripts/`](./scripts): the `wbs-dev` CLI and its shared build, test, lint, and source-update commands
+- [`runner/`](./runner): the Dockerized development tooling environment
 - [`docs/`](./docs): engineering notes and architecture decisions
 
 The user-facing product configuration and documentation live at the [repository root](../README.md). Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).
@@ -27,18 +27,18 @@ Use the documentation according to the task:
 | Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
 
 The main development flow is: change the root Compose product or an image under
-`images/`, build it through `./nx`, exercise it through the integration suites,
+`images/`, build it through `./wbs-dev`, exercise it through the integration suites,
 and publish approved versions through the repository workflows.
 
 ## Build and test
 
-Run development commands from this directory. The `nx` wrapper runs them in the standard Docker development environment by default.
+Run development commands from this directory. The `wbs-dev` command runs them in the standard Docker development environment by default.
 
 ```sh
 cd development
-./nx build
-./nx test
-./nx lint
+./wbs-dev build
+./wbs-dev test
+./wbs-dev lint
 ```
 
 For contributor setup, command details, and the release process, see [CONTRIBUTING.md](./CONTRIBUTING.md).

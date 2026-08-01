@@ -1,20 +1,8 @@
 # Conventional Commits
 
-[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) are used here to help generate local draft release suggestions with Nx.
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) keep commit history readable and make the release impact of a change explicit.
 
-In this repository they are used for:
-
-- local preview of possible version bumps
-- local preview of draft changelog entries
-
-They are not the final release source of truth by themselves:
-
-- the CI `Create Release` workflow is tag-only
-- CI does not run `nx release`
-- CI does not generate changelogs
-- final changelog text is curated and committed in the release PR
-
-Typical local preparation uses `nx release version` plus per-project `nx release changelog <version>`. A full `nx release --dry-run` is also useful as a preview path.
+Version numbers and changelogs are currently curated in the release preparation PR. The CI `Create Release` workflow is tag-only: it reads committed package versions, audits or creates the corresponding tags, and does not infer versions or generate changelogs.
 
 ## How to Use in PRs
 
@@ -25,20 +13,18 @@ To preserve conventional-commit metadata on `main`, use one of these:
 
 ## Supported Types
 
-Configured in [`nx.json`](https://github.com/wmde/wikibase-suite/blob/main/development/nx.json):
-
-| Type     | SemVer bump | Changelog title  |
-| -------- | ----------- | ---------------- |
-| build    | patch       | 📦 Build         |
-| chore    | patch       | 🏡 Chore         |
-| ci       | none        | Not included      |
-| docs     | patch       | 📖 Documentation |
-| feat     | minor       | 🚀 Features      |
-| fix      | patch       | 🩹 Fixes         |
-| perf     | patch       | 🔥 Performance   |
-| refactor | patch       | 💅 Refactors     |
-| style    | patch       | 🎨 Styles        |
-| test     | patch       | ✅ Tests         |
+| Type     | Intended change |
+| -------- | --------------- |
+| build    | Build system or dependency changes |
+| chore    | Maintenance that does not fit another type |
+| ci       | Continuous integration changes |
+| docs     | Documentation changes |
+| feat     | New user-visible functionality |
+| fix      | User-visible bug fixes |
+| perf     | Performance improvements |
+| refactor | Internal changes without intended behavior changes |
+| style    | Formatting or presentation-only changes |
+| test     | Test-only changes |
 
 Any type can be a breaking change with `!`, which implies a major bump.
 

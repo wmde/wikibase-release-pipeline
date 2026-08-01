@@ -4,20 +4,28 @@
 	"license": "BSD-3-Clause",
 	"type": "module",
 	"private": true,
+	"scripts": {
+		"typecheck:scripts": "tsc -p scripts/tsconfig.json"
+	},
 	"devDependencies": {
-		"@nx/js": "22.5.0",
-		"@nx/workspace": "22.5.0",
-		"@swc-node/register": "1.11.1",
-		"@swc/core": "1.15.8",
-		"@swc/helpers": "0.5.18",
+		"@types/mocha": "^10.0.7",
 		"@types/cheerio": "^0.22.35",
 		"@types/node": "^20.11.28",
+		"@wdio/cli": "^9.30.0",
+		"@wdio/globals": "^9.29.1",
+		"@wdio/local-runner": "^9.30.0",
+		"@wdio/logger": "^9.29.1",
+		"@wdio/mocha-framework": "^9.30.0",
+		"@wdio/reporter": "^9.29.1",
+		"@wdio/spec-reporter": "^9.29.1",
+		"@wdio/types": "^9.29.1",
 		"@wmde/eslint-config-wikimedia-typescript": "0.2.9",
 		"any-eslint-parser": "^1.0.1",
 		"async-wait-until": "^2.0.12",
 		"axios": "^1.7.3",
 		"chalk": "^5.3.0",
 		"cheerio": "^1.0.0-rc.12",
+		"commander": "14.0.3",
 		"dotenv": "^16.4.5",
 		"dotenv-expand": "^11.0.6",
 		"eslint": "^8.57.0",
@@ -25,43 +33,34 @@
 		"eslint-plugin-compat": "^4.2.0",
 		"eslint-plugin-unicorn": "^51.0.1",
 		"lodash": "^4.17.21",
-		"nx": "22.5.0",
+		"mocha": "^10.7.0",
 		"prettier": "^3.3.3",
 		"prettier-plugin-organize-imports": "^4.0.0",
 		"semver-parser": "^4.1.6",
 		"shellcheck": "^3.0.0",
 		"stylelint-config-wikimedia": "0.17.2",
-		"ts-node": "^10.9.2",
 		"tslib": "^2.6.3",
+		"tsx": "4.23.1",
 		"typescript": "~5.4.5",
-		"yaml-eslint-parser": "^1.2.3",
-		"yargs": "^17.7.2"
-	},
-	"nx": {
-		"targets": {
-			"lint": {
-				"executor": "nx:run-commands",
-				"options": {
-					"command": "./lint.sh .."
-				}
-			},
-			"test": {},
-			"build": {
-				"executor": "nx:run-commands",
-				"options": {
-					"command": "./nx run-many -t build -p \"images/**\""
-				}
-			},
-			"update-commits": {
-				"executor": "nx:run-commands",
-				"options": {
-					"command": "./nx run-many -t update-commits -p \"images/**\" --parallel=1"
-				}
-			}
-		}
+		"wdio-mediawiki": "6.5.2",
+		"wdio-wikibase": "7.1.0",
+		"webdriverio": "^9.30.0",
+		"yaml-eslint-parser": "^1.2.3"
 	},
 	"engines": {
 		"node": "20"
+	},
+	"pnpm": {
+		"supportedArchitectures": {
+			"os": [
+				"darwin",
+				"linux"
+			],
+			"cpu": [
+				"x64",
+				"arm64"
+			]
+		}
 	},
 	"packageManager": "pnpm@9.6.0"
 }

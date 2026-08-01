@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# Create a local.env if it doesn't already exist
+# Local development overrides are optional, but Docker Compose requires the
+# configured env file to exist.
 [ -f "local.env" ] || touch local.env
+# shellcheck disable=SC1091
 source local.env
 
 # Reuse an existing GitHub CLI login for update-commits API requests.
@@ -18,20 +20,19 @@ if [[ " $* " == *" update-commits "* ]] &&
   fi
 fi
 
-# Execute nx directly when already running in the build-tools container.
+run_cli() {
+  exec pnpm exec tsx scripts/wbs-dev/cli.ts "$@"
+}
+
+# Commands already running in the build-tools container can execute directly.
 if [[ -f /.dockerenv ]]; then
-  exec pnpm exec nx "$@"
+  run_cli "$@"
 fi
 
-# Otherwise, build or load the exact build-tools image and run nx in it.
-
-# Create the expected Docker network if it doesn't exist
+# Host and CI execution use the same pinned build-tools image.
 docker network create wbs-dev > /dev/null 2>&1 || true
+./scripts/build-tools.sh
 
-./build-tools.sh
-
-if [[ "${1:-}" == "release" ]]; then
-  exec docker compose --progress quiet run --rm -e NX_PREFER_TS_NODE=true runner -c 'pnpm exec nx "$@"' -- "$@"
-fi
-
-exec docker compose --progress quiet run --rm runner -c 'pnpm exec nx "$@"' -- "$@"
+exec docker compose --progress quiet run --rm runner \
+  -c 'pnpm exec tsx scripts/wbs-dev/cli.ts "$@"' \
+  -- "$@"

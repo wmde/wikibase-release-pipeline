@@ -57,7 +57,7 @@ jobs:
           set -e # abort on error
           set -x # show commands
 
-          ./nx release publish -p $IMAGE_NAME
+          ./wbs-dev publish "$IMAGE_NAME"
         working-directory: development
 
       - name: Publish image documentation to Docker Hub

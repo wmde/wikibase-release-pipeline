@@ -21,7 +21,7 @@ future ARM64 build, but multi-platform publishing is not enabled yet.
   single target platform:
 
   ```bash
-  ./nx build wdqs --platform=linux/arm64
+  ./wbs-dev build wdqs --platform=linux/arm64
   ```
 
 ## What remains
@@ -42,5 +42,5 @@ Before publishing a combined AMD64/ARM64 image:
    the right confidence and runtime.
 
 The final multi-platform workflow should continue to use the repository's
-`./nx build` entry point. GitHub-specific steps should only provide the builder,
+`./wbs-dev build` entry point. GitHub-specific steps should only provide the builder,
 emulation, credentials, and requested platforms.
