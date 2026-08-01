@@ -1,4 +1,4 @@
-# Browser test suites
+# Integration test suites
 
 Run tests through the repository's build-tools container. See [CONTRIBUTING.md](../CONTRIBUTING.md#test) for the command reference.
 

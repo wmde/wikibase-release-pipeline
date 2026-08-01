@@ -214,7 +214,7 @@ function commandTasks(
 						label:
 							args.length > 0 ?
 								`test ${ args.join( ' ' ) }` :
-								'test all browser suites',
+								'test all suites',
 						command: 'scripts/test/run.sh',
 						args
 					}
@@ -337,7 +337,7 @@ async function main(): Promise<void> {
 	program
 		.name( 'wbs-dev' )
 		.description(
-			'Build, test, lint, update, and publish Wikibase Suite images.'
+			'Build, test, lint, update, and publish Wikibase Suite projects.'
 		)
 		.showHelpAfterError()
 		.showSuggestionAfterError()
@@ -361,8 +361,8 @@ async function main(): Promise<void> {
 	addProxyCommand(
 		program,
 		'test',
-		'Run browser suites or the wbs-tools bootstrap test.',
-		'[SUITE|wbs-tools...] [browser test options...]',
+		'Run all or selected integration test suites.',
+		'[SUITE...] [test options...]',
 		{ forwardHelp: true }
 	);
 	addProxyCommand(
@@ -389,7 +389,7 @@ async function main(): Promise<void> {
 		[
 			'',
 			'Selection defaults:',
-			'  build selects all images, test selects all browser suites, lint selects the',
+			'  build selects all images, test selects all integration suites, lint selects the',
 			'  repository root, and update-commits selects every supported image when no',
 			'  target is given. "all" is an explicit equivalent where supported. publish',
 			'  always requires explicit image names.',

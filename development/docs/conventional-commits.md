@@ -4,6 +4,9 @@
 
 Version numbers and changelogs are currently curated in the release preparation PR. The CI `Create Release` workflow is tag-only: it reads committed package versions, audits or creates the corresponding tags, and does not infer versions or generate changelogs.
 
+See the [release process](./releasing.md) for the complete preparation,
+publication-ordering, and verification workflow.
+
 ## How to Use in PRs
 
 To preserve conventional-commit metadata on `main`, use one of these:

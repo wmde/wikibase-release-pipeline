@@ -8,6 +8,12 @@ This repository contains the Wikibase Suite toolset used for [building](./images
 
 ## Quick reference
 
+The examples below assume the current directory is `development/`. From the
+repository root, replace `./wbs-dev` with `development/wbs-dev`. The wrapper is
+location-independent, targets do not require a `--` separator, and additional
+tool options follow the selected targets. See the complete
+[`wbs-dev` command guide](./docs/wbs-dev.md).
+
 ### Build
 
 ```bash
@@ -51,6 +57,18 @@ $ ./wbs-dev test queryservice
 
 # Start and leave up the test environment for a given test suite without running tests
 $ ./wbs-dev test repo --setup
+```
+
+### Lint and publish
+
+```bash
+# Lint the repository root, development tooling, or a selected image
+$ ./wbs-dev lint
+$ ./wbs-dev lint development
+$ ./wbs-dev lint wikibase
+
+# Preview official image publication without pushing
+$ ./wbs-dev publish wikibase --dry-run
 ```
 
 ### Deployment configuration
@@ -159,59 +177,13 @@ MW_SCRIPT_PATH=/w
 
 For more information on testing, see the [README](./test/README.md).
 
-## Release and Publish Process
+## Release and publish process
 
-### Overview
+Versions and changelogs are curated in the release pull request. After it is
+reviewed, passes CI, and merges to `main`, the Create Release workflow audits or
+creates tags from those committed versions. Image tags trigger tested Docker Hub
+publication; the WBS product tag makes the release discoverable to the installer.
 
-Releasing WBS has three stages: prepare, review, and publish. In preparation, we branch from freshly updated `main`, move to the target MediaWiki version, refresh related upstream component versions, and run a local build/test loop until the update set is stable. We then choose versions and curate changelogs for every changed releasable project before opening a release PR for team review. After approval and merge, publishing is coordinated with the Developer Advocate so announcement timing and release timing line up, then `Create Release` is run on `main` to create/push tags and trigger DockerHub image publishing.
-
-### Release Flow
-
-1. Prepare the release implementation changes (substantive release work):
-
-   - create a release branch from a freshly updated `main`
-     ```bash
-     git checkout main
-     git pull
-     git checkout -b <release-branch-name>
-     ```
-   - update `MEDIAWIKI_VERSION` in `images/wikibase/build.env` to the target MediaWiki version
-   - run `./wbs-dev update-commits` to refresh upstream commit pins for Wikibase, WDQS frontend, and QuickStatements for the selected MediaWiki line:
-     ```bash
-     ./wbs-dev update-commits
-     ```
-   - verify the OpenSearch version supported by that MediaWiki/CirrusSearch line and update `OPENSEARCH_VERSION` and its Wikimedia plugin versions in `images/opensearch/build.env` when required
-   - separately check the latest published WDQS service artifact and update `WDQS_VERSION` in `images/wdqs/build.env` when a newer usable version is available
-   - build and test locally:
-     ```bash
-     ./wbs-dev build
-     ./wbs-dev test
-     ```
-   - fix any breakages caused by the MediaWiki bump or dependency updates, then repeat build/test until green
-
-2. Set the target version in `images/<project>/package.json` for every image being released. Update the root `../package.json` version when the Wikibase Suite product version changes. Versions are deliberately curated in the release preparation commit; release tooling does not currently infer or rewrite them.
-
-3. Add a release entry to each changed project's `CHANGELOG.md`, including the root `../CHANGELOG.md` when the WBS product changes. Summarize user-visible behavior, important upstream changes, compatibility considerations, and breaking changes rather than copying commit subjects mechanically.
-
-4. Update `DEPLOY_VERSION` in `../docker-compose.yml` to exactly match the version specified in `../package.json`. _As a safeguard CI fails on the version reporting test if there is any divergence._
-
-5. Once the version/changelog changes are finalized, push the release branch to GitHub and open a new PR with target branch of `main`. Once the CI tests pass on that PR, tag the "wikibase-suite" team as reviewers.
-
-6. Once PR is reviewed and approved, merge to `main`.
-
-7. All releases should be announced to the community before finalized, coordinate timing with the Developer Advocate BEFORE completing Step 8 below so the announcement follows the publish closely.
-
-8. Run `Create Release` on `main`:
-   - run [Create a WBS Release Action](https://github.com/wmde/wikibase-suite/actions/workflows/create_release.yml) after the release PR has been finalized, reviewed, approved, and merged
-   - `dry_run=true` to audit tags only.
-   - `dry_run=false` to create and push missing tags.
-   - workflow behavior:
-     - derives tags from committed `package.json` values (`<name>@<version>`)
-     - creates only tags that do not already exist on `origin`
-     - pushes tags one by one so each tag emits its own push event
-   - does not infer/rewrite versions or generate changelogs
-
-When a WBS release changes the exact `wikibase/wbs-tools` image selected in `tools/scripts/_versions.sh`, publish that tools image before creating the corresponding `wbs@…` tag. Otherwise, new installations will reference an image tag that is not yet available.
-
-- Image tags such as `wikibase@1.2.3` trigger Docker Hub publishing workflows.
-- `wbs@X.Y.Z` tags make that WBS release discoverable by the installer; they do not publish images.
+For the complete preparation checklist, project/version mapping, image-before-WBS
+publication order, dry-run behavior, and recovery guidance, follow the canonical
+[release process](./docs/releasing.md).

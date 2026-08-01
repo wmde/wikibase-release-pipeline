@@ -22,8 +22,10 @@ Use the documentation according to the task:
 | --- | --- |
 | Install or operate a published WBS release | [WBS documentation](../README.md) |
 | Change product configuration or image sources | [Contributor guide](./CONTRIBUTING.md) |
-| Add or debug an integration test | [Browser test suites](./test/README.md) |
+| Run build, test, lint, update, or publish commands | [`wbs-dev` command guide](./docs/wbs-dev.md) |
+| Add or debug an integration test | [Integration test suites](./test/README.md) |
 | Change the installer or operations tools | [Tools development guide](../tools/docs/README.md) |
+| Prepare and publish a release | [Release process](./docs/releasing.md) |
 | Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
 
 The main development flow is: change the root Compose product or an image under
@@ -32,13 +34,16 @@ and publish approved versions through the repository workflows.
 
 ## Build and test
 
-Run development commands from this directory. The `wbs-dev` command runs them in the standard Docker development environment by default.
+The `wbs-dev` wrapper resolves its own location, so it can be invoked from any
+working directory. From the repository root:
 
 ```sh
-cd development
-./wbs-dev build
-./wbs-dev test
-./wbs-dev lint
+development/wbs-dev build
+development/wbs-dev test
+development/wbs-dev lint
 ```
 
-For contributor setup, command details, and the release process, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+When already in `development/`, use the equivalent `./wbs-dev ...` form. For
+target selection, forwarded options, and all commands, see the
+[`wbs-dev` command guide](./docs/wbs-dev.md). For contributor setup, see
+[CONTRIBUTING.md](./CONTRIBUTING.md).
