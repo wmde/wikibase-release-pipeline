@@ -6,7 +6,7 @@ future ARM64 build, but multi-platform publishing is not enabled yet.
 
 ## What is ready
 
-- Application and build-tools registry caches are scoped by the requested
+- Application and `wbs-dev` registry caches are scoped by the requested
   platform, such as `linux-amd64`, `linux-arm64`, or
   `linux-amd64_linux-arm64`.
 - The shared environment setup action can register QEMU for requested non-native

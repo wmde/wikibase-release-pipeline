@@ -24,15 +24,15 @@ run_cli() {
   exec pnpm exec tsx scripts/wbs-dev/cli.ts "$@"
 }
 
-# Commands already running in the build-tools container can execute directly.
+# Commands already running in the wbs-dev container can execute directly.
 if [[ -f /.dockerenv ]]; then
   run_cli "$@"
 fi
 
-# Host and CI execution use the same pinned build-tools image.
+# Host and CI execution use the same wbs-dev image.
 docker network create wbs-dev > /dev/null 2>&1 || true
-./scripts/build-tools.sh
+./scripts/build-wbs-dev.sh
 
-exec docker compose --progress quiet run --rm runner \
+exec docker compose --progress quiet run --rm wbs-dev \
   -c 'pnpm exec tsx scripts/wbs-dev/cli.ts "$@"' \
   -- "$@"

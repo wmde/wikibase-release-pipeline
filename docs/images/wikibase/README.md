@@ -112,7 +112,7 @@ Let's build the Linked Open Data Web together!
 
 ## Version reporting
 
-The bundled Wikibase Suite extension adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
+The bundled Wikibase Suite extension adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the deploy version.
 
 The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 

@@ -7,7 +7,7 @@ This directory contains the image sources and the build, integration-test, and r
 - [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
 - [`test/`](./test): integration test runner, suites, and specifications
 - [`scripts/`](./scripts): the `wbs-dev` CLI and its shared build, test, lint, and source-update commands
-- [`runner/`](./runner): the Dockerized development tooling environment
+- [`container/`](./container): the Dockerized `wbs-dev` environment
 - [`docs/`](./docs): engineering notes and architecture decisions
 
 The user-facing product configuration and documentation live at the [repository root](../README.md). Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).

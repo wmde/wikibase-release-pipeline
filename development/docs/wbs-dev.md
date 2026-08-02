@@ -16,7 +16,7 @@ From `development/`, the equivalent command is:
 ./wbs-dev <command>
 ```
 
-Git and Docker with the Compose and Buildx plugins are required. Node.js, pnpm, Python, and the linters do not need to be installed on the host: `wbs-dev` runs them in the `wbs-build-tools` container.
+Git and Docker with the Compose and Buildx plugins are required. Node.js, pnpm, Python, and the linters do not need to be installed on the host: `wbs-dev` runs them in the `wbs-dev` container.
 
 Run `development/wbs-dev --help` or `development/wbs-dev <command> --help` for the current command-line reference.
 
@@ -150,12 +150,12 @@ Official publication normally happens in GitHub Actions after an image release t
 
 ## Development environment details
 
-The first command may take longer while the build-tools image and workspace dependencies are prepared. Later commands use Docker's local BuildKit cache. Optional local environment overrides belong in `development/local.env`, which the wrapper creates when missing.
+The first command may take longer while the `wbs-dev` image and workspace dependencies are prepared. Later commands use Docker's local BuildKit cache. Optional local environment overrides belong in `development/local.env`, which the wrapper creates when missing.
 
 To rebuild the tooling container without cache and refresh its base image:
 
 ```bash
-WBS_BUILD_TOOLS_NO_CACHE=true development/wbs-dev lint
+WBS_DEV_NO_CACHE=true development/wbs-dev lint
 ```
 
 The implementation beneath `development/scripts/` is internal. Changes to local and CI behavior should continue to flow through `wbs-dev` so both environments exercise the same code path.

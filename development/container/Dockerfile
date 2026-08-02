@@ -1,5 +1,5 @@
 # Base image: Node.js LTS (20) on Debian Bookworm (12)
-FROM node:20-bookworm-slim AS wbs-build-tools
+FROM node:20-bookworm-slim AS wbs-dev
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -54,4 +54,4 @@ ENV PATH="/root/.local/share/pnpm:${PATH}"
 # Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/development/node_modules/.bin:/root/venv/bin:$PATH"
 
-ENTRYPOINT [ "./scripts/runner-entrypoint.sh" ]
+ENTRYPOINT [ "./scripts/wbs-dev-entrypoint.sh" ]

@@ -97,29 +97,29 @@ Development requires Git and a current Docker installation with the Compose and
 Buildx plugins. Host installations of Node.js, pnpm, Python, and the linters
 are not required.
 
-Every `./wbs-dev` command builds or loads the `wbs-build-tools` image and runs
+Every `./wbs-dev` command builds or loads the `wbs-dev` image and runs
 the repository's TypeScript command coordinator in that container. The repository
 is mounted into the container, while image builds and test services use the host
 Docker daemon. CI uses the same entry point and underlying scripts.
 
-The first command may take longer while the build-tools image and workspace
+The first command may take longer while the `wbs-dev` image and workspace
 dependencies are prepared. Subsequent commands use Docker's local BuildKit cache.
 CI additionally imports and exports platform-scoped cache records in GHCR.
 
 Optional local overrides belong in `local.env`, which `./wbs-dev` creates when it is
 missing.
 
-To rebuild the build-tools image without reading cached layers and refresh its
+To rebuild the `wbs-dev` image without reading cached layers and refresh its
 base image:
 
 ```bash
-$ WBS_BUILD_TOOLS_NO_CACHE=true ./wbs-dev lint
+$ WBS_DEV_NO_CACHE=true ./wbs-dev lint
 ```
 
-To rebuild both the build-tools image and a product image from fresh base images:
+To rebuild both the `wbs-dev` image and a product image from fresh base images:
 
 ```bash
-$ WBS_BUILD_TOOLS_NO_CACHE=true ./wbs-dev build wikibase --no-cache --pull
+$ WBS_DEV_NO_CACHE=true ./wbs-dev build wikibase --no-cache --pull
 ```
 
 To take advantage of the git hooks we've included, you'll need to configure git to use the `.githooks/` directory.

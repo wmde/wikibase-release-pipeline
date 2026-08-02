@@ -1,5 +1,5 @@
 {
-	"name": "wikibase-suite-development",
+	"name": "wbs-dev",
 	"version": "3.0.0",
 	"license": "BSD-3-Clause",
 	"type": "module",

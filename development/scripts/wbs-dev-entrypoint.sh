@@ -15,7 +15,7 @@ fi
 # Keep the mounted workspace dependencies synchronized with the exact lockfile.
 if [ -f "pnpm-lock.yaml" ]; then
   lockfile_hash=$(sha256sum pnpm-lock.yaml | cut -d ' ' -f 1)
-  lockfile_marker="node_modules/.wbs-build-tools-lockfile"
+  lockfile_marker="node_modules/.wbs-dev-lockfile"
   installed_hash=$(cat "$lockfile_marker" 2>/dev/null || true)
 
   if [[ "$installed_hash" != "$lockfile_hash" ]]; then
@@ -28,5 +28,5 @@ elif ! [ -f "pnpm-lock.yaml" ]; then
   pnpm install
 fi
 
-# Execute the command passed to the container
+# Execute the command passed to the wbs-dev container
 exec bash "$@"

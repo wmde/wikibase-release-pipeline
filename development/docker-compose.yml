@@ -6,12 +6,12 @@ networks:
     external: true
 
 services:
-  runner:
-    image: ${WBS_BUILD_TOOLS_IMAGE:-wbs-build-tools:latest}
+  wbs-dev:
+    image: ${WBS_DEV_IMAGE:-wbs-dev:latest}
     scale: 0
     build:
       context: .
-      dockerfile: runner/Dockerfile
+      dockerfile: container/Dockerfile
     working_dir: /workspace/development
     stop_grace_period: 1s
     ports:
