@@ -68,38 +68,6 @@ jobs:
         run: ./wbs-dev build ${{ matrix.imageName }} --push
         working-directory: development
 
-      - name: Smoke test WBS tools image
-        if: matrix.imageName == 'wbs-tools'
-        env:
-          WBS_TOOLS_IMAGE: ghcr.io/${{ github.repository_owner }}/wikibase/wbs-tools:dev-${{ github.run_id }}
-        run: |
-          set -euo pipefail
-
-          smoke_dir="$(mktemp -d)"
-          trap 'docker logs wbs-tools-smoke 2>/dev/null || true; docker rm -f wbs-tools-smoke 2>/dev/null || true; rm -r "$smoke_dir"' EXIT
-
-          mkdir -p "$smoke_dir/certs" "$smoke_dir/wbs"
-          touch "$smoke_dir/installation.log"
-          openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
-            -out "$smoke_dir/certs/cert.pem" \
-            -keyout "$smoke_dir/certs/key.pem" \
-            -subj /CN=localhost >/dev/null 2>&1
-
-          docker run --rm --entrypoint sh "$WBS_TOOLS_IMAGE" \
-            -c 'test -f dist/cli.js && test -f dist/server.js'
-
-          docker run -d \
-            --name wbs-tools-smoke \
-            -p 127.0.0.1:18888:443 \
-            -e LOCALHOST=true \
-            -v "$smoke_dir/wbs:/app/wbs" \
-            -v "$smoke_dir/certs:/app/certs" \
-            -v "$smoke_dir/installation.log:/app/installation.log" \
-            "$WBS_TOOLS_IMAGE"
-
-          curl --fail --insecure --retry 20 --retry-delay 1 --retry-connrefused --retry-all-errors \
-            https://127.0.0.1:18888/ >/dev/null
-
   test:
     needs:
       - skip_check

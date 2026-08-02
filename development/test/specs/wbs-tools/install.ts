@@ -4,6 +4,7 @@ import {
 	ADMIN_USERNAME,
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
+	verifyCliArtifact,
 	waitForInstalledServicesHealthy
 } from '../../suites/wbs-tools/test-environment.js';
 
@@ -21,6 +22,10 @@ async function clickEnabledButton( label: string ): Promise<void> {
 }
 
 describe( 'WBS tools installer', () => {
+	it( 'contains the compiled command-line installer', () => {
+		verifyCliArtifact();
+	} );
+
 	it( 'boots a healthy Wikibase Suite whose administrator can log in', async () => {
 		await browser.url( '/' );
 		await clickEnabledButton( 'Get started' );

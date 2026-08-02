@@ -111,6 +111,24 @@ function copyCheckout(): void {
 	writeFileSync( INSTALL_LOG, '' );
 }
 
+function toolsImage(): string {
+	const registry = process.env.WBS_TEST_IMAGE_REGISTRY || 'wikibase';
+	const tag = process.env.WBS_TEST_IMAGE_TAG || 'latest';
+	return `${ registry }/wbs-tools:${ tag }`;
+}
+
+export function verifyCliArtifact(): void {
+	run( 'docker', [
+		'run',
+		'--rm',
+		'--entrypoint',
+		'sh',
+		toolsImage(),
+		'-c',
+		'test -f dist/cli.js'
+	] );
+}
+
 export function runBootstrapTest(): void {
 	run( 'bash', [
 		join(
@@ -122,9 +140,7 @@ export function runBootstrapTest(): void {
 
 export function startInstaller(): void {
 	copyCheckout();
-	const registry = process.env.WBS_TEST_IMAGE_REGISTRY || 'wikibase';
-	const tag = process.env.WBS_TEST_IMAGE_TAG || 'latest';
-	const image = `${ registry }/wbs-tools:${ tag }`;
+	const image = toolsImage();
 	const skipPull = process.env.GITHUB_ACTIONS === 'true' ? 'false' : 'true';
 
 	run( 'bash', [ './install', '--web', '--local', '--skip-deps' ], {
