@@ -11,14 +11,12 @@ export LAUNCH_TRIGGER_PATH
 export RESET
 export SCRIPTS_DIR
 export TOOLS_DIR
+INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
-# shellcheck disable=SC1091
-source "$SCRIPTS_DIR/_versions.sh"
-
 # -- Script Specific Variables --
 
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
@@ -120,57 +118,47 @@ detect_existing_install_state() {
 }
 
 start_installer_webserver() {
+  local command
+
   # Ensure old container is gone before build/run
   remove_any_existing_installer_webserver
 
-  if $DEV; then
-    # BuildKit (via buildx with the docker-container driver) does not load images
-    # into the local Docker image store by default. --load ensures it is available
-    # to `docker run`.
-    BUILDKIT_DRIVER=$(docker buildx inspect | grep 'Driver:' | awk '{print $2}')
-    if [ "$BUILDKIT_DRIVER" = "docker-container" ]; then
-      LOAD_FLAG="--load"
-    else
-      LOAD_FLAG=""
-    fi
-
-    run "docker build $LOAD_FLAG -t $WBS_TOOLS_IMAGE $WBS_TOOLS_PROJECT_DIR"
-  elif [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
-    run "docker pull $WBS_TOOLS_IMAGE"
-  elif ! docker image inspect "$WBS_TOOLS_IMAGE" >/dev/null 2>&1; then
-    status "⛔️ Required local image $WBS_TOOLS_IMAGE was not found"
-    return 1
-  fi
-
   # Run with volumes mapped as before
   if $DEV; then
-    run "docker run -d \
-      --name $INSTALLER_CONTAINER_NAME \
-      -e SERVER_IP=$SERVER_IP \
-      -e LOCALHOST=$LOCALHOST \
-      -e LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH \
-      -e EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE \
-      -e DEV_SERVER=true \
-      -p $INSTALLER_PORT:443 \
-      -v $WBS_DIR:/app/wbs \
-      -v $CERTS_DIR:/app/certs \
-      -v $LOG_PATH:/app/installation.log \
-      -v $WBS_TOOLS_APP_DIR:/src \
-      $WBS_TOOLS_IMAGE \
-      sh -lc 'ln -sfn /app/node_modules /src/node_modules && cd /src && npm run dev:server'"
+    command=(
+      docker run -d
+      --name "$INSTALLER_CONTAINER_NAME"
+      -e "SERVER_IP=$SERVER_IP"
+      -e "LOCALHOST=$LOCALHOST"
+      -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
+      -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
+      -e DEV_SERVER=true
+      -p "$INSTALLER_PORT:443"
+      -v "$WBS_DIR:/app/wbs"
+      -v "$CERTS_DIR:/app/certs"
+      -v "$LOG_PATH:/app/installation.log"
+      -v "$WBS_TOOLS_APP_DIR:/src"
+      "$WBS_TOOLS_IMAGE"
+      sh -lc 'ln -sfn /app/node_modules /src/node_modules && cd /src && npm run dev:server'
+    )
   else
-    run "docker run -d \
-      --name $INSTALLER_CONTAINER_NAME \
-      -e SERVER_IP=$SERVER_IP \
-      -e LOCALHOST=$LOCALHOST \
-      -e LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH \
-      -e EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE \
-      -p $INSTALLER_PORT:443 \
-      -v $WBS_DIR:/app/wbs \
-      -v $CERTS_DIR:/app/certs \
-      -v $LOG_PATH:/app/installation.log \
-      $WBS_TOOLS_IMAGE"
+    command=(
+      docker run -d
+      --name "$INSTALLER_CONTAINER_NAME"
+      -e "SERVER_IP=$SERVER_IP"
+      -e "LOCALHOST=$LOCALHOST"
+      -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
+      -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
+      -p "$INSTALLER_PORT:443"
+      -v "$WBS_DIR:/app/wbs"
+      -v "$CERTS_DIR:/app/certs"
+      -v "$LOG_PATH:/app/installation.log"
+      "$WBS_TOOLS_IMAGE"
+      node dist/wbs.js install "${INSTALL_ARGS[@]}"
+    )
   fi
+
+  run_args "${command[@]}"
 
   echo "Open the following URL in your browser to continue:"
   echo

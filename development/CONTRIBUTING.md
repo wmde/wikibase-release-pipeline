@@ -80,6 +80,17 @@ $ cd ..
 $ docker compose up --wait
 ```
 
+To develop the browser installer itself with live reload, run this from the
+repository root:
+
+```bash
+$ ./wbs install --dev
+```
+
+This uses the current `development/images/wbs-tools` source and local `.test`
+hostnames. It assumes Git and Docker are installed and does not build the
+product images.
+
 ## Development setup
 
 Development requires Git and a current Docker installation with the Compose and

@@ -1,34 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- Parse CLI Arguments ---
+# --- Parse bootstrap arguments ---
 
-INSTALL_ARGS=("$@")
+RUNTIME_ARGS=()
+WEB_SELECTED=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --cli)
-      CLI=true
-      ;;
     --web)
-      CLI=false
-      ;;
-    --dev)
-      DEV=true
-      LOCALHOST=true
-      SKIP_DEPENDENCY_INSTALLS=true
-      ;;
-    --reset)
-      RESET=true
-      ;;
-    --skip-clone)
-      SKIP_CLONE=true
-      ;;
-    --skip-deps)
-      SKIP_DEPENDENCY_INSTALLS=true
-      ;;
-    --skip-launch)
-      SKIP_LAUNCH=true
+      WEB_SELECTED=true
+      RUNTIME_ARGS+=( "$1" )
       ;;
     --wbs-ref)
       if [[ -z "${2:-}" ]]; then
@@ -46,10 +28,21 @@ while [[ $# -gt 0 ]]; do
       fi
       ;;
     --debug)
-      DEBUG=true
+      RUNTIME_ARGS+=( "$1" )
       ;;
     --local)
-      LOCALHOST=true
+      RUNTIME_ARGS+=( "$1" )
+      ;;
+    --dev)
+      echo "⚠️ --dev requires an existing checkout. Run ./wbs install --dev there."
+      exit 1
+      ;;
+    --skip-clone|--skip-deps|--skip-launch|--reset|--cli)
+      echo "⚠️ Unsupported install option: $1"
+      exit 1
+      ;;
+    *)
+      RUNTIME_ARGS+=( "$1" )
       ;;
   esac
   shift
@@ -59,7 +52,7 @@ done
 # instead of cloning again.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCAL_WBS_DIR="$SCRIPT_DIR"
-if [[ -d "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/tools" ]]; then
+if [[ -e "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/tools" ]]; then
   WBS_DIR="$LOCAL_WBS_DIR"
   SKIP_CLONE=true
 fi
@@ -68,21 +61,8 @@ fi
 
 WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-suite.git}"
 WBS_REF="${WBS_REF:-}"
-SKIP_CLONE="${SKIP_CLONE:-false}"
-
 export WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
-
-export CLI="${CLI:-false}"
-export DEV="${DEV:-false}"
-export DEBUG="${DEBUG:-false}"
-export LOCALHOST="${LOCALHOST:-false}"
-export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
-export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
-export RESET="${RESET:-false}"
-
-export TOOLS_DIR="${TOOLS_DIR:-$WBS_DIR/tools}"
-export ENV_FILE_PATH="$WBS_DIR/.env"
-export SCRIPTS_DIR="$TOOLS_DIR/scripts"
+WBS_SKIP_DEPENDENCY_INSTALLS="${WBS_SKIP_DEPENDENCY_INSTALLS:-false}"
 
 # --- Functions ---
 
@@ -229,14 +209,18 @@ clone_repo() {
 echo
 echo "Wikibase Suite"
 echo
-if ! $SKIP_DEPENDENCY_INSTALLS; then
+if [[ "$WBS_SKIP_DEPENDENCY_INSTALLS" != true ]]; then
   echo "🔧 Installing dependencies..."
   echo
   install_git
 fi
 
-if ! $SKIP_CLONE; then
+if [[ "${SKIP_CLONE:-false}" != true ]]; then
   clone_repo
 fi
 
-exec bash "$SCRIPTS_DIR/install.sh" "${INSTALL_ARGS[@]}"
+if [[ "$WEB_SELECTED" != true ]]; then
+  RUNTIME_ARGS=( --web "${RUNTIME_ARGS[@]}" )
+fi
+
+exec "$WBS_DIR/wbs" install "${RUNTIME_ARGS[@]}"

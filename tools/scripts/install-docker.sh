@@ -19,7 +19,7 @@ install_docker() {
   debug "Checking for Docker..."
 
   if command -v docker >/dev/null 2>&1; then
-    # This script is sourced by install.sh, so returning avoids exiting installation early.
+    # This script is sourced by the host-side wbs runner.
     return 0
   fi
 

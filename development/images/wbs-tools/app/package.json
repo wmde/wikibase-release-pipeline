@@ -17,6 +17,7 @@
 		"@wikimedia/codex": "^2.5.0",
 		"@wikimedia/codex-icons": "^2.5.0",
 		"better-sse": "^0.15.1",
+		"commander": "14.0.3",
 		"express": "^5.1.0",
 		"tldts": "^7.0.30"
 	},

@@ -89,6 +89,20 @@ development/wbs-dev test queryservice --setup
 
 Available suites and their coverage are documented in the [test guide](../test/README.md). Local suites use the most recently built `wikibase/*:latest` images. CI points the same suites at images built and tagged for that workflow run.
 
+## Develop the installer UI
+
+The product-facing `wbs` command is separate from the repository task runner.
+From any directory, invoke it through the path to the checkout:
+
+```bash
+/path/to/wikibase-suite/wbs install --dev
+```
+
+This builds `wbs-tools` from the current checkout, starts the browser installer
+with live reload, uses local `.test` hostnames, and assumes Git and Docker are
+already installed. It does not build the Wikibase Suite product images. Use
+`development/wbs-dev build` separately when those images have changed.
+
 ## Lint
 
 ```bash

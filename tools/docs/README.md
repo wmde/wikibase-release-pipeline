@@ -20,23 +20,32 @@ The branch and tag model is:
 - WBS tools image release tags use the format `wbs-tools@X.Y.Z`.
 - New development should happen on `dev` or feature branches, then merge to `main` only when ready to become the public installer path.
 
-## Running locally
+## Installer entry points
 
-Clone the repository and run from the directory that contains `install`:
-
-```bash
-git clone https://github.com/wmde/wikibase-suite
-cd wikibase-suite
-./install [OPTIONS]
-```
-
-For local development, use `--dev` or `--local`:
+The downloaded bootstrap is browser-first. It installs Git when needed, selects
+and checks out the latest stable WBS release, and then delegates to that
+release's `wbs` command:
 
 ```bash
-./install --dev
+bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install)
 ```
 
-`--dev` sets `LOCALHOST=true` and skips dependency installs. When using `--local` or `--dev`, the installer defaults to:
+From an existing checkout, use the location-independent root command. It
+resolves the rest of the repository relative to its own path, so it can be
+invoked while your shell is in another directory:
+
+```bash
+/path/to/wikibase-suite/wbs install
+/path/to/wikibase-suite/wbs install --web
+```
+
+`wbs install` uses the terminal wizard by default. `wbs install --web` uses the
+browser UI. Both paths use the same containerized Commander entry point and the
+same host orchestration scripts.
+
+For local networking, add `--local`. This retains the normal dependency and
+checkout behavior; it only selects the no-public-domain networking mode. The
+installer then defaults to:
 
 ```bash
 WIKIBASE_PUBLIC_HOST=wikibase.test
@@ -45,26 +54,39 @@ WDQS_PUBLIC_HOST=query.wikibase.test
 
 Add those hosts to your system hosts file before launching the stack.
 
-## Options
+## Checkout command options
 
 | Option | Description |
 | --- | --- |
-| `--web` | Use the browser UI. This is currently the default. |
-| `--cli` | Collect configuration through the command-line wizard. |
-| `--dev` | Local development shortcut: sets `LOCALHOST=true` and skips dependency installs. |
-| `--local` | Configure for localhost domains and avoid Let's Encrypt. |
-| `--reset` | Interactive reset. Optionally deletes `.env`, `LocalSettings.php`, and existing services/data before relaunch. |
-| `--skip-clone` | Do not clone the Wikibase Suite repository. Assumes it is already present. |
-| `--skip-deps` | Skip installing Git and Docker. Assumes both are installed and Docker is running. |
-| `--skip-launch` | Run through configuration but exit before `docker compose up`. |
-| `--wbs-ref REF` | Checkout a specific Wikibase Suite branch or tag instead of the latest stable `wbs@…` release. |
+| `--web` | Use the browser UI instead of the default terminal wizard. |
+| `--dev` | Develop the browser installer from the current checkout with live reload. Implies `--local` and assumes dependencies are installed. |
+| `--local` | Use local hostnames without public DNS validation or public certificates. |
 | `--debug` | Enable verbose logging and disable quiet Docker pulls. |
+
+The downloaded bootstrap additionally accepts `--wbs-ref REF` to check out a
+specific WBS branch or tag. It defaults to browser mode and deliberately does
+not expose checkout-only `--dev` behavior.
+
+The old `--cli`, `--skip-clone`, `--skip-deps`, `--skip-launch`, and `--reset`
+options were never part of a published interface and are not supported.
+
+## Developing the browser installer
+
+From an existing checkout, run:
+
+```bash
+./wbs install --dev
+```
+
+This builds the WBS tools image from `development/images/wbs-tools`, mounts the
+application source for live reload, opens the browser installer, and implies
+`--local`. It assumes Git and Docker are already installed. It does not build
+the product images; use `development/wbs-dev build` when those sources changed.
 
 ## Runtime behavior
 
 - Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
 - Normal installations pull the exact WBS tools image selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
-- `--dev` builds the WBS tools image from `development/images/wbs-tools` instead of pulling it, so local source changes are included.
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.

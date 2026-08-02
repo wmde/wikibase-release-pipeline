@@ -89,6 +89,7 @@ function copyCheckout(): void {
 
 	for ( const file of [
 		'install',
+		'wbs',
 		'docker-compose.yml',
 		'.env.example',
 		'package.json'
@@ -125,8 +126,50 @@ export function verifyCliArtifact(): void {
 		'sh',
 		toolsImage(),
 		'-c',
-		'test -f dist/cli.js'
+		'test -f dist/wbs.js && test -f dist/cli.js'
 	] );
+}
+
+export function verifyCommandInterface(): void {
+	const image = toolsImage();
+	const help = run( 'docker', [
+		'run',
+		'--rm',
+		image,
+		'node',
+		'dist/wbs.js',
+		'install',
+		'--help'
+	] );
+	for ( const option of [ '--web', '--local', '--dev', '--debug' ] ) {
+		if ( !help.includes( option ) ) {
+			throw new Error( `wbs install help does not include ${ option }.` );
+		}
+	}
+	if ( help.includes( '--cli' ) ) {
+		throw new Error( 'wbs install must not expose the redundant --cli option.' );
+	}
+
+	for ( const invalidOption of [ '--cli', '--unknown-option' ] ) {
+		const result = spawnSync(
+			'docker',
+			[
+				'run',
+				'--rm',
+				'-e',
+				'WBS_VALIDATE_OPTIONS=true',
+				image,
+				'node',
+				'dist/wbs.js',
+				'install',
+				invalidOption
+			],
+			{ encoding: 'utf8', stdio: 'pipe' }
+		);
+		if ( result.status === 0 ) {
+			throw new Error( `wbs install unexpectedly accepted ${ invalidOption }.` );
+		}
+	}
 }
 
 export function runBootstrapTest(): void {
@@ -143,7 +186,7 @@ export function startInstaller(): void {
 	const image = toolsImage();
 	const skipPull = process.env.GITHUB_ACTIONS === 'true' ? 'false' : 'true';
 
-	run( 'bash', [ './install', '--web', '--local', '--skip-deps' ], {
+	run( 'bash', [ './install', '--local' ], {
 		cwd: CHECKOUT_ROOT,
 		env: {
 			...process.env,
@@ -155,6 +198,8 @@ export function startInstaller(): void {
 			WBS_E2E_HTTPS_PORT: String( WIKIBASE_HTTPS_PORT ),
 			WBS_INSTALLER_CONTAINER_NAME: INSTALLER_CONTAINER,
 			WBS_INSTALLER_PORT: String( INSTALLER_PORT ),
+			WBS_SKIP_ARCH_CHECK: 'true',
+			WBS_SKIP_DEPENDENCY_INSTALLS: 'true',
 			WBS_TOOLS_IMAGE: image,
 			WBS_TOOLS_SKIP_PULL: skipPull
 		}

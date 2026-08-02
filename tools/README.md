@@ -1,6 +1,6 @@
 # Wikibase Suite tools
 
-This directory contains the host-side scripts and development documentation for the Wikibase Suite installation and operations tools. The root [install](../install) command invokes these scripts. The containerized application source and image definition are maintained under [`development/images/wbs-tools`](../development/images/wbs-tools).
+This directory contains the host-side scripts and development documentation for the Wikibase Suite installation and operations tools. The downloaded [install](../install) bootstrap and the checkout-local [wbs](../wbs) command invoke these scripts. The containerized application source and image definition are maintained under [`development/images/wbs-tools`](../development/images/wbs-tools).
 
 For normal installation instructions, start with [Install Wikibase Suite](../docs/install.md).
 
@@ -16,5 +16,5 @@ During installation, the installer:
 
 Use this section only when developing, reviewing, or testing the tools.
 
-- [docs/README.md](docs/README.md) covers local runs, CLI options, localhost installation, reset flags, WBS refs, and other custom installation paths.
+- [docs/README.md](docs/README.md) covers the bootstrap, checkout-local CLI, localhost installation, installer UI development, and WBS refs.
 - [docs/adrs/README.md](docs/adrs/README.md) lists architecture decision records.

@@ -12,6 +12,7 @@ COPY app/public ./public
 COPY app/shared ./shared
 COPY app/data ./data
 COPY app/cli.ts ./cli.ts
+COPY app/wbs.ts ./wbs.ts
 COPY app/server.ts ./server.ts
 COPY app/logStreamer.ts ./logStreamer.ts
 COPY app/passwordPolicy.ts ./passwordPolicy.ts

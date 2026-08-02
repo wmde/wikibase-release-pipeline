@@ -84,3 +84,18 @@ run() {
   printf '\n' >> "$LOG_PATH"
   printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
 }
+
+# Execute an argument array without reparsing it through a shell.
+run_args() {
+  local rendered_command
+  printf -v rendered_command '%q ' "$@"
+  printf '%s %s [debug]\n' "$(_timestamp)" "BEGIN RUN: $rendered_command" >> "$LOG_PATH"
+
+  if $INTERACTIVE && [ "$DEBUG" = true ]; then
+    "$@" 2>&1 | tee -a "$LOG_PATH"
+  else
+    "$@" >>"$LOG_PATH" 2>&1
+  fi
+  printf '\n' >> "$LOG_PATH"
+  printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
+}

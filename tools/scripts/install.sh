@@ -15,6 +15,7 @@ export ENV_FILE_PATH
 export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
 export TOOLS_DIR
+INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
 
@@ -68,25 +69,12 @@ if $RESET; then
   echo
 fi
 
-# shellcheck disable=SC1091
-source "$SCRIPTS_DIR/install-docker.sh"
-if ! $SKIP_DEPENDENCY_INSTALLS; then
-  install_docker
-fi
-if ! $LOCALHOST; then
-  confirm_arch
-fi
-confirm_docker_version
-confirm_docker_compose_version
-confirm_docker_running
-status "✅ Docker installed"
-
 if $CLI; then
-  bash "$SCRIPTS_DIR/cli-installer.sh"
+  bash "$SCRIPTS_DIR/cli-installer.sh" "${INSTALL_ARGS[@]}"
 else
   export LAUNCH_TRIGGER_PATH="${LAUNCH_TRIGGER_PATH:-$WBS_DIR/.wbs-installer-launch-ready}"
   rm -f "$LAUNCH_TRIGGER_PATH"
-  bash "$SCRIPTS_DIR/web-installer.sh"
+  bash "$SCRIPTS_DIR/web-installer.sh" "${INSTALL_ARGS[@]}"
 fi
 
 # --- Launch or exit ---

@@ -31,7 +31,10 @@ create_fixture_remote() {
   mkdir -p "$fixture_repo/tools/scripts"
   printf '#!/usr/bin/env bash\nexit 0\n' > "$fixture_repo/tools/scripts/install.sh"
   chmod +x "$fixture_repo/tools/scripts/install.sh"
-  git -C "$fixture_repo" add tools/scripts/install.sh
+  # shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
+  printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$fixture_repo/wbs"
+  chmod +x "$fixture_repo/wbs"
+  git -C "$fixture_repo" add tools/scripts/install.sh wbs
 
   create_commit "$fixture_repo" "1.9.0"
   git -C "$fixture_repo" tag 'wbs@1.9.0'
@@ -59,16 +62,23 @@ run_bootstrap() {
   WBS_DIR="$case_dir/wikibase-suite" \
     WBS_REPO_URL="$fixture_remote" \
     WBS_REF='' \
-    bash "$case_dir/bootstrap/install" --skip-deps --skip-launch "$@"
+    WBS_SKIP_DEPENDENCY_INSTALLS=true \
+    bash "$case_dir/bootstrap/install" "$@"
 }
 
 fixture_remote="$(create_fixture_remote releases)"
 
 run_bootstrap latest "$fixture_remote"
 grep -q '"version": "1.10.0"' "$TEST_ROOT/latest/wikibase-suite/package.json"
+grep -qx 'install' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
+grep -qx -- '--web' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 
 run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0'
 grep -q '"version": "1.9.0"' "$TEST_ROOT/explicit/wikibase-suite/package.json"
+
+run_bootstrap local-mode "$fixture_remote" --local --debug
+grep -qx -- '--local' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
+grep -qx -- '--debug' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
 
 prerelease_repo="$TEST_ROOT/prerelease-only"
 prerelease_remote="$TEST_ROOT/prerelease-only.git"
@@ -78,7 +88,9 @@ git -C "$prerelease_repo" config user.name "WBS tools test"
 mkdir -p "$prerelease_repo/tools/scripts"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/tools/scripts/install.sh"
 chmod +x "$prerelease_repo/tools/scripts/install.sh"
-git -C "$prerelease_repo" add tools/scripts/install.sh
+printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/wbs"
+chmod +x "$prerelease_repo/wbs"
+git -C "$prerelease_repo" add tools/scripts/install.sh wbs
 create_commit "$prerelease_repo" "2.0.0-rc.1"
 git -C "$prerelease_repo" tag 'wbs@2.0.0-rc.1'
 git clone -q --bare "$prerelease_repo" "$prerelease_remote"
@@ -101,7 +113,23 @@ git init -q "$local_checkout"
 cp "$REPO_DIR/install" "$local_checkout/install"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$local_checkout/tools/scripts/install.sh"
 chmod +x "$local_checkout/tools/scripts/install.sh"
+# shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
+printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$local_checkout/wbs"
+chmod +x "$local_checkout/wbs"
 WBS_REPO_URL="$TEST_ROOT/missing.git" WBS_REF='' \
-  bash "$local_checkout/install" --dev --skip-launch
+  WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$local_checkout/install"
+grep -qx -- '--web' "$local_checkout/wbs-invocation"
+
+if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --dev >"$TEST_ROOT/dev.log" 2>&1; then
+  echo "Expected --dev on the bootstrap to fail."
+  exit 1
+fi
+grep -q -- '--dev requires an existing checkout' "$TEST_ROOT/dev.log"
+
+if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --skip-clone >"$TEST_ROOT/skip-clone.log" 2>&1; then
+  echo "Expected --skip-clone to be rejected."
+  exit 1
+fi
+grep -q 'Unsupported install option: --skip-clone' "$TEST_ROOT/skip-clone.log"
 
 echo "WBS bootstrap selection tests passed"

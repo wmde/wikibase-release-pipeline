@@ -5,6 +5,7 @@ import {
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
 	verifyCliArtifact,
+	verifyCommandInterface,
 	waitForInstalledServicesHealthy
 } from '../../suites/wbs-tools/test-environment.js';
 
@@ -24,6 +25,9 @@ async function clickEnabledButton( label: string ): Promise<void> {
 describe( 'WBS tools installer', () => {
 	it( 'contains the compiled command-line installer', () => {
 		verifyCliArtifact();
+	} );
+	it( 'provides the supported wbs install command interface', () => {
+		verifyCommandInterface();
 	} );
 
 	it( 'boots a healthy Wikibase Suite whose administrator can log in', async () => {
