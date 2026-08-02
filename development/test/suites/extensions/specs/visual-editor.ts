@@ -1,4 +1,4 @@
-import LoginPage from '../../../../helpers/pages/login.page.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
 
 const waitForVisualEditor = async (): Promise<void> => {
 	await browser.waitUntil(

@@ -1,4 +1,4 @@
-import page from '../../../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 describe( 'Special:Version', function () {
 	it( 'Should have user defined extension loaded', async function () {

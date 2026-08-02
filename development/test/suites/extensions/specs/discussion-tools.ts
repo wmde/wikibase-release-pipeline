@@ -1,6 +1,6 @@
-import LoginPage from '../../../../helpers/pages/login.page.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
 import { ChainablePromiseElement } from 'webdriverio';
-import page from '../../../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 const waitForDiscussionTools = async (): Promise<void> => {
 	await browser.waitUntil(

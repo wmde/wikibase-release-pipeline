@@ -1,10 +1,10 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ItemPage from '../../../../helpers/pages/entity/item.page.js';
-import LoginPage from '../../../../helpers/pages/login.page.js';
-import PropertyPage from '../../../../helpers/pages/entity/property.page.js';
-import page from '../../../../helpers/pages/page.js';
-import propertyIdSelector from '../../../../helpers/property-id-selector.js';
-import { Claim } from '../../../../types/entity-data.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
+import PropertyPage from '../../../helpers/pages/entity/property.page.js';
+import page from '../../../helpers/pages/page.js';
+import propertyIdSelector from '../../../helpers/property-id-selector.js';
+import { Claim } from '../../../types/entity-data.js';
 
 describe( 'WikibaseLocalMedia', function () {
 	let propertyId: string;

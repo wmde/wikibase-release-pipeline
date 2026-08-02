@@ -1,4 +1,4 @@
-import page from '../../../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 describe( 'Wikimedia login', function () {
 	it( 'Should offer login through Wikimedia when a consumer is configured', async function () {

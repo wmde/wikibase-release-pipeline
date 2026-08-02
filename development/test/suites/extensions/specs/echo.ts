@@ -1,5 +1,5 @@
-import LoginPage from '../../../../helpers/pages/login.page.js';
-import page from '../../../../helpers/pages/page.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
+import page from '../../../helpers/pages/page.js';
 
 const createUser = async (
 	username: string,

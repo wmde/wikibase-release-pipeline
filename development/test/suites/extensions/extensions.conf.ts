@@ -4,12 +4,12 @@ import wdioConfig from '../../setup/wdio.conf.js';
 
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
-	name: 'repo',
+	name: 'extensions',
 	maxInstances: 3,
-	specs: [ 'suites/repo/specs/*.ts' ],
-	envFiles: [
-		...defaultSettings.envFiles,
-		'../images/wikibase/build.env' // to compare actual MediaWiki version to build
+	specs: [ 'suites/extensions/specs/*.ts' ],
+	composeFiles: [
+		...defaultSettings.composeFiles,
+		'suites/extensions/docker-compose.override.yml'
 	]
 } );
 

@@ -84,6 +84,7 @@ jobs:
       matrix:
         suite:
           - repo
+          - extensions
           - queryservice
           - repo_client
           - quickstatements

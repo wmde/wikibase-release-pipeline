@@ -1,4 +1,4 @@
-import page from '../../../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 describe( 'UniversalLanguageSelector', function () {
 	beforeEach( async function () {

@@ -1,4 +1,4 @@
-import LoginPage from '../../../../helpers/pages/login.page.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
 
 describe( 'Babel', function () {
 	beforeEach( async function () {

@@ -159,8 +159,8 @@ You can run the tests in the Docker container locally through the same entry poi
 # Skip the initial build when the required images were built separately
 ./wbs-dev test repo --skip-build
 
-# Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./wbs-dev test repo --spec suites/repo/specs/extensions/babel.ts
+# Only run a specific file within its test suite (e.g., the Babel extension)
+./wbs-dev test extensions --spec suites/extensions/specs/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:

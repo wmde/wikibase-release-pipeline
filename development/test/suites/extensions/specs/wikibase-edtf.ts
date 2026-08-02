@@ -1,8 +1,8 @@
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
-import ItemPage from '../../../../helpers/pages/entity/item.page.js';
-import propertyIdSelector from '../../../../helpers/property-id-selector.js';
-import SpecialEntityDataPage from '../../../../helpers/pages/special/entity-data.page.js';
-import SpecialNewPropertyPage from '../../../../helpers/pages/special/new-property.page.js';
+import ItemPage from '../../../helpers/pages/entity/item.page.js';
+import propertyIdSelector from '../../../helpers/property-id-selector.js';
+import SpecialEntityDataPage from '../../../helpers/pages/special/entity-data.page.js';
+import SpecialNewPropertyPage from '../../../helpers/pages/special/new-property.page.js';
 
 describe( 'WikibaseEdtf', function () {
 	const propertyLabel = 'Groundhog Day Release';

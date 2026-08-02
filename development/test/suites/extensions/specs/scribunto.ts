@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
-import LoginPage from '../../../../helpers/pages/login.page.js';
-import { utf8 } from '../../../../helpers/read-file-encoding.js';
+import LoginPage from '../../../helpers/pages/login.page.js';
+import { utf8 } from '../../../helpers/read-file-encoding.js';
 
 const pageSuffix = Date.now();
 const moduleName = `Bananas-${ pageSuffix }`;

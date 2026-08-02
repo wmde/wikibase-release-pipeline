@@ -1,5 +1,5 @@
 import { createRequire } from 'module';
-import page from '../../../../helpers/pages/page.js';
+import page from '../../../helpers/pages/page.js';
 
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
@@ -33,7 +33,7 @@ const getVersionOrEmpty = (
 ): string => source[ key ] ?? '';
 const require = createRequire( import.meta.url );
 const getSuitePackageVersion = (): string => {
-	const suitePackageJson = require( '../../../../../../package.json' ) as {
+	const suitePackageJson = require( '../../../../../package.json' ) as {
 		version?: string;
 	};
 

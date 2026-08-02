@@ -10,19 +10,20 @@ Run tests through the repository's build-tools container. See [CONTRIBUTING.md](
 ./wbs-dev test repo_client
 
 # Run one spec within a suite's environment
-./wbs-dev test repo --spec suites/repo/specs/extensions/babel.ts
+./wbs-dev test extensions --spec suites/extensions/specs/babel.ts
 
 # Start a suite's services and leave them running
 ./wbs-dev test queryservice --setup
 ```
 
-Tests use locally built `wikibase/*:latest` images by default. Build changed images before testing them. CI sets `WBS_TEST_IMAGE_REGISTRY` and `WBS_TEST_IMAGE_TAG` to use the images built for that workflow run.
+Test runs build the local images once before starting the selected suites. Use `--skip-build` when the required images were built separately, as they are in CI. CI sets `WBS_TEST_IMAGE_REGISTRY` and `WBS_TEST_IMAGE_TAG` to use the images built for that workflow run.
 
 ## Suites
 
 | Suite | Coverage and additional services |
 | --- | --- |
-| `repo` | Core Wikibase repository and extensions; runs up to three WDIO workers |
+| `repo` | Core Wikibase repository behavior; runs up to three WDIO workers |
+| `extensions` | Bundled MediaWiki and Wikibase extensions; runs up to three WDIO workers |
 | `repo_client` | Repository/client federation and change dispatch |
 | `queryservice` | WDQS, updater, and WDQS frontend through the `queryservice` Compose profile |
 | `quickstatements` | QuickStatements through the `quickstatements` Compose profile |
