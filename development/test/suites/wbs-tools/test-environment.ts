@@ -176,7 +176,7 @@ export function runBootstrapTest(): void {
 	run( 'bash', [
 		join(
 			HOST_REPOSITORY_ROOT,
-			'development/test/specs/wbs-tools/install-bootstrap.sh'
+			'development/test/suites/wbs-tools/specs/install-bootstrap.sh'
 		)
 	] );
 }

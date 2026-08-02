@@ -10,7 +10,7 @@ Run tests through the repository's build-tools container. See [CONTRIBUTING.md](
 ./wbs-dev test repo_client
 
 # Run one spec within a suite's environment
-./wbs-dev test repo --spec specs/repo/extensions/babel.ts
+./wbs-dev test repo --spec suites/repo/specs/extensions/babel.ts
 
 # Start a suite's services and leave them running
 ./wbs-dev test queryservice --setup
@@ -86,9 +86,9 @@ Put local overrides in `development/local.env`. Defaults come from the root `.en
 
 ### Choose where the test belongs
 
-- Add a browser spec under `test/specs/<suite>/`. Use the suite whose services and configuration match the behavior under test.
+- Add a browser spec under `test/suites/<suite>/specs/`. Use the suite whose services and configuration match the behavior under test.
 - Put reusable browser interactions in `test/helpers/pages/` and other shared test logic in `test/helpers/`. Keep behavior specific to one test in its spec.
-- Put suite-specific MediaWiki configuration, SQL, fixture extensions, and Compose overrides in `test/suites/<suite>/`.
+- Put suite-specific MediaWiki configuration, SQL, fixture extensions, and Compose overrides beside the specs in `test/suites/<suite>/`.
 - Change shared runner lifecycle code in `test/setup/` only when the behavior should apply to every suite.
 
 An existing suite automatically discovers a new spec only when its `<suite>.conf.ts` `specs` patterns include the new path. When a change needs a different combination of Compose profiles or overrides, add a suite directory with a matching `<suite>.conf.ts` and include it in the CI test matrix.
@@ -102,7 +102,12 @@ An existing suite automatically discovers a new spec only when its `<suite>.conf
 - Keep assertions in the spec so the behavior being verified remains visible; helpers should primarily arrange state or expose reusable interactions.
 - Run the smallest relevant spec while iterating, then its complete suite before submitting the change. Build every changed image first because tests do not build images automatically.
 
-The `wbs-tools` suite includes the bootstrap selection checks in `test/specs/wbs-tools/install-bootstrap.sh` and the end-to-end installer test in `test/specs/wbs-tools/install.ts`. The latter uses the installer's supported local mode with reserved `.test` hostnames, boots the complete deployment, waits for its services and configured health checks, and logs into Wikibase using the administrator credentials entered in the form.
+The `wbs-tools` suite includes the bootstrap selection checks in
+`test/suites/wbs-tools/specs/install-bootstrap.sh` and the end-to-end installer
+test in `test/suites/wbs-tools/specs/install.ts`. The latter uses the installer's
+supported local mode with reserved `.test` hostnames, boots the complete
+deployment, waits for its services and configured health checks, and logs into
+Wikibase using the administrator credentials entered in the form.
 
 This exercises the supported `--local` path. It does not cover public DNS matching, public certificate issuance, firewall configuration, or reachability from outside the Docker host; those remain separate deployment concerns.
 

@@ -6,7 +6,10 @@ export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'repo',
 	maxInstances: 3,
-	specs: [ 'specs/repo/*.ts', 'specs/repo/extensions/*.ts' ],
+	specs: [
+		'suites/repo/specs/*.ts',
+		'suites/repo/specs/extensions/*.ts'
+	],
 	envFiles: [
 		...defaultSettings.envFiles,
 		'../images/wikibase/build.env' // to compare actual MediaWiki version to build

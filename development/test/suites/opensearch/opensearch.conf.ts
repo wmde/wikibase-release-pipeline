@@ -5,7 +5,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'opensearch',
-	specs: [ 'specs/opensearch/*.ts' ],
+	specs: [ 'suites/opensearch/specs/*.ts' ],
 	composeProfiles: [ 'opensearch' ],
 	composeFiles: [
 		...defaultSettings.composeFiles,

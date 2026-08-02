@@ -403,7 +403,7 @@ async function main(): Promise<void> {
 			'  wbs-dev build wikibase wdqs --no-cache --pull',
 			'  wbs-dev build wikibase wdqs --parallel=2 --dry-run',
 			'  wbs-dev test repo queryservice --headed',
-			'  wbs-dev test repo --spec specs/repo/special-new-item.ts',
+			'  wbs-dev test repo --spec suites/repo/specs/special-new-item.ts',
 			'  wbs-dev update-commits wikibase quickstatements',
 			'  wbs-dev publish wikibase --dry-run'
 		].join( '\n' )

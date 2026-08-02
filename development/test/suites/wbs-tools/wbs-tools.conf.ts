@@ -12,7 +12,7 @@ import {
 export const testEnv = TestEnv.create( {
 	name: 'wbs-tools',
 	maxInstances: 1,
-	specs: [ 'specs/wbs-tools/install.ts' ],
+	specs: [ 'suites/wbs-tools/specs/install.ts' ],
 	envFiles: [ './test-runner.env', '../local.env' ],
 	composeFiles: [ 'suites/wbs-tools/docker-compose.override.yml' ],
 	waitForUrls: () => [ 'http://browser:4444/wd/hub/status' ],

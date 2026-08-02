@@ -5,7 +5,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'queryservice',
-	specs: [ 'specs/queryservice/*.ts' ],
+	specs: [ 'suites/queryservice/specs/*.ts' ],
 	composeProfiles: [ 'queryservice' ]
 } );
 

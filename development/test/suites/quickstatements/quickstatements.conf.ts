@@ -5,7 +5,7 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'quickstatements',
-	specs: [ 'specs/quickstatements/*.ts' ],
+	specs: [ 'suites/quickstatements/specs/*.ts' ],
 	composeProfiles: [ 'quickstatements' ],
 	composeFiles: [
 		...defaultSettings.composeFiles,

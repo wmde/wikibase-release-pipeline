@@ -47,7 +47,7 @@ $ ./wbs-dev test
 $ ./wbs-dev test repo
 
 # Runs the `repo` test suite with a specific spec file (paths to spec files are rooted in the `test` directory)
-$ ./wbs-dev test repo --spec specs/repo/special-new-item.ts
+$ ./wbs-dev test repo --spec suites/repo/specs/special-new-item.ts
 
 # Start with a headed browser
 $ ./wbs-dev test repo --headed
@@ -130,7 +130,9 @@ $ git config core.hooksPath .githooks
 
 ## Testing
 
-Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run by default in each suite are specified in the `.conf.ts` file in each suite directory under the `specs` key.
+Tests are organized under `test/suites/<suite>`. Each suite owns its environment
+configuration, fixtures, and `specs/` directory. Its `.conf.ts` file selects the
+specs that run by default.
 
 Local test commands build all images once and then run against the resulting
 `:latest` tags. Docker's layer cache avoids repeating unchanged build work. CI
@@ -158,7 +160,7 @@ You can run the tests in the Docker container locally through the same entry poi
 ./wbs-dev test repo --skip-build
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
-./wbs-dev test repo --spec specs/repo/extensions/babel.ts
+./wbs-dev test repo --spec suites/repo/specs/extensions/babel.ts
 ```
 
 There are also a few special options, useful when writing tests or in setting up and debugging the test runner:

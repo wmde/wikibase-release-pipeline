@@ -5,7 +5,10 @@ import wdioConfig from '../../setup/wdio.conf.js';
 export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'repo_client',
-	specs: [ 'specs/repo_client/*.ts', 'specs/repo_client/extensions/*.ts' ],
+	specs: [
+		'suites/repo_client/specs/*.ts',
+		'suites/repo_client/specs/extensions/*.ts'
+	],
 	composeFiles: [
 		...defaultSettings.composeFiles,
 		'suites/repo_client/docker-compose.override.yml'

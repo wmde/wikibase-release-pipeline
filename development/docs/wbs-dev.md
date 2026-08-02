@@ -87,7 +87,7 @@ development/wbs-dev test repo
 development/wbs-dev test repo --skip-build
 
 # One spec in a suite's environment
-development/wbs-dev test repo --spec specs/repo/special-new-item.ts
+development/wbs-dev test repo --spec suites/repo/specs/special-new-item.ts
 
 # Start a suite environment and leave it running
 development/wbs-dev test queryservice --setup

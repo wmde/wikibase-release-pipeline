@@ -182,11 +182,11 @@ async function buildImages(): Promise<void> {
 	await new Promise<void>( ( resolveBuild, rejectBuild ) => {
 		const child = spawn(
 			'pnpm',
-			[ 'exec', 'tsx', 'scripts/wbs-dev/cli.ts', 'build' ],
+			[ 'exec', 'tsx', 'scripts/wbs-dev/cli.ts', 'build', '--quiet' ],
 			{
 				cwd: DEVELOPMENT_ROOT,
 				env: process.env,
-				stdio: 'inherit'
+				stdio: [ 'inherit', 'ignore', 'inherit' ]
 			}
 		);
 		child.once( 'error', rejectBuild );
@@ -202,6 +202,7 @@ async function buildImages(): Promise<void> {
 			resolveBuild();
 		} );
 	} );
+	console.log( '✅ All image builds are current.' );
 }
 
 async function runSuites(
@@ -322,7 +323,7 @@ Available project suites:
 Examples:
   wbs-dev test
   wbs-dev test repo queryservice --headed
-  wbs-dev test repo --spec specs/repo/special-new-item.ts
+  wbs-dev test repo --spec suites/repo/specs/special-new-item.ts
   wbs-dev test repo --setup
   wbs-dev test all --shard 1/2`
 	);

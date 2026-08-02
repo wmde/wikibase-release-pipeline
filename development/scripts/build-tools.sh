@@ -51,4 +51,4 @@ if [[ -n "${BUILD_CACHE_REGISTRY:-}" ]]; then
   fi
 fi
 
-exec docker buildx build "${BUILD_ARGS[@]}" .
+docker buildx build --quiet "${BUILD_ARGS[@]}" . >/dev/null
