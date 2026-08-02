@@ -60,7 +60,10 @@ development/wbs-dev build --parallel=1
 
 Local builds load `wikibase/<image>:latest` into the local Docker daemon. CI uses the same coordinator and build scripts, but adds a run-specific GHCR tag, pushes the result for test jobs, and uses shared BuildKit caches.
 
-Tests do not implicitly build images. Rebuild affected images—or all images when the dependency boundary is uncertain—before testing.
+Test commands build all images once before running any selected suites. Local
+Docker layer caching keeps unchanged builds inexpensive. Use `--skip-build` only
+when the required images were already built by a separate step, as they are in
+CI.
 
 For a locally named custom build from a branch:
 
@@ -79,6 +82,9 @@ development/wbs-dev test
 
 # One suite
 development/wbs-dev test repo
+
+# Use images already built by a separate step
+development/wbs-dev test repo --skip-build
 
 # One spec in a suite's environment
 development/wbs-dev test repo --spec specs/repo/special-new-item.ts

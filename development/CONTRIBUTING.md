@@ -132,13 +132,13 @@ $ git config core.hooksPath .githooks
 
 Tests are organized in suites, which can be found in `test/suites`. Each suite runs a series of specs (tests) found in the `test/specs` directory. Which specs run by default in each suite are specified in the `.conf.ts` file in each suite directory under the `specs` key.
 
-Local test suites run against the most recently built local Docker images, using
-the `:latest` tag by default. CI supplies the registry and run-specific image tag.
+Local test commands build all images once and then run against the resulting
+`:latest` tags. Docker's layer cache avoids repeating unchanged build work. CI
+builds images in parallel jobs, supplies the registry and run-specific image tag,
+and invokes tests with `--skip-build`.
 Each suite starts only the optional service profiles it needs; for example,
 Query Service, OpenSearch, and QuickStatements are not started for the core repo
 suite. The suites extend the product configuration from the repository root.
-
-_Note: Builds are currently not performed automatically by tests. Make sure you have built against current changes before running tests. See [Build](#build) above._
 
 You can run the tests in the Docker container locally through the same entry point used by CI with `./wbs-dev test`.
 
@@ -153,6 +153,9 @@ You can run the tests in the Docker container locally through the same entry poi
 
 # Only run a single suite (e.g., repo)
 ./wbs-dev test repo
+
+# Skip the initial build when the required images were built separately
+./wbs-dev test repo --skip-build
 
 # Only run a specific file within the setup for any test suite (e.g., repo and the Babel extension)
 ./wbs-dev test repo --spec specs/repo/extensions/babel.ts

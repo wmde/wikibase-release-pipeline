@@ -106,7 +106,10 @@ The `wbs-tools` suite includes the bootstrap selection checks in `test/specs/wbs
 
 This exercises the supported `--local` path. It does not cover public DNS matching, public certificate issuance, firewall configuration, or reachability from outside the Docker host; those remain separate deployment concerns.
 
-Because it installs the complete current checkout, build all local images with `./wbs-dev build` before running this suite. CI provides the equivalent images from its build jobs under a workflow-specific tag.
+Because it installs the complete current checkout, the normal test command
+builds all local images before running this suite. CI provides the equivalent
+images from its parallel build jobs and uses `--skip-build` with a
+workflow-specific tag.
 
 When working on the browser tests, consult the documentation of the following libraries:
 

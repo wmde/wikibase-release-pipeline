@@ -2,6 +2,7 @@ import { Launcher, type RunCommandArguments } from '@wdio/cli';
 import logger from '@wdio/logger';
 import chalk from 'chalk';
 import { Command, InvalidArgumentError, Option } from 'commander';
+import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import process from 'node:process';
@@ -17,6 +18,7 @@ interface TestOptions extends WdioOptions {
 	headed?: boolean;
 	nodeDebug?: boolean;
 	setup?: boolean;
+	skipBuild?: boolean;
 }
 
 const DEVELOPMENT_ROOT = join( dirname( fileURLToPath( import.meta.url ) ), '../..' );
@@ -153,6 +155,7 @@ function prepareWdioOptions( options: TestOptions ): WdioOptions {
 	delete wdioOptions.nodeDebug;
 	delete wdioOptions.reporter;
 	delete wdioOptions.setup;
+	delete wdioOptions.skipBuild;
 
 	if ( headed ) {
 		process.env.HEADED_TESTS = 'true';
@@ -173,6 +176,32 @@ function prepareWdioOptions( options: TestOptions ): WdioOptions {
 	}
 
 	return wdioOptions;
+}
+
+async function buildImages(): Promise<void> {
+	await new Promise<void>( ( resolveBuild, rejectBuild ) => {
+		const child = spawn(
+			'pnpm',
+			[ 'exec', 'tsx', 'scripts/wbs-dev/cli.ts', 'build' ],
+			{
+				cwd: DEVELOPMENT_ROOT,
+				env: process.env,
+				stdio: 'inherit'
+			}
+		);
+		child.once( 'error', rejectBuild );
+		child.once( 'exit', ( code, signal ) => {
+			if ( signal ) {
+				rejectBuild( new Error( `Image builds terminated by signal ${ signal }.` ) );
+				return;
+			}
+			if ( code !== 0 ) {
+				rejectBuild( new Error( 'One or more image builds failed.' ) );
+				return;
+			}
+			resolveBuild();
+		} );
+	} );
 }
 
 async function runSuites(
@@ -203,6 +232,9 @@ async function runSuites(
 	}
 	if ( options.setup && ( ( options.spec && options.spec.length ) || options.watch ) ) {
 		throw new Error( '--setup cannot be combined with --spec or --watch.' );
+	}
+	if ( !options.skipBuild ) {
+		await buildImages();
 	}
 
 	if ( options.setup ) {
@@ -265,6 +297,10 @@ async function main(): Promise<void> {
 		.option(
 			'--setup',
 			'Start and leave up one suite environment without running tests'
+		)
+		.option(
+			'--skip-build',
+			'Skip the image build performed before the selected test suites'
 		)
 		.option( '--headed', 'Run tests in a headed browser' )
 		.option( '-d, --debug', 'Use debugging timeouts' )
