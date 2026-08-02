@@ -33,7 +33,7 @@ const getVersionOrEmpty = (
 ): string => source[ key ] ?? '';
 const require = createRequire( import.meta.url );
 const getSuitePackageVersion = (): string => {
-	const suitePackageJson = require( '../../../../../package.json' ) as {
+	const suitePackageJson = require( '../../../../../../package.json' ) as {
 		version?: string;
 	};
 
