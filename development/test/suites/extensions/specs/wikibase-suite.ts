@@ -4,7 +4,6 @@ import page from '../../../helpers/pages/page.js';
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
 	deployVersion: string;
-	buildToolsGitSha: string;
 };
 
 type WikibaseSuitePublicMetrics = {
@@ -71,7 +70,7 @@ const getDeployVersionFromComposeWikibaseService =
 const getRuntimeVersionsFromWikibaseContainer =
 	async (): Promise<WikibaseSuiteVersions> => {
 		const runtimeOutput = await testEnv.runDockerComposeCmd(
-			'exec -T wikibase sh -lc \'printf "wikibaseImageVersion=%s\\n" "$WIKIBASE_IMAGE_VERSION"; printf "deployVersion=%s\\n" "$DEPLOY_VERSION"; printf "buildToolsGitSha=%s\\n" "$BUILD_TOOLS_GIT_SHA"\''
+			'exec -T wikibase sh -lc \'printf "wikibaseImageVersion=%s\\n" "$WIKIBASE_IMAGE_VERSION"; printf "deployVersion=%s\\n" "$DEPLOY_VERSION"\''
 		);
 		const runtimeEntries = runtimeOutput
 			.trim()
@@ -85,9 +84,7 @@ const getRuntimeVersionsFromWikibaseContainer =
 		return {
 			wikibaseImageVersion:
 				runtimeEntries.wikibaseImageVersion ?? '',
-			deployVersion: runtimeEntries.deployVersion ?? '',
-			buildToolsGitSha:
-				runtimeEntries.buildToolsGitSha ?? ''
+			deployVersion: runtimeEntries.deployVersion ?? ''
 		};
 	};
 
@@ -101,8 +98,7 @@ const getWikibaseSuiteApiVersions =
 		return {
 			wikibaseImageVersion:
 				getVersionOrEmpty( apiVersions, 'wikibase_image_version' ),
-			deployVersion: getVersionOrEmpty( apiVersions, 'deploy_version' ),
-			buildToolsGitSha: getVersionOrEmpty( apiVersions, 'build_tools_git_sha' )
+			deployVersion: getVersionOrEmpty( apiVersions, 'deploy_version' )
 		};
 	};
 
@@ -137,11 +133,6 @@ describe( 'Wikibase Suite extension', function () {
 		expect( normalizeVersionValue( versions.deployVersion ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.deployVersion )
 		);
-		expect(
-			normalizeVersionValue( versions.buildToolsGitSha ).toLowerCase()
-		).toEqual(
-			normalizeVersionValue( runtimeVersions.buildToolsGitSha ).toLowerCase()
-		);
 	} );
 
 	it( 'Should include suite versions on Special:Version', async function () {
@@ -151,13 +142,6 @@ describe( 'Wikibase Suite extension', function () {
 		);
 		expect( normalizeVersionValue( dockerImageVersion ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.wikibaseImageVersion )
-		);
-
-		const buildToolsVersion = await getInstalledSoftwareVersionForProduct(
-			'Wikibase Suite Build Tools'
-		);
-		expect( normalizeVersionValue( buildToolsVersion ).toLowerCase() ).toEqual(
-			normalizeVersionValue( runtimeVersions.buildToolsGitSha ).toLowerCase()
 		);
 
 		const deployValue = await getInstalledSoftwareVersionForProduct(

@@ -135,10 +135,6 @@ done
 # === Wikibase Suite version metadata build args
 if [ "$IMAGE_NAME" = "wikibase" ]; then
 	BUILD_ARGS+=("--build-arg" "WIKIBASE_IMAGE_VERSION=$IMAGE_VERSION")
-	BUILD_TOOLS_GIT_SHA="$(git rev-parse --short HEAD 2>/dev/null || true)"
-	if [ -n "$BUILD_TOOLS_GIT_SHA" ]; then
-		BUILD_ARGS+=("--build-arg" "BUILD_TOOLS_GIT_SHA=$BUILD_TOOLS_GIT_SHA")
-	fi
 elif [ "$IMAGE_NAME" = "wbs-tools" ]; then
 	BUILD_ARGS+=("--build-arg" "WBS_TOOLS_VERSION=$IMAGE_VERSION")
 fi
