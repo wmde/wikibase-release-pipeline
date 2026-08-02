@@ -20,6 +20,13 @@ export default class TestEnv {
 
 	public baseDockerComposeCmd: string;
 
+	private exitKeypressListener?: (
+		character: string,
+		key: readline.Key
+	) => Promise<void>;
+
+	private stdinWasRaw = false;
+
 	public static create( settings: Partial<TestSettings> ): TestEnv {
 		return new this( makeTestSettings( settings ) );
 	}
@@ -61,12 +68,30 @@ export default class TestEnv {
 
 			await this.waitForServices();
 		} catch ( e ) {
+			this.releaseExitListener();
 			throw new SevereServiceError( e );
 		}
 	}
 
 	public async down(): Promise<void> {
-		await this.stopServices();
+		try {
+			await this.stopServices();
+		} finally {
+			this.releaseExitListener();
+		}
+	}
+
+	public releaseExitListener(): void {
+		if ( !this.exitKeypressListener ) {
+			return;
+		}
+
+		process.stdin.removeListener( 'keypress', this.exitKeypressListener );
+		if ( process.stdin.isTTY ) {
+			process.stdin.setRawMode( this.stdinWasRaw );
+		}
+		process.stdin.pause();
+		this.exitKeypressListener = undefined;
 	}
 
 	public async waitForServices(): Promise<void[]> {
@@ -169,20 +194,22 @@ export default class TestEnv {
 	}
 
 	protected async setupExitListener(): Promise<void> {
-		if ( !process.stdout.isTTY ) {
+		if ( !process.stdout.isTTY || !process.stdin.isTTY ) {
 			return null;
 		}
 
-		const onKeyPress = async ( _, key ): Promise<void> => {
+		this.releaseExitListener();
+		this.stdinWasRaw = process.stdin.isRaw;
+		this.exitKeypressListener = async ( _, key ): Promise<void> => {
 			if ( key.ctrl && key.name === 'c' ) {
-				process.stdin.removeListener( 'keypress', onKeyPress );
+				this.releaseExitListener();
 				await this.exitPrompt();
 			}
 		};
 
 		readline.emitKeypressEvents( process.stdin );
 		process.stdin.setEncoding( 'utf8' ).setRawMode( true ).resume();
-		process.stdin.on( 'keypress', onKeyPress );
+		process.stdin.on( 'keypress', this.exitKeypressListener );
 	}
 
 	protected resetOutputDir(): void {

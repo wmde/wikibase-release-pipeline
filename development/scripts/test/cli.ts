@@ -242,9 +242,16 @@ async function runSuites(
 		const configUrl = pathToFileURL( getSuiteConfigFilePath( suiteNames[ 0 ] ) ).href;
 		// eslint-disable-next-line es-x/no-dynamic-import
 		const { testEnv } = ( await import( configUrl ) ) as {
-			testEnv: { up: () => Promise<void> };
+			testEnv: {
+				up: () => Promise<void>;
+				releaseExitListener: () => void;
+			};
 		};
-		await testEnv.up();
+		try {
+			await testEnv.up();
+		} finally {
+			testEnv.releaseExitListener();
+		}
 		return;
 	}
 
