@@ -204,6 +204,14 @@ async function buildImages(): Promise<void> {
 	} );
 }
 
+function printSuiteHeading( suiteName: string ): void {
+	console.log(
+		chalk.bgWhiteBright.black.bold(
+			`\n"${ suiteName }" test suite ${ ' '.repeat( Math.max( 1, 96 - suiteName.length ) ) }`
+		)
+	);
+}
+
 async function runSuites(
 	requestedSuites: string[],
 	options: TestOptions
@@ -233,12 +241,12 @@ async function runSuites(
 	if ( options.setup && ( ( options.spec && options.spec.length ) || options.watch ) ) {
 		throw new Error( '--setup cannot be combined with --spec or --watch.' );
 	}
-	const reportCurrentImages = !options.skipBuild;
-	if ( reportCurrentImages ) {
-		await buildImages();
-	}
-
 	if ( options.setup ) {
+		printSuiteHeading( suiteNames[ 0 ] );
+		if ( !options.skipBuild ) {
+			await buildImages();
+			console.log( '✅ All image builds are current.' );
+		}
 		const configUrl = pathToFileURL( getSuiteConfigFilePath( suiteNames[ 0 ] ) ).href;
 		// eslint-disable-next-line es-x/no-dynamic-import
 		const { testEnv } = ( await import( configUrl ) ) as {
@@ -248,9 +256,6 @@ async function runSuites(
 			};
 		};
 		try {
-			if ( reportCurrentImages ) {
-				console.log( '✅ All image builds are current.' );
-			}
 			await testEnv.up();
 		} finally {
 			testEnv.releaseExitListener();
@@ -267,16 +272,13 @@ async function runSuites(
 
 	const wdioOptions = prepareWdioOptions( options );
 	let failed = false;
-	let reportCurrentImagesBeforeSuite = reportCurrentImages;
+	let buildImagesBeforeSuite = !options.skipBuild;
 	for ( const suiteName of suiteNames ) {
-		console.log(
-			chalk.bgWhiteBright.black.bold(
-				`\n"${ suiteName }" test suite ${ ' '.repeat( Math.max( 1, 96 - suiteName.length ) ) }`
-			)
-		);
-		if ( reportCurrentImagesBeforeSuite ) {
+		printSuiteHeading( suiteName );
+		if ( buildImagesBeforeSuite ) {
+			await buildImages();
 			console.log( '✅ All image builds are current.' );
-			reportCurrentImagesBeforeSuite = false;
+			buildImagesBeforeSuite = false;
 		}
 		const exitCode = await runWdio(
 			getSuiteConfigFilePath( suiteName ),
