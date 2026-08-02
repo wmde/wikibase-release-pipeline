@@ -202,7 +202,6 @@ async function buildImages(): Promise<void> {
 			resolveBuild();
 		} );
 	} );
-	console.log( '✅ All image builds are current.' );
 }
 
 async function runSuites(
@@ -234,7 +233,8 @@ async function runSuites(
 	if ( options.setup && ( ( options.spec && options.spec.length ) || options.watch ) ) {
 		throw new Error( '--setup cannot be combined with --spec or --watch.' );
 	}
-	if ( !options.skipBuild ) {
+	const reportCurrentImages = !options.skipBuild;
+	if ( reportCurrentImages ) {
 		await buildImages();
 	}
 
@@ -248,6 +248,9 @@ async function runSuites(
 			};
 		};
 		try {
+			if ( reportCurrentImages ) {
+				console.log( '✅ All image builds are current.' );
+			}
 			await testEnv.up();
 		} finally {
 			testEnv.releaseExitListener();
@@ -264,12 +267,17 @@ async function runSuites(
 
 	const wdioOptions = prepareWdioOptions( options );
 	let failed = false;
+	let reportCurrentImagesBeforeSuite = reportCurrentImages;
 	for ( const suiteName of suiteNames ) {
 		console.log(
 			chalk.bgWhiteBright.black.bold(
 				`\n"${ suiteName }" test suite ${ ' '.repeat( Math.max( 1, 96 - suiteName.length ) ) }`
 			)
 		);
+		if ( reportCurrentImagesBeforeSuite ) {
+			console.log( '✅ All image builds are current.' );
+			reportCurrentImagesBeforeSuite = false;
+		}
 		const exitCode = await runWdio(
 			getSuiteConfigFilePath( suiteName ),
 			wdioOptions

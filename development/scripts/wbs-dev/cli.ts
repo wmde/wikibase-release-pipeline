@@ -16,6 +16,7 @@ interface Task {
 	label: string;
 	command: string;
 	args: string[];
+	announce?: boolean;
 }
 
 const DEVELOPMENT_ROOT = process.cwd();
@@ -211,6 +212,7 @@ function commandTasks(
 				parallel: 1,
 				tasks: [
 					{
+						announce: false,
 						label:
 							args.length > 0 ?
 								`test ${ args.join( ' ' ) }` :
@@ -253,7 +255,9 @@ function commandTasks(
 }
 
 async function runTask( task: Task ): Promise<number> {
-	console.log( `\n=== ${ task.label } ===` );
+	if ( task.announce !== false ) {
+		console.log( `\n=== ${ task.label } ===` );
+	}
 	return await new Promise( ( resolve, reject ) => {
 		const child = spawn( task.command, task.args, {
 			cwd: DEVELOPMENT_ROOT,
