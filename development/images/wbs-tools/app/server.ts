@@ -2,7 +2,7 @@ import { createSession, createChannel } from 'better-sse';
 import { promises as dns } from 'dns';
 import express from 'express';
 import { existsSync, readFileSync, createReadStream } from 'fs';
-import https, { request } from 'https';
+import https from 'https';
 import { dirname, join } from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
@@ -35,6 +35,7 @@ const SSL_CERT_KEY_PATH = '/app/certs/key.pem';
 const SSL_CERT_PATH = '/app/certs/cert.pem';
 // 10 minutes
 const AUTO_FINALIZE_TIMEOUT_MS = 10 * 60 * 1000;
+const INSTALLATION_STATUS_POLL_MS = 5 * 1000;
 const DEV_SERVER = process.env.DEV_SERVER === 'true';
 const APP_ROOT = DEV_SERVER ? moduleDir : dirname( moduleDir );
 const INDEX_TEMPLATE_PATH = join( APP_ROOT, 'index.html' );
@@ -184,15 +185,23 @@ app.get( '/config', async ( req, res ): Promise<void> => {
 	}
 } );
 
+function finalizeInstallation(): void {
+	sanitizeConfig();
+	clearLog();
+}
+
+function exitInstaller(): void {
+	// eslint-disable-next-line n/no-process-exit
+	setTimeout( () => process.exit( 0 ), 300 );
+}
+
 app.post( '/finalize-setup', async ( req, res ): Promise<void> => {
 	try {
-		sanitizeConfig();
-		clearLog();
+		finalizeInstallation();
 
 		res.status( 200 ).json( { status: 'finalized' } );
 		console.log( '💤 Installation finalized. Exiting...' );
-		// eslint-disable-next-line n/no-process-exit
-		setTimeout( () => process.exit( 0 ), 300 ); // allow response to finish
+		exitInstaller(); // allow response to finish
 	} catch ( err ) {
 		console.error( '❌ Finalize error:', err );
 		res.status( 500 ).send( 'Failed to finalize installation' );
@@ -257,37 +266,23 @@ httpsServer.listen( 443, () => {
 	console.log( `✅ HTTPS server running at https://localhost:443${ DEV_SERVER ? ' (dev mode)' : '' }` );
 } );
 
-// Kick off finalize if booted and inactive
-setTimeout( () => {
-	if ( isBooted() ) {
-		console.log( '⏱️ Auto-finalizing installation after timeout...' );
-
-		const req = request(
-			{
-				method: 'POST',
-				host: 'localhost',
-				port: 443,
-				path: '/finalize-setup',
-				rejectUnauthorized: false, // allow self-signed certs
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			},
-			( res ) => {
-				if ( res.statusCode && res.statusCode >= 200 && res.statusCode < 300 ) {
-					console.log( '✅ Auto-finalize complete' );
-				} else {
-					console.error( `❌ Auto-finalize failed: ${ res.statusCode }` );
-				}
-			}
-		);
-
-		req.on( 'error', ( err ) => {
-			console.error( '❌ Auto-finalize request error:', err );
-		} );
-
-		req.end(); // no body needed
-	} else {
-		console.log( '⏱️ Auto-finalize skipped: not yet booted' );
+function scheduleAutoFinalizeAfterBoot(): void {
+	if ( !isBooted() ) {
+		setTimeout( scheduleAutoFinalizeAfterBoot, INSTALLATION_STATUS_POLL_MS );
+		return;
 	}
-}, AUTO_FINALIZE_TIMEOUT_MS );
+
+	console.log( '⏱️ Installation complete. Auto-finalize scheduled in 10 minutes.' );
+	setTimeout( () => {
+		try {
+			finalizeInstallation();
+			console.log( '✅ Auto-finalize complete. Exiting...' );
+			exitInstaller();
+		} catch ( err ) {
+			console.error( '❌ Auto-finalize failed:', err );
+		}
+	}, AUTO_FINALIZE_TIMEOUT_MS );
+}
+
+// Start the grace period only after installation has completed successfully.
+scheduleAutoFinalizeAfterBoot();
