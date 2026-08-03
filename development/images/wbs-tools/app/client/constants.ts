@@ -16,7 +16,7 @@ export const DEFAULT_FORM: ConfigForm = {
 	MW_ADMIN_EMAIL: '',
 	WIKIBASE_PUBLIC_HOST: '',
 	WDQS_PUBLIC_HOST: '',
-	METADATA_CALLBACK: true,
+	METADATA_CALLBACK: false,
 	MW_ADMIN_NAME: '',
 	MW_ADMIN_PASS: '',
 	DB_NAME: 'my_wiki',

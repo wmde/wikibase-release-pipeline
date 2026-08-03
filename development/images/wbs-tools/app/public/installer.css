@@ -190,6 +190,10 @@ body {
   font-size: 1.02rem;
 }
 
+.wizard-panel__header p + p {
+  margin-top: 14px;
+}
+
 .wizard-panel__body {
   display: grid;
   gap: 20px;
@@ -615,22 +619,45 @@ body {
   font-weight: 700;
 }
 
-.metadata-choice {
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color-subtle, #eaecf0);
+.visibility-choice {
+  margin-top: 4px;
+  margin-bottom: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-color-subtle, #eaecf0);
+  border-radius: 2px;
+  background: var(--background-color-neutral-subtle, #f8f9fa);
 }
 
-.metadata-choice .cdx-checkbox__label {
+.visibility-choice .cdx-checkbox__label {
   font-weight: 700;
   line-height: 1.45;
 }
 
-.metadata-choice__description {
-  margin-top: 6px;
-  padding-left: 28px;
+.visibility-details {
+  display: grid;
+  gap: 12px;
   color: var(--color-subtle, #54595d);
-  font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+.visibility-details p {
+  margin: 0;
+}
+
+.installation-contents {
+  margin-top: 18px;
+}
+
+.installation-contents h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.installation-contents ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--color-subtle, #54595d);
+  line-height: 1.45;
 }
 
 .review-status {
@@ -821,20 +848,20 @@ body {
 
 .config-download-link {
   gap: 6px;
-  border: 1px solid var(--background-color-progressive, #36c);
+  border: 1px solid var(--border-color-base, #72777d);
   padding: 7px 14px;
-  background: var(--background-color-progressive, #36c);
-  color: var(--color-inverted-fixed, #fff);
+  background: var(--background-color-neutral-subtle, #eaecf0);
+  color: var(--color-base, #202122);
 }
 
 .config-download-link .cdx-icon {
-  color: var(--color-inverted-fixed, #fff);
+  color: currentcolor;
 }
 
 .config-download-link:hover,
 .config-download-link:focus {
-  background: var(--background-color-progressive--hover, #3056a9);
-  color: var(--color-inverted-fixed, #fff);
+  background: var(--background-color-interactive-subtle--hover, #dadde3);
+  color: var(--color-base, #202122);
   text-decoration: none;
 }
 
@@ -842,17 +869,21 @@ body {
   gap: 6px;
   border: 1px solid var(--border-color-base, #72777d);
   padding: 7px 12px;
-  background: var(--background-color-base, #fff);
+  background: var(--background-color-neutral-subtle, #eaecf0);
   color: var(--color-base, #202122);
 }
 
 .config-copy-action:hover,
 .config-copy-action:focus {
-  background: var(--background-color-neutral-subtle, #eaecf0);
+  background: var(--background-color-interactive-subtle--hover, #dadde3);
 }
 
 .config-copy-action.is-copied {
   border-color: var(--border-color-success, #14866d);
+  color: var(--color-success, #14866d);
+}
+
+.config-copy-action.is-copied .cdx-icon {
   color: var(--color-success, #14866d);
 }
 
@@ -1103,6 +1134,14 @@ body {
   align-items: center;
 }
 
+.log-dialog-footer {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .shutdown-panel__message {
   color: var(--color-subtle, #54595d);
 }
@@ -1134,5 +1173,10 @@ body {
 
   .password-field__row {
     grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .log-dialog-footer {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

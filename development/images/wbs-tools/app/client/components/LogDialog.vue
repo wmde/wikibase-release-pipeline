@@ -43,15 +43,20 @@
 		</div>
 
 		<template #footer>
-			<div class="shutdown-panel">
-				<cdx-button
-					action="destructive"
-					:disabled="finalizing"
-					@click="finalize"
-				>
-					Shut down installer
+			<div class="log-dialog-footer">
+				<div class="shutdown-panel">
+					<cdx-button
+						action="destructive"
+						:disabled="finalizing"
+						@click="finalize"
+					>
+						Stop the installer
+					</cdx-button>
+					<span class="shutdown-panel__message">{{ shutdownMessage }}</span>
+				</div>
+				<cdx-button type="button" @click="emit( 'update:open', false )">
+					Close
 				</cdx-button>
-				<span class="shutdown-panel__message">{{ shutdownMessage }}</span>
 			</div>
 		</template>
 	</cdx-dialog>

@@ -32,23 +32,12 @@
 				</p>
 			</header>
 
-			<cdx-message class="intro-callout">
-				<div class="callout-heading">
-					<cdx-icon :icon="cdxIconInfoFilled" class="callout-icon callout-icon--info" size="small" />
-					<div class="callout-title">What you'll need:</div>
-				</div>
-				<ul class="intro-callout__list">
-					<li>A domain you own or control</li>
-					<li>Access to your domain provider’s DNS settings</li>
-				</ul>
-			</cdx-message>
-
 			<section class="overview-list" aria-labelledby="overview-heading">
 				<h3 id="overview-heading">What you'll configure</h3>
 				<ul>
 					<li>
 						<cdx-icon :icon="cdxIconGlobe" size="medium" />
-						<span>Domain settings</span>
+						<span>Connect domains</span>
 					</li>
 					<li>
 						<cdx-icon :icon="cdxIconLock" size="medium" />
@@ -59,11 +48,26 @@
 						<span>Database credentials</span>
 					</li>
 					<li>
+						<cdx-icon :icon="cdxIconGlobe" size="medium" />
+						<span>Choose whether to share ecosystem statistics</span>
+					</li>
+					<li>
 						<cdx-icon :icon="cdxIconCheck" size="medium" />
 						<span>Install Wikibase Suite</span>
 					</li>
 				</ul>
 			</section>
+
+			<cdx-message class="setup-callout security-note">
+				<div class="callout-heading">
+					<cdx-icon :icon="cdxIconLock" class="callout-icon callout-icon--info" size="small" />
+					<div class="callout-title">Security note</div>
+				</div>
+				<p class="setup-callout__text">
+					Any credentials entered in the installer are transmitted securely, used only for this setup, and
+					are not stored or shared with any third party.
+				</p>
+			</cdx-message>
 		</div>
 
 		<div v-if="existingInstallState !== 'previous'" class="wizard-actions">
@@ -84,7 +88,6 @@ import {
 	cdxIconCheck,
 	cdxIconDatabase,
 	cdxIconGlobe,
-	cdxIconInfoFilled,
 	cdxIconLock
 } from '@wikimedia/codex-icons';
 import type { ExistingInstallState } from '../types';

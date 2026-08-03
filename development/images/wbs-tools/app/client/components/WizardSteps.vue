@@ -28,10 +28,8 @@
 <script setup lang="ts">
 import { CdxIcon } from '@wikimedia/codex';
 import { cdxIconCheck } from '@wikimedia/codex-icons';
-import type { WizardStep } from '../types';
-
 defineProps<{
-	currentStep: WizardStep;
+	currentStep: number;
 	locked: boolean;
 	steps: Array<{ title: string; complete?: boolean }>;
 }>();

@@ -12,7 +12,7 @@
 
 			<section class="wizard-progress-area" aria-label="Installation progress">
 				<wizard-steps
-					:current-step="currentStep"
+					:current-step="currentStep - 1"
 					:locked="configLocked"
 					:steps="steps"
 				/>
@@ -65,7 +65,6 @@
 						:can-continue="accountReady"
 						:disabled="configLocked"
 						@update-field="updateField"
-						@update-checkbox="form.METADATA_CALLBACK = $event"
 						@generate-password="generatePasswordForField"
 						@touch="touchField"
 						@back="currentStep = 1"
@@ -77,12 +76,22 @@
 						:form="form"
 						:text-statuses="databaseTextStatuses"
 						:password-status="passwordStatuses.DB_PASS"
-						:can-start="canStartSetup"
+						:can-continue="databaseReady"
 						:disabled="configLocked"
 						@update-field="updateField"
 						@generate-password="generatePasswordForField"
 						@touch="touchField"
 						@back="currentStep = 2"
+						@continue="continueToVisibility"
+					/>
+
+					<visibility-step
+						v-else-if="currentStep === 4"
+						:enabled="form.METADATA_CALLBACK"
+						:can-start="canStartSetup"
+						:disabled="configLocked"
+						@update:enabled="form.METADATA_CALLBACK = $event"
+						@back="currentStep = 3"
 						@start="startSetup"
 					/>
 
@@ -136,6 +145,7 @@ import DatabaseStep from './components/DatabaseStep.vue';
 import DomainHelp from './components/DomainHelp.vue';
 import LogDialog from './components/LogDialog.vue';
 import SetupStep from './components/SetupStep.vue';
+import VisibilityStep from './components/VisibilityStep.vue';
 import WelcomeStep from './components/WelcomeStep.vue';
 import WizardSteps from './components/WizardSteps.vue';
 
@@ -160,7 +170,7 @@ const existingInstallIsRunning = initialState.existingInstallState === 'running'
 const existingInstallBlocksSetup = initialState.existingInstallState === 'previous';
 const initialSetupComplete = initialState.isBooted || existingInstallIsRunning;
 const initialSetupLocked = initialSetupComplete || initialState.isSetupStarted || existingInstallBlocksSetup;
-const currentStep = ref<WizardStep>( initialSetupComplete || initialState.isSetupStarted ? 4 : 0 );
+const currentStep = ref<WizardStep>( initialSetupComplete || initialState.isSetupStarted ? 5 : 0 );
 const configLocked = ref( initialSetupLocked );
 const setupComplete = ref( initialSetupComplete );
 const form = reactive<ConfigForm>( configToForm( null ) );
@@ -181,10 +191,10 @@ const setupHasStatusLines = computed( () => setupLog.hasStatusLines.value );
 const setupLogText = computed( () => setupLog.logText.value );
 
 const steps = computed( () => [
-	{ title: 'Welcome' },
-	{ title: 'Domain' },
+	{ title: 'Domains' },
 	{ title: 'Account' },
 	{ title: 'Database' },
+	{ title: 'Visibility' },
 	{ title: 'Installation', complete: setupComplete.value }
 ] );
 
@@ -319,6 +329,17 @@ async function continueToDatabase(): Promise<void> {
 	}
 }
 
+async function continueToVisibility(): Promise<void> {
+	touchField( 'DB_NAME' );
+	touchField( 'DB_USER' );
+	touchField( 'DB_PASS' );
+	await passwordValidation.validateNow( 'DB_PASS', form.DB_PASS );
+
+	if ( databaseReady.value ) {
+		currentStep.value = 4;
+	}
+}
+
 async function startSetup(): Promise<void> {
 	clearSaveError();
 	touchField( 'MW_ADMIN_EMAIL' );
@@ -353,7 +374,7 @@ async function startSetup(): Promise<void> {
 		configText.value = response.configText || '';
 		configLocked.value = true;
 		setupComplete.value = false;
-		currentStep.value = 4;
+		currentStep.value = 5;
 		setupLog.resetForRun();
 	} catch ( error ) {
 		console.error( error );
@@ -374,6 +395,8 @@ function submitCurrentStep(): void {
 	} else if ( currentStep.value === 2 ) {
 		void continueToDatabase();
 	} else if ( currentStep.value === 3 ) {
+		void continueToVisibility();
+	} else if ( currentStep.value === 4 ) {
 		void startSetup();
 	}
 }
@@ -391,7 +414,7 @@ async function handleSetupComplete(): Promise<void> {
 	}
 	setupLog.setProgress( 100, 'Installation complete. Your services are ready.' );
 	setupComplete.value = true;
-	currentStep.value = 4;
+	currentStep.value = 5;
 }
 
 async function hydrateInitialConfig(): Promise<void> {

@@ -2,10 +2,10 @@
 	<section class="wizard-panel is-active">
 		<div class="wizard-panel__body wizard-panel__body--form">
 			<header class="wizard-panel__header">
-				<h2>Create an admin account</h2>
+				<h2>Administrator account</h2>
 				<p>
-					This will be the first account on your Wikibase with full administrative permissions. You can
-					create additional accounts later.
+					This will be your administrator account for your Wikibase. After the installation you can use
+					these credentials to log in to your Wikibase.
 				</p>
 			</header>
 
@@ -52,20 +52,6 @@
 					@touch="emit( 'touch', 'MW_ADMIN_PASS' )"
 				/>
 			</div>
-
-			<div class="metadata-choice">
-				<cdx-checkbox
-					:model-value="form.METADATA_CALLBACK"
-					name="METADATA_CALLBACK"
-					:disabled="disabled"
-					@update:model-value="emit( 'update-checkbox', Boolean( $event ) )"
-				>
-					Make this Wikibase visible in the global Wikibase directory
-				</cdx-checkbox>
-				<div class="metadata-choice__description">
-					Enable this if you want your Wikibase to be listed in the shared global directory for discovery.
-				</div>
-			</div>
 		</div>
 
 		<div class="wizard-actions">
@@ -89,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { CdxButton, CdxCheckbox } from '@wikimedia/codex';
+import { CdxButton } from '@wikimedia/codex';
 import type { ConfigForm, FieldValidationStatus } from '../types';
 import PasswordField from './PasswordField.vue';
 import ValidatedTextField from './ValidatedTextField.vue';
@@ -107,7 +93,6 @@ defineProps<{
 
 const emit = defineEmits<{
 	'update-field': [ name: AccountFieldName, value: string ];
-	'update-checkbox': [ value: boolean ];
 	'generate-password': [ name: 'MW_ADMIN_PASS' ];
 	touch: [ name: AccountFieldName ];
 	back: [];

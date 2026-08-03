@@ -62,23 +62,29 @@
 								:class="{ 'is-copied': copiedConfig }"
 								@click="copyConfig"
 							>
-								<cdx-icon :icon="cdxIconCopy" size="small" />
+								<cdx-icon :icon="copiedConfig ? cdxIconCheck : cdxIconCopy" size="small" />
 								<span>{{ copiedConfig ? 'Configuration copied' : 'Copy configuration' }}</span>
 							</button>
-							<button
-								type="button"
-								class="config-reveal-button"
-								:aria-expanded="configRevealed"
-								aria-controls="config-content"
-								@click="configRevealed = !configRevealed"
-							>
-								<cdx-icon :icon="configRevealed ? cdxIconEyeClosed : cdxIconEye" size="small" />
-								<span>{{ configRevealed ? 'Hide configuration' : 'Show configuration' }}</span>
-							</button>
+							<!--
+								Keep the configuration reveal control available for a possible future return.
+								<button
+									type="button"
+									class="config-reveal-button"
+									:aria-expanded="configRevealed"
+									aria-controls="config-content"
+									@click="configRevealed = !configRevealed"
+								>
+									<cdx-icon :icon="configRevealed ? cdxIconEyeClosed : cdxIconEye" size="small" />
+									<span>{{ configRevealed ? 'Hide configuration' : 'Show configuration' }}</span>
+								</button>
+							-->
 						</div>
-						<div v-if="configRevealed" class="config-box">
-							<pre id="config-content">{{ configText }}</pre>
-						</div>
+						<!--
+							Keep the revealed configuration content with its control for a possible future return.
+							<div v-if="configRevealed" class="config-box">
+								<pre id="config-content">{{ configText }}</pre>
+							</div>
+						-->
 					</cdx-message>
 				</div>
 				</div>
@@ -108,13 +114,25 @@
 					</li>
 				</ol>
 			</div>
+
+			<section v-if="!complete" class="installation-contents" aria-labelledby="installation-contents-heading">
+				<h3 id="installation-contents-heading">What is getting installed</h3>
+				<ul>
+					<li>Wikibase and MediaWiki for creating and managing structured linked data.</li>
+					<li>Query Service and Query Service UI for SPARQL queries.</li>
+					<li>Query Service Updater to keep query data in sync.</li>
+					<li>QuickStatements for batch imports and edits.</li>
+					<li>Reverse-proxy service (Traefik) for routing your domain names to Wikibase and the Query Service UI.</li>
+					<li>Required services: job runner, database (MariaDB), and search server (OpenSearch).</li>
+				</ul>
+			</section>
 		</div>
 	</section>
 </template>
 
 <script setup lang="ts">
 import { CdxButton, CdxIcon, CdxMessage, CdxProgressBar } from '@wikimedia/codex';
-import { cdxIconAlert, cdxIconCopy, cdxIconDownload, cdxIconEye, cdxIconEyeClosed } from '@wikimedia/codex-icons';
+import { cdxIconAlert, cdxIconCheck, cdxIconCopy, cdxIconDownload, cdxIconEye, cdxIconEyeClosed } from '@wikimedia/codex-icons';
 import { computed, ref, watch } from 'vue';
 import type { ConfigForm } from '../types';
 
