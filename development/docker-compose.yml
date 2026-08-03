@@ -5,6 +5,10 @@ networks:
     name: wbs-dev
     external: true
 
+volumes:
+  buildx:
+    name: wbs-dev-buildx
+
 services:
   wbs-dev:
     image: ${WBS_DEV_IMAGE:-wbs-dev:latest}
@@ -23,6 +27,8 @@ services:
       # paths understood by the host Docker daemon.
       - ${PWD}/..:${PWD}/..:z
       - /var/run/docker.sock:/var/run/docker.sock
+      # Preserve named-builder metadata alongside its persistent BuildKit container.
+      - buildx:/root/.docker/buildx
     privileged: true
     env_file:
       - test/test-runner.env

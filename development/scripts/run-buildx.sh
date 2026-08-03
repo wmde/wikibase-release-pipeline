@@ -66,8 +66,8 @@ for arg in "${BUILD_ARGS[@]}"; do
 	PREVIOUS_ARG=$arg
 done
 
-# CI enables a shared registry cache through these environment variables. Local
-# builds use BuildKit's local cache unless a registry cache is configured.
+# Source builds use a shared registry cache when one is configured, in addition
+# to BuildKit's local cache.
 if [[ -n "${BUILD_CACHE_REGISTRY:-}" ]]; then
 	CACHE_REGISTRY=${BUILD_CACHE_REGISTRY%/}
 	CACHE_SCOPE=${BUILD_CACHE_SCOPE:-${TARGET_PLATFORMS:-$(docker info --format '{{.OSType}}-{{.Architecture}}')}}
@@ -111,9 +111,16 @@ fi
 # so bootstrap, local product builds, and CI all use the same behavior.
 if [[ -n "${BUILD_CACHE_REGISTRY:-}" ]]; then
 	if ! docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1; then
-		docker buildx create \
+		# Parallel image tasks may all observe a missing shared builder. One creates
+		# it; the others can safely continue once that builder becomes visible.
+		if ! builder_create_output=$(docker buildx create \
 			--name "$BUILDER_NAME" \
-			--driver docker-container >/dev/null
+			--driver docker-container 2>&1); then
+			if ! docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1; then
+				printf '%s\n' "$builder_create_output" >&2
+				exit 1
+			fi
+		fi
 	fi
 	docker buildx inspect "$BUILDER_NAME" --bootstrap >/dev/null
 fi
