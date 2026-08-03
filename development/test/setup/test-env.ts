@@ -54,7 +54,7 @@ export default class TestEnv {
 				await this.settings.beforeServices();
 			}
 			console.log(
-				`▶️  Bringing up the test environment ${ this.settings.debug ? '(DEBUG)' : '' }`
+				`▶️ Bringing up the "${ this.settings.name }" test environment${ this.settings.debug ? ' (DEBUG)' : '' }`
 			);
 
 			await this.stopServices();

@@ -7,6 +7,7 @@ import { existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { printSuiteHeading } from './output.js';
 
 type WdioOptions = Partial<RunCommandArguments> & {
 	repeat?: number;
@@ -179,6 +180,7 @@ function prepareWdioOptions( options: TestOptions ): WdioOptions {
 }
 
 async function buildImages(): Promise<void> {
+	console.log( '🏗️ Building images...' );
 	await new Promise<void>( ( resolveBuild, rejectBuild ) => {
 		const child = spawn(
 			'pnpm',
@@ -202,14 +204,7 @@ async function buildImages(): Promise<void> {
 			resolveBuild();
 		} );
 	} );
-}
-
-function printSuiteHeading( suiteName: string ): void {
-	console.log(
-		chalk.bgWhiteBright.black.bold(
-			`\n"${ suiteName }" test suite ${ ' '.repeat( Math.max( 1, 96 - suiteName.length ) ) }`
-		)
-	);
+	console.log( '✅ Images finished building' );
 }
 
 async function runSuites(
@@ -242,10 +237,8 @@ async function runSuites(
 		throw new Error( '--setup cannot be combined with --spec or --watch.' );
 	}
 	if ( options.setup ) {
-		printSuiteHeading( suiteNames[ 0 ] );
 		if ( !options.skipBuild ) {
 			await buildImages();
-			console.log( '✅ All image builds are current.' );
 		}
 		const configUrl = pathToFileURL( getSuiteConfigFilePath( suiteNames[ 0 ] ) ).href;
 		// eslint-disable-next-line es-x/no-dynamic-import
@@ -257,10 +250,15 @@ async function runSuites(
 		};
 		try {
 			await testEnv.up();
+			printSuiteHeading( suiteNames[ 0 ] );
 		} finally {
 			testEnv.releaseExitListener();
 		}
 		return;
+	}
+
+	if ( !options.skipBuild ) {
+		await buildImages();
 	}
 
 	if ( suiteNames.length > 1 ) {
@@ -272,14 +270,7 @@ async function runSuites(
 
 	const wdioOptions = prepareWdioOptions( options );
 	let failed = false;
-	let buildImagesBeforeSuite = !options.skipBuild;
 	for ( const suiteName of suiteNames ) {
-		printSuiteHeading( suiteName );
-		if ( buildImagesBeforeSuite ) {
-			await buildImages();
-			console.log( '✅ All image builds are current.' );
-			buildImagesBeforeSuite = false;
-		}
 		const exitCode = await runWdio(
 			getSuiteConfigFilePath( suiteName ),
 			wdioOptions

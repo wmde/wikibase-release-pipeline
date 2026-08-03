@@ -2,6 +2,7 @@ import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { printSuiteHeading } from '../../scripts/test/output.js';
 import JsonReporter from '../helpers/json-reporter.js';
 import TestEnv from './test-env.js';
 
@@ -97,6 +98,7 @@ export function wdioConfig( providedTestEnv: TestEnv ): WebdriverIO.Config {
 			if ( settings.onPrepare ) {
 				await settings.onPrepare();
 			}
+			printSuiteHeading( settings.name );
 		},
 
 		before: async () => {
