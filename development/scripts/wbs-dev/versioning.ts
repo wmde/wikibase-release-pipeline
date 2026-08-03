@@ -208,26 +208,30 @@ function updateChangelog(
 		.filter( ( commit ) => commit.bump )
 		.map( ( commit ) => `- ${ commit.subject }` )
 		.join( '\n' );
-	const headingText = `# ${ targetVersion } (${ date })`;
 	if ( draftHeadings.length === 0 ) {
+		const newEntryHeading = `# ${ targetVersion } (${ date })`;
 		const generatedDraftBody =
 			generatedBody || '- Release changes to be documented.';
 		const firstContent = changelog.search( /\S/u );
 		const normalizedChangelog =
 			firstContent === -1 ? '' : changelog.slice( firstContent );
-		return `${ headingText }\n\n${ generatedDraftBody }\n\n${ normalizedChangelog }`;
+		return `${ newEntryHeading }\n\n${ generatedDraftBody }\n\n${ normalizedChangelog }`;
 	}
 	const draft = draftHeadings[ 0 ];
 	const nextHeading = headings.find( ( heading ) => heading.start > draft.start );
 	const bodyEnd = nextHeading ? nextHeading.start : changelog.length;
 	const body = changelog.slice( draft.end, bodyEnd );
 	const hasBody = body.trim().length > 0;
+	const draftHeading =
+		draft.version === targetVersion && hasBody ?
+			changelog.slice( draft.start, draft.end ) :
+			`# ${ targetVersion } (${ date })`;
 	const replacementBody = hasBody ?
 		body :
 		`\n\n${ generatedBody || '- Release changes to be documented.' }\n\n`;
 	return (
 		changelog.slice( 0, draft.start ) +
-		headingText +
+		draftHeading +
 		replacementBody +
 		changelog.slice( bodyEnd )
 	);
