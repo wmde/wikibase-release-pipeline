@@ -43,9 +43,16 @@ describe( 'WBS tools installer', () => {
 		await setField( 'MW_ADMIN_PASS', ADMIN_PASSWORD );
 		await clickEnabledButton( 'Continue' );
 
-		await setField( 'DB_PASS', 'WbsToolsDatabasePassword-2026' );
 		await setField( 'DB_NAME', 'wbs_tools_test' );
 		await setField( 'DB_USER', 'wbs_tools_user' );
+		await setField( 'DB_PASS', 'WbsToolsDatabasePassword-2026' );
+		await clickEnabledButton( 'Continue' );
+
+		await expect( $( 'h2=Visibility' ) ).toBeDisplayed();
+		const visibilityCheckbox = await $( 'input[name="METADATA_CALLBACK"]' );
+		await expect( visibilityCheckbox ).not.toBeSelected();
+		await visibilityCheckbox.click();
+		await expect( visibilityCheckbox ).toBeSelected();
 		await clickEnabledButton( 'Start installation' );
 
 		const completionHeading = await $( 'h2=Installation complete! 🎉' );
