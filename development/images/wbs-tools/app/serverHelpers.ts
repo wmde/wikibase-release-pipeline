@@ -40,7 +40,7 @@ export function isSetupStarted(): boolean {
 		.split( '\n' )
 		.some( ( line ) => {
 			const match = line.match( /\s\[([a-z0-9_]+)\]$/i );
-			return match !== null && match[ 1 ].toLowerCase() !== 'debug';
+			return match?.[ 1 ].toLowerCase() === 'config_saved';
 		} );
 }
 
