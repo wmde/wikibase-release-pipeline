@@ -102,10 +102,7 @@ ARG MEDIAWIKI_VERSION
 # Set the user agent as releases.wikimedia.org will 403 us otherwise
 # hadolint ignore=DL4006
 RUN set -eux; \
-    curl --http1.1 --retry 5 --retry-all-errors --retry-delay 2 --remove-on-error \
-        -A "Mozilla/5.0" -fSL \
-        "https://releases.wikimedia.org/mediawiki/$(echo ${MEDIAWIKI_VERSION} | cut -d. -f1,2)/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" \
-        -o mediawiki.tar.gz; \
+    curl -A "Mozilla/5.0" -fSL "https://releases.wikimedia.org/mediawiki/$(echo ${MEDIAWIKI_VERSION} | cut -d. -f1,2)/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz; \
     tar -x --strip-components=1 -f mediawiki.tar.gz; \
     rm -r mediawiki.tar.gz; \
     install -d /var/log/mediawiki -o www-data
