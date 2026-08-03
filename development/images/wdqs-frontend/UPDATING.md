@@ -1,4 +1,4 @@
-# Updating Query Service frontend
+# Updating Query Service frontend (`wikibase/wdqs-frontend`)
 
 [Back to the release guide](../../docs/releasing.md#1-update-images-from-upstream-sources-optional)
 

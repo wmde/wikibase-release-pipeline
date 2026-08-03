@@ -2,7 +2,7 @@
 
 Wikibase Suite (WBS) and each of its images have independent version numbers. They all use [semantic versioning](https://semver.org/spec/v2.0.0.html), written as `MAJOR.MINOR.PATCH`.
 
-Semantic versioning defines what those numbers mean. The repository's [Conventional Commits policy](../development/docs/conventional-commits.md) records the impact of each change so the release tooling can select the next version.
+Semantic versioning defines what those numbers mean. The repository's [versioning and Conventional Commits policy](../development/docs/versioning-and-commits.md) records the impact of each change so the release tooling can select the next version.
 
 ## WBS versions
 

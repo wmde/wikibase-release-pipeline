@@ -22,30 +22,22 @@ The branch and tag model is:
 
 ## Installer entry points
 
-The downloaded bootstrap is browser-first. It installs Git when needed, selects
-and checks out the latest stable WBS release, and then delegates to that
-release's `wbs` command:
+The downloaded bootstrap is browser-first. It installs Git when needed, selects and checks out the latest stable WBS release, and then delegates to that release's `wbs` command:
 
 ```bash
 bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install)
 ```
 
-From an existing checkout, use the location-independent root command. It
-resolves the rest of the repository relative to its own path, so it can be
-invoked while your shell is in another directory:
+From an existing checkout, use the location-independent root command. It resolves the rest of the repository relative to its own path, so it can be invoked while your shell is in another directory:
 
 ```bash
 /path/to/wikibase-suite/wbs install
 /path/to/wikibase-suite/wbs install --web
 ```
 
-`wbs install` uses the terminal wizard by default. `wbs install --web` uses the
-browser UI. Both paths use the same containerized Commander entry point and the
-same host orchestration scripts.
+`wbs install` uses the terminal wizard by default. `wbs install --web` uses the browser UI. Both paths use the same containerized Commander entry point and the same host orchestration scripts.
 
-For local networking, add `--local`. This retains the normal dependency and
-checkout behavior; it only selects the no-public-domain networking mode. The
-installer then defaults to:
+For local networking, add `--local`. This retains the normal dependency and checkout behavior; it only selects the no-public-domain networking mode. The installer then defaults to:
 
 ```bash
 WIKIBASE_PUBLIC_HOST=wikibase.test
@@ -64,12 +56,9 @@ Add those hosts to your system hosts file before launching the stack.
 | `--local` | Use local hostnames without public DNS validation or public certificates. |
 | `--debug` | Enable verbose logging and disable quiet Docker pulls. |
 
-The downloaded bootstrap additionally accepts `--wbs-ref REF` to check out a
-specific WBS branch or tag. It defaults to browser mode and deliberately does
-not expose checkout-only `--dev` behavior.
+The downloaded bootstrap additionally accepts `--wbs-ref REF` to check out a specific WBS branch or tag. It defaults to browser mode and deliberately does not expose checkout-only `--dev` behavior.
 
-The old `--cli`, `--skip-clone`, `--skip-deps`, `--skip-launch`, and `--reset`
-options were never part of a published interface and are not supported.
+The old `--cli`, `--skip-clone`, `--skip-deps`, `--skip-launch`, and `--reset` options were never part of a published interface and are not supported.
 
 ## Developing the browser installer
 
@@ -79,12 +68,15 @@ From an existing checkout, run:
 ./wbs install --dev
 ```
 
-This builds the WBS tools image from `development/images/wbs-tools`, mounts the
-application source for live reload, opens the browser installer, and implies
-`--local`. It assumes Git and Docker are already installed. It does not build
-the product images; use `development/wbs-dev build` when those sources changed.
+This builds the WBS tools image from `development/images/wbs-tools`, mounts the application source for live reload, opens the browser installer, and implies `--local`. It assumes Git and Docker are already installed. It does not build the product images; use `development/wbs-dev build` when those sources changed.
 
-To install an unpublished source checkout, add `--build`:
+To test a complete installation from the current checkout, build the tools and product images before starting the installer:
+
+```bash
+./install --build
+```
+
+To install another unpublished branch or tag, select it in the downloaded bootstrap and add `--build`:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/install) \
@@ -92,14 +84,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/ins
   --build
 ```
 
-This builds the tools and product images from the selected checkout and records
-their selection in `docker-compose.build.yml`. Remove that generated file to
-return the installation to published image tags. Source builds require more
-time, CPU, memory, and storage than a normal installation. They anonymously
-reuse the public build cache produced by CI in GHCR; prefix the command with
-`BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build
-output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to
-stream it in the terminal.
+This builds the tools and product images from the selected checkout and records their selection in `docker-compose.build.yml`. Remove that generated file to return the installation to published image tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to stream it in the terminal.
 
 ## Runtime behavior
 

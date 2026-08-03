@@ -8,7 +8,9 @@ The installable product configuration and user documentation live at the [reposi
 
 Development requires Git and a current Docker installation with the Compose and Buildx plugins. Node.js, pnpm, Python, and the repository linters do not need to be installed on the host.
 
-Run repository tasks through `wbs-dev`. From the repository root:
+Repository tasks run through `wbs-dev`. The wrapper builds or loads the development-tooling image and runs the TypeScript task coordinator in that container. The checkout is mounted into the container, while image builds and test services use the host Docker daemon. GitHub Actions uses the same entry point and underlying scripts.
+
+Run examples from the repository root unless stated otherwise:
 
 ```bash
 development/wbs-dev build
@@ -16,9 +18,17 @@ development/wbs-dev test
 development/wbs-dev lint
 ```
 
-Test commands build the local images before running. Docker's layer cache keeps unchanged builds inexpensive. When already in `development/`, use the equivalent `./wbs-dev ...` form.
+The wrapper is location-independent. When already in `development/`, use the equivalent `./wbs-dev ...` form.
 
-See the [local development guide](./docs/local-development.md) for environment details and common workflows, or the [`wbs-dev` command guide](./docs/wbs-dev.md) for targets and options. Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).
+Use `development/wbs-dev --help` or `development/wbs-dev <command> --help` for the current targets, options, and examples.
+
+Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+## Local configuration
+
+Put optional local overrides in `development/local.env`. The `wbs-dev` wrapper creates the file when it is missing. Test defaults come from the root `.env.example`, `development/test/test-services.env`, and `development/test/test-runner.env`.
+
+See the [integration test guide](./test/README.md#environment-and-local-overrides) for test-specific variables.
 
 ## Documentation map
 
@@ -27,11 +37,11 @@ Use the documentation according to the task:
 | Task | Start here |
 | --- | --- |
 | Install or operate a published WBS release | [WBS documentation](../README.md) |
-| Set up and work in the repository locally | [Local development guide](./docs/local-development.md) |
+| Set up and work in the repository locally | This guide |
 | Prepare and submit a change | [Contributor guide](../CONTRIBUTING.md) |
-| Run build, test, lint, update, or publish commands | [`wbs-dev` command guide](./docs/wbs-dev.md) |
+| Run build, test, lint, update, or publish commands | `development/wbs-dev <command> --help` |
 | Add or debug an integration test | [Integration test suites](./test/README.md) |
-| Change the installer or operations tools | [Tools development guide](../tools/docs/README.md) |
+| Develop or test the installer and operations tools | [Tools development guide](../tools/docs/README.md) |
 | Prepare and publish a release | [Release process](./docs/releasing.md) |
 | Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
 

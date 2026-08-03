@@ -1,4 +1,4 @@
-# Updating OpenSearch
+# Updating OpenSearch (`wikibase/opensearch`)
 
 [Back to the release guide](../../docs/releasing.md#1-update-images-from-upstream-sources-optional)
 

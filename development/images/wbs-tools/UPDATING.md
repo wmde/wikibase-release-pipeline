@@ -1,4 +1,4 @@
-# Updating WBS tools
+# Updating WBS tools (`wikibase/wbs-tools`)
 
 [Back to the release guide](../../docs/releasing.md#2-complete-the-product-changes)
 

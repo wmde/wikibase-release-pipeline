@@ -17,6 +17,7 @@ Current ADRs include:
 - [5 - release notes process](0005-release-notes-process.md)
 - [6 - pipeline runner](0006-pipline-runner.md)
 - [7 - wikibase release notes publishing](0007-wikibase-release-notes-publish.md)
+- [8 - WMDE repository release notes](0008-wmde-repo-release-notes.md)
 - [9 - non-WMDE release notes](0009-non-WMDE-release-notes.md)
 - [10 - queryservice tarball](0010-queryservice-tarball.md)
 - [11 - wikibase bundle](0011-wikibase-bundle.md)
@@ -27,3 +28,5 @@ Current ADRs include:
 - [16 - updating non wmde software](0016-updating-non-wmde-software.md)
 - [17 - using mediawiki docker image](0017-using-mediawiki-docker-image.md)
 - [18 - anonymous access defaults for the wikibase image](0018-anonymous-access-defaults.md)
+- [19 - publish multi-platform images](0019-multi-platform-images.md)
+- [20 - generate upstream updates and image changelogs](0020-upstream-updates-and-changelogs.md)

@@ -1,4 +1,4 @@
-# Updating Wikibase
+# Updating Wikibase (`wikibase/wikibase`)
 
 [Back to the release guide](../../docs/releasing.md#1-update-images-from-upstream-sources-optional)
 

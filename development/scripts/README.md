@@ -2,7 +2,7 @@
 
 This directory contains the implementation behind `development/wbs-dev`. `wbs-dev` is the supported human and CI entry point; the shell and Python files here are internal building blocks rather than separate command interfaces.
 
-See the [`wbs-dev` command guide](../docs/wbs-dev.md) for the public command surface. Call that wrapper rather than invoking files in this directory directly.
+Use `development/wbs-dev --help` and its subcommand help for the public command surface. Call that wrapper rather than invoking files in this directory directly.
 
 - `wbs-dev/` discovers targets, validates selections, and coordinates tasks.
 - `test/` provides the Commander-based integration-test CLI and its container wrapper.

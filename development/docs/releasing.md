@@ -4,7 +4,7 @@ Prepare each release in a pull request containing the implementation, versions, 
 
 WBS and each image are versioned independently according to the [WBS version policy](../../docs/versions.md), and all follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
-The `wbs-dev update-versions` command uses [Conventional Commits](./conventional-commits.md) to determine the next release version and generate changelog entries.
+The `wbs-dev update-versions` command uses the repository's [versioning and commit policy](./versioning-and-commits.md) to determine the next release version and generate changelog entries.
 
 ## Release workflow
 
@@ -36,7 +36,7 @@ Fix failures and rerun the tests before continuing.
 
 ### 4. Commit the changes
 
-Commit all release changes according to the [Conventional Commits policy](./conventional-commits.md).
+Commit all release changes according to the [versioning and commit policy](./versioning-and-commits.md).
 
 ### 5. Generate versions and changelogs
 
