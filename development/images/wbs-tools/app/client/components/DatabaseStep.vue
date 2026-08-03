@@ -2,7 +2,7 @@
 	<section class="wizard-panel is-active">
 		<div class="wizard-panel__body wizard-panel__body--form">
 			<header class="wizard-panel__header">
-				<h2>Set up database credentials</h2>
+				<h2>Database credentials</h2>
 				<p>
 					Wikibase stores data in a MariaDB database. These credentials are used internally between
 					services.
@@ -10,20 +10,6 @@
 			</header>
 
 			<div class="field-stack">
-				<password-field
-					:model-value="form.DB_PASS"
-					label="Database password"
-					description="Select Generate to create a secure unique password, or enter your own. Passwords must be at least 10 characters."
-					name="DB_PASS"
-					autocomplete="new-password"
-					:status="passwordStatus"
-					:disabled="disabled"
-					show-generate-button
-					@update:model-value="emit( 'update-field', 'DB_PASS', $event )"
-					@generate="emit( 'generate-password', 'DB_PASS' )"
-					@touch="emit( 'touch', 'DB_PASS' )"
-				/>
-
 				<validated-text-field
 					:model-value="form.DB_NAME"
 					label="Database name"
@@ -51,16 +37,30 @@
 					@update:model-value="emit( 'update-field', 'DB_USER', $event )"
 					@touch="emit( 'touch', 'DB_USER' )"
 				/>
+
+				<password-field
+					:model-value="form.DB_PASS"
+					label="Database password"
+					description="Select Generate to create a secure unique password, or enter your own. Passwords must be at least 10 characters."
+					name="DB_PASS"
+					autocomplete="new-password"
+					:status="passwordStatus"
+					:disabled="disabled"
+					show-generate-button
+					@update:model-value="emit( 'update-field', 'DB_PASS', $event )"
+					@generate="emit( 'generate-password', 'DB_PASS' )"
+					@touch="emit( 'touch', 'DB_PASS' )"
+				/>
 			</div>
 
 			<cdx-message class="setup-callout setup-callout--warning">
 				<div class="callout-heading">
 					<cdx-icon :icon="cdxIconAlert" class="callout-icon callout-icon--warning" size="small" />
-					<div class="callout-title">Before you start</div>
+					<div class="callout-title">Please note</div>
 				</div>
 				<p class="setup-callout__text">
-					Once installation has started, the database name, user, and password can’t be easily changed without
-					starting the installation over.
+					You can continue with the default credentials, or change them to something more familiar. Remember
+					that these cannot be changed easily after installation.
 				</p>
 			</cdx-message>
 		</div>
@@ -75,10 +75,10 @@
 					type="button"
 					action="progressive"
 					weight="primary"
-					:disabled="disabled || !canStart"
-					@click="emit( 'start' )"
+					:disabled="disabled || !canContinue"
+					@click="emit( 'continue' )"
 				>
-					Start installation
+					Continue
 				</cdx-button>
 			</div>
 		</div>
@@ -99,7 +99,7 @@ defineProps<{
 	form: ConfigForm;
 	textStatuses: Record<DatabaseTextFieldName, FieldValidationStatus>;
 	passwordStatus: FieldValidationStatus;
-	canStart: boolean;
+	canContinue: boolean;
 	disabled: boolean;
 }>();
 
@@ -108,6 +108,6 @@ const emit = defineEmits<{
 	'generate-password': [ name: 'DB_PASS' ];
 	touch: [ name: DatabaseFieldName ];
 	back: [];
-	start: [];
+	continue: [];
 }>();
 </script>

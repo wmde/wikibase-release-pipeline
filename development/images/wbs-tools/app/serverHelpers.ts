@@ -142,7 +142,7 @@ export function getConfig(
 			MW_ADMIN_EMAIL: String( input.MW_ADMIN_EMAIL ?? '' ).trim(),
 			WIKIBASE_PUBLIC_HOST: String( input.WIKIBASE_PUBLIC_HOST ?? '' ).trim(),
 			WDQS_PUBLIC_HOST: String( input.WDQS_PUBLIC_HOST ?? '' ).trim(),
-			METADATA_CALLBACK: String( input.METADATA_CALLBACK ?? 'true' ).trim(),
+			METADATA_CALLBACK: String( input.METADATA_CALLBACK ?? 'false' ).trim(),
 			MW_ADMIN_NAME: String( input.MW_ADMIN_NAME ?? '' ).trim(),
 			MW_ADMIN_PASS: resolvePasswordInput( input.MW_ADMIN_PASS, shouldGeneratePasswords ),
 			DB_NAME: input.DB_NAME && input.DB_NAME !== '' ?
@@ -182,7 +182,7 @@ export function getConfig(
 		WDQS_PUBLIC_HOST: isLocalhostSetup() ? 'query.wikibase.test' : '',
 		MW_ADMIN_PASS: '',
 		DB_PASS: '',
-		METADATA_CALLBACK: 'true'
+		METADATA_CALLBACK: 'false'
 	};
 
 	return { config: configObject, configText: makeConfigText( configObject ) };

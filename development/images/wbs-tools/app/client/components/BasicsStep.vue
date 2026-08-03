@@ -2,22 +2,22 @@
 	<section class="wizard-panel is-active">
 		<div class="wizard-panel__body wizard-panel__body--form">
 			<header class="wizard-panel__header">
-				<h2>Configure domain names</h2>
+				<h2>Connect domains</h2>
 				<p>
-					Enter the web addresses you’d like to use for your Wikibase and Query Service. In your DNS
-					provider's control panel, create two records of either <strong>A</strong> or <strong>CNAME</strong>
-					type, one for each hostname. Each hostname must ultimately route to this server's public IP address:
-					<copyable-value :value="serverIp" label="Copy server IP address" />. DNS changes can take a few
-					minutes to propagate. The fields will show a
+					Enter the domain names you have linked via DNS A records to your server’s IP address:
+					<copyable-value :value="serverIp" label="Copy server IP address" />.
+				</p>
+				<p class="domain-validation-copy">
+					The fields will show a
 					<cdx-icon :icon="cdxIconCheck" class="dns-help-inline__check" size="small" />
-					once the entered hostname resolves to this server.
+					when the entered domains resolve correctly.
 				</p>
 			</header>
 
 			<div class="field-stack">
 				<validated-text-field
 					:model-value="form.WIKIBASE_PUBLIC_HOST"
-					label="Wikibase host"
+					label="Wikibase domain"
 					description="The address where your Wikibase will be accessible. Don’t include <code>http://</code> or a trailing slash."
 					name="WIKIBASE_PUBLIC_HOST"
 					placeholder="e.g. wikibase.example.org"
@@ -33,7 +33,7 @@
 
 				<validated-text-field
 					:model-value="form.WDQS_PUBLIC_HOST"
-					label="Query Service host"
+					label="Query Service subdomain"
 					description="The address for the SPARQL query service. Must be different from the Wikibase host."
 					name="WDQS_PUBLIC_HOST"
 					placeholder="e.g. query.wikibase.example.org"
@@ -55,14 +55,10 @@
 						<div class="callout-title">Need help?</div>
 					</div>
 					<p class="dns-help-inline__intro">
-						Your DNS provider’s documentation will have the exact steps for managing records. To learn more, see
-						<a href="https://developer.mozilla.org/en-US/docs/Glossary/DNS" target="_blank" rel="noreferrer">DNS basics</a>
-						or
-						<a href="https://learn.wordpress.org/lesson/domain-management-understanding-dns-records/" target="_blank" rel="noreferrer">understanding DNS records</a>,
-						or check guides for
-						<a href="https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/" target="_blank" rel="noreferrer">Cloudflare</a>,
-						<a href="https://www.godaddy.com/help/add-an-a-record-19238" target="_blank" rel="noreferrer">GoDaddy</a>, or
-						<a href="https://www.namecheap.com/support/knowledgebase/article.aspx/319/2237/how-can-i-set-up-an-a-address-record-for-my-domain/" target="_blank" rel="noreferrer">Namecheap</a>.
+						To update your DNS settings, log in to your domain provider and navigate to DNS settings (often
+						called “DNS Management,” “DNS Settings,” or “Zone File Editor”). For more information, follow
+						the domain instructions in the
+						<a href="https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/install.md" target="_blank" rel="noreferrer">installation guide</a>.
 					</p>
 				</div>
 			</cdx-message>
