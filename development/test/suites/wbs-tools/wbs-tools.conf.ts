@@ -4,7 +4,6 @@ import {
 	INSTALLER_URL,
 	INSTALL_TIMEOUT,
 	collectDiagnostics,
-	runBootstrapTest,
 	startInstaller,
 	stopInstaller
 } from './test-environment.js';
@@ -18,7 +17,6 @@ export const testEnv = TestEnv.create( {
 	waitForUrls: () => [ 'http://browser:4444/wd/hub/status' ],
 	onPrepare: async () => {
 		try {
-			runBootstrapTest();
 			await testEnv.up();
 			startInstaller();
 		} catch ( error ) {

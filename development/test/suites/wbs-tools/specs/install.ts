@@ -1,14 +1,16 @@
+import assert from 'node:assert/strict';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import {
 	ADMIN_EMAIL,
 	ADMIN_PASSWORD,
 	ADMIN_USERNAME,
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
+	toolsImage,
 	verifyFinalizedInstallerArtifacts,
-	verifyCliArtifact,
-	verifyCommandInterface,
-	waitForInstallerStopped,
-	waitForInstalledServicesHealthy
+	waitForInstalledServicesHealthy,
+	waitForInstallerStopped
 } from '../test-environment.js';
 
 async function setField( name: string, value: string ): Promise<void> {
@@ -25,11 +27,65 @@ async function clickEnabledButton( label: string ): Promise<void> {
 }
 
 describe( 'WBS tools installer', () => {
+	it( 'selects stable releases and forwards supported bootstrap options', () => {
+		execFileSync(
+			'bash',
+			[ fileURLToPath( new URL( './install-bootstrap.sh', import.meta.url ) ) ],
+			{ encoding: 'utf8' }
+		);
+	} );
 	it( 'contains the compiled command-line installer', () => {
-		verifyCliArtifact();
+		execFileSync(
+			'docker',
+			[
+				'run',
+				'--rm',
+				'--entrypoint',
+				'sh',
+				toolsImage(),
+				'-c',
+				'test -f dist/wbs.js && test -f dist/cli.js'
+			],
+			{ encoding: 'utf8' }
+		);
 	} );
 	it( 'provides the supported wbs install command interface', () => {
-		verifyCommandInterface();
+		const image = toolsImage();
+		const help = execFileSync(
+			'docker',
+			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'install', '--help' ],
+			{ encoding: 'utf8' }
+		);
+		for ( const option of [ '--web', '--local', '--dev', '--build', '--debug' ] ) {
+			assert.ok(
+				help.includes( option ),
+				`wbs install help does not include ${ option }.`
+			);
+		}
+		assert.doesNotMatch( help, /--cli/u );
+
+		for ( const invalidOption of [ '--cli', '--unknown-option' ] ) {
+			const result = spawnSync(
+				'docker',
+				[
+					'run',
+					'--rm',
+					'-e',
+					'WBS_VALIDATE_OPTIONS=true',
+					image,
+					'node',
+					'dist/wbs.js',
+					'install',
+					invalidOption
+				],
+				{ encoding: 'utf8', stdio: 'pipe' }
+			);
+			assert.notEqual(
+				result.status,
+				0,
+				`wbs install unexpectedly accepted ${ invalidOption }.`
+			);
+		}
 	} );
 
 	it( 'boots a healthy Wikibase Suite, finalizes securely, and preserves administrator login', async () => {

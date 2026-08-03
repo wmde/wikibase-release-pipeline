@@ -112,73 +112,10 @@ function copyCheckout(): void {
 	writeFileSync( INSTALL_LOG, '' );
 }
 
-function toolsImage(): string {
+export function toolsImage(): string {
 	const registry = process.env.WBS_TEST_IMAGE_REGISTRY || 'wikibase';
 	const tag = process.env.WBS_TEST_IMAGE_TAG || 'latest';
 	return `${ registry }/wbs-tools:${ tag }`;
-}
-
-export function verifyCliArtifact(): void {
-	run( 'docker', [
-		'run',
-		'--rm',
-		'--entrypoint',
-		'sh',
-		toolsImage(),
-		'-c',
-		'test -f dist/wbs.js && test -f dist/cli.js'
-	] );
-}
-
-export function verifyCommandInterface(): void {
-	const image = toolsImage();
-	const help = run( 'docker', [
-		'run',
-		'--rm',
-		image,
-		'node',
-		'dist/wbs.js',
-		'install',
-		'--help'
-	] );
-	for ( const option of [ '--web', '--local', '--dev', '--build', '--debug' ] ) {
-		if ( !help.includes( option ) ) {
-			throw new Error( `wbs install help does not include ${ option }.` );
-		}
-	}
-	if ( help.includes( '--cli' ) ) {
-		throw new Error( 'wbs install must not expose the redundant --cli option.' );
-	}
-
-	for ( const invalidOption of [ '--cli', '--unknown-option' ] ) {
-		const result = spawnSync(
-			'docker',
-			[
-				'run',
-				'--rm',
-				'-e',
-				'WBS_VALIDATE_OPTIONS=true',
-				image,
-				'node',
-				'dist/wbs.js',
-				'install',
-				invalidOption
-			],
-			{ encoding: 'utf8', stdio: 'pipe' }
-		);
-		if ( result.status === 0 ) {
-			throw new Error( `wbs install unexpectedly accepted ${ invalidOption }.` );
-		}
-	}
-}
-
-export function runBootstrapTest(): void {
-	run( 'bash', [
-		join(
-			HOST_REPOSITORY_ROOT,
-			'development/test/suites/wbs-tools/specs/install-bootstrap.sh'
-		)
-	] );
 }
 
 export function startInstaller(): void {
