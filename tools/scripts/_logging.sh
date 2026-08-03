@@ -72,30 +72,50 @@ debug() {
 #   <raw command output...>
 run() {
   local cmd="$*"
+  local command_status=0
   printf '%s %s [debug]\n' "$(_timestamp)" "BEGIN RUN: $cmd" >> "$LOG_PATH"
 
   if $INTERACTIVE && [ "$DEBUG" = true ]; then
     # output to screen and log
-    bash -c "$cmd" 2>&1 | tee -a "$LOG_PATH"
+    if bash -c "$cmd" 2>&1 | tee -a "$LOG_PATH"; then
+      :
+    else
+      command_status=$?
+    fi
   else
     # log only
-    bash -c "$cmd" >>"$LOG_PATH" 2>&1
+    if bash -c "$cmd" >>"$LOG_PATH" 2>&1; then
+      :
+    else
+      command_status=$?
+    fi
   fi
   printf '\n' >> "$LOG_PATH"
   printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
+  return "$command_status"
 }
 
 # Execute an argument array without reparsing it through a shell.
 run_args() {
   local rendered_command
+  local command_status=0
   printf -v rendered_command '%q ' "$@"
   printf '%s %s [debug]\n' "$(_timestamp)" "BEGIN RUN: $rendered_command" >> "$LOG_PATH"
 
   if $INTERACTIVE && [ "$DEBUG" = true ]; then
-    "$@" 2>&1 | tee -a "$LOG_PATH"
+    if "$@" 2>&1 | tee -a "$LOG_PATH"; then
+      :
+    else
+      command_status=$?
+    fi
   else
-    "$@" >>"$LOG_PATH" 2>&1
+    if "$@" >>"$LOG_PATH" 2>&1; then
+      :
+    else
+      command_status=$?
+    fi
   fi
   printf '\n' >> "$LOG_PATH"
   printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
+  return "$command_status"
 }

@@ -35,8 +35,11 @@ if [[ "${#image_projects[@]}" -eq 0 ]]; then
   exit 1
 fi
 
-status "Building Wikibase Suite images from the selected source checkout..." "images_build_started"
-"$WBS_DIR/development/wbs-dev" build "${image_projects[@]}"
+status "🕐 Building Wikibase Suite images from the selected source checkout..." "images_build_started"
+if ! run_args "$WBS_DIR/development/wbs-dev" build "${image_projects[@]}"; then
+  status "⛔️ One or more image builds failed. Review $LOG_PATH or rerun with --debug." "images_build_failed"
+  exit 1
+fi
 cp "$BUILD_COMPOSE_TEMPLATE" "$BUILD_COMPOSE_FILE"
 status "✅ All source image builds are current." "images_build_ready"
 status "Locally built images will remain selected through docker-compose.build.yml. Remove that file to return to published images." "source_build_override_created"

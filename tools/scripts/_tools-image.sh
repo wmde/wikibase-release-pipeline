@@ -13,7 +13,7 @@ prepare_tools_image() {
   if [[ "${DEV:-false}" == true || "${BUILD:-false}" == true ]]; then
     local tools_version
     tools_version="$(sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$tools_project_dir/package.json" | head -n 1)"
-    status "Building WBS tools from the selected source checkout..." "tools_build_started"
+    status "🕐 Building WBS tools from the selected source checkout..." "tools_build_started"
     debug "Building WBS tools from $tools_project_dir"
     run_args docker buildx build \
       --load \

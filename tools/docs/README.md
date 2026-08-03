@@ -97,7 +97,9 @@ their selection in `docker-compose.build.yml`. Remove that generated file to
 return the installation to published image tags. Source builds require more
 time, CPU, memory, and storage than a normal installation. They anonymously
 reuse the public build cache produced by CI in GHCR; prefix the command with
-`BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache.
+`BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build
+output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to
+stream it in the terminal.
 
 ## Runtime behavior
 
