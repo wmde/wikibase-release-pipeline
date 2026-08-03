@@ -1,6 +1,6 @@
 # Integration test suites
 
-Run tests through the repository's `wbs-dev` container. See the [`wbs-dev` command guide](../docs/wbs-dev.md#test) for the command reference.
+Run tests through the repository's `wbs-dev` container. Use `./wbs-dev test --help` for the current command reference.
 
 ```bash
 # Run every suite sequentially

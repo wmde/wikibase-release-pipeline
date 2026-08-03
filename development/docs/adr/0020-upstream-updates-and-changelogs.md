@@ -18,7 +18,7 @@ This is especially visible when updating:
 
 ## Decision
 
-Extend `wbs-dev update-sources` with image-specific update providers. Each provider will select or propose compatible upstream versions, update related pins atomically, and produce structured metadata describing the old and new sources.
+Extend `./wbs-dev update-sources` with image-specific update providers. Each provider will select or propose compatible upstream versions, update related pins atomically, and produce structured metadata describing the old and new sources.
 
 Use that metadata during release preparation to generate image-specific changelog drafts. For example, a Wikibase image entry should identify the MediaWiki update, link to its release notes, and link to comparison ranges for bundled extension updates. A WDQS entry should identify and link to the selected Query Service release and comparison.
 

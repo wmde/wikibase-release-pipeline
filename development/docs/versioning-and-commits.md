@@ -10,7 +10,7 @@ The [WBS version policy](../../docs/versions.md) explains how product and image 
 
 ## Release impact
 
-Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) so the history records the intended impact of a change. `wbs-dev update-versions` examines commits since each affected project's latest tag and proposes the highest applicable version increment:
+Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) so the history records the intended impact of a change. `./wbs-dev update-versions` examines commits since each affected project's latest tag and proposes the highest applicable version increment:
 
 | Commit                                          | Version increment  |
 | ----------------------------------------------- | ------------------ |
@@ -21,7 +21,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) so th
 
 Changed paths determine which independently versioned projects a commit affects; the optional commit scope is descriptive and does not select a project. Uncommitted project changes cause `update-versions` to propose at least a patch so release preparation can include source-pin and metadata updates.
 
-The command also proposes changelog entries from release-driving commits. Release operators must review and may edit the proposed version and changelog before committing them. The `wbs-dev release` commands only publish validated, committed release tags. Prerelease versions are not currently supported.
+The command also proposes changelog entries from release-driving commits. Release operators must review and may edit the proposed version and changelog before committing them. The `./wbs-dev release` commands only publish validated, committed release tags. Prerelease versions are not currently supported.
 
 See the [release process](./releasing.md) for preparation, publication ordering, and verification.
 

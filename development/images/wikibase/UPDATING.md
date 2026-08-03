@@ -9,7 +9,7 @@ Use this guide when the release refreshes MediaWiki or bundled extensions.
 For a MediaWiki update, set `MEDIAWIKI_VERSION` in [`build.env`](./build.env) to the target [published version](https://releases.wikimedia.org/mediawiki/), then run:
 
 ```bash
-development/wbs-dev update-sources wikibase
+./wbs-dev update-sources wikibase
 ```
 
 Use the latest stable maintenance release in the target MediaWiki release line. Moving to a new release line is a deliberate Wikibase major update.

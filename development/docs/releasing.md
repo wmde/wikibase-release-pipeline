@@ -4,7 +4,7 @@ Prepare each release in a pull request containing the implementation, versions, 
 
 WBS and each image are versioned independently according to the [WBS version policy](../../docs/versions.md), and all follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
-The `wbs-dev update-versions` command uses the repository's [versioning and commit policy](./versioning-and-commits.md) to determine the next release version and generate changelog entries.
+The `./wbs-dev update-versions` command uses the repository's [versioning and commit policy](./versioning-and-commits.md) to determine the next release version and generate changelog entries.
 
 ## Release workflow
 
@@ -29,7 +29,7 @@ Ensure that the intended development work and any compatibility changes required
 After all intended changes are in place:
 
 ```bash
-development/wbs-dev test
+./wbs-dev test
 ```
 
 Fix failures and rerun the tests before continuing.
@@ -41,7 +41,7 @@ Commit all release changes according to the [versioning and commit policy](./ver
 ### 5. Generate versions and changelogs
 
 ```bash
-development/wbs-dev update-versions <project...|all>
+./wbs-dev update-versions <project...|all>
 ```
 
 This makes local working-tree changes only: it does not stage, commit, tag, or push anything. Review the result with `git diff`. For `wbs`, it also keeps `DEPLOY_VERSION` aligned. An existing higher version is not reduced, and a manually written unreleased changelog entry is preserved.

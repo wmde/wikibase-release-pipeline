@@ -7,7 +7,7 @@ Use this guide when the release refreshes the Query Service frontend.
 ## 1. Update the source
 
 ```bash
-development/wbs-dev update-sources wdqs-frontend
+./wbs-dev update-sources wdqs-frontend
 ```
 
 The command updates the pinned Wikidata Query GUI development commit.

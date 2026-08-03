@@ -68,7 +68,7 @@ From an existing checkout, run:
 ./wbs install --dev
 ```
 
-This builds the WBS tools image from `development/images/wbs-tools`, mounts the application source for live reload, opens the browser installer, and implies `--local`. It assumes Git and Docker are already installed. It does not build the product images; use `development/wbs-dev build` when those sources changed.
+This builds the WBS tools image from `development/images/wbs-tools`, mounts the application source for live reload, opens the browser installer, and implies `--local`. It assumes Git and Docker are already installed. It does not build the product images; use `./wbs-dev build` when those sources changed.
 
 To test a complete installation from the current checkout, build the tools and product images before starting the installer:
 

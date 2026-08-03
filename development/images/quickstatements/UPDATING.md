@@ -9,7 +9,7 @@ Use this guide when the release refreshes those commits.
 ## 1. Update the sources
 
 ```bash
-development/wbs-dev update-sources quickstatements
+./wbs-dev update-sources quickstatements
 ```
 
 The command updates both commits and the MagnusTools archive checksum.
