@@ -95,7 +95,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/ins
 This builds the tools and product images from the selected checkout and records
 their selection in `docker-compose.build.yml`. Remove that generated file to
 return the installation to published image tags. Source builds require more
-time, CPU, memory, and storage than a normal installation.
+time, CPU, memory, and storage than a normal installation. They anonymously
+reuse the public build cache produced by CI in GHCR; prefix the command with
+`BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache.
 
 ## Runtime behavior
 

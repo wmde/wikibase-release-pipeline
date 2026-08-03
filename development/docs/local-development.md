@@ -26,7 +26,13 @@ development/wbs-dev test repo
 development/wbs-dev lint wikibase
 ```
 
-Test commands build all local images once before running the selected suites. Docker's layer cache keeps unchanged builds inexpensive. CI builds images in parallel, imports and exports platform-specific cache records in GHCR, and runs the same suites with `--skip-build` against workflow-specific image tags.
+Test commands build all local images once before running the selected suites. Source builds use Docker's local layer cache and anonymously import the public, platform-specific cache records produced by CI in GHCR. CI builds images in parallel, updates those cache records, and runs the same suites with `--skip-build` against workflow-specific image tags.
+
+To use only the local BuildKit cache, explicitly disable the registry cache:
+
+```bash
+BUILD_CACHE_REGISTRY= development/wbs-dev build wikibase
+```
 
 See the [`wbs-dev` command guide](./wbs-dev.md) for target and option details and the [integration test guide](../test/README.md) for suite coverage and test authoring.
 

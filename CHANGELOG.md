@@ -7,6 +7,7 @@ Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
 - Moves the Wikibase Suite Compose configuration from `deploy/` to the repository root. Existing installations must move their `.env`, complete `config/` contents, and any Compose override to the root during the upgrade.
 - Adds the Wikibase Suite installer at the repository root.
 - Adds `install --build` for testing a complete installation from an unpublished source checkout.
+- Reuses the public CI build cache by default for developer and installer source builds.
 - Allows compatible WBS tools updates within the selected major version without requiring another WBS release.
 - Adds optional login with Wikimedia accounts. See [Enable Wikimedia login](./docs/images/wikibase/README.md#wikimedia-oauth-login).
 - Makes Suite and image documentation part of the root product documentation and moves image sources, integration tests, and release tooling under `development/`.

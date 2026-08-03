@@ -10,6 +10,13 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # shellcheck disable=SC1091
 source local.env
 
+# Public cache records produced by CI accelerate source builds without requiring
+# registry credentials. Set BUILD_CACHE_REGISTRY to an empty value to opt out.
+if [[ -z "${BUILD_CACHE_REGISTRY+x}" ]]; then
+  BUILD_CACHE_REGISTRY="ghcr.io/wmde/wikibase"
+fi
+export BUILD_CACHE_REGISTRY
+
 # Reuse an existing GitHub CLI login for update-sources API requests.
 # If gh is unavailable or unauthenticated, the updater falls back to anonymous access.
 if [[ " $* " == *" update-sources "* ]] &&
