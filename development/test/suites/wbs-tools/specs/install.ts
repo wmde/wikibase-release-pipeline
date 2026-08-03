@@ -4,8 +4,10 @@ import {
 	ADMIN_USERNAME,
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
+	verifyFinalizedInstallerArtifacts,
 	verifyCliArtifact,
 	verifyCommandInterface,
+	waitForInstallerStopped,
 	waitForInstalledServicesHealthy
 } from '../test-environment.js';
 
@@ -30,7 +32,7 @@ describe( 'WBS tools installer', () => {
 		verifyCommandInterface();
 	} );
 
-	it( 'boots a healthy Wikibase Suite whose administrator can log in', async () => {
+	it( 'boots a healthy Wikibase Suite, finalizes securely, and preserves administrator login', async () => {
 		await browser.url( '/' );
 		await clickEnabledButton( 'Get started' );
 
@@ -58,6 +60,10 @@ describe( 'WBS tools installer', () => {
 		const completionHeading = await $( 'h2=Installation complete! 🎉' );
 		await completionHeading.waitForDisplayed( { timeout: INSTALL_TIMEOUT } );
 		await waitForInstalledServicesHealthy();
+		await clickEnabledButton( 'View log' );
+		await clickEnabledButton( 'Stop the installer' );
+		await waitForInstallerStopped();
+		verifyFinalizedInstallerArtifacts();
 
 		await browser.url( `${ WIKIBASE_URL }/wiki/Special:UserLogin` );
 		await setField( 'wpName', ADMIN_USERNAME );

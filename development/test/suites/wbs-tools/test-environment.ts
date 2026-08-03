@@ -279,6 +279,50 @@ export async function waitForInstalledServicesHealthy(): Promise<void> {
 	throw new Error( `Installed services did not become healthy: ${ problem }` );
 }
 
+function installerIsRunning(): boolean {
+	return run(
+		'docker',
+		[ 'inspect', '--format={{.State.Running}}', INSTALLER_CONTAINER ],
+		{ allowFailure: true }
+	).trim() === 'true';
+}
+
+export async function waitForInstallerStopped(): Promise<void> {
+	const deadline = Date.now() + 30000;
+	while ( Date.now() < deadline ) {
+		if ( !installerIsRunning() ) {
+			return;
+		}
+		await wait( 250 );
+	}
+	throw new Error( 'Installer container did not stop after finalization.' );
+}
+
+export function verifyFinalizedInstallerArtifacts(): void {
+	const configPath = join( CHECKOUT_ROOT, '.env' );
+	const passwordEntries = readFileSync( configPath, 'utf8' )
+		.split( '\n' )
+		.map( ( line ) => /^\s*([A-Z0-9_]*PASS(?:WORD)?)=(.*)$/i.exec( line ) )
+		.filter( ( match ): match is RegExpExecArray => match !== null );
+
+	if ( passwordEntries.length === 0 ) {
+		throw new Error( 'Finalized installer config contains no password entries to verify.' );
+	}
+
+	const unsanitized = passwordEntries.filter( ( match ) => match[ 2 ].trim() !== '' );
+	if ( unsanitized.length > 0 ) {
+		throw new Error(
+			`Finalized installer config retained credentials in: ${ unsanitized
+				.map( ( match ) => match[ 1 ] )
+				.join( ', ' ) }.`
+		);
+	}
+
+	if ( readFileSync( INSTALL_LOG, 'utf8' ) !== '' ) {
+		throw new Error( 'Finalized installer did not clear its installation log.' );
+	}
+}
+
 export function collectDiagnostics(): void {
 	mkdirSync( RESULT_ROOT, { recursive: true } );
 	if ( existsSync( INSTALL_LOG ) ) {
