@@ -1,4 +1,4 @@
-import { parseSemVer } from 'semver-parser';
+import { minor as getMinorVersion } from 'semver';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../../../helpers/pages/entity/property.page.js';
 import LoginPage from '../../../helpers/pages/login.page.js';
@@ -223,7 +223,7 @@ describe( 'Property', function () {
 				await $( 'label=ID:' ).click();
 				await browser.keys( propertyId.split( '' ) );
 
-				if ( parseSemVer( mediaWikiVersion ).minor === 39 ) {
+				if ( getMinorVersion( mediaWikiVersion ) === 39 ) {
 					await $( 'span=Set label, description and aliases' ).click();
 				} else {
 					await $( 'span=Continue' ).click();
@@ -238,7 +238,7 @@ describe( 'Property', function () {
 					`${ dataType.name } Alias A|${ dataType.name } Alias B`.split( '' )
 				);
 
-				if ( parseSemVer( mediaWikiVersion ).minor === 39 ) {
+				if ( getMinorVersion( mediaWikiVersion ) === 39 ) {
 					await $( 'span=Set label, description and aliases' ).click();
 				} else {
 					await $( 'span=Save changes' ).click();
