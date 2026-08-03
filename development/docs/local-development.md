@@ -53,6 +53,14 @@ From the repository root, run:
 
 This builds WBS tools from the current `development/images/wbs-tools` source and starts the browser installer with live reload at `https://localhost:8888`. It assumes Git and Docker are installed and does not build the product images.
 
+To test a complete installation from the current checkout rather than develop the installer UI, run:
+
+```bash
+./install --build
+```
+
+The source build uses normal installer networking unless `--local` is also supplied. It generates `docker-compose.build.yml` so subsequent Compose operations keep using the locally built images. Remove that file to return to published image tags.
+
 ## Rebuild without cache
 
 The first `wbs-dev` command may take longer while the tooling image and workspace dependencies are prepared. Subsequent commands use Docker's local BuildKit cache.

@@ -14,7 +14,7 @@ See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/devel
 
 This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
-WBS releases select an exact tools image version. This prevents the tools runtime and the mounted WBS checkout from becoming incompatible.
+WBS releases select a compatible tools major version. Minor and patch tools releases within that major version must remain compatible with the mounted WBS checkout and its host-side scripts.
 
 ## Source
 

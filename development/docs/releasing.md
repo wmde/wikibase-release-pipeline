@@ -22,7 +22,7 @@ To update one or more images from upstream sources, follow the corresponding gui
 
 ### 2. Complete the product changes
 
-Ensure that the intended development work and any compatibility changes required by image updates are complete. When WBS is in scope, update its selected image versions, exact WBS tools version, and any required operating or migration documentation. For WBS tools, follow the [product-specific preparation guide](../images/wbs-tools/UPDATING.md).
+Ensure that the intended development work and any compatibility changes required by image updates are complete. When WBS is in scope, update its selected image major versions and any required operating or migration documentation. For WBS tools, follow the [product-specific preparation guide](../images/wbs-tools/UPDATING.md).
 
 ### 3. Test and fix
 

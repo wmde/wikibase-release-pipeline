@@ -8,6 +8,7 @@ export SCRIPTS_DIR
 export ENV_FILE_PATH
 
 export DEBUG="${DEBUG:-false}"
+export BUILD=false
 export DEV=false
 export LOCALHOST=false
 export RESET=false
@@ -28,6 +29,9 @@ if [[ "${1:-}" == install ]]; then
         ;;
       --debug)
         export DEBUG=true
+        ;;
+      --build)
+        export BUILD=true
         ;;
       --dev)
         export DEV=true
@@ -77,5 +81,9 @@ docker run --rm \
   -e WBS_VALIDATE_OPTIONS=true \
   "$WBS_TOOLS_IMAGE" \
   node dist/wbs.js install "${INSTALL_ARGS[@]}"
+
+if $BUILD; then
+  bash "$SCRIPTS_DIR/build-images.sh"
+fi
 
 exec bash "$SCRIPTS_DIR/install.sh" "${INSTALL_ARGS[@]}"

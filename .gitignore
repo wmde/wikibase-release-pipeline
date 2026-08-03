@@ -9,6 +9,7 @@ local.env
 **/.env
 
 docker-compose.local.yml
+/docker-compose.build.yml
 
 log
 config/*.ini

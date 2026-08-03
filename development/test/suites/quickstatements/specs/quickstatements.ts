@@ -52,7 +52,7 @@ const exampleSnakValues = {
 	time: '+1967-01-17T00:00:00Z/11'
 };
 
-describe( 'QuickStatements Service', function () {
+describe( 'QuickStatements', function () {
 	let propertyId = null;
 	let propertyIdItem = null;
 	let propertyURL = null;

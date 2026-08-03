@@ -33,6 +33,9 @@ while [[ $# -gt 0 ]]; do
     --local)
       RUNTIME_ARGS+=( "$1" )
       ;;
+    --build)
+      RUNTIME_ARGS+=( "$1" )
+      ;;
     --dev)
       echo "⚠️ --dev requires an existing checkout. Run ./wbs install --dev there."
       exit 1

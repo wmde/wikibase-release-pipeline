@@ -113,24 +113,26 @@ export function defaultFunctions(): void {
 			await browser.url( `${ testEnv.vars.QUICKSTATEMENTS_URL }/#/batch/new` );
 
 			// create a batch
-			await $( '#qs-command-editor' ).setValue( theQuery );
-
-			// eslint-disable-next-line wdio/no-pause
-			await browser.pause( 1000 );
+			const commandEditor = await $( '#qs-command-editor' );
+			await commandEditor.waitForDisplayed();
+			await commandEditor.setValue( theQuery );
 
 			// click import
-			await $( '.qs-new-batch-form button[type="submit"]' ).click();
-
-			// eslint-disable-next-line wdio/no-pause
-			await browser.pause( 1000 );
+			const importButton = await $( '.qs-new-batch-form button[type="submit"]' );
+			await importButton.waitForClickable();
+			await importButton.click();
 
 			// click run
-			await $( "button[tt='run']" ).click();
-
-			const commands = await $$( '.command_state' );
+			const runButton = await $( "button[tt='run']" );
+			await runButton.waitForClickable();
+			await runButton.click();
 
 			await browser.waitUntil(
 				async () => {
+					const commands = await $$( '.command_state' );
+					if ( ( await commands.length ) === 0 ) {
+						return false;
+					}
 					const commandStateArray = await Promise.all(
 						await commands.map( async ( command ) =>
 							command.getAttribute( 'aria-label' )
@@ -141,8 +143,8 @@ export function defaultFunctions(): void {
 					);
 				},
 				{
-					timeout: 10000,
-					timeoutMsg: 'Expected to be done after 10 seconds'
+					timeout: settings.waitForTimeout,
+					timeoutMsg: 'Expected all QuickStatements commands to finish'
 				}
 			);
 		}

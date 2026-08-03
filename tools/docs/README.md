@@ -6,9 +6,9 @@ The installer currently supports first-time Wikibase Suite installation through 
 
 ## Versioning and releases
 
-The containerized application is released independently as the [`wikibase/wbs-tools` image](../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. Each WBS release selects an exact compatible tools image version.
+The containerized application is released independently as the [`wikibase/wbs-tools` image](../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. WBS selects a compatible tools major version.
 
-A change to the tools can therefore produce a tools image release without changing the WBS configuration. A WBS release is still required before normal installation selects that new image version.
+Compatible minor and patch tools releases become available to normal installations without changing the WBS configuration. A WBS release is required to select a new tools major version.
 
 Use Conventional Commits for changes in this repository so future release tooling can derive semantic version bumps and changelog entries from commit history.
 
@@ -60,6 +60,7 @@ Add those hosts to your system hosts file before launching the stack.
 | --- | --- |
 | `--web` | Use the browser UI instead of the default terminal wizard. |
 | `--dev` | Develop the browser installer from the current checkout with live reload. Implies `--local` and assumes dependencies are installed. |
+| `--build` | Build WBS tools and all product images from the selected source checkout before installing. |
 | `--local` | Use local hostnames without public DNS validation or public certificates. |
 | `--debug` | Enable verbose logging and disable quiet Docker pulls. |
 
@@ -83,10 +84,24 @@ application source for live reload, opens the browser installer, and implies
 `--local`. It assumes Git and Docker are already installed. It does not build
 the product images; use `development/wbs-dev build` when those sources changed.
 
+To install an unpublished source checkout, add `--build`:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/install) \
+  --wbs-ref BRANCH_OR_TAG \
+  --build
+```
+
+This builds the tools and product images from the selected checkout and records
+their selection in `docker-compose.build.yml`. Remove that generated file to
+return the installation to published image tags. Source builds require more
+time, CPU, memory, and storage than a normal installation.
+
 ## Runtime behavior
 
 - Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
-- Normal installations pull the exact WBS tools image selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
+- Normal installations pull the compatible WBS tools major selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
+- Source installations requested with `--build` use the locally built images selected by the generated `docker-compose.build.yml` file.
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.

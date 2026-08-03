@@ -6,6 +6,7 @@ type InstallOptions = {
 	local: boolean;
 	debug: boolean;
 	dev: boolean;
+	build: boolean;
 };
 
 async function runInstall( options: InstallOptions ): Promise<void> {
@@ -44,6 +45,12 @@ async function main(): Promise<void> {
 			new Option(
 				'--local',
 				'Use local hostnames without public DNS validation.'
+			)
+		)
+		.addOption(
+			new Option(
+				'--build',
+				'Build and install the images from the selected source checkout.'
 			)
 		)
 		.addOption( new Option( '--debug', 'Show verbose diagnostic output.' ) )

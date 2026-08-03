@@ -22,7 +22,7 @@ WBS 7 and earlier releases use `deploy@MAJOR.MINOR.PATCH` tags. WBS 8 and later 
 
 The Wikibase, Query Service, Query Service frontend, OpenSearch, QuickStatements, and WBS tools images are released and versioned separately from WBS. Most image references in a WBS release use compatible major-version tags. For example, a WBS release might reference `wikibase/wikibase:7`, which points to the latest `7.x.x` release of the Wikibase image.
 
-The WBS tools image is an exception: installation scripts select an exact version, such as `wikibase/wbs-tools:1.0.0`, because the tools run against and modify the WBS checkout.
+The WBS tools image follows the same compatible-major convention. Installation scripts select a tag such as `wikibase/wbs-tools:1`; tools releases within that major version must remain compatible with the WBS checkout and its host-side scripts.
 
 WBS images publish the following shared tags:
 
@@ -41,4 +41,4 @@ Docker tags can be updated. If you need to pin the exact image contents rather t
 - Updating WBS to a new patch or minor version requires switching to the corresponding WBS Git tag.
 - Updating an image within its current major version requires pulling the newer image; the WBS Git tag does not change.
 - Moving an image to a new major version is handled by a WBS release and its upgrade instructions. Do not change image major versions independently unless you maintain a custom configuration.
-- Publishing a WBS tools image does not require a WBS release. Selecting a new exact tools version as the default for normal installations does.
+- Publishing a compatible WBS tools minor or patch release does not require a WBS release. Moving WBS to a new WBS tools major version does.

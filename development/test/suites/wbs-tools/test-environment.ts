@@ -141,7 +141,7 @@ export function verifyCommandInterface(): void {
 		'install',
 		'--help'
 	] );
-	for ( const option of [ '--web', '--local', '--dev', '--debug' ] ) {
+	for ( const option of [ '--web', '--local', '--dev', '--build', '--debug' ] ) {
 		if ( !help.includes( option ) ) {
 			throw new Error( `wbs install help does not include ${ option }.` );
 		}

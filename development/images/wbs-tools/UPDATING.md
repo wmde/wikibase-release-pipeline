@@ -8,7 +8,7 @@ WBS tools is repository-owned code and has no `update-sources` step. Its version
 
 Review the application, dependencies, and Node runtime changes since the latest `wbs-tools@<version>` tag. Check compatibility with the mounted WBS checkout, the `wbs` command, generated configuration, Docker, Git, and the installer.
 
-The WBS tools image can be published independently. WBS selects an exact version, so update and release WBS separately when normal installations must use the new image by default.
+The WBS tools image can be published independently. WBS selects its compatible major tag, so minor and patch tools releases become available to normal installations without a WBS release. A new tools major version requires a WBS release to select it.
 
 ## 2. Determine the impact
 

@@ -40,7 +40,9 @@ generate_cert_for_installer_webserver() {
     INSTALLER_HOST="localhost"
   else
     # Extra random suffix helps avoid LE rate limits during repeated runs
-    INSTALLER_SUBDOMAIN="wbs-installer-$(hexdump -n 3 -v -e '/1 "%02x"' /dev/urandom)"
+    local installer_suffix
+    printf -v installer_suffix '%04x%04x' "$RANDOM" "$RANDOM"
+    INSTALLER_SUBDOMAIN="wbs-installer-$installer_suffix"
     INSTALLER_HOST="$INSTALLER_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
 
@@ -93,9 +95,12 @@ remove_any_existing_installer_webserver() {
 compose_services_are_running() {
   pushd "$WBS_DIR" >/dev/null || return 1
 
-  local compose_opts=()
+  local compose_opts=(-f docker-compose.yml)
   if [ -f "docker-compose.local.yml" ]; then
-    compose_opts+=(-f docker-compose.yml -f docker-compose.local.yml)
+    compose_opts+=(-f docker-compose.local.yml)
+  fi
+  if [ -f "docker-compose.build.yml" ]; then
+    compose_opts+=(-f docker-compose.build.yml)
   fi
 
   local running_services

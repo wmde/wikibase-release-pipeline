@@ -114,6 +114,8 @@ The product-facing `wbs` command is separate from the repository task runner. Fr
 
 This builds `wbs-tools` from the current checkout, starts the browser installer with live reload, uses local `.test` hostnames, and assumes Git and Docker are already installed. Configure those hostnames as described in the [local development guide](./local-development.md#develop-the-installer-ui). It does not build the Wikibase Suite product images. Use `development/wbs-dev build` separately when those images have changed.
 
+For a complete installation test of an unpublished checkout, use `./install --build` instead. This builds the tools and product images from the checkout and then runs the normal installer.
+
 ## Lint
 
 ```bash

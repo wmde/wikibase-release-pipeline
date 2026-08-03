@@ -76,8 +76,9 @@ grep -qx -- '--web' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0'
 grep -q '"version": "1.9.0"' "$TEST_ROOT/explicit/wikibase-suite/package.json"
 
-run_bootstrap local-mode "$fixture_remote" --local --debug
+run_bootstrap local-mode "$fixture_remote" --local --build --debug
 grep -qx -- '--local' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
+grep -qx -- '--build' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
 grep -qx -- '--debug' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
 
 prerelease_repo="$TEST_ROOT/prerelease-only"

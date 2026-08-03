@@ -35,11 +35,16 @@ wait_for_launch_signal() {
 launch_wbs() {
   pushd "$WBS_DIR" >/dev/null || return 1
 
-  local compose_opts=()
+  local compose_opts=(-f docker-compose.yml)
   local compose_up_opts=(-d)
 
   if [ -f "docker-compose.local.yml" ]; then
-    compose_opts+=(-f docker-compose.yml -f docker-compose.local.yml)
+    compose_opts+=(-f docker-compose.local.yml)
+    status "Using local Compose customizations from docker-compose.local.yml." "local_compose_override"
+  fi
+  if [ -f "docker-compose.build.yml" ]; then
+    compose_opts+=(-f docker-compose.build.yml)
+    status "Using images built from this checkout via docker-compose.build.yml." "source_build_images"
   fi
 
   if ! $DEBUG ; then
@@ -55,7 +60,10 @@ launch_wbs() {
   fi
 
   status "Pulling Docker images..." "images_pull_started"
-  run "docker compose ${compose_opts[*]} pull"
+  if ! run "docker compose ${compose_opts[*]} pull"; then
+    status "⛔️ Could not pull the selected images. For an unpublished source checkout, rerun the installer with --build." "images_pull_failed"
+    return 1
+  fi
 
   status "Starting Docker Compose services. Generally takes 2–6 minutes..." "services_waiting"
   run "docker compose ${compose_opts[*]} up ${compose_up_opts[*]}"
