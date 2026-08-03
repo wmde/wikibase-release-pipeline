@@ -39,6 +39,10 @@ jobs:
       - run: ./wbs-dev lint
         working-directory: development
 
+      - name: Test wbs-dev tooling
+        run: ./wbs-dev test tooling
+        working-directory: development
+
   build:
     needs:
       - skip_check

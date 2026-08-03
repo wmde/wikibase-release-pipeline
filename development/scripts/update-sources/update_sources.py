@@ -1,5 +1,7 @@
+import difflib
 import hashlib
 import os, json, re, requests
+import tempfile
 from typing import Callable
 from bs4 import BeautifulSoup
 
@@ -28,7 +30,7 @@ def get_commit(
     print(f"Variable:\t{variable}")
     print(f"\tURL:\t{url}")
     try:
-        response = requests.get(url, headers=get_request_headers(url))
+        response = requests.get(url, headers=get_request_headers(url), timeout=30)
         response.raise_for_status()
         commit = parse_commit(response)
         if previous_commit != commit:
@@ -40,7 +42,7 @@ def get_commit(
             return False
     except Exception as exc:
         print(f"\tError:\t{exc}")
-        return False
+        raise
 
 
 gerrit_pattern = re.compile(
@@ -81,6 +83,14 @@ codeberg_pattern = re.compile(
 )
 
 
+def replace_variable(contents: str, variable: str, value: str) -> str:
+    return re.sub(
+        rf"(?m)^{re.escape(variable)}=[0-9a-f]+$",
+        f"{variable}={value}",
+        contents,
+    )
+
+
 def parse_codeberg_commit(response: requests.Response) -> str:
     """Fetch from API"""
     data = json.loads(response.content)
@@ -88,12 +98,14 @@ def parse_codeberg_commit(response: requests.Response) -> str:
 
 
 def get_codeberg_archive_sha256(repo_path: str, commit: str) -> str:
-    response = requests.get(f"https://codeberg.org/{repo_path}/archive/{commit}.tar.gz")
+    response = requests.get(
+        f"https://codeberg.org/{repo_path}/archive/{commit}.tar.gz", timeout=30
+    )
     response.raise_for_status()
     return hashlib.sha256(response.content).hexdigest()
 
 
-def run(file_path):
+def run(file_path, dry_run=False):
     if not os.path.exists(file_path):
         print(f"File {file_path} does not exist.")
         return
@@ -101,7 +113,8 @@ def run(file_path):
     print(f"Processing {file_path}")
 
     with open(file_path, "r") as variable_file:
-        variable_contents = variable_file.read()
+        original_contents = variable_file.read()
+    variable_contents = original_contents
 
     mediawiki_match = re.search(r"MEDIAWIKI_VERSION=(\d+)\.(\d+)", variable_contents)
     if mediawiki_match:
@@ -118,10 +131,8 @@ def run(file_path):
             parse_gerrit_commit,
             gerrit_commit[2],
         ):
-            variable_contents = re.sub(
-                f"{gerrit_commit[1]}=[0-9a-f]+",
-                f"{gerrit_commit[1]}={commit}",
-                variable_contents,
+            variable_contents = replace_variable(
+                variable_contents, gerrit_commit[1], commit
             )
 
     for github_commit in re.findall(github_pattern, variable_contents):
@@ -131,10 +142,8 @@ def run(file_path):
             parse_github_commit,
             github_commit[3],
         ):
-            variable_contents = re.sub(
-                f"{github_commit[2]}=[0-9a-f]+",
-                f"{github_commit[2]}={commit}",
-                variable_contents,
+            variable_contents = replace_variable(
+                variable_contents, github_commit[2], commit
             )
 
     for bitbucket_commit in re.findall(bitbucket_pattern, variable_contents):
@@ -144,10 +153,8 @@ def run(file_path):
             parse_bitbucket_commit,
             bitbucket_commit[3],
         ):
-            variable_contents = re.sub(
-                f"{bitbucket_commit[2]}=[0-9a-f]+",
-                f"{bitbucket_commit[2]}={commit}",
-                variable_contents,
+            variable_contents = replace_variable(
+                variable_contents, bitbucket_commit[2], commit
             )
 
     for codeberg_commit in re.findall(codeberg_pattern, variable_contents):
@@ -158,30 +165,47 @@ def run(file_path):
             parse_codeberg_commit,
             codeberg_commit[3],
         ):
-            variable_contents = re.sub(
-                f"{codeberg_commit[2]}=[0-9a-f]+",
-                f"{codeberg_commit[2]}={commit}",
-                variable_contents,
+            variable_contents = replace_variable(
+                variable_contents, codeberg_commit[2], commit
             )
             archive_sha_variable = (
                 codeberg_commit[2].removesuffix("_COMMIT") + "_ARCHIVE_SHA"
             )
             if re.search(f"{archive_sha_variable}=[0-9a-f]+", variable_contents):
                 archive_sha256 = get_codeberg_archive_sha256(repo_path, commit)
-                variable_contents = re.sub(
-                    f"{archive_sha_variable}=[0-9a-f]+",
-                    f"{archive_sha_variable}={archive_sha256}",
-                    variable_contents,
+                variable_contents = replace_variable(
+                    variable_contents, archive_sha_variable, archive_sha256
                 )
 
-    with open(file_path, "w") as variable_file:
+    if variable_contents == original_contents:
+        print("No source pin updates are available.")
+        return
+
+    if dry_run:
+        print(
+            "".join(
+                difflib.unified_diff(
+                    original_contents.splitlines(keepends=True),
+                    variable_contents.splitlines(keepends=True),
+                    fromfile=file_path,
+                    tofile=file_path,
+                )
+            ),
+            end="",
+        )
+        return
+
+    directory = os.path.dirname(file_path)
+    with tempfile.NamedTemporaryFile("w", dir=directory, delete=False) as variable_file:
         variable_file.write(variable_contents)
+        temporary_path = variable_file.name
+    os.replace(temporary_path, file_path)
 
 
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 2:
-        print("Usage: python script_name.py <path_to_env_file>")
+    if len(sys.argv) not in (2, 3):
+        print("Usage: python script_name.py <path_to_env_file> [--dry-run]")
     else:
-        run(sys.argv[1])
+        run(sys.argv[1], len(sys.argv) == 3 and sys.argv[2] == "--dry-run")

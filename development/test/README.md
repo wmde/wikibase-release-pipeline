@@ -1,6 +1,6 @@
 # Integration test suites
 
-Run tests through the repository's `wbs-dev` container. See [CONTRIBUTING.md](../CONTRIBUTING.md#test) for the command reference.
+Run tests through the repository's `wbs-dev` container. See the [`wbs-dev` command guide](../docs/wbs-dev.md#test) for the command reference.
 
 ```bash
 # Run every suite sequentially
@@ -101,21 +101,13 @@ An existing suite automatically discovers a new spec only when its `<suite>.conf
 - Create unique test data when practical and do not rely on spec execution order. The `repo` suite can run several WDIO workers concurrently.
 - Prefer page objects for repeated UI flows and WebdriverIO expectations or `browser.waitUntil` for asynchronous behavior. Use a fixed `browser.pause` only when no observable condition is available, and explain why in the spec.
 - Keep assertions in the spec so the behavior being verified remains visible; helpers should primarily arrange state or expose reusable interactions.
-- Run the smallest relevant spec while iterating, then its complete suite before submitting the change. Build every changed image first because tests do not build images automatically.
+- Run the smallest relevant spec while iterating, then its complete suite before submitting the change. Test commands build the local images unless `--skip-build` is given.
 
-The `wbs-tools` suite includes the bootstrap selection checks in
-`test/suites/wbs-tools/specs/install-bootstrap.sh` and the end-to-end installer
-test in `test/suites/wbs-tools/specs/install.ts`. The latter uses the installer's
-supported local mode with reserved `.test` hostnames, boots the complete
-deployment, waits for its services and configured health checks, and logs into
-Wikibase using the administrator credentials entered in the form.
+The `wbs-tools` suite includes the bootstrap selection checks in `test/suites/wbs-tools/specs/install-bootstrap.sh` and the end-to-end installer test in `test/suites/wbs-tools/specs/install.ts`. The latter uses the installer's supported local mode with reserved `.test` hostnames, boots the complete deployment, waits for its services and configured health checks, and logs into Wikibase using the administrator credentials entered in the form.
 
 This exercises the supported `--local` path. It does not cover public DNS matching, public certificate issuance, firewall configuration, or reachability from outside the Docker host; those remain separate deployment concerns.
 
-Because it installs the complete current checkout, the normal test command
-builds all local images before running this suite. CI provides the equivalent
-images from its parallel build jobs and uses `--skip-build` with a
-workflow-specific tag.
+Because it installs the complete current checkout, the normal test command builds all local images before running this suite. CI provides the equivalent images from its parallel build jobs and uses `--skip-build` with a workflow-specific tag.
 
 When working on the browser tests, consult the documentation of the following libraries:
 

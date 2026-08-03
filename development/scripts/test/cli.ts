@@ -337,6 +337,9 @@ async function main(): Promise<void> {
 Available project suites:
   ${ allSuiteNames.join( ', ' ) }
 
+Additional wbs-dev target:
+  tooling (fast task-runner and release fixtures)
+
 Examples:
   wbs-dev test
   wbs-dev test repo queryservice --headed

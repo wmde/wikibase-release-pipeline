@@ -1,10 +1,29 @@
 import { Command } from 'commander';
 import { spawn } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
+import { fetchRemoteTags } from './git.js';
+import {
+	DEVELOPMENT_ROOT,
+	IMAGES_ROOT,
+	readImageNames,
+	readReleaseProjects,
+	resolveProjectSelections
+} from './projects.js';
+import {
+	preflightRelease,
+	publishGitTags,
+	requireDockerHubImages
+} from './release.js';
+import {
+	applyFileUpdates,
+	assertStableVersion,
+	planVersionUpdate,
+	type FileUpdate
+} from './versioning.js';
 
-type CommandName = 'build' | 'lint' | 'publish' | 'test' | 'update-commits';
+type CommandName = 'build' | 'lint' | 'test' | 'update-sources';
 
 interface ParsedArguments {
 	selections: string[];
@@ -19,40 +38,11 @@ interface Task {
 	announce?: boolean;
 }
 
-const DEVELOPMENT_ROOT = process.cwd();
-const IMAGES_ROOT = join( DEVELOPMENT_ROOT, 'images' );
 const DEFAULT_BUILD_PARALLELISM = 3;
-const UPDATE_COMMIT_IMAGES = [ 'quickstatements', 'wdqs-frontend', 'wikibase' ];
+const UPDATE_SOURCE_IMAGES = [ 'quickstatements', 'wdqs-frontend', 'wikibase' ];
 
 function fail( message: string ): never {
 	throw new Error( message );
-}
-
-function readImageNames(): string[] {
-	return readdirSync( IMAGES_ROOT )
-		.filter( ( entry ) => {
-			const projectRoot = join( IMAGES_ROOT, entry );
-			return (
-				statSync( projectRoot ).isDirectory() &&
-				existsSync( join( projectRoot, 'Dockerfile' ) ) &&
-				existsSync( join( projectRoot, 'package.json' ) )
-			);
-		} )
-		.map( ( entry ) => {
-			const packageJson = JSON.parse(
-				readFileSync( join( IMAGES_ROOT, entry, 'package.json' ), 'utf8' )
-			) as { name?: string };
-			if ( !packageJson.name ) {
-				fail( `Image project ${ entry } has no package name.` );
-			}
-			if ( packageJson.name !== entry ) {
-				fail(
-					`Image directory ${ entry } does not match package name ${ packageJson.name }.`
-				);
-			}
-			return entry;
-		} )
-		.sort();
 }
 
 function parseArguments(
@@ -154,12 +144,16 @@ function commandTasks(
 	switch ( command ) {
 		case 'build': {
 			const parsed = parseArguments( args, true );
-			if ( parsed.forwarded.includes( '--publish' ) ) {
-				fail(
-					'build does not accept --publish; use the explicit publish command.'
-				);
-			}
 			const selected = resolveSelections( parsed.selections, images, command );
+			if ( parsed.forwarded.includes( '--publish' ) ) {
+				if ( parsed.selections.length !== 1 || selected.length !== 1 ) {
+					fail( 'build --publish requires exactly one explicit image project.' );
+				}
+				const packageJson = JSON.parse(
+					readFileSync( join( IMAGES_ROOT, selected[ 0 ], 'package.json' ), 'utf8' )
+				) as { version: string };
+				assertStableVersion( packageJson.version, `${ selected[ 0 ] } package` );
+			}
 			return {
 				parallel: parsed.parallel,
 				tasks: selected.map( ( image ) => ( {
@@ -170,57 +164,80 @@ function commandTasks(
 			};
 		}
 
-		case 'publish': {
+		case 'update-sources': {
 			const parsed = parseArguments( args, false );
-			const selected = resolveSelections( parsed.selections, images, command, {
-				requireExplicit: true
-			} );
-			return {
-				parallel: 1,
-				tasks: selected.map( ( image ) => ( {
-					label: `publish ${ image }`,
-					command: 'scripts/build-image.sh',
-					args: [ image, '--publish', ...parsed.forwarded ]
-				} ) )
-			};
-		}
-
-		case 'update-commits': {
-			const parsed = parseArguments( args, false );
-			if ( parsed.forwarded.length > 0 ) {
+			if ( parsed.selections.length === 0 ) {
+				fail( 'update-sources requires an image project or "all".' );
+			}
+			const unsupportedOptions = parsed.forwarded.filter(
+				( option ) => option !== '--dry-run'
+			);
+			if ( unsupportedOptions.length > 0 ) {
 				fail(
-					`update-commits does not accept options: ${ parsed.forwarded.join( ' ' ) }.`
+					`update-sources does not accept options: ${ unsupportedOptions.join( ' ' ) }.`
 				);
 			}
 			const selected = resolveSelections(
 				parsed.selections,
-				UPDATE_COMMIT_IMAGES,
+				UPDATE_SOURCE_IMAGES,
 				command
 			);
 			return {
 				parallel: 1,
 				tasks: selected.map( ( image ) => ( {
-					label: `update-commits ${ image }`,
-					command: 'scripts/update-commits/run.sh',
-					args: [ image ]
+					label: `update-sources ${ image }`,
+					command: 'scripts/update-sources/run.sh',
+					args: [ image, ...parsed.forwarded ]
 				} ) )
 			};
 		}
 
 		case 'test': {
+			const parsed = parseArguments( args, false );
+			const includeTooling =
+				!args.includes( '--help' ) &&
+				( parsed.selections.length === 0 ||
+					parsed.selections.includes( 'all' ) ||
+					parsed.selections.includes( 'tooling' ) );
+			const integrationSelections = parsed.selections.filter(
+				( selection ) => selection !== 'tooling'
+			);
+			if (
+				parsed.selections.includes( 'tooling' ) &&
+				integrationSelections.length === 0 &&
+				parsed.forwarded.length > 0
+			) {
+				fail( 'The tooling test target does not accept integration test options.' );
+			}
+			const integrationArgs = [
+				...integrationSelections,
+				...parsed.forwarded
+			];
+			const includeIntegration =
+				integrationSelections.length > 0 ||
+				!parsed.selections.includes( 'tooling' );
+			const tasks: Task[] = [];
+			if ( includeTooling ) {
+				tasks.push( {
+					label: 'test wbs-dev tooling',
+					command: 'pnpm',
+					args: [ 'test:scripts' ]
+				} );
+			}
+			if ( includeIntegration ) {
+				tasks.push( {
+					announce: false,
+					label:
+						integrationArgs.length > 0 ?
+							`test ${ integrationArgs.join( ' ' ) }` :
+							'test all integration suites',
+					command: 'scripts/test/run.sh',
+					args: integrationArgs
+				} );
+			}
 			return {
 				parallel: 1,
-				tasks: [
-					{
-						announce: false,
-						label:
-							args.length > 0 ?
-								`test ${ args.join( ' ' ) }` :
-								'test all suites',
-						command: 'scripts/test/run.sh',
-						args
-					}
-				]
+				tasks
 			};
 		}
 
@@ -252,6 +269,79 @@ function commandTasks(
 			};
 		}
 	}
+}
+
+async function updateVersions(
+	requested: string[],
+	dryRun: boolean
+): Promise<void> {
+	const projects = resolveProjectSelections(
+		requested,
+		readReleaseProjects(),
+		'update-versions',
+		{ requireExplicit: true }
+	);
+	fetchRemoteTags();
+	const plans = projects
+		.map( ( project ) => planVersionUpdate( project ) )
+		.filter( Boolean );
+	if ( plans.length === 0 ) {
+		console.log( 'No selected projects have releasable changes.' );
+		return;
+	}
+	for ( const plan of plans ) {
+		console.log(
+			`${ dryRun ? 'Would prepare' : 'Preparing' } ${ plan!.project.name } ${ plan!.targetVersion } (${ plan!.reason }).`
+		);
+	}
+	if ( !dryRun ) {
+		const updates = plans.reduce<FileUpdate[]>(
+			( accumulated, plan ) => [ ...accumulated, ...plan!.updates ],
+			[]
+		);
+		applyFileUpdates( updates );
+	}
+}
+
+async function releaseImages(
+	requested: string[],
+	dryRun: boolean
+): Promise<void> {
+	const projects = resolveProjectSelections(
+		requested,
+		readReleaseProjects(),
+		'release images',
+		{ imagesOnly: true }
+	);
+	publishGitTags( preflightRelease( projects ), dryRun );
+}
+
+async function releaseWbs( dryRun: boolean ): Promise<void> {
+	const projects = readReleaseProjects();
+	const wbs = projects.find( ( project ) => project.name === 'wbs' )!;
+	const images = projects.filter( ( project ) => project.isImage );
+	const targets = preflightRelease( [ wbs ] );
+	await requireDockerHubImages( images, { wait: false } );
+	publishGitTags( targets, dryRun );
+}
+
+async function releaseAll( dryRun: boolean ): Promise<void> {
+	const projects = readReleaseProjects();
+	const images = projects.filter( ( project ) => project.isImage );
+	const wbs = projects.find( ( project ) => project.name === 'wbs' )!;
+	const targets = preflightRelease( [ ...images, wbs ] );
+	const imageTargets = targets.filter( ( target ) => target.project.isImage );
+	const wbsTargets = targets.filter( ( target ) => !target.project.isImage );
+	publishGitTags( imageTargets, dryRun );
+	if ( dryRun ) {
+		publishGitTags( wbsTargets, true );
+		console.log(
+			'Dry run: WBS publication would wait for every full-version image tag.'
+		);
+		return;
+	}
+	await requireDockerHubImages( images, { wait: true } );
+	publishGitTags( wbsTargets, false );
 }
 
 async function runTask( task: Task ): Promise<number> {
@@ -311,7 +401,24 @@ async function executeCommand(
 	args: string[]
 ): Promise<void> {
 	const { tasks, parallel } = commandTasks( command, args );
-	await runTasks( tasks, parallel );
+	const sourceBackups =
+		command === 'update-sources' ?
+			tasks.map( ( task ) => {
+				const path = join( IMAGES_ROOT, task.args[ 0 ], 'build.env' );
+				return { path, contents: readFileSync( path, 'utf8' ) };
+			} ) :
+			[];
+	try {
+		await runTasks( tasks, parallel );
+	} catch ( error ) {
+		if ( sourceBackups.length > 0 ) {
+			applyFileUpdates( sourceBackups );
+			console.error(
+				'Restored every selected source file after the update failed.'
+			);
+		}
+		throw error;
+	}
 }
 
 function addProxyCommand(
@@ -377,16 +484,56 @@ async function main(): Promise<void> {
 	);
 	addProxyCommand(
 		program,
-		'update-commits',
+		'update-sources',
 		'Update all or selected supported upstream commit pins.',
-		'[IMAGE...]'
+		'IMAGE...|all [--dry-run]'
 	);
-	addProxyCommand(
-		program,
-		'publish',
-		'Publish official version tags for explicitly selected images.',
-		'IMAGE... [docker buildx options...]'
-	);
+	program
+		.command( 'update-versions' )
+		.description(
+			'Infer versions and update package files and changelogs atomically.'
+		)
+		.argument( '<projects...>', 'PROJECT...|all' )
+		.option( '--dry-run', 'Show inferred releases without writing files.' )
+		.action(
+			async ( projects: string[], options: { dryRun?: boolean } ) =>
+				await updateVersions( projects, options.dryRun ?? false )
+		);
+
+	const release = program
+		.command( 'release' )
+		.description( 'Create and push reviewed release tags.' )
+		.action( () => release.help() );
+	release
+		.command( 'images' )
+		.description(
+			'Release selected images, or every image when none is selected.'
+		)
+		.argument( '[images...]' )
+		.option( '--dry-run', 'Validate and show tags without creating them.' )
+		.action(
+			async ( images: string[] | undefined, options: { dryRun?: boolean } ) =>
+				await releaseImages( images ?? [], options.dryRun ?? false )
+		);
+	release
+		.command( 'wbs' )
+		.description( 'Release WBS after confirming every required image exists.' )
+		.option( '--dry-run', 'Validate and show the tag without creating it.' )
+		.action(
+			async ( options: { dryRun?: boolean } ) =>
+				await releaseWbs( options.dryRun ?? false )
+		);
+	release
+		.command( 'all' )
+		.description( 'Release images, wait for publication, and then release WBS.' )
+		.option(
+			'--dry-run',
+			'Validate and show the complete sequence without creating tags.'
+		)
+		.action(
+			async ( options: { dryRun?: boolean } ) =>
+				await releaseAll( options.dryRun ?? false )
+		);
 
 	program.addHelpText(
 		'after',
@@ -394,9 +541,8 @@ async function main(): Promise<void> {
 			'',
 			'Selection defaults:',
 			'  build selects all images, test selects all integration suites, lint selects the',
-			'  repository root, and update-commits selects every supported image when no',
-			'  target is given. "all" is an explicit equivalent where supported. publish',
-			'  always requires explicit image names.',
+			'  repository root. Release preparation commands require explicit projects;',
+			'  use "all" as their sole target to select every supported project.',
 			'',
 			'Argument forwarding:',
 			'  Options after the target list are passed unchanged to the underlying build,',
@@ -408,8 +554,10 @@ async function main(): Promise<void> {
 			'  wbs-dev build wikibase wdqs --parallel=2 --dry-run',
 			'  wbs-dev test repo queryservice --headed',
 			'  wbs-dev test repo --spec suites/repo/specs/special-new-item.ts',
-			'  wbs-dev update-commits wikibase quickstatements',
-			'  wbs-dev publish wikibase --dry-run'
+			'  wbs-dev update-sources wikibase quickstatements',
+			'  wbs-dev update-versions wikibase wbs --dry-run',
+			'  wbs-dev build wikibase --publish --dry-run',
+			'  wbs-dev release all --dry-run'
 		].join( '\n' )
 	);
 
