@@ -31,8 +31,8 @@ Targets follow the command directly. A `--` separator is not required. Once an o
 | `build` | all images | supported | Docker Buildx options |
 | `test` | all suites, sequentially | supported | test runner and WebdriverIO options |
 | `lint` | repository root | selects the root default | lint options |
-| `update-sources` | none; a project or `all` is required | supported alone | `--dry-run` only |
-| `update-versions` | none; a project or `all` is required | supported alone | `--dry-run` only |
+| `update-sources` | none; a project or `all` is required | supported alone | none |
+| `update-versions` | none; a project or `all` is required | supported alone | none |
 | `release` | displays subcommand help | selected by its subcommand | `--dry-run` only |
 
 Examples:
@@ -135,25 +135,24 @@ The available targets are `root`, `development`, `test`, and every image name. U
 ## Update images from upstream sources
 
 ```bash
-# Preview every supported source update
-development/wbs-dev update-sources all --dry-run
-
 # Update selected pins
 development/wbs-dev update-sources wikibase wdqs-frontend
+
+# Update every supported source
+development/wbs-dev update-sources all
 ```
 
-The supported targets are `wikibase`, `wdqs-frontend`, and `quickstatements`. This command changes source pins only. It restores all selected source files if one selected updater fails.
+The supported targets are `wikibase`, `wdqs-frontend`, and `quickstatements`. This command changes source pins only. It restores all selected source files if one selected updater fails. Changes remain local and unstaged; review them with `git diff`.
 
 ## Update release versions
 
 `update-versions` fetches authoritative tags from `origin`, infers semantic versions from release-driving Conventional Commits and relevant working-tree changes, and updates versions and changelogs together:
 
 ```bash
-development/wbs-dev update-versions wikibase wbs --dry-run
 development/wbs-dev update-versions wikibase wbs
 ```
 
-No files are staged or committed. A manually written untagged changelog draft is preserved, while an empty or absent draft receives a simple generated entry. See the [release guide](./releasing.md) for the inference and review rules.
+Changes remain local and unstaged: no files are staged or committed, and no tags are created or pushed. Review the result with `git diff`. A manually written untagged changelog draft is preserved, while an empty or absent draft receives a simple generated entry. See the [release guide](./releasing.md) for the inference and review rules.
 
 ## Release
 

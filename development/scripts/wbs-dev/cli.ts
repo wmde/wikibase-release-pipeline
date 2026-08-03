@@ -169,12 +169,9 @@ function commandTasks(
 			if ( parsed.selections.length === 0 ) {
 				fail( 'update-sources requires an image project or "all".' );
 			}
-			const unsupportedOptions = parsed.forwarded.filter(
-				( option ) => option !== '--dry-run'
-			);
-			if ( unsupportedOptions.length > 0 ) {
+			if ( parsed.forwarded.length > 0 ) {
 				fail(
-					`update-sources does not accept options: ${ unsupportedOptions.join( ' ' ) }.`
+					`update-sources does not accept options: ${ parsed.forwarded.join( ' ' ) }.`
 				);
 			}
 			const selected = resolveSelections(
@@ -187,7 +184,7 @@ function commandTasks(
 				tasks: selected.map( ( image ) => ( {
 					label: `update-sources ${ image }`,
 					command: 'scripts/update-sources/run.sh',
-					args: [ image, ...parsed.forwarded ]
+					args: [ image ]
 				} ) )
 			};
 		}
@@ -271,10 +268,7 @@ function commandTasks(
 	}
 }
 
-async function updateVersions(
-	requested: string[],
-	dryRun: boolean
-): Promise<void> {
+async function updateVersions( requested: string[] ): Promise<void> {
 	const projects = resolveProjectSelections(
 		requested,
 		readReleaseProjects(),
@@ -291,16 +285,17 @@ async function updateVersions(
 	}
 	for ( const plan of plans ) {
 		console.log(
-			`${ dryRun ? 'Would prepare' : 'Preparing' } ${ plan!.project.name } ${ plan!.targetVersion } (${ plan!.reason }).`
+			`Preparing ${ plan!.project.name } ${ plan!.targetVersion } (${ plan!.reason }).`
 		);
 	}
-	if ( !dryRun ) {
-		const updates = plans.reduce<FileUpdate[]>(
-			( accumulated, plan ) => [ ...accumulated, ...plan!.updates ],
-			[]
-		);
-		applyFileUpdates( updates );
-	}
+	const updates = plans.reduce<FileUpdate[]>(
+		( accumulated, plan ) => [ ...accumulated, ...plan!.updates ],
+		[]
+	);
+	applyFileUpdates( updates );
+	console.log(
+		'Updated local files. Nothing was staged, committed, tagged, or pushed. Review with git diff.'
+	);
 }
 
 async function releaseImages(
@@ -485,20 +480,16 @@ async function main(): Promise<void> {
 	addProxyCommand(
 		program,
 		'update-sources',
-		'Update all or selected supported upstream commit pins.',
-		'IMAGE...|all [--dry-run]'
+		'Update upstream commit pins in local, unstaged files.',
+		'IMAGE...|all'
 	);
 	program
 		.command( 'update-versions' )
 		.description(
-			'Infer versions and update package files and changelogs atomically.'
+			'Infer versions and update local package files and changelogs atomically.'
 		)
 		.argument( '<projects...>', 'PROJECT...|all' )
-		.option( '--dry-run', 'Show inferred releases without writing files.' )
-		.action(
-			async ( projects: string[], options: { dryRun?: boolean } ) =>
-				await updateVersions( projects, options.dryRun ?? false )
-		);
+		.action( async ( projects: string[] ) => await updateVersions( projects ) );
 
 	const release = program
 		.command( 'release' )
@@ -543,6 +534,8 @@ async function main(): Promise<void> {
 			'  build selects all images, test selects all integration suites, lint selects the',
 			'  repository root. Release preparation commands require explicit projects;',
 			'  use "all" as their sole target to select every supported project.',
+			'  Preparation changes remain local and unstaged; review them with git diff.',
+			'  Preparation commands do not support --dry-run; build options are forwarded.',
 			'',
 			'Argument forwarding:',
 			'  Options after the target list are passed unchanged to the underlying build,',
@@ -555,7 +548,7 @@ async function main(): Promise<void> {
 			'  wbs-dev test repo queryservice --headed',
 			'  wbs-dev test repo --spec suites/repo/specs/special-new-item.ts',
 			'  wbs-dev update-sources wikibase quickstatements',
-			'  wbs-dev update-versions wikibase wbs --dry-run',
+			'  wbs-dev update-versions wikibase wbs',
 			'  wbs-dev build wikibase --publish --dry-run',
 			'  wbs-dev release all --dry-run'
 		].join( '\n' )

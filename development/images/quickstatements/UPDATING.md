@@ -9,7 +9,6 @@ Use this guide when the release refreshes those commits.
 ## 1. Update the sources
 
 ```bash
-development/wbs-dev update-sources quickstatements --dry-run
 development/wbs-dev update-sources quickstatements
 ```
 

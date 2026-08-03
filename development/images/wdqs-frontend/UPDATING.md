@@ -7,7 +7,6 @@ Use this guide when the release refreshes the Query Service frontend.
 ## 1. Update the source
 
 ```bash
-development/wbs-dev update-sources wdqs-frontend --dry-run
 development/wbs-dev update-sources wdqs-frontend
 ```
 

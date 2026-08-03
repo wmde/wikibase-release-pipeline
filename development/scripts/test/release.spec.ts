@@ -201,30 +201,41 @@ describe( 'wbs-dev release tooling', () => {
 			assert.match( changelog, /A carefully edited explanation\./u );
 		} );
 
-		it( 'treats uncommitted source updates as a patch and supports dry runs', () => {
+		it( 'treats uncommitted source updates as a local patch release', () => {
 			const fixture = createFixture();
 			write(
 				fixture,
 				'development/images/wikibase/build.env',
 				'WIKIBASE_COMMIT=bbb\n'
 			);
-			const before = readFileSync(
-				join( fixture.root, 'development/images/wikibase/package.json' ),
-				'utf8'
-			);
-			const result = cli( fixture, 'update-versions', 'wikibase', '--dry-run' );
+			const result = cli( fixture, 'update-versions', 'wikibase' );
 			assert.equal( result.status, 0, result.stderr );
 			assert.match(
 				result.stdout,
-				/Would prepare wikibase 1\.0\.1 \(patch release\)/u
+				/Preparing wikibase 1\.0\.1 \(patch release\)/u
 			);
 			assert.equal(
-				readFileSync(
-					join( fixture.root, 'development/images/wikibase/package.json' ),
-					'utf8'
-				),
-				before
+				JSON.parse(
+					readFileSync(
+						join( fixture.root, 'development/images/wikibase/package.json' ),
+						'utf8'
+					)
+				).version,
+				'1.0.1'
 			);
+			assert.match( result.stdout, /Nothing was staged, committed, tagged, or pushed/u );
+			assert.equal( git( fixture, 'diff', '--cached', '--name-only' ), '' );
+		} );
+
+		it( 'reserves dry runs for release commands', () => {
+			const fixture = createFixture();
+			const versions = cli( fixture, 'update-versions', 'wikibase', '--dry-run' );
+			assert.notEqual( versions.status, 0 );
+			assert.match( versions.stderr, /unknown option '--dry-run'/u );
+
+			const sources = cli( fixture, 'update-sources', 'wikibase', '--dry-run' );
+			assert.notEqual( sources.status, 0 );
+			assert.match( sources.stderr, /does not accept options: --dry-run/u );
 		} );
 
 		it( 'uses legacy deploy tags for WBS and keeps DEPLOY_VERSION aligned', () => {

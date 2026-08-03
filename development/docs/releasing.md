@@ -44,7 +44,7 @@ Commit all release changes according to the [Conventional Commits policy](./conv
 development/wbs-dev update-versions <project...|all>
 ```
 
-This updates the selected package versions and changelogs without staging or committing them. For `wbs`, it also keeps `DEPLOY_VERSION` aligned. An existing higher version is not reduced, and a manually written unreleased changelog entry is preserved.
+This makes local working-tree changes only: it does not stage, commit, tag, or push anything. Review the result with `git diff`. For `wbs`, it also keeps `DEPLOY_VERSION` aligned. An existing higher version is not reduced, and a manually written unreleased changelog entry is preserved.
 
 ### 6. Review and merge
 

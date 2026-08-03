@@ -1,4 +1,3 @@
-import difflib
 import hashlib
 import os, json, re, requests
 import tempfile
@@ -105,7 +104,7 @@ def get_codeberg_archive_sha256(repo_path: str, commit: str) -> str:
     return hashlib.sha256(response.content).hexdigest()
 
 
-def run(file_path, dry_run=False):
+def run(file_path):
     if not os.path.exists(file_path):
         print(f"File {file_path} does not exist.")
         return
@@ -181,31 +180,21 @@ def run(file_path, dry_run=False):
         print("No source pin updates are available.")
         return
 
-    if dry_run:
-        print(
-            "".join(
-                difflib.unified_diff(
-                    original_contents.splitlines(keepends=True),
-                    variable_contents.splitlines(keepends=True),
-                    fromfile=file_path,
-                    tofile=file_path,
-                )
-            ),
-            end="",
-        )
-        return
-
     directory = os.path.dirname(file_path)
     with tempfile.NamedTemporaryFile("w", dir=directory, delete=False) as variable_file:
         variable_file.write(variable_contents)
         temporary_path = variable_file.name
     os.replace(temporary_path, file_path)
+    print(
+        f"Updated {file_path}. Nothing was staged, committed, tagged, or pushed. "
+        "Review with git diff."
+    )
 
 
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) not in (2, 3):
-        print("Usage: python script_name.py <path_to_env_file> [--dry-run]")
+    if len(sys.argv) != 2:
+        print("Usage: python script_name.py <path_to_env_file>")
     else:
-        run(sys.argv[1], len(sys.argv) == 3 and sys.argv[2] == "--dry-run")
+        run(sys.argv[1])
