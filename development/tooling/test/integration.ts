@@ -161,7 +161,7 @@ export async function runIntegrationSuites(
 	}
 
 	if ( failed ) {
-		process.exitCode = 1;
+		throw new Error( 'One or more integration test suites failed.' );
 	}
 }
 

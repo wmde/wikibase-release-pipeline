@@ -12,7 +12,8 @@ export LAUNCH_TRIGGER_PATH
 export RESET
 export SCRIPTS_DIR
 export WBS_STATE_DIR
-INSTALL_ARGS=( "$@" )
+export CONFIGURE_ONLY
+CONFIGURE_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
 
@@ -22,18 +23,15 @@ source "$SCRIPTS_DIR/_logging.sh"
 
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
 INSTALLER_CONTAINER_NAME=${WBS_INSTALLER_CONTAINER_NAME:-wikibase-suite-installer-webserver}
+INSTALLER_WORKER_CONTAINER_NAME=${WBS_INSTALLER_WORKER_CONTAINER_NAME:-wikibase-suite-installer-worker}
 INSTALLER_PORT=${WBS_INSTALLER_PORT:-8888}
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
 WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
-WBS_TOOLS_APP_DIR="$WBS_TOOLS_PROJECT_DIR/app"
 LE_DIR="$WBS_STATE_DIR/letsencrypt"
 CERTS_DIR="$WBS_STATE_DIR/certs"
-if [[ -n "${LAUNCH_TRIGGER_PATH:-}" && "$LAUNCH_TRIGGER_PATH" == "$WBS_DIR/"* ]]; then
-  LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/${LAUNCH_TRIGGER_PATH#"$WBS_DIR/"}"
-else
-  LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/$(basename "${LAUNCH_TRIGGER_PATH:-.wbs-installer-launch-ready}")"
-fi
+LAUNCH_TRIGGER_PATH="${LAUNCH_TRIGGER_PATH:-$WBS_STATE_DIR/install-request}"
+LAUNCH_TRIGGER_CONTAINER_PATH="/app/state/install-request"
 EXISTING_INSTALL_STATE="${EXISTING_INSTALL_STATE:-none}"
 
 # --- Functions ---
@@ -88,6 +86,7 @@ generate_cert_for_installer_webserver() {
 remove_any_existing_installer_webserver() {
   # Remove any existing installer container with our fixed name (running or exited).
   run "docker rm -fv $INSTALLER_CONTAINER_NAME >/dev/null 2>&1 || true"
+  run "docker rm -fv $INSTALLER_WORKER_CONTAINER_NAME >/dev/null 2>&1 || true"
 
   # Optional: warn if the host port is already taken (by something else)
   if command -v lsof >/dev/null 2>&1; then
@@ -97,6 +96,38 @@ remove_any_existing_installer_webserver() {
   fi
 }
 
+start_installer_worker() {
+  local worker_args=(install-worker)
+  local environment_args=()
+  if [[ "${WBS_BUILD_IMAGES:-false}" == true ]]; then
+    worker_args+=(--build)
+  elif [[ "${WBS_LOCAL_IMAGES:-false}" == true ]]; then
+    worker_args+=(--local-images)
+  fi
+  for variable_name in \
+    COMPOSE_PROJECT_NAME BUILD_CACHE_REGISTRY GITHUB_ACTIONS \
+    WBS_E2E_PULL_POLICY WBS_E2E_HTTP_PORT WBS_E2E_HTTPS_PORT \
+    WBS_TEST_IMAGE_REGISTRY WBS_TEST_IMAGE_TAG; do
+    if [[ -v "$variable_name" ]]; then
+      environment_args+=(-e "$variable_name")
+    fi
+  done
+
+  run_args docker run -d --rm \
+    --name "$INSTALLER_WORKER_CONTAINER_NAME" \
+    --network none \
+    -e "WBS_DIR=$WBS_DIR" \
+    -e "ENV_FILE_PATH=$ENV_FILE_PATH" \
+    -e "LOG_PATH=$LOG_PATH" \
+    -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_PATH" \
+    "${environment_args[@]}" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$WBS_DIR:$WBS_DIR" \
+    -w "$WBS_DIR" \
+    "$WBS_TOOLS_IMAGE" \
+    node /app/dist/wbs.js "${worker_args[@]}"
+}
+
 compose_services_are_running() {
   pushd "$WBS_DIR" >/dev/null || return 1
 
@@ -104,8 +135,8 @@ compose_services_are_running() {
   if [ -f "docker-compose.local.yml" ]; then
     compose_opts+=(-f docker-compose.local.yml)
   fi
-  if [[ "${WBS_LOCAL_IMAGES:-false}" == true ]] || [ -f "$WBS_STATE_DIR/local-images" ]; then
-	compose_opts+=(-f development/docker-compose.local-images.yml)
+  if [[ "${WBS_LOCAL_IMAGES:-false}" == true ]]; then
+    compose_opts+=(-f development/docker-compose.local-images.yml)
   fi
 
   local running_services
@@ -132,6 +163,9 @@ start_installer_webserver() {
 
   # Ensure old container is gone before build/run
   remove_any_existing_installer_webserver
+  mkdir -p "$WBS_STATE_DIR"
+  touch "$ENV_FILE_PATH" "$LOG_PATH"
+  rm -f "$LAUNCH_TRIGGER_PATH"
 
   # Run with volumes mapped as before
   if $INSTALLER_DEV; then
@@ -142,21 +176,17 @@ start_installer_webserver() {
       -e "LOCALHOST=$LOCALHOST"
       -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
       -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
+      -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
       -e DEV_SERVER=true
       -e "INSTALLER_DEV_MOCK=${INSTALLER_DEV_MOCK:-false}"
       -p "$INSTALLER_PORT:443"
-      -v "$WBS_DIR:/app/wbs"
+      -v "$WBS_DIR:/app/wbs:ro"
+      -v "$ENV_FILE_PATH:/app/wbs/.env"
+      -v "$WBS_STATE_DIR:/app/state"
       -v "$CERTS_DIR:/app/certs"
       -v "$LOG_PATH:/app/installation.log"
-      -v "$WBS_TOOLS_APP_DIR/client:/app/client"
-      -v "$WBS_TOOLS_APP_DIR/data:/app/data"
-      -v "$WBS_TOOLS_APP_DIR/public:/app/public"
-      -v "$WBS_TOOLS_APP_DIR/shared:/app/shared"
-      -v "$WBS_TOOLS_APP_DIR/index.html:/app/index.html"
-      -v "$WBS_TOOLS_APP_DIR/logStreamer.ts:/app/logStreamer.ts"
-      -v "$WBS_TOOLS_APP_DIR/passwordPolicy.ts:/app/passwordPolicy.ts"
-      -v "$WBS_TOOLS_APP_DIR/server.ts:/app/server.ts"
-      -v "$WBS_TOOLS_APP_DIR/serverHelpers.ts:/app/serverHelpers.ts"
+      -v "$WBS_TOOLS_PROJECT_DIR/web:/app/web"
+      -v "$WBS_TOOLS_PROJECT_DIR/shared:/app/shared"
       "$WBS_TOOLS_IMAGE"
       npm run dev:server
     )
@@ -168,12 +198,15 @@ start_installer_webserver() {
       -e "LOCALHOST=$LOCALHOST"
       -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
       -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
+      -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
       -p "$INSTALLER_PORT:443"
-      -v "$WBS_DIR:/app/wbs"
+      -v "$WBS_DIR:/app/wbs:ro"
+      -v "$ENV_FILE_PATH:/app/wbs/.env"
+      -v "$WBS_STATE_DIR:/app/state"
       -v "$CERTS_DIR:/app/certs"
       -v "$LOG_PATH:/app/installation.log"
       "$WBS_TOOLS_IMAGE"
-      node dist/wbs.js install "${INSTALL_ARGS[@]}"
+      node dist/wbs.js configure "${CONFIGURE_ARGS[@]}"
     )
   fi
 
@@ -206,3 +239,12 @@ EXISTING_INSTALL_STATE="$(detect_existing_install_state)"
 # No need to cd; we reference absolute paths for build context and Dockerfile
 generate_cert_for_installer_webserver
 start_installer_webserver
+
+if [[ "${CONFIGURE_ONLY:-false}" == true ]]; then
+  docker wait "$INSTALLER_CONTAINER_NAME" >/dev/null
+  docker rm "$INSTALLER_CONTAINER_NAME" >/dev/null 2>&1 || true
+elif [[ "${INSTALLER_DEV_MOCK:-false}" == true ]]; then
+  :
+else
+  start_installer_worker
+fi

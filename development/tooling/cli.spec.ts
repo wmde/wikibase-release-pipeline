@@ -24,31 +24,10 @@ describe( 'wbs-dev command contracts', () => {
 		);
 	} );
 
-	it( 'exposes the product-oriented suite lifecycle', () => {
-		const suite = cli( 'suite', '--help' );
-		assert.equal( suite.status, 0, suite.stderr );
-		for ( const command of [ 'up', 'down', 'status', 'reset' ] ) {
-			assert.ok( suite.stdout.includes( command ) );
-		}
-
-		const up = cli( 'suite', 'up', '--help' );
-		assert.equal( up.status, 0, up.stderr );
-		assert.doesNotMatch( up.stdout, /^\s+--build(?:\s|$)/mu );
-		assert.match( up.stdout, /--no-build/u );
-		assert.match( up.stdout, /--published/u );
-		assert.doesNotMatch( up.stdout, /--no-pull/u );
-		assert.doesNotMatch( up.stdout, /--local/u );
-		assert.match( up.stdout, /pulls upstream service images/u );
-		assert.match( up.stdout, /builds\s+every WBS product image/u );
-		assert.match( up.stdout, /prevents Compose from pulling the WBS product images/u );
-		assert.match( up.stdout, /requires those local images to exist already/u );
-		assert.match( up.stdout, /Docker Hub images to be tested/u );
-		assert.match( up.stdout, /docker-compose\.local\.yml remains last/u );
-
-		const reset = cli( 'suite', 'reset', '--help' );
-		assert.equal( reset.status, 0, reset.stderr );
-		assert.match( reset.stdout, /permanently removes Compose volumes/u );
-		assert.match( reset.stdout, /remains stopped/u );
+	it( 'leaves Suite lifecycle ownership to the root wbs command', () => {
+		const result = cli( '--help' );
+		assert.equal( result.status, 0, result.stderr );
+		assert.doesNotMatch( result.stdout, /^\s+suite(?:\s|$)/mu );
 	} );
 
 	it( 'exposes browser installer development', () => {

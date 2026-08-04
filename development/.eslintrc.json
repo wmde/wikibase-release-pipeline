@@ -10,7 +10,7 @@
 		"**/results/result.json",
 		"!../.github/**/**",
 		"../config/extensions",
-		"images/wbs-tools/app",
+		"images/wbs-tools",
 		"cloud-init.yml",
 		"package-lock.json",
 		"pnpm/**/**",

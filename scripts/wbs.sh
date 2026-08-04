@@ -8,43 +8,16 @@ export WBS_STATE_DIR
 export ENV_FILE_PATH
 
 export DEBUG="${DEBUG:-false}"
-export FROM_SOURCE=false
 export INSTALLER_DEV=false
+export INSTALLER_DEV_MOCK=false
 export LOCALHOST=false
 export RESET=false
 export SKIP_LAUNCH=false
 export SKIP_DEPENDENCY_INSTALLS="${WBS_SKIP_DEPENDENCY_INSTALLS:-false}"
+export CONFIGURE_ONLY=false
+export WBS_BUILD_IMAGES=false
 
-if [[ "${1:-}" == install ]]; then
-  shift
-  INSTALL_ARGS=( "$@" )
-
-  for argument in "$@"; do
-    case "$argument" in
-      --web)
-        export CLI=false
-        ;;
-      --local)
-        export LOCALHOST=true
-        ;;
-      --debug)
-        export DEBUG=true
-        ;;
-      --from-source)
-        export FROM_SOURCE=true
-        ;;
-      --installer-dev|--dev)
-        echo "⚠️ Installer development has moved. Run ./development/wbs-dev installer-dev web."
-        exit 1
-        ;;
-      -h|--help)
-        SHOW_HELP=true
-        ;;
-    esac
-  done
-
-  export CLI="${CLI:-true}"
-fi
+COMMAND="${1:-}"
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
@@ -53,45 +26,155 @@ source "$SCRIPTS_DIR/install-docker.sh"
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_tools-image.sh"
 
-if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
-  install_docker
-fi
-if [[ "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
-  confirm_arch
-fi
-confirm_docker_version
-confirm_docker_compose_version
-confirm_docker_running
-status "✅ Docker installed"
+prepare_runtime() {
+  local install_dependencies="$1"
+  if [[ "$install_dependencies" == true && "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
+    install_docker
+  fi
+  if [[ "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
+    confirm_arch
+  fi
+  confirm_docker_version
+  confirm_docker_compose_version
+  confirm_docker_running
+  status "✅ Docker installed"
+}
 
-if $FROM_SOURCE; then
-  status "🕐 Building Wikibase Suite images from the selected source checkout..." "images_build_started"
-  if ! run_args "$WBS_DIR/development/wbs-dev" build; then
-    status "⛔️ One or more image builds failed. Review $LOG_PATH or rerun with --debug." "images_build_failed"
+prepare_source_tools_image() {
+  status "🕐 Building the WBS tools image from the selected source checkout..." "tools_build_started"
+  if ! run_args "$WBS_DIR/development/wbs-dev" build wbs-tools; then
+    status "⛔️ The WBS tools image build failed. Review $LOG_PATH or rerun with --debug." "tools_build_failed"
     exit 1
   fi
-  status "✅ All source image builds are current." "images_build_ready"
+  status "✅ The source checkout's WBS tools image is ready." "tools_build_ready"
 
-  mkdir -p "$WBS_STATE_DIR"
-  touch "$WBS_STATE_DIR/local-images"
   export WBS_TOOLS_IMAGE="wikibase/wbs-tools:latest"
-  status "Locally built images remain selected for this checkout. Remove .wbs/local-images to return to published images." "source_build_images_selected"
-else
-  prepare_wbs_tools_image
+  export WBS_TOOLS_SKIP_PULL=true
+  export WBS_BUILD_IMAGES=true
+  export WBS_LOCAL_IMAGES=true
+}
+
+run_tools_validation() {
+  docker run --rm \
+    -e WBS_VALIDATE_OPTIONS=true \
+    "$WBS_TOOLS_IMAGE" \
+    node dist/wbs.js "$@"
+}
+
+run_tools_command() {
+  local tty_flags=()
+  local environment_args=()
+  if [[ -t 0 && -t 1 ]]; then
+    tty_flags=(-it)
+  else
+    tty_flags=(-i)
+  fi
+  for variable_name in \
+    COMPOSE_PROJECT_NAME BUILD_CACHE_REGISTRY GITHUB_ACTIONS \
+    WBS_E2E_PULL_POLICY WBS_E2E_HTTP_PORT WBS_E2E_HTTPS_PORT \
+    WBS_TEST_IMAGE_REGISTRY WBS_TEST_IMAGE_TAG; do
+    if [[ -v "$variable_name" ]]; then
+      environment_args+=(-e "$variable_name")
+    fi
+  done
+  exec docker run "${tty_flags[@]}" --rm \
+    "${environment_args[@]}" \
+    -e WBS_DIR="$WBS_DIR" \
+    -e ENV_FILE_PATH="$ENV_FILE_PATH" \
+    -e LOG_PATH="$WBS_DIR/installation.log" \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$WBS_DIR:$WBS_DIR" \
+    -v "$WBS_DIR:/app/wbs" \
+    -w "$WBS_DIR" \
+    "$WBS_TOOLS_IMAGE" \
+    node /app/dist/wbs.js "$@"
+}
+
+case "$COMMAND" in
+  up|down|status|reset)
+    prepare_runtime false
+    prepare_wbs_tools_image
+    run_tools_command "$@"
+    ;;
+esac
+
+if [[ "$COMMAND" == install || "$COMMAND" == configure ]]; then
+  shift
+  REQUEST_ARGS=( "$@" )
+  CONFIGURE_ARGS=()
+  FROM_SOURCE=false
+
+  for argument in "${REQUEST_ARGS[@]}"; do
+    case "$argument" in
+      --web)
+        export CLI=false
+        CONFIGURE_ARGS+=( "$argument" )
+        ;;
+      --local)
+        export LOCALHOST=true
+        CONFIGURE_ARGS+=( "$argument" )
+        ;;
+      --debug)
+        export DEBUG=true
+        CONFIGURE_ARGS+=( "$argument" )
+        ;;
+      --from-source)
+        FROM_SOURCE=true
+        ;;
+      --installer-dev|--dev)
+        echo "⚠️ Installer development has moved. Run ./development/wbs-dev installer-dev web."
+        exit 1
+        ;;
+      -h|--help)
+        SHOW_HELP=true
+        CONFIGURE_ARGS+=( "$argument" )
+        ;;
+      *)
+        CONFIGURE_ARGS+=( "$argument" )
+        ;;
+    esac
+  done
+  export CLI="${CLI:-true}"
+
+  if [[ "$COMMAND" == configure && "$FROM_SOURCE" == true ]]; then
+    echo "wbs: --from-source belongs to 'wbs install', not 'wbs configure'." >&2
+    exit 1
+  fi
+
+  if [[ "$COMMAND" == install ]]; then
+    prepare_runtime true
+  else
+    prepare_runtime false
+  fi
+
+  if [[ "$COMMAND" == install && "$FROM_SOURCE" == true ]]; then
+    prepare_source_tools_image
+  else
+    prepare_wbs_tools_image
+  fi
+
+  if [[ "${SHOW_HELP:-false}" == true ]]; then
+    exec docker run --rm "$WBS_TOOLS_IMAGE" \
+      node dist/wbs.js "$COMMAND" "${REQUEST_ARGS[@]}"
+  fi
+
+  run_tools_validation "$COMMAND" "${REQUEST_ARGS[@]}"
+
+  if [[ "$COMMAND" == configure ]]; then
+    export CONFIGURE_ONLY=true
+    export SKIP_LAUNCH=true
+  fi
+
+  if [[ "$CLI" == true ]]; then
+    run_tools_command "$COMMAND" "${REQUEST_ARGS[@]}"
+  fi
+
+  exec bash "$SCRIPTS_DIR/run-web-installer.sh" "${CONFIGURE_ARGS[@]}"
 fi
 
-if [[ -z "${INSTALL_ARGS+x}" ]]; then
-  exec docker run --rm "$WBS_TOOLS_IMAGE" node dist/wbs.js "$@"
-fi
-
-if [[ "${SHOW_HELP:-false}" == true ]]; then
-  exec docker run --rm "$WBS_TOOLS_IMAGE" \
-    node dist/wbs.js install "${INSTALL_ARGS[@]}"
-fi
-
-docker run --rm \
-  -e WBS_VALIDATE_OPTIONS=true \
-  "$WBS_TOOLS_IMAGE" \
-  node dist/wbs.js install "${INSTALL_ARGS[@]}"
-
-exec bash "$SCRIPTS_DIR/run-installer.sh" "${INSTALL_ARGS[@]}"
+# Commands implemented entirely by the tools application retain the generic
+# container entry point. This also renders top-level help when no command was
+# supplied.
+prepare_runtime false
+prepare_wbs_tools_image
+run_tools_command "$@"

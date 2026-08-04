@@ -7,7 +7,6 @@ import { registerLintCommand } from './lint/command.js';
 import { registerUpdateSourcesCommand } from './prepare/update-sources-command.js';
 import { registerUpdateVersionsCommand } from './prepare/update-versions-command.js';
 import { registerReleaseCommand } from './release/command.js';
-import { registerSuiteCommand } from './suite/command.js';
 import { registerTestCommand } from './test/command.js';
 
 async function main(): Promise<void> {
@@ -24,7 +23,6 @@ async function main(): Promise<void> {
 
 	registerBuildCommand( program, context );
 	registerInstallerDevCommand( program, context );
-	registerSuiteCommand( program, context );
 	registerTestCommand( program, context );
 	registerLintCommand( program, context );
 	registerUpdateSourcesCommand( program, context );
@@ -41,7 +39,6 @@ async function main(): Promise<void> {
 			'Examples:',
 			'  wbs-dev build',
 			'  wbs-dev installer-dev web',
-			'  wbs-dev suite up',
 			'  wbs-dev test',
 			'  wbs-dev lint',
 			'  wbs-dev update-sources wikibase quickstatements',
@@ -61,5 +58,8 @@ async function main(): Promise<void> {
 
 main().catch( ( error ) => {
 	console.error( error instanceof Error ? `wbs-dev: ${ error.message }` : error );
-	process.exitCode = process.exitCode || 1;
+	// Fatal command errors have already passed through task and suite cleanup hooks.
+	// Exit explicitly so an open third-party handle cannot turn a failure into a hang.
+	// eslint-disable-next-line n/no-process-exit
+	process.exit( 1 );
 } );

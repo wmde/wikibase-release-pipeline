@@ -55,7 +55,7 @@ describe( 'installer-dev web environment', () => {
 		assert.equal( toolsBuilds, 0 );
 		assert.equal( runner.calls.length, 1 );
 		assert.deepEqual( runner.calls[ 0 ].args, [
-			'/host/repo/scripts/run-installer.sh'
+			'/host/repo/scripts/run-web-installer.sh'
 		] );
 		const environment = runner.calls[ 0 ].options.env;
 		assert.ok( environment );

@@ -5,10 +5,16 @@ import {
 	ADMIN_EMAIL,
 	ADMIN_PASSWORD,
 	ADMIN_USERNAME,
+	DATABASE_NAME,
+	DATABASE_PASSWORD,
+	DATABASE_USER,
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
 	toolsImage,
+	verifyCliInstallWaitsForConfiguration,
 	verifyFinalizedInstallerArtifacts,
+	verifyInstallerContainerIsolation,
+	verifySubmittedInstallerConfiguration,
 	waitForInstalledServicesHealthy,
 	waitForInstallerStopped
 } from './test-environment.js';
@@ -44,7 +50,7 @@ describe( 'WBS tools installer', () => {
 				'sh',
 				toolsImage(),
 				'-c',
-				'test -f dist/wbs.js && test -f dist/cli.js'
+				'test -f dist/wbs.js && test -f dist/cli/configure.js'
 			],
 			{ encoding: 'utf8' }
 		);
@@ -97,6 +103,40 @@ describe( 'WBS tools installer', () => {
 		}
 	} );
 
+	it( 'provides configuration and lifecycle command interfaces', () => {
+		const image = toolsImage();
+		const help = execFileSync(
+			'docker',
+			[ 'run', '--rm', image, 'node', 'dist/wbs.js', '--help' ],
+			{ encoding: 'utf8' }
+		);
+		for ( const command of [ 'configure', 'up', 'down', 'status', 'reset' ] ) {
+			assert.ok( help.includes( command ), `wbs help does not include ${ command }.` );
+		}
+
+		const configureHelp = execFileSync(
+			'docker',
+			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'configure', '--help' ],
+			{ encoding: 'utf8' }
+		);
+		assert.match( configureHelp, /--web/u );
+		assert.match( configureHelp, /--local/u );
+		assert.doesNotMatch( configureHelp, /--from-source/u );
+
+		const upHelp = execFileSync(
+			'docker',
+			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'up', '--help' ],
+			{ encoding: 'utf8' }
+		);
+		assert.match( upHelp, /--update/u );
+		assert.match( upHelp, /--local-images/u );
+		assert.match( upHelp, /--build/u );
+	} );
+
+	it( 'finishes CLI configuration before starting lifecycle operations', () => {
+		verifyCliInstallWaitsForConfiguration();
+	} );
+
 	it( 'boots a healthy Wikibase Suite, finalizes securely, and preserves administrator login', async () => {
 		await browser.url( '/' );
 		await clickEnabledButton( 'Get started' );
@@ -110,9 +150,9 @@ describe( 'WBS tools installer', () => {
 		await setField( 'MW_ADMIN_PASS', ADMIN_PASSWORD );
 		await clickEnabledButton( 'Continue' );
 
-		await setField( 'DB_NAME', 'wbs_tools_test' );
-		await setField( 'DB_USER', 'wbs_tools_user' );
-		await setField( 'DB_PASS', 'WbsToolsDatabasePassword-2026' );
+		await setField( 'DB_NAME', DATABASE_NAME );
+		await setField( 'DB_USER', DATABASE_USER );
+		await setField( 'DB_PASS', DATABASE_PASSWORD );
 		await clickEnabledButton( 'Continue' );
 
 		await expect( $( 'h2=Visibility' ) ).toBeDisplayed();
@@ -121,12 +161,21 @@ describe( 'WBS tools installer', () => {
 		await visibilityCheckbox.click();
 		await expect( visibilityCheckbox ).toBeSelected();
 		await clickEnabledButton( 'Start installation' );
+		verifyInstallerContainerIsolation();
 
 		const completionHeading = await $( 'h2=Installation complete! 🎉' );
 		await completionHeading.waitForDisplayed( { timeout: INSTALL_TIMEOUT } );
 		await waitForInstalledServicesHealthy();
+		verifySubmittedInstallerConfiguration();
 		await clickEnabledButton( 'View log' );
-		await clickEnabledButton( 'Stop the installer' );
+		const stopInstallerButton = await $(
+			'.setup-log-dialog .shutdown-panel button'
+		);
+		await stopInstallerButton.waitForDisplayed();
+		await stopInstallerButton.waitForEnabled();
+		await stopInstallerButton.scrollIntoView( { block: 'center' } );
+		await stopInstallerButton.waitForClickable();
+		await stopInstallerButton.click();
 		await waitForInstallerStopped();
 		verifyFinalizedInstallerArtifacts();
 

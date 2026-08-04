@@ -1,5 +1,5 @@
 # Local image selection used by wbs install --from-source.
-# Remove .wbs/local-images to return to published image tags.
+# It is selected explicitly by lifecycle command options and is never persistent.
 
 services:
   wikibase:

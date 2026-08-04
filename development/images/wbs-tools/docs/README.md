@@ -22,7 +22,7 @@ The branch and tag model is:
 
 ## Installer entry points
 
-The downloaded bootstrap is browser-first. It installs Git when needed, selects and checks out the latest stable WBS release, and then delegates to that release's `wbs` command:
+The downloaded bootstrap is browser-first. It installs Docker when needed, pulls the compatible tools image, asks that image to clone the latest stable WBS release, and then delegates to the checkout's `wbs` command:
 
 ```bash
 bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install)
@@ -86,13 +86,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/ins
   --from-source
 ```
 
-This builds every image through `development/wbs-dev` and selects `development/docker-compose.local-images.yml` for the checkout. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Remove `.wbs/local-images` to return the installation to published image tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to stream it in the terminal.
+This first builds the checkout's tools image and then uses it to build every product image through `development/wbs-dev`. The operation selects `development/docker-compose.local-images.yml` only for that invocation. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. After checkout, installation output is written to `installation.log` in the WBS directory; add `--debug` to stream it in the terminal.
 
 ## Runtime behavior
 
 - Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
 - Normal installations pull the compatible WBS tools major selected by the installation scripts, currently `wikibase/wbs-tools:1`. Set `WBS_TOOLS_IMAGE` to test a different published image.
-- Source installations requested with `--from-source` use `wikibase/wbs-tools:latest` and `development/docker-compose.local-images.yml`; `.wbs/local-images` records the product-image selection.
+- Source installations requested with `--from-source` build `wikibase/wbs-tools:latest` and explicitly select `development/docker-compose.local-images.yml` for that operation.
 - `wbs-dev installer-dev web` builds and uses the local `latest` images for that development session without changing the checkout's persistent product-image selection.
 - `wbs-dev installer-dev web --mock` builds only the installer tools image and simulates progress without changing configuration or services.
 - The installer web server runs on port `8888` for browser UI installations.
@@ -102,10 +102,10 @@ This builds every image through `development/wbs-dev` and selects `development/d
 
 ## Local installer state
 
-The ignored `.wbs/` directory contains state used only by the temporary browser installer and source-image selection:
+The ignored `.wbs/` directory contains state used only by the temporary browser installer:
 
-- `.wbs/local-images` selects the tracked `development/docker-compose.local-images.yml` override.
 - `.wbs/certs/` contains the certificate and private key presented by the temporary installer web server on port `8888`.
 - `.wbs/letsencrypt/` contains the temporary installer's Let's Encrypt account and certificate-request state.
+- `.wbs/install-request` is the short-lived request passed from the socketless web server to the non-networked installation worker.
 
 The certificate directories are regenerated when needed and are separate from the installed Wikibase Suite HTTPS certificates. The running product's Traefik certificates are stored in the `traefik-letsencrypt-data` Docker volume.

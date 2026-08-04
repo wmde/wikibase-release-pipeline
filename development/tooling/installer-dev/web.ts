@@ -43,7 +43,7 @@ export async function runInstallerDevWeb(
 	const stateRoot = join( root, '.wbs' );
 	await dependencies.commandRunner.run(
 		'bash',
-		[ join( root, 'scripts', 'run-installer.sh' ) ],
+		[ join( root, 'scripts', 'run-web-installer.sh' ) ],
 		{
 			cwd: root,
 			output: 'inherit',
@@ -54,6 +54,7 @@ export async function runInstallerDevWeb(
 				ENV_FILE_PATH: join( root, '.env' ),
 				INSTALLER_DEV: 'true',
 				INSTALLER_DEV_MOCK: options.mock ? 'true' : 'false',
+				CONFIGURE_ONLY: 'false',
 				LAUNCH_TRIGGER_PATH: join( stateRoot, 'installer-dev-launch-ready' ),
 				LOCALHOST: 'true',
 				LOG_PATH: join( stateRoot, 'installer-dev.log' ),
@@ -63,6 +64,7 @@ export async function runInstallerDevWeb(
 				SCRIPTS_DIR: join( root, 'scripts' ),
 				WBS_DIR: root,
 				WBS_INSTALLER_CONTAINER_NAME: 'wbs-dev-installer-web',
+				WBS_INSTALLER_WORKER_CONTAINER_NAME: 'wbs-dev-installer-worker',
 				WBS_LAUNCH_FOREGROUND: 'true',
 				WBS_LOCAL_IMAGES: 'true',
 				WBS_STATE_DIR: stateRoot,

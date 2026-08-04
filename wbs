@@ -7,5 +7,6 @@ export WBS_DIR
 export SCRIPTS_DIR="${SCRIPTS_DIR:-$WBS_DIR/scripts}"
 export WBS_STATE_DIR="${WBS_STATE_DIR:-$WBS_DIR/.wbs}"
 export ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
+export LOG_PATH="${LOG_PATH:-$WBS_DIR/installation.log}"
 
 exec bash "$SCRIPTS_DIR/wbs.sh" "$@"

@@ -6,19 +6,13 @@ LABEL org.opencontainers.image.version="${WBS_TOOLS_VERSION}"
 
 WORKDIR /app
 
-COPY app/package.json app/package-lock.json app/tsconfig.json app/tsconfig.server.json app/vite.config.ts app/index.html ./
-COPY app/client ./client
-COPY app/public ./public
-COPY app/shared ./shared
-COPY app/data ./data
-COPY app/cli.ts ./cli.ts
-COPY app/wbs.ts ./wbs.ts
-COPY app/server.ts ./server.ts
-COPY app/logStreamer.ts ./logStreamer.ts
-COPY app/passwordPolicy.ts ./passwordPolicy.ts
-COPY app/serverHelpers.ts ./serverHelpers.ts
+COPY package.json package-lock.json tsconfig.json tsconfig.server.json ./
+COPY cli ./cli
+COPY shared ./shared
+COPY web ./web
+COPY wbs.ts ./wbs.ts
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash docker-cli docker-cli-compose git openssl curl
 RUN npm ci && npm run build
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/web/server.js"]

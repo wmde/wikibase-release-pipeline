@@ -24,16 +24,28 @@ Repository tasks run through `wbs-dev`. The wrapper builds or loads the developm
 Use the repository-root `.env` and Compose configuration to run Wikibase Suite as an installed user would:
 
 ```bash
-./wbs-dev suite up
-./wbs-dev suite status
-./wbs-dev suite down
+../wbs up --build
+../wbs status
+../wbs down
 ```
 
-`suite up` applies the local-image Compose override, pulls upstream service images, builds every WBS product image from the current checkout, and starts with those local images. The override prevents Compose from pulling the locally built WBS product images. Use `./wbs-dev suite up --no-build` to skip rebuilding and use existing local product images; the command fails if those images are not available locally. Use `./wbs-dev suite up --published` to omit the development override and build so the configured Docker Hub images can be tested.
+`wbs up --build` builds every WBS product image from the current checkout, selects the local-image Compose override, and starts the Suite without pulling published product images. After the initial build, `../wbs up --local-images` starts those existing images without rebuilding. Use `../wbs up --update` without either development option to update and start the configured published images.
+
+When the repository-root `.env` is missing or incomplete, interactive `wbs up` resumes the command-line configurator. Existing values become prompt defaults and existing passwords can be retained without displaying them. With `--build` or `--local-images`, the configurator supplies local host, administrator, and database defaults for values that are still missing.
+
+The current local profile uses `wikibase.test` and `query.wikibase.test`. The configurator prints the hosts-file entry needed when those names do not already resolve locally. Local DNS and certificate handling remain separate from image and lifecycle selection.
 
 Compose files are applied in this order: the root `docker-compose.yml`, the development local-image override when selected, and the optional root `docker-compose.local.yml` last. This allows checkout-specific customizations to override either image mode.
 
-To remove all Suite volumes and generated configuration, use `./wbs-dev suite reset`. This permanently deletes the instance data and leaves the Suite stopped; run `./wbs-dev suite up` explicitly when you want to start it again. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
+To remove all Suite volumes and generated configuration, use `../wbs reset`. This asks for confirmation, permanently deletes the instance data, and leaves the Suite stopped; run `../wbs up` explicitly when you want to start it again. Use `--force` only for automation. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
+
+For exploratory work inside an integration-test environment instead, start exactly one named suite with `--setup`:
+
+```bash
+./wbs-dev test repo --setup
+```
+
+This builds the test images, starts that suite's test-only services and fixtures, and leaves the environment running without executing its specifications. It is test infrastructure rather than an alternative product lifecycle command.
 
 ## Developing the browser installer
 

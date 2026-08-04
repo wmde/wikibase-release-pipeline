@@ -1,5 +1,8 @@
+import assert from 'node:assert/strict';
 import { spawnSync } from 'child_process';
+import { parse } from 'dotenv';
 import {
+	chmodSync,
 	copyFileSync,
 	cpSync,
 	existsSync,
@@ -16,10 +19,14 @@ export const INSTALLER_URL = `https://host.docker.internal:${ INSTALLER_PORT }`;
 export const WIKIBASE_URL = 'https://wikibase.test';
 export const ADMIN_USERNAME = 'WbsToolsAdmin';
 export const ADMIN_PASSWORD = 'WbsToolsAdminPassword-2026';
-export const ADMIN_EMAIL = 'wbs-tools-test@example.org';
+export const ADMIN_EMAIL = 'wbs-tools-test@example.test';
 export const INSTALL_TIMEOUT = 15 * 60 * 1000;
+export const DATABASE_NAME = 'wbs_tools_test';
+export const DATABASE_USER = 'wbs_tools_user';
+export const DATABASE_PASSWORD = 'WbsToolsDatabasePassword-2026';
 
 const INSTALLER_CONTAINER = 'wbs-tools-e2e-installer';
+const INSTALLER_WORKER_CONTAINER = 'wbs-tools-e2e-installer-worker';
 const INSTALL_PROJECT = 'wbs-tools-e2e';
 const HOST_REPOSITORY_ROOT = resolve(
 	process.env.HOST_PWD || join( process.cwd(), '../..' )
@@ -41,6 +48,7 @@ type CommandOptions = {
 	cwd?: string;
 	env?: NodeJS.ProcessEnv;
 	allowFailure?: boolean;
+	input?: string;
 };
 
 function run(
@@ -52,6 +60,7 @@ function run(
 		cwd: options.cwd,
 		env: options.env || process.env,
 		encoding: 'utf8',
+		input: options.input,
 		stdio: 'pipe'
 	} );
 	const output = `${ result.stdout || '' }${ result.stderr || '' }`;
@@ -118,6 +127,45 @@ export function toolsImage(): string {
 	return `${ registry }/wbs-tools:${ tag }`;
 }
 
+export function verifyCliInstallWaitsForConfiguration(): void {
+	const auditRoot = join( TEMP_ROOT, 'cli-sequencing' );
+	rmSync( auditRoot, { recursive: true, force: true } );
+	mkdirSync( auditRoot, { recursive: true } );
+	copyFileSync( join( HOST_REPOSITORY_ROOT, '.env.example' ), join( auditRoot, '.env.example' ) );
+	const fakeDocker = join( auditRoot, 'docker' );
+	writeFileSync(
+		fakeDocker,
+		'#!/bin/sh\n' +
+			'grep -q "^MW_ADMIN_NAME=CliAdmin$" /app/wbs/.env || exit 99\n' +
+			'touch /app/wbs/docker-called-after-configuration\n'
+	);
+	chmodSync( fakeDocker, 0o755 );
+
+	const answers = [
+		'cli@example.test',
+		'wikibase.test',
+		'query.wikibase.test',
+		'n',
+		'CliAdmin',
+		'CliAdminPassword-2026',
+		'cli_wiki',
+		'cli_user',
+		'CliDatabasePassword-2026',
+		''
+	].join( '\n' );
+	run(
+		'docker',
+		[
+			'run', '--rm', '-i',
+			'-v', `${ auditRoot }:/app/wbs`,
+			'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
+			toolsImage(), 'node', 'dist/wbs.js', 'install', '--local'
+		],
+		{ input: answers }
+	);
+	assert.equal( existsSync( join( auditRoot, 'docker-called-after-configuration' ) ), true );
+}
+
 export function startInstaller(): void {
 	copyCheckout();
 	const image = toolsImage();
@@ -134,6 +182,7 @@ export function startInstaller(): void {
 			WBS_E2E_HTTP_PORT: '18080',
 			WBS_E2E_HTTPS_PORT: String( WIKIBASE_HTTPS_PORT ),
 			WBS_INSTALLER_CONTAINER_NAME: INSTALLER_CONTAINER,
+			WBS_INSTALLER_WORKER_CONTAINER_NAME: INSTALLER_WORKER_CONTAINER,
 			WBS_INSTALLER_PORT: String( INSTALLER_PORT ),
 			WBS_SKIP_ARCH_CHECK: 'true',
 			WBS_SKIP_DEPENDENCY_INSTALLS: 'true',
@@ -235,6 +284,61 @@ export async function waitForInstallerStopped(): Promise<void> {
 	throw new Error( 'Installer container did not stop after finalization.' );
 }
 
+export function verifyInstallerContainerIsolation(): void {
+	type ContainerInspection = {
+		HostConfig: { NetworkMode: string };
+		Mounts: { Source: string; Destination: string }[];
+	};
+	const inspect = ( container: string ): ContainerInspection =>
+		JSON.parse( run( 'docker', [ 'inspect', container ] ) )[ 0 ] as ContainerInspection;
+	const web = inspect( INSTALLER_CONTAINER );
+	const worker = inspect( INSTALLER_WORKER_CONTAINER );
+
+	assert.equal(
+		web.Mounts.some( ( mount ) => mount.Destination === '/var/run/docker.sock' ),
+		false,
+		'The network-facing installer web container must not receive the Docker socket.'
+	);
+	assert.equal( worker.HostConfig.NetworkMode, 'none' );
+	assert.equal(
+		worker.Mounts.some(
+			( mount ) => mount.Source === '/var/run/docker.sock' &&
+				mount.Destination === '/var/run/docker.sock'
+		),
+		true,
+		'The non-networked installation worker requires the Docker socket.'
+	);
+}
+
+export function verifySubmittedInstallerConfiguration(): void {
+	const config = parse( readFileSync( join( CHECKOUT_ROOT, '.env' ), 'utf8' ) );
+	assert.deepEqual(
+		{
+			WIKIBASE_PUBLIC_HOST: config.WIKIBASE_PUBLIC_HOST,
+			WDQS_PUBLIC_HOST: config.WDQS_PUBLIC_HOST,
+			MW_ADMIN_EMAIL: config.MW_ADMIN_EMAIL,
+			MW_ADMIN_NAME: config.MW_ADMIN_NAME,
+			MW_ADMIN_PASS: config.MW_ADMIN_PASS,
+			DB_NAME: config.DB_NAME,
+			DB_USER: config.DB_USER,
+			DB_PASS: config.DB_PASS,
+			METADATA_CALLBACK: config.METADATA_CALLBACK
+		},
+		{
+			WIKIBASE_PUBLIC_HOST: 'wikibase.test',
+			WDQS_PUBLIC_HOST: 'query.wikibase.test',
+			MW_ADMIN_EMAIL: ADMIN_EMAIL,
+			MW_ADMIN_NAME: ADMIN_USERNAME,
+			MW_ADMIN_PASS: ADMIN_PASSWORD,
+			DB_NAME: DATABASE_NAME,
+			DB_USER: DATABASE_USER,
+			DB_PASS: DATABASE_PASSWORD,
+			METADATA_CALLBACK: 'true'
+		},
+		'Generated .env does not match the values submitted through the installer UI.'
+	);
+}
+
 export function verifyFinalizedInstallerArtifacts(): void {
 	const configPath = join( CHECKOUT_ROOT, '.env' );
 	const passwordEntries = readFileSync( configPath, 'utf8' )
@@ -285,6 +389,7 @@ export function collectDiagnostics(): void {
 
 export function stopInstaller(): void {
 	run( 'docker', [ 'rm', '-f', INSTALLER_CONTAINER ], { allowFailure: true } );
+	run( 'docker', [ 'rm', '-f', INSTALLER_WORKER_CONTAINER ], { allowFailure: true } );
 	if ( existsSync( COMPOSE_FILES[ 0 ] ) ) {
 		run(
 			'docker',

@@ -3,7 +3,14 @@ set -euo pipefail
 
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$TEST_DIR/../../.." && pwd)"
-TEST_ROOT="$(mktemp -d)"
+if [[ -n "${HOST_PWD:-}" ]]; then
+  mkdir -p "$REPO_DIR/development/tests/wbs-tools/tmp"
+  TEST_ROOT="$(mktemp -d "$REPO_DIR/development/tests/wbs-tools/tmp/bootstrap.XXXXXX")"
+  HOST_TEST_ROOT="${TEST_ROOT/#$REPO_DIR/$HOST_PWD}"
+else
+  TEST_ROOT="$(mktemp -d)"
+  HOST_TEST_ROOT="$TEST_ROOT"
+fi
 
 cleanup() {
   rm -r "$TEST_ROOT"
@@ -56,12 +63,18 @@ run_bootstrap() {
   shift 2
 
   local case_dir="$TEST_ROOT/$case_name"
+  local host_case_dir="$HOST_TEST_ROOT/$case_name"
+  local host_fixture_remote="${fixture_remote/#$TEST_ROOT/$HOST_TEST_ROOT}"
   mkdir -p "$case_dir/bootstrap"
   cp "$REPO_DIR/install" "$case_dir/bootstrap/install"
 
   WBS_DIR="$case_dir/wikibase-suite" \
+    WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
     WBS_REPO_URL="$fixture_remote" \
+    WBS_DOCKER_REPO_URL="$host_fixture_remote" \
     WBS_REF='' \
+    WBS_TOOLS_IMAGE="${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}" \
+    WBS_TOOLS_SKIP_PULL=true \
     WBS_SKIP_DEPENDENCY_INSTALLS=true \
     bash "$case_dir/bootstrap/install" "$@"
 }
@@ -106,7 +119,7 @@ if run_bootstrap query-failure "$TEST_ROOT/missing.git" >"$TEST_ROOT/query-failu
   echo "Expected an unreachable release repository to fail."
   exit 1
 fi
-grep -q 'Could not query Wikibase Suite releases' "$TEST_ROOT/query-failure.log"
+grep -Eq 'Could not read from remote repository|does not appear to be a git repository|Command failed' "$TEST_ROOT/query-failure.log"
 
 local_checkout="$TEST_ROOT/local-checkout"
 mkdir -p "$local_checkout/scripts"
@@ -125,12 +138,12 @@ if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" 
   echo "Expected --installer-dev on the bootstrap to fail."
   exit 1
 fi
-grep -q -- 'installer-dev web' "$TEST_ROOT/installer-dev.log"
+grep -q -- 'installer development requires an existing checkout' "$TEST_ROOT/installer-dev.log"
 
 if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --skip-clone >"$TEST_ROOT/skip-clone.log" 2>&1; then
   echo "Expected --skip-clone to be rejected."
   exit 1
 fi
-grep -q 'Unsupported install option: --skip-clone' "$TEST_ROOT/skip-clone.log"
+grep -q 'unsupported install option: --skip-clone' "$TEST_ROOT/skip-clone.log"
 
 echo "WBS bootstrap selection tests passed"
