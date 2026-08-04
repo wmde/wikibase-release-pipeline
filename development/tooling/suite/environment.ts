@@ -27,12 +27,14 @@ export class SuiteEnvironment {
 		private readonly dependencies: SuiteEnvironmentDependencies
 	) {}
 
-	public async up( options: { build?: boolean; local?: boolean } ): Promise<void> {
-		const local = options.local || options.build;
-		if ( options.build ) {
+	public async up( options: { build?: boolean; published?: boolean } = {} ): Promise<void> {
+		const useLocalImages = options.published !== true;
+		const project = this.composeProject( useLocalImages );
+		await project.pull();
+		if ( useLocalImages && options.build !== false ) {
 			await this.dependencies.buildImages();
 		}
-		await this.composeProject( local ).up();
+		await project.up();
 	}
 
 	public async down(): Promise<void> {
@@ -54,7 +56,7 @@ export class SuiteEnvironment {
 		}
 	}
 
-	private composeProject( local: boolean ): ComposeProject {
+	private composeProject( localImages: boolean ): ComposeProject {
 		const root = this.context.hostRepositoryRoot;
 		const envFile = join( root, '.env' );
 		if ( !this.fileSystem.exists( envFile ) ) {
@@ -64,14 +66,14 @@ export class SuiteEnvironment {
 		}
 
 		const composeFiles = [ join( root, 'docker-compose.yml' ) ];
-		const customComposeFile = join( root, 'docker-compose.local.yml' );
-		if ( this.fileSystem.exists( customComposeFile ) ) {
-			composeFiles.push( customComposeFile );
-		}
-		if ( local ) {
+		if ( localImages ) {
 			composeFiles.push(
 				join( root, 'development', 'docker-compose.local-images.yml' )
 			);
+		}
+		const customComposeFile = join( root, 'docker-compose.local.yml' );
+		if ( this.fileSystem.exists( customComposeFile ) ) {
+			composeFiles.push( customComposeFile );
 		}
 
 		return new ComposeProject(

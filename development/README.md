@@ -29,12 +29,9 @@ Use the repository-root `.env` and Compose configuration to run Wikibase Suite a
 ./wbs-dev suite down
 ```
 
-Add `--local` to select images already built from the current checkout. Add `--build` to build all product images first; `--build` implies `--local`.
+`suite up` applies the local-image Compose override, pulls upstream service images, builds every WBS product image from the current checkout, and starts with those local images. The override prevents Compose from pulling the locally built WBS product images. Use `./wbs-dev suite up --no-build` to skip rebuilding and use existing local product images; the command fails if those images are not available locally. Use `./wbs-dev suite up --published` to omit the development override and build so the configured Docker Hub images can be tested.
 
-```bash
-./wbs-dev suite up --local
-./wbs-dev suite up --build
-```
+Compose files are applied in this order: the root `docker-compose.yml`, the development local-image override when selected, and the optional root `docker-compose.local.yml` last. This allows checkout-specific customizations to override either image mode.
 
 To remove all Suite volumes and generated configuration, use `./wbs-dev suite reset`. This permanently deletes the instance data and leaves the Suite stopped; run `./wbs-dev suite up` explicitly when you want to start it again. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
 

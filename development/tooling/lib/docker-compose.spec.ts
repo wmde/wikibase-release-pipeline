@@ -59,6 +59,7 @@ describe( 'Docker Compose project', () => {
 			runner
 		);
 
+		await project.pull();
 		await project.up();
 		await project.status();
 		await project.down( {
@@ -70,6 +71,10 @@ describe( 'Docker Compose project', () => {
 		assert.deepEqual(
 			runner.calls.map( ( call ) => call.args ),
 			[
+				[
+					'compose', '--project-directory', '/repo', '--file',
+					'/repo/compose.yml', 'pull'
+				],
 				[
 					'compose', '--project-directory', '/repo', '--file',
 					'/repo/compose.yml', 'up', '--detach', '--wait'

@@ -33,19 +33,40 @@ describe( 'wbs-dev command contracts', () => {
 
 		const up = cli( 'suite', 'up', '--help' );
 		assert.equal( up.status, 0, up.stderr );
-		assert.match( up.stdout, /--local/u );
-		assert.match( up.stdout, /--build/u );
-		assert.match( up.stdout, /then start with --local/u );
+		assert.doesNotMatch( up.stdout, /^\s+--build(?:\s|$)/mu );
+		assert.match( up.stdout, /--no-build/u );
+		assert.match( up.stdout, /--published/u );
+		assert.doesNotMatch( up.stdout, /--no-pull/u );
+		assert.doesNotMatch( up.stdout, /--local/u );
+		assert.match( up.stdout, /pulls upstream service images/u );
+		assert.match( up.stdout, /builds\s+every WBS product image/u );
+		assert.match( up.stdout, /prevents Compose from pulling the WBS product images/u );
+		assert.match( up.stdout, /requires those local images to exist already/u );
+		assert.match( up.stdout, /Docker Hub images to be tested/u );
+		assert.match( up.stdout, /docker-compose\.local\.yml remains last/u );
+
+		const reset = cli( 'suite', 'reset', '--help' );
+		assert.equal( reset.status, 0, reset.stderr );
+		assert.match( reset.stdout, /permanently removes Compose volumes/u );
+		assert.match( reset.stdout, /remains stopped/u );
 	} );
 
 	it( 'exposes browser installer development', () => {
 		const installerDev = cli( 'installer-dev', '--help' );
 		assert.equal( installerDev.status, 0, installerDev.stderr );
 		assert.match( installerDev.stdout, /web/u );
+		assert.match( installerDev.stdout, /real local installation/u );
+		assert.match( installerDev.stdout, /without changing configuration or services/u );
 
 		const web = cli( 'installer-dev', 'web', '--help' );
 		assert.equal( web.status, 0, web.stderr );
 		assert.match( web.stdout, /browser installer with live reload/u );
+		assert.match( web.stdout, /--mock/u );
+		assert.match( web.stdout, /https:\/\/localhost:8888/u );
+		assert.match( web.stdout, /writes the repository-root \.env/u );
+		assert.match( web.stdout, /Builds only wbs-tools/u );
+		assert.match( web.stdout, /does not write \.env/u );
+		assert.match( web.stdout, /cannot be skipped/u );
 	} );
 
 	it( 'rejects integration options for the tooling-only target', () => {

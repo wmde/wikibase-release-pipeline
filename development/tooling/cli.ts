@@ -41,7 +41,7 @@ async function main(): Promise<void> {
 			'Examples:',
 			'  wbs-dev build',
 			'  wbs-dev installer-dev web',
-			'  wbs-dev suite up --build',
+			'  wbs-dev suite up',
 			'  wbs-dev test',
 			'  wbs-dev lint',
 			'  wbs-dev update-sources wikibase quickstatements',

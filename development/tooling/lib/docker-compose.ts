@@ -62,6 +62,10 @@ export class ComposeProject {
 		await this.run( [ 'up', '--detach', ...( wait ? [ '--wait' ] : [] ) ] );
 	}
 
+	public async pull(): Promise<void> {
+		await this.run( [ 'pull' ] );
+	}
+
 	public async down( options: ComposeDownOptions = {} ): Promise<void> {
 		const args = [ 'down' ];
 		if ( options.volumes ) {
