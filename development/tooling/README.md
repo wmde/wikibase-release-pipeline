@@ -5,6 +5,7 @@ This directory contains the implementation behind `./wbs-dev`. `wbs-dev` is the 
 Use `./wbs-dev --help` and its subcommand help for the public command surface. Call that wrapper rather than invoking files in this directory directly.
 
 - `build/` owns product image-build coordination.
+- `installer-dev/` launches and adapts the installer for manual development.
 - `lint/` owns lint target selection and execution.
 - `test/` coordinates tooling checks and integration suites.
 - `prepare/` updates upstream source pins, versions, and changelogs.

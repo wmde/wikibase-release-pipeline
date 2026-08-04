@@ -33,11 +33,9 @@ if [[ "${1:-}" == install ]]; then
       --from-source)
         export FROM_SOURCE=true
         ;;
-      --installer-dev)
-        export INSTALLER_DEV=true
-        export CLI=false
-        export LOCALHOST=true
-        export SKIP_DEPENDENCY_INSTALLS=true
+      --installer-dev|--dev)
+        echo "⚠️ Installer development has moved. Run ./development/wbs-dev installer-dev web."
+        exit 1
         ;;
       -h|--help)
         SHOW_HELP=true
@@ -58,7 +56,7 @@ source "$SCRIPTS_DIR/_tools-image.sh"
 if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
   install_docker
 fi
-if [[ "$INSTALLER_DEV" != true && "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
+if [[ "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
   confirm_arch
 fi
 confirm_docker_version
@@ -78,14 +76,6 @@ if $FROM_SOURCE; then
   touch "$WBS_STATE_DIR/local-images"
   export WBS_TOOLS_IMAGE="wikibase/wbs-tools:latest"
   status "Locally built images remain selected for this checkout. Remove .wbs/local-images to return to published images." "source_build_images_selected"
-elif $INSTALLER_DEV; then
-  status "🕐 Building WBS tools from the selected source checkout..." "tools_build_started"
-  if ! run_args "$WBS_DIR/development/wbs-dev" build wbs-tools; then
-    status "⛔️ The WBS tools build failed. Review $LOG_PATH or rerun with --debug." "tools_build_failed"
-    exit 1
-  fi
-  export WBS_TOOLS_IMAGE="wikibase/wbs-tools:latest"
-  status "✅ WBS tools build is current." "tools_build_ready"
 else
   prepare_wbs_tools_image
 fi

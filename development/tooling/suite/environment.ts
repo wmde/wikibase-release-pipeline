@@ -2,9 +2,9 @@ import { existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { RepositoryContext } from '../context.js';
 import {
-	ComposeProject,
-	type CommandRunner
+	ComposeProject
 } from '../lib/docker-compose.js';
+import type { CommandRunner } from '../lib/process.js';
 
 const GENERATED_CONFIG_FILES = [
 	'LocalSettings.php',

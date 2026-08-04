@@ -59,7 +59,6 @@ describe( 'WBS tools installer', () => {
 		for ( const option of [
 			'--web',
 			'--local',
-			'--installer-dev',
 			'--from-source',
 			'--debug'
 		] ) {
@@ -70,7 +69,11 @@ describe( 'WBS tools installer', () => {
 		}
 		assert.doesNotMatch( help, /--cli/u );
 
-		for ( const invalidOption of [ '--cli', '--unknown-option' ] ) {
+		for ( const invalidOption of [
+			'--cli',
+			'--installer-dev',
+			'--unknown-option'
+		] ) {
 			const result = spawnSync(
 				'docker',
 				[

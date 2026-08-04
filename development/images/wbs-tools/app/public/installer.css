@@ -125,6 +125,15 @@ body {
   text-align: center;
 }
 
+.wizard-progress__item.is-interactive {
+  cursor: pointer;
+}
+
+.wizard-progress__item.is-interactive:focus-visible {
+  outline: 2px solid var(--border-color-progressive, #36c);
+  outline-offset: 4px;
+}
+
 .wizard-progress__step {
   display: inline-flex;
   align-items: center;

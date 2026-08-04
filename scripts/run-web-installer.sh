@@ -28,7 +28,11 @@ WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
 WBS_TOOLS_APP_DIR="$WBS_TOOLS_PROJECT_DIR/app"
 LE_DIR="$WBS_STATE_DIR/letsencrypt"
 CERTS_DIR="$WBS_STATE_DIR/certs"
-LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/$(basename "${LAUNCH_TRIGGER_PATH:-.wbs-installer-launch-ready}")"
+if [[ -n "${LAUNCH_TRIGGER_PATH:-}" && "$LAUNCH_TRIGGER_PATH" == "$WBS_DIR/"* ]]; then
+  LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/${LAUNCH_TRIGGER_PATH#"$WBS_DIR/"}"
+else
+  LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/$(basename "${LAUNCH_TRIGGER_PATH:-.wbs-installer-launch-ready}")"
+fi
 EXISTING_INSTALL_STATE="${EXISTING_INSTALL_STATE:-none}"
 
 # --- Functions ---
@@ -99,8 +103,8 @@ compose_services_are_running() {
   if [ -f "docker-compose.local.yml" ]; then
     compose_opts+=(-f docker-compose.local.yml)
   fi
-  if [ -f "$WBS_STATE_DIR/local-images" ]; then
-    compose_opts+=(-f development/docker-compose.local-images.yml)
+  if [[ "${WBS_LOCAL_IMAGES:-false}" == true ]] || [ -f "$WBS_STATE_DIR/local-images" ]; then
+	compose_opts+=(-f development/docker-compose.local-images.yml)
   fi
 
   local running_services
@@ -142,9 +146,17 @@ start_installer_webserver() {
       -v "$WBS_DIR:/app/wbs"
       -v "$CERTS_DIR:/app/certs"
       -v "$LOG_PATH:/app/installation.log"
-      -v "$WBS_TOOLS_APP_DIR:/src"
+      -v "$WBS_TOOLS_APP_DIR/client:/app/client"
+      -v "$WBS_TOOLS_APP_DIR/data:/app/data"
+      -v "$WBS_TOOLS_APP_DIR/public:/app/public"
+      -v "$WBS_TOOLS_APP_DIR/shared:/app/shared"
+      -v "$WBS_TOOLS_APP_DIR/index.html:/app/index.html"
+      -v "$WBS_TOOLS_APP_DIR/logStreamer.ts:/app/logStreamer.ts"
+      -v "$WBS_TOOLS_APP_DIR/passwordPolicy.ts:/app/passwordPolicy.ts"
+      -v "$WBS_TOOLS_APP_DIR/server.ts:/app/server.ts"
+      -v "$WBS_TOOLS_APP_DIR/serverHelpers.ts:/app/serverHelpers.ts"
       "$WBS_TOOLS_IMAGE"
-      sh -lc 'ln -sfn /app/node_modules /src/node_modules && cd /src && npm run dev:server'
+      npm run dev:server
     )
   else
     command=(

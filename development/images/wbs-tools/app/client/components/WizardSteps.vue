@@ -7,8 +7,15 @@
 			:class="{
 				'is-active': currentStep === index,
 				'is-complete': currentStep > index,
+				'is-interactive': interactive,
 				'is-locked': locked && currentStep > index
 			}"
+			:aria-label="interactive ? `Show ${ step.title } step` : undefined"
+			:role="interactive ? 'button' : undefined"
+			:tabindex="interactive ? 0 : undefined"
+			@click="selectStep( index )"
+			@keydown.enter.prevent="selectStep( index )"
+			@keydown.space.prevent="selectStep( index )"
 		>
 			<div class="wizard-progress__topline">
 				<span class="wizard-progress__step">
@@ -28,9 +35,21 @@
 <script setup lang="ts">
 import { CdxIcon } from '@wikimedia/codex';
 import { cdxIconCheck } from '@wikimedia/codex-icons';
-defineProps<{
+const props = defineProps<{
 	currentStep: number;
+	interactive: boolean;
 	locked: boolean;
 	steps: Array<{ title: string; complete?: boolean }>;
 }>();
+
+const emit = defineEmits<{
+	'select-step': [ index: number ];
+}>();
+
+function selectStep( index: number ): void {
+	if ( !props.interactive ) {
+		return;
+	}
+	emit( 'select-step', index );
+}
 </script>

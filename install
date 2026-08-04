@@ -37,7 +37,7 @@ while [[ $# -gt 0 ]]; do
       RUNTIME_ARGS+=( "$1" )
       ;;
     --installer-dev)
-      echo "⚠️ --installer-dev requires an existing checkout. Run ./wbs install --installer-dev there."
+      echo "⚠️ Installer development requires an existing checkout. Run ./development/wbs-dev installer-dev web there."
       exit 1
       ;;
     --build)
@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
       exit 1
       ;;
     --dev)
-      echo "⚠️ --dev has been renamed to --installer-dev."
+      echo "⚠️ Installer development requires an existing checkout. Run ./development/wbs-dev installer-dev web there."
       exit 1
       ;;
     --skip-clone|--skip-deps|--skip-launch|--reset|--cli)

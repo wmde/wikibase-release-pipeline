@@ -15,7 +15,7 @@ export function createRepositoryContext(
 	return {
 		developmentRoot,
 		repositoryRoot,
-		hostRepositoryRoot: process.env.HOST_PWD ?? repositoryRoot,
+		hostRepositoryRoot: resolve( process.env.HOST_PWD ?? repositoryRoot ),
 		imagesRoot: join( developmentRoot, 'images' ),
 		testRoot: join( developmentRoot, 'tests' )
 	};

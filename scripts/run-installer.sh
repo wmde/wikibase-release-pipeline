@@ -15,12 +15,20 @@ export ENV_FILE_PATH
 export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
 export WBS_STATE_DIR
+export WBS_LAUNCH_FOREGROUND
+export WBS_LOCAL_IMAGES
 INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
+
+# Each installer development session starts with a fresh status stream so a
+# previous failed launch does not leave the UI locked on the installation step.
+if $INSTALLER_DEV; then
+  : > "$LOG_PATH"
+fi
 
 prompt_to_show_saved_config() {
   if ! $CLI || [[ ! -t 0 ]] || [[ ! -f "$ENV_FILE_PATH" ]]; then
@@ -86,12 +94,13 @@ if $SKIP_LAUNCH; then
 fi
 
 # Detach to avoid accidental interruption of the launch process
-if ! $CLI; then
+if ! $CLI && [[ "${WBS_LAUNCH_FOREGROUND:-false}" != true ]]; then
   debug "Starting background process..."
   nohup env \
-    WBS_DIR="$WBS_DIR" \
-    WBS_STATE_DIR="$WBS_STATE_DIR" \
-    LOG_PATH="$LOG_PATH" \
+		WBS_DIR="$WBS_DIR" \
+		WBS_STATE_DIR="$WBS_STATE_DIR" \
+		WBS_LOCAL_IMAGES="${WBS_LOCAL_IMAGES:-false}" \
+		LOG_PATH="$LOG_PATH" \
     INSTALLER_DEV="$INSTALLER_DEV" \
     DEBUG="$DEBUG" \
     LOCALHOST="$LOCALHOST" \
@@ -103,5 +112,9 @@ if ! $CLI; then
   echo "It is now safe to close this terminal session."
   echo
 else
+  if ! $CLI; then
+    echo "Keep this terminal open while the development installer starts the Suite."
+    echo
+  fi
   bash "$SCRIPTS_DIR/launch-suite.sh"
 fi

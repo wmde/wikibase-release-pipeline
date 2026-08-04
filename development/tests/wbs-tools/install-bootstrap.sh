@@ -125,7 +125,7 @@ if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" 
   echo "Expected --installer-dev on the bootstrap to fail."
   exit 1
 fi
-grep -q -- '--installer-dev requires an existing checkout' "$TEST_ROOT/installer-dev.log"
+grep -q -- 'installer-dev web' "$TEST_ROOT/installer-dev.log"
 
 if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --skip-clone >"$TEST_ROOT/skip-clone.log" 2>&1; then
   echo "Expected --skip-clone to be rejected."

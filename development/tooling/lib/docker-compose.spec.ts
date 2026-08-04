@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha';
 import assert from 'node:assert/strict';
+import { ComposeProject } from './docker-compose.js';
 import type {
 	CommandRunner,
 	CommandRunOptions
-} from './docker-compose.js';
-import { ComposeProject } from './docker-compose.js';
+} from './process.js';
 
 class RecordingRunner implements CommandRunner {
 	public calls: {

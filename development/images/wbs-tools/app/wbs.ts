@@ -5,7 +5,6 @@ type InstallOptions = {
 	web: boolean;
 	local: boolean;
 	debug: boolean;
-	installerDev: boolean;
 	fromSource: boolean;
 };
 
@@ -14,9 +13,9 @@ async function runInstall( options: InstallOptions ): Promise<void> {
 		return;
 	}
 
-	process.env.LOCALHOST = String( options.local || options.installerDev );
+	process.env.LOCALHOST = String( options.local );
 	process.env.DEBUG = String( options.debug );
-	if ( options.web || options.installerDev ) {
+	if ( options.web ) {
 		await import( './server.js' );
 	} else {
 		await import( './cli.js' );
@@ -35,12 +34,6 @@ async function main(): Promise<void> {
 		.command( 'install' )
 		.description( 'Configure and install Wikibase Suite.' )
 		.addOption( new Option( '--web', 'Use the browser installer.' ) )
-		.addOption(
-			new Option(
-				'--installer-dev',
-				'Develop the browser installer from the current source checkout.'
-			)
-		)
 		.addOption(
 			new Option(
 				'--local',

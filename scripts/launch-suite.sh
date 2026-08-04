@@ -13,6 +13,7 @@ export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
 export RESET
 export WBS_STATE_DIR
+export WBS_LOCAL_IMAGES
 
 # --- Bootstrap Logging ---
 
@@ -42,9 +43,9 @@ launch_wbs() {
     compose_opts+=(-f docker-compose.local.yml)
     status "Using local Compose customizations from docker-compose.local.yml." "local_compose_override"
   fi
-  if [ -f "$WBS_STATE_DIR/local-images" ]; then
-    compose_opts+=(-f development/docker-compose.local-images.yml)
-    status "Using images built from this checkout." "source_build_images"
+  if [[ "${WBS_LOCAL_IMAGES:-false}" == true ]] || [ -f "$WBS_STATE_DIR/local-images" ]; then
+	compose_opts+=(-f development/docker-compose.local-images.yml)
+	status "Using images built from this checkout." "source_build_images"
   fi
 
   if ! $DEBUG ; then

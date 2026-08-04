@@ -38,6 +38,16 @@ Add `--local` to select images already built from the current checkout. Add `--b
 
 To remove all Suite volumes and generated configuration, use `./wbs-dev suite reset`. This permanently deletes the instance data and leaves the Suite stopped; run `./wbs-dev suite up` explicitly when you want to start it again. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
 
+## Developing the browser installer
+
+Start the browser installer with live reload from the current checkout:
+
+```bash
+./wbs-dev installer-dev web
+```
+
+This builds the local Suite images, uses local test domains, and runs the normal host launch scripts, so following the regular installer actions performs a real Suite installation. In development mode, the progress steps are also clickable so each screen can be inspected without completing the preceding screens.
+
 Use `./wbs-dev --help` or `./wbs-dev <command> --help` for the current targets, options, and examples.
 
 Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).

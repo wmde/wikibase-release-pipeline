@@ -13,8 +13,10 @@
 			<section class="wizard-progress-area" aria-label="Installation progress">
 				<wizard-steps
 					:current-step="currentStep - 1"
+					:interactive="initialState.installerDev"
 					:locked="configLocked"
 					:steps="steps"
+					@select-step="showStep"
 				/>
 			</section>
 
@@ -156,6 +158,7 @@ type DatabaseTextFieldName = 'DB_NAME' | 'DB_USER';
 type FormFieldName = keyof ConfigForm;
 
 const fallbackState: InitialSetupState = {
+	installerDev: false,
 	isConfigSaved: false,
 	isBooted: false,
 	isSetupStarted: false,
@@ -264,6 +267,10 @@ function getTextStatus( name: TextValidationFieldName ): FieldValidationStatus {
 }
 
 function touchField( _name: FormFieldName ): void {
+}
+
+function showStep( index: number ): void {
+	currentStep.value = ( index + 1 ) as WizardStep;
 }
 
 function updateField( name: FormFieldName, value: string ): void {

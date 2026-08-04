@@ -69,6 +69,7 @@ function escapeHtmlAttribute( value: string ): string {
 
 function renderSetupShell( scriptSrc: string ): string {
 	const initialState = {
+		installerDev: DEV_SERVER,
 		isConfigSaved: isConfigSaved(),
 		isBooted: isBooted(),
 		isSetupStarted: isSetupStarted(),
@@ -228,6 +229,14 @@ if ( DEV_SERVER ) {
 		appType: 'custom',
 		plugins: [ vue() ],
 		publicDir: false,
+		optimizeDeps: {
+			include: [
+				'@wikimedia/codex',
+				'@wikimedia/codex-icons',
+				'tldts',
+				'vue'
+			]
+		},
 		server: {
 			middlewareMode: true,
 			hmr: {
@@ -284,5 +293,7 @@ function scheduleAutoFinalizeAfterBoot(): void {
 	}, AUTO_FINALIZE_TIMEOUT_MS );
 }
 
-// Start the grace period only after installation has completed successfully.
-scheduleAutoFinalizeAfterBoot();
+// A live-reload development server remains available until the developer replaces it.
+if ( !DEV_SERVER ) {
+	scheduleAutoFinalizeAfterBoot();
+}

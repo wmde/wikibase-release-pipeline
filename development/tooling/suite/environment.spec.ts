@@ -4,7 +4,7 @@ import type { RepositoryContext } from '../context.js';
 import type {
 	CommandRunner,
 	CommandRunOptions
-} from '../lib/docker-compose.js';
+} from '../lib/process.js';
 import { SuiteEnvironment } from './environment.js';
 
 class RecordingRunner implements CommandRunner {

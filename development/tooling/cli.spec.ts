@@ -38,6 +38,16 @@ describe( 'wbs-dev command contracts', () => {
 		assert.match( up.stdout, /then start with --local/u );
 	} );
 
+	it( 'exposes browser installer development', () => {
+		const installerDev = cli( 'installer-dev', '--help' );
+		assert.equal( installerDev.status, 0, installerDev.stderr );
+		assert.match( installerDev.stdout, /web/u );
+
+		const web = cli( 'installer-dev', 'web', '--help' );
+		assert.equal( web.status, 0, web.stderr );
+		assert.match( web.stdout, /browser installer with live reload/u );
+	} );
+
 	it( 'rejects integration options for the tooling-only target', () => {
 		const result = cli( 'test', 'tooling', '--headed' );
 		assert.notEqual( result.status, 0 );
