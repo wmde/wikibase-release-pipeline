@@ -80,13 +80,16 @@ else
     "$WBS_TOOLS_IMAGE" \
     node /app/dist/wbs.js "${prepare_args[@]}"
 
-  touch "$WBS_DIR/installation.log"
+  WBS_STATE_DIR="$WBS_DIR/.wbs"
+  LOG_PATH="$WBS_STATE_DIR/installation.log"
+  mkdir -p "$WBS_STATE_DIR"
+  touch "$LOG_PATH"
   {
     echo "Bootstrap log from $BOOTSTRAP_LOG"
     cat "$BOOTSTRAP_LOG"
-  } >> "$WBS_DIR/installation.log"
+  } >> "$LOG_PATH"
   # Continue the same installation log after handing control to the checkout.
-  export WBS_LOG_INITIALIZED=1
+  export WBS_STATE_DIR LOG_PATH WBS_LOG_INITIALIZED=1
 fi
 
 if [[ "$WEB_SELECTED" != true ]]; then

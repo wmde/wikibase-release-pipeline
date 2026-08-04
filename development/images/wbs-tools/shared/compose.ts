@@ -97,7 +97,7 @@ export async function reset(): Promise<void> {
 }
 
 export function appendOperationLog( message: string, code?: string ): void {
-	const logPath = process.env.LOG_PATH || join( repositoryRoot, 'installation.log' );
+	const logPath = process.env.LOG_PATH || join( repositoryRoot, '.wbs/installation.log' );
 	mkdirSync( join( repositoryRoot ), { recursive: true } );
 	writeFileSync(
 		logPath,

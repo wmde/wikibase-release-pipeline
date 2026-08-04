@@ -32,7 +32,7 @@ run_wbs_tools_command() {
     "${WBS_TOOLS_ENVIRONMENT_ARGS[@]}" \
     -e WBS_DIR="$WBS_DIR" \
     -e ENV_FILE_PATH="$ENV_FILE_PATH" \
-    -e LOG_PATH="$WBS_DIR/installation.log" \
+    -e LOG_PATH="$LOG_PATH" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$WBS_DIR:$WBS_DIR" \
     -v "$WBS_DIR:/app/wbs" \
@@ -142,6 +142,7 @@ run_install_or_configure() {
 }
 
 main() {
+  local command="${1:-}"
   SCRIPTS_DIR="${SCRIPTS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
   WBS_DIR="${WBS_DIR:-$(cd "$SCRIPTS_DIR/.." && pwd)}"
   export WBS_DIR SCRIPTS_DIR
@@ -154,7 +155,14 @@ main() {
   fi
   export WBS_STATE_DIR="${WBS_STATE_DIR:-$WBS_DIR/.wbs}"
   export ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
-  export LOG_PATH="${LOG_PATH:-$WBS_DIR/installation.log}"
+  if [[ -z "${LOG_PATH:-}" ]]; then
+    if [[ "$command" == install ]]; then
+      LOG_PATH="$WBS_STATE_DIR/installation.log"
+    else
+      LOG_PATH="$WBS_STATE_DIR/wbs.log"
+    fi
+  fi
+  export LOG_PATH
   export DEBUG="${DEBUG:-false}"
   export INSTALLER_DEV=false
   export INSTALLER_DEV_MOCK=false
@@ -170,7 +178,6 @@ main() {
   # shellcheck disable=SC1091
   source "$SCRIPTS_DIR/_tools-image.sh"
 
-  local command="${1:-}"
   case "$command" in
     up|down|status|reset)
       prepare_runtime false

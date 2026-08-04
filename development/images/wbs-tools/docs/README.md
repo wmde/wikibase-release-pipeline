@@ -96,7 +96,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/ins
   --from-source
 ```
 
-This first builds the checkout's tools image and then uses it to build every product image through `development/wbs-dev`. The operation selects `development/docker-compose.local-images.yml` only for that invocation. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. After checkout, installation output is written to `installation.log` in the WBS directory; add `--debug` to stream it in the terminal.
+This first builds the checkout's tools image and then uses it to build every product image through `development/wbs-dev`. The operation selects `development/docker-compose.local-images.yml` only for that invocation. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. After checkout, installation output is written to `.wbs/installation.log`; add `--debug` to stream it in the terminal. Other lifecycle commands use `.wbs/wbs.log`.
 
 ## Runtime behavior
 
