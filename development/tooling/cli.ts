@@ -6,6 +6,7 @@ import { registerLintCommand } from './lint/command.js';
 import { registerUpdateSourcesCommand } from './prepare/update-sources-command.js';
 import { registerUpdateVersionsCommand } from './prepare/update-versions-command.js';
 import { registerReleaseCommand } from './release/command.js';
+import { registerSuiteCommand } from './suite/command.js';
 import { registerTestCommand } from './test/command.js';
 
 async function main(): Promise<void> {
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
 		.enablePositionalOptions();
 
 	registerBuildCommand( program, context );
+	registerSuiteCommand( program, context );
 	registerTestCommand( program, context );
 	registerLintCommand( program, context );
 	registerUpdateSourcesCommand( program, context );
@@ -36,6 +38,7 @@ async function main(): Promise<void> {
 			'',
 			'Examples:',
 			'  wbs-dev build',
+			'  wbs-dev suite up --build',
 			'  wbs-dev test',
 			'  wbs-dev lint',
 			'  wbs-dev update-sources wikibase quickstatements',

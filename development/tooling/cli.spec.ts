@@ -24,6 +24,20 @@ describe( 'wbs-dev command contracts', () => {
 		);
 	} );
 
+	it( 'exposes the product-oriented suite lifecycle', () => {
+		const suite = cli( 'suite', '--help' );
+		assert.equal( suite.status, 0, suite.stderr );
+		for ( const command of [ 'up', 'down', 'status', 'reset' ] ) {
+			assert.ok( suite.stdout.includes( command ) );
+		}
+
+		const up = cli( 'suite', 'up', '--help' );
+		assert.equal( up.status, 0, up.stderr );
+		assert.match( up.stdout, /--local/u );
+		assert.match( up.stdout, /--build/u );
+		assert.match( up.stdout, /then start with --local/u );
+	} );
+
 	it( 'rejects integration options for the tooling-only target', () => {
 		const result = cli( 'test', 'tooling', '--headed' );
 		assert.notEqual( result.status, 0 );

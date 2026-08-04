@@ -19,6 +19,25 @@ Repository tasks run through `wbs-dev`. The wrapper builds or loads the developm
 ./wbs-dev lint
 ```
 
+## Running a Suite instance
+
+Use the repository-root `.env` and Compose configuration to run Wikibase Suite as an installed user would:
+
+```bash
+./wbs-dev suite up
+./wbs-dev suite status
+./wbs-dev suite down
+```
+
+Add `--local` to select images already built from the current checkout. Add `--build` to build all product images first; `--build` implies `--local`.
+
+```bash
+./wbs-dev suite up --local
+./wbs-dev suite up --build
+```
+
+To remove all Suite volumes and generated configuration before starting again, use `./wbs-dev suite reset`. This permanently deletes the instance data, as described in the user-facing [reset documentation](../docs/operating/reset.md).
+
 Use `./wbs-dev --help` or `./wbs-dev <command> --help` for the current targets, options, and examples.
 
 Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).

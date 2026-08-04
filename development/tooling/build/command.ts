@@ -4,16 +4,17 @@ import { join } from 'node:path';
 import type { RepositoryContext } from '../context.js';
 import { discoverImageNames } from '../projects.js';
 import { resolveNames } from '../selection.js';
-import { runTasks } from '../tasks.js';
-import { assertStableVersion } from '../versions.js';
+import { assertStableVersion } from '../lib/versioning.js';
+import {
+	buildImages,
+	DEFAULT_BUILD_PARALLELISM
+} from './images.js';
 
 interface ParsedBuildArguments {
 	images: string[];
 	forwarded: string[];
 	parallel: number;
 }
-
-const DEFAULT_PARALLELISM = 3;
 
 function positiveInteger( value: string ): number {
 	const parsed = Number.parseInt( value, 10 );
@@ -28,7 +29,7 @@ function positiveInteger( value: string ): number {
 export function parseBuildArguments( args: string[] ): ParsedBuildArguments {
 	const images: string[] = [];
 	const forwarded: string[] = [];
-	let parallel = DEFAULT_PARALLELISM;
+	let parallel = DEFAULT_BUILD_PARALLELISM;
 	let forwarding = false;
 	let explicitForwarding = false;
 
@@ -88,14 +89,7 @@ async function runBuild(
 		assertStableVersion( packageJson.version, `${ selected[ 0 ] } package` );
 	}
 
-	await runTasks(
-		selected.map( ( image ) => ( {
-			label: `build ${ image }`,
-			command: 'tooling/build/image.sh',
-			args: [ image, ...parsed.forwarded ]
-		} ) ),
-		{ cwd: context.developmentRoot, parallel: parsed.parallel }
-	);
+	await buildImages( selected, parsed.forwarded, context, parsed.parallel );
 }
 
 export function registerBuildCommand(
@@ -119,7 +113,7 @@ export function registerBuildCommand(
 				'  With no target or "all", build every image.',
 				'',
 				'wbs-dev build option:',
-				`  --parallel=N  maximum concurrent image builds (default: ${ DEFAULT_PARALLELISM })`,
+				`  --parallel=N  maximum concurrent image builds (default: ${ DEFAULT_BUILD_PARALLELISM })`,
 				'  Other options after the image list are forwarded to Docker Buildx.',
 				'',
 				'Examples:',
