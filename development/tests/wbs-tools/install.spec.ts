@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
 	ADMIN_EMAIL,
@@ -131,6 +134,43 @@ describe( 'WBS tools installer', () => {
 		assert.match( upHelp, /--update/u );
 		assert.match( upHelp, /--local-images/u );
 		assert.match( upHelp, /--build/u );
+	} );
+
+	it( 'does not reapply template values over an existing configuration', () => {
+		const configRoot = mkdtempSync( join( tmpdir(), 'wbs-config-' ) );
+		try {
+			writeFileSync( join( configRoot, '.env.example' ), 'TEMPLATE_ONLY=template\n' );
+			writeFileSync( join( configRoot, '.env' ), 'EXISTING_ONLY=preserved\n' );
+			const input = {
+				MW_ADMIN_EMAIL: 'admin@example.test',
+				WIKIBASE_PUBLIC_HOST: 'wikibase.test',
+				WDQS_PUBLIC_HOST: 'query.wikibase.test',
+				METADATA_CALLBACK: 'false',
+				MW_ADMIN_NAME: 'Admin',
+				MW_ADMIN_PASS: 'AdminPassword-2026',
+				DB_NAME: 'my_wiki',
+				DB_USER: 'sqluser',
+				DB_PASS: 'DatabasePassword-2026'
+			};
+			const script = [
+				"import('./dist/shared/configuration.js')",
+				`.then(({ getConfig }) => console.log(JSON.stringify(getConfig(${ JSON.stringify( input ) }).config)))`
+			].join( '' );
+			const output = execFileSync(
+				'docker',
+				[
+					'run', '--rm',
+					'-v', `${ configRoot }:/app/wbs`,
+					toolsImage(), 'node', '--input-type=module', '--eval', script
+				],
+				{ encoding: 'utf8' }
+			);
+			const config = JSON.parse( output ) as Record<string, string>;
+			assert.equal( config.EXISTING_ONLY, 'preserved' );
+			assert.equal( config.TEMPLATE_ONLY, undefined );
+		} finally {
+			rmSync( configRoot, { recursive: true, force: true } );
+		}
 	} );
 
 	it( 'finishes CLI configuration before starting lifecycle operations', () => {

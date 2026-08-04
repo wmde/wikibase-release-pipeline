@@ -133,14 +133,14 @@ export function getConfig(
 	config: Record<string, string>;
 	configText: string;
 } {
-	// 1) Submitted setup fields override existing values without discarding other .env options.
+	// 1) Submitted setup fields override the existing .env when present. Templates
+	// are only the base for a new configuration.
 	if ( hasAnyInput( input ) ) {
-		const templateEnv = getTemplateEnv();
 		const existingEnv = getEnv();
+		const baseEnv = existingEnv ?? getTemplateEnv();
 		const shouldGeneratePasswords = options.generateMissingPasswords === true;
 		const configObject: Record<string, string> = {
-			...templateEnv,
-			...existingEnv,
+			...baseEnv,
 			MW_ADMIN_EMAIL: String( input.MW_ADMIN_EMAIL ?? '' ).trim(),
 			WIKIBASE_PUBLIC_HOST: String( input.WIKIBASE_PUBLIC_HOST ?? '' ).trim(),
 			WDQS_PUBLIC_HOST: String( input.WDQS_PUBLIC_HOST ?? '' ).trim(),
