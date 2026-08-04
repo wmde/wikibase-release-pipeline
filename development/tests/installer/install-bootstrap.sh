@@ -4,8 +4,8 @@ set -euo pipefail
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$TEST_DIR/../../.." && pwd)"
 if [[ -n "${HOST_PWD:-}" ]]; then
-  mkdir -p "$REPO_DIR/development/tests/wbs-tools/tmp"
-  TEST_ROOT="$(mktemp -d "$REPO_DIR/development/tests/wbs-tools/tmp/bootstrap.XXXXXX")"
+  mkdir -p "$REPO_DIR/development/tests/installer/tmp"
+  TEST_ROOT="$(mktemp -d "$REPO_DIR/development/tests/installer/tmp/bootstrap.XXXXXX")"
   HOST_REPO_DIR="$(cd "$HOST_PWD" && pwd)"
   HOST_TEST_ROOT="${TEST_ROOT/#$REPO_DIR/$HOST_REPO_DIR}"
 else
@@ -33,7 +33,7 @@ create_fixture_remote() {
   local fixture_remote="$TEST_ROOT/$fixture_name.git"
 
   git init -q "$fixture_repo"
-  git -C "$fixture_repo" config user.email "wbs-tools-test@example.invalid"
+  git -C "$fixture_repo" config user.email "installer-test@example.invalid"
   git -C "$fixture_repo" config user.name "WBS tools test"
 
   mkdir -p "$fixture_repo/scripts"
@@ -96,7 +96,7 @@ grep -qx -- '--debug' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
 prerelease_repo="$TEST_ROOT/prerelease-only"
 prerelease_remote="$TEST_ROOT/prerelease-only.git"
 git init -q "$prerelease_repo"
-git -C "$prerelease_repo" config user.email "wbs-tools-test@example.invalid"
+git -C "$prerelease_repo" config user.email "installer-test@example.invalid"
 git -C "$prerelease_repo" config user.name "WBS tools test"
 mkdir -p "$prerelease_repo/scripts"
 printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/scripts/run-wbs-tools.sh"

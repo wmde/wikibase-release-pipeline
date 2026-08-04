@@ -9,11 +9,11 @@ import {
 } from './test-environment.js';
 
 export const testEnv = TestEnv.create( {
-	name: 'wbs-tools',
+	name: 'installer',
 	maxInstances: 1,
-	specs: [ 'wbs-tools/install.spec.ts' ],
+	specs: [ 'installer/contracts.spec.ts', 'installer/install.spec.ts' ],
 	envFiles: [ './test-runner.env', '../local.env' ],
-	composeFiles: [ 'wbs-tools/docker-compose.override.yml' ],
+	composeFiles: [ 'installer/docker-compose.override.yml' ],
 	waitForUrls: () => [ 'http://browser:4444/wd/hub/status' ],
 	onPrepare: async () => {
 		try {

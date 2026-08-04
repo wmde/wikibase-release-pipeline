@@ -29,7 +29,7 @@ Test runs build the local images once before starting the selected suites. Use `
 | `quickstatements` | QuickStatements through the `quickstatements` Compose profile |
 | `opensearch` | OpenSearch-backed search through the `opensearch` Compose profile |
 | `pingback` | Metadata callback behavior using its suite-specific fixture |
-| `wbs-tools` | Installer bootstrap selection, web form, full deployment health, and administrator login |
+| `installer` | Complete installer journey, including bootstrap selection, web configuration, deployment health, and administrator login |
 
 Each suite is defined by `tests/<suite>/<suite>.conf.ts`. It combines the published deployment Compose file with the shared test override and any suite-specific override. Test results are written beneath the suite's `results` directory; CI uploads them only after a failure.
 
@@ -104,7 +104,7 @@ An existing suite automatically discovers a new spec only when its `<suite>.conf
 - Keep assertions in the spec so the behavior being verified remains visible; helpers should primarily arrange state or expose reusable interactions.
 - Run the smallest relevant spec while iterating, then its complete suite before submitting the change. Test commands build the local images unless `--skip-build` is given.
 
-The `wbs-tools` suite includes the bootstrap selection checks in `tests/wbs-tools/install-bootstrap.sh` and the installer tests in `tests/wbs-tools/install.spec.ts`. These verify the command interfaces, existing-configuration precedence, that CLI configuration completes before lifecycle operations begin, and the web/worker Docker-socket isolation boundary. The full browser flow uses the installer's supported local mode with reserved `.test` hostnames, verifies the submitted `.env` values, boots the complete deployment, waits for its services and configured health checks, and logs into Wikibase using the administrator credentials entered in the form.
+The `installer` suite includes bootstrap selection checks and one complete user-facing installation journey. Its fast supporting contracts verify the command interfaces, existing-configuration precedence, that CLI configuration completes before lifecycle operations begin, and the web/worker Docker-socket isolation boundary. The central browser test runs the root `install` command in the supported local mode, completes the web form, verifies the submitted `.env` values, boots the complete deployment, waits for its services and configured health checks, finalizes the installer, and logs into Wikibase using the administrator credentials entered in the form.
 
 This exercises the supported `--local` path. It does not cover public DNS matching, public certificate issuance, firewall configuration, or reachability from outside the Docker host; those remain separate deployment concerns.
 

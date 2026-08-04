@@ -19,24 +19,24 @@ export const INSTALLER_URL = `https://host.docker.internal:${ INSTALLER_PORT }`;
 export const WIKIBASE_URL = 'https://wikibase.test';
 export const ADMIN_USERNAME = 'WbsToolsAdmin';
 export const ADMIN_PASSWORD = 'WbsToolsAdminPassword-2026';
-export const ADMIN_EMAIL = 'wbs-tools-test@example.test';
+export const ADMIN_EMAIL = 'installer-test@example.test';
 export const INSTALL_TIMEOUT = 15 * 60 * 1000;
 export const DATABASE_NAME = 'wbs_tools_test';
 export const DATABASE_USER = 'wbs_tools_user';
 export const DATABASE_PASSWORD = 'WbsToolsDatabasePassword-2026';
 
-const INSTALLER_CONTAINER = 'wbs-tools-e2e-installer';
-const INSTALLER_WORKER_CONTAINER = 'wbs-tools-e2e-installer-worker';
-const INSTALL_PROJECT = 'wbs-tools-e2e';
+const INSTALLER_CONTAINER = 'installer-e2e-web';
+const INSTALLER_WORKER_CONTAINER = 'installer-e2e-worker';
+const INSTALL_PROJECT = 'installer-e2e';
 const HOST_REPOSITORY_ROOT = resolve(
 	process.env.HOST_PWD || join( process.cwd(), '../..' )
 );
 const SUITE_ROOT = join(
 	HOST_REPOSITORY_ROOT,
-	'development/tests/wbs-tools'
+	'development/tests/installer'
 );
-export const WBS_TOOLS_TEMP_ROOT = join( SUITE_ROOT, 'tmp' );
-const TEMP_ROOT = WBS_TOOLS_TEMP_ROOT;
+export const INSTALLER_TEMP_ROOT = join( SUITE_ROOT, 'tmp' );
+const TEMP_ROOT = INSTALLER_TEMP_ROOT;
 const CHECKOUT_ROOT = join( TEMP_ROOT, 'checkout' );
 const RESULT_ROOT = join( SUITE_ROOT, 'results' );
 const INSTALL_LOG = join( CHECKOUT_ROOT, 'installation.log' );

@@ -4,38 +4,12 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-	ADMIN_EMAIL,
-	ADMIN_PASSWORD,
-	ADMIN_USERNAME,
-	DATABASE_NAME,
-	DATABASE_PASSWORD,
-	DATABASE_USER,
-	INSTALL_TIMEOUT,
-	WIKIBASE_URL,
-	WBS_TOOLS_TEMP_ROOT,
+	INSTALLER_TEMP_ROOT,
 	toolsImage,
-	verifyCliInstallWaitsForConfiguration,
-	verifyFinalizedInstallerArtifacts,
-	verifyInstallerContainerIsolation,
-	verifySubmittedInstallerConfiguration,
-	waitForInstalledServicesHealthy,
-	waitForInstallerStopped
+	verifyCliInstallWaitsForConfiguration
 } from './test-environment.js';
 
-async function setField( name: string, value: string ): Promise<void> {
-	const field = await $( `input[name="${ name }"]` );
-	await field.waitForDisplayed();
-	await field.setValue( value );
-	await browser.keys( 'Tab' );
-}
-
-async function clickEnabledButton( label: string ): Promise<void> {
-	const button = await $( `button=${ label }` );
-	await button.waitForClickable();
-	await button.click();
-}
-
-describe( 'WBS tools installer', () => {
+describe( 'Installer supporting contracts', () => {
 	it( 'selects stable releases and forwards supported bootstrap options', () => {
 		execFileSync(
 			'bash',
@@ -43,6 +17,7 @@ describe( 'WBS tools installer', () => {
 			{ encoding: 'utf8' }
 		);
 	} );
+
 	it( 'contains the compiled command-line installer', () => {
 		execFileSync(
 			'docker',
@@ -58,6 +33,7 @@ describe( 'WBS tools installer', () => {
 			{ encoding: 'utf8' }
 		);
 	} );
+
 	it( 'provides the supported wbs install command interface', () => {
 		const image = toolsImage();
 		const help = execFileSync(
@@ -65,12 +41,7 @@ describe( 'WBS tools installer', () => {
 			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'install', '--help' ],
 			{ encoding: 'utf8' }
 		);
-		for ( const option of [
-			'--web',
-			'--local',
-			'--from-source',
-			'--debug'
-		] ) {
+		for ( const option of [ '--web', '--local', '--from-source', '--debug' ] ) {
 			assert.ok(
 				help.includes( option ),
 				`wbs install help does not include ${ option }.`
@@ -78,11 +49,7 @@ describe( 'WBS tools installer', () => {
 		}
 		assert.doesNotMatch( help, /--cli/u );
 
-		for ( const invalidOption of [
-			'--cli',
-			'--installer-dev',
-			'--unknown-option'
-		] ) {
+		for ( const invalidOption of [ '--cli', '--installer-dev', '--unknown-option' ] ) {
 			const result = spawnSync(
 				'docker',
 				[
@@ -137,7 +104,7 @@ describe( 'WBS tools installer', () => {
 	} );
 
 	it( 'does not reapply template values over an existing configuration', () => {
-		const configRoot = mkdtempSync( join( WBS_TOOLS_TEMP_ROOT, 'configuration-' ) );
+		const configRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'configuration-' ) );
 		try {
 			// Paths are contained by the test-owned temporary directory.
 			// eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -178,54 +145,5 @@ describe( 'WBS tools installer', () => {
 
 	it( 'finishes CLI configuration before starting lifecycle operations', () => {
 		verifyCliInstallWaitsForConfiguration();
-	} );
-
-	it( 'boots a healthy Wikibase Suite, finalizes securely, and preserves administrator login', async () => {
-		await browser.url( '/' );
-		await clickEnabledButton( 'Get started' );
-
-		await setField( 'WIKIBASE_PUBLIC_HOST', 'wikibase.test' );
-		await setField( 'WDQS_PUBLIC_HOST', 'query.wikibase.test' );
-		await clickEnabledButton( 'Continue' );
-
-		await setField( 'MW_ADMIN_EMAIL', ADMIN_EMAIL );
-		await setField( 'MW_ADMIN_NAME', ADMIN_USERNAME );
-		await setField( 'MW_ADMIN_PASS', ADMIN_PASSWORD );
-		await clickEnabledButton( 'Continue' );
-
-		await setField( 'DB_NAME', DATABASE_NAME );
-		await setField( 'DB_USER', DATABASE_USER );
-		await setField( 'DB_PASS', DATABASE_PASSWORD );
-		await clickEnabledButton( 'Continue' );
-
-		await expect( $( 'h2=Visibility' ) ).toBeDisplayed();
-		const visibilityCheckbox = await $( 'input[name="METADATA_CALLBACK"]' );
-		await expect( visibilityCheckbox ).not.toBeSelected();
-		await visibilityCheckbox.click();
-		await expect( visibilityCheckbox ).toBeSelected();
-		await clickEnabledButton( 'Start installation' );
-		verifyInstallerContainerIsolation();
-
-		const completionHeading = await $( 'h2=Installation complete! 🎉' );
-		await completionHeading.waitForDisplayed( { timeout: INSTALL_TIMEOUT } );
-		await waitForInstalledServicesHealthy();
-		verifySubmittedInstallerConfiguration();
-		await clickEnabledButton( 'View log' );
-		const stopInstallerButton = await $(
-			'.setup-log-dialog .shutdown-panel button'
-		);
-		await stopInstallerButton.waitForDisplayed();
-		await stopInstallerButton.waitForEnabled();
-		await stopInstallerButton.scrollIntoView( { block: 'center' } );
-		await stopInstallerButton.waitForClickable();
-		await stopInstallerButton.click();
-		await waitForInstallerStopped();
-		verifyFinalizedInstallerArtifacts();
-
-		await browser.url( `${ WIKIBASE_URL }/wiki/Special:UserLogin` );
-		await setField( 'wpName', ADMIN_USERNAME );
-		await setField( 'wpPassword', ADMIN_PASSWORD );
-		await clickEnabledButton( 'Log in' );
-		await expect( $( '#pt-userpage-2' ) ).toBeDisplayed();
 	} );
 } );
