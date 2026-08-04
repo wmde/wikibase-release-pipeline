@@ -93,7 +93,7 @@ describe( 'Suite environment', () => {
 		);
 	} );
 
-	it( 'resets volumes and only the documented generated configuration', async () => {
+	it( 'resets volumes and generated configuration without restarting', async () => {
 		const generated = [
 			'/host/repo/config/LocalSettings.php',
 			'/host/repo/config/wikibase-php.ini',
@@ -107,9 +107,7 @@ describe( 'Suite environment', () => {
 		await environment.reset();
 
 		assert.deepEqual( removed, generated );
+		assert.equal( runner.calls.length, 1 );
 		assert.ok( runner.calls[ 0 ].args.includes( '--volumes' ) );
-		assert.deepEqual( runner.calls[ 1 ].args.slice( -3 ), [
-			'up', '--detach', '--wait'
-		] );
 	} );
 } );

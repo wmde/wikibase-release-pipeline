@@ -36,7 +36,7 @@ Add `--local` to select images already built from the current checkout. Add `--b
 ./wbs-dev suite up --build
 ```
 
-To remove all Suite volumes and generated configuration before starting again, use `./wbs-dev suite reset`. This permanently deletes the instance data, as described in the user-facing [reset documentation](../docs/operating/reset.md).
+To remove all Suite volumes and generated configuration, use `./wbs-dev suite reset`. This permanently deletes the instance data and leaves the Suite stopped; run `./wbs-dev suite up` explicitly when you want to start it again. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
 
 Use `./wbs-dev --help` or `./wbs-dev <command> --help` for the current targets, options, and examples.
 

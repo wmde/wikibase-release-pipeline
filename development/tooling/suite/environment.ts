@@ -52,7 +52,6 @@ export class SuiteEnvironment {
 				this.fileSystem.remove( path );
 			}
 		}
-		await this.composeProject( false ).up();
 	}
 
 	private composeProject( local: boolean ): ComposeProject {

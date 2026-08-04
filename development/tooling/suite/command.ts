@@ -40,6 +40,6 @@ export function registerSuiteCommand(
 
 	suite
 		.command( 'reset' )
-		.description( 'Delete Suite data and generated configuration, then restart.' )
+		.description( 'Delete Suite data and generated configuration.' )
 		.action( async () => await environment.reset() );
 }
