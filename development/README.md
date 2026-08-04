@@ -46,7 +46,15 @@ Start the browser installer with live reload from the current checkout:
 ./wbs-dev installer-dev web
 ```
 
-This builds the local Suite images, uses local test domains, and runs the normal host launch scripts, so following the regular installer actions performs a real Suite installation. In development mode, the progress steps are also clickable so each screen can be inspected without completing the preceding screens.
+This builds the local Suite images, uses local test domains, and runs the normal host launch scripts, so following the regular installer actions performs a real Suite installation.
+
+For UI and UX work without starting services, use mock mode:
+
+```bash
+./wbs-dev installer-dev web --mock
+```
+
+Mock mode builds only the installer tools image, makes the progress steps clickable, and runs normal form validation. Starting installation emits an accelerated, realistic installation log through the completed screen, but does not write the repository `.env`, signal the host launch scripts, or start Suite services. Without `--mock`, the progress steps are not skippable and the installer retains its real end-to-end behavior.
 
 Use `./wbs-dev --help` or `./wbs-dev <command> --help` for the current targets, options, and examples.
 

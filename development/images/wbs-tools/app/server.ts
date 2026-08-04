@@ -1,7 +1,7 @@
 import { createSession, createChannel } from 'better-sse';
 import { promises as dns } from 'dns';
 import express from 'express';
-import { existsSync, readFileSync, createReadStream } from 'fs';
+import { appendFileSync, existsSync, readFileSync, createReadStream } from 'fs';
 import https from 'https';
 import { dirname, join } from 'path';
 import readline from 'readline';
@@ -37,8 +37,22 @@ const SSL_CERT_PATH = '/app/certs/cert.pem';
 const AUTO_FINALIZE_TIMEOUT_MS = 10 * 60 * 1000;
 const INSTALLATION_STATUS_POLL_MS = 5 * 1000;
 const DEV_SERVER = process.env.DEV_SERVER === 'true';
+const INSTALLER_DEV_MOCK = DEV_SERVER && process.env.INSTALLER_DEV_MOCK === 'true';
 const APP_ROOT = DEV_SERVER ? moduleDir : dirname( moduleDir );
 const INDEX_TEMPLATE_PATH = join( APP_ROOT, 'index.html' );
+
+type ConfigResponse = ReturnType<typeof getConfig>;
+
+const MOCK_INSTALLATION_EVENTS = [
+	{ delayMs: 250, message: 'Configuration saved.', code: 'config_saved' },
+	{ delayMs: 900, message: 'Pulling Docker images...', code: 'images_pull_started' },
+	{ delayMs: 1700, message: 'Starting Docker Compose services...', code: 'services_waiting' },
+	{ delayMs: 2700, message: 'Docker Compose services reported ready.', code: 'services_ready' },
+	{ delayMs: 3400, message: 'Installation is complete.', code: 'setup_complete' }
+] as const;
+
+let mockConfigResponse: ConfigResponse | null = null;
+let mockInstallationTimers: ReturnType<typeof setTimeout>[] = [];
 
 // Express setup
 const app = express();
@@ -69,11 +83,11 @@ function escapeHtmlAttribute( value: string ): string {
 
 function renderSetupShell( scriptSrc: string ): string {
 	const initialState = {
-		installerDev: DEV_SERVER,
-		isConfigSaved: isConfigSaved(),
-		isBooted: isBooted(),
-		isSetupStarted: isSetupStarted(),
-		existingInstallState: getExistingInstallState(),
+		installerDevMock: INSTALLER_DEV_MOCK,
+		isConfigSaved: INSTALLER_DEV_MOCK ? false : isConfigSaved(),
+		isBooted: INSTALLER_DEV_MOCK ? false : isBooted(),
+		isSetupStarted: INSTALLER_DEV_MOCK ? false : isSetupStarted(),
+		existingInstallState: INSTALLER_DEV_MOCK ? 'none' : getExistingInstallState(),
 		isLocalhostSetup: isLocalhostSetup(),
 		serverIp: process.env.SERVER_IP || ''
 	};
@@ -81,6 +95,23 @@ function renderSetupShell( scriptSrc: string ): string {
 	return readFileSync( INDEX_TEMPLATE_PATH, 'utf8' )
 		.replace( '%SETUP_STATE%', escapeJsonForHtml( initialState ) )
 		.replace( '%SCRIPT_SRC%', escapeHtmlAttribute( scriptSrc ) );
+}
+
+function startMockInstallation(): void {
+	for ( const timer of mockInstallationTimers ) {
+		clearTimeout( timer );
+	}
+	mockInstallationTimers = [];
+	clearLog();
+
+	for ( const event of MOCK_INSTALLATION_EVENTS ) {
+		mockInstallationTimers.push( setTimeout( () => {
+			appendFileSync(
+				LOG_PATH,
+				`${ new Date().toISOString() } ${ event.message } [${ event.code }]\n`
+			);
+		}, event.delayMs ) );
+	}
 }
 
 // create and start the log streamer
@@ -111,13 +142,19 @@ app.post( '/config', async ( req, res ): Promise<void> => {
 			return;
 		}
 
-		saveConfigText( configText );
-		markConfigReadyForLaunch();
-		console.log( '.env file written successfully' );
+		if ( INSTALLER_DEV_MOCK ) {
+			mockConfigResponse = { config, configText };
+			startMockInstallation();
+			console.log( 'Mock installation started; no configuration or services were changed.' );
+		} else {
+			saveConfigText( configText );
+			markConfigReadyForLaunch();
+			console.log( '.env file written successfully' );
+		}
 		res.status( 200 ).json( { status: 'ok', config, configText } );
 	} catch ( err ) {
-		console.error( 'Failed to write .env:', err );
-		res.status( 500 ).send( 'Failed to write .env' );
+		console.error( 'Failed to save installer configuration:', err );
+		res.status( 500 ).send( 'Failed to save installer configuration' );
 	}
 } );
 
@@ -178,7 +215,7 @@ app.post( '/validate/hostname', async ( req, res ): Promise<void> => {
 
 app.get( '/config', async ( req, res ): Promise<void> => {
 	try {
-		const { config, configText } = getConfig();
+		const { config, configText } = mockConfigResponse ?? getConfig();
 		res.status( 200 ).json( { config, configText } );
 	} catch ( err ) {
 		console.error( 'Failed to read .env:', err );
@@ -187,7 +224,9 @@ app.get( '/config', async ( req, res ): Promise<void> => {
 } );
 
 function finalizeInstallation(): void {
-	sanitizeConfig();
+	if ( !INSTALLER_DEV_MOCK ) {
+		sanitizeConfig();
+	}
 	clearLog();
 }
 

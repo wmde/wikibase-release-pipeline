@@ -5,6 +5,7 @@ set -euo pipefail
 
 export WBS_DIR
 export INSTALLER_DEV
+export INSTALLER_DEV_MOCK
 export DEBUG
 export LOCALHOST
 export LAUNCH_TRIGGER_PATH
@@ -142,6 +143,7 @@ start_installer_webserver() {
       -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
       -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
       -e DEV_SERVER=true
+      -e "INSTALLER_DEV_MOCK=${INSTALLER_DEV_MOCK:-false}"
       -p "$INSTALLER_PORT:443"
       -v "$WBS_DIR:/app/wbs"
       -v "$CERTS_DIR:/app/certs"

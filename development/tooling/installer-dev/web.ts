@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { buildAllImages } from '../build/images.js';
+import { buildAllImages, buildImages } from '../build/images.js';
 import type { RepositoryContext } from '../context.js';
 import {
 	type CommandRunner,
@@ -8,7 +8,12 @@ import {
 
 export interface InstallerDevWebDependencies {
 	buildLocalImages: () => Promise<void>;
+	buildToolsImage: () => Promise<void>;
 	commandRunner: CommandRunner;
+}
+
+export interface InstallerDevWebOptions {
+	mock?: boolean;
 }
 
 function defaultDependencies(
@@ -16,16 +21,22 @@ function defaultDependencies(
 ): InstallerDevWebDependencies {
 	return {
 		buildLocalImages: async () => await buildAllImages( context ),
+		buildToolsImage: async () => await buildImages( [ 'wbs-tools' ], [], context ),
 		commandRunner: new ProcessCommandRunner()
 	};
 }
 
 export async function runInstallerDevWeb(
 	context: RepositoryContext,
+	options: InstallerDevWebOptions = {},
 	dependencies = defaultDependencies( context )
 ): Promise<void> {
 	const root = context.hostRepositoryRoot;
-	await dependencies.buildLocalImages();
+	if ( options.mock ) {
+		await dependencies.buildToolsImage();
+	} else {
+		await dependencies.buildLocalImages();
+	}
 
 	const imageRegistry = process.env.WBS_TEST_IMAGE_REGISTRY ?? 'wikibase';
 	const imageTag = process.env.WBS_TEST_IMAGE_TAG ?? 'latest';
@@ -42,6 +53,7 @@ export async function runInstallerDevWeb(
 				DEBUG: 'false',
 				ENV_FILE_PATH: join( root, '.env' ),
 				INSTALLER_DEV: 'true',
+				INSTALLER_DEV_MOCK: options.mock ? 'true' : 'false',
 				LAUNCH_TRIGGER_PATH: join( stateRoot, 'installer-dev-launch-ready' ),
 				LOCALHOST: 'true',
 				LOG_PATH: join( stateRoot, 'installer-dev.log' ),

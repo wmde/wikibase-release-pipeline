@@ -13,7 +13,7 @@
 			<section class="wizard-progress-area" aria-label="Installation progress">
 				<wizard-steps
 					:current-step="currentStep - 1"
-					:interactive="initialState.installerDev"
+					:interactive="initialState.installerDevMock"
 					:locked="configLocked"
 					:steps="steps"
 					@select-step="showStep"
@@ -169,7 +169,7 @@ type DatabaseTextFieldName = 'DB_NAME' | 'DB_USER';
 type FormFieldName = keyof ConfigForm;
 
 const fallbackState: InitialSetupState = {
-	installerDev: false,
+	installerDevMock: false,
 	isConfigSaved: false,
 	isBooted: false,
 	isSetupStarted: false,

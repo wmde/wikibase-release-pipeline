@@ -21,7 +21,7 @@ export type ConfigResponse = {
 };
 
 export type InitialSetupState = {
-	installerDev: boolean;
+	installerDevMock: boolean;
 	isConfigSaved: boolean;
 	isBooted: boolean;
 	isSetupStarted: boolean;

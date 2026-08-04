@@ -5,6 +5,7 @@ set -euo pipefail
 
 export CLI
 export INSTALLER_DEV
+export INSTALLER_DEV_MOCK
 export DEBUG
 export LOCALHOST
 export SKIP_DEPENDENCY_INSTALLS
