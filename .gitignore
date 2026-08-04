@@ -31,11 +31,7 @@ development/tests/*/results/
 node_modules
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/
 
 # misc
 npm-debug.log
