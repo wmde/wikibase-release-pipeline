@@ -18,7 +18,7 @@ The current tool already provides a useful foundation for these workflows: share
 
 The installer is one workflow of the broader `wbs` tools application.
 
-The public CLI owns configuration and core lifecycle commands: `wbs configure`, `wbs install`, `wbs up`, `wbs down`, `wbs status`, and `wbs reset`. Development behavior is selected with explicit lifecycle options such as `wbs up --build`; it is not a separate Suite lifecycle implementation under `wbs-dev`.
+The tools command layer owns configuration and core lifecycle commands: `wbs configure`, `wbs install`, `wbs up`, `wbs down`, `wbs status`, and `wbs reset`. The lifecycle commands remain an internal, experimental interface until their end-user behavior is ready to publish. Development behavior is selected with explicit lifecycle options such as `wbs up --build`; it is not a separate Suite lifecycle implementation under `wbs-dev`.
 
 The published tools image contains the command implementation, terminal configurator, and browser configurator. Host scripts retain the minimum boundary needed to install Docker, pull or build that image, mount the checkout, and launch its roles.
 

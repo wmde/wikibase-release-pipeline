@@ -132,8 +132,8 @@ describe( 'WBS tools installer', () => {
 			{ encoding: 'utf8' }
 		);
 		assert.match( upHelp, /--update/u );
-		assert.match( upHelp, /--local-images/u );
 		assert.match( upHelp, /--build/u );
+		assert.doesNotMatch( upHelp, /--local-images/u );
 	} );
 
 	it( 'does not reapply template values over an existing configuration', () => {

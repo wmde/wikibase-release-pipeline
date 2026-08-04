@@ -76,8 +76,7 @@ async function main(): Promise<void> {
 		.description( 'Start the configured Wikibase Suite.' )
 		.addOption( new Option( '--update', 'Pull selected images before starting.' ) )
 		.addOption( new Option( '--build', 'Build and select images from this checkout.' ) )
-		.addOption( new Option( '--local-images', 'Use images built from this checkout.' ) )
-		.action( async ( options: { update?: boolean; build?: boolean; localImages?: boolean } ) => {
+		.action( async ( options: { update?: boolean; build?: boolean } ) => {
 			const missing = missingConfigurationKeys();
 			if ( missing.length ) {
 				if ( !process.stdin.isTTY ) {
@@ -86,7 +85,7 @@ async function main(): Promise<void> {
 				console.log( 'Suite configuration is incomplete; resuming configuration.' );
 				await configure( {
 					web: false,
-					local: options.build === true || options.localImages === true,
+					local: options.build === true,
 					debug: false
 				} );
 			}

@@ -29,9 +29,11 @@ Use the repository-root `.env` and Compose configuration to run Wikibase Suite a
 ../wbs down
 ```
 
-`wbs up --build` builds every WBS product image from the current checkout, selects the local-image Compose override, and starts the Suite without pulling published product images. After the initial build, `../wbs up --local-images` starts those existing images without rebuilding. Use `../wbs up --update` without either development option to update and start the configured published images.
+`wbs up --build` builds every WBS product image from the current checkout, selects the local-image Compose override, and starts the Suite without pulling published product images. Use `../wbs up --update` without the development option to update and start the configured published images.
 
-When the repository-root `.env` is missing or incomplete, interactive `wbs up` resumes the command-line configurator. Existing values become prompt defaults and existing passwords can be retained without displaying them. With `--build` or `--local-images`, the configurator supplies local host, administrator, and database defaults for values that are still missing.
+When the repository-root `.env` is missing or incomplete, interactive `wbs up` resumes the command-line configurator. Existing values become prompt defaults and existing passwords can be retained without displaying them. An existing `.env` remains the configuration base; template values are used only when creating a new configuration. With `--build`, the configurator supplies local host, administrator, and database defaults for values that are still missing.
+
+The checkout-local lifecycle commands are currently an internal, experimental development interface. They are intentionally not documented as an end-user operations feature yet.
 
 The current local profile uses `wikibase.test` and `query.wikibase.test`. The configurator prints the hosts-file entry needed when those names do not already resolve locally. Local DNS and certificate handling remain separate from image and lifecycle selection.
 
