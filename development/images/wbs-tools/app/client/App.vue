@@ -116,7 +116,8 @@
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					Feedback?
+					<cdx-icon :icon="cdxIconSpeechBubble" size="small" />
+					<span>Tell us how it went</span>
 				</a>
 			</div>
 		</div>
@@ -134,7 +135,8 @@
 </template>
 
 <script setup lang="ts">
-import { CdxMessage } from '@wikimedia/codex';
+import { CdxIcon, CdxMessage } from '@wikimedia/codex';
+import { cdxIconSpeechBubble } from '@wikimedia/codex-icons';
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { HOST_VALIDATION_POLL_MS } from './constants';
 import { SaveConfigError, configToForm, fetchConfig, saveConfig } from './config';
