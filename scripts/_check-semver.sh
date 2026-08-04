@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# check_semver
+# _check-semver
 # Usage:
-#   _check_semver MIN [ACTUAL]
-#   echo ACTUAL | _check_semver MIN
+#   _check-semver.sh MIN [ACTUAL]
+#   echo ACTUAL | _check-semver.sh MIN
 # Exit 0 if ACTUAL >= MIN, else 1. No output.
 
 set -euo pipefail
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
-  echo "usage: _check_semver MIN [ACTUAL] (or: ACTUAL on stdin)" >&2
+  echo "usage: _check-semver.sh MIN [ACTUAL] (or: ACTUAL on stdin)" >&2
   exit 2
 fi
 

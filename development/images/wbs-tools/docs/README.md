@@ -6,7 +6,7 @@ The installer currently supports first-time Wikibase Suite installation through 
 
 ## Versioning and releases
 
-The containerized application is released independently as the [`wikibase/wbs-tools` image](../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. WBS selects a compatible tools major version.
+The containerized application is released independently as the [`wikibase/wbs-tools` image](../../../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. WBS selects a compatible tools major version.
 
 Compatible minor and patch tools releases become available to normal installations without changing the WBS configuration. A WBS release is required to select a new tools major version.
 
@@ -51,12 +51,12 @@ Add those hosts to your system hosts file before launching the stack.
 | Option | Description |
 | --- | --- |
 | `--web` | Use the browser UI instead of the default terminal wizard. |
-| `--dev` | Develop the browser installer from the current checkout with live reload. Implies `--local` and assumes dependencies are installed. |
-| `--build` | Build WBS tools and all product images from the selected source checkout before installing. |
+| `--installer-dev` | Develop the browser installer from the current checkout with live reload. Implies `--local` and assumes dependencies are installed. |
+| `--from-source` | Build WBS tools and all product images from the selected source checkout before installing. |
 | `--local` | Use local hostnames without public DNS validation or public certificates. |
 | `--debug` | Enable verbose logging and disable quiet Docker pulls. |
 
-The downloaded bootstrap additionally accepts `--wbs-ref REF` to check out a specific WBS branch or tag. It defaults to browser mode and deliberately does not expose checkout-only `--dev` behavior.
+The downloaded bootstrap additionally accepts `--wbs-ref REF` to check out a specific WBS branch or tag. It defaults to browser mode and deliberately does not expose checkout-only `--installer-dev` behavior.
 
 The old `--cli`, `--skip-clone`, `--skip-deps`, `--skip-launch`, and `--reset` options were never part of a published interface and are not supported.
 
@@ -65,33 +65,44 @@ The old `--cli`, `--skip-clone`, `--skip-deps`, `--skip-launch`, and `--reset` o
 From an existing checkout, run:
 
 ```bash
-./wbs install --dev
+./wbs install --installer-dev
 ```
 
-This builds the WBS tools image from `development/images/wbs-tools`, mounts the application source for live reload, opens the browser installer, and implies `--local`. It assumes Git and Docker are already installed. It does not build the product images; use `./wbs-dev build` when those sources changed.
+This builds `wikibase/wbs-tools:latest` through `development/wbs-dev`, mounts the application source for live reload, opens the browser installer, and implies `--local`. It assumes Git and Docker are already installed. It does not build the product images; use `./development/wbs-dev build` when those sources changed.
 
 To test a complete installation from the current checkout, build the tools and product images before starting the installer:
 
 ```bash
-./install --build
+./install --from-source
 ```
 
-To install another unpublished branch or tag, select it in the downloaded bootstrap and add `--build`:
+To install another unpublished branch or tag, select it in the downloaded bootstrap and add `--from-source`:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/install) \
   --wbs-ref BRANCH_OR_TAG \
-  --build
+  --from-source
 ```
 
-This builds the tools and product images from the selected checkout and records their selection in `docker-compose.build.yml`. Remove that generated file to return the installation to published image tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to stream it in the terminal.
+This builds every image through `development/wbs-dev` and selects `development/docker-compose.local-images.yml` for the checkout. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Remove `.wbs/local-images` to return the installation to published image tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. Build output is written to `/tmp/wikibase-suite-installer.log`; add `--debug` to stream it in the terminal.
 
 ## Runtime behavior
 
 - Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
-- Normal installations pull the compatible WBS tools major selected by the installation scripts. Set `WBS_TOOLS_IMAGE` to test a different published image.
-- Source installations requested with `--build` use the locally built images selected by the generated `docker-compose.build.yml` file.
+- Normal installations pull the compatible WBS tools major selected by the installation scripts, currently `wikibase/wbs-tools:1`. Set `WBS_TOOLS_IMAGE` to test a different published image.
+- Source installations requested with `--from-source` use `wikibase/wbs-tools:latest` and `development/docker-compose.local-images.yml`; `.wbs/local-images` records the product-image selection.
+- Installer development requested with `--installer-dev` builds and uses `wikibase/wbs-tools:latest` without changing the product-image selection.
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.
 - After launch, the saved `.env` configuration is displayed. Store credentials securely.
+
+## Local installer state
+
+The ignored `.wbs/` directory contains state used only by the temporary browser installer and source-image selection:
+
+- `.wbs/local-images` selects the tracked `development/docker-compose.local-images.yml` override.
+- `.wbs/certs/` contains the certificate and private key presented by the temporary installer web server on port `8888`.
+- `.wbs/letsencrypt/` contains the temporary installer's Let's Encrypt account and certificate-request state.
+
+The certificate directories are regenerated when needed and are separate from the installed Wikibase Suite HTTPS certificates. The running product's Traefik certificates are stored in the `traefik-letsencrypt-data` Docker volume.

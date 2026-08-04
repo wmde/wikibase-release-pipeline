@@ -27,7 +27,7 @@ Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 Put optional local overrides in `development/local.env`. The `wbs-dev` wrapper creates the file when it is missing. Test defaults come from the root `.env.example`, `development/tests/test-services.env`, and `development/tests/test-runner.env`.
 
-See the [integration test guide](./test/README.md#environment-and-local-overrides) for test-specific variables.
+See the [integration test guide](./tests/README.md#environment-and-local-overrides) for test-specific variables.
 
 ## Documentation map
 
@@ -39,17 +39,18 @@ Use the documentation according to the task:
 | Set up and work in the repository locally | This guide |
 | Prepare and submit a change | [Contributor guide](../CONTRIBUTING.md) |
 | Run build, test, lint, update, or publish commands | `./wbs-dev <command> --help` |
-| Add or debug an integration test | [Integration test suites](./test/README.md) |
-| Develop or test the installer and operations tools | [Tools development guide](../tools/docs/README.md) |
+| Add or debug an integration test | [Integration test suites](./tests/README.md) |
+| Develop or test the installer and operations tools | [WBS tools development guide](./images/wbs-tools/docs/README.md) |
 | Prepare and publish a release | [Release process](./docs/releasing.md) |
 | Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
 
 ## Repository layout
 
 - [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
-- [`test/`](./test): integration test runner, suites, and specifications
+- [`tests/`](./tests): integration test runner, suites, and specifications
 - [`tooling/`](./tooling): internal implementation behind the `wbs-dev` commands
-- [`container/`](./container): Dockerized `wbs-dev` environment
 - [`docs/`](./docs): development guides, engineering notes, and architecture decisions
+- [`Dockerfile`](./Dockerfile), [`docker-compose.yml`](./docker-compose.yml), and [`wbs-dev`](./wbs-dev): containerized development environment and its supported entry point
+- [`docker-compose.local-images.yml`](./docker-compose.local-images.yml): product override selecting images built from the current checkout
 
 Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).

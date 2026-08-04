@@ -6,7 +6,7 @@ Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
 - Moves the search service to the new `wikibase/opensearch:1` image, based on OpenSearch 1.3.20 and required by MediaWiki 1.46.
 - Moves the Wikibase Suite Compose configuration from `deploy/` to the repository root. Existing installations must move their `.env`, complete `config/` contents, and any Compose override to the root during the upgrade.
 - Adds the Wikibase Suite installer at the repository root.
-- Adds `install --build` for testing a complete installation from an unpublished source checkout.
+- Adds `install --from-source` for testing a complete installation from an unpublished source checkout.
 - Reuses the public CI build cache by default for developer and installer source builds.
 - Allows compatible WBS tools updates within the selected major version without requiring another WBS release.
 - Adds optional login with Wikimedia accounts. See [Enable Wikimedia login](./docs/images/wikibase/README.md#wikimedia-oauth-login).

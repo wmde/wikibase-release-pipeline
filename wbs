@@ -4,8 +4,8 @@ set -euo pipefail
 
 WBS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export WBS_DIR
-export TOOLS_DIR="${TOOLS_DIR:-$WBS_DIR/tools}"
-export SCRIPTS_DIR="${SCRIPTS_DIR:-$TOOLS_DIR/scripts}"
+export SCRIPTS_DIR="${SCRIPTS_DIR:-$WBS_DIR/scripts}"
+export WBS_STATE_DIR="${WBS_STATE_DIR:-$WBS_DIR/.wbs}"
 export ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
 
 exec bash "$SCRIPTS_DIR/wbs.sh" "$@"

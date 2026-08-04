@@ -58,7 +58,8 @@ export function discoverReleaseProjects(
 				'wbs',
 				'config',
 				'docs',
-				'tools'
+				'scripts',
+				'development/docker-compose.local-images.yml'
 			],
 			legacyTagNames: [ 'deploy' ],
 			isImage: false

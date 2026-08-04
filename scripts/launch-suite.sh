@@ -11,8 +11,8 @@ export WBS_DIR
 export ENV_FILE_PATH
 export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
-export TOOLS_DIR
 export RESET
+export WBS_STATE_DIR
 
 # --- Bootstrap Logging ---
 
@@ -42,9 +42,9 @@ launch_wbs() {
     compose_opts+=(-f docker-compose.local.yml)
     status "Using local Compose customizations from docker-compose.local.yml." "local_compose_override"
   fi
-  if [ -f "docker-compose.build.yml" ]; then
-    compose_opts+=(-f docker-compose.build.yml)
-    status "Using images built from this checkout via docker-compose.build.yml." "source_build_images"
+  if [ -f "$WBS_STATE_DIR/local-images" ]; then
+    compose_opts+=(-f development/docker-compose.local-images.yml)
+    status "Using images built from this checkout." "source_build_images"
   fi
 
   if ! $DEBUG ; then
@@ -61,7 +61,7 @@ launch_wbs() {
 
   status "Pulling Docker images..." "images_pull_started"
   if ! run "docker compose ${compose_opts[*]} pull"; then
-    status "⛔️ Could not pull the selected images. For an unpublished source checkout, rerun the installer with --build." "images_pull_failed"
+    status "⛔️ Could not pull the selected images. For an unpublished source checkout, rerun the installer with --from-source." "images_pull_failed"
     return 1
   fi
 

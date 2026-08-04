@@ -4,7 +4,7 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export CLI
-export DEV
+export INSTALLER_DEV
 export DEBUG
 export LOCALHOST
 export SKIP_DEPENDENCY_INSTALLS
@@ -14,7 +14,7 @@ export WBS_DIR
 export ENV_FILE_PATH
 export LAUNCH_TRIGGER_PATH
 export SCRIPTS_DIR
-export TOOLS_DIR
+export WBS_STATE_DIR
 INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
@@ -70,11 +70,11 @@ if $RESET; then
 fi
 
 if $CLI; then
-  bash "$SCRIPTS_DIR/cli-installer.sh" "${INSTALL_ARGS[@]}"
+  bash "$SCRIPTS_DIR/run-cli-installer.sh" "${INSTALL_ARGS[@]}"
 else
   export LAUNCH_TRIGGER_PATH="${LAUNCH_TRIGGER_PATH:-$WBS_DIR/.wbs-installer-launch-ready}"
   rm -f "$LAUNCH_TRIGGER_PATH"
-  bash "$SCRIPTS_DIR/web-installer.sh" "${INSTALL_ARGS[@]}"
+  bash "$SCRIPTS_DIR/run-web-installer.sh" "${INSTALL_ARGS[@]}"
 fi
 
 # --- Launch or exit ---
@@ -90,17 +90,18 @@ if ! $CLI; then
   debug "Starting background process..."
   nohup env \
     WBS_DIR="$WBS_DIR" \
+    WBS_STATE_DIR="$WBS_STATE_DIR" \
     LOG_PATH="$LOG_PATH" \
-    DEV="$DEV" \
+    INSTALLER_DEV="$INSTALLER_DEV" \
     DEBUG="$DEBUG" \
     LOCALHOST="$LOCALHOST" \
     LAUNCH_TRIGGER_PATH="$LAUNCH_TRIGGER_PATH" \
     RESET="$RESET" \
-    bash "$SCRIPTS_DIR/launch.sh" \
+    bash "$SCRIPTS_DIR/launch-suite.sh" \
     >/dev/null 2>&1 &
 
   echo "It is now safe to close this terminal session."
   echo
 else
-  bash "$SCRIPTS_DIR/launch.sh"
+  bash "$SCRIPTS_DIR/launch-suite.sh"
 fi

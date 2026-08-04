@@ -33,11 +33,19 @@ while [[ $# -gt 0 ]]; do
     --local)
       RUNTIME_ARGS+=( "$1" )
       ;;
-    --build)
+    --from-source)
       RUNTIME_ARGS+=( "$1" )
       ;;
+    --installer-dev)
+      echo "⚠️ --installer-dev requires an existing checkout. Run ./wbs install --installer-dev there."
+      exit 1
+      ;;
+    --build)
+      echo "⚠️ --build has been renamed to --from-source."
+      exit 1
+      ;;
     --dev)
-      echo "⚠️ --dev requires an existing checkout. Run ./wbs install --dev there."
+      echo "⚠️ --dev has been renamed to --installer-dev."
       exit 1
       ;;
     --skip-clone|--skip-deps|--skip-launch|--reset|--cli)
@@ -55,7 +63,7 @@ done
 # instead of cloning again.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCAL_WBS_DIR="$SCRIPT_DIR"
-if [[ -e "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/tools" ]]; then
+if [[ -e "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/scripts" ]]; then
   WBS_DIR="$LOCAL_WBS_DIR"
   SKIP_CLONE=true
 fi

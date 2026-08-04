@@ -6,7 +6,6 @@ This folder stores decision records for significant product, UX, and technical c
 
 - [`NNNN-adr-template.md`](NNNN-adr-template.md) - template for new ADRs.
 - [`0001-expand-installer-into-operations-tool.md`](0001-expand-installer-into-operations-tool.md) - expanding the installer into a Wikibase Suite operations tool.
-- [`0002-product-first-monorepo.md`](0002-product-first-monorepo.md) - organizing Wikibase Suite as a product-first monorepo.
 
 ## Working Pattern
 

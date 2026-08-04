@@ -4,13 +4,13 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export WBS_DIR
-export DEV
+export INSTALLER_DEV
 export DEBUG
 export LOCALHOST
 export LAUNCH_TRIGGER_PATH
 export RESET
 export SCRIPTS_DIR
-export TOOLS_DIR
+export WBS_STATE_DIR
 INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---
@@ -26,8 +26,8 @@ SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
 WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
 WBS_TOOLS_APP_DIR="$WBS_TOOLS_PROJECT_DIR/app"
-LE_DIR="$TOOLS_DIR/letsencrypt"
-CERTS_DIR="$TOOLS_DIR/certs"
+LE_DIR="$WBS_STATE_DIR/letsencrypt"
+CERTS_DIR="$WBS_STATE_DIR/certs"
 LAUNCH_TRIGGER_CONTAINER_PATH="/app/wbs/$(basename "${LAUNCH_TRIGGER_PATH:-.wbs-installer-launch-ready}")"
 EXISTING_INSTALL_STATE="${EXISTING_INSTALL_STATE:-none}"
 
@@ -99,8 +99,8 @@ compose_services_are_running() {
   if [ -f "docker-compose.local.yml" ]; then
     compose_opts+=(-f docker-compose.local.yml)
   fi
-  if [ -f "docker-compose.build.yml" ]; then
-    compose_opts+=(-f docker-compose.build.yml)
+  if [ -f "$WBS_STATE_DIR/local-images" ]; then
+    compose_opts+=(-f development/docker-compose.local-images.yml)
   fi
 
   local running_services
@@ -129,7 +129,7 @@ start_installer_webserver() {
   remove_any_existing_installer_webserver
 
   # Run with volumes mapped as before
-  if $DEV; then
+  if $INSTALLER_DEV; then
     command=(
       docker run -d
       --name "$INSTALLER_CONTAINER_NAME"
@@ -179,7 +179,7 @@ start_installer_webserver() {
 }
 
 echo
-if $DEV; then
+if $INSTALLER_DEV; then
   echo "🔧 Launching web-based installer (dev mode with live reload)..."
 else
   echo "🔧 Launching web-based installer..."

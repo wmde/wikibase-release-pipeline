@@ -5,8 +5,8 @@ type InstallOptions = {
 	web: boolean;
 	local: boolean;
 	debug: boolean;
-	dev: boolean;
-	build: boolean;
+	installerDev: boolean;
+	fromSource: boolean;
 };
 
 async function runInstall( options: InstallOptions ): Promise<void> {
@@ -14,9 +14,9 @@ async function runInstall( options: InstallOptions ): Promise<void> {
 		return;
 	}
 
-	process.env.LOCALHOST = String( options.local || options.dev );
+	process.env.LOCALHOST = String( options.local || options.installerDev );
 	process.env.DEBUG = String( options.debug );
-	if ( options.web || options.dev ) {
+	if ( options.web || options.installerDev ) {
 		await import( './server.js' );
 	} else {
 		await import( './cli.js' );
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
 		.addOption( new Option( '--web', 'Use the browser installer.' ) )
 		.addOption(
 			new Option(
-				'--dev',
+				'--installer-dev',
 				'Develop the browser installer from the current source checkout.'
 			)
 		)
@@ -49,7 +49,7 @@ async function main(): Promise<void> {
 		)
 		.addOption(
 			new Option(
-				'--build',
+				'--from-source',
 				'Build and install the images from the selected source checkout.'
 			)
 		)

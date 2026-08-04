@@ -10,7 +10,7 @@ describe( 'WBS installation image selection', () => {
 			readFileSync( resolve( 'images/wbs-tools/package.json' ), 'utf8' )
 		) as { version: string };
 		const major = toolsPackage.version.split( '.', 1 )[ 0 ];
-		const versionsScript = resolve( '../tools/scripts/_versions.sh' );
+		const versionsScript = resolve( '../scripts/_versions.sh' );
 		const selectedImage = execFileSync(
 			'bash',
 			[
@@ -39,7 +39,7 @@ describe( 'WBS installation image selection', () => {
 				'-f',
 				resolve( repositoryRoot, 'docker-compose.yml' ),
 				'-f',
-				resolve( repositoryRoot, 'tools/docker-compose.build.yml' ),
+				resolve( repositoryRoot, 'development/docker-compose.local-images.yml' ),
 				'config'
 			],
 			{ encoding: 'utf8' }

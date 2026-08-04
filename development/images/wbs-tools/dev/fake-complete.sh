@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PARENT_DIR="$(cd "$ROOT_DIR/.." && pwd)"
-WBS_DIR="${WBS_DIR:-$PARENT_DIR}"
+REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+WBS_DIR="${WBS_DIR:-$REPOSITORY_ROOT}"
 ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
 LOG_PATH="${LOG_PATH:-/tmp/wikibase-suite-installer.log}"
 

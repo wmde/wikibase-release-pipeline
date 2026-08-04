@@ -5,10 +5,9 @@ set -euo pipefail
 
 export WBS_DIR
 export DEBUG
-export DEV
+export INSTALLER_DEV
 export LOCALHOST
 export LOG_PATH
-export TOOLS_DIR
 INSTALL_ARGS=( "$@" )
 
 # --- Bootstrap Logging ---

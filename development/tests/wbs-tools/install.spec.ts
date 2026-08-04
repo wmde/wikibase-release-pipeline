@@ -56,7 +56,13 @@ describe( 'WBS tools installer', () => {
 			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'install', '--help' ],
 			{ encoding: 'utf8' }
 		);
-		for ( const option of [ '--web', '--local', '--dev', '--build', '--debug' ] ) {
+		for ( const option of [
+			'--web',
+			'--local',
+			'--installer-dev',
+			'--from-source',
+			'--debug'
+		] ) {
 			assert.ok(
 				help.includes( option ),
 				`wbs install help does not include ${ option }.`

@@ -30,3 +30,4 @@ Current ADRs include:
 - [18 - anonymous access defaults for the wikibase image](0018-anonymous-access-defaults.md)
 - [19 - publish multi-platform images](0019-multi-platform-images.md)
 - [20 - generate upstream updates and image changelogs](0020-upstream-updates-and-changelogs.md)
+- [21 - product-first monorepo](0021-product-first-monorepo.md)

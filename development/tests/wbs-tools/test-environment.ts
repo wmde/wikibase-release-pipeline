@@ -102,7 +102,7 @@ function copyCheckout(): void {
 			join( CHECKOUT_ROOT, 'config', file )
 		);
 	}
-	cpSync( join( HOST_REPOSITORY_ROOT, 'tools' ), join( CHECKOUT_ROOT, 'tools' ), {
+	cpSync( join( HOST_REPOSITORY_ROOT, 'scripts' ), join( CHECKOUT_ROOT, 'scripts' ), {
 		recursive: true
 	} );
 	copyFileSync(
