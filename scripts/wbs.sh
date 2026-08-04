@@ -53,7 +53,7 @@ source "$SCRIPTS_DIR/_logging.sh"
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/install-docker.sh"
 # shellcheck disable=SC1091
-source "$SCRIPTS_DIR/prepare-wbs-tools-image.sh"
+source "$SCRIPTS_DIR/_tools-image.sh"
 
 if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
   install_docker
