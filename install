@@ -94,4 +94,4 @@ if [[ "$WEB_SELECTED" != true ]]; then
 fi
 
 export WBS_DIR WBS_TOOLS_IMAGE
-exec "$WBS_DIR/wbs" install "${RUNTIME_ARGS[@]}"
+exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

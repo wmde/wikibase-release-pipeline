@@ -24,22 +24,22 @@ Repository tasks run through `wbs-dev`. The wrapper builds or loads the developm
 Use the repository-root `.env` and Compose configuration to run Wikibase Suite as an installed user would:
 
 ```bash
-../wbs up --build
-../wbs status
-../wbs down
+./wbs up --build
+./wbs status
+./wbs down
 ```
 
-`wbs up --build` builds every WBS product image from the current checkout, selects the local-image Compose override, and starts the Suite without pulling published product images. Use `../wbs up --update` without the development option to update and start the configured published images.
+`wbs up --build` builds every WBS product image from the current checkout, selects the local-image Compose override, and starts the Suite without pulling published product images. Use `./wbs up --update` without the development option to update and start the configured published images.
 
 When the repository-root `.env` is missing or incomplete, interactive `wbs up` resumes the command-line configurator. Existing values become prompt defaults and existing passwords can be retained without displaying them. An existing `.env` remains the configuration base; template values are used only when creating a new configuration. With `--build`, the configurator supplies local host, administrator, and database defaults for values that are still missing.
 
-The checkout-local lifecycle commands are currently an internal, experimental development interface. They are intentionally not documented as an end-user operations feature yet.
+The `development/wbs` lifecycle commands are an internal, experimental development interface. They are intentionally absent from the repository root and are not documented as an end-user operations feature yet.
 
 The current local profile uses `wikibase.test` and `query.wikibase.test`. The configurator prints the hosts-file entry needed when those names do not already resolve locally. Local DNS and certificate handling remain separate from image and lifecycle selection.
 
 Compose files are applied in this order: the root `docker-compose.yml`, the development local-image override when selected, and the optional root `docker-compose.local.yml` last. This allows checkout-specific customizations to override either image mode.
 
-To remove all Suite volumes and generated configuration, use `../wbs reset`. This asks for confirmation, permanently deletes the instance data, and leaves the Suite stopped; run `../wbs up` explicitly when you want to start it again. Use `--force` only for automation. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
+To remove all Suite volumes and generated configuration, use `./wbs reset`. This asks for confirmation, permanently deletes the instance data, and leaves the Suite stopped; run `./wbs up` explicitly when you want to start it again. Use `--force` only for automation. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
 
 For exploratory work inside an integration-test environment instead, start exactly one named suite with `--setup`:
 
@@ -99,6 +99,7 @@ Use the documentation according to the task:
 - [`tooling/`](./tooling): internal implementation behind the `wbs-dev` commands
 - [`docs/`](./docs): development guides, engineering notes, and architecture decisions
 - [`Dockerfile`](./Dockerfile), [`docker-compose.yml`](./docker-compose.yml), and [`wbs-dev`](./wbs-dev): containerized development environment and its supported entry point
+- [`wbs`](./wbs): experimental developer entry point for emerging Suite lifecycle commands
 - [`docker-compose.local-images.yml`](./docker-compose.local-images.yml): product override selecting images built from the current checkout
 
 Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).

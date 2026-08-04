@@ -32,7 +32,7 @@ The detailed design and prioritization of these workflows are outside the curren
 
 - The first-time browser experience remains the active web scope.
 - Configuration is a distinct stage shared by CLI and web entry points.
-- Docker lifecycle behavior has one implementation behind the root `wbs` command.
+- Docker lifecycle behavior has one implementation behind the internal host launcher and experimental `development/wbs` entry point.
 - The Docker socket is confined to short-lived CLI or worker roles that expose no network service.
 - Existing installations should not be modified accidentally.
 

@@ -1,6 +1,6 @@
 # Wikibase Suite tools
 
-This directory contains the containerized Wikibase Suite configuration, installation, and lifecycle application. The downloaded [install](../../../install) bootstrap and checkout-local [wbs](../../../wbs) command provide its small host-side boundary.
+This directory contains the containerized Wikibase Suite configuration, installation, and lifecycle application. The downloaded [install](../../../install) bootstrap hands off to the internal host launcher, while [`development/wbs`](../../wbs) provides an explicitly experimental developer entry point.
 
 For normal installation instructions, start with [Install Wikibase Suite](../../../docs/install.md).
 
@@ -18,5 +18,5 @@ The same image also implements the terminal configurator and the currently inter
 
 Use this section only when developing, reviewing, or testing the tools.
 
-- [docs/README.md](docs/README.md) covers the bootstrap, checkout-local CLI, localhost installation, installer UI development, and WBS refs.
+- [docs/README.md](docs/README.md) covers the bootstrap, experimental development CLI, localhost installation, installer UI development, and WBS refs.
 - [docs/adrs/README.md](docs/adrs/README.md) lists architecture decision records.

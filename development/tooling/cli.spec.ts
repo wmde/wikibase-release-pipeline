@@ -24,7 +24,7 @@ describe( 'wbs-dev command contracts', () => {
 		);
 	} );
 
-	it( 'leaves Suite lifecycle ownership to the root wbs command', () => {
+	it( 'leaves Suite lifecycle ownership to the WBS tools launcher', () => {
 		const result = cli( '--help' );
 		assert.equal( result.status, 0, result.stderr );
 		assert.doesNotMatch( result.stdout, /^\s+suite(?:\s|$)/mu );

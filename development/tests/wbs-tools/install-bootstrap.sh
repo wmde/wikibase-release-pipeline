@@ -37,12 +37,10 @@ create_fixture_remote() {
   git -C "$fixture_repo" config user.name "WBS tools test"
 
   mkdir -p "$fixture_repo/scripts"
-  printf '#!/usr/bin/env bash\nexit 0\n' > "$fixture_repo/scripts/wbs.sh"
-  chmod +x "$fixture_repo/scripts/wbs.sh"
   # shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
-  printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$fixture_repo/wbs"
-  chmod +x "$fixture_repo/wbs"
-  git -C "$fixture_repo" add scripts/wbs.sh wbs
+  printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$fixture_repo/scripts/run-wbs-tools.sh"
+  chmod +x "$fixture_repo/scripts/run-wbs-tools.sh"
+  git -C "$fixture_repo" add scripts/run-wbs-tools.sh
 
   create_commit "$fixture_repo" "1.9.0"
   git -C "$fixture_repo" tag 'wbs@1.9.0'
@@ -101,11 +99,9 @@ git init -q "$prerelease_repo"
 git -C "$prerelease_repo" config user.email "wbs-tools-test@example.invalid"
 git -C "$prerelease_repo" config user.name "WBS tools test"
 mkdir -p "$prerelease_repo/scripts"
-printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/scripts/wbs.sh"
-chmod +x "$prerelease_repo/scripts/wbs.sh"
-printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/wbs"
-chmod +x "$prerelease_repo/wbs"
-git -C "$prerelease_repo" add scripts/wbs.sh wbs
+printf '#!/usr/bin/env bash\nexit 0\n' > "$prerelease_repo/scripts/run-wbs-tools.sh"
+chmod +x "$prerelease_repo/scripts/run-wbs-tools.sh"
+git -C "$prerelease_repo" add scripts/run-wbs-tools.sh
 create_commit "$prerelease_repo" "2.0.0-rc.1"
 git -C "$prerelease_repo" tag 'wbs@2.0.0-rc.1'
 git clone -q --bare "$prerelease_repo" "$prerelease_remote"
@@ -126,11 +122,9 @@ local_checkout="$TEST_ROOT/local-checkout"
 mkdir -p "$local_checkout/scripts"
 git init -q "$local_checkout"
 cp "$REPO_DIR/install" "$local_checkout/install"
-printf '#!/usr/bin/env bash\nexit 0\n' > "$local_checkout/scripts/wbs.sh"
-chmod +x "$local_checkout/scripts/wbs.sh"
 # shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
-printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$local_checkout/wbs"
-chmod +x "$local_checkout/wbs"
+printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$local_checkout/scripts/run-wbs-tools.sh"
+chmod +x "$local_checkout/scripts/run-wbs-tools.sh"
 WBS_REPO_URL="$TEST_ROOT/missing.git" WBS_REF='' \
   WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$local_checkout/install"
 grep -qx -- '--web' "$local_checkout/wbs-invocation"

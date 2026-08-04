@@ -99,7 +99,6 @@ function copyCheckout(): void {
 
 	for ( const file of [
 		'install',
-		'wbs',
 		'docker-compose.yml',
 		'.env.example',
 		'package.json'
