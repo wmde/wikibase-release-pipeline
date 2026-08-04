@@ -5,8 +5,8 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"test:scripts": "mocha --import=tsx \"scripts/test/**/*.spec.ts\"",
-		"typecheck:scripts": "tsc -p scripts/tsconfig.json"
+		"test:tooling": "mocha --import=tsx \"tooling/**/*.spec.ts\"",
+		"typecheck:tooling": "tsc -p tooling/tsconfig.json"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.7",

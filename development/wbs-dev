@@ -28,7 +28,7 @@ if [[ " $* " == *" update-sources "* ]] &&
 fi
 
 run_cli() {
-  exec pnpm exec tsx scripts/wbs-dev/cli.ts "$@"
+  exec pnpm exec tsx tooling/cli.ts "$@"
 }
 
 # Commands already running in the wbs-dev container can execute directly.
@@ -38,8 +38,27 @@ fi
 
 # Host and CI execution use the same wbs-dev image.
 docker network create wbs-dev > /dev/null 2>&1 || true
-./scripts/build-wbs-dev.sh
+
+WBS_DEV_IMAGE=${WBS_DEV_IMAGE:-wbs-dev:latest}
+export WBS_DEV_IMAGE
+build_args=(
+  --file Dockerfile
+  --load
+  --quiet
+  --tag "$WBS_DEV_IMAGE"
+)
+
+if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]]; then
+  build_args+=(--no-cache --pull)
+fi
+
+tooling/buildx.sh \
+  --cache-name wbs-dev \
+  --builder-name wbs-dev-builder \
+  --context . \
+  --silent \
+  -- "${build_args[@]}"
 
 exec docker compose --progress quiet run --rm wbs-dev \
-  -c 'pnpm exec tsx scripts/wbs-dev/cli.ts "$@"' \
+  -c 'pnpm exec tsx tooling/cli.ts "$@"' \
   -- "$@"

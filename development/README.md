@@ -25,7 +25,7 @@ Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Local configuration
 
-Put optional local overrides in `development/local.env`. The `wbs-dev` wrapper creates the file when it is missing. Test defaults come from the root `.env.example`, `development/test/test-services.env`, and `development/test/test-runner.env`.
+Put optional local overrides in `development/local.env`. The `wbs-dev` wrapper creates the file when it is missing. Test defaults come from the root `.env.example`, `development/tests/test-services.env`, and `development/tests/test-runner.env`.
 
 See the [integration test guide](./test/README.md#environment-and-local-overrides) for test-specific variables.
 
@@ -48,7 +48,7 @@ Use the documentation according to the task:
 
 - [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
 - [`test/`](./test): integration test runner, suites, and specifications
-- [`scripts/`](./scripts): internal implementation behind the `wbs-dev` commands
+- [`tooling/`](./tooling): internal implementation behind the `wbs-dev` commands
 - [`container/`](./container): Dockerized `wbs-dev` environment
 - [`docs/`](./docs): development guides, engineering notes, and architecture decisions
 

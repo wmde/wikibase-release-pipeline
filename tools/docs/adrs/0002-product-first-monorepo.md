@@ -17,7 +17,7 @@ Keep Wikibase Suite and its image development pipeline in one repository and org
 - The repository root contains the installable Compose product, installer, configuration, changelog, and user documentation.
 - `docs/images/` contains the canonical usage documentation and changelogs for independently usable Suite images.
 - `development/images/` contains image Dockerfiles and build inputs.
-- `development/test/` contains the integration test suite.
+- `development/tests/` contains the integration test suite.
 - Shared build and release tooling remains under `development/`.
 
 GitHub workflow definitions remain under the required root `.github/` location but invoke the tooling in `development/`.

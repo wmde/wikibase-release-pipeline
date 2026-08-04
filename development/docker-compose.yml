@@ -15,7 +15,7 @@ services:
     scale: 0
     build:
       context: .
-      dockerfile: container/Dockerfile
+      dockerfile: Dockerfile
     working_dir: /workspace/development
     stop_grace_period: 1s
     ports:
@@ -31,7 +31,7 @@ services:
       - buildx:/root/.docker/buildx
     privileged: true
     env_file:
-      - test/test-runner.env
+      - tests/test-runner.env
       - local.env
     environment:
       HOST_PWD: ${PWD}/..

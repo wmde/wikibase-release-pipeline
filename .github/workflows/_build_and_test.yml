@@ -90,7 +90,7 @@ jobs:
           - repo
           - extensions
           - queryservice
-          - repo_client
+          - repo-client
           - quickstatements
           - pingback
           - opensearch
@@ -111,12 +111,12 @@ jobs:
       - name: Show logs
         if: failure()
         run: |
-          ls -lahr development/test/suites/${{ matrix.suite }}/results development/test/suites/${{ matrix.suite }}/results/*
-          tail -n +1 development/test/suites/${{ matrix.suite }}/results/*.log
+          ls -lahr development/tests/${{ matrix.suite }}/results development/tests/${{ matrix.suite }}/results/*
+          tail -n +1 development/tests/${{ matrix.suite }}/results/*.log
         continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
-          path: development/test/suites/**/results
+          path: development/tests/*/results
