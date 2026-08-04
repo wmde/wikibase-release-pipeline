@@ -33,6 +33,8 @@ Use the repository-root `.env` and Compose configuration to run Wikibase Suite a
 
 When the repository-root `.env` is missing or incomplete, interactive `wbs up` resumes the command-line configurator. Existing values become prompt defaults and existing passwords can be retained without displaying them. An existing `.env` remains the configuration base; template values are used only when creating a new configuration. With `--build`, the configurator supplies local host, administrator, and database defaults for values that are still missing.
 
+Optional repository-root `local.env` values override `.env` when lifecycle commands run Docker Compose. The configurator continues to own `.env` and never modifies `local.env`. The WBS host runner sources this trusted, shell-compatible file before preparing the runtime and tools image. For example, developers building every image locally on ARM can set `WBS_SKIP_ARCH_CHECK=true` without changing the supported installer defaults.
+
 The `development/wbs` lifecycle commands are an internal, experimental development interface. They are intentionally absent from the repository root and are not documented as an end-user operations feature yet.
 
 The current local profile uses `wikibase.test` and `query.wikibase.test`. The configurator prints the hosts-file entry needed when those names do not already resolve locally. Local DNS and certificate handling remain separate from image and lifecycle selection.

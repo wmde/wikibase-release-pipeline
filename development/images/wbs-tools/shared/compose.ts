@@ -12,6 +12,7 @@ export type SuiteOptions = {
 
 const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
+const localEnvFile = join( repositoryRoot, 'local.env' );
 const REQUIRED_CONFIGURATION_KEYS = [
 	'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST', 'MW_ADMIN_NAME', 'MW_ADMIN_EMAIL',
 	'MW_ADMIN_PASS', 'DB_PASS', 'DB_NAME', 'DB_USER'
@@ -29,9 +30,12 @@ function composeArgs( localImages = false ): string[] {
 	const args = [
 		'compose',
 		'--project-directory', repositoryRoot,
-		'--env-file', envFile,
-		'--file', join( repositoryRoot, 'docker-compose.yml' )
+		'--env-file', envFile
 	];
+	if ( existsSync( localEnvFile ) ) {
+		args.push( '--env-file', localEnvFile );
+	}
+	args.push( '--file', join( repositoryRoot, 'docker-compose.yml' ) );
 	if ( localImages ) {
 		args.push( '--file', join( repositoryRoot, 'development/docker-compose.local-images.yml' ) );
 	}

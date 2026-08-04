@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -140,6 +140,38 @@ describe( 'Installer supporting contracts', () => {
 			assert.equal( config.TEMPLATE_ONLY, undefined );
 		} finally {
 			rmSync( configRoot, { recursive: true, force: true } );
+		}
+	} );
+
+	it( 'loads local.env after .env for lifecycle Compose commands', () => {
+		const composeRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'compose-' ) );
+		try {
+			writeFileSync( join( composeRoot, '.env' ), 'IMAGE_TAG=published\n' );
+			writeFileSync( join( composeRoot, 'local.env' ), 'IMAGE_TAG=local\n' );
+			writeFileSync( join( composeRoot, 'docker-compose.yml' ), 'services: {}\n' );
+			const fakeDocker = join( composeRoot, 'docker' );
+			writeFileSync(
+				fakeDocker,
+				'#!/bin/sh\nprintf "%s\\n" "$@" > /app/wbs/docker-arguments\n'
+			);
+			chmodSync( fakeDocker, 0o755 );
+			execFileSync(
+				'docker',
+				[
+					'run', '--rm',
+					'-v', `${ composeRoot }:/app/wbs`,
+					'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
+					toolsImage(), 'node', '--input-type=module', '--eval',
+					"import('./dist/shared/compose.js').then(({ status }) => status())"
+				],
+				{ encoding: 'utf8' }
+			);
+			assert.match(
+				readFileSync( join( composeRoot, 'docker-arguments' ), 'utf8' ),
+				/--env-file\n\/app\/wbs\/\.env\n--env-file\n\/app\/wbs\/local\.env\n/u
+			);
+		} finally {
+			rmSync( composeRoot, { recursive: true, force: true } );
 		}
 	} );
 

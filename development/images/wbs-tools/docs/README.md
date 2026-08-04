@@ -109,6 +109,7 @@ This first builds the checkout's tools image and then uses it to build every pro
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.
+- If root `local.env` exists, Docker Compose loads it after `.env`. The configurator writes only `.env`.
 - After launch, the saved `.env` configuration is displayed. Store credentials securely.
 
 Host-side scripts retain only the bootstrap boundary: Docker checks, tools-image selection, temporary web-container orchestration, and mounting the Docker socket into CLI or worker roles. [`scripts/run-wbs-tools.sh`](../../../../scripts/run-wbs-tools.sh) is the single internal dispatcher and tools-container launcher. Test-only environment variables are explicitly requested by the development harness instead of being part of the product launcher.
