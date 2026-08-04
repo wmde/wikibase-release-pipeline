@@ -108,6 +108,17 @@
 					/>
 				</form>
 			</section>
+
+			<div v-if="setupComplete" class="feedback-action">
+				<a
+					class="feedback-link"
+					href="https://forms.zohopublic.eu/wmde/form/ServiceSatisfaction1/formperma/6KQbSMNVmkO-wrpPWa5OW_9HUQbTFdPBRP07Q94fe-8"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Feedback?
+				</a>
+			</div>
 		</div>
 
 		<domain-help

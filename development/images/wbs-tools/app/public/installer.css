@@ -48,6 +48,39 @@ body {
   padding: 30px 36px;
 }
 
+.feedback-action {
+  display: flex;
+  justify-content: center;
+}
+
+.feedback-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color-progressive, #36c);
+  border-radius: 2px;
+  background: var(--background-color-progressive, #36c);
+  color: var(--color-inverted-fixed, #fff);
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.feedback-link:hover,
+.feedback-link:focus {
+  border-color: var(--border-color-progressive--hover, #3056a9);
+  background: var(--background-color-progressive--hover, #3056a9);
+  color: var(--color-inverted-fixed, #fff);
+  text-decoration: none;
+}
+
+.feedback-link:focus-visible {
+  outline: 2px solid var(--box-shadow-color-progressive--focus, #36c);
+  outline-offset: 2px;
+}
+
 .form-submit-proxy {
   position: absolute;
   width: 1px;
