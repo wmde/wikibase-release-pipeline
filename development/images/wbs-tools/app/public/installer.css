@@ -57,6 +57,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   min-height: 32px;
   padding: 6px 12px;
   border: 1px solid var(--border-color-progressive, #36c);
@@ -66,6 +67,10 @@ body {
   font-weight: 700;
   line-height: 1.4;
   text-decoration: none;
+}
+
+.feedback-link .cdx-icon {
+  color: inherit;
 }
 
 .feedback-link:hover,
