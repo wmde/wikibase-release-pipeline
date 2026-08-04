@@ -20,7 +20,7 @@ describe( 'wbs-dev command contracts', () => {
 		assert.match( result.stdout, /--headed/u );
 		assert.match(
 			result.stdout,
-			/tooling \(fast development-tooling fixtures\)/u
+			/wbs-dev-tools \(fast development-tooling tests\)/u
 		);
 	} );
 
@@ -48,8 +48,8 @@ describe( 'wbs-dev command contracts', () => {
 		assert.match( web.stdout, /cannot be skipped/u );
 	} );
 
-	it( 'rejects integration options for the tooling-only target', () => {
-		const result = cli( 'test', 'tooling', '--headed' );
+	it( 'rejects integration options for the wbs-dev-tools target', () => {
+		const result = cli( 'test', 'wbs-dev-tools', '--headed' );
 		assert.notEqual( result.status, 0 );
 		assert.match( result.stderr, /does not accept integration options/u );
 	} );

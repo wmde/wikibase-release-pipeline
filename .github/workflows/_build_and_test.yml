@@ -39,10 +39,6 @@ jobs:
       - run: ./wbs-dev lint
         working-directory: development
 
-      - name: Test wbs-dev tooling
-        run: ./wbs-dev test tooling
-        working-directory: development
-
   build:
     needs:
       - skip_check
@@ -87,6 +83,7 @@ jobs:
       fail-fast: false
       matrix:
         suite:
+          - wbs-dev-tools
           - repo
           - extensions
           - queryservice
@@ -104,19 +101,25 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - name: "Run ${{ matrix.suite }} test suite"
+      - name: Run wbs-dev tooling test suite
+        if: matrix.suite == 'wbs-dev-tools'
+        run: ./wbs-dev test wbs-dev-tools
+        working-directory: development
+
+      - name: "Run ${{ matrix.suite }} integration test suite"
+        if: matrix.suite != 'wbs-dev-tools'
         run: ./wbs-dev test ${{ matrix.suite }} --skip-build
         working-directory: development
 
       - name: Show logs
-        if: failure()
+        if: failure() && matrix.suite != 'wbs-dev-tools'
         run: |
           ls -lahr development/tests/${{ matrix.suite }}/results development/tests/${{ matrix.suite }}/results/*
           tail -n +1 development/tests/${{ matrix.suite }}/results/*.log
         continue-on-error: true
 
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: failure() && matrix.suite != 'wbs-dev-tools'
         with:
           name: dev-${{ github.run_id }}-${{ matrix.suite }}-test-results
           path: development/tests/*/results

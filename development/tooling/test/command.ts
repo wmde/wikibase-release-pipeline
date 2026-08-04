@@ -94,23 +94,23 @@ async function runTests(
 	context: RepositoryContext
 ): Promise<void> {
 	const suites = discoverSuiteNames( context );
-	const selected = resolveNames( requested, [ 'tooling', ...suites ], {
+	const selected = resolveNames( requested, [ 'wbs-dev-tools', ...suites ], {
 		command: 'test',
 		noun: 'target'
 	} );
-	const includeTooling = selected.includes( 'tooling' );
-	const integrationSuites = selected.filter( ( name ) => name !== 'tooling' );
+	const includeWbsDevTools = selected.includes( 'wbs-dev-tools' );
+	const integrationSuites = selected.filter( ( name ) => name !== 'wbs-dev-tools' );
 
 	if (
-		includeTooling &&
+		includeWbsDevTools &&
 		integrationSuites.length === 0 &&
 		hasIntegrationOptions( options )
 	) {
 		throw new Error(
-			'The tooling test target does not accept integration options.'
+			'The wbs-dev-tools test target does not accept integration options.'
 		);
 	}
-	if ( includeTooling ) {
+	if ( includeWbsDevTools ) {
 		await runTasks(
 			[
 				{
@@ -136,8 +136,8 @@ export function registerTestCommand(
 	const suites = discoverSuiteNames( context );
 	const command = program
 		.command( 'test' )
-		.description( 'Run tooling tests and integration suites.' )
-		.argument( '[targets...]', 'tooling|SUITE...|all' );
+		.description( 'Run wbs-dev tooling tests and integration suites.' )
+		.argument( '[targets...]', 'wbs-dev-tools|SUITE...|all' );
 	addIntegrationOptions( command );
 	command
 		.addHelpText(
@@ -145,13 +145,13 @@ export function registerTestCommand(
 			[
 				'',
 				'Targets:',
-				'  tooling (fast development-tooling fixtures)',
+				'  wbs-dev-tools (fast development-tooling tests)',
 				`  ${ suites.join( ', ' ) }`,
-				'  With no target or "all", run tooling and every integration suite.',
+				'  With no target or "all", test wbs-dev tooling and every integration suite.',
 				'',
 				'Examples:',
 				'  wbs-dev test',
-				'  wbs-dev test tooling',
+				'  wbs-dev test wbs-dev-tools',
 				'  wbs-dev test repo queryservice --headed',
 				'  wbs-dev test repo --spec repo/special-new-item.spec.ts',
 				'  wbs-dev test repo --setup',
