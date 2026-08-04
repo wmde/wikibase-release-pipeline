@@ -10,6 +10,7 @@ import TestSettings, {
 	TestSuiteSettings
 } from '../_types/test-settings.js';
 import loadEnvFiles from './load-env-files.js';
+import { applyMaxInstancesCap } from './max-instances.js';
 
 export const ONE_DAY_IN_MS = 86400000;
 
@@ -72,8 +73,12 @@ export const makeTestSettings = (
 		name: settings.name,
 		specs: settings.specs
 	};
-	const maxInstances =
+	const suiteMaxInstances =
 		settings.maxInstances ?? parseInt( process.env.MAX_INSTANCES );
+	const maxInstances = applyMaxInstancesCap(
+		suiteMaxInstances,
+		process.env.WBS_TEST_MAX_INSTANCES
+	);
 	// Docker Compose uses this value to configure the Selenium session limit.
 	// Keep it aligned with the number of workers WebdriverIO will start.
 	testEnvVars.MAX_INSTANCES = maxInstances.toString();

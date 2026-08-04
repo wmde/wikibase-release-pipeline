@@ -77,6 +77,8 @@ Contribution expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 Put optional local overrides in `development/local.env`. The `wbs-dev` wrapper creates the file when it is missing. Test defaults come from the root `.env.example`, `development/tests/test-services.env`, and `development/tests/test-runner.env`.
 
+If parallel browser-test workers exhaust local CPU or memory, set `WBS_TEST_MAX_INSTANCES=1` in `development/local.env`. This caps every suite without changing its CI defaults.
+
 See the [integration test guide](./tests/README.md#environment-and-local-overrides) for test-specific variables.
 
 ## Documentation map
