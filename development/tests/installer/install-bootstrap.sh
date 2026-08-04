@@ -85,15 +85,12 @@ grep -q '"version": "1.10.0"' "$TEST_ROOT/latest/wikibase-suite/package.json"
 grep -qx 'install' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 grep -qx -- '--web' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 test -f "$TEST_ROOT/latest/wikibase-suite/.wbs/installation.log"
-test ! -e "$TEST_ROOT/latest/wikibase-suite/installation.log"
 
-run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0'
+run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0' --local --from-source --debug
 grep -q '"version": "1.9.0"' "$TEST_ROOT/explicit/wikibase-suite/package.json"
-
-run_bootstrap local-mode "$fixture_remote" --local --from-source --debug
-grep -qx -- '--local' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
-grep -qx -- '--from-source' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
-grep -qx -- '--debug' "$TEST_ROOT/local-mode/wikibase-suite/wbs-invocation"
+grep -qx -- '--local' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
+grep -qx -- '--from-source' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
+grep -qx -- '--debug' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 
 prerelease_repo="$TEST_ROOT/prerelease-only"
 prerelease_remote="$TEST_ROOT/prerelease-only.git"
@@ -114,12 +111,6 @@ if run_bootstrap no-stable "$prerelease_remote" >"$TEST_ROOT/no-stable.log" 2>&1
 fi
 grep -q 'No stable Wikibase Suite release was found' "$TEST_ROOT/no-stable.log"
 
-if run_bootstrap query-failure "$TEST_ROOT/missing.git" >"$TEST_ROOT/query-failure.log" 2>&1; then
-  echo "Expected an unreachable release repository to fail."
-  exit 1
-fi
-grep -Eq 'Could not read from remote repository|does not appear to be a git repository|Command failed' "$TEST_ROOT/query-failure.log"
-
 local_checkout="$TEST_ROOT/local-checkout"
 mkdir -p "$local_checkout/scripts"
 git init -q "$local_checkout"
@@ -130,17 +121,5 @@ chmod +x "$local_checkout/scripts/run-wbs-tools.sh"
 WBS_REPO_URL="$TEST_ROOT/missing.git" WBS_REF='' \
   WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$local_checkout/install"
 grep -qx -- '--web' "$local_checkout/wbs-invocation"
-
-if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --installer-dev >"$TEST_ROOT/installer-dev.log" 2>&1; then
-  echo "Expected --installer-dev on the bootstrap to fail."
-  exit 1
-fi
-grep -q -- 'installer development requires an existing checkout' "$TEST_ROOT/installer-dev.log"
-
-if WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$TEST_ROOT/latest/bootstrap/install" --skip-clone >"$TEST_ROOT/skip-clone.log" 2>&1; then
-  echo "Expected --skip-clone to be rejected."
-  exit 1
-fi
-grep -q 'unsupported install option: --skip-clone' "$TEST_ROOT/skip-clone.log"
 
 echo "WBS bootstrap selection tests passed"

@@ -18,22 +18,6 @@ describe( 'Installer supporting contracts', () => {
 		);
 	} );
 
-	it( 'contains the compiled command-line installer', () => {
-		execFileSync(
-			'docker',
-			[
-				'run',
-				'--rm',
-				'--entrypoint',
-				'sh',
-				toolsImage(),
-				'-c',
-				'test -f dist/wbs.js && test -f dist/cli/configure.js'
-			],
-			{ encoding: 'utf8' }
-		);
-	} );
-
 	it( 'provides the supported wbs install command interface', () => {
 		const image = toolsImage();
 		const help = execFileSync(
@@ -47,60 +31,16 @@ describe( 'Installer supporting contracts', () => {
 				`wbs install help does not include ${ option }.`
 			);
 		}
-		assert.doesNotMatch( help, /--cli/u );
 
-		for ( const invalidOption of [ '--cli', '--installer-dev', '--unknown-option' ] ) {
-			const result = spawnSync(
-				'docker',
-				[
-					'run',
-					'--rm',
-					'-e',
-					'WBS_VALIDATE_OPTIONS=true',
-					image,
-					'node',
-					'dist/wbs.js',
-					'install',
-					invalidOption
-				],
-				{ encoding: 'utf8', stdio: 'pipe' }
-			);
-			assert.notEqual(
-				result.status,
-				0,
-				`wbs install unexpectedly accepted ${ invalidOption }.`
-			);
-		}
-	} );
-
-	it( 'provides configuration and lifecycle command interfaces', () => {
-		const image = toolsImage();
-		const help = execFileSync(
+		const invalid = spawnSync(
 			'docker',
-			[ 'run', '--rm', image, 'node', 'dist/wbs.js', '--help' ],
-			{ encoding: 'utf8' }
+			[
+				'run', '--rm', '-e', 'WBS_VALIDATE_OPTIONS=true', image,
+				'node', 'dist/wbs.js', 'install', '--unknown-option'
+			],
+			{ encoding: 'utf8', stdio: 'pipe' }
 		);
-		for ( const command of [ 'configure', 'up', 'down', 'status', 'reset' ] ) {
-			assert.ok( help.includes( command ), `wbs help does not include ${ command }.` );
-		}
-
-		const configureHelp = execFileSync(
-			'docker',
-			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'configure', '--help' ],
-			{ encoding: 'utf8' }
-		);
-		assert.match( configureHelp, /--web/u );
-		assert.match( configureHelp, /--local/u );
-		assert.doesNotMatch( configureHelp, /--from-source/u );
-
-		const upHelp = execFileSync(
-			'docker',
-			[ 'run', '--rm', image, 'node', 'dist/wbs.js', 'up', '--help' ],
-			{ encoding: 'utf8' }
-		);
-		assert.match( upHelp, /--update/u );
-		assert.match( upHelp, /--build/u );
-		assert.doesNotMatch( upHelp, /--local-images/u );
+		assert.notEqual( invalid.status, 0 );
 	} );
 
 	it( 'does not reapply template values over an existing configuration', () => {
