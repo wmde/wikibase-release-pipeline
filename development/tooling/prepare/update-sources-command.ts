@@ -1,7 +1,7 @@
 import type { Command } from 'commander';
 import type { RepositoryContext } from '../context.js';
+import { applyFileUpdates, type FileUpdate } from '../lib/file-updates.js';
 import { resolveNames } from '../selection.js';
-import { applyFileUpdates, type FileUpdate } from './files.js';
 import { planSourceUpdate, sourceUpdateImages } from './source-providers.js';
 
 async function updateSources(

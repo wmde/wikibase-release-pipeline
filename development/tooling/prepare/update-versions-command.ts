@@ -1,12 +1,12 @@
 import type { Command } from 'commander';
 import type { RepositoryContext } from '../context.js';
 import { GitRepository } from '../git.js';
+import { applyFileUpdates, type FileUpdate } from '../lib/file-updates.js';
+import { planVersionUpdate, type VersionPlan } from '../lib/versioning.js';
 import {
 	discoverReleaseProjects,
 	resolveProjectSelections
 } from '../projects.js';
-import { applyFileUpdates, type FileUpdate } from './files.js';
-import { planVersionUpdate, type VersionPlan } from './versioning.js';
 
 function isVersionPlan( plan: VersionPlan | undefined ): plan is VersionPlan {
 	return plan !== undefined;

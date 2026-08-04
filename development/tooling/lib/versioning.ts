@@ -5,7 +5,7 @@ import semver from 'semver';
 import type { RepositoryContext } from '../context.js';
 import { GitRepository } from '../git.js';
 import type { ReleaseProject } from '../projects.js';
-import { assertStableVersion } from '../versions.js';
+import type { FileUpdate } from './file-updates.js';
 
 type Bump = 'major' | 'minor' | 'patch';
 
@@ -14,7 +14,15 @@ interface CommitRecord {
 	bump?: Bump;
 }
 
-import type { FileUpdate } from './files.js';
+const STABLE_VERSION = /^\d+\.\d+\.\d+$/u;
+
+export function assertStableVersion( version: string, context: string ): void {
+	if ( !STABLE_VERSION.test( version ) || !semver.valid( version ) ) {
+		throw new Error(
+			`${ context } must use a stable MAJOR.MINOR.PATCH version; received "${ version }".`
+		);
+	}
+}
 
 export interface VersionPlan {
 	project: ReleaseProject;
