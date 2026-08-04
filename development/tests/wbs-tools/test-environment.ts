@@ -35,7 +35,8 @@ const SUITE_ROOT = join(
 	HOST_REPOSITORY_ROOT,
 	'development/tests/wbs-tools'
 );
-const TEMP_ROOT = join( SUITE_ROOT, 'tmp' );
+export const WBS_TOOLS_TEMP_ROOT = join( SUITE_ROOT, 'tmp' );
+const TEMP_ROOT = WBS_TOOLS_TEMP_ROOT;
 const CHECKOUT_ROOT = join( TEMP_ROOT, 'checkout' );
 const RESULT_ROOT = join( SUITE_ROOT, 'results' );
 const INSTALL_LOG = join( CHECKOUT_ROOT, 'installation.log' );
@@ -186,6 +187,13 @@ export function startInstaller(): void {
 			WBS_INSTALLER_PORT: String( INSTALLER_PORT ),
 			WBS_SKIP_ARCH_CHECK: 'true',
 			WBS_SKIP_DEPENDENCY_INSTALLS: 'true',
+			WBS_TOOLS_ENV_PASSTHROUGH: [
+				'WBS_E2E_PULL_POLICY',
+				'WBS_E2E_HTTP_PORT',
+				'WBS_E2E_HTTPS_PORT',
+				'WBS_TEST_IMAGE_REGISTRY',
+				'WBS_TEST_IMAGE_TAG'
+			].join( ' ' ),
 			WBS_TOOLS_IMAGE: image,
 			WBS_TOOLS_SKIP_PULL: skipPull
 		}

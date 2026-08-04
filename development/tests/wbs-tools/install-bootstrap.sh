@@ -6,7 +6,8 @@ REPO_DIR="$(cd "$TEST_DIR/../../.." && pwd)"
 if [[ -n "${HOST_PWD:-}" ]]; then
   mkdir -p "$REPO_DIR/development/tests/wbs-tools/tmp"
   TEST_ROOT="$(mktemp -d "$REPO_DIR/development/tests/wbs-tools/tmp/bootstrap.XXXXXX")"
-  HOST_TEST_ROOT="${TEST_ROOT/#$REPO_DIR/$HOST_PWD}"
+  HOST_REPO_DIR="$(cd "$HOST_PWD" && pwd)"
+  HOST_TEST_ROOT="${TEST_ROOT/#$REPO_DIR/$HOST_REPO_DIR}"
 else
   TEST_ROOT="$(mktemp -d)"
   HOST_TEST_ROOT="$TEST_ROOT"

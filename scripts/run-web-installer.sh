@@ -9,7 +9,6 @@ export INSTALLER_DEV_MOCK
 export DEBUG
 export LOCALHOST
 export LAUNCH_TRIGGER_PATH
-export RESET
 export SCRIPTS_DIR
 export WBS_STATE_DIR
 export CONFIGURE_ONLY
@@ -19,6 +18,8 @@ CONFIGURE_ARGS=( "$@" )
 
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
+# shellcheck disable=SC1091
+source "$SCRIPTS_DIR/run-wbs-tools.sh"
 # -- Script Specific Variables --
 
 CERT_EMAIL="${CERT_EMAIL:-wbs-setup@wikimedia.de}"
@@ -98,20 +99,12 @@ remove_any_existing_installer_webserver() {
 
 start_installer_worker() {
   local worker_args=(install-worker)
-  local environment_args=()
   if [[ "${WBS_BUILD_IMAGES:-false}" == true ]]; then
     worker_args+=(--build)
   elif [[ "${WBS_LOCAL_IMAGES:-false}" == true ]]; then
     worker_args+=(--local-images)
   fi
-  for variable_name in \
-    COMPOSE_PROJECT_NAME BUILD_CACHE_REGISTRY GITHUB_ACTIONS \
-    WBS_E2E_PULL_POLICY WBS_E2E_HTTP_PORT WBS_E2E_HTTPS_PORT \
-    WBS_TEST_IMAGE_REGISTRY WBS_TEST_IMAGE_TAG; do
-    if [[ -v "$variable_name" ]]; then
-      environment_args+=(-e "$variable_name")
-    fi
-  done
+  prepare_wbs_tools_environment_args
 
   run_args docker run -d --rm \
     --name "$INSTALLER_WORKER_CONTAINER_NAME" \
@@ -120,7 +113,7 @@ start_installer_worker() {
     -e "ENV_FILE_PATH=$ENV_FILE_PATH" \
     -e "LOG_PATH=$LOG_PATH" \
     -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_PATH" \
-    "${environment_args[@]}" \
+    "${WBS_TOOLS_ENVIRONMENT_ARGS[@]}" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$WBS_DIR:$WBS_DIR" \
     -w "$WBS_DIR" \
@@ -147,9 +140,7 @@ compose_services_are_running() {
 }
 
 detect_existing_install_state() {
-  if $RESET; then
-    echo "none"
-  elif compose_services_are_running; then
+  if compose_services_are_running; then
     echo "running"
   elif [ -f "$WBS_DIR/config/LocalSettings.php" ]; then
     echo "previous"

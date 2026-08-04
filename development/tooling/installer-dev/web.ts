@@ -49,7 +49,6 @@ export async function runInstallerDevWeb(
 			output: 'inherit',
 			env: {
 				...process.env,
-				CLI: 'false',
 				DEBUG: 'false',
 				ENV_FILE_PATH: join( root, '.env' ),
 				INSTALLER_DEV: 'true',
@@ -58,9 +57,7 @@ export async function runInstallerDevWeb(
 				LAUNCH_TRIGGER_PATH: join( stateRoot, 'installer-dev-launch-ready' ),
 				LOCALHOST: 'true',
 				LOG_PATH: join( stateRoot, 'installer-dev.log' ),
-				RESET: 'false',
 				SKIP_DEPENDENCY_INSTALLS: 'true',
-				SKIP_LAUNCH: 'false',
 				SCRIPTS_DIR: join( root, 'scripts' ),
 				WBS_DIR: root,
 				WBS_INSTALLER_CONTAINER_NAME: 'wbs-dev-installer-web',
@@ -68,6 +65,7 @@ export async function runInstallerDevWeb(
 				WBS_LAUNCH_FOREGROUND: 'true',
 				WBS_LOCAL_IMAGES: 'true',
 				WBS_STATE_DIR: stateRoot,
+				WBS_TOOLS_ENV_PASSTHROUGH: 'WBS_TEST_IMAGE_REGISTRY WBS_TEST_IMAGE_TAG',
 				WBS_TOOLS_IMAGE: `${ imageRegistry }/wbs-tools:${ imageTag }`
 			}
 		}

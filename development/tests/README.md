@@ -104,7 +104,7 @@ An existing suite automatically discovers a new spec only when its `<suite>.conf
 - Keep assertions in the spec so the behavior being verified remains visible; helpers should primarily arrange state or expose reusable interactions.
 - Run the smallest relevant spec while iterating, then its complete suite before submitting the change. Test commands build the local images unless `--skip-build` is given.
 
-The `wbs-tools` suite includes the bootstrap selection checks in `tests/wbs-tools/install-bootstrap.sh` and the end-to-end installer test in `tests/wbs-tools/install.spec.ts`. The latter uses the installer's supported local mode with reserved `.test` hostnames, boots the complete deployment, waits for its services and configured health checks, and logs into Wikibase using the administrator credentials entered in the form.
+The `wbs-tools` suite includes the bootstrap selection checks in `tests/wbs-tools/install-bootstrap.sh` and the installer tests in `tests/wbs-tools/install.spec.ts`. These verify the command interfaces, existing-configuration precedence, that CLI configuration completes before lifecycle operations begin, and the web/worker Docker-socket isolation boundary. The full browser flow uses the installer's supported local mode with reserved `.test` hostnames, verifies the submitted `.env` values, boots the complete deployment, waits for its services and configured health checks, and logs into Wikibase using the administrator credentials entered in the form.
 
 This exercises the supported `--local` path. It does not cover public DNS matching, public certificate issuance, firewall configuration, or reachability from outside the Docker host; those remain separate deployment concerns.
 

@@ -65,41 +65,10 @@ debug() {
   fi
 }
 
-# run "command string"
-# Always logs. Mirrors to stdout only if INTERACTIVE && DEBUG.
-# Log format:
-#   2025-... BEGIN RUN: command string [debug]
-#   <raw command output...>
-run() {
-  local cmd="$*"
+_run_logged() {
+  local rendered_command="$1"
+  shift
   local command_status=0
-  printf '%s %s [debug]\n' "$(_timestamp)" "BEGIN RUN: $cmd" >> "$LOG_PATH"
-
-  if $INTERACTIVE && [ "$DEBUG" = true ]; then
-    # output to screen and log
-    if bash -c "$cmd" 2>&1 | tee -a "$LOG_PATH"; then
-      :
-    else
-      command_status=$?
-    fi
-  else
-    # log only
-    if bash -c "$cmd" >>"$LOG_PATH" 2>&1; then
-      :
-    else
-      command_status=$?
-    fi
-  fi
-  printf '\n' >> "$LOG_PATH"
-  printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
-  return "$command_status"
-}
-
-# Execute an argument array without reparsing it through a shell.
-run_args() {
-  local rendered_command
-  local command_status=0
-  printf -v rendered_command '%q ' "$@"
   printf '%s %s [debug]\n' "$(_timestamp)" "BEGIN RUN: $rendered_command" >> "$LOG_PATH"
 
   if $INTERACTIVE && [ "$DEBUG" = true ]; then
@@ -118,4 +87,17 @@ run_args() {
   printf '\n' >> "$LOG_PATH"
   printf '%s %s [debug]\n' "$(_timestamp)" "END RUN" >> "$LOG_PATH"
   return "$command_status"
+}
+
+# Execute a command string through Bash. Use only where shell syntax such as a
+# pipeline or redirect is required.
+run() {
+  _run_logged "$*" bash -c "$*"
+}
+
+# Execute an argument array without reparsing it through a shell.
+run_args() {
+  local rendered_command
+  printf -v rendered_command '%q ' "$@"
+  _run_logged "$rendered_command" "$@"
 }

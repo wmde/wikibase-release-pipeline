@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -13,6 +12,7 @@ import {
 	DATABASE_USER,
 	INSTALL_TIMEOUT,
 	WIKIBASE_URL,
+	WBS_TOOLS_TEMP_ROOT,
 	toolsImage,
 	verifyCliInstallWaitsForConfiguration,
 	verifyFinalizedInstallerArtifacts,
@@ -137,9 +137,12 @@ describe( 'WBS tools installer', () => {
 	} );
 
 	it( 'does not reapply template values over an existing configuration', () => {
-		const configRoot = mkdtempSync( join( tmpdir(), 'wbs-config-' ) );
+		const configRoot = mkdtempSync( join( WBS_TOOLS_TEMP_ROOT, 'configuration-' ) );
 		try {
+			// Paths are contained by the test-owned temporary directory.
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			writeFileSync( join( configRoot, '.env.example' ), 'TEMPLATE_ONLY=template\n' );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			writeFileSync( join( configRoot, '.env' ), 'EXISTING_ONLY=preserved\n' );
 			const input = {
 				MW_ADMIN_EMAIL: 'admin@example.test',

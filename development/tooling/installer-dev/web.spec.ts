@@ -70,7 +70,6 @@ describe( 'installer-dev web environment', () => {
 		assert.equal( environment.INSTALLER_DEV, 'true' );
 		assert.equal( environment.INSTALLER_DEV_MOCK, 'false' );
 		assert.equal( environment.LOCALHOST, 'true' );
-		assert.equal( environment.SKIP_LAUNCH, 'false' );
 		assert.equal(
 			environment.WBS_LAUNCH_FOREGROUND,
 			'true'
@@ -107,6 +106,5 @@ describe( 'installer-dev web environment', () => {
 		const environment = runner.calls[ 0 ].options.env;
 		assert.ok( environment );
 		assert.equal( environment.INSTALLER_DEV_MOCK, 'true' );
-		assert.equal( environment.SKIP_LAUNCH, 'false' );
 	} );
 } );

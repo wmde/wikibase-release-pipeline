@@ -37,6 +37,8 @@ From an existing checkout, use the location-independent root command. It resolve
 
 `wbs install` uses the terminal wizard by default. `wbs install --web` uses the browser UI. Both paths use the same containerized Commander entry point and the same host orchestration scripts.
 
+When configuration is resumed, an existing `.env` is the sole base and submitted answers update it without importing new values from the template. The template is used only when creating a new configuration. This preserves custom and release-specific settings while still allowing the CLI or web form to fill missing required values.
+
 For local networking, add `--local`. This retains the normal dependency and checkout behavior; it only selects the no-public-domain networking mode. The installer then defaults to:
 
 ```bash
@@ -90,6 +92,7 @@ This first builds the checkout's tools image and then uses it to build every pro
 
 ## Runtime behavior
 
+- The root `wbs` stub and lifecycle commands are currently internal development interfaces, not announced end-user operations features.
 - Remote installs discover the highest stable `wbs@MAJOR.MINOR.PATCH` tag and clone it to `~/wikibase-suite`. Set `WBS_DIR` to use a custom checkout path.
 - Normal installations pull the compatible WBS tools major selected by the installation scripts, currently `wikibase/wbs-tools:1`. Set `WBS_TOOLS_IMAGE` to test a different published image.
 - Source installations requested with `--from-source` build `wikibase/wbs-tools:latest` and explicitly select `development/docker-compose.local-images.yml` for that operation.
@@ -99,6 +102,8 @@ This first builds the checkout's tools image and then uses it to build every pro
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.
 - After launch, the saved `.env` configuration is displayed. Store credentials securely.
+
+Host-side scripts retain only the bootstrap boundary: Docker checks, tools-image selection, temporary web-container orchestration, and mounting the Docker socket into CLI or worker roles. [`scripts/run-wbs-tools.sh`](../../../../scripts/run-wbs-tools.sh) centralizes the generic tools-container invocation. Test-only environment variables are explicitly requested by the development harness instead of being part of the product launcher.
 
 ## Local installer state
 
