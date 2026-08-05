@@ -59,6 +59,6 @@ lib/buildx.sh \
   --silent \
   -- "${build_args[@]}"
 
-exec docker compose --progress quiet run --rm wbs-dev \
+exec docker compose --progress quiet run --no-TTY --rm wbs-dev \
   -c 'pnpm exec tsx wbs-dev.ts "$@"' \
   -- "$@"

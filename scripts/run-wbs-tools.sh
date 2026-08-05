@@ -5,7 +5,7 @@
 prepare_wbs_tools_environment_args() {
   WBS_TOOLS_ENVIRONMENT_ARGS=()
   local variable_name
-  local variable_names="COMPOSE_PROJECT_NAME BUILD_CACHE_REGISTRY GITHUB_ACTIONS ${WBS_TOOLS_ENV_PASSTHROUGH:-}"
+  local variable_names="COMPOSE_PROJECT_NAME BUILD_CACHE_REGISTRY GITHUB_ACTIONS WBS_DEV_IMAGE ${WBS_TOOLS_ENV_PASSTHROUGH:-}"
   for variable_name in $variable_names; do
     if [[ -v "$variable_name" ]]; then
       WBS_TOOLS_ENVIRONMENT_ARGS+=(-e "$variable_name")
@@ -42,6 +42,11 @@ run_wbs_tools_command() {
 }
 
 prepare_install_runtime() {
+  local docker_was_missing=false
+  if ! command -v docker >/dev/null 2>&1; then
+    docker_was_missing=true
+  fi
+
   # shellcheck disable=SC1091
   source "$SCRIPTS_DIR/install-docker.sh"
   if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
@@ -53,7 +58,9 @@ prepare_install_runtime() {
   confirm_docker_version
   confirm_docker_compose_version
   confirm_docker_running
-  status "✅ Docker installed"
+  if [[ "$docker_was_missing" == true ]]; then
+    status "✅ Docker installed"
+  fi
 }
 
 prepare_source_tools_image() {

@@ -17,9 +17,6 @@ services:
   wbs-dev:
     image: ${WBS_DEV_IMAGE:-wbs-dev:latest}
     scale: 0
-    build:
-      context: .
-      dockerfile: Dockerfile
     working_dir: /workspace/development
     stop_grace_period: 1s
     ports:

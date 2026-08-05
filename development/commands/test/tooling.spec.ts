@@ -12,6 +12,44 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 describe( 'WBS installation image selection', () => {
+	it( 'does not announce Docker when it is already installed', () => {
+		const fixture = mkdtempSync( join( tmpdir(), 'wbs-docker-preflight-' ) );
+		const fakeDocker = join( fixture, 'docker' );
+		writeFileSync(
+			fakeDocker,
+			`#!/bin/sh
+case "$*" in
+  "--version") echo "Docker version 28.0.0" ;;
+  "compose version") echo "Docker Compose version v2.30.0" ;;
+esac
+exit 0
+`
+		);
+		chmodSync( fakeDocker, 0o755 );
+
+		try {
+			const result = spawnSync(
+				'bash',
+				[
+					'-c',
+					'source "$1"; SCRIPTS_DIR="$(dirname "$1")"; ' +
+						'SKIP_DEPENDENCY_INSTALLS=false; WBS_SKIP_ARCH_CHECK=true; ' +
+						'DEBUG=false; prepare_install_runtime',
+					'bash',
+					resolve( '../scripts/run-wbs-tools.sh' )
+				],
+				{
+					encoding: 'utf8',
+					env: { ...process.env, PATH: `${ fixture }:${ process.env.PATH }` }
+				}
+			);
+			assert.equal( result.status, 0, result.stderr );
+			assert.doesNotMatch( result.stdout, /Docker installed/u );
+		} finally {
+			rmSync( fixture, { recursive: true, force: true } );
+		}
+	} );
+
 	it( 'selects the compatible major version published by the tools project', () => {
 		const toolsPackage = JSON.parse(
 			readFileSync( resolve( 'images/wbs-tools/package.json' ), 'utf8' )

@@ -153,7 +153,7 @@ export function verifyCliInstallWaitsForConfiguration(): void {
 		'CliDatabasePassword-2026',
 		''
 	].join( '\n' );
-	run(
+	const output = run(
 		'docker',
 		[
 			'run', '--rm', '-i',
@@ -164,6 +164,13 @@ export function verifyCliInstallWaitsForConfiguration(): void {
 		{ input: answers }
 	);
 	assert.equal( existsSync( join( auditRoot, 'docker-called-after-configuration' ) ), true );
+	assert.match( output, /Wikibase Suite is now running\./u );
+	assert.match( output, /Wikibase:\s+https:\/\/wikibase\.test/u );
+	assert.match( output, /Query Service:\s+https:\/\/query\.wikibase\.test/u );
+	assert.match(
+		output,
+		/QuickStatements:\s+https:\/\/wikibase\.test\/tools\/quickstatements/u
+	);
 }
 
 export function startInstaller(): void {

@@ -41,6 +41,61 @@ describe( 'Installer supporting contracts', () => {
 			{ encoding: 'utf8', stdio: 'pipe' }
 		);
 		assert.notEqual( invalid.status, 0 );
+
+		const valid = spawnSync(
+			'docker',
+			[
+				'run', '--rm', '-e', 'WBS_VALIDATE_OPTIONS=true', image,
+				'node', 'dist/wbs.js', 'install', '--local'
+			],
+			{ encoding: 'utf8', stdio: 'pipe' }
+		);
+		assert.equal( valid.status, 0, valid.stderr );
+		assert.doesNotMatch( valid.stderr, /configuration is incomplete/u );
+	} );
+
+	it( 'describes generated and retained passwords independently', () => {
+		const configRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'password-prompts-' ) );
+		try {
+			writeFileSync(
+				join( configRoot, '.env' ),
+				[
+					'MW_ADMIN_EMAIL=admin@example.test',
+					'WIKIBASE_PUBLIC_HOST=wikibase.test',
+					'WDQS_PUBLIC_HOST=query.wikibase.test',
+					'METADATA_CALLBACK=false',
+					'MW_ADMIN_NAME=Admin',
+					'MW_ADMIN_PASS=',
+					'DB_NAME=my_wiki',
+					'DB_USER=sqluser',
+					'DB_PASS=ExistingDatabasePassword-2026',
+					''
+				].join( '\n' )
+			);
+			const result = spawnSync(
+				'docker',
+				[
+					'run', '--rm', '-i',
+					'-v', `${ configRoot }:/app/wbs`,
+					toolsImage(), 'node', 'dist/wbs.js', 'configure', '--local'
+				],
+				{ encoding: 'utf8', input: '\n'.repeat( 9 ), stdio: 'pipe' }
+			);
+			assert.equal( result.status, 0, result.stderr );
+			assert.match(
+				result.stdout,
+				/Admin password \(press Enter to use generated password\)/u
+			);
+			assert.match(
+				result.stdout,
+				/Database password \(press Enter to keep existing password\)/u
+			);
+			const config = readFileSync( join( configRoot, '.env' ), 'utf8' );
+			assert.match( config, /^MW_ADMIN_PASS=.+$/mu );
+			assert.match( config, /^DB_PASS=ExistingDatabasePassword-2026$/mu );
+		} finally {
+			rmSync( configRoot, { recursive: true, force: true } );
+		}
 	} );
 
 	it( 'does not reapply template values over an existing configuration', () => {

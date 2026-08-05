@@ -57,15 +57,10 @@ function composeArgs( localImages = false ): string[] {
 
 async function buildImages(): Promise<void> {
 	const developmentRoot = join( repositoryRoot, 'development' );
-	const developmentImage = process.env.WBS_DEV_IMAGE || 'wbs-dev:latest';
-	await runProcess( 'docker', [
-		'buildx', 'build', '--file', join( developmentRoot, 'Dockerfile' ),
-		'--load', '--tag', developmentImage, developmentRoot
-	] );
 	await runProcess( 'docker', [
 		'compose', '--project-directory', developmentRoot,
 		'--file', join( developmentRoot, 'docker-compose.yml' ),
-		'run', '--rm', 'wbs-dev', '-c',
+		'run', '--no-TTY', '--rm', 'wbs-dev', '-c',
 		'pnpm exec tsx wbs-dev.ts build'
 	] );
 }

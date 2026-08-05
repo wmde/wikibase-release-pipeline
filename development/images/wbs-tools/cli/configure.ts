@@ -15,7 +15,6 @@ import {
 import { stdin as input, stdout as output } from 'process';
 import {
 	getConfig,
-	isConfigSaved,
 	isLocalhostSetup,
 	saveConfigText
 } from '../lib/configuration.js';
@@ -183,9 +182,11 @@ function validatePasswordMessage( value: string | undefined ): ValidationMessage
 	return 'Password must be at least 10 characters. Press Enter to use a generated password.';
 }
 
-async function promptPasswordUntil( label: string ): Promise<string> {
-	const hasSavedConfig = isConfigSaved();
-	const promptHelp = hasSavedConfig ?
+async function promptPasswordUntil(
+	label: string,
+	hasExistingPassword: boolean
+): Promise<string> {
+	const promptHelp = hasExistingPassword ?
 		'press Enter to keep existing password' :
 		'press Enter to use generated password';
 	const promptLabel = `${ label } (${ promptHelp })`;
@@ -285,7 +286,10 @@ async function gatherConfig(): Promise<CliConfigInput> {
 		'Admin username must be at least 4 characters and use MediaWiki-compatible characters.'
 	);
 
-	const MW_ADMIN_PASS = await promptPasswordUntil( 'Admin password' );
+	const MW_ADMIN_PASS = await promptPasswordUntil(
+		'Admin password',
+		Boolean( defaults.MW_ADMIN_PASS )
+	);
 
 	const DB_NAME = await promptUntil(
 		'Database name',
@@ -301,7 +305,10 @@ async function gatherConfig(): Promise<CliConfigInput> {
 		'Database user must be at least 4 characters and use letters, numbers, or underscores.'
 	);
 
-	const DB_PASS = await promptPasswordUntil( 'Database password' );
+	const DB_PASS = await promptPasswordUntil(
+		'Database password',
+		Boolean( defaults.DB_PASS )
+	);
 
 	return {
 		MW_ADMIN_EMAIL,
