@@ -4,46 +4,33 @@
 
 This image contains QuickStatements and the required Magnustools library. It is ready to be connected to MediaWiki OAuth on a Wikibase image.
 
-> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md), which provides everything you need to run a Wikibase instance on your own server. For an integrated setup, see the [`docker-compose.yml` file in the full Wikibase Suite (WBS) configuration](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
-## Requirements
+## Setup
 
-- MediaWiki/Wikibase instance with
-  [OAuth](https://www.mediawiki.org/wiki/Extension:OAuth) enabled
-- QuickStatements set up as an OAuth consumer on MediaWiki
-- Reverse proxy (if Wikibase and QuickStatements are running on the same host)
-- DNS domain name resolution for QuickStatements and Wikibase
-- Configuration via environment variables
+### 1) Provision the supporting services and configuration
 
-### MediaWiki/Wikibase instance
+- **MediaWiki/Wikibase instance**
+    Enable the [OAuth extension](https://www.mediawiki.org/wiki/Extension:OAuth). We recommend the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase), which is the image used in our tests. Other MediaWiki installations with the Wikibase and OAuth extensions should work but require manual setup.
+- **OAuth consumer**
+    Configure QuickStatements as an OAuth consumer on your Wikibase instance. For a manual setup, create the consumer on Wikibase:
 
-We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions there to get it running.
+    ```sh
+    php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
+            --approve \
+            --callbackUrl  "$QUICKSTATEMENTS_PUBLIC_URL/api.php" \
+            --callbackIsPrefix true --user "$MW_ADMIN_NAME" --name QuickStatements --description QuickStatements --version 1.0.1 \
+            --grants createeditmovepage --grants editpage --grants highvolume --jsonOnSuccess
+    ```
 
-Any MediaWiki with Wikibase and OAuth extensions should work, but the setup needs to be done manually.
+    Pass the resulting consumer key and secret to this container using `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`.
 
-### OAuth consumer
+- **Reverse proxy**
+    If QuickStatements and Wikibase run on the same IP address, use a reverse proxy to route requests to the correct service based on the URL. The [`docker-compose.yml` file in the full Wikibase Suite (WBS) configuration](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml) includes a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
+- **DNS resolution**
+    Make QuickStatements and Wikibase accessible through DNS domain names from both the Docker network and the user's browser so OAuth authorization works. The simplest approach is to connect both services to the internet and use public DNS domain names.
 
-QuickStatements needs to be set up as an OAuth consumer on your Wikibase instance. If you are setting up QuickStatements manually, create the OAuth consumer on Wikibase:
-
-```sh
-php /var/www/html/extensions/OAuth/maintenance/createOAuthConsumer.php \
-        --approve \
-        --callbackUrl  "$QUICKSTATEMENTS_PUBLIC_URL/api.php" \
-        --callbackIsPrefix true --user "$MW_ADMIN_NAME" --name QuickStatements --description QuickStatements --version 1.0.1 \
-        --grants createeditmovepage --grants editpage --grants highvolume --jsonOnSuccess
-```
-
-You can pass the consumer and secret token you got from your Wikibase instance to this container using the environment variables `OAUTH_CONSUMER_KEY` and `OAUTH_CONSUMER_SECRET`.
-
-### Reverse proxy
-
-If QuickStatements and Wikibase are running on the same IP address, a reverse proxy is required to route HTTP requests to Wikibase or QuickStatements depending on the URL used to access them. See the [example](#Example) below for a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
-
-### DNS resolution
-
-In order to authorize QuickStatements against Wikibase via OAuth, both services need to be accessible via DNS domain names, both from within the Docker network as well as from the user's browser. The easiest way to achieve this is by connecting both Wikibase and QuickStatements to the internet and letting them use public DNS domain names.
-
-### Environment variables
+### 2) Set the environment variables
 
 Variables in **bold** are required.
 
@@ -61,27 +48,15 @@ Variables in **bold** are required.
 | `LANGUAGE_CODE`                  | "en"        | Site language                                                                                          |
 | `SITENAME`                       | "wikibase"  | Site name                                                                                              |
 
-## Example
+## Troubleshooting
 
-For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
-
-## Releases
-
-Official releases of this image can be found on [Docker Hub wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements).
-
-See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`quickstatements@…` tag](https://github.com/wmde/wikibase-suite/tags).
-
-## Versioning
-
-This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
-
-## Known issues
+### Known limitations
 
 QuickStatements' "Run in background" option is not supported by this image.
 
 QuickStatements' "Batches" require a database and are not supported by this image.
 
-## Troubleshooting
+### OAuth errors
 
 If you see an error such as `mw-oauth exception` when trying to log in, check that you have passed the correct consumer token and secret token to QuickStatements.
 
@@ -89,23 +64,24 @@ If you have changed the value of `$wgSecretKey` or `$wgOAuthSecretKey` since you
 
 ## Internal filesystem layout
 
-Hooking into the internal filesystem can extend the functionality of this image.
+The following paths can be used to extend this image. See the [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/Dockerfile) for its source.
 
-| Directory                                   | Description                    |
-| ------------------------------------------- | ------------------------------ |
+| Path                                        | Description                                                                                                                                        |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/var/www/html/quickstatements`             | Base QuickStatements directory |
 | `/var/www/html/quickstatements/public_html` | The Apache root folder         |
 | `/var/www/html/magnustools`                 | Base magnustools directory     |
+| `/templates/config.json`                     | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` in `entrypoint.sh`)              |
+| `/templates/oauth.ini`                       | Template for QuickStatements' oauth.ini (substituted to `/quickstatements/data/oauth.ini` in `entrypoint.sh`)                                      |
+| `/templates/php.ini`                         | PHP config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` in `entrypoint.sh` ) |
 
-| File                     | Description                                                                                                                                        |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/templates/config.json` | Template for QuickStatements' config.json (substituted to `/var/www/html/quickstatements/public_html/config.json` in `entrypoint.sh`)              |
-| `/templates/oauth.ini`   | Template for QuickStatements' oauth.ini (substituted to `/quickstatements/data/oauth.ini` in `entrypoint.sh`)                                      |
-| `/templates/php.ini`     | PHP config (default provided sets date.timezone to prevent php complaining substituted to `/usr/local/etc/php/conf.d/php.ini` in `entrypoint.sh` ) |
+## Releases
 
-## Source
+Official releases of this image can be found on [Docker Hub wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements).
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/Dockerfile).
+See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`quickstatements@…` tag](https://github.com/wmde/wikibase-suite/tags).
+
+This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
 ## Authors & contact
 

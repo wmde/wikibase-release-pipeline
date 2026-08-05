@@ -2,7 +2,7 @@
 
 Frontend for the [Wikidata Query Service (WDQS)](https://www.mediawiki.org/wiki/Wikidata_Query_Service).
 
-To interact with the WDQS frontend, navigate to the URL corresponding to the port allocated for it. In the example below, the WDQS frontend is available at `http://localhost:8834`.
+To interact with the WDQS frontend, navigate to the URL corresponding to the port allocated for it. The full Wikibase Suite (WBS) configuration makes the frontend available at `http://localhost:8834` by default.
 
 When writing queries using the frontend interface, click "Code" to view the corresponding URL.
 
@@ -10,36 +10,24 @@ For general instructions on using WDQS, building SPARQL queries, and additional 
 - [Wikidata Query Service User Manual](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual)
 - [What is SPARQL](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service)
 
-> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md), which provides everything you need to run a Wikibase instance on your own server. For an integrated setup, see the [`docker-compose.yml` file in the full Wikibase Suite (WBS) configuration](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
-## Requirements
+## Setup
 
-In order to run WDQS Frontend, you need:
+### 1) Provision the supporting services and configuration
 
-- at least 2 GB RAM to start WDQS
-- MediaWiki/Wikibase instance
-- WDQS as server
-- WDQS as updater
-- Reverse proxy (if Wikibase and WDQS Frontend are running on the same host)
-- Configuration via environment variables
+- **Memory**
+    Allocate at least 2 GB of RAM to start WDQS.
+- **MediaWiki/Wikibase instance**
+    We recommend the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase), which is the image used in our tests. Follow its setup instructions to get it running.
+- **WDQS server**
+    Use the [Query Service image](https://hub.docker.com/r/wikibase/wdqs).
+- **WDQS updater**
+    Use a second instance of the [Query Service image](https://hub.docker.com/r/wikibase/wdqs). See the [Query Service documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
+- **Reverse proxy**
+    If the WDQS frontend and Wikibase run on the same IP address, use a reverse proxy to route requests to the correct service based on the URL. The [`docker-compose.yml` file in the full Wikibase Suite (WBS) configuration](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml) includes a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
 
-### MediaWiki/Wikibase instance
-
-We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we run all our tests against. Follow the setup instructions there to get it running.
-
-### WDQS as server
-
-We suggest using the [Query Service image](https://hub.docker.com/r/wikibase/wdqs).
-
-### WDQS as updater
-
-We suggest using the [Query Service image](https://hub.docker.com/r/wikibase/wdqs), the same image used for the Query Service server. See the [Query Service documentation](https://wikitech.wikimedia.org/wiki/Wikidata_Query_Service) to learn how to run it in updater mode.
-
-### Reverse proxy
-
-If QuickStatements and Wikibase are running on the same IP address, a reverse proxy is required to route HTTP requests to Wikibase or QuickStatements, depending on the URL used to access them. See the [example](#Example) below for a reverse proxy setup using [Traefik](https://doc.traefik.io/traefik/).
-
-### Environment variables
+### 2) Set the environment variables
 
 Variables in **bold** are required.
 
@@ -49,13 +37,21 @@ Variables in **bold** are required.
 | **`WDQS_PUBLIC_URL`**     |                              | Hostname of the WDQS host      |
 | **`WIKIBASE_PUBLIC_URL`** |                              | Public URL of the Wikibase API, for example `https://wikibase.example/w/api.php` |
 
-## Local query examples
+## Features
+
+### Local query examples
 
 By default, the frontend loads query examples from the local Wikibase page `Project:SPARQL/examples`. Create that page on the Wikibase side and add examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 
-## Example
+## Internal filesystem layout
 
-For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
+The following paths can be used to extend this image. See the [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs-frontend/Dockerfile) for its source.
+
+| Path                                         | Description                                |
+| -------------------------------------------- | ------------------------------------------ |
+| `/config/wdqs-frontend-config.json`          | Configuration file for the WDQS frontend.  |
+| `/healthcheck.sh`                            | Verifies that the frontend is serving requests. |
+| `/templates/nginx-default.conf.template`     | Nginx config template.                     |
 
 ## Releases
 
@@ -63,24 +59,7 @@ Official releases of this image can be found on [Docker Hub wikibase/wdqs-fronte
 
 See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs-frontend/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`wdqs-frontend@…` tag](https://github.com/wmde/wikibase-suite/tags).
 
-## Versioning
-
 This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
-
-## Internal filesystem layout
-
-Hooking into the internal filesystem can extend the functionality of this image.
-
-| File                                         | Description                                |
-| -------------------------------------------- | ------------------------------------------ |
-| `/config/wdqs-frontend-config.json`          | Configuration file for the WDQS frontend.  |
-| `/healthcheck.sh`                            | Verifies that the frontend is serving requests. |
-| `/templates/nginx-default.conf.template`     | Nginx config template.                     |
-
-
-## Source
-
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs-frontend/Dockerfile).
 
 ## Authors & contact
 

@@ -8,32 +8,26 @@ and
 [org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin)
 plugins for [Wikibase](https://wikiba.se).
 
-> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/Dockerfile).
 
-## Requirements
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md), which provides everything you need to run a Wikibase instance on your own server. For an integrated setup, see the [`docker-compose.yml` file in the full Wikibase Suite (WBS) configuration](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
-In order to run Wikibase search, you need:
+## Setup
 
-- MediaWiki/Wikibase instance
+### 1) Provision the supporting services and configuration
 
-### MediaWiki/Wikibase instance
+- **MediaWiki/Wikibase instance**
+    We recommend the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase), which is the image used in our tests. Follow its setup instructions to get it running.
 
-We suggest using the [Wikibase image](https://hub.docker.com/r/wikibase/wikibase) because this is the image we
-run all our tests against. Follow the setup instructions over there to get it up and running.
+### 2) Set the environment variables
 
-Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase container. This legacy variable name is retained so existing Wikibase configuration remains compatible.
-
-## Example
-
-For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
+Add `ELASTICSEARCH_HOST` to the Wikibase container. This legacy variable name is retained so existing Wikibase configurations remain compatible.
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/opensearch](https://hub.docker.com/r/wikibase/opensearch).
 
 See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`opensearch@…` tag](https://github.com/wmde/wikibase-suite/tags).
-
-## Versioning
 
 This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
@@ -42,10 +36,6 @@ In addition to the standard tags, this image also publishes a tag that includes 
 | Tag | Example | Description |
 | --- | --- | --- |
 | os*OPENSEARCH-VERSION* | os1.3.20 | Points to the latest image release containing that OpenSearch version. |
-
-## Source
-
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/Dockerfile).
 
 ## Authors & contact
 
