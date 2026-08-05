@@ -7,12 +7,12 @@ import { dirname, join } from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
 import { createLogStreamer } from './log-streamer.js';
-import { validateSetupPassword } from '../shared/password-policy.js';
+import { validateSetupPassword } from '../lib/password-policy.js';
 import {
 	canSkipDnsValidation,
 	isValidSetupHostname,
 	validateSetupConfig
-} from '../shared/validation.js';
+} from '../lib/validation.js';
 import {
 	LOG_PATH,
 	isBooted,
@@ -25,7 +25,7 @@ import {
 	markConfigReadyForLaunch,
 	clearLog,
 	sanitizeConfig
-} from '../shared/configuration.js';
+} from '../lib/configuration.js';
 
 const fileName = fileURLToPath( import.meta.url );
 const moduleDir = dirname( fileName );

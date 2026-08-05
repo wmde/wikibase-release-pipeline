@@ -1,9 +1,11 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { validatePassword } from './validation.js';
 import type { ValidationResult } from './validation.js';
 
-const COMMON_PASSWORDS_FILE_PATH = join( process.cwd(), 'shared', 'common-passwords-top-100000.txt' );
+const COMMON_PASSWORDS_FILE_PATH = fileURLToPath(
+	new URL( './common-passwords-top-100000.txt', import.meta.url )
+);
 
 let commonPasswords: Set<string> | null = null;
 

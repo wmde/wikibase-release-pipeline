@@ -11,6 +11,6 @@
 		"noEmit": true,
 		"types": ["vite/client"]
 	},
-	"include": ["web/client/**/*.ts", "web/client/**/*.vue", "shared/**/*.ts", "web/vite.config.ts"],
+	"include": ["web/client/**/*.ts", "web/client/**/*.vue", "lib/**/*.ts", "web/vite.config.ts"],
 	"exclude": ["node_modules", "dist", "web/public/assets"]
 }

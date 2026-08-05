@@ -12,7 +12,7 @@ During a new installation:
 4. The checkout launches the browser configurator without exposing the Docker socket to it.
 5. A separate, non-networked worker from the same image receives the Docker socket, starts the services, and reports progress through the installation log.
 
-The same image also implements the terminal configurator and the currently internal, experimental `wbs up`, `down`, `status`, and `reset` commands. They are available for development and architectural testing but are not yet an announced end-user operations interface. Its source is organized by runtime boundary: [`wbs.ts`](wbs.ts) registers commands, [`cli/`](cli) contains terminal interaction, [`shared/`](shared) contains reusable configuration and Docker operations, and [`web/`](web) contains the server and browser client.
+The same image also implements the terminal configurator and the currently internal, experimental `wbs up`, `down`, `status`, and `reset` commands. They are available for development and architectural testing but are not yet an announced end-user operations interface. Its source is organized by responsibility: [`wbs.ts`](wbs.ts) assembles the application, [`commands/`](commands) registers command verbs, [`lib/`](lib) contains reusable configuration and Docker operations, [`cli/`](cli) contains terminal interaction, and [`web/`](web) contains the server and browser client.
 
 ## Development
 

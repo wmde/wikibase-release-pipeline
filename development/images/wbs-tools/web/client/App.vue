@@ -158,7 +158,7 @@ import {
 	isValidDatabaseUser,
 	isValidSetupEmailAddress,
 	isValidSetupHostname
-} from '../../shared/validation.ts';
+} from '../../lib/validation.ts';
 import type { ConfigForm, FieldValidationStatus, InitialSetupState, WizardStep } from './types';
 import AccountStep from './components/AccountStep.vue';
 import BasicsStep from './components/BasicsStep.vue';

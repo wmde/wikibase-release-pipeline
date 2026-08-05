@@ -18,8 +18,8 @@ import {
 	isConfigSaved,
 	isLocalhostSetup,
 	saveConfigText
-} from '../shared/configuration.js';
-import { validateSetupPassword } from '../shared/password-policy.js';
+} from '../lib/configuration.js';
+import { validateSetupPassword } from '../lib/password-policy.js';
 import {
 	areSetupHostsDistinct,
 	canSkipDnsValidation,
@@ -28,7 +28,7 @@ import {
 	isValidDatabaseUser,
 	isValidSetupEmailAddress,
 	isValidSetupHostname
-} from '../shared/validation.js';
+} from '../lib/validation.js';
 
 type CliConfigInput = {
 	MW_ADMIN_EMAIL: string;

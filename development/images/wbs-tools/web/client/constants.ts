@@ -1,5 +1,5 @@
 import type { ConfigForm, SetupProgressEvent } from './types';
-export { HOST_NAME_REGEX } from '../../shared/validation.ts';
+export { HOST_NAME_REGEX } from '../../lib/validation.ts';
 
 export const HOST_VALIDATION_DEBOUNCE_MS = 450;
 export const PASSWORD_VALIDATION_DEBOUNCE_MS = 350;

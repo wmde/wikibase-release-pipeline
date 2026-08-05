@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { HOST_VALIDATION_DEBOUNCE_MS } from '../constants';
-import { canSkipDnsValidation, isValidSetupHostname } from '../../../shared/validation.ts';
+import { canSkipDnsValidation, isValidSetupHostname } from '../../../lib/validation.ts';
 import type { FieldValidationStatus } from '../types';
 
 type HostFieldName = 'WIKIBASE_PUBLIC_HOST' | 'WDQS_PUBLIC_HOST';

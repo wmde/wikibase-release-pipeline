@@ -1,6 +1,6 @@
 import { DEFAULT_FORM } from './constants';
 import type { ConfigForm } from './types';
-import type { SetupConfigValidationIssue } from '../../shared/validation.ts';
+import type { SetupConfigValidationIssue } from '../../lib/validation.ts';
 
 export class SaveConfigError extends Error {
 	constructor( public readonly details: string[] = [] ) {
