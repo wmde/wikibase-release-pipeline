@@ -1,4 +1,3 @@
-/* eslint-disable n/no-deprecated-api */
 import http from 'http';
 import url from 'url';
 

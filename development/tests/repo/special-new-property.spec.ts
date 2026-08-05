@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-suite -- This suite generates cases from the supported datatype matrix. */
 import LoginPage from '../_helpers/pages/login.page.js';
 import SpecialListPropertiesPage from '../_helpers/pages/special/list-properties.page.js';
 import SpecialNewPropertyPage from '../_helpers/pages/special/new-property.page.js';
@@ -22,9 +23,7 @@ describe( 'Special:NewProperty', function () {
 		);
 	} );
 
-	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
-		// eslint-disable-next-line mocha/no-setup-in-describe
 		describe( `Should be able to work with datatype ${ dataType.name } `, function () {
 			before( async function () {
 				if ( dataType.extensionNeeded ) {

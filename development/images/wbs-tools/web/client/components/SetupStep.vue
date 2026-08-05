@@ -65,26 +65,7 @@
 								<cdx-icon :icon="copiedConfig ? cdxIconCheck : cdxIconCopy" size="small" />
 								<span>{{ copiedConfig ? 'Configuration copied' : 'Copy configuration' }}</span>
 							</button>
-							<!--
-								Keep the configuration reveal control available for a possible future return.
-								<button
-									type="button"
-									class="config-reveal-button"
-									:aria-expanded="configRevealed"
-									aria-controls="config-content"
-									@click="configRevealed = !configRevealed"
-								>
-									<cdx-icon :icon="configRevealed ? cdxIconEyeClosed : cdxIconEye" size="small" />
-									<span>{{ configRevealed ? 'Hide configuration' : 'Show configuration' }}</span>
-								</button>
-							-->
 						</div>
-						<!--
-							Keep the revealed configuration content with its control for a possible future return.
-							<div v-if="configRevealed" class="config-box">
-								<pre id="config-content">{{ configText }}</pre>
-							</div>
-						-->
 					</cdx-message>
 				</div>
 				</div>
@@ -132,7 +113,7 @@
 
 <script setup lang="ts">
 import { CdxButton, CdxIcon, CdxMessage, CdxProgressBar } from '@wikimedia/codex';
-import { cdxIconAlert, cdxIconCheck, cdxIconCopy, cdxIconDownload, cdxIconEye, cdxIconEyeClosed } from '@wikimedia/codex-icons';
+import { cdxIconAlert, cdxIconCheck, cdxIconCopy, cdxIconDownload } from '@wikimedia/codex-icons';
 import { computed, ref, watch } from 'vue';
 import type { ConfigForm } from '../types';
 
@@ -154,7 +135,6 @@ const emit = defineEmits<{
 type ChecklistState = 'complete' | 'current' | 'upcoming';
 
 const copiedConfig = ref( false );
-const configRevealed = ref( false );
 const configDownloadUrl = ref( '#' );
 const currentStatusLine = computed( () => props.summary || 'Waiting for status updates.' );
 const progressChecklistItems = computed( () => {

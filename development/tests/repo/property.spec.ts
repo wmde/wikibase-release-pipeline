@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-suite -- This suite generates cases from the supported datatype matrix. */
 import { minor as getMinorVersion } from 'semver';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import PropertyPage from '../_helpers/pages/entity/property.page.js';
@@ -55,9 +56,7 @@ describe( 'Property', function () {
 		);
 	} );
 
-	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
-		// eslint-disable-next-line mocha/no-setup-in-describe
 		describe( `Should be able to work with type ${ dataType.name }`, function () {
 			let propertyId: string = null;
 			let stringPropertyId: string = null;

@@ -31,7 +31,6 @@ export default function loadEnvFiles(
 ): Record<string, string> {
 	let envVars = {};
 	envFilePaths
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		.filter( ( envFilePath ) => envFilePath && existsSync( envFilePath ) )
 		.forEach( ( envFilePath ) => {
 			envVars = loadEnvFile( envFilePath, envVars );

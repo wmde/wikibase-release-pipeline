@@ -20,7 +20,7 @@ async function runLint(
 	const lintPaths = new Map<string, string>( [
 		[ 'root', '..' ],
 		[ 'development', '.' ],
-		[ 'test', 'test' ],
+		[ 'test', 'tests' ],
 		...discoverImageNames( context ).map(
 			( image ) => [ image, `images/${ image }` ] as [string, string]
 		)

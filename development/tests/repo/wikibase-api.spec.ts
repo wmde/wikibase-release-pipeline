@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-suite -- This suite generates cases from the supported datatype matrix. */
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { wikibasePropertyString } from '../_helpers/wikibase-property-types.js';
@@ -10,7 +11,6 @@ describe( 'Wikibase API', function () {
 		await browser.waitForJobs();
 	} );
 
-	// eslint-disable-next-line mocha/no-setup-in-describe
 	dataTypes.forEach( ( dataType: WikibasePropertyType ) => {
 		it( `Should be able to create many properties and items of type ${ dataType.name }`, async function () {
 			for ( let i = 0; i < 100; i++ ) {

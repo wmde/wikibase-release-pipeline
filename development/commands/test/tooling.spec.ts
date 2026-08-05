@@ -68,7 +68,6 @@ describe( 'WBS installation image selection', () => {
 		const fixture = mkdtempSync( join( tmpdir(), 'wbs-development-launcher-' ) );
 		const dockerLog = join( fixture, 'docker.log' );
 		const fakeDocker = join( fixture, 'docker' );
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		writeFileSync(
 			fakeDocker,
 			`#!/bin/sh
@@ -76,7 +75,6 @@ printf '%s\\n' "$*" >> "$FAKE_DOCKER_LOG"
 exit 0
 `
 		);
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		chmodSync( fakeDocker, 0o755 );
 
 		try {
@@ -94,7 +92,6 @@ exit 0
 			} );
 			assert.equal( result.status, 0, result.stderr );
 			assert.doesNotMatch( result.stdout, /Docker installed/u );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			const commands = readFileSync( dockerLog, 'utf8' );
 			assert.match( commands, /image inspect wikibase\/wbs-tools:latest/u );
 			assert.match( commands, /node \/app\/dist\/wbs\.js status/u );

@@ -82,6 +82,12 @@ If parallel browser-test workers exhaust local CPU or memory, set `WBS_TEST_MAX_
 
 See the [integration test guide](./tests/README.md#environment-and-local-overrides) for test-specific variables.
 
+## Linting
+
+`./wbs-dev lint` applies one shared JavaScript and TypeScript correctness baseline, with scoped additions for Node.js, Vue, Mocha, and WebdriverIO execution environments. Prettier remains an explicit formatting option through `./wbs-dev lint --fix --prettier`; formatting is not part of the default lint check.
+
+The repository does not currently contain JavaScript owned by WBS that runs as Wikibase or MediaWiki extension code. Upstream extension source is excluded because it belongs to its source project. If extension JavaScript is added here later, keep it in an explicit source directory and add a scoped Wikimedia ESLint configuration for that directory rather than applying Wikimedia rules to the development tools, installer, or integration tests.
+
 ## Documentation map
 
 Use the documentation according to the task:

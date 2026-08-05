@@ -14,7 +14,7 @@ async function checkIfUp(
 			try {
 				await axios.get( serviceURL );
 				return true;
-			} catch ( e ) {
+			} catch ( _error ) {
 				return false;
 			}
 		};
@@ -28,7 +28,9 @@ async function checkIfUp(
 				)
 			);
 		} else {
-			throw new Error( `❌ Could not load ${ serviceURL } with error: ${ e }` );
+			throw new Error( `❌ Could not load ${ serviceURL } with error: ${ e }`, {
+				cause: e
+			} );
 		}
 	}
 }

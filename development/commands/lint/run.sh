@@ -59,22 +59,20 @@ if $fix; then
 
   if $prettier; then
     echo "ℹ️ Pre-processing with Prettier"
-    prettier "$path/**/*.{cjs,js,mjs,ts,json}" --log-level error --write
+    prettier "$path/**/*.{cjs,js,mjs,ts,vue,json}" --log-level error --write
     prettier "$path/**/*.md" --log-level error --config .prettierrc.json --write
     prettier "$path/**/*.{yml,yaml}" --log-level error --config .prettierrc.json --write
   fi
 
   echo "ℹ️ Running ESLint with fix"
-  eslint "$path" --no-eslintrc --config .eslintrc.json --fix
-  eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json --fix
+  eslint "$path" --config eslint.config.mjs --fix
 
   echo "ℹ️ Running Black for Python"
   find "$path" -type d -name node_modules -prune -o -name '*.py' -print0 | xargs -0 -r \
     python3 -m black --quiet
 else
   echo "ℹ️ Running ESLint (without --fix)"
-  eslint "$path" --no-eslintrc --config .eslintrc.json
-  eslint "$path/**/**" --no-eslintrc --config .eslintrc-whitespace.json
+  eslint "$path" --config eslint.config.mjs
 
   echo "ℹ️ Running Python Black on all *.py files (with --check)"
   find "$path" -type d -name node_modules -prune -o -name '*.py' -print0 | xargs -0 -r \
@@ -89,7 +87,7 @@ find "$path" \
     -o -path "$path/config/extensions" \
   \) \
   -prune -o \
-  -type f -name "*.sh" -print0 | xargs -0 shellcheck -x
+  -type f -name "*.sh" -print0 | xargs -0 -r shellcheck -x
 
 echo "ℹ️ Running hadolint on all Dockerfiles"
 find "$path" -type d \( -name node_modules -o -name .git \) -prune -o -type f -name Dockerfile -print0 | xargs -0 -r \

@@ -51,7 +51,6 @@ describe( 'Scribunto Item', function () {
 	} );
 
 	it( 'Should be able to reference an item on client using Lua', async function () {
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const template = await readFile(
 			new URL( 'repo-client.lua', import.meta.url ),
 			utf8

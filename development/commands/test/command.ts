@@ -123,7 +123,6 @@ async function runTests(
 		);
 	}
 	if ( integrationSuites.length > 0 ) {
-		// eslint-disable-next-line es-x/no-dynamic-import
 		const { runIntegrationSuites } = await import( './integration.js' );
 		await runIntegrationSuites( integrationSuites, options, context );
 	}

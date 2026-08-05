@@ -60,6 +60,5 @@ main().catch( ( error ) => {
 	console.error( error instanceof Error ? `wbs-dev: ${ error.message }` : error );
 	// Fatal command errors have already passed through task and suite cleanup hooks.
 	// Exit explicitly so an open third-party handle cannot turn a failure into a hang.
-	// eslint-disable-next-line n/no-process-exit
 	process.exit( 1 );
 } );

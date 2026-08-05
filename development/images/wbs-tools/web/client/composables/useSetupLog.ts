@@ -24,7 +24,6 @@ export function useSetupLog( onComplete: () => Promise<void> | void ) {
 	let progressTimer: number | null = null;
 	let progressTimerStartedAt = 0;
 	let progressTimerFrom = 0;
-	let progressTimerTarget = 95;
 
 	function stopProgressTimer(): void {
 		if ( progressTimer !== null ) {
@@ -42,7 +41,6 @@ export function useSetupLog( onComplete: () => Promise<void> | void ) {
 
 		stopProgressTimer();
 		progressTimerFrom = safeFrom;
-		progressTimerTarget = safeTarget;
 		progressTimerStartedAt = Date.now();
 		progressTimer = window.setInterval( () => {
 			const elapsed = Date.now() - progressTimerStartedAt;

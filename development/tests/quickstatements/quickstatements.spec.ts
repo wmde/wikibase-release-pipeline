@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-suite -- This suite generates datatype combinations dynamically. */
 import { AxiosResponse } from 'axios';
 import lodash from 'lodash';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
@@ -187,7 +188,6 @@ describe( 'QuickStatements', function () {
 
 	describe( 'Should be able to add qualifiers to statements with a range of datatypes', function () {
 		// should be disabled for dynamic tests
-		// eslint-disable-next-line mocha/no-setup-in-describe
 		mainSnakDataTypes.forEach( ( mainSnakDataType ) => {
 			qualifierSnakDataTypes.forEach( ( qualifierSnakDataType ) => {
 				it( `Should be able to add a ${ mainSnakDataType } statement with a ${ qualifierSnakDataType } qualifier.`, async function () {

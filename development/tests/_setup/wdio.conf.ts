@@ -6,7 +6,6 @@ import { printSuiteHeading } from '../../commands/test/output.js';
 import JsonReporter from '../_helpers/json-reporter.js';
 import TestEnv from './test-env.js';
 
-// eslint-disable-next-line no-underscore-dangle
 const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
 // Most values here should be derived from the currently globally set testEnv and

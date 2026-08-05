@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-non-literal-fs-filename */
 import { createReadStream, existsSync } from 'fs';
 import { stat } from 'fs/promises';
 import type { Session } from 'better-sse';

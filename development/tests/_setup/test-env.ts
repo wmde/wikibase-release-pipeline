@@ -9,7 +9,6 @@ import checkIfUp from './check-if-up.js';
 import { makeTestSettings } from './make-test-settings.js';
 
 declare global {
-	// eslint-disable-next-line no-var, no-use-before-define
 	var testEnv: TestEnv | undefined;
 }
 
@@ -158,9 +157,7 @@ export default class TestEnv {
 			);
 			await this.down();
 			process.stdin.setEncoding( null );
-			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
@@ -171,9 +168,7 @@ export default class TestEnv {
 				)
 			);
 			process.stdin.setEncoding( null );
-			// eslint-disable-next-line no-use-before-define
 			process.stdin.removeListener( 'keypress', onKeyPress );
-			// eslint-disable-next-line n/no-process-exit
 			process.exit( 1 );
 		};
 
@@ -215,7 +210,6 @@ export default class TestEnv {
 	protected resetOutputDir(): void {
 		try {
 			rmSync( this.settings.outputDir, { recursive: true, force: true } );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			mkdirSync( this.settings.outputDir, { recursive: true } );
 		} catch ( e ) {
 			this.testLog.error(

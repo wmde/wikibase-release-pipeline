@@ -47,9 +47,7 @@ describe( 'Installer supporting contracts', () => {
 		const configRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'configuration-' ) );
 		try {
 			// Paths are contained by the test-owned temporary directory.
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			writeFileSync( join( configRoot, '.env.example' ), 'TEMPLATE_ONLY=template\n' );
-			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			writeFileSync( join( configRoot, '.env' ), 'EXISTING_ONLY=preserved\n' );
 			const input = {
 				MW_ADMIN_EMAIL: 'admin@example.test',

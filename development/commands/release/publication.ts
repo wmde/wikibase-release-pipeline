@@ -99,7 +99,8 @@ export function publishGitTags(
 			] );
 		} catch ( error ) {
 			throw new Error(
-				`Created local tag ${ target.tag }, but could not push it: ${ String( error ) }`
+				`Created local tag ${ target.tag }, but could not push it: ${ String( error ) }`,
+				{ cause: error }
 			);
 		}
 		console.log( `Published Git tag ${ target.tag }.` );
@@ -166,7 +167,7 @@ export async function requireDockerHubImages(
 			return [ project.name, packageJson.version ];
 		} )
 	);
-	do {
+	while ( pending.size > 0 ) {
 		for ( const [ image, version ] of pending ) {
 			if ( await dockerHubImageExists( image, version ) ) {
 				console.log(
@@ -190,5 +191,5 @@ export async function requireDockerHubImages(
 			`Waiting for ${ pending.size } image release workflow${ pending.size === 1 ? '' : 's' }…`
 		);
 		await delay( intervalMs );
-	} while ( true );
+	}
 }

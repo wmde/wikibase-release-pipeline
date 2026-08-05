@@ -20,7 +20,6 @@ describe( 'Scribunto', function () {
 	} );
 
 	it( 'Should be able to execute lua module', async function () {
-		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const fileContents = await readFile(
 			new URL( 'bananas.lua', import.meta.url ),
 			utf8

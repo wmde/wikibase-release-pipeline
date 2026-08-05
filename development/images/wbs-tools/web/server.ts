@@ -1,10 +1,9 @@
-import { createSession, createChannel } from 'better-sse';
+import { createSession } from 'better-sse';
 import { promises as dns } from 'dns';
 import express from 'express';
-import { appendFileSync, existsSync, readFileSync, createReadStream } from 'fs';
+import { appendFileSync, existsSync, readFileSync } from 'fs';
 import https from 'https';
 import { dirname, join } from 'path';
-import readline from 'readline';
 import { fileURLToPath } from 'url';
 import { createLogStreamer } from './log-streamer.js';
 import { validateSetupPassword } from '../lib/password-policy.js';
@@ -67,8 +66,6 @@ app.use(
 	express.static( join( APP_ROOT, 'node_modules', '@wikimedia', 'codex-icons', 'dist', 'images' ) )
 );
 app.use( express.json() );
-
-const logChannel = createChannel();
 
 function escapeJsonForHtml( value: unknown ): string {
 	return JSON.stringify( value ).replace( /</g, '\\u003c' );
@@ -239,7 +236,6 @@ function finalizeInstallation(): void {
 }
 
 function exitInstaller(): void {
-	// eslint-disable-next-line n/no-process-exit
 	setTimeout( () => process.exit( 0 ), 300 );
 }
 

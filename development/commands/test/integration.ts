@@ -123,7 +123,6 @@ export async function runIntegrationSuites(
 		const configUrl = pathToFileURL(
 			suiteConfigPath( context, suiteNames[ 0 ] )
 		).href;
-		// eslint-disable-next-line es-x/no-dynamic-import
 		const { testEnv } = ( await import( configUrl ) ) as {
 			testEnv: {
 				up: () => Promise<void>;
@@ -174,7 +173,8 @@ async function runWdio(
 		return await new Launcher( configFilePath, wdioOptions ).run();
 	} catch ( error ) {
 		throw new Error(
-			`Failed to start the test suite: ${ error instanceof Error ? error.stack : error }`
+			`Failed to start the test suite: ${ error instanceof Error ? error.stack : error }`,
+			{ cause: error }
 		);
 	}
 }
