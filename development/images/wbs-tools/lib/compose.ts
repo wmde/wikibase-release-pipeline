@@ -66,7 +66,7 @@ async function buildImages(): Promise<void> {
 		'compose', '--project-directory', developmentRoot,
 		'--file', join( developmentRoot, 'docker-compose.yml' ),
 		'run', '--rm', 'wbs-dev', '-c',
-		'pnpm exec tsx tooling/cli.ts build'
+		'pnpm exec tsx wbs-dev.ts build'
 	] );
 }
 

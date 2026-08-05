@@ -101,7 +101,9 @@ Use the documentation according to the task:
 
 - [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
 - [`tests/`](./tests): integration test runner, suites, and specifications
-- [`tooling/`](./tooling): internal implementation behind the `wbs-dev` commands
+- [`commands/`](./commands): implementations of the `wbs-dev` command families
+- [`lib/`](./lib): shared process, repository, selection, and task infrastructure
+- [`wbs-dev.ts`](./wbs-dev.ts): TypeScript composition root behind the `wbs-dev` launcher
 - [`docs/`](./docs): development guides, engineering notes, and architecture decisions
 - [`Dockerfile`](./Dockerfile), [`docker-compose.yml`](./docker-compose.yml), and [`wbs-dev`](./wbs-dev): containerized development environment and its supported entry point
 - [`wbs`](./wbs): experimental developer entry point for emerging Suite lifecycle commands

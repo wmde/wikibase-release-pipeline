@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import type { RepositoryContext } from '../context.js';
+import type { RepositoryContext } from '../../lib/context.js';
 import { runInstallerDevWeb } from './web.js';
 
 export function registerInstallerDevCommand(

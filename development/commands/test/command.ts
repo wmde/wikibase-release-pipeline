@@ -1,7 +1,7 @@
 import { InvalidArgumentError, Option, type Command } from 'commander';
-import type { RepositoryContext } from '../context.js';
-import { resolveNames } from '../selection.js';
-import { runTasks } from '../tasks.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import { resolveNames } from '../../lib/selection.js';
+import { runTasks } from '../../lib/tasks.js';
 import type { TestOptions } from './integration.js';
 import { discoverSuiteNames } from './suites.js';
 
@@ -116,7 +116,7 @@ async function runTests(
 				{
 					label: 'test wbs-dev tooling',
 					command: 'pnpm',
-					args: [ 'test:tooling' ]
+					args: [ 'test:wbs-dev-tools' ]
 				}
 			],
 			{ cwd: context.developmentRoot }

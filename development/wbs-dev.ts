@@ -1,13 +1,13 @@
 import { Command } from 'commander';
 import process from 'node:process';
-import { registerBuildCommand } from './build/command.js';
-import { createRepositoryContext } from './context.js';
-import { registerInstallerDevCommand } from './installer-dev/command.js';
-import { registerLintCommand } from './lint/command.js';
-import { registerUpdateSourcesCommand } from './prepare/update-sources-command.js';
-import { registerUpdateVersionsCommand } from './prepare/update-versions-command.js';
-import { registerReleaseCommand } from './release/command.js';
-import { registerTestCommand } from './test/command.js';
+import { registerBuildCommand } from './commands/build/command.js';
+import { registerInstallerDevCommand } from './commands/installer-dev/command.js';
+import { registerLintCommand } from './commands/lint/command.js';
+import { registerUpdateSourcesCommand } from './commands/prepare/update-sources-command.js';
+import { registerUpdateVersionsCommand } from './commands/prepare/update-versions-command.js';
+import { registerReleaseCommand } from './commands/release/command.js';
+import { registerTestCommand } from './commands/test/command.js';
+import { createRepositoryContext } from './lib/context.js';
 
 async function main(): Promise<void> {
 	const context = createRepositoryContext();

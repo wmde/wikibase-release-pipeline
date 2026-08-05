@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { parseBuildArguments } from './command.js';
 
-const RUN_BUILDX = resolve( 'tooling/buildx.sh' );
+const RUN_BUILDX = resolve( 'lib/buildx.sh' );
 
 function dryRun( ...buildArguments: string[] ): string {
 	return execFileSync(

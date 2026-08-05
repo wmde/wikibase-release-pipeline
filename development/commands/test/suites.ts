@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import type { RepositoryContext } from '../context.js';
+import type { RepositoryContext } from '../../lib/context.js';
 
 export function suiteConfigPath(
 	context: RepositoryContext,

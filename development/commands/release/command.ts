@@ -1,10 +1,10 @@
 import type { Command } from 'commander';
-import type { RepositoryContext } from '../context.js';
-import { GitRepository } from '../git.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import { GitRepository } from '../../lib/git.js';
 import {
 	discoverReleaseProjects,
 	resolveProjectSelections
-} from '../projects.js';
+} from '../../lib/projects.js';
 import {
 	preflightRelease,
 	publishGitTags,

@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { spawn } from 'node:child_process';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
-import type { RepositoryContext } from '../context.js';
+import type { RepositoryContext } from '../../lib/context.js';
 import { printSuiteHeading } from './output.js';
 import { discoverSuiteNames, suiteConfigPath } from './suites.js';
 
@@ -58,7 +58,7 @@ async function buildImages( context: RepositoryContext ): Promise<void> {
 	await new Promise<void>( ( resolveBuild, rejectBuild ) => {
 		const child = spawn(
 			'pnpm',
-			[ 'exec', 'tsx', 'tooling/cli.ts', 'build', '--quiet' ],
+			[ 'exec', 'tsx', 'wbs-dev.ts', 'build', '--quiet' ],
 			{
 				cwd: context.developmentRoot,
 				env: process.env,

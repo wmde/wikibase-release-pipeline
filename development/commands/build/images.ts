@@ -1,6 +1,6 @@
-import type { RepositoryContext } from '../context.js';
-import { discoverImageNames } from '../projects.js';
-import { runTasks } from '../tasks.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import { discoverImageNames } from '../../lib/projects.js';
+import { runTasks } from '../../lib/tasks.js';
 
 export const DEFAULT_BUILD_PARALLELISM = 3;
 
@@ -13,7 +13,7 @@ export async function buildImages(
 	await runTasks(
 		images.map( ( image ) => ( {
 			label: `build ${ image }`,
-			command: 'tooling/build/image.sh',
+			command: 'commands/build/image.sh',
 			args: [ image, ...forwarded ]
 		} ) ),
 		{ cwd: context.developmentRoot, parallel }

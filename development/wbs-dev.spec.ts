@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
 import { resolve } from 'node:path';
 
-const CLI = resolve( 'tooling/cli.ts' );
+const CLI = resolve( 'wbs-dev.ts' );
 const TSX = resolve( 'node_modules/.bin/tsx' );
 
 function cli( ...args: string[] ): SpawnSyncReturns<string> {

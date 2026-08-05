@@ -2,7 +2,7 @@ import { Options } from '@wdio/types';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { printSuiteHeading } from '../../tooling/test/output.js';
+import { printSuiteHeading } from '../../commands/test/output.js';
 import JsonReporter from '../_helpers/json-reporter.js';
 import TestEnv from './test-env.js';
 

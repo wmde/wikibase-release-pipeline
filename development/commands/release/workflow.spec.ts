@@ -12,7 +12,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { replaceVariable } from '../prepare/source-providers.js';
 
-const CLI = resolve( 'tooling/cli.ts' );
+const CLI = resolve( 'wbs-dev.ts' );
 const TSX = resolve( 'node_modules/.bin/tsx' );
 const fixtures: string[] = [];
 

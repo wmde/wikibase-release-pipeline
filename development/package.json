@@ -5,8 +5,8 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"test:tooling": "mocha --import=tsx \"tooling/**/*.spec.ts\"",
-		"typecheck:tooling": "tsc -p tooling/tsconfig.json"
+		"test:wbs-dev-tools": "mocha --import=tsx \"{wbs-dev.spec.ts,commands/**/*.spec.ts,lib/**/*.spec.ts}\"",
+		"typecheck:wbs-dev": "tsc -p tsconfig.wbs-dev.json"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.7",

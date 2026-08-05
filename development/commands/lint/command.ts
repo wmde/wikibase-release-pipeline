@@ -1,8 +1,8 @@
 import type { Command } from 'commander';
-import type { RepositoryContext } from '../context.js';
-import { discoverImageNames } from '../projects.js';
-import { resolveNames } from '../selection.js';
-import { runTasks } from '../tasks.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import { discoverImageNames } from '../../lib/projects.js';
+import { resolveNames } from '../../lib/selection.js';
+import { runTasks } from '../../lib/tasks.js';
 
 interface LintOptions {
 	fix?: boolean;
@@ -43,7 +43,7 @@ async function runLint(
 	await runTasks(
 		selected.map( ( target ) => ( {
 			label: `lint ${ target }`,
-			command: 'tooling/lint/run.sh',
+			command: 'commands/lint/run.sh',
 			args: [ lintPaths.get( target )!, ...optionArgs ]
 		} ) ),
 		{ cwd: context.developmentRoot }

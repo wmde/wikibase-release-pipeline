@@ -1,10 +1,10 @@
 import { join } from 'node:path';
 import { buildAllImages, buildImages } from '../build/images.js';
-import type { RepositoryContext } from '../context.js';
+import type { RepositoryContext } from '../../lib/context.js';
 import {
 	type CommandRunner,
 	ProcessCommandRunner
-} from '../lib/process.js';
+} from '../../lib/process.js';
 
 export interface InstallerDevWebDependencies {
 	buildLocalImages: () => Promise<void>;

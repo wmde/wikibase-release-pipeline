@@ -28,7 +28,7 @@ if [[ " $* " == *" update-sources "* ]] &&
 fi
 
 run_cli() {
-  exec pnpm exec tsx tooling/cli.ts "$@"
+  exec pnpm exec tsx wbs-dev.ts "$@"
 }
 
 # Commands already running in the wbs-dev container can execute directly.
@@ -52,7 +52,7 @@ if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]]; then
   build_args+=(--no-cache --pull)
 fi
 
-tooling/buildx.sh \
+lib/buildx.sh \
   --cache-name wbs-dev \
   --builder-name wbs-dev-builder \
   --context . \
@@ -60,5 +60,5 @@ tooling/buildx.sh \
   -- "${build_args[@]}"
 
 exec docker compose --progress quiet run --rm wbs-dev \
-  -c 'pnpm exec tsx tooling/cli.ts "$@"' \
+  -c 'pnpm exec tsx wbs-dev.ts "$@"' \
   -- "$@"

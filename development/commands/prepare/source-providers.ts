@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { RepositoryContext } from '../context.js';
-import type { FileUpdate } from '../lib/file-updates.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import type { FileUpdate } from '../../lib/file-updates.js';
 
 interface SourcePin {
 	variable: string;

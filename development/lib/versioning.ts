@@ -2,9 +2,9 @@ import { CommitParser } from 'conventional-commits-parser';
 import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import semver from 'semver';
-import type { RepositoryContext } from '../context.js';
-import { GitRepository } from '../git.js';
-import type { ReleaseProject } from '../projects.js';
+import type { RepositoryContext } from './context.js';
+import { GitRepository } from './git.js';
+import type { ReleaseProject } from './projects.js';
 import type { FileUpdate } from './file-updates.js';
 
 type Bump = 'major' | 'minor' | 'patch';

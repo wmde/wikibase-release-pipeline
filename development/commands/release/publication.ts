@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
-import { GitRepository } from '../git.js';
+import { GitRepository } from '../../lib/git.js';
 import {
 	assertStableVersion,
 	hasChangelogVersion
-} from '../lib/versioning.js';
-import type { ReleaseProject } from '../projects.js';
+} from '../../lib/versioning.js';
+import type { ReleaseProject } from '../../lib/projects.js';
 
 export interface ReleaseTarget {
 	project: ReleaseProject;

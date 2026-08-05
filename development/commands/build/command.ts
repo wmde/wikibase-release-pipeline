@@ -1,10 +1,10 @@
 import type { Command } from 'commander';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { RepositoryContext } from '../context.js';
-import { discoverImageNames } from '../projects.js';
-import { resolveNames } from '../selection.js';
-import { assertStableVersion } from '../lib/versioning.js';
+import type { RepositoryContext } from '../../lib/context.js';
+import { discoverImageNames } from '../../lib/projects.js';
+import { resolveNames } from '../../lib/selection.js';
+import { assertStableVersion } from '../../lib/versioning.js';
 import {
 	buildImages,
 	DEFAULT_BUILD_PARALLELISM

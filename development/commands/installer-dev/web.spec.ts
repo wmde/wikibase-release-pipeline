@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha';
 import assert from 'node:assert/strict';
-import type { RepositoryContext } from '../context.js';
+import type { RepositoryContext } from '../../lib/context.js';
 import type {
 	CommandRunner,
 	CommandRunOptions
-} from '../lib/process.js';
+} from '../../lib/process.js';
 import {
 	runInstallerDevWeb,
 	type InstallerDevWebDependencies

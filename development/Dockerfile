@@ -51,4 +51,4 @@ ENV PATH="/root/.local/share/pnpm:${PATH}"
 # Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/development/node_modules/.bin:/root/venv/bin:$PATH"
 
-ENTRYPOINT [ "./tooling/container-entrypoint.sh" ]
+ENTRYPOINT [ "./lib/container-entrypoint.sh" ]
