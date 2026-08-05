@@ -1,11 +1,4 @@
 {
 	"name": "wdqs",
-	"version": "2.1.1",
-	"nx": {
-		"targets": {
-			"lint": {},
-			"build": {},
-			"nx-release-publish": {}
-		}
-	}
+	"version": "2.1.1"
 }

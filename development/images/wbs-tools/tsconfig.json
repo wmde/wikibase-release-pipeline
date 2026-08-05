@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"types": ["vite/client"]
+	},
+	"include": ["web/client/**/*.ts", "web/client/**/*.vue", "lib/**/*.ts", "web/vite.config.ts"],
+	"exclude": ["node_modules", "dist", "web/public/assets"]
+}

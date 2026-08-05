@@ -2,9 +2,9 @@
 .nx
 .pnpm-store
 node_modules
-test/suites/**/results
-test/log
-test/mwlog
+tests/*/results
+tests/log
+tests/mwlog
 docs/diagrams/node_modules/
 artifacts/*
 docs/*

@@ -53,10 +53,11 @@ ssh root@SERVER_IP_ADDRESS
 <br>
 
 ```sh
-bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install) --web
+bash <(curl -fsSL https://github.com/wmde/wikibase-suite/raw/main/install)
 ```
 
-This command installs the latest stable WBS release identified by a `wbs@MAJOR.MINOR.PATCH` tag.
+This command installs the latest stable WBS release identified by a
+`wbs@MAJOR.MINOR.PATCH` tag and starts its browser installer.
 
 <br>
 

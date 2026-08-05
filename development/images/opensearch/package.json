@@ -1,11 +1,4 @@
 {
 	"name": "opensearch",
-	"version": "1.0.0",
-	"nx": {
-		"targets": {
-			"lint": {},
-			"build": {},
-			"nx-release-publish": {}
-		}
-	}
+	"version": "1.0.0"
 }

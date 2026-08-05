@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# Local development overrides are optional, but Docker Compose requires the
+# configured env file to exist.
+[ -f "local.env" ] || touch local.env
+# shellcheck disable=SC1091
+source local.env
+
+# Public cache records produced by CI accelerate source builds without requiring
+# registry credentials. Set BUILD_CACHE_REGISTRY to an empty value to opt out.
+if [[ -z "${BUILD_CACHE_REGISTRY+x}" ]]; then
+  BUILD_CACHE_REGISTRY="ghcr.io/wmde/wikibase"
+fi
+export BUILD_CACHE_REGISTRY
+
+# Reuse an existing GitHub CLI login for update-sources API requests.
+# If gh is unavailable or unauthenticated, the updater falls back to anonymous access.
+if [[ " $* " == *" update-sources "* ]] &&
+  [[ -z "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]] &&
+  command -v gh > /dev/null 2>&1; then
+  if github_api_token="$(gh auth token 2> /dev/null)"; then
+    export GITHUB_TOKEN="$github_api_token"
+  fi
+fi
+
+run_cli() {
+  exec pnpm exec tsx wbs-dev.ts "$@"
+}
+
+# Commands already running in the wbs-dev container can execute directly.
+if [[ -f /.dockerenv ]]; then
+  run_cli "$@"
+fi
+
+# Host and CI execution use the same wbs-dev image.
+docker network create wbs-dev > /dev/null 2>&1 || true
+
+WBS_DEV_IMAGE=${WBS_DEV_IMAGE:-wbs-dev:latest}
+export WBS_DEV_IMAGE
+build_args=(
+  --file Dockerfile
+  --load
+  --quiet
+  --tag "$WBS_DEV_IMAGE"
+)
+
+if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]]; then
+  build_args+=(--no-cache --pull)
+fi
+
+lib/buildx.sh \
+  --cache-name wbs-dev \
+  --builder-name wbs-dev-builder \
+  --context . \
+  --silent \
+  -- "${build_args[@]}"
+
+exec docker compose --progress quiet run --rm wbs-dev \
+  -c 'pnpm exec tsx wbs-dev.ts "$@"' \
+  -- "$@"

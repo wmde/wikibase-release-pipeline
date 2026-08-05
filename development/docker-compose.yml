@@ -5,13 +5,21 @@ networks:
     name: wbs-dev
     external: true
 
+volumes:
+  buildx:
+    name: wbs-dev-buildx
+  node-modules:
+    name: wbs-dev-node-modules
+  wbs-tools-node-modules:
+    name: wbs-dev-wbs-tools-node-modules
+
 services:
-  runner:
-    image: ${WBS_BUILD_TOOLS_IMAGE:-wbs-build-tools:latest}
+  wbs-dev:
+    image: ${WBS_DEV_IMAGE:-wbs-dev:latest}
     scale: 0
     build:
       context: .
-      dockerfile: runner/Dockerfile
+      dockerfile: Dockerfile
     working_dir: /workspace/development
     stop_grace_period: 1s
     ports:
@@ -19,10 +27,19 @@ services:
       - 4211:4211
     volumes:
       - ..:/workspace:z
+      # Installer tests launch nested containers whose bind mounts must use
+      # paths understood by the host Docker daemon.
+      - ${PWD}/..:${PWD}/..:z
       - /var/run/docker.sock:/var/run/docker.sock
+      # Keep Linux dependencies out of the host checkout so host-side pnpm can
+      # maintain its own platform-specific installation.
+      - node-modules:/workspace/development/node_modules
+      - wbs-tools-node-modules:/workspace/development/images/wbs-tools/node_modules
+      # Preserve named-builder metadata alongside its persistent BuildKit container.
+      - buildx:/root/.docker/buildx
     privileged: true
     env_file:
-      - test/test-runner.env
+      - tests/test-runner.env
       - local.env
     environment:
       HOST_PWD: ${PWD}/..

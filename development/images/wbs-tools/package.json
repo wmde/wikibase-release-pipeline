@@ -1,15 +1,35 @@
 {
 	"name": "wbs-tools",
 	"version": "1.0.0",
-	"nx": {
-		"targets": {
-			"build": {},
-			"test": {
-				"options": {
-					"command": "images/wbs-tools/test/install-bootstrap.sh"
-				}
-			},
-			"nx-release-publish": {}
-		}
+	"description": "Wikibase Suite installation and operations tools",
+	"main": "dist/web/server.js",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"start": "node dist/web/server.js",
+		"dev:server": "tsx watch web/server.ts",
+		"build": "pnpm run typecheck:client && pnpm run build:client && pnpm run build:server",
+		"build:client": "vite build --config web/vite.config.ts",
+		"build:server": "tsc -p tsconfig.server.json && cp lib/common-passwords-top-100000.txt dist/lib/",
+		"typecheck:client": "vue-tsc --noEmit -p tsconfig.json"
+	},
+	"dependencies": {
+		"@clack/prompts": "^1.2.0",
+		"better-sse": "^0.15.1",
+		"commander": "14.0.3",
+		"express": "^5.1.0",
+		"tldts": "^7.0.30"
+	},
+	"devDependencies": {
+		"@types/express": "^5.0.3",
+		"@types/node": "^24.3.0",
+		"@vitejs/plugin-vue": "^6.0.6",
+		"@wikimedia/codex": "^2.5.0",
+		"@wikimedia/codex-icons": "^2.5.0",
+		"tsx": "^4.21.0",
+		"typescript": "~5.8.3",
+		"vite": "^8.0.9",
+		"vue": "^3.5.33",
+		"vue-tsc": "^3.2.7"
 	}
 }

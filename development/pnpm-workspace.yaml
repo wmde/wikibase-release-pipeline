@@ -1,3 +1,18 @@
 packages:
   - "images/*"
-  - "test/**"
+
+allowBuilds:
+  edgedriver: true
+  esbuild: true
+  geckodriver: true
+  vue-demi: true
+
+injectWorkspacePackages: true
+
+supportedArchitectures:
+  os:
+    - darwin
+    - linux
+  cpu:
+    - x64
+    - arm64

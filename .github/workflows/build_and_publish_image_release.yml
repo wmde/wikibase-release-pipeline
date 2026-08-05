@@ -33,12 +33,12 @@ jobs:
           # Extract the tag name
           TAG_NAME=$(echo ${{ github.ref }} | sed 's/refs\/tags\///')
 
-          # Use regex to extract the imageName before the @ and confirm the version is valid semver version tag
-          if [[ "$TAG_NAME" =~ ^([^@]+)@([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)$ ]]; then
+          # Prerelease publication is intentionally unsupported for now.
+          if [[ "$TAG_NAME" =~ ^([^@]+)@([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             # Store image name in environment for later steps
             echo "IMAGE_NAME=${BASH_REMATCH[1]}" >> $GITHUB_ENV
           else
-            echo "Tag does not match the pattern {imageName}@{semantic-version}"
+            echo "Tag does not match the stable pattern {imageName}@{MAJOR.MINOR.PATCH}"
             exit 1
           fi
 
@@ -57,7 +57,7 @@ jobs:
           set -e # abort on error
           set -x # show commands
 
-          ./nx release publish -p $IMAGE_NAME
+          ./wbs-dev build "$IMAGE_NAME" --publish
         working-directory: development
 
       - name: Publish image documentation to Docker Hub

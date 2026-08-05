@@ -4,7 +4,7 @@
 
 This image contains the Wikibase extension running on top of MediaWiki. Wikibase and several other extensions are bundled in addition to [those hipped by MediaWiki](https://www.mediawiki.org/wiki/Bundled_extensions_and_skins). The MediaWiki application runs on top of PHP on an Apache web server in a Debian base image.
 
-> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-release-pipeline/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Bundled extensions
 
@@ -98,7 +98,7 @@ To set up an external job runner, use this image for a second container, overwri
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Wikibase Suite Call Back
 
@@ -112,7 +112,7 @@ Let's build the Linked Open Data Web together!
 
 ## Version reporting
 
-The bundled Wikibase Suite extension adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the build-tools and deploy versions.
+The bundled Wikibase Suite extension adds entries to the `Special:Version` page under the “Installed software” section. It reports the version of this image and, when available, the deploy version.
 
 The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 
@@ -122,11 +122,11 @@ When Wikimedia login is enabled, its aggregate linked-user count is exposed thro
 
 Official releases of this image can be found on [Docker Hub wikibase/wikibase](https://hub.docker.com/r/wikibase/wikibase).
 
-See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`wikibase@…` tag](https://github.com/wmde/wikibase-release-pipeline/tags).
+See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`wikibase@…` tag](https://github.com/wmde/wikibase-suite/tags).
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
+This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
 In addition to the standard tags, this image also publishes a tag that includes the bundled MediaWiki version.
 
@@ -159,7 +159,7 @@ Hooking into the internal filesystem can extend the functionality of this image.
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/Dockerfile).
 
 ## Authors & contact
 
