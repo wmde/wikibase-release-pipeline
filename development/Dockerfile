@@ -44,9 +44,8 @@ WORKDIR /workspace/development
 # Setup Git
 RUN git config --global --add safe.directory /workspace
 
-# Install PNPM
-RUN curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" PNPM_VERSION=9.6.0 bash -
-ENV PATH="/root/.local/share/pnpm:${PATH}"
+# Install pnpm through the package-manager shim bundled with Node.js.
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
 
 # Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/development/node_modules/.bin:/root/venv/bin:$PATH"

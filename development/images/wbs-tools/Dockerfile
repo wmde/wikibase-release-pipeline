@@ -2,7 +2,7 @@ FROM node:24-alpine AS build
 
 WORKDIR /workspace/development
 
-RUN corepack enable && corepack prepare pnpm@9.6.0 --activate
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY images/wbs-tools/package.json ./images/wbs-tools/package.json

@@ -53,17 +53,5 @@
 	"engines": {
 		"node": "24"
 	},
-	"pnpm": {
-		"supportedArchitectures": {
-			"os": [
-				"darwin",
-				"linux"
-			],
-			"cpu": [
-				"x64",
-				"arm64"
-			]
-		}
-	},
-	"packageManager": "pnpm@9.6.0"
+	"packageManager": "pnpm@11.20.0"
 }
