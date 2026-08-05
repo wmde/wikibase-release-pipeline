@@ -101,9 +101,13 @@ describe( 'WikibaseLocalMedia', function () {
 
 		await browser.keys( 'image.png'.split( '' ) );
 
-		await $( '.wikibase-toolbar-button-save[aria-disabled="false"]' )
-			.$( '=save' )
-			.click();
+		const saveButtonSelector =
+			'.wikibase-toolbar-button-save[aria-disabled="false"] a';
+		await $( saveButtonSelector ).waitForClickable();
+		// eslint-disable-next-line wdio/no-pause -- LocalMedia replaces Save while validating the filename.
+		await browser.pause( 300 );
+		await $( saveButtonSelector ).waitForClickable();
+		await $( saveButtonSelector ).click();
 
 		await expect( $( 'div.commons-media-caption' ).$( 'a' ) ).toHaveText( 'Image.png' );
 	} );

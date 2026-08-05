@@ -61,7 +61,7 @@ describe( 'Installer supporting contracts', () => {
 				DB_PASS: 'DatabasePassword-2026'
 			};
 			const script = [
-				"import('./dist/shared/configuration.js')",
+				"import('./dist/lib/configuration.js')",
 				`.then(({ getConfig }) => console.log(JSON.stringify(getConfig(${ JSON.stringify( input ) }).config)))`
 			].join( '' );
 			const output = execFileSync(
@@ -100,7 +100,7 @@ describe( 'Installer supporting contracts', () => {
 					'-v', `${ composeRoot }:/app/wbs`,
 					'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
 					toolsImage(), 'node', '--input-type=module', '--eval',
-					"import('./dist/shared/compose.js').then(({ status }) => status())"
+					"import('./dist/lib/compose.js').then(({ status }) => status())"
 				],
 				{ encoding: 'utf8' }
 			);

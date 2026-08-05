@@ -135,6 +135,11 @@ const submitDiscussionToolsComment = async ( buttonLabel: RegExp ): Promise<void
 		}
 	);
 	await submitButton.click();
+	await replyWidget.waitForDisplayed( {
+		reverse: true,
+		timeout: 30000,
+		timeoutMsg: 'Expected the DiscussionTools reply to finish saving'
+	} );
 };
 
 const postDiscussionToolsComment = async (
