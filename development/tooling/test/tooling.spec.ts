@@ -1,8 +1,15 @@
 import { describe, it } from 'mocha';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { execFileSync, spawnSync } from 'node:child_process';
+import {
+	chmodSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 
 describe( 'WBS installation image selection', () => {
 	it( 'selects the compatible major version published by the tools project', () => {
@@ -55,5 +62,45 @@ describe( 'WBS installation image selection', () => {
 			assert.ok( output.includes( `image: ${ image }` ), `Missing ${ image }` );
 		}
 		assert.match( output, /pull_policy: never/u );
+	} );
+
+	it( 'runs development lifecycle commands with the local tools image', () => {
+		const fixture = mkdtempSync( join( tmpdir(), 'wbs-development-launcher-' ) );
+		const dockerLog = join( fixture, 'docker.log' );
+		const fakeDocker = join( fixture, 'docker' );
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
+		writeFileSync(
+			fakeDocker,
+			`#!/bin/sh
+printf '%s\\n' "$*" >> "$FAKE_DOCKER_LOG"
+exit 0
+`
+		);
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
+		chmodSync( fakeDocker, 0o755 );
+
+		try {
+			const result = spawnSync( resolve( 'wbs' ), [ 'status' ], {
+				encoding: 'utf8',
+				env: {
+					...process.env,
+					FAKE_DOCKER_LOG: dockerLog,
+					PATH: `${ fixture }:${ process.env.PATH }`,
+					WBS_DIR: fixture,
+					WBS_SKIP_ARCH_CHECK: 'true',
+					WBS_TOOLS_IMAGE: '',
+					WBS_TOOLS_SKIP_PULL: ''
+				}
+			} );
+			assert.equal( result.status, 0, result.stderr );
+			assert.doesNotMatch( result.stdout, /Docker installed/u );
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
+			const commands = readFileSync( dockerLog, 'utf8' );
+			assert.match( commands, /image inspect wikibase\/wbs-tools:latest/u );
+			assert.match( commands, /node \/app\/dist\/wbs\.js status/u );
+			assert.doesNotMatch( commands, /^(?:info|pull|--version|compose version)/mu );
+		} finally {
+			rmSync( fixture, { recursive: true, force: true } );
+		}
 	} );
 } );

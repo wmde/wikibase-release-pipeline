@@ -41,9 +41,10 @@ run_wbs_tools_command() {
     node /app/dist/wbs.js "$@"
 }
 
-prepare_runtime() {
-  local install_dependencies="$1"
-  if [[ "$install_dependencies" == true && "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
+prepare_install_runtime() {
+  # shellcheck disable=SC1091
+  source "$SCRIPTS_DIR/install-docker.sh"
+  if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
     install_docker
   fi
   if [[ "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
@@ -69,12 +70,11 @@ prepare_source_tools_image() {
   export WBS_LOCAL_IMAGES=true
 }
 
-run_install_or_configure() {
+run_configurator() {
   local command="$1"
   shift
   local request_args=( "$@" )
   local configure_args=()
-  local from_source=false
   local cli=true
   local show_help=false
   local argument
@@ -94,7 +94,6 @@ run_install_or_configure() {
         configure_args+=( "$argument" )
         ;;
       --from-source)
-        from_source=true
         ;;
       -h|--help)
         show_help=true
@@ -105,23 +104,6 @@ run_install_or_configure() {
         ;;
     esac
   done
-
-  if [[ "$command" == configure && "$from_source" == true ]]; then
-    echo "wbs: --from-source belongs to 'wbs install', not 'wbs configure'." >&2
-    exit 1
-  fi
-
-  if [[ "$command" == install ]]; then
-    prepare_runtime true
-  else
-    prepare_runtime false
-  fi
-
-  if [[ "$command" == install && "$from_source" == true ]]; then
-    prepare_source_tools_image
-  else
-    prepare_wbs_tools_image
-  fi
 
   if [[ "$show_help" == true ]]; then
     exec docker run --rm "$WBS_TOOLS_IMAGE" \
@@ -139,6 +121,29 @@ run_install_or_configure() {
   fi
 
   exec bash "$SCRIPTS_DIR/run-web-installer.sh" "${configure_args[@]}"
+}
+
+run_install() {
+  local from_source=false
+  local argument
+  for argument in "$@"; do
+    if [[ "$argument" == --from-source ]]; then
+      from_source=true
+    fi
+  done
+
+  prepare_install_runtime
+  if [[ "$from_source" == true ]]; then
+    prepare_source_tools_image
+  else
+    update_wbs_tools_image " For an unpublished source checkout, rerun wbs install with --from-source."
+  fi
+  run_configurator install "$@"
+}
+
+run_configure() {
+  require_wbs_tools_image
+  run_configurator configure "$@"
 }
 
 main() {
@@ -174,26 +179,24 @@ main() {
   # shellcheck disable=SC1091
   source "$SCRIPTS_DIR/_logging.sh"
   # shellcheck disable=SC1091
-  source "$SCRIPTS_DIR/install-docker.sh"
-  # shellcheck disable=SC1091
   source "$SCRIPTS_DIR/_tools-image.sh"
 
   case "$command" in
-    up|down|status|reset)
-      prepare_runtime false
-      prepare_wbs_tools_image
+    install)
+      shift
+      run_install "$@"
+      ;;
+    configure)
+      shift
+      run_configure "$@"
+      ;;
+    *)
+      # All other verbs are implemented entirely by the tools application.
+      # This path also renders application help when no verb was supplied.
+      require_wbs_tools_image
       run_wbs_tools_command "$@"
       ;;
-    install|configure)
-      run_install_or_configure "$@"
-      ;;
   esac
-
-  # Commands implemented entirely by the tools application retain the generic
-  # container entry point. This also renders help when no command was supplied.
-  prepare_runtime false
-  prepare_wbs_tools_image
-  run_wbs_tools_command "$@"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then

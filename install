@@ -61,6 +61,7 @@ else
   if [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
     echo "Pulling $WBS_TOOLS_IMAGE..."
     docker pull "$WBS_TOOLS_IMAGE"
+    export WBS_TOOLS_SKIP_PULL=true
   fi
 
   target_parent="$(dirname "$WBS_DOCKER_DIR")"
