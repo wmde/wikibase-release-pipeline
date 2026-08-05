@@ -170,4 +170,4 @@ if [ "$DRY_RUN" = true ]; then
 	RUN_BUILDX_ARGS+=(--dry-run)
 fi
 
-exec "$SCRIPT_DIR/../buildx.sh" "${RUN_BUILDX_ARGS[@]}" -- "${BUILD_ARGS[@]}"
+exec "$SCRIPT_DIR/../../lib/buildx.sh" "${RUN_BUILDX_ARGS[@]}" -- "${BUILD_ARGS[@]}"

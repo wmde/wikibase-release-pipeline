@@ -10,6 +10,8 @@ Development requires Git and a current Docker installation with the Compose and 
 
 Repository tasks run through `wbs-dev`. The wrapper builds or loads the development-tooling image and runs the TypeScript task coordinator in that container. The checkout is mounted into the container, while image builds and test services use the host Docker daemon. GitHub Actions uses the same entry point and underlying scripts.
 
+The container keeps its Linux `node_modules` installations in named Docker volumes. This leaves any host-side pnpm installation untouched, so contributors can also use the Node version declared in `.nvmrc` for direct editor and package-manager integration. Dependency volumes are refreshed automatically when the package manifest, lockfile, workspace configuration, or pnpm version changes.
+
 > [!NOTE]
 > Development commands in this documentation assume you first run `cd development`; examples therefore use `./wbs-dev` consistently. Optionally, add the repository's `development/` directory to your shell's `PATH` to run the wrapper as `wbs-dev` from any working directory.
 
