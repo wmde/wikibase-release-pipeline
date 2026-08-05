@@ -7,7 +7,6 @@ Wikibase Suite (WBS) uses the following published container images. These images
 - [Query Service](./wdqs/README.md)
 - [Query Service frontend](./wdqs-frontend/README.md)
 - [QuickStatements](./quickstatements/README.md)
-- [WBS tools](./wbs-tools/README.md)
 
 The Dockerfiles and supporting build inputs are maintained under [`development/images`](../../development/images). See [Wikibase Suite development](../../development/README.md) if you need to build customized images.
 

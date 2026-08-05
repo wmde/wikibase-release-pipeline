@@ -12,7 +12,7 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 4 to 5 whil
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 5.0.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%405.0.1/deploy/CHANGELOG.md#501-2025-08-26)
-   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md)
 
 3. Decide whether to opt into the metadata callback. During the migration, you will set `METADATA_CALLBACK` to `true` to opt in or `false` to opt out.
 

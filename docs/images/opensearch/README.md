@@ -8,7 +8,7 @@ and
 [org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin](https://central.sonatype.com/artifact/org.wikimedia.search.highlighter/cirrus-highlighter-opensearch-plugin)
 plugins for [Wikibase](https://wikiba.se).
 
-> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-release-pipeline/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
+> 💡 This image is part of [Wikibase Suite (WBS)](https://github.com/wmde/wikibase-suite/blob/main/README.md) which provides everything you need to run a Wikibase instance on your own server.
 
 ## Requirements
 
@@ -25,17 +25,17 @@ Be sure to add the `ELASTICSEARCH_HOST` environment variable to your Wikibase co
 
 ## Example
 
-For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-release-pipeline/blob/main/docker-compose.yml).
+For an integrated Docker Compose example showing how this image is used in the full WBS configuration, see the root [docker-compose.yml](https://github.com/wmde/wikibase-suite/blob/main/docker-compose.yml).
 
 ## Releases
 
 Official releases of this image can be found on [Docker Hub wikibase/opensearch](https://hub.docker.com/r/wikibase/opensearch).
 
-See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/opensearch/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`opensearch@…` tag](https://github.com/wmde/wikibase-release-pipeline/tags).
+See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`opensearch@…` tag](https://github.com/wmde/wikibase-suite/tags).
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
+This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
 In addition to the standard tags, this image also publishes a tag that includes the bundled OpenSearch version.
 
@@ -45,7 +45,7 @@ In addition to the standard tags, this image also publishes a tag that includes 
 
 ## Source
 
-This image is built from this [Dockerfile](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/opensearch/Dockerfile).
+This image is built from this [Dockerfile](https://github.com/wmde/wikibase-suite/blob/main/development/images/opensearch/Dockerfile).
 
 ## Authors & contact
 

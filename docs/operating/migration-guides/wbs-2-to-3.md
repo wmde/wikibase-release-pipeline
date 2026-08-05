@@ -12,8 +12,8 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 2 to 3 whil
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 3.0.4](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%403.0.4/deploy/CHANGELOG.md#304-2025-02-24)
-   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
-   - [Query Service image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs/CHANGELOG.md)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Query Service image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs/CHANGELOG.md)
 
 3. Prepare the configuration for MediaWiki 1.42.5.
 
