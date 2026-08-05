@@ -155,6 +155,17 @@ RUN_BUILDX_ARGS=(
 	--context .
 )
 
+if [ "$IMAGE_NAME" = "wbs-tools" ]; then
+	# wbs-tools is a pnpm workspace package; build it from the workspace root so
+	# the production image consumes the same frozen lockfile as development.
+	RUN_BUILDX_ARGS=(
+		--cache-name "$IMAGE_NAME"
+		--builder-name wbs-application-builder
+		--context "$DEVELOPMENT_ROOT"
+	)
+	BUILD_ARGS+=(--file "$DEVELOPMENT_ROOT/images/wbs-tools/Dockerfile")
+fi
+
 if [ "$DRY_RUN" = true ]; then
 	RUN_BUILDX_ARGS+=(--dry-run)
 fi

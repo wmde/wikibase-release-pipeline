@@ -1,18 +1,28 @@
-FROM node:20-alpine
+FROM node:24-alpine AS build
+
+WORKDIR /workspace/development
+
+RUN corepack enable && corepack prepare pnpm@9.6.0 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY images/wbs-tools/package.json ./images/wbs-tools/package.json
+RUN pnpm --filter wbs-tools install --frozen-lockfile
+
+COPY images/wbs-tools ./images/wbs-tools
+RUN pnpm --filter wbs-tools build && \
+    pnpm --filter wbs-tools --prod deploy /app
+
+FROM node:24-alpine
 
 ARG WBS_TOOLS_VERSION
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 LABEL org.opencontainers.image.version="${WBS_TOOLS_VERSION}"
 
 WORKDIR /app
-
-COPY package.json package-lock.json tsconfig.json tsconfig.server.json ./
-COPY cli ./cli
-COPY shared ./shared
-COPY web ./web
-COPY wbs.ts ./wbs.ts
+ENV NODE_ENV=production
 
 RUN apk add --no-cache bash docker-cli docker-cli-compose git openssl curl
-RUN npm ci && npm run build
+
+COPY --from=build /app ./
 
 CMD ["node", "dist/web/server.js"]

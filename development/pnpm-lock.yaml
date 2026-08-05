@@ -138,12 +138,6 @@ importers:
       '@clack/prompts':
         specifier: ^1.2.0
         version: 1.7.0
-      '@wikimedia/codex':
-        specifier: ^2.5.0
-        version: 2.6.2(vue@3.5.40(typescript@5.4.5))
-      '@wikimedia/codex-icons':
-        specifier: ^2.5.0
-        version: 2.6.2
       better-sse:
         specifier: ^0.15.1
         version: 0.15.1
@@ -165,22 +159,28 @@ importers:
         version: 24.13.3
       '@vitejs/plugin-vue':
         specifier: ^6.0.6
-        version: 6.0.8(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0))(vue@3.5.40(typescript@5.4.5))
+        version: 6.0.8(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0))(vue@3.5.40(typescript@5.8.3))
+      '@wikimedia/codex':
+        specifier: ^2.5.0
+        version: 2.6.2(vue@3.5.40(typescript@5.8.3))
+      '@wikimedia/codex-icons':
+        specifier: ^2.5.0
+        version: 2.6.2
       tsx:
         specifier: ^4.21.0
         version: 4.23.1
       typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
+        specifier: ~5.8.3
+        version: 5.8.3
       vite:
         specifier: ^8.0.9
         version: 8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0)
       vue:
         specifier: ^3.5.33
-        version: 3.5.40(typescript@5.4.5)
+        version: 3.5.40(typescript@5.8.3)
       vue-tsc:
         specifier: ^3.2.7
-        version: 3.3.9(typescript@5.4.5)
+        version: 3.3.9(typescript@5.8.3)
 
   images/wdqs: {}
 
@@ -3778,6 +3778,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   unbzip2-stream@1.4.3:
     resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}
 
@@ -4249,11 +4254,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@floating-ui/vue@1.0.6(vue@3.5.40(typescript@5.4.5))':
+  '@floating-ui/vue@1.0.6(vue@3.5.40(typescript@5.8.3))':
     dependencies:
       '@floating-ui/dom': 1.8.0
       '@floating-ui/utils': 0.2.12
-      vue-demi: 0.14.10(vue@3.5.40(typescript@5.4.5))
+      vue-demi: 0.14.10(vue@3.5.40(typescript@5.8.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -4772,11 +4777,11 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-vue@6.0.8(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0))(vue@3.5.40(typescript@5.4.5))':
+  '@vitejs/plugin-vue@6.0.8(vite@8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0))(vue@3.5.40(typescript@5.8.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.2.0(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.5.0)
-      vue: 3.5.40(typescript@5.4.5)
+      vue: 3.5.40(typescript@5.8.3)
 
   '@vitest/pretty-format@2.1.9':
     dependencies:
@@ -5059,11 +5064,11 @@ snapshots:
 
   '@wikimedia/codex-icons@2.6.2': {}
 
-  '@wikimedia/codex@2.6.2(vue@3.5.40(typescript@5.4.5))':
+  '@wikimedia/codex@2.6.2(vue@3.5.40(typescript@5.8.3))':
     dependencies:
-      '@floating-ui/vue': 1.0.6(vue@3.5.40(typescript@5.4.5))
+      '@floating-ui/vue': 1.0.6(vue@3.5.40(typescript@5.8.3))
       '@wikimedia/codex-icons': 2.6.2
-      vue: 3.5.40(typescript@5.4.5)
+      vue: 3.5.40(typescript@5.8.3)
     transitivePeerDependencies:
       - '@vue/composition-api'
 
@@ -7992,6 +7997,8 @@ snapshots:
 
   typescript@5.4.5: {}
 
+  typescript@5.8.3: {}
+
   unbzip2-stream@1.4.3:
     dependencies:
       buffer: 5.7.1
@@ -8051,9 +8058,9 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-demi@0.14.10(vue@3.5.40(typescript@5.4.5)):
+  vue-demi@0.14.10(vue@3.5.40(typescript@5.8.3)):
     dependencies:
-      vue: 3.5.40(typescript@5.4.5)
+      vue: 3.5.40(typescript@5.8.3)
 
   vue-eslint-parser@9.4.3(eslint@8.57.0):
     dependencies:
@@ -8068,13 +8075,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue-tsc@3.3.9(typescript@5.4.5):
+  vue-tsc@3.3.9(typescript@5.8.3):
     dependencies:
       '@volar/typescript': 2.4.28
       '@vue/language-core': 3.3.9
-      typescript: 5.4.5
+      typescript: 5.8.3
 
-  vue@3.5.40(typescript@5.4.5):
+  vue@3.5.40(typescript@5.8.3):
     dependencies:
       '@vue/compiler-dom': 3.5.40
       '@vue/compiler-sfc': 3.5.40
@@ -8082,7 +8089,7 @@ snapshots:
       '@vue/server-renderer': 3.5.40
       '@vue/shared': 3.5.40
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.8.3
 
   wait-port@1.1.0:
     dependencies:
