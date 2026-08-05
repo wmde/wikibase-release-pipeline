@@ -42,7 +42,7 @@ The current local profile uses `wikibase.test` and `query.wikibase.test`. The co
 
 Compose files are applied in this order: the root `docker-compose.yml`, the development local-image override when selected, and the optional root `docker-compose.local.yml` last. This allows checkout-specific customizations to override either image mode.
 
-To remove all Suite volumes and generated configuration, use `./wbs reset`. This asks for confirmation, permanently deletes the instance data, and leaves the Suite stopped; run `./wbs up` explicitly when you want to start it again. Use `--force` only for automation. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
+Use `./wbs reset` to reset the development instance. It asks independently whether to delete the generated `.env` configuration and whether to delete services, volumes, data, and generated runtime files. Repository-root `local.env` is always preserved. A data reset leaves the Suite stopped; run `./wbs up` explicitly when you want to start it again. Use `--force` only for automation when both configuration and data should be deleted. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
 
 For exploratory work inside an integration-test environment instead, start exactly one named suite with `--setup`:
 

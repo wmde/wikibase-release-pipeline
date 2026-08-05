@@ -2,6 +2,7 @@ import { confirm, isCancel } from '@clack/prompts';
 import { Command, Option } from 'commander';
 import process from 'node:process';
 import {
+	configurationExists,
 	down,
 	missingConfigurationKeys,
 	reset,
@@ -99,24 +100,50 @@ async function main(): Promise<void> {
 		.description( 'Show Wikibase Suite service status.' )
 		.action( status );
 	program.command( 'reset' )
-		.description( 'Delete Suite data and generated configuration.' )
-		.addOption( new Option( '--force', 'Skip confirmation for automation.' ) )
+		.description( 'Delete Suite configuration, services, and data.' )
+		.addOption( new Option( '--force', 'Delete both configuration and data without prompting.' ) )
 		.action( async ( options: { force?: boolean } ) => {
-			if ( !options.force ) {
+			let deleteConfiguration = options.force === true;
+			let deleteData = options.force === true;
+			if ( options.force !== true ) {
 				if ( !process.stdin.isTTY ) {
 					throw new Error( 'reset requires confirmation; rerun with --force for automation.' );
 				}
-				const answer = await confirm( {
-					message: 'Permanently delete all Wikibase Suite data and generated configuration?',
+				if ( configurationExists() ) {
+					const configurationAnswer = await confirm( {
+						message: 'Delete the current Wikibase Suite configuration in .env?',
+						initialValue: false
+					} );
+					if ( isCancel( configurationAnswer ) ) {
+						console.log( 'Reset canceled.' );
+						return;
+					}
+					deleteConfiguration = configurationAnswer;
+				}
+				const dataAnswer = await confirm( {
+					message: 'Permanently delete all Wikibase Suite services and data?',
 					initialValue: false
 				} );
-				if ( isCancel( answer ) || !answer ) {
+				if ( isCancel( dataAnswer ) ) {
 					console.log( 'Reset canceled.' );
 					return;
 				}
+				deleteData = dataAnswer;
 			}
-			await reset();
-			console.log( 'Wikibase Suite data and generated configuration were removed.' );
+			if ( !deleteConfiguration && !deleteData ) {
+				console.log( 'Nothing was reset.' );
+				return;
+			}
+			await reset( {
+				configuration: deleteConfiguration,
+				data: deleteData
+			} );
+			if ( deleteConfiguration ) {
+				console.log( 'Wikibase Suite .env configuration was removed.' );
+			}
+			if ( deleteData ) {
+				console.log( 'Wikibase Suite services, data, and generated runtime files were removed.' );
+			}
 		} );
 
 	if ( process.argv.length === 2 ) {

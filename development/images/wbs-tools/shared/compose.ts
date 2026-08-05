@@ -10,6 +10,11 @@ export type SuiteOptions = {
 	onStartingServices?: () => void | Promise<void>;
 };
 
+export type ResetOptions = {
+	configuration: boolean;
+	data: boolean;
+};
+
 const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
 const localEnvFile = join( repositoryRoot, 'local.env' );
@@ -24,6 +29,10 @@ export function missingConfigurationKeys(): string[] {
 	}
 	const config = parseEnvContent( readFileSync( envFile, 'utf8' ) );
 	return REQUIRED_CONFIGURATION_KEYS.filter( ( key ) => !config[ key ]?.trim() );
+}
+
+export function configurationExists(): boolean {
+	return existsSync( envFile );
 }
 
 function composeArgs( localImages = false ): string[] {
@@ -89,10 +98,17 @@ export async function status(): Promise<void> {
 	await runProcess( 'docker', [ ...composeArgs(), 'ps' ] );
 }
 
-export async function reset(): Promise<void> {
-	await runProcess( 'docker', [ ...composeArgs(), 'down', '--volumes' ] );
-	for ( const filename of [ 'LocalSettings.php', 'wikibase-php.ini', 'wdqs-frontend-config.json' ] ) {
-		rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
+export async function reset( options: ResetOptions ): Promise<void> {
+	// Compose needs .env while it removes the instance, so configuration is
+	// deliberately deleted only after any requested data reset has completed.
+	if ( options.data ) {
+		await runProcess( 'docker', [ ...composeArgs(), 'down', '--volumes' ] );
+		for ( const filename of [ 'LocalSettings.php', 'wikibase-php.ini', 'wdqs-frontend-config.json' ] ) {
+			rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
+		}
+	}
+	if ( options.configuration ) {
+		rmSync( envFile, { force: true } );
 	}
 }
 
