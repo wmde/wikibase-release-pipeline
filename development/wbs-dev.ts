@@ -3,6 +3,9 @@ import process from 'node:process';
 import { registerBuildCommand } from './commands/build/command.js';
 import { registerInstallerDevCommand } from './commands/installer-dev/command.js';
 import { registerLintCommand } from './commands/lint/command.js';
+import { registerUpdateSourcesCommand } from './commands/prepare/update-sources-command.js';
+import { registerUpdateVersionsCommand } from './commands/prepare/update-versions-command.js';
+import { registerReleaseCommand } from './commands/release/command.js';
 import { registerTestCommand } from './commands/test/command.js';
 import { createRepositoryContext } from './lib/context.js';
 
@@ -22,16 +25,25 @@ async function main(): Promise<void> {
 	registerInstallerDevCommand( program, context );
 	registerTestCommand( program, context );
 	registerLintCommand( program, context );
+	registerUpdateSourcesCommand( program, context );
+	registerUpdateVersionsCommand( program, context );
+	registerReleaseCommand( program, context );
 
 	program.addHelpText(
 		'after',
 		[
 			'',
+			'Preparation commands update local, unstaged files for review.',
+			'Publication commands validate committed state before creating tags.',
+			'',
 			'Examples:',
 			'  wbs-dev build',
 			'  wbs-dev installer-dev web',
 			'  wbs-dev test',
-			'  wbs-dev lint'
+			'  wbs-dev lint',
+			'  wbs-dev update-sources wikibase quickstatements',
+			'  wbs-dev update-versions wikibase wbs',
+			'  wbs-dev release all --dry-run'
 		].join( '\n' )
 	);
 

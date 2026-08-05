@@ -43,7 +43,7 @@ Applying security fixes to the running Wikibase instance (or other Wikibase rela
 
 #### MediaWiki
 
-In the case of MediaWiki or any extension (including Wikibase) on Gerrit, [triggering a new build](../../docs/topics/pipeline.md) on the release branch where the security fix has been applied and then [publishing](../../docs/topics/publishing.md) the new release should be sufficient to include the security fixes in the new docker images and tarballs.
+In the case of MediaWiki or any extension (including Wikibase) on Gerrit, rebuilding and publishing through the current [release process](../releasing.md) after the security fix has been applied should be sufficient to include the security fixes in the new images and release artifacts.
 
 #### ElasticSearch
 
