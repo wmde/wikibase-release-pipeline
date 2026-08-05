@@ -24,7 +24,6 @@ class ApiQueryWikibaseSuite extends ApiQueryBase {
 			$data['versions'] = [
 				'wikibase_image_version' => $this->getVersionValue( 'WIKIBASE_IMAGE_VERSION' ),
 				'deploy_version' => $this->getVersionValue( 'DEPLOY_VERSION' ),
-				'build_tools_git_sha' => $this->getVersionValue( 'BUILD_TOOLS_GIT_SHA' ),
 			];
 		}
 
