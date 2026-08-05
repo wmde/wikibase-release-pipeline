@@ -1,12 +1,4 @@
 {
 	"name": "wdqs-frontend",
-	"version": "2.1.1",
-	"nx": {
-		"targets": {
-			"lint": {},
-			"build": {},
-			"nx-release-publish": {},
-			"update-commits": {}
-		}
-	}
+	"version": "2.1.1"
 }

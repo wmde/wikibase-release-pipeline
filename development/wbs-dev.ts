@@ -1,0 +1,46 @@
+import { Command } from 'commander';
+import process from 'node:process';
+import { registerBuildCommand } from './commands/build/command.js';
+import { registerLintCommand } from './commands/lint/command.js';
+import { createRepositoryContext } from './lib/context.js';
+
+async function main(): Promise<void> {
+	const context = createRepositoryContext();
+	const program = new Command();
+	program
+		.name( 'wbs-dev' )
+		.description(
+			'Build, test, lint, update, and publish Wikibase Suite projects.'
+		)
+		.showHelpAfterError()
+		.showSuggestionAfterError()
+		.enablePositionalOptions();
+
+	registerBuildCommand( program, context );
+	registerLintCommand( program, context );
+
+	program.addHelpText(
+		'after',
+		[
+			'',
+			'Examples:',
+			'  wbs-dev build',
+			'  wbs-dev lint'
+		].join( '\n' )
+	);
+
+	if ( process.argv.length === 2 ) {
+		program.help();
+	}
+	const argv = process.argv.map( ( argument ) =>
+		argument === '--debug=node' ? '--node-debug' : argument
+	);
+	await program.parseAsync( argv );
+}
+
+main().catch( ( error ) => {
+	console.error( error instanceof Error ? `wbs-dev: ${ error.message }` : error );
+	// Fatal command errors have already passed through task and suite cleanup hooks.
+	// Exit explicitly so an open third-party handle cannot turn a failure into a hang.
+	process.exit( 1 );
+} );

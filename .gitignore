@@ -9,6 +9,7 @@ local.env
 **/.env
 
 docker-compose.local.yml
+/.wbs/
 
 log
 config/*.ini
@@ -21,20 +22,16 @@ config/extensions/*
 # Keep the pre-8.0 product directory ignored while installations migrate to root
 deploy/
 
-development/test/log
-development/test/mwlog
-development/test/suites/config
-development/test/suites/**/results/
+development/tests/log
+development/tests/mwlog
+development/tests/config
+development/tests/*/results/
 
 # dependencies
 node_modules
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/
 
 # misc
 npm-debug.log
@@ -42,6 +39,3 @@ npm-debug.log
 # System Files
 .DS_Store
 Thumbs.db
-
-**/.nx/cache
-**/.nx/workspace-data

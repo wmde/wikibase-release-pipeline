@@ -1,0 +1,7 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true
+	},
+	"include": ["wbs-dev.ts", "wbs-dev.spec.ts", "commands/**/*.ts", "lib/**/*.ts"]
+}

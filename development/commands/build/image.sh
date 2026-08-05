@@ -4,18 +4,18 @@ set -euo pipefail
 
 # === Script setup
 
-# Change to the directory where the script is located
-cd "$(dirname "${BASH_SOURCE[0]}")"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+DEVELOPMENT_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 
 if [ "$#" -lt 1 ]; then
-	echo "Usage: $0 <directory> [--dry-run] [--publish] [docker buildx build arguments...]"
+	echo "Usage: $0 <image> [--dry-run] [--publish] [docker buildx build arguments...]"
 	exit 1
 fi
 
 IMAGE_PROJECT=$1
 
 # Change to the directory for the specified image project
-cd "../images/$IMAGE_PROJECT" || {
+cd "$DEVELOPMENT_ROOT/images/$IMAGE_PROJECT" || {
 	echo "Failed to change directory to images/$IMAGE_PROJECT"
 	exit 1
 }
@@ -25,8 +25,6 @@ shift
 
 DRY_RUN=false
 PUBLISH=false
-NO_CACHE=false
-TARGET_PLATFORMS=""
 BUILD_ARGS=()
 TAGS=()
 BUILD_ENV_FILE="build.env"
@@ -34,18 +32,10 @@ DISALLOWED_ARGS=(
 	"--firstRelease=true"
 )
 
-PREVIOUS_ARG=""
 for arg in "$@"; do
-	if [[ "$PREVIOUS_ARG" == "--platform" ]]; then
-		TARGET_PLATFORMS="$arg"
-	elif [[ "$arg" == --platform=* ]]; then
-		TARGET_PLATFORMS=${arg#--platform=}
-	fi
-
 	if [[ $arg == "--dry-run" || $arg == "--dryRun=true" ]]; then
 		DRY_RUN=true
 	elif [[ $arg == "--no-cache" ]]; then
-		NO_CACHE=true
 		BUILD_ARGS+=("$arg")
 	elif [[ $arg == "--publish" ]]; then
 		PUBLISH=true
@@ -54,12 +44,17 @@ for arg in "$@"; do
 	else
 		BUILD_ARGS+=("$arg")
 	fi
-	PREVIOUS_ARG="$arg"
 done
 
 # === Setup tags
 
 IMAGE_VERSION=$(jq -r '.version' package.json)
+
+if [ "$PUBLISH" = true ] && [[ ! "$IMAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+	echo "Official image publication requires a stable MAJOR.MINOR.PATCH version; received $IMAGE_VERSION."
+	# Extend this validation when prerelease publication is intentionally supported.
+	exit 1
+fi
 
 # publish to Dockerhub
 if [ "$PUBLISH" = true ]; then
@@ -97,6 +92,15 @@ fi
 
 IMAGE_NAME=$(jq -r '.name' package.json)
 
+if [ "$PUBLISH" = true ] && [[ "${GITHUB_REF:-}" == refs/tags/* ]]; then
+	RELEASE_TAG=${GITHUB_REF#refs/tags/}
+	EXPECTED_RELEASE_TAG="${IMAGE_NAME}@${IMAGE_VERSION}"
+	if [ "$RELEASE_TAG" != "$EXPECTED_RELEASE_TAG" ]; then
+		echo "Release tag $RELEASE_TAG does not match package version $EXPECTED_RELEASE_TAG."
+		exit 1
+	fi
+fi
+
 # publish to Dockerhub
 if [ "$PUBLISH" = true ]; then
 	IMAGE_REGISTRY=""
@@ -126,10 +130,6 @@ done
 # === Wikibase Suite version metadata build args
 if [ "$IMAGE_NAME" = "wikibase" ]; then
 	BUILD_ARGS+=("--build-arg" "WIKIBASE_IMAGE_VERSION=$IMAGE_VERSION")
-	BUILD_TOOLS_GIT_SHA="$(git rev-parse --short HEAD 2>/dev/null || true)"
-	if [ -n "$BUILD_TOOLS_GIT_SHA" ]; then
-		BUILD_ARGS+=("--build-arg" "BUILD_TOOLS_GIT_SHA=$BUILD_TOOLS_GIT_SHA")
-	fi
 elif [ "$IMAGE_NAME" = "wbs-tools" ]; then
 	BUILD_ARGS+=("--build-arg" "WBS_TOOLS_VERSION=$IMAGE_VERSION")
 fi
@@ -147,65 +147,27 @@ if [ -f "$BUILD_ENV_FILE" ]; then
 	done < <(grep -E '^[A-Z_]+=.*' "$BUILD_ENV_FILE")
 fi
 
-# === Import and export BuildKit cache
-#
-# CI enables the shared registry cache with the environment variables below.
-# Local builds use BuildKit's local cache automatically, but developers can opt
-# into the registry cache after authenticating Docker with a package token.
-
-if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
-	CACHE_REGISTRY=${BUILD_CACHE_REGISTRY%/}
-	CACHE_REPOSITORY="${CACHE_REGISTRY}/${IMAGE_NAME}"
-	CACHE_SCOPE=${BUILD_CACHE_SCOPE:-${TARGET_PLATFORMS:-$(docker info --format '{{.OSType}}-{{.Architecture}}')}}
-	CACHE_SCOPE=${CACHE_SCOPE//\//-}
-	CACHE_SCOPE=${CACHE_SCOPE//,/_}
-	CACHE_SCOPE=${CACHE_SCOPE//aarch64/arm64}
-	CACHE_SCOPE=${CACHE_SCOPE//x86_64/amd64}
-	CACHE_REF="${CACHE_REPOSITORY}:buildcache-${CACHE_SCOPE}"
-	LEGACY_CACHE_REF="${CACHE_REPOSITORY}:buildcache"
-	APPLICATION_BUILDER="wbs-application-builder"
-
-	BUILD_ARGS+=("--builder" "$APPLICATION_BUILDER")
-
-	if [ "$NO_CACHE" = false ]; then
-		# Read the former unscoped cache while platform-specific caches populate.
-		# New cache records are written only to the platform-specific reference.
-		BUILD_ARGS+=(
-			"--cache-from" "type=registry,ref=${CACHE_REF}"
-			"--cache-from" "type=registry,ref=${LEGACY_CACHE_REF}"
-		)
-	fi
-
-	if [ "${BUILD_CACHE_PUSH:-false}" = true ]; then
-		BUILD_ARGS+=(
-			"--cache-to"
-			"type=registry,ref=${CACHE_REF},mode=max,ignore-error=true"
-		)
-	fi
-fi
-
 # == Run build
 
-BUILD_COMMAND=(docker buildx build "${BUILD_ARGS[@]}" .)
+RUN_BUILDX_ARGS=(
+	--cache-name "$IMAGE_NAME"
+	--builder-name wbs-application-builder
+	--context .
+)
+
+if [ "$IMAGE_NAME" = "wbs-tools" ]; then
+	# wbs-tools is a pnpm workspace package; build it from the workspace root so
+	# the production image consumes the same frozen lockfile as development.
+	RUN_BUILDX_ARGS=(
+		--cache-name "$IMAGE_NAME"
+		--builder-name wbs-application-builder
+		--context "$DEVELOPMENT_ROOT"
+	)
+	BUILD_ARGS+=(--file "$DEVELOPMENT_ROOT/images/wbs-tools/Dockerfile")
+fi
 
 if [ "$DRY_RUN" = true ]; then
-	echo "Dry-run. This is the build command which would run:"
-	echo
-	printf '%q ' "${BUILD_COMMAND[@]}"
-	echo
-	echo
-else
-	# Registry cache export requires a BuildKit builder rather than Docker's
-	# default builder. Keep this here so direct local and containerized CI builds
-	# use the same behavior whenever a registry cache is configured.
-	if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
-		if ! docker buildx inspect "$APPLICATION_BUILDER" >/dev/null 2>&1; then
-			docker buildx create \
-				--name "$APPLICATION_BUILDER" \
-				--driver docker-container >/dev/null
-		fi
-		docker buildx inspect "$APPLICATION_BUILDER" --bootstrap >/dev/null
-	fi
-
-	exec "${BUILD_COMMAND[@]}"
+	RUN_BUILDX_ARGS+=(--dry-run)
 fi
+
+exec "$SCRIPT_DIR/../../lib/buildx.sh" "${RUN_BUILDX_ARGS[@]}" -- "${BUILD_ARGS[@]}"

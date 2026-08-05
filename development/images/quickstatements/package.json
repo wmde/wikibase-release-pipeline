@@ -1,12 +1,4 @@
 {
 	"name": "quickstatements",
-	"version": "1.2.0",
-	"nx": {
-		"targets": {
-			"lint": {},
-			"build": {},
-			"nx-release-publish": {},
-			"update-commits": {}
-		}
-	}
+	"version": "1.2.0"
 }

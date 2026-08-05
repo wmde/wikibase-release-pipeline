@@ -1,5 +1,5 @@
-# Base image: Node.js LTS (20) on Debian Bookworm (12)
-FROM node:20-bookworm-slim AS wbs-build-tools
+# Base image: Node.js LTS (24) on Debian Bookworm (12)
+FROM node:24-bookworm-slim AS wbs-dev
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -32,14 +32,11 @@ RUN ARCH=$(uname -m) && \
     fi && \
     chmod +x /usr/local/bin/hadolint
 
-# Set up Python virtual environment and install Python packages (for black and update_commits.py)
+# Set up Python virtual environment for Python formatting
 RUN python3 -m venv /root/venv && \
     /root/venv/bin/pip install --no-cache-dir --upgrade \
         pip \
         setuptools \
-        requests \
-        bs4 \
-        lxml \
         black
 
 WORKDIR /workspace/development
@@ -47,14 +44,10 @@ WORKDIR /workspace/development
 # Setup Git
 RUN git config --global --add safe.directory /workspace
 
-# Install PNPM
-RUN curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" PNPM_VERSION=9.6.0 bash -
-ENV PATH="/root/.local/share/pnpm:${PATH}"
+# Install pnpm through the package-manager shim bundled with Node.js.
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
 
 # Add npm module bins and activate Python venv virtual environment
 ENV PATH="/workspace/development/node_modules/.bin:/root/venv/bin:$PATH"
 
-# https://github.com/nrwl/nx/issues/27040
-ENV NX_ISOLATE_PLUGINS=false
-
-ENTRYPOINT [ "./runner/entrypoint.sh" ]
+ENTRYPOINT [ "./lib/container-entrypoint.sh" ]

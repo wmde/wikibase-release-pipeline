@@ -1,12 +1,4 @@
 {
 	"name": "wikibase",
-	"version": "8.0.0",
-	"nx": {
-		"targets": {
-			"lint": {},
-			"build": {},
-			"nx-release-publish": {},
-			"update-commits": {}
-		}
-	}
+	"version": "8.0.0"
 }
