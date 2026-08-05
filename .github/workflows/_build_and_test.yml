@@ -91,6 +91,7 @@ jobs:
           - quickstatements
           - pingback
           - opensearch
+          - installer
 
     steps:
       - uses: actions/checkout@v4

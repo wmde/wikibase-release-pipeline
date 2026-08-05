@@ -1,0 +1,21 @@
+name: wbs-dev-test-services
+
+networks:
+  default:
+    name: wbs-dev
+    external: true
+
+services:
+  browser:
+    image: ${TEST_BROWSER_IMAGE_URL}
+    stop_grace_period: 1s
+    ports:
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
+    shm_size: 2g
+    environment:
+      SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
+      SE_VNC_NO_PASSWORD: 1
+    extra_hosts:
+      - host.docker.internal:host-gateway
