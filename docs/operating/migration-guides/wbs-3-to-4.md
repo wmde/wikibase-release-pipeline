@@ -12,11 +12,11 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 3 to 4 whil
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 4.2.1](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/deploy/CHANGELOG.md#421-2025-07-11)
-   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md)
    - [Elasticsearch image 1.0.2](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%404.2.1/build/elasticsearch/CHANGELOG.md#102-2025-03-20)
-   - [Query Service image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs/CHANGELOG.md)
-   - [Query Service frontend image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs-frontend/CHANGELOG.md)
-   - [QuickStatements image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/quickstatements/CHANGELOG.md)
+   - [Query Service image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs/CHANGELOG.md)
+   - [Query Service frontend image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs-frontend/CHANGELOG.md)
+   - [QuickStatements image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/CHANGELOG.md)
 
 3. Plan the required `.env` change. During the migration, you will add `WDQS_PUBLIC_HOST` using the existing value of `WDQS_FRONTEND_PUBLIC_HOST`.
 

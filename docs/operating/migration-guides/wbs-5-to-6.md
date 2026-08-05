@@ -12,10 +12,10 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 5 to 6 whil
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
    - [WBS 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/deploy/CHANGELOG.md#600-2026-02-16)
-   - [Wikibase image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wikibase/CHANGELOG.md)
-   - [Query Service image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs/CHANGELOG.md)
-   - [Query Service frontend image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wdqs-frontend/CHANGELOG.md)
-   - [QuickStatements image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/quickstatements/CHANGELOG.md)
+   - [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md)
+   - [Query Service image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs/CHANGELOG.md)
+   - [Query Service frontend image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wdqs-frontend/CHANGELOG.md)
+   - [QuickStatements image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/quickstatements/CHANGELOG.md)
 
 3. Read the [MediaWiki 1.45 UPGRADE file](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/refs/heads/REL1_45/UPGRADE) and identify any required changes. Do not update files under `deploy/config/extensions` while WBS is running, because that directory is mounted into the running container.
 

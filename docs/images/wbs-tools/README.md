@@ -8,17 +8,17 @@ Most users do not need to run this image directly. Use the [WBS Installation Gui
 
 Official releases of this image are available on [Docker Hub as `wikibase/wbs-tools`](https://hub.docker.com/r/wikibase/wbs-tools).
 
-See the [image changelog](https://github.com/wmde/wikibase-release-pipeline/blob/main/development/images/wbs-tools/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`wbs-tools@…` tag](https://github.com/wmde/wikibase-release-pipeline/tags).
+See the [image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wbs-tools/CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`wbs-tools@…` tag](https://github.com/wmde/wikibase-suite/tags).
 
 ## Versioning
 
-This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/versions.md).
+This image uses the shared WBS image tag format. See [WBS Versions](https://github.com/wmde/wikibase-suite/blob/main/docs/versions.md).
 
-WBS releases select an exact tools image version. This prevents the tools runtime and the mounted WBS checkout from becoming incompatible.
+WBS releases select a compatible tools major version. Minor and patch tools releases within that major version must remain compatible with the mounted WBS checkout and its host-side scripts.
 
 ## Source
 
-The image definition and application source are maintained under [`development/images/wbs-tools`](https://github.com/wmde/wikibase-release-pipeline/tree/main/development/images/wbs-tools).
+The image definition and application source are maintained under [`development/images/wbs-tools`](https://github.com/wmde/wikibase-suite/tree/main/development/images/wbs-tools).
 
 ## Authors and contact
 
