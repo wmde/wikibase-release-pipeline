@@ -1,0 +1,45 @@
+services:
+  mysql:
+    volumes:
+      - ./_setup/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
+
+  wikibase:
+    volumes:
+      - ./_setup/repo-LocalSettings.php:/var/www/html/LocalSettings.d/10_Wikibase.php
+      - ./_setup/repo-extra-install.sh:/extra-install.sh
+
+  wikibase-client:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wikibase:${WBS_TEST_IMAGE_TAG:-latest}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - wikibase-client-config:/config
+      - ./_setup/client-LocalSettings.php:/var/www/html/LocalSettings.d/10_Wikibase.php
+      - ./_setup/empty.php:/var/www/html/LocalSettings.d/15_EntitySchema.php
+      - ./_setup/empty.php:/var/www/html/LocalSettings.d/20_WikibaseLocalMedia.php
+      - ./_setup/empty.php:/var/www/html/LocalSettings.d/60_Elastica.php
+      - ./_setup/empty.php:/var/www/html/LocalSettings.d/61_CirrusSearch.php
+      - ./_setup/empty.php:/var/www/html/LocalSettings.d/62_WikibaseCirrusSearch.php
+      - ./_setup/client-extra-install.sh:/extra-install.sh
+      - ./${OUTPUT_DIR}:/var/log/mediawiki
+    ports:
+      - 8383:80
+    environment:
+      MW_ADMIN_NAME:
+      MW_ADMIN_PASS:
+      MW_ADMIN_EMAIL:
+      MW_WG_SERVER: http://wikibase-client
+      DB_SERVER: mysql:3306
+      DB_USER:
+      DB_PASS:
+      DB_NAME: client_wiki
+      METADATA_CALLBACK: false
+    healthcheck:
+      test: curl --silent --fail http://localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 2m
+
+volumes:
+  wikibase-client-config:

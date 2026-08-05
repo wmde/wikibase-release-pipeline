@@ -1,0 +1,38 @@
+import asyncWaitUntil from 'async-wait-until';
+import axios from 'axios';
+
+const { waitUntil, TimeoutError } = asyncWaitUntil;
+
+async function checkIfUp(
+	serviceURL: string,
+	// default timeout is 1 second less than default Mocha test timeout
+	timeout: number = 90 * 1000 - 1000,
+	timeoutMsg: string = null
+): Promise<void> {
+	try {
+		const predicate = async (): Promise<boolean> => {
+			try {
+				await axios.get( serviceURL );
+				return true;
+			} catch ( _error ) {
+				return false;
+			}
+		};
+		await waitUntil( predicate, { timeout } );
+	} catch ( e ) {
+		if ( e instanceof TimeoutError ) {
+			throw (
+				timeoutMsg ||
+				new Error(
+					`❌ Could not load ${ serviceURL } after ${ timeout / 1000 } seconds.`
+				)
+			);
+		} else {
+			throw new Error( `❌ Could not load ${ serviceURL } with error: ${ e }`, {
+				cause: e
+			} );
+		}
+	}
+}
+
+export default checkIfUp;
