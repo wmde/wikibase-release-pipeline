@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import process from 'node:process';
 import { registerBuildCommand } from './commands/build/command.js';
+import { registerInstallerDevCommand } from './commands/installer-dev/command.js';
 import { registerLintCommand } from './commands/lint/command.js';
 import { registerTestCommand } from './commands/test/command.js';
 import { createRepositoryContext } from './lib/context.js';
@@ -18,6 +19,7 @@ async function main(): Promise<void> {
 		.enablePositionalOptions();
 
 	registerBuildCommand( program, context );
+	registerInstallerDevCommand( program, context );
 	registerTestCommand( program, context );
 	registerLintCommand( program, context );
 
@@ -27,6 +29,7 @@ async function main(): Promise<void> {
 			'',
 			'Examples:',
 			'  wbs-dev build',
+			'  wbs-dev installer-dev web',
 			'  wbs-dev test',
 			'  wbs-dev lint'
 		].join( '\n' )

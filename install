@@ -1,242 +1,101 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 
-# --- Parse CLI Arguments ---
+BOOTSTRAP_LOG="${WBS_BOOTSTRAP_LOG:-/tmp/wikibase-suite-installer.log}"
+WBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1}"
+WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-suite.git}"
+WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
+WBS_DOCKER_DIR="${WBS_DOCKER_DIR:-$WBS_DIR}"
+WBS_DOCKER_REPO_URL="${WBS_DOCKER_REPO_URL:-$WBS_REPO_URL}"
+WBS_REF="${WBS_REF:-}"
+RUNTIME_ARGS=()
+WEB_SELECTED=false
 
-INSTALL_ARGS=("$@")
+exec > >(tee -a "$BOOTSTRAP_LOG") 2>&1
 
-while [[ $# -gt 0 ]]; do
+while (( $# )); do
   case "$1" in
-    --cli)
-      CLI=true
-      ;;
     --web)
-      CLI=false
-      ;;
-    --dev)
-      DEV=true
-      LOCALHOST=true
-      SKIP_DEPENDENCY_INSTALLS=true
-      ;;
-    --reset)
-      RESET=true
-      ;;
-    --skip-clone)
-      SKIP_CLONE=true
-      ;;
-    --skip-deps)
-      SKIP_DEPENDENCY_INSTALLS=true
-      ;;
-    --skip-launch)
-      SKIP_LAUNCH=true
+      WEB_SELECTED=true
+      RUNTIME_ARGS+=("$1")
       ;;
     --wbs-ref)
-      if [[ -z "${2:-}" ]]; then
-        echo "⚠️ --wbs-ref requires a branch or tag name."
-        exit 1
-      fi
+      [[ -n "${2:-}" ]] || { echo "wbs: --wbs-ref requires a value."; exit 1; }
       WBS_REF="$2"
       shift
       ;;
     --wbs-ref=*)
       WBS_REF="${1#*=}"
-      if [[ -z "$WBS_REF" ]]; then
-        echo "⚠️ --wbs-ref requires a branch or tag name."
-        exit 1
-      fi
       ;;
-    --debug)
-      DEBUG=true
+    --installer-dev|--dev)
+      echo "wbs: installer development requires an existing checkout."
+      exit 1
       ;;
-    --local)
-      LOCALHOST=true
+    --skip-clone|--skip-deps|--skip-launch|--reset|--cli)
+      echo "wbs: unsupported install option: $1"
+      exit 1
+      ;;
+    *)
+      RUNTIME_ARGS+=("$1")
       ;;
   esac
   shift
 done
 
-# When this script is run from a Wikibase Suite checkout, use that checkout
-# instead of cloning again.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOCAL_WBS_DIR="$SCRIPT_DIR"
-if [[ -d "$LOCAL_WBS_DIR/.git" && -d "$LOCAL_WBS_DIR/tools" ]]; then
-  WBS_DIR="$LOCAL_WBS_DIR"
-  SKIP_CLONE=true
-fi
-
-# --- Installer variables (including defaults) ---
-
-WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-release-pipeline.git}"
-WBS_REF="${WBS_REF:-}"
-SKIP_CLONE="${SKIP_CLONE:-false}"
-
-export WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
-
-export CLI="${CLI:-false}"
-export DEV="${DEV:-false}"
-export DEBUG="${DEBUG:-false}"
-export LOCALHOST="${LOCALHOST:-false}"
-export SKIP_DEPENDENCY_INSTALLS="${SKIP_DEPENDENCY_INSTALLS:-false}"
-export SKIP_LAUNCH="${SKIP_LAUNCH:-false}"
-export RESET="${RESET:-false}"
-
-export TOOLS_DIR="${TOOLS_DIR:-$WBS_DIR/tools}"
-export ENV_FILE_PATH="$WBS_DIR/.env"
-export SCRIPTS_DIR="$TOOLS_DIR/scripts"
-
-# --- Functions ---
-
-display_path() {
-  local path="$1"
-
-  if [[ "$path" == "$HOME" ]]; then
-    printf '~'
-  elif [[ "$path" == "$HOME/"* ]]; then
-    printf '~/%s' "${path#"$HOME/"}"
-  else
-    printf '%s' "$path"
-  fi
-}
-
-suite_version() {
-  if [[ ! -f "$WBS_DIR/package.json" ]]; then
-    return
-  fi
-
-  sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$WBS_DIR/package.json" | head -n 1
-}
-
-checkout_status() {
-  local version
-  local ref_name="$WBS_REF"
-
-  version="$(suite_version)"
-
-  if [[ "$ref_name" == "main" ]]; then
-    ref_name="main branch"
-  fi
-
-  if [[ -n "$version" ]]; then
-    echo "✅ Checked out $ref_name (Wikibase Suite $version)"
-  else
-    echo "✅ Checked out $ref_name"
-  fi
-}
-
-install_git() {
-  if command -v git >/dev/null 2>&1; then
-    echo "✅ Git installed"
-    return
-  fi
-
-  if command -v apt-get >/dev/null 2>&1; then
-    # Debian / Ubuntu
-    apt-get update >/dev/null 2>&1 || true
-    apt-get install -y git >/dev/null 2>&1
-  elif command -v dnf >/dev/null 2>&1; then
-    # Fedora / RHEL 8+ / Rocky / Alma
-    dnf install -y git >/dev/null 2>&1
-  elif command -v yum >/dev/null 2>&1; then
-    # CentOS 7 / Amazon Linux 2 / older RHEL-family (yum-based)
-    # - Legacy yum path; installs Git from the default repos.
-    #   On older CentOS 7 this will be an older Git version, but usually fine.
-    yum install -y git >/dev/null 2>&1
-  else
-    echo "⚠️ Unsupported package manager. Please install Git manually."
-    exit 1
-  fi
-
-  echo "✅ Git installed"
-}
-
-latest_stable_wbs_ref() {
-  git ls-remote --tags --refs "$WBS_REPO_URL" 'refs/tags/wbs@*' |
-    awk '
-      $2 ~ /^refs\/tags\/wbs@[0-9]+\.[0-9]+\.[0-9]+$/ {
-        ref = $2
-        sub(/^refs\/tags\//, "", ref)
-        version = ref
-        sub(/^wbs@/, "", version)
-        split(version, part, ".")
-
-        if (!found ||
-            part[1] + 0 > major ||
-            (part[1] + 0 == major && part[2] + 0 > minor) ||
-            (part[1] + 0 == major && part[2] + 0 == minor && part[3] + 0 > patch)) {
-          found = 1
-          latest = ref
-          major = part[1] + 0
-          minor = part[2] + 0
-          patch = part[3] + 0
-        }
-      }
-
-      END {
-        if (found) {
-          print latest
-        }
-      }
-    '
-}
-
-resolve_wbs_ref() {
-  local latest_ref
-
-  if [[ -n "$WBS_REF" ]]; then
-    return
-  fi
-
-  echo "🔎 Finding the latest stable Wikibase Suite release..."
-  if ! latest_ref="$(latest_stable_wbs_ref)"; then
-    echo "⚠️ Could not query Wikibase Suite releases from $WBS_REPO_URL."
-    exit 1
-  fi
-
-  if [[ -z "$latest_ref" ]]; then
-    echo "⚠️ No stable Wikibase Suite release was found."
-    echo "Specify a release or development branch with --wbs-ref REF."
-    exit 1
-  fi
-
-  WBS_REF="$latest_ref"
-  echo "✅ Latest stable release: $WBS_REF"
-}
-
-clone_repo() {
-  local wbs_parent_dir
-  local wbs_target_dir
-
-  wbs_parent_dir="$(dirname "$WBS_DIR")"
-  wbs_target_dir="$(basename "$WBS_DIR")"
-
-  mkdir -p "$wbs_parent_dir"
-  pushd "$wbs_parent_dir" >/dev/null || return 1
-
-  if [ ! -d "$wbs_target_dir/.git" ]; then
-    resolve_wbs_ref
-    git clone --branch "$WBS_REF" --single-branch --depth 1 "$WBS_REPO_URL" "$wbs_target_dir" >/dev/null 2>&1
-    echo "✅ Wikibase Suite cloned to $(display_path "$WBS_DIR")"
-    checkout_status
-  else
-    echo "✅ Wikibase Suite already present at $(display_path "$WBS_DIR")"
-  fi
-
-  popd >/dev/null || return 1
-}
-
-# --- Execution ---
-
 echo
 echo "Wikibase Suite"
 echo
-if ! $SKIP_DEPENDENCY_INSTALLS; then
-  echo "🔧 Installing dependencies..."
-  echo
-  install_git
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
+  WBS_DIR="$SCRIPT_DIR"
+else
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "Installing Docker..."
+    curl -fsSL https://get.docker.com | sh
+  fi
+  docker info >/dev/null
+  docker compose version >/dev/null
+
+  if [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
+    echo "Pulling $WBS_TOOLS_IMAGE..."
+    docker pull "$WBS_TOOLS_IMAGE"
+    export WBS_TOOLS_SKIP_PULL=true
+  fi
+
+  target_parent="$(dirname "$WBS_DOCKER_DIR")"
+  mkdir -p "$target_parent"
+  prepare_args=(prepare --target "$WBS_DOCKER_DIR" --repository "$WBS_DOCKER_REPO_URL")
+  repository_mount=()
+  if [[ "$WBS_DOCKER_REPO_URL" == /* && ( -e "$WBS_DOCKER_REPO_URL" || -e "$WBS_REPO_URL" ) ]]; then
+    repository_parent="$(dirname "$WBS_DOCKER_REPO_URL")"
+    repository_mount=(-v "$repository_parent:$repository_parent:ro")
+  fi
+  if [[ -n "$WBS_REF" ]]; then
+    prepare_args+=(--ref "$WBS_REF")
+  fi
+  docker run --rm \
+    -v "$target_parent:$target_parent" \
+    "${repository_mount[@]}" \
+    "$WBS_TOOLS_IMAGE" \
+    node /app/dist/wbs.js "${prepare_args[@]}"
+
+  WBS_STATE_DIR="$WBS_DIR/.wbs"
+  LOG_PATH="$WBS_STATE_DIR/installation.log"
+  mkdir -p "$WBS_STATE_DIR"
+  touch "$LOG_PATH"
+  {
+    echo "Bootstrap log from $BOOTSTRAP_LOG"
+    cat "$BOOTSTRAP_LOG"
+  } >> "$LOG_PATH"
+  # Continue the same installation log after handing control to the checkout.
+  export WBS_STATE_DIR LOG_PATH WBS_LOG_INITIALIZED=1
 fi
 
-if ! $SKIP_CLONE; then
-  clone_repo
+if [[ "$WEB_SELECTED" != true ]]; then
+  RUNTIME_ARGS=(--web "${RUNTIME_ARGS[@]}")
 fi
 
-exec bash "$SCRIPTS_DIR/install.sh" "${INSTALL_ARGS[@]}"
+export WBS_DIR WBS_TOOLS_IMAGE
+exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

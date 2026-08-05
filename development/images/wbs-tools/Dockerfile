@@ -1,23 +1,29 @@
-FROM node:20-alpine
+FROM node:24-alpine AS build
+
+WORKDIR /workspace/development
+
+RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY images/wbs-tools/package.json ./images/wbs-tools/package.json
+RUN pnpm --filter wbs-tools install --frozen-lockfile
+
+COPY images/wbs-tools ./images/wbs-tools
+RUN pnpm --filter wbs-tools build && \
+    pnpm --filter wbs-tools --prod deploy /app && \
+    cp -R images/wbs-tools/web/public/assets /app/web/public/
+
+FROM node:24-alpine
 
 ARG WBS_TOOLS_VERSION
 LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
 LABEL org.opencontainers.image.version="${WBS_TOOLS_VERSION}"
 
 WORKDIR /app
+ENV NODE_ENV=production
 
-COPY app/package.json app/package-lock.json app/tsconfig.json app/tsconfig.server.json app/vite.config.ts app/index.html ./
-COPY app/client ./client
-COPY app/public ./public
-COPY app/shared ./shared
-COPY app/data ./data
-COPY app/cli.ts ./cli.ts
-COPY app/server.ts ./server.ts
-COPY app/logStreamer.ts ./logStreamer.ts
-COPY app/passwordPolicy.ts ./passwordPolicy.ts
-COPY app/serverHelpers.ts ./serverHelpers.ts
+RUN apk add --no-cache bash docker-cli docker-cli-compose git openssl curl
 
-RUN apk add --no-cache bash
-RUN npm ci && npm run build
+COPY --from=build /app ./
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/web/server.js"]
