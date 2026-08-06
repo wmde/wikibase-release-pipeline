@@ -30,8 +30,8 @@ const fileName = fileURLToPath( import.meta.url );
 const moduleDir = dirname( fileName );
 
 // Constants
-const SSL_CERT_KEY_PATH = '/app/certs/key.pem';
-const SSL_CERT_PATH = '/app/certs/cert.pem';
+const SSL_CERT_KEY_PATH = process.env.SSL_CERT_KEY_PATH || '/app/certs/key.pem';
+const SSL_CERT_PATH = process.env.SSL_CERT_PATH || '/app/certs/cert.pem';
 // 10 minutes
 const AUTO_FINALIZE_TIMEOUT_MS = 10 * 60 * 1000;
 const INSTALLATION_STATUS_POLL_MS = 5 * 1000;
@@ -57,14 +57,6 @@ let mockInstallationTimers: ReturnType<typeof setTimeout>[] = [];
 // Express setup
 const app = express();
 app.use( express.static( join( APP_ROOT, 'public' ) ) );
-app.use(
-	'/codex-assets',
-	express.static( join( APP_ROOT, 'node_modules', '@wikimedia', 'codex', 'dist' ) )
-);
-app.use(
-	'/codex-icons',
-	express.static( join( APP_ROOT, 'node_modules', '@wikimedia', 'codex-icons', 'dist', 'images' ) )
-);
 app.use( express.json() );
 
 function escapeJsonForHtml( value: unknown ): string {
@@ -93,6 +85,10 @@ function renderSetupShell( scriptSrc: string ): string {
 
 	return readFileSync( INDEX_TEMPLATE_PATH, 'utf8' )
 		.replace( '%SETUP_STATE%', escapeJsonForHtml( initialState ) )
+		.replace(
+			'%BUILT_STYLE_LINK%',
+			DEV_SERVER ? '' : '<link rel="stylesheet" href="/assets/installer-app.css" />'
+		)
 		.replace( '%SCRIPT_SRC%', escapeHtmlAttribute( scriptSrc ) );
 }
 
@@ -253,7 +249,7 @@ app.post( '/finalize-setup', async ( req, res ): Promise<void> => {
 } );
 
 if ( !existsSync( SSL_CERT_PATH ) || !existsSync( SSL_CERT_KEY_PATH ) ) {
-	throw new Error( 'Not able to access SSL certificate or key in /app/certs' );
+	throw new Error( 'Not able to access the SSL certificate or key.' );
 }
 
 const credentials = {
@@ -315,7 +311,11 @@ if ( DEV_SERVER ) {
 }
 
 httpsServer.listen( 443, () => {
-	console.log( `✅ HTTPS server running at https://localhost:443${ DEV_SERVER ? ' (dev mode)' : '' }` );
+	console.log(
+		DEV_SERVER ?
+			'✅ HTTPS development server running.' :
+			'✅ HTTPS server running at https://localhost:443'
+	);
 } );
 
 function scheduleAutoFinalizeAfterBoot(): void {

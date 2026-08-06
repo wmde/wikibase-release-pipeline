@@ -31,7 +31,6 @@ describe( 'installer-dev web environment', () => {
 	it( 'builds local images and launches the real installer flow with live reload', async () => {
 		const runner = new RecordingRunner();
 		let localBuilds = 0;
-		let toolsBuilds = 0;
 		const context: RepositoryContext = {
 			developmentRoot: '/container/repo/development',
 			hostRepositoryRoot: '/host/repo',
@@ -43,16 +42,12 @@ describe( 'installer-dev web environment', () => {
 			buildLocalImages: async () => {
 				localBuilds++;
 			},
-			buildToolsImage: async () => {
-				toolsBuilds++;
-			},
 			commandRunner: runner
 		};
 
 		await runInstallerDevWeb( context, {}, dependencies );
 
 		assert.equal( localBuilds, 1 );
-		assert.equal( toolsBuilds, 0 );
 		assert.equal( runner.calls.length, 1 );
 		assert.deepEqual( runner.calls[ 0 ].args, [
 			'/host/repo/scripts/run-web-installer.sh'
@@ -62,6 +57,10 @@ describe( 'installer-dev web environment', () => {
 		assert.equal(
 			environment.WBS_DIR,
 			'/host/repo'
+		);
+		assert.equal(
+			environment.WBS_DEVELOPMENT_ROOT,
+			'/container/repo/development'
 		);
 		assert.equal(
 			environment.ENV_FILE_PATH,
@@ -77,10 +76,9 @@ describe( 'installer-dev web environment', () => {
 		assert.equal( environment.WBS_LOCAL_IMAGES, 'true' );
 	} );
 
-	it( 'builds only wbs-tools and enables the side-effect-free mock flow', async () => {
+	it( 'uses the development workspace for the side-effect-free mock flow', async () => {
 		const runner = new RecordingRunner();
 		let localBuilds = 0;
-		let toolsBuilds = 0;
 		const context: RepositoryContext = {
 			developmentRoot: '/container/repo/development',
 			hostRepositoryRoot: '/host/repo',
@@ -92,16 +90,12 @@ describe( 'installer-dev web environment', () => {
 			buildLocalImages: async () => {
 				localBuilds++;
 			},
-			buildToolsImage: async () => {
-				toolsBuilds++;
-			},
 			commandRunner: runner
 		};
 
 		await runInstallerDevWeb( context, { mock: true }, dependencies );
 
 		assert.equal( localBuilds, 0 );
-		assert.equal( toolsBuilds, 1 );
 		assert.equal( runner.calls.length, 1 );
 		const environment = runner.calls[ 0 ].options.env;
 		assert.ok( environment );

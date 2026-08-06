@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { buildAllImages, buildImages } from '../build/images.js';
+import { buildAllImages } from '../build/images.js';
 import type { RepositoryContext } from '../../lib/context.js';
 import {
 	type CommandRunner,
@@ -8,7 +8,6 @@ import {
 
 export interface InstallerDevWebDependencies {
 	buildLocalImages: () => Promise<void>;
-	buildToolsImage: () => Promise<void>;
 	commandRunner: CommandRunner;
 }
 
@@ -21,7 +20,6 @@ function defaultDependencies(
 ): InstallerDevWebDependencies {
 	return {
 		buildLocalImages: async () => await buildAllImages( context ),
-		buildToolsImage: async () => await buildImages( [ 'wbs-tools' ], [], context ),
 		commandRunner: new ProcessCommandRunner()
 	};
 }
@@ -32,9 +30,7 @@ export async function runInstallerDevWeb(
 	dependencies = defaultDependencies( context )
 ): Promise<void> {
 	const root = context.hostRepositoryRoot;
-	if ( options.mock ) {
-		await dependencies.buildToolsImage();
-	} else {
+	if ( !options.mock ) {
 		await dependencies.buildLocalImages();
 	}
 
@@ -60,6 +56,7 @@ export async function runInstallerDevWeb(
 				SKIP_DEPENDENCY_INSTALLS: 'true',
 				SCRIPTS_DIR: join( root, 'scripts' ),
 				WBS_DIR: root,
+				WBS_DEVELOPMENT_ROOT: context.developmentRoot,
 				WBS_INSTALLER_CONTAINER_NAME: 'wbs-dev-installer-web',
 				WBS_INSTALLER_WORKER_CONTAINER_NAME: 'wbs-dev-installer-worker',
 				WBS_LAUNCH_FOREGROUND: 'true',

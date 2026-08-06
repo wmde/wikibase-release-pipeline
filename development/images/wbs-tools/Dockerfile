@@ -11,7 +11,8 @@ RUN pnpm --filter wbs-tools install --frozen-lockfile
 COPY images/wbs-tools ./images/wbs-tools
 RUN pnpm --filter wbs-tools build && \
     pnpm --filter wbs-tools --prod deploy /app && \
-    cp -R images/wbs-tools/web/public/assets /app/web/public/
+    cp -R images/wbs-tools/web/public/assets /app/web/public/ && \
+    test -s /app/web/public/assets/installer-app.css
 
 FROM node:24-alpine
 

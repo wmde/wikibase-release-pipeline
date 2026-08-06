@@ -80,7 +80,7 @@ cd development
 
 This builds all local Suite images, mounts the installer application source for live reload, and launches the normal installer and service-startup flow with local test domains. Cached build stages make repeat starts substantially faster.
 
-Use `./wbs-dev installer-dev web --mock` for UI and UX development without changing installer or Suite state. Mock mode builds only `wbs-tools`, enables direct navigation among the progress steps, and retains the normal form and validation behavior. Starting installation streams a short simulated image-pull and service-startup log through the completed screen. It does not write `.env`, signal the host launcher, or start services. Without `--mock`, steps cannot be skipped and the real installation flow is used.
+Use `./wbs-dev installer-dev web --mock` for UI and UX development without changing installer or Suite state. Mock mode uses the same live development server, enables direct navigation among the progress steps, and retains the normal form and validation behavior. Starting installation streams a short simulated image-pull and service-startup log through the completed screen. It does not write configuration, signal the host launcher, or start services. Without `--mock`, steps cannot be skipped and the real installation flow is used.
 
 To test a complete installation from the current checkout, build the tools and product images before starting the installer:
 
@@ -107,7 +107,7 @@ This first builds the checkout's tools image and then uses it to build every pro
 - The experimental `development/wbs` launcher selects the checkout's local `wikibase/wbs-tools:latest` image without pulling. It builds that image when missing; run `wbs-dev build wbs-tools` after changing the tools application.
 - Source installations requested with `--from-source` build `wikibase/wbs-tools:latest` and explicitly select `development/docker-compose.local-images.yml` for that operation.
 - `wbs-dev installer-dev web` builds and uses the local `latest` images for that development session without changing the checkout's persistent product-image selection.
-- `wbs-dev installer-dev web --mock` builds only the installer tools image and simulates progress without changing configuration or services.
+- `wbs-dev installer-dev web --mock` runs the live development server and simulates progress without changing configuration or services.
 - The installer web server runs on port `8888` for browser UI installations.
 - For non-localhost web installs, the installer tries to obtain a Let's Encrypt certificate on port `80`. If that fails, it falls back to a self-signed certificate and the browser will warn.
 - If `docker-compose.local.yml` exists in the Wikibase Suite directory, it is merged automatically.

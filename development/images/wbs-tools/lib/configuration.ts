@@ -1,16 +1,18 @@
 import crypto from 'crypto';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'fs';
+import { join } from 'path';
 import {
 	parseEnvContent,
 	serializeEnvContent
 } from './validation.js';
 
-export const ENV_FILE_PATH = '/app/wbs/.env';
-export const ENV_TEMPLATE_FILE_PATH = '/app/wbs/template.env';
-export const DOT_ENV_EXAMPLE_FILE_PATH = '/app/wbs/.env.example';
-export const LOCAL_SETTINGS_FILE_PATH = '/app/wbs/config/LocalSettings.php';
+const WBS_DIR = process.env.WBS_DIR || '/app/wbs';
+export const ENV_FILE_PATH = process.env.ENV_FILE_PATH || join( WBS_DIR, '.env' );
+export const ENV_TEMPLATE_FILE_PATH = join( WBS_DIR, 'template.env' );
+export const DOT_ENV_EXAMPLE_FILE_PATH = join( WBS_DIR, '.env.example' );
+export const LOCAL_SETTINGS_FILE_PATH = join( WBS_DIR, 'config', 'LocalSettings.php' );
 export const LAUNCH_TRIGGER_PATH = process.env.LAUNCH_TRIGGER_PATH || '';
-export const LOG_PATH = '/app/installation.log';
+export const LOG_PATH = process.env.LOG_PATH || '/app/installation.log';
 const DEFAULT_DB_NAME = 'my_wiki';
 const DEFAULT_DB_USER = 'sqluser';
 const EXISTING_INSTALL_STATES = new Set( [ 'none', 'running', 'previous' ] );

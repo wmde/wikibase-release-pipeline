@@ -4,6 +4,7 @@ set -euo pipefail
 # --- Expected Variables ---
 
 export WBS_DIR
+export WBS_DEVELOPMENT_ROOT
 export INSTALLER_DEV
 export INSTALLER_DEV_MOCK
 export DEBUG
@@ -28,7 +29,6 @@ INSTALLER_WORKER_CONTAINER_NAME=${WBS_INSTALLER_WORKER_CONTAINER_NAME:-wikibase-
 INSTALLER_PORT=${WBS_INSTALLER_PORT:-8888}
 SERVER_IP=$(curl --silent --show-error --fail https://api.ipify.org || echo "127.0.0.1")
 CERTBOT_IMAGE="${CERTBOT_IMAGE:-certbot/certbot:v4.2.0}"
-WBS_TOOLS_PROJECT_DIR="$WBS_DIR/development/images/wbs-tools"
 LE_DIR="$WBS_STATE_DIR/letsencrypt"
 CERTS_DIR="$WBS_STATE_DIR/certs"
 LAUNCH_TRIGGER_PATH="${LAUNCH_TRIGGER_PATH:-$WBS_STATE_DIR/install-request}"
@@ -149,60 +149,14 @@ detect_existing_install_state() {
   fi
 }
 
-start_installer_webserver() {
-  local command
-
-  # Ensure old container is gone before build/run
+prepare_installer_webserver() {
   remove_any_existing_installer_webserver
   mkdir -p "$WBS_STATE_DIR"
   touch "$ENV_FILE_PATH" "$LOG_PATH"
   rm -f "$LAUNCH_TRIGGER_PATH"
+}
 
-  # Run with volumes mapped as before
-  if $INSTALLER_DEV; then
-    command=(
-      docker run -d
-      --name "$INSTALLER_CONTAINER_NAME"
-      -e "SERVER_IP=$SERVER_IP"
-      -e "LOCALHOST=$LOCALHOST"
-      -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
-      -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
-      -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
-      -e DEV_SERVER=true
-      -e "INSTALLER_DEV_MOCK=${INSTALLER_DEV_MOCK:-false}"
-      -p "$INSTALLER_PORT:443"
-      -v "$WBS_DIR:/app/wbs:ro"
-      -v "$ENV_FILE_PATH:/app/wbs/.env"
-      -v "$WBS_STATE_DIR:/app/state"
-      -v "$CERTS_DIR:/app/certs"
-      -v "$LOG_PATH:/app/installation.log"
-      -v "$WBS_TOOLS_PROJECT_DIR/web:/app/web"
-      -v "$WBS_TOOLS_PROJECT_DIR/shared:/app/shared"
-      "$WBS_TOOLS_IMAGE"
-      npm run dev:server
-    )
-  else
-    command=(
-      docker run -d
-      --name "$INSTALLER_CONTAINER_NAME"
-      -e "SERVER_IP=$SERVER_IP"
-      -e "LOCALHOST=$LOCALHOST"
-      -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
-      -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
-      -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
-      -p "$INSTALLER_PORT:443"
-      -v "$WBS_DIR:/app/wbs:ro"
-      -v "$ENV_FILE_PATH:/app/wbs/.env"
-      -v "$WBS_STATE_DIR:/app/state"
-      -v "$CERTS_DIR:/app/certs"
-      -v "$LOG_PATH:/app/installation.log"
-      "$WBS_TOOLS_IMAGE"
-      node dist/wbs.js configure "${CONFIGURE_ARGS[@]}"
-    )
-  fi
-
-  run_args "${command[@]}"
-
+show_installer_url() {
   echo "Open the following URL in your browser to continue:"
   echo
   echo "https://$INSTALLER_HOST:$INSTALLER_PORT"
@@ -216,6 +170,56 @@ start_installer_webserver() {
   fi
 }
 
+cleanup_installer_development() {
+  docker rm -fv "$INSTALLER_WORKER_CONTAINER_NAME" >/dev/null 2>&1 || true
+}
+
+start_installer_development_server() {
+  if [[ -z "${WBS_DEVELOPMENT_ROOT:-}" ]]; then
+    echo "WBS_DEVELOPMENT_ROOT is required for installer development." >&2
+    return 1
+  fi
+
+  if [[ "${INSTALLER_DEV_MOCK:-false}" != true ]]; then
+    start_installer_worker
+  fi
+
+  export SERVER_IP
+  export EXISTING_INSTALL_STATE
+  export DEV_SERVER=true
+  export INSTALLER_DEV_MOCK
+  export SSL_CERT_KEY_PATH="$CERTS_DIR/key.pem"
+  export SSL_CERT_PATH="$CERTS_DIR/cert.pem"
+
+  trap cleanup_installer_development EXIT
+  show_installer_url
+  cd "$WBS_DEVELOPMENT_ROOT"
+  pnpm --filter wbs-tools dev:server
+}
+
+start_installer_webserver() {
+  local command=(
+    docker run -d
+    --name "$INSTALLER_CONTAINER_NAME"
+    -e "SERVER_IP=$SERVER_IP"
+    -e "LOCALHOST=$LOCALHOST"
+    -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
+    -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
+    -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
+    -p "$INSTALLER_PORT:443"
+    -v "$WBS_DIR:/app/wbs:ro"
+    -v "$ENV_FILE_PATH:/app/wbs/.env"
+    -v "$WBS_STATE_DIR:/app/state"
+    -v "$CERTS_DIR:/app/certs"
+    -v "$LOG_PATH:/app/installation.log"
+    "$WBS_TOOLS_IMAGE"
+    node dist/wbs.js configure "${CONFIGURE_ARGS[@]}"
+  )
+
+  run_args "${command[@]}"
+  show_installer_url
+}
+
 echo
 if $INSTALLER_DEV; then
   echo "🔧 Launching web-based installer (dev mode with live reload)..."
@@ -224,11 +228,18 @@ else
 fi
 echo
 
-debug "Launching installer webserver container..."
+debug "Launching installer webserver..."
 EXISTING_INSTALL_STATE="$(detect_existing_install_state)"
 
-# No need to cd; we reference absolute paths for build context and Dockerfile
+# Prepare the certificate and state shared by packaged and development servers.
 generate_cert_for_installer_webserver
+prepare_installer_webserver
+
+if $INSTALLER_DEV; then
+  start_installer_development_server
+  exit 0
+fi
+
 start_installer_webserver
 
 if [[ "${CONFIGURE_ONLY:-false}" == true ]]; then

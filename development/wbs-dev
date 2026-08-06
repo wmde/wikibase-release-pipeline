@@ -59,6 +59,21 @@ lib/buildx.sh \
   --silent \
   -- "${build_args[@]}"
 
-exec docker compose --progress quiet run --no-TTY --rm wbs-dev \
+compose_run_args=(--progress quiet run --no-TTY --rm)
+if [[ "${1:-}" == "installer-dev" && "${2:-}" == "web" ]]; then
+  installer_port=${WBS_INSTALLER_PORT:-8888}
+  compose_run_args+=(--publish "$installer_port:443" --env "WBS_INSTALLER_PORT=$installer_port")
+  cleanup_installer_dev() {
+    docker rm -fv wbs-dev-installer-worker >/dev/null 2>&1 || true
+  }
+  trap cleanup_installer_dev EXIT
+
+  docker compose "${compose_run_args[@]}" wbs-dev \
+    -c 'pnpm exec tsx wbs-dev.ts "$@"' \
+    -- "$@"
+  exit 0
+fi
+
+exec docker compose "${compose_run_args[@]}" wbs-dev \
   -c 'pnpm exec tsx wbs-dev.ts "$@"' \
   -- "$@"
