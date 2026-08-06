@@ -13,11 +13,11 @@ The presence of `config/LocalSettings.php` controls whether WBS starts from exis
 - If the file exists, the Wikibase service uses it.
 - If the file is missing, the Wikibase service runs setup using the current image and environment.
 
-This is why changing `.env` and restarting is not a supported way to reconfigure an existing setup. With the exception of `METADATA_CALLBACK`, `WIKIMEDIA_OAUTH_CONSUMER_KEY`, and `WIKIMEDIA_OAUTH_CONSUMER_SECRET`, `.env` values are first-start inputs that were already written into `LocalSettings.php`, the database volume, or other generated state.
+This is why changing `.env` and restarting is not a supported way to reconfigure an existing setup. With the exception of `METADATA_CALLBACK`, `WIKIMEDIA_OAUTH_CONSUMER_TOKEN`, and `WIKIMEDIA_OAUTH_SECRET_TOKEN`, `.env` values are first-start inputs that were already written into `LocalSettings.php`, the database volume, or other generated state.
 
 If you need to change first-start setup values, follow [Resetting WBS while keeping its configuration](./reset.md).
 
-To enable or update login with a Wikimedia account, follow [Wikimedia OAuth login](../images/wikibase/README.md#wikimedia-oauth-login).
+To enable or update login with a Wikimedia account, follow [Login with Wikimedia](./login-with-wikimedia.md).
 
 For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](./updating.md#major-version-upgrades).
 

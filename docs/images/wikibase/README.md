@@ -22,7 +22,7 @@ This image contains the Wikibase extension running on top of MediaWiki. Wikibase
 
 ### 2) Set the environment variables
 
-On first launch without `/config/LocalSettings.php`, the image uses the environment variables below to create the file. All variables other than `METADATA_CALLBACK`, `WIKIMEDIA_OAUTH_CONSUMER_KEY`, and `WIKIMEDIA_OAUTH_CONSUMER_SECRET` are initial setup values and should not be changed after the image first starts.
+On first launch without `/config/LocalSettings.php`, the image uses the environment variables below to create the file. All variables other than `METADATA_CALLBACK`, `WIKIMEDIA_OAUTH_CONSUMER_TOKEN`, and `WIKIMEDIA_OAUTH_SECRET_TOKEN` are initial setup values and should not be changed after the image first starts.
 
 Variables in **bold** are required, and the image fails to start if any of them is unset. Variables with default values do not need to be set explicitly.
 
@@ -43,8 +43,8 @@ Variables in **bold** are required, and the image fails to start if any of them 
 | `QUICKSTATEMENTS_PUBLIC_URL` | undefined  | Public URL of the QuickStatements server, such as [wikibase/quickstatements](https://hub.docker.com/r/wikibase/quickstatements). Leave undefined to disable QuickStatements functionality.                   |
 | `WDQS_PUBLIC_ENDPOINT_URL`   | undefined  | Public URL of the WDQS API, such as the one provided by [wikibase/wdqs](https://hub.docker.com/r/wikibase/wdqs). Leave undefined to disable WDQS integration.                                                |
 | `WDQS_PUBLIC_FRONTEND_URL`   | undefined  | Public URL of the WDQS frontend, such as [wikibase/wdqs-frontend](https://hub.docker.com/r/wikibase/wdqs-frontend). Used by WikibaseManifest and by `<sparql tryit="1">` links. Leave undefined to disable WDQS integration. |
-| `WIKIMEDIA_OAUTH_CONSUMER_KEY` | undefined | Client application key from a Wikimedia OAuth 1.0a consumer. Wikimedia login is active only when this and the secret below are provided. |
-| `WIKIMEDIA_OAUTH_CONSUMER_SECRET` | undefined | Client application secret from that consumer. |
+| `WIKIMEDIA_OAUTH_CONSUMER_TOKEN` | undefined | Consumer token from a Wikimedia OAuth 1.0a consumer. Wikimedia login is active only when this and the secret token below are provided. |
+| `WIKIMEDIA_OAUTH_SECRET_TOKEN` | undefined | Secret token from that consumer. |
 
 ## Features
 
@@ -72,7 +72,7 @@ To enable Wikimedia login:
 
 1. At [Wikimedia OAuth consumer registration](https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose/oauth1a), propose a new OAuth 1.0a consumer.
 2. Set its callback URL to `https://<your-wikibase-host>/w/index.php?title=Special:PluggableAuthLogin` with the default basic permissions.
-3. In your WBS `.env` file, set `WIKIMEDIA_OAUTH_CONSUMER_KEY` and `WIKIMEDIA_OAUTH_CONSUMER_SECRET` to the resulting client application key and secret.
+3. In your WBS `.env` file, set `WIKIMEDIA_OAUTH_CONSUMER_TOKEN` and `WIKIMEDIA_OAUTH_SECRET_TOKEN` to the resulting consumer token and secret token.
 4. From your WBS directory, apply the new configuration:
 
    ```sh

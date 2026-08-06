@@ -1,11 +1,11 @@
 <?php
 
-$wikimediaConsumerKey = getenv( 'WIKIMEDIA_OAUTH_CONSUMER_KEY' );
-$wikimediaConsumerSecret = getenv( 'WIKIMEDIA_OAUTH_CONSUMER_SECRET' );
+$wikimediaConsumerToken = getenv( 'WIKIMEDIA_OAUTH_CONSUMER_TOKEN' );
+$wikimediaSecretToken = getenv( 'WIKIMEDIA_OAUTH_SECRET_TOKEN' );
 
 if (
-	$wikimediaConsumerKey !== false && $wikimediaConsumerKey !== '' &&
-	$wikimediaConsumerSecret !== false && $wikimediaConsumerSecret !== ''
+	$wikimediaConsumerToken !== false && $wikimediaConsumerToken !== '' &&
+	$wikimediaSecretToken !== false && $wikimediaSecretToken !== ''
 ) {
 	// Authenticate local Wikibase users through a Wikimedia OAuth 1.0a consumer.
 	// Credentials are deliberately read at runtime so they can be added after
@@ -20,8 +20,8 @@ if (
 		'data' => [
 			'type' => 'mediawiki',
 			'uri' => 'https://meta.wikimedia.org/w/index.php?title=Special:OAuth',
-			'clientId' => $wikimediaConsumerKey,
-			'clientSecret' => $wikimediaConsumerSecret,
+			'clientId' => $wikimediaConsumerToken,
+			'clientSecret' => $wikimediaSecretToken,
 		],
 	];
 }
