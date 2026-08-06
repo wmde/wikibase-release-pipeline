@@ -1,4 +1,4 @@
-# 1.2.0 (2026-07-20)
+# 1.2.0 (2026-08-06)
 
 - Updates QuickStatements to its latest upstream commit, adding full lexeme support, `LAST_FORM` and `LAST_SENSE`, automatic import-format detection, and interface improvements alongside fixes.
 - Updates MagnusTools to its latest upstream commit, including compatibility, security, API retry, and modernization work.
