@@ -1,4 +1,4 @@
-# 18) Anonymous access defaults for the Wikibase image {#adr_0018}
+# 18) Anonymous access defaults for the Wikibase Docker Image {#adr_0018}
 
 Date: 2026-04-20
 
@@ -8,11 +8,11 @@ accepted
 
 ## Context
 
-The Wikibase Suite Docker image ships a `LocalSettings.wbs.php` template which is appended to the generated `LocalSettings.php` on first install. Historically, that template also contained the logic for loading bundled configuration fragments from `development/images/wikibase/LocalSettings.d`.
+The Wikibase Docker Image ships a `LocalSettings.wbs.php` template which is appended to the generated `LocalSettings.php` on first install. Historically, that template also contained the logic for loading bundled configuration fragments from `docker-images/wikibase/LocalSettings.d`.
 
 That means the user-owned `LocalSettings.php` in the config volume has also contained image-managed bootstrap logic. If an operator edits that loading logic incorrectly, they can break the bundled configuration model of the image.
 
-We want to change the default anonymous access model for the bundled Wikibase image used by Wikibase Suite. The goal is to require a logged-in account for write actions while keeping public read access available.
+We want to change the default anonymous access model for the bundled Wikibase Docker Image used by Wikibase Suite. The goal is to require a logged-in account for write actions while keeping public read access available.
 
 This decision is driven by two considerations:
 
@@ -23,11 +23,11 @@ We also want this default to be easy to locate, reason about, and override by op
 
 ## Decision
 
-The Wikibase image will keep anonymous read access enabled by default, but will disable anonymous write actions and anonymous self-service account creation by default.
+The Wikibase Docker Image will keep anonymous read access enabled by default, but will disable anonymous write actions and anonymous self-service account creation by default.
 
 The affected defaults will be implemented in:
 
-`development/images/wikibase/LocalSettings.MediaWiki.php`
+`docker-images/wikibase/LocalSettings.MediaWiki.php`
 
 That location should contain only the non-default settings needed for this policy:
 

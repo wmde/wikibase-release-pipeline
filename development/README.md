@@ -1,6 +1,6 @@
-# Wikibase Suite development
+# Wikibase Suite (WBS) development
 
-This development area contains the image sources and the build, integration-test, and release tooling for Wikibase Suite. It is for contributors and advanced users building customized images; it is not required to install or operate WBS with the published images.
+This development area contains the build, integration-test, and release tooling for Wikibase Suite. It is for contributors and advanced users building customized images; it is not required to install or operate WBS with the published images.
 
 The installable product configuration and user documentation live at the [repository root](../README.md).
 
@@ -44,7 +44,7 @@ The current local profile uses `wikibase.test` and `query.wikibase.test`. The co
 
 Compose files are applied in this order: the root `docker-compose.yml`, the development local-image override when selected, and the optional root `docker-compose.local.yml` last. This allows checkout-specific customizations to override either image mode.
 
-Use `./wbs reset` to reset the development instance. It asks independently whether to delete the generated `.env` configuration and whether to delete services, volumes, data, and generated runtime files. Repository-root `local.env` is always preserved. A data reset leaves the Suite stopped; run `./wbs up` explicitly when you want to start it again. Use `--force` only for automation when both configuration and data should be deleted. The deleted state is described in the user-facing [reset documentation](../docs/operating/reset.md).
+Use `./wbs reset` to reset the development instance. It asks independently whether to delete the generated `.env` configuration and whether to delete services, volumes, data, and generated runtime files. Repository-root `local.env` is always preserved. A data reset leaves the Suite stopped; run `./wbs up` explicitly when you want to start it again. Use `--force` only for automation when both configuration and data should be deleted. The deleted state is described in the user-facing [reset documentation](../docs/operate/reset.md).
 
 For exploratory work inside an integration-test environment instead, start exactly one named suite with `--setup`:
 
@@ -102,12 +102,14 @@ Use the documentation according to the task:
 | Run build, test, lint, update, or publish commands | `./wbs-dev <command> --help` |
 | Add or debug an integration test | [Integration test suites](./tests/README.md) |
 | Develop or test the installer and operations tools | [WBS tools development guide](./images/wbs-tools/docs/README.md) |
-| Prepare and publish a release | [Release process](./docs/releasing.md) |
+| Write end-user or developer documentation | [Documentation guide](./docs/document/README.md) |
+| Find contributor guides and engineering records | [Contributor documentation](./docs/README.md) |
+| Prepare and publish a release | [Release process](./docs/release.md) |
 | Understand an architectural decision | [Architecture Decision Records](./docs/adr/index.md) |
 
 ## Repository layout
 
-- [`images/`](./images): Dockerfiles and supporting source for the published Wikibase Suite images
+- [`images/`](./images): Dockerfiles and supporting source for the published WBS Docker Images
 - [`tests/`](./tests): integration test runner, suites, and specifications
 - [`commands/`](./commands): implementations of the `wbs-dev` command families
 - [`lib/`](./lib): shared process, repository, selection, and task infrastructure
@@ -117,4 +119,4 @@ Use the documentation according to the task:
 - [`wbs`](./wbs): experimental developer entry point for emerging Suite lifecycle commands
 - [`docker-compose.local-images.yml`](./docker-compose.local-images.yml): product override selecting images built from the current checkout
 
-Canonical image usage documentation is in the [WBS Images Guide](../docs/images/README.md).
+Canonical image usage documentation is indexed in [WBS Docker Images](../docs/docker-images.md) and maintained beside each image's source.

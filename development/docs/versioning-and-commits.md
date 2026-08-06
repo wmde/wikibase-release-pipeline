@@ -23,7 +23,7 @@ Changed paths determine which independently versioned projects a commit affects;
 
 The command also proposes changelog entries from release-driving commits. Release operators must review and may edit the proposed version and changelog before committing them. The `./wbs-dev release` commands only publish validated, committed release tags. Prerelease versions are not currently supported.
 
-See the [release process](./releasing.md) for preparation, publication ordering, and verification.
+See the [release process](./release.md) for preparation, publication ordering, and verification.
 
 ## Commit types
 

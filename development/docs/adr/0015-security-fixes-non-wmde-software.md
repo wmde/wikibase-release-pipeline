@@ -43,7 +43,7 @@ Applying security fixes to the running Wikibase instance (or other Wikibase rela
 
 #### MediaWiki
 
-In the case of MediaWiki or any extension (including Wikibase) on Gerrit, rebuilding and publishing through the current [release process](../releasing.md) after the security fix has been applied should be sufficient to include the security fixes in the new images and release artifacts.
+In the case of MediaWiki or any extension (including Wikibase) on Gerrit, rebuilding and publishing through the current [release process](../release.md) after the security fix has been applied should be sufficient to include the security fixes in the new images and release artifacts.
 
 #### ElasticSearch
 
@@ -61,7 +61,7 @@ Pre-release announcement about the security releases will also be published on t
 
 ### Recognizing the need to release
 
-To some extent the most important part of continuously delivering security fixes is to be notified of when they are available. Since most of the code shipped in the Wikibase docker images aren't WMDE maintained we need to become aware of when they are available to be included.
+To some extent the most important part of continuously delivering security fixes is to be notified of when they are available. Since most of the code shipped in the Wikibase Docker Images aren't WMDE maintained we need to become aware of when they are available to be included.
 
 For MediaWiki we could add some simple test to compare which is the latest stable version we have released to the one that [currently is available](https://www.mediawiki.org/wiki/Template:MW_stable_release_number). When there is a mismatch we know there is a release available.
 

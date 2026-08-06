@@ -5,11 +5,7 @@ Updates in concert with Wikibase image v8.0.0 (MediaWiki 1.46.0) release.
 - Moves the Wikibase and Wikibase jobrunner services to the `wikibase/wikibase:8` image.
 - Moves the search service to the new `wikibase/opensearch:1` image, based on OpenSearch 1.3.20 and required by MediaWiki 1.46.
 - Moves the Wikibase Suite Compose configuration from `deploy/` to the repository root. Existing installations must move their `.env`, complete `config/` contents, and any Compose override to the root during the upgrade.
-- Adds the Wikibase Suite installer at the repository root.
-- Adds `install --from-source` for testing a complete installation from an unpublished source checkout.
-- Reuses the public CI build cache by default for developer and installer source builds.
-- Allows compatible WBS tools updates within the selected major version without requiring another WBS release.
-- Adds optional login with Wikimedia accounts. See [Enable Wikimedia login](./docs/images/wikibase/README.md#wikimedia-oauth-login).
+- Adds the Wikibase Suite installer.
 - Makes Suite and image documentation part of the root product documentation and moves image sources, integration tests, and release tooling under `development/`.
 - See the [Wikibase image changelog](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/CHANGELOG.md#800-2026-07-20) for the paired image changes in this release.
 
@@ -64,7 +60,7 @@ Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
 
 ### 🚀 Features
 
-- Adds a [Call Back](https://github.com/wmde/wikibase-suite/blob/main/docs/images/wikibase/README.md#wikibase-suite-call-back) feature to allow instances to share publicly available data to analyze the use of Wikibase and increase discoverability.
+- Adds a [Call Back](https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/README.md#wikibase-suite-call-back) feature to allow instances to share publicly available data to analyze the use of Wikibase and increase discoverability.
 
 
 ## 4.0.1 (2025-03-21)

@@ -20,7 +20,7 @@ This is especially visible when updating:
 
 Extend `./wbs-dev update-sources` with image-specific update providers. Each provider will select or propose compatible upstream versions, update related pins atomically, and produce structured metadata describing the old and new sources.
 
-Use that metadata during release preparation to generate image-specific changelog drafts. For example, a Wikibase image entry should identify the MediaWiki update, link to its release notes, and link to comparison ranges for bundled extension updates. A WDQS entry should identify and link to the selected Query Service release and comparison.
+Use that metadata during release preparation to generate image-specific changelog drafts. For example, a Wikibase Docker Image entry should identify the MediaWiki update, link to its release notes, and link to comparison ranges for bundled extension updates. A WDQS entry should identify and link to the selected Query Service release and comparison.
 
 Generated output remains a proposal: operators review compatibility, semantic-version impact, links, and wording before committing it. Automatic updates must respect the compatibility policy in each image's `UPDATING.md`; they must not silently cross an incompatible release boundary.
 

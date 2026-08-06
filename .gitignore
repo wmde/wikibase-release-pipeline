@@ -17,7 +17,7 @@ config/*.json
 config/*.php
 !config/Extensions.php
 config/extensions/*
-!config/extensions/README.md
+!config/extensions/.gitkeep
 
 # Keep the pre-8.0 product directory ignored while installations migrate to root
 deploy/

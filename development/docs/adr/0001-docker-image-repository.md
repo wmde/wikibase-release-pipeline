@@ -8,7 +8,7 @@ accepted
 
 ## Context
 
-Currently the Wikibase docker images are built on travis and deployed to Dockerhub.
+Currently the Wikibase Docker Images are built on travis and deployed to Dockerhub.
 
 There are a number of existing docker repositories we could consider to host our images. We need not pick only one repository but for the purposes of documentaion and clarity we probably want a single canonical one then other repositories could then be "syndicated" from the canonical one.
 
@@ -30,7 +30,7 @@ Some key properties of existing registries were considered in the table below:
 
 ## Decision
 
-We will publish Docker release images to Dockerhub. Dockerhub is the goto location for publishing Docker images. We do not consider publishing Wikibase Docker images to WMF Docker Registry yet, as its purpose is to hold images to be used in Wikimedia production infrastructure. This might change once Wikibase (i.e. MediaWiki and extensions) will be deployed using container images - not the case as of December 2020.
+We will publish Docker release images to Dockerhub. Dockerhub is the goto location for publishing Docker images. We do not consider publishing Wikibase Docker Images to WMF Docker Registry yet, as its purpose is to hold images to be used in Wikimedia production infrastructure. This might change once Wikibase (i.e. MediaWiki and extensions) will be deployed using container images - not the case as of December 2020.
 
 ## Consequences
 

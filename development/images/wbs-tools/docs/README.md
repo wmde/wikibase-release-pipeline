@@ -1,4 +1,4 @@
-# Wikibase Suite tools development
+# Wikibase Suite (WBS) Tools development
 
 This document covers local testing, advanced installer options, and the current release model for the installer code.
 
@@ -6,7 +6,7 @@ The installer currently supports first-time Wikibase Suite installation through 
 
 ## Versioning and releases
 
-The containerized application is released independently as the [`wikibase/wbs-tools` image](../../../../docs/images/wbs-tools/README.md), using `wbs-tools@X.Y.Z` release tags. WBS selects a compatible tools major version.
+The containerized application is released independently as the [`wikibase/wbs-tools` image](../README.md), using `wbs-tools@X.Y.Z` release tags. WBS selects a compatible tools major version.
 
 Compatible minor and patch tools releases become available to normal installations without changing the WBS configuration. A WBS release is required to select a new tools major version.
 
@@ -17,7 +17,7 @@ The branch and tag model is:
 - `main` hosts the public bootstrap script at `raw/main/install`. The bootstrap discovers and installs the latest stable `wbs@…` tag.
 - `dev` is the integration branch for the next release.
 - Wikibase Suite release tags use the format `wbs@X.Y.Z`.
-- WBS tools image release tags use the format `wbs-tools@X.Y.Z`.
+- WBS Tools Docker Image release tags use the format `wbs-tools@X.Y.Z`.
 - New development should happen on `dev` or feature branches, then merge to `main` only when ready to become the public installer path.
 
 ## Installer entry points

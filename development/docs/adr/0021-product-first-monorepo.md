@@ -15,8 +15,8 @@ Separating the product configuration into another repository would require every
 Keep Wikibase Suite and its image development pipeline in one repository and organize it around the user-facing product:
 
 - The repository root contains the installable Compose product, installer, configuration, changelog, and user documentation.
-- `docs/images/` contains the canonical usage documentation and changelogs for independently usable Suite images.
-- `development/images/` contains image Dockerfiles and build inputs.
+- `docs/` contains the user-facing WBS documentation index and operations guides, with installation, configuration, and migration guides grouped in dedicated subdirectories.
+- `docker-images/` contains each independently usable image's README, changelog, Dockerfile, and build inputs.
 - `development/tests/` contains the integration test suite.
 - Shared build and release tooling remains under `development/`.
 

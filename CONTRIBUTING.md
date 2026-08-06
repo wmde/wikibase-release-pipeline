@@ -4,6 +4,8 @@ Contributions to the Wikibase Suite product configuration, images, documentation
 
 Start with the [Wikibase Suite development guide](./development/README.md) for requirements, common workflows, and task-specific documentation.
 
+When writing or revising end-user or developer documentation, follow the [documentation guide](./development/docs/document/README.md).
+
 ## Commit and submit the change
 
 Use the repository's [versioning and Conventional Commits policy](./development/docs/versioning-and-commits.md). To preserve that metadata on `main`, use a conventional pull-request title when squash merging, or retain conventional commit messages when merging without squash.

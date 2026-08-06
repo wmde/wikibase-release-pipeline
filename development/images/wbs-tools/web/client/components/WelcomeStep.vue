@@ -14,7 +14,7 @@
 					This Wikibase Suite has already been installed. The installer cannot safely be run again
 					for this installation. To start over with a new configuration, see
 					<a
-						href="https://github.com/wmde/wikibase-release-pipeline/blob/main/docs/operating/reset.md"
+						href="https://github.com/wmde/wikibase-suite/blob/main/docs/reset.md"
 						target="_blank"
 						rel="noreferrer"
 					>Resetting an instance</a>.

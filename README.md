@@ -13,11 +13,11 @@ Wikibase Suite (WBS) is a production-ready Wikibase software bundle that allows 
 
 ## Installing WBS
 
-For a new server, start with the [WBS Installation Guide](./docs/install.md).
+For a new server, start with [Installing Wikibase Suite (WBS)](./docs/install/README.md).
 
 ## Operating WBS
 
-For an existing server installation, start with the [WBS Operations Guide](./docs/operating/README.md).
+For an existing server installation, start with [Operating Wikibase Suite (WBS)](./docs/operate/README.md).
 
 ## Community and Support
 
@@ -28,11 +28,11 @@ For an existing server installation, start with the [WBS Operations Guide](./doc
 - [Wikibase Suite Phabricator board](https://phabricator.wikimedia.org/project/board/5755/)
 - [Wikibase Suite team email](mailto:wikibase-suite-support@wikimedia.de)
 
-If something is not working as expected, start with [Troubleshooting](./docs/operating/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If something is not working as expected, start with [Troubleshooting](./docs/operate/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
 
-## WBS Images
+## WBS Docker Images
 
-WBS uses a set of published container images which can also be used independently. See the [WBS Images Guide](./docs/images/README.md) for their configuration options and release notes.
+WBS uses a set of published Docker images which can also be used independently. See [Wikibase Suite (WBS) Docker Images](./docs/docker-images.md) for their configuration options and release notes.
 
 ## Development
 
