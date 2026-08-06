@@ -13,6 +13,8 @@ You need a Wikimedia account to register the OAuth consumer. Your WBS instance m
 
 1. Open [Wikimedia OAuth consumer registration](https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose/oauth1a) and log in to your Wikimedia account if prompted.
 
+<img align="right" width="360" src="./assets/wikimedia-oauth-consumer-details.png" alt="Wikimedia OAuth consumer form with the application name, contact email address, and callback URL highlighted">
+
 2. Describe your Wikibase in the required fields:
 
    - **Application name:** Enter a name that identifies your Wikibase.
@@ -27,11 +29,15 @@ You need a Wikimedia account to register the OAuth consumer. Your WBS instance m
 
    Replace `<your-wikibase-host>` with your Wikibase hostname.
 
-   ![Wikimedia OAuth consumer form with the application name and callback URL highlighted](./assets/wikimedia-oauth-consumer-details.png)
+<br clear="right">
+<br>
+
+<img align="right" width="360" src="./assets/wikimedia-oauth-consumer-submit.png" alt="Wikimedia OAuth consumer form with the acknowledgement and Propose consumer button highlighted">
 
 4. Keep the remaining default settings, including the default basic permissions. At the bottom of the form, select the acknowledgement checkbox, then select **Propose consumer**.
 
-   ![Wikimedia OAuth consumer form with the acknowledgement and Propose consumer button highlighted](./assets/wikimedia-oauth-consumer-submit.png)
+<br clear="right">
+<br>
 
 5. Copy the **consumer token** and **secret token** shown after the consumer is created.
 
@@ -67,8 +73,14 @@ By default, anyone who can authenticate with Wikimedia can create a correspondin
    $wgOAuthDisallowRemoteOnlyAccounts = true;
    ```
 
-2. A user who wants to link accounts must first log in with their local Wikibase credentials.
+2. Restart the Wikibase and job-runner services:
 
-3. In **Preferences**, under **User profile**, open **Manage remote accounts**, then select **Log in with Wikimedia**.
+   ```sh
+   docker compose restart wikibase wikibase-jobrunner
+   ```
+
+3. A user who wants to link accounts must first log in with their local Wikibase credentials.
+
+4. In **Preferences**, under **User profile**, open **Manage remote accounts**, then select **Log in with Wikimedia**.
 
 After the accounts are linked, the user can use **Login with Wikimedia** for future logins.

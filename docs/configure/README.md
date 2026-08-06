@@ -24,13 +24,31 @@ To enable or update login with a Wikimedia account, follow [Enabling Login with 
 
 For a major version upgrade, preserve the existing configuration and follow the [major upgrade procedure](../operate/updating.md#major-version-upgrades).
 
+After changing `config/LocalSettings.php`, restart the Wikibase and job-runner services:
+
+```sh
+docker compose restart wikibase wikibase-jobrunner
+```
+
 ## config/wikibase-php.ini
 
 This is Wikibase's `php.ini` override file, a good place for tuning PHP configuration values. It gets loaded by the MediaWiki Wikibase web server's PHP interpreter.
 
+After changing `config/wikibase-php.ini`, restart the Wikibase and job-runner services:
+
+```sh
+docker compose restart wikibase wikibase-jobrunner
+```
+
 ## config/wdqs-frontend-config.json
 
 This configuration file allows you to control `wdqs-frontend`, the GUI for the Query Service.
+
+After changing `config/wdqs-frontend-config.json`, restart the Query Service frontend:
+
+```sh
+docker compose restart wdqs-frontend
+```
 
 By default, query examples are loaded from the local Wikibase page `Project:SPARQL/examples`. Administrators can create that page and add local examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 

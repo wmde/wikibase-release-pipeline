@@ -68,7 +68,7 @@ Edit `.env` and set the values below.
 | `DB_NAME` | `my_wiki` | The name of the MariaDB database created for MediaWiki. The default value can be used for a new install. |
 | `DB_USER` | `sqluser` | The MariaDB user created for MediaWiki. The default value can be used for a new install. |
 | `DB_PASS` | `change-this-password` | The MariaDB password for `DB_USER`. Set this to something other than the default value before first start. |
-| `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. Unlike the other `.env` values, this value may be changed after initial setup; restart the services for the change to take effect. |
+| `METADATA_CALLBACK` | `true` | Set to `true` to opt into the WBS metadata callback, or `false` to opt out. |
 | `WIKIMEDIA_OAUTH_CONSUMER_TOKEN` (optional) | None | Wikimedia OAuth consumer token. See [Enabling Login with Wikimedia](../configure/login-with-wikimedia.md). |
 | `WIKIMEDIA_OAUTH_SECRET_TOKEN` (optional) | None | Wikimedia OAuth secret token. |
 
