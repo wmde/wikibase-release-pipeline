@@ -4,6 +4,7 @@
 
 - Configures OAuth to use the MediaWiki 1.46-compatible local user source
 - Adds PluggableAuth, WSOAuth, and related config to enabled Wikimedia OAuth logins option
+- Ignores initial MediaWiki setup environment variables after installation.
 
 ## Dependency updates
 

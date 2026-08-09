@@ -31,6 +31,12 @@ else
 fi
 
 if [ -e "/config/LocalSettings.php" ]; then
+    # These values are inputs to initial setup. Existing configuration is authoritative.
+    unset \
+        DB_SERVER DB_PASS DB_USER DB_NAME \
+        MW_ADMIN_NAME MW_ADMIN_EMAIL MW_ADMIN_PASS \
+        MW_WG_SERVER MW_WG_LANGUAGE_CODE MW_WG_SITENAME \
+        ELASTICSEARCH_HOST
     cp /config/LocalSettings.php /var/www/html/LocalSettings.php
     # Always run update (this might be the first run off of a new image version on existing config and data)
     # TODO: Switch to the new way of running maintenance scripts after dropping 1.39 support end of 2025
