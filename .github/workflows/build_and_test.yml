@@ -11,7 +11,7 @@ on:
         description: Build and assemble CI images for AMD64 and ARM64.
         type: boolean
         required: true
-        default: true
+        default: false
       test_arm64:
         description: Run every test suite against the ARM64 image set too.
         type: boolean
