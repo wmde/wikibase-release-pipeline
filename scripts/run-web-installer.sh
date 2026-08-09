@@ -60,21 +60,21 @@ generate_cert_for_installer_webserver() {
     INSTALLER_HOST="$INSTALLER_SUBDOMAIN.$SERVER_IP.nip.io"
   fi
 
-  run "mkdir -p $LE_DIR $CERTS_DIR"
+  run_args mkdir -p "$LE_DIR" "$CERTS_DIR"
   debug "Using domain: $INSTALLER_HOST"
 
   if ! $LOCALHOST; then
-    if run "docker run --rm \
-      -v $LE_DIR:/etc/letsencrypt \
-      -v $CERTS_DIR:/certs \
+    if run_args docker run --rm \
+      -v "$LE_DIR:/etc/letsencrypt" \
+      -v "$CERTS_DIR:/certs" \
       -p 80:80 \
-      $CERTBOT_IMAGE certonly \
+      "$CERTBOT_IMAGE" certonly \
         --standalone \
         --non-interactive \
         --preferred-challenges http \
         --agree-tos \
-        --email $CERT_EMAIL \
-        -d $INSTALLER_HOST"; then
+        --email "$CERT_EMAIL" \
+        -d "$INSTALLER_HOST"; then
 
       LE_CERT_PATH="$LE_DIR/live/$INSTALLER_HOST"
 
@@ -87,10 +87,10 @@ generate_cert_for_installer_webserver() {
   fi
 
   # Fallback: self-signed cert
-  run "openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -out $CERTS_DIR/cert.pem \
-    -keyout $CERTS_DIR/key.pem \
-    -subj /CN=$INSTALLER_HOST"
+  run_args openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out "$CERTS_DIR/cert.pem" \
+    -keyout "$CERTS_DIR/key.pem" \
+    -subj "/CN=$INSTALLER_HOST"
   SELF_SIGNED_CERT=true
 }
 
