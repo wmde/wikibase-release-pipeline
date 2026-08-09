@@ -5,7 +5,11 @@ import semver from 'semver';
 import type { RepositoryContext } from './context.js';
 import type { FileUpdate } from './file-updates.js';
 import { GitRepository } from './git.js';
-import type { ReleaseProject } from './projects.js';
+import {
+	projectVersion,
+	projectWithVersion,
+	type ReleaseProject
+} from './projects.js';
 import type { SourceChange } from './source-changes.js';
 
 type Bump = 'major' | 'minor' | 'patch';
@@ -169,23 +173,44 @@ function hasRelevantWorkingChanges(
 	context: RepositoryContext,
 	project: ReleaseProject,
 	policy: VersionPolicy,
-	proposedPaths: string[]
+	proposedUpdates: FileUpdate[]
 ): boolean {
+	const proposedByPath = new Map(
+		proposedUpdates.map((update) => [
+			relative(context.repositoryRoot, update.path),
+			update.contents
+		])
+	);
 	const changed = new Set([
 		...git
 			.run(['diff', '--name-only', 'HEAD', '--', ...project.pathspecs])
 			.split('\n')
 			.filter(Boolean),
-		...proposedPaths
+		...proposedByPath.keys()
 	]);
 	const generated = new Set(
-		[project.packagePath, project.changelogPath].map((path) =>
+		[project.changelogPath].map((path) =>
 			relative(context.repositoryRoot, path)
 		)
 	);
 	return [...changed].some((path) => {
 		if (generated.has(path)) {
 			return false;
+		}
+		if (path === relative(context.repositoryRoot, project.versionPath)) {
+			const committed = git.run(['show', `HEAD:${path}`], {
+				allowFailure: true
+			});
+			if (!committed) {
+				return true;
+			}
+			const candidate =
+				proposedByPath.get(path) ?? readFileSync(project.versionPath, 'utf8');
+			const committedVersion = projectVersion(project, committed);
+			return (
+				projectWithVersion(project, candidate, committedVersion).trimEnd() !==
+				committed.trimEnd()
+			);
 		}
 		return policy.isRelevantWorkingChange({ context, git, project, path });
 	});
@@ -380,12 +405,6 @@ function updateChangelog(
 	);
 }
 
-function packageWithVersion(contents: string, version: string): string {
-	const packageJson = JSON.parse(contents) as Record<string, unknown>;
-	packageJson.version = version;
-	return `${JSON.stringify(packageJson, null, '\t')}\n`;
-}
-
 export function planVersionUpdate(
 	context: RepositoryContext,
 	git: GitRepository,
@@ -395,20 +414,19 @@ export function planVersionUpdate(
 ): VersionPlan | undefined {
 	const date = options.date ?? new Date().toISOString().slice(0, 10);
 	const proposedUpdates = options.proposedUpdates ?? [];
-	const proposedPaths = proposedUpdates.map((update) =>
-		relative(context.repositoryRoot, update.path)
-	);
 	const sourcePaths = new Set(options.sourcePaths ?? []);
 	const generatedPaths = new Set(
 		[
-			project.packagePath,
+			project.versionPath,
 			project.changelogPath,
 			...(policy.generatedPaths?.({ context, project }) ?? [])
 		].map((path) => relative(context.repositoryRoot, path))
 	);
-	const packageContents = readFileSync(project.packagePath, 'utf8');
-	const packageJson = JSON.parse(packageContents) as { version: string };
-	assertStableVersion(packageJson.version, `${project.name} package`);
+	const versionContents =
+		proposedUpdates.find((update) => update.path === project.versionPath)
+			?.contents ?? readFileSync(project.versionPath, 'utf8');
+	const currentVersion = projectVersion(project, versionContents);
+	assertStableVersion(currentVersion, `${project.name} project`);
 	const previous = findPreviousRelease(git, project);
 	const commits = readCommits(
 		git,
@@ -421,7 +439,9 @@ export function planVersionUpdate(
 	if ((options.sourceChanges?.length ?? 0) > 0) {
 		bumps.push('patch');
 	}
-	if (hasRelevantWorkingChanges(git, context, project, policy, proposedPaths)) {
+	if (
+		hasRelevantWorkingChanges(git, context, project, policy, proposedUpdates)
+	) {
 		bumps.push('patch');
 	}
 	const bump = bumps.sort((left, right) => bumpRank(right) - bumpRank(left))[0];
@@ -453,10 +473,10 @@ export function planVersionUpdate(
 			: '';
 	const replacesGeneratedChangelogSections =
 		/^##[ \t]+(?:Changes|Dependency updates)[ \t]*$/mu.test(draftBody);
-	if (!bump && !hasDraft && previous.version === packageJson.version) {
+	if (!bump && !hasDraft && previous.version === currentVersion) {
 		return undefined;
 	}
-	const minimumVersion = [packageJson.version, inferred]
+	const minimumVersion = [currentVersion, inferred]
 		.filter(Boolean)
 		.sort((left, right) => semver.rcompare(left!, right!))[0]!;
 	const targetVersion = options.targetVersion ?? minimumVersion;
@@ -468,8 +488,8 @@ export function planVersionUpdate(
 	}
 	const updates: FileUpdate[] = [
 		{
-			path: project.packagePath,
-			contents: packageWithVersion(packageContents, targetVersion)
+			path: project.versionPath,
+			contents: projectWithVersion(project, versionContents, targetVersion)
 		},
 		{
 			path: project.changelogPath,

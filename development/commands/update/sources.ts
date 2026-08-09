@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { BAKE_MANIFEST } from '../../lib/bake.js';
 import type { RepositoryContext } from '../../lib/context.js';
 import type { FileUpdate } from '../../lib/file-updates.js';
 import type {
@@ -45,7 +46,7 @@ export async function planSourceUpdate(
 	if (!provider) {
 		throw new Error(`No source update provider exists for ${image}.`);
 	}
-	const path = join(context.imagesRoot, image, 'build.env');
+	const path = join(context.imagesRoot, image, BAKE_MANIFEST);
 	const original = readFileSync(path, 'utf8');
 	const plan = await provider.plan(original, interaction);
 	return { path, image, contents: plan.contents, changes: plan.changes };

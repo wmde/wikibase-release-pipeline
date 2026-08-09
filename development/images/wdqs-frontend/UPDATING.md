@@ -17,7 +17,7 @@ The command:
 1. Resolves the latest commit from the Wikidata Query GUI `master` branch.
 2. Presents the current-to-proposed commit range with a Gerrit comparison link.
 3. Asks whether to include the update.
-4. Updates `WDQSQUERYGUI_COMMIT`, drafts the changelog, asks the operator to confirm the image version, and leaves every change unstaged for review with `git diff`.
+4. Updates `WDQSQUERYGUI.revision` in [`docker-bake.hcl`](./docker-bake.hcl), drafts the changelog, asks the operator to confirm the image version, and leaves every change unstaged for review with `git diff`.
 
 The command confirms that the branch exists, but it cannot establish compatibility with the image's local patches or configuration.
 
@@ -25,10 +25,10 @@ The command confirms that the branch exists, but it cannot establish compatibili
 
 The same update can be prepared manually:
 
-1. Read `WDQSQUERYGUI_COMMIT` from [`build.env`](./build.env).
+1. Read `WDQSQUERYGUI.revision` from [`docker-bake.hcl`](./docker-bake.hcl).
 2. Resolve the head of `refs/heads/master` from the [Wikidata Query GUI repository](https://gerrit.wikimedia.org/r/plugins/gitiles/wikidata/query/gui/).
 3. Compare the pinned and proposed commits in Gerrit.
-4. Set `WDQSQUERYGUI_COMMIT` to the proposed full commit hash and review the resulting diff.
+4. Set `WDQSQUERYGUI.revision` to the proposed full commit hash and review the resulting diff.
 
 ## Review
 
@@ -40,7 +40,7 @@ Query GUI is pinned by commit rather than by an upstream release version, so det
 
 ## Dependencies not updated automatically
 
-`wbs-dev update` does not select the Node build image or nginx runtime image in [`build.env`](./build.env). When reviewing them:
+`wbs-dev update` does not select the Node build image or nginx runtime image in [`docker-bake.hcl`](./docker-bake.hcl). When reviewing them:
 
 - The pinned Query GUI source does not declare a Node engine or version file. Confirm a Node update by running its locked `npm ci` and Grunt build through this image rather than assuming compatibility from metadata.
 - Node is used only to build the static frontend. Review build warnings and the generated output when changing it.

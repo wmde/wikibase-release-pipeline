@@ -2,172 +2,159 @@
 
 set -euo pipefail
 
-# === Script setup
-
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 DEVELOPMENT_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 
 if [ "$#" -lt 1 ]; then
-	echo "Usage: $0 <image> [--dry-run] [--publish] [docker buildx build arguments...]"
+	echo "Usage: $0 <image> [--dry-run] [--publish] [docker buildx bake arguments]"
 	exit 1
 fi
 
 IMAGE_PROJECT=$1
-
-# Change to the directory for the specified image project
-cd "$DEVELOPMENT_ROOT/images/$IMAGE_PROJECT" || {
-	echo "Failed to change directory to images/$IMAGE_PROJECT"
-	exit 1
-}
-
-# Remove the first argument, leaving the rest for docker buildx build
+IMAGE_ROOT="$DEVELOPMENT_ROOT/images/$IMAGE_PROJECT"
+cd "$IMAGE_ROOT"
 shift
 
 DRY_RUN=false
 PUBLISH=false
-BUILD_ARGS=()
-TAGS=()
-BUILD_ENV_FILE="build.env"
-DISALLOWED_ARGS=(
-	"--firstRelease=true"
-)
+PUSH=false
+NO_CACHE=false
+PLATFORMS=""
+BAKE_ARGS=()
 
-for arg in "$@"; do
-	if [[ $arg == "--dry-run" || $arg == "--dryRun=true" ]]; then
-		DRY_RUN=true
-	elif [[ $arg == "--no-cache" ]]; then
-		BUILD_ARGS+=("$arg")
-	elif [[ $arg == "--publish" ]]; then
-		PUBLISH=true
-	elif [[ " ${DISALLOWED_ARGS[*]} " =~ $arg ]]; then
-		continue
-	else
-		BUILD_ARGS+=("$arg")
-	fi
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--dry-run|--dryRun=true)
+			DRY_RUN=true
+			shift
+			;;
+		--publish)
+			PUBLISH=true
+			shift
+			;;
+		--push)
+			PUSH=true
+			shift
+			;;
+		--load)
+			# The default image target already uses the Docker output.
+			shift
+			;;
+		--no-cache)
+			NO_CACHE=true
+			BAKE_ARGS+=("$1")
+			shift
+			;;
+		--platform)
+			[[ -n "${2:-}" ]] || { echo "--platform requires a value." >&2; exit 1; }
+			PLATFORMS=$2
+			shift 2
+			;;
+		--platform=*)
+			PLATFORMS=${1#--platform=}
+			shift
+			;;
+		--firstRelease=true)
+			shift
+			;;
+		*)
+			BAKE_ARGS+=("$1")
+			shift
+			;;
+	esac
 done
 
-# === Setup tags
+VARIABLES=$(docker buildx bake --list=type=variables,format=json)
+IMAGE_NAME=$(jq -r '.[] | select(.name == "IMAGE_NAME") | .value' <<<"$VARIABLES")
+IMAGE_VERSION=$(jq -r '.[] | select(.name == "IMAGE_VERSION") | .value' <<<"$VARIABLES")
 
-IMAGE_VERSION=$(jq -r '.version' package.json)
-
-if [ "$PUBLISH" = true ] && [[ ! "$IMAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-	echo "Official image publication requires a stable MAJOR.MINOR.PATCH version; received $IMAGE_VERSION."
-	# Extend this validation when prerelease publication is intentionally supported.
+if [[ "$IMAGE_NAME" != "$IMAGE_PROJECT" ]]; then
+	echo "Image directory $IMAGE_PROJECT does not match manifest name $IMAGE_NAME." >&2
 	exit 1
 fi
 
-# publish to Dockerhub
+TARGET=$IMAGE_NAME
+IMAGE_REPOSITORY="wikibase/$IMAGE_NAME"
+TAGS="latest"
+
 if [ "$PUBLISH" = true ]; then
-	IMAGE_VERSION_MAJOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1)
-	IMAGE_VERSION_MINOR=$(echo "$IMAGE_VERSION" | cut -d '.' -f 1,2)
-	TAGS+=(
-		"${IMAGE_VERSION}"
-		"${IMAGE_VERSION_MAJOR}"
-		"${IMAGE_VERSION_MINOR}"
-	)
-	# get image specific tags
-	if [ -f "$BUILD_ENV_FILE" ]; then
-		# shellcheck disable=SC1090
-		source "$BUILD_ENV_FILE"
-		eval "$(declare -p IMAGE_TAGS 2>/dev/null)"
-		TAGS+=(
-			"${IMAGE_TAGS[@]}"
-		)
+	[[ "$IMAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+		echo "Official image publication requires a stable MAJOR.MINOR.PATCH version; received $IMAGE_VERSION." >&2
+		exit 1
+	}
+	TARGET="${IMAGE_NAME}-release"
+	BAKE_ARGS+=(--push)
+	if [[ "${GITHUB_REF:-}" == refs/tags/* ]]; then
+		RELEASE_TAG=${GITHUB_REF#refs/tags/}
+		EXPECTED_RELEASE_TAG="${IMAGE_NAME}@${IMAGE_VERSION}"
+		if [ "$RELEASE_TAG" != "$EXPECTED_RELEASE_TAG" ]; then
+			echo "Release tag $RELEASE_TAG does not match manifest version $EXPECTED_RELEASE_TAG." >&2
+			exit 1
+		fi
 	fi
-	BUILD_ARGS+=("--push")
-# build/test in CI
 elif [ "${GITHUB_ACTIONS:-}" = true ]; then
-	TAGS+=(
-		"dev-${GITHUB_RUN_ID}"
-	)
-# local build
-else
-	BUILD_ARGS+=("--load")
-	# When not tagging anything but the image name the "latest" tag is by default applied,
-	# making that explicit here:
-	TAGS+=(
-		"latest"
-	)
+	IMAGE_REPOSITORY="ghcr.io/${GITHUB_REPOSITORY_OWNER}/wikibase/${IMAGE_NAME}"
+	TAGS="dev-${GITHUB_RUN_ID}"
 fi
 
-IMAGE_NAME=$(jq -r '.name' package.json)
+if [ "$PUSH" = true ]; then
+	BAKE_ARGS+=(--set "${TARGET}.output=type=registry")
+fi
 
-if [ "$PUBLISH" = true ] && [[ "${GITHUB_REF:-}" == refs/tags/* ]]; then
-	RELEASE_TAG=${GITHUB_REF#refs/tags/}
-	EXPECTED_RELEASE_TAG="${IMAGE_NAME}@${IMAGE_VERSION}"
-	if [ "$RELEASE_TAG" != "$EXPECTED_RELEASE_TAG" ]; then
-		echo "Release tag $RELEASE_TAG does not match package version $EXPECTED_RELEASE_TAG."
+if [ -n "$PLATFORMS" ]; then
+	if [[ "$PLATFORMS" == *,* && "$PUSH" = false && "$PUBLISH" = false ]]; then
+		echo "Multi-platform builds require --push or --publish; Docker cannot load a multi-platform image." >&2
 		exit 1
 	fi
+	BAKE_ARGS+=(--set "${TARGET}.platform=${PLATFORMS}")
 fi
 
-# publish to Dockerhub
-if [ "$PUBLISH" = true ]; then
-	IMAGE_REGISTRY=""
-	IMAGE_NAMESPACE=wikibase
+BUILDER_NAME=wbs-application-builder
+if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
+	CACHE_REGISTRY=${BUILD_CACHE_REGISTRY%/}
+	CACHE_SCOPE=${BUILD_CACHE_SCOPE:-${PLATFORMS:-$(docker info --format '{{.OSType}}-{{.Architecture}}')}}
+	CACHE_SCOPE=${CACHE_SCOPE//\//-}
+	CACHE_SCOPE=${CACHE_SCOPE//,/_}
+	CACHE_SCOPE=${CACHE_SCOPE//aarch64/arm64}
+	CACHE_SCOPE=${CACHE_SCOPE//x86_64/amd64}
+	CACHE_REF="${CACHE_REGISTRY}/${IMAGE_NAME}:buildcache-${CACHE_SCOPE}"
+	LEGACY_CACHE_REF="${CACHE_REGISTRY}/${IMAGE_NAME}:buildcache"
 
-# build/test in CI
-elif [ "${GITHUB_ACTIONS:-}" = true ]; then
-	IMAGE_REGISTRY=ghcr.io
-	IMAGE_NAMESPACE="${GITHUB_REPOSITORY_OWNER}/wikibase"
+	BAKE_ARGS+=(--builder "$BUILDER_NAME")
+	if [ "$NO_CACHE" = false ]; then
+		BAKE_ARGS+=(
+			--set "${TARGET}.cache-from=type=registry,ref=${CACHE_REF}"
+			--set "${TARGET}.cache-from+=type=registry,ref=${LEGACY_CACHE_REF}"
+		)
+	fi
+	if [ "${BUILD_CACHE_PUSH:-false}" = true ]; then
+		BAKE_ARGS+=(
+			--set "${TARGET}.cache-to=type=registry,ref=${CACHE_REF},mode=max,ignore-error=true"
+		)
+	fi
 
-# local build
-else
-	IMAGE_REGISTRY=""
-	IMAGE_NAMESPACE=wikibase
-fi
-
-if [ -n "$IMAGE_REGISTRY" ]; then
-	IMAGE_URL="${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}"
-else
-	IMAGE_URL="${IMAGE_NAMESPACE}/${IMAGE_NAME}"
-fi
-
-for TAG in "${TAGS[@]}"; do
-	BUILD_ARGS+=("--tag" "${IMAGE_URL}:${TAG}")
-done
-
-# === Wikibase Suite version metadata build args
-if [ "$IMAGE_NAME" = "wikibase" ]; then
-	BUILD_ARGS+=("--build-arg" "WIKIBASE_IMAGE_VERSION=$IMAGE_VERSION")
-elif [ "$IMAGE_NAME" = "wbs-tools" ]; then
-	BUILD_ARGS+=("--build-arg" "WBS_TOOLS_VERSION=$IMAGE_VERSION")
-fi
-
-# === Transform vars in build.env to build args
-
-if [ -f "$BUILD_ENV_FILE" ]; then
-	while IFS='=' read -r key value; do
-		# skip if the line is empty or the key is IMAGE_TAGS
-		[ -z "$key" ] || [[ "$key" == IMAGE_TAGS ]] && continue
-
-		if [ -n "$value" ]; then
-			BUILD_ARGS+=("--build-arg" "$key=$value")
+	if [ "$DRY_RUN" = false ]; then
+		if ! docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1; then
+			if ! create_output=$(docker buildx create --name "$BUILDER_NAME" --driver docker-container 2>&1); then
+				docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1 || {
+					printf '%s\n' "$create_output" >&2
+					exit 1
+				}
+			fi
 		fi
-	done < <(grep -E '^[A-Z_]+=.*' "$BUILD_ENV_FILE")
+		docker buildx inspect "$BUILDER_NAME" --bootstrap >/dev/null
+	fi
 fi
-
-# == Run build
-
-RUN_BUILDX_ARGS=(
-	--cache-name "$IMAGE_NAME"
-	--builder-name wbs-application-builder
-	--context .
-)
 
 if [ "$IMAGE_NAME" = "wbs-tools" ]; then
-	# wbs-tools is a pnpm workspace package; build it from the workspace root so
-	# the production image consumes the same frozen lockfile as development.
-	RUN_BUILDX_ARGS=(
-		--cache-name "$IMAGE_NAME"
-		--builder-name wbs-application-builder
-		--context "$DEVELOPMENT_ROOT"
-	)
-	BUILD_ARGS+=(--file "$DEVELOPMENT_ROOT/images/wbs-tools/Dockerfile")
+	BAKE_ARGS+=(--allow "fs.read=$DEVELOPMENT_ROOT")
 fi
 
 if [ "$DRY_RUN" = true ]; then
-	RUN_BUILDX_ARGS+=(--dry-run)
+	BAKE_ARGS+=(--print)
 fi
 
-exec "$SCRIPT_DIR/../../lib/buildx.sh" "${RUN_BUILDX_ARGS[@]}" -- "${BUILD_ARGS[@]}"
+exec env \
+	IMAGE_REPOSITORY="$IMAGE_REPOSITORY" \
+	TAGS="$TAGS" \
+	docker buildx bake "${BAKE_ARGS[@]}" "$TARGET"

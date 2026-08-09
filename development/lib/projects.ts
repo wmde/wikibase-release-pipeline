@@ -1,41 +1,44 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+	BAKE_MANIFEST,
+	readBakeScalar,
+	readImageManifest,
+	replaceBakeValue
+} from './bake.js';
 import type { RepositoryContext } from './context.js';
 import { resolveNames } from './selection.js';
 
 export interface ReleaseProject {
 	name: string;
-	packagePath: string;
+	versionPath: string;
 	changelogPath: string;
 	pathspecs: string[];
 	legacyTagNames: string[];
 	isImage: boolean;
 }
 
-export function discoverImageNames( context: RepositoryContext ): string[] {
-	return readdirSync( context.imagesRoot )
-		.filter( ( entry ) => {
-			const projectRoot = join( context.imagesRoot, entry );
+export function discoverImageNames(context: RepositoryContext): string[] {
+	return readdirSync(context.imagesRoot)
+		.filter((entry) => {
+			const projectRoot = join(context.imagesRoot, entry);
 			return (
-				statSync( projectRoot ).isDirectory() &&
-				existsSync( join( projectRoot, 'Dockerfile' ) ) &&
-				existsSync( join( projectRoot, 'package.json' ) )
+				statSync(projectRoot).isDirectory() &&
+				existsSync(join(projectRoot, 'Dockerfile')) &&
+				existsSync(join(projectRoot, BAKE_MANIFEST))
 			);
-		} )
-		.map( ( entry ) => {
-			const packageJson = JSON.parse(
-				readFileSync( join( context.imagesRoot, entry, 'package.json' ), 'utf8' )
-			) as { name?: string };
-			if ( !packageJson.name ) {
-				throw new Error( `Image project ${ entry } has no package name.` );
-			}
-			if ( packageJson.name !== entry ) {
+		})
+		.map((entry) => {
+			const manifest = readImageManifest(
+				join(context.imagesRoot, entry, BAKE_MANIFEST)
+			);
+			if (manifest.name !== entry) {
 				throw new Error(
-					`Image directory ${ entry } does not match package name ${ packageJson.name }.`
+					`Image directory ${entry} does not match manifest name ${manifest.name}.`
 				);
 			}
 			return entry;
-		} )
+		})
 		.sort();
 }
 
@@ -45,8 +48,8 @@ export function discoverReleaseProjects(
 	return [
 		{
 			name: 'wbs',
-			packagePath: join( context.repositoryRoot, 'package.json' ),
-			changelogPath: join( context.repositoryRoot, 'CHANGELOG.md' ),
+			versionPath: join(context.repositoryRoot, 'package.json'),
+			changelogPath: join(context.repositoryRoot, 'CHANGELOG.md'),
 			pathspecs: [
 				'.env.example',
 				'README.md',
@@ -61,20 +64,44 @@ export function discoverReleaseProjects(
 				'scripts',
 				'development/docker-compose.local-images.yml'
 			],
-			legacyTagNames: [ 'deploy' ],
+			legacyTagNames: ['deploy'],
 			isImage: false
 		},
-		...discoverImageNames( context ).map(
-			( name ): ReleaseProject => ( {
+		...discoverImageNames(context).map(
+			(name): ReleaseProject => ({
 				name,
-				packagePath: join( context.imagesRoot, name, 'package.json' ),
-				changelogPath: join( context.imagesRoot, name, 'CHANGELOG.md' ),
-				pathspecs: [ `development/images/${ name }` ],
+				versionPath: join(context.imagesRoot, name, BAKE_MANIFEST),
+				changelogPath: join(context.imagesRoot, name, 'CHANGELOG.md'),
+				pathspecs: [`development/images/${name}`],
 				legacyTagNames: [],
 				isImage: true
-			} )
+			})
 		)
 	];
+}
+
+export function projectVersion(
+	project: ReleaseProject,
+	contents?: string
+): string {
+	const source = contents ?? readFileSync(project.versionPath, 'utf8');
+	if (project.isImage) {
+		return readBakeScalar(source, 'IMAGE_VERSION');
+	}
+	return (JSON.parse(source) as { version: string }).version;
+}
+
+export function projectWithVersion(
+	project: ReleaseProject,
+	contents: string,
+	version: string
+): string {
+	if (project.isImage) {
+		return replaceBakeValue(contents, 'IMAGE_VERSION', undefined, version);
+	}
+	const packageJson = JSON.parse(contents) as Record<string, unknown>;
+	packageJson.version = version;
+	return `${JSON.stringify(packageJson, null, '\t')}\n`;
 }
 
 export function resolveProjectSelections(
@@ -84,14 +111,14 @@ export function resolveProjectSelections(
 	options: { requireExplicit?: boolean; imagesOnly?: boolean } = {}
 ): ReleaseProject[] {
 	const availableProjects = projects.filter(
-		( project ) => !options.imagesOnly || project.isImage
+		(project) => !options.imagesOnly || project.isImage
 	);
 	const names = resolveNames(
 		requested,
-		availableProjects.map( ( project ) => project.name ),
+		availableProjects.map((project) => project.name),
 		{ command, noun: 'project', requireExplicit: options.requireExplicit }
 	);
 	return names.map(
-		( name ) => availableProjects.find( ( project ) => project.name === name )!
+		(name) => availableProjects.find((project) => project.name === name)!
 	);
 }

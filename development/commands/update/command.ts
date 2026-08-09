@@ -207,9 +207,12 @@ async function update(
 			cancel('No files were changed.');
 			return;
 		}
-		const updates: FileUpdate[] = [
+		const proposedWrites: FileUpdate[] = [
 			...sourceUpdates,
 			...versionPlans.flatMap((plan) => plan.updates)
+		];
+		const updates = [
+			...new Map(proposedWrites.map((update) => [update.path, update])).values()
 		];
 		applyFileUpdates(updates);
 		outro(

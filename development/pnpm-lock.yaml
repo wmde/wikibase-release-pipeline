@@ -15,6 +15,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.8.0(jiti@2.7.0)(supports-color@8.1.1))
+      '@tree-sitter-grammars/tree-sitter-hcl':
+        specifier: 1.2.0
+        version: 1.2.0(tree-sitter@0.25.1)
       '@types/cheerio':
         specifier: ^0.22.35
         version: 0.22.35
@@ -120,6 +123,9 @@ importers:
       shellcheck:
         specifier: ^3.0.0
         version: 3.0.0
+      tree-sitter:
+        specifier: 0.25.1
+        version: 0.25.1
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -144,10 +150,6 @@ importers:
       webdriverio:
         specifier: ^9.30.0
         version: 9.30.0(puppeteer-core@21.11.0(supports-color@8.1.1))(supports-color@8.1.1)
-
-  images/opensearch: {}
-
-  images/quickstatements: {}
 
   images/wbs-tools:
     dependencies:
@@ -197,12 +199,6 @@ importers:
       vue-tsc:
         specifier: ^3.2.7
         version: 3.3.9(typescript@5.8.3)
-
-  images/wdqs: {}
-
-  images/wdqs-frontend: {}
-
-  images/wikibase: {}
 
 packages:
 
@@ -783,6 +779,14 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
+
+  '@tree-sitter-grammars/tree-sitter-hcl@1.2.0':
+    resolution: {integrity: sha512-2bVnOojkkdMLevp0G4v3ksbNoOQFc/Pt9GAdWX4i3aykVyI+CkktE1hsF/XAeUQFjwgGrVZnEyeCll5oD7Ibfg==}
+    peerDependencies:
+      tree-sitter: ^0.25.0
+    peerDependenciesMeta:
+      tree-sitter:
+        optional: true
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
@@ -2633,6 +2637,10 @@ packages:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
     engines: {node: '>= 0.4.0'}
 
+  node-addon-api@8.9.1:
+    resolution: {integrity: sha512-4eUQWVPCUUUiBjLnHS3cXWeC6ryoPUc0U3rP7IuzapoGbzMqd/r6KKO0clr0b+snQhsrueFEhCZDdK+LK7hxKg==}
+    engines: {node: ^18 || ^20 || >= 21}
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -2641,6 +2649,10 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
 
   normalize-package-data@6.0.2:
     resolution: {integrity: sha512-V6gygoYb/5EmNI+MEGrWkC+e6+Rr7mTmfHrxDbLzxQogBkgzo76rkok0Am6thgSF7Mv2nLOajAJj5vDJZEFn7g==}
@@ -3236,6 +3248,9 @@ packages:
 
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
+  tree-sitter@0.25.1:
+    resolution: {integrity: sha512-mrcEdkYtHfrK1A6fs3O6FxkBo0Qig5XUXqHhxUOQu0bmPo00QF4XaSx4edpazdHwxnSCjlGKGgIqWdaN4dvTLA==}
 
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
@@ -4044,6 +4059,13 @@ snapshots:
   '@sindresorhus/merge-streams@4.0.0': {}
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
+
+  '@tree-sitter-grammars/tree-sitter-hcl@1.2.0(tree-sitter@0.25.1)':
+    dependencies:
+      node-addon-api: 8.9.1
+      node-gyp-build: 4.8.4
+    optionalDependencies:
+      tree-sitter: 0.25.1
 
   '@types/body-parser@1.19.6':
     dependencies:
@@ -6152,10 +6174,14 @@ snapshots:
 
   netmask@2.0.2: {}
 
+  node-addon-api@8.9.1: {}
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
     optional: true
+
+  node-gyp-build@4.8.4: {}
 
   normalize-package-data@6.0.2:
     dependencies:
@@ -6836,6 +6862,11 @@ snapshots:
 
   tr46@0.0.3:
     optional: true
+
+  tree-sitter@0.25.1:
+    dependencies:
+      node-addon-api: 8.9.1
+      node-gyp-build: 4.8.4
 
   ts-algebra@2.0.0: {}
 

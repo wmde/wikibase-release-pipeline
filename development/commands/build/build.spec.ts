@@ -4,22 +4,12 @@ import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { parseBuildArguments } from './command.js';
 
-const RUN_BUILDX = resolve( 'lib/buildx.sh' );
+const RUN_IMAGE_BUILD = resolve('commands/build/image.sh');
 
-function dryRun( ...buildArguments: string[] ): string {
+function dryRun(...buildArguments: string[]): string {
 	return execFileSync(
-		RUN_BUILDX,
-		[
-			'--cache-name',
-			'wikibase',
-			'--builder-name',
-			'wbs-application-builder',
-			'--context',
-			'.',
-			'--dry-run',
-			'--',
-			...buildArguments
-		],
+		RUN_IMAGE_BUILD,
+		['wikibase', '--dry-run', ...buildArguments],
 		{
 			cwd: process.cwd(),
 			encoding: 'utf8',
@@ -30,62 +20,67 @@ function dryRun( ...buildArguments: string[] ): string {
 				BUILD_CACHE_PUSH: 'true'
 			}
 		}
-	).replace( /\\/gu, '' );
+	).replace(/\\/gu, '');
 }
 
-describe( 'wbs-dev build', () => {
-	it( 'adds the scoped and legacy registry caches', () => {
-		const command = dryRun( '--load', '--tag', 'wikibase/wikibase:latest' );
-		assert.match( command, /--builder wbs-application-builder/u );
+describe('wbs-dev build', () => {
+	it('adds the scoped and legacy registry caches', () => {
+		const command = dryRun('--push');
 		assert.match(
 			command,
-			/--cache-from type=registry,ref=ghcr\.io\/example\/wikibase\/wikibase:buildcache-linux-amd64/u
+			/"ref": "ghcr\.io\/example\/wikibase\/wikibase:buildcache-linux-amd64"/u
 		);
 		assert.match(
 			command,
-			/--cache-from type=registry,ref=ghcr\.io\/example\/wikibase\/wikibase:buildcache/u
+			/"ref": "ghcr\.io\/example\/wikibase\/wikibase:buildcache"/u
 		);
 		assert.match(
 			command,
-			/--cache-to type=registry,ref=ghcr\.io\/example\/wikibase\/wikibase:buildcache-linux-amd64,mode=max,ignore-error=true/u
+			/"ref": "ghcr\.io\/example\/wikibase\/wikibase:buildcache-linux-amd64"/u
 		);
-	} );
+	});
 
-	it( 'does not import registry caches for a no-cache build', () => {
-		const command = dryRun( '--no-cache', '--pull' );
-		assert.doesNotMatch( command, /--cache-from/u );
-		assert.match( command, /--cache-to/u );
-	} );
+	it('does not import registry caches for a no-cache build', () => {
+		const command = dryRun('--no-cache', '--pull');
+		assert.doesNotMatch(command, /"cache-from"/u);
+		assert.match(command, /"cache-to"/u);
+	});
 
-	it( 'keeps image selection separate from forwarded Buildx arguments', () => {
+	it('composes optional multi-platform registry builds', () => {
+		const command = dryRun('--push', '--platform=linux/amd64,linux/arm64');
+		assert.match(command, /"linux\/amd64,linux\/arm64"/u);
+		assert.match(command, /"type": "registry"/u);
+	});
+
+	it('keeps image selection separate from forwarded Buildx arguments', () => {
 		assert.deepEqual(
-			parseBuildArguments( [
+			parseBuildArguments([
 				'wikibase',
 				'wdqs',
 				'--no-cache',
 				'--parallel=2',
 				'--pull'
-			] ),
+			]),
 			{
-				images: [ 'wikibase', 'wdqs' ],
-				forwarded: [ '--no-cache', '--pull' ],
+				images: ['wikibase', 'wdqs'],
+				forwarded: ['--no-cache', '--pull'],
 				parallel: 2
 			}
 		);
-	} );
+	});
 
-	it( 'forwards coordinator-looking options after an explicit separator', () => {
-		assert.deepEqual( parseBuildArguments( [ 'wikibase', '--', '--parallel=2' ] ), {
-			images: [ 'wikibase' ],
-			forwarded: [ '--parallel=2' ],
+	it('forwards coordinator-looking options after an explicit separator', () => {
+		assert.deepEqual(parseBuildArguments(['wikibase', '--', '--parallel=2']), {
+			images: ['wikibase'],
+			forwarded: ['--parallel=2'],
 			parallel: 3
-		} );
-	} );
+		});
+	});
 
-	it( 'rejects invalid coordinator parallelism', () => {
+	it('rejects invalid coordinator parallelism', () => {
 		assert.throws(
-			() => parseBuildArguments( [ '--parallel=0' ] ),
+			() => parseBuildArguments(['--parallel=0']),
 			/positive integer/u
 		);
-	} );
-} );
+	});
+});

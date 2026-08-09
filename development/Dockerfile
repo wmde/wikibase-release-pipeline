@@ -1,5 +1,5 @@
-# Base image: Node.js LTS (24) on Debian Bookworm (12)
-FROM node:24-bookworm-slim AS wbs-dev
+# Base image: Node.js LTS (24) on Debian Trixie (13)
+FROM node:24-trixie-slim AS wbs-dev
 
 # WBS tests use the Selenium Standalone image, so no need for the embedded Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -11,6 +11,7 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
         git \
+        build-essential \
         curl \
         jq \
         python3-pip \

@@ -30,6 +30,8 @@ The primary release-preparation workflow is the `wbs-dev update` interview. It g
 
 3. Make any compatibility or documentation changes identified during review, then build and test the projects in scope. Use `wbs-dev test -h` and `wbs-dev build -h` to select appropriate targets.
 
+   Each image's `docker-bake.hcl` is its authoritative build and release manifest. From an image directory, `docker buildx bake` performs a native local build and loads it into Docker; use `docker buildx bake --print` to inspect the fully evaluated definition. `wbs-dev build` composes shared cache, builder, publication, and optional `--platform` policy around the same manifest.
+
 4. Commit the release changes. If additional product commits changed the release contents, rerun `wbs-dev update` so that its version and changelog proposals include them, then review and commit the refreshed metadata.
 
 5. Merge the pull request into `main` after review and CI pass.

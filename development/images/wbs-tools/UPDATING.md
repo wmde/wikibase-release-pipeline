@@ -36,10 +36,10 @@ The release inputs are:
 
 | Input | Purpose | Release action |
 | --- | --- | --- |
-| `package.json` `version` | Source of the image version, release tag, Docker tags, and changelog version. | Updated by `wbs-dev update wbs-tools`. |
+| `docker-bake.hcl` `IMAGE_VERSION` | Source of the image version, release tag, Docker tags, and changelog version. | Updated by `wbs-dev update wbs-tools`. |
 | Bootstrap `WBS_TOOLS_IMAGE` default in the root `install` script | Selects the tools image before a WBS checkout exists. | Change only when the next WBS release adopts a new tools major. |
 | Checkout `WBS_TOOLS_IMAGE` default in `scripts/_versions.sh` | Selects the compatible tools image after control passes to the WBS checkout. | Keep it aligned with the bootstrap default for that WBS release. |
-| Docker build argument `WBS_TOOLS_VERSION` | Writes `org.opencontainers.image.version` into the image. | Supplied automatically from `package.json`; do not edit it manually. |
+| Docker build argument `WBS_TOOLS_VERSION` | Records the exact tools version inside the image. | Derived automatically from `IMAGE_VERSION`; do not edit it manually. |
 | Runtime override `WBS_TOOLS_IMAGE` | Selects a different image for development or verification. | Do not persist an override in a normal release. |
 
 Publishing `X.Y.Z` also updates the mutable `X.Y` and `X` Docker tags. The OCI version label records the exact version inside the image, but the runtime does not inspect that label and the image does not self-update from it.

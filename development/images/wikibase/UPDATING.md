@@ -21,17 +21,17 @@ The command:
 5. Resolves the configured community extensions from their development branches.
 6. Presents current-to-proposed commit ranges, drafts the changelog, asks the operator to confirm the image version, and leaves every change unstaged for review with `git diff`.
 
-Source definitions live in `development/commands/update/sources/wikibase.ts`; the URLs in [`build.env`](./build.env) remain review references. The command confirms that releases and branches exist, but it cannot establish compatibility with local patches or the OpenSearch image.
+Source repositories, refs, revisions, image dependencies, image version, and tag policy live in [`docker-bake.hcl`](./docker-bake.hcl), which is the authoritative image manifest. The TypeScript provider contains only the Wikibase-specific update interview and compatibility logic. The command confirms that releases and branches exist, but it cannot establish compatibility with local patches or the OpenSearch image.
 
 ## Manual update
 
 The same update can be prepared manually:
 
 1. Find the available [MediaWiki releases](https://releases.wikimedia.org/mediawiki/) and decide whether to use the latest maintenance release in the current line, move to a newer stable line, or leave `MEDIAWIKI_VERSION` unchanged.
-2. Set `MEDIAWIKI_VERSION` in [`build.env`](./build.env) when changing MediaWiki.
+2. Set `MEDIAWIKI.version` in [`docker-bake.hcl`](./docker-bake.hcl) when changing MediaWiki.
 3. Derive the extension branch as `REL<major>_<minor>` from that version—for example, MediaWiki 1.46 uses `REL1_46`.
-4. Resolve the head of that branch for every Wikimedia-maintained extension listed in `build.env` and update its corresponding `*_COMMIT` variable.
-5. Resolve the configured branch heads for WikibaseLocalMedia, WikibaseEdtf, and WikibaseInWikitext and update their commit variables.
+4. Resolve the head of that branch for every Wikimedia-maintained extension declared in `docker-bake.hcl` and update its `revision` attribute.
+5. Resolve the configured branch heads for WikibaseLocalMedia, WikibaseEdtf, and WikibaseInWikitext and update their `revision` attributes.
 6. Review the MediaWiki release notes and every resulting commit range before building or testing the image.
 
 ## Review
@@ -44,7 +44,7 @@ Treat the MediaWiki release line as a compatibility boundary. Although the secon
 
 ## Dependencies not updated automatically
 
-`wbs-dev update` does not select the PHP runtime or Composer build image in [`build.env`](./build.env). When reviewing them:
+`wbs-dev update` does not select the PHP runtime or Composer build image in [`docker-bake.hcl`](./docker-bake.hcl). When reviewing them:
 
 - Confirm that the PHP version satisfies the selected MediaWiki release's `composer.json` requirement and the requirements of the bundled extensions. MediaWiki 1.46 requires PHP 8.3 or later; do not infer that the same range applies to another MediaWiki line.
 - Keep the PHP image's Debian variant compatible with the system packages and PHP extensions installed by the [`Dockerfile`](./Dockerfile).

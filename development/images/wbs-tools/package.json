@@ -1,6 +1,5 @@
 {
 	"name": "wbs-tools",
-	"version": "1.0.0",
 	"description": "Wikibase Suite installation and operations tools",
 	"main": "dist/web/server.js",
 	"private": true,

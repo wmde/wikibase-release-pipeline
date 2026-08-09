@@ -10,6 +10,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+import { readImageManifest } from '../../lib/bake.js';
 import { createRepositoryContext } from '../../lib/context.js';
 import { applyFileUpdates } from '../../lib/file-updates.js';
 import { GitRepository } from '../../lib/git.js';
@@ -18,7 +19,7 @@ import {
 	resolveProjectSelections
 } from '../../lib/projects.js';
 import { planVersionUpdate, type VersionPlan } from '../../lib/versioning.js';
-import { replaceVariable } from '../update/source-utils.js';
+import { readVariable, replaceVariable } from '../update/source-utils.js';
 import { defaultVersionPolicy, versionPolicyFor } from '../update/versions.js';
 
 const CLI = resolve('wbs-dev.ts');
@@ -56,6 +57,27 @@ function commitAll(fixture: Fixture, message: string): void {
 	git(fixture, 'commit', '-m', message);
 }
 
+function wikibaseManifest(version: string, revision = 'aaa'): string {
+	return `variable "IMAGE_NAME" { default = "wikibase" }
+variable "IMAGE_VERSION" { default = "${version}" }
+variable "WIKIBASE" {
+  default = {
+    kind = "github"
+    name = "Wikibase"
+    repo = "https://github.com/example/wikibase.git"
+    ref = "refs/heads/main"
+    revision = "${revision}"
+  }
+}
+`;
+}
+
+function imageVersion(fixture: Fixture): string {
+	return readImageManifest(
+		join(fixture.root, 'development/images/wikibase/docker-bake.hcl')
+	).version;
+}
+
 function createFixture(): Fixture {
 	const parent = mkdtempSync(join(tmpdir(), 'wbs-dev-release-'));
 	fixtures.push(parent);
@@ -70,18 +92,13 @@ function createFixture(): Fixture {
 	write(fixture, 'development/images/wikibase/Dockerfile', 'FROM scratch\n');
 	write(
 		fixture,
-		'development/images/wikibase/package.json',
-		'{\n\t"name": "wikibase",\n\t"version": "1.0.0"\n}\n'
+		'development/images/wikibase/docker-bake.hcl',
+		wikibaseManifest('1.0.0')
 	);
 	write(
 		fixture,
 		'development/images/wikibase/CHANGELOG.md',
 		'# 1.0.0 (2026-01-01)\n\n- Initial release.\n'
-	);
-	write(
-		fixture,
-		'development/images/wikibase/build.env',
-		'WIKIBASE_COMMIT=aaa\n'
 	);
 	write(
 		fixture,
@@ -175,14 +192,16 @@ describe('wbs-dev preparation and release workflow', () => {
 
 	describe('release preparation', () => {
 		it('updates only the exact requested source variable', () => {
-			assert.equal(
-				replaceVariable(
-					'OAUTH_COMMIT=aaa\nWSOAUTH_COMMIT=bbb\n',
-					'OAUTH_COMMIT',
-					'ccc'
-				),
-				'OAUTH_COMMIT=ccc\nWSOAUTH_COMMIT=bbb\n'
-			);
+			const manifest = `${wikibaseManifest('1.0.0')}
+variable "WSOAUTH" {
+  default = {
+    revision = "bbb"
+  }
+}
+`;
+			const updated = replaceVariable(manifest, 'WIKIBASE.revision', 'ccc');
+			assert.equal(readVariable(updated, 'WIKIBASE.revision'), 'ccc');
+			assert.equal(readVariable(updated, 'WSOAUTH.revision'), 'bbb');
 		});
 
 		it('infers a minor version and generates a structured changelog entry', () => {
@@ -197,15 +216,7 @@ describe('wbs-dev preparation and release workflow', () => {
 			git(fixture, 'tag', 'wikibase@99.0.0');
 			const result = versions(fixture, 'wikibase');
 			assert.equal(result.status, 0, result.stderr);
-			assert.equal(
-				JSON.parse(
-					readFileSync(
-						join(fixture.root, 'development/images/wikibase/package.json'),
-						'utf8'
-					)
-				).version,
-				'1.1.0'
-			);
+			assert.equal(imageVersion(fixture), '1.1.0');
 			assert.match(
 				readFileSync(
 					join(fixture.root, 'development/images/wikibase/CHANGELOG.md'),
@@ -216,15 +227,7 @@ describe('wbs-dev preparation and release workflow', () => {
 			assert.equal(git(fixture, 'diff', '--cached', '--name-only'), '');
 			const rerun = versions(fixture, 'wikibase');
 			assert.equal(rerun.status, 0, rerun.stderr);
-			assert.equal(
-				JSON.parse(
-					readFileSync(
-						join(fixture.root, 'development/images/wikibase/package.json'),
-						'utf8'
-					)
-				).version,
-				'1.1.0'
-			);
+			assert.equal(imageVersion(fixture), '1.1.0');
 		});
 
 		it('preserves a manually written untagged draft and its higher version floor', () => {
@@ -236,8 +239,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			);
 			write(
 				fixture,
-				'development/images/wikibase/package.json',
-				'{\n\t"name": "wikibase",\n\t"version": "1.2.0"\n}\n'
+				'development/images/wikibase/docker-bake.hcl',
+				wikibaseManifest('1.2.0')
 			);
 			write(
 				fixture,
@@ -264,8 +267,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			);
 			write(
 				fixture,
-				'development/images/wikibase/build.env',
-				'WIKIBASE_COMMIT=bbb\n'
+				'development/images/wikibase/docker-bake.hcl',
+				wikibaseManifest('1.0.0', 'bbb')
 			);
 			const context = createRepositoryContext(fixture.development);
 			const gitRepository = new GitRepository(context);
@@ -314,7 +317,7 @@ describe('wbs-dev preparation and release workflow', () => {
 				{
 					date: '2026-08-07',
 					sourceChanges,
-					sourcePaths: ['development/images/wikibase/build.env']
+					sourcePaths: ['development/images/wikibase/docker-bake.hcl']
 				}
 			)!;
 			applyFileUpdates(first.updates);
@@ -333,7 +336,7 @@ describe('wbs-dev preparation and release workflow', () => {
 				{
 					date: '2026-08-08',
 					sourceChanges,
-					sourcePaths: ['development/images/wikibase/build.env']
+					sourcePaths: ['development/images/wikibase/docker-bake.hcl']
 				}
 			)!;
 			assert.equal(rerun.replacesGeneratedChangelogSections, true);
@@ -399,8 +402,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			const fixture = createFixture();
 			write(
 				fixture,
-				'development/images/wikibase/build.env',
-				'WIKIBASE_COMMIT=bbb\n'
+				'development/images/wikibase/docker-bake.hcl',
+				wikibaseManifest('1.0.0', 'bbb')
 			);
 			const result = versions(fixture, 'wikibase');
 			assert.equal(result.status, 0, result.stderr);
@@ -408,20 +411,49 @@ describe('wbs-dev preparation and release workflow', () => {
 				result.stdout,
 				/Preparing wikibase 1\.0\.1 \(patch release\)/u
 			);
-			assert.equal(
-				JSON.parse(
-					readFileSync(
-						join(fixture.root, 'development/images/wikibase/package.json'),
-						'utf8'
-					)
-				).version,
-				'1.0.1'
-			);
+			assert.equal(imageVersion(fixture), '1.0.1');
 			assert.match(
 				result.stdout,
 				/Nothing was staged, committed, tagged, or pushed/u
 			);
 			assert.equal(git(fixture, 'diff', '--cached', '--name-only'), '');
+		});
+
+		it('merges a proposed source pin and image version in one manifest update', () => {
+			const fixture = createFixture();
+			const context = createRepositoryContext(fixture.development);
+			const gitRepository = new GitRepository(context);
+			gitRepository.fetchRemoteTags();
+			const project = discoverReleaseProjects(context).find(
+				(candidate) => candidate.name === 'wikibase'
+			)!;
+			const proposedManifest = wikibaseManifest('1.0.0', 'bbb');
+			const plan = planVersionUpdate(
+				context,
+				gitRepository,
+				project,
+				defaultVersionPolicy,
+				{
+					proposedUpdates: [
+						{ path: project.versionPath, contents: proposedManifest }
+					],
+					sourceChanges: [
+						{
+							variable: 'WIKIBASE.revision',
+							description: 'Wikibase main',
+							previous: 'aaa',
+							next: 'bbb'
+						}
+					],
+					sourcePaths: ['development/images/wikibase/docker-bake.hcl']
+				}
+			)!;
+			const manifestUpdate = plan.updates.find(
+				(update) => update.path === project.versionPath
+			)!.contents;
+			assert.equal(readVariable(manifestUpdate, 'WIKIBASE.revision'), 'bbb');
+			assert.equal(readImageManifest(project.versionPath).version, '1.0.0');
+			assert.equal(readVariable(manifestUpdate, 'IMAGE_VERSION'), '1.0.1');
 		});
 
 		it('reserves dry runs for release commands', () => {
@@ -493,8 +525,8 @@ describe('wbs-dev preparation and release workflow', () => {
 				'# 1.2.0\n\n- First draft.\n\n# 1.1.0\n\n- Second draft.\n\n# 1.0.0\n\n- Initial.\n'
 			);
 			commitAll(fixture, 'feat(wikibase): ambiguous release notes');
-			const packageBefore = readFileSync(
-				join(fixture.root, 'development/images/wikibase/package.json'),
+			const manifestBefore = readFileSync(
+				join(fixture.root, 'development/images/wikibase/docker-bake.hcl'),
 				'utf8'
 			);
 			const changelogBefore = readFileSync(
@@ -506,10 +538,10 @@ describe('wbs-dev preparation and release workflow', () => {
 			assert.match(result.stderr, /multiple untagged release entries/u);
 			assert.equal(
 				readFileSync(
-					join(fixture.root, 'development/images/wikibase/package.json'),
+					join(fixture.root, 'development/images/wikibase/docker-bake.hcl'),
 					'utf8'
 				),
-				packageBefore
+				manifestBefore
 			);
 			assert.equal(
 				readFileSync(
@@ -533,14 +565,14 @@ describe('wbs-dev preparation and release workflow', () => {
 				'# 1.2.0\n\n- First draft.\n\n# 1.1.0\n\n- Second draft.\n\n# 1.0.0\n\n- Initial.\n'
 			);
 			commitAll(fixture, 'feat(wikibase): prepare an atomic release');
-			const packagePath = join(
+			const manifestPath = join(
 				fixture.root,
-				'development/images/wikibase/package.json'
+				'development/images/wikibase/docker-bake.hcl'
 			);
-			const before = readFileSync(packagePath, 'utf8');
+			const before = readFileSync(manifestPath, 'utf8');
 			const result = versions(fixture, 'wikibase', 'wbs');
 			assert.notEqual(result.status, 0);
-			assert.equal(readFileSync(packagePath, 'utf8'), before);
+			assert.equal(readFileSync(manifestPath, 'utf8'), before);
 		});
 	});
 
@@ -549,8 +581,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			const fixture = createFixture();
 			write(
 				fixture,
-				'development/images/wikibase/package.json',
-				'{\n\t"name": "wikibase",\n\t"version": "1.0.1"\n}\n'
+				'development/images/wikibase/docker-bake.hcl',
+				wikibaseManifest('1.0.1')
 			);
 			write(
 				fixture,
@@ -590,7 +622,7 @@ describe('wbs-dev preparation and release workflow', () => {
 
 		it('blocks publication from a dirty working tree', () => {
 			const fixture = createFixture();
-			write(fixture, 'development/images/wikibase/build.env', 'dirty=true\n');
+			write(fixture, 'development/images/wikibase/dirty.txt', 'dirty=true\n');
 			const result = cli(fixture, 'release', 'images', 'wikibase', '--dry-run');
 			assert.notEqual(result.status, 0);
 			assert.match(result.stderr, /clean working tree/u);
@@ -600,8 +632,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			const fixture = createFixture();
 			write(
 				fixture,
-				'development/images/wikibase/package.json',
-				'{\n\t"name": "wikibase",\n\t"version": "1.1.0-rc.1"\n}\n'
+				'development/images/wikibase/docker-bake.hcl',
+				wikibaseManifest('1.1.0-rc.1')
 			);
 			write(
 				fixture,

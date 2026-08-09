@@ -1,105 +1,48 @@
 import semver from 'semver';
-import type {
-	SourceChange,
-	SourcePin,
-	SourceUpdateProvider
-} from '../source-types.js';
+import { bakeObject, resolveBakeVariables } from '../../../lib/bake.js';
+import type { SourceChange, SourceUpdateProvider } from '../source-types.js';
 import {
 	changeLines,
 	describePinChanges,
-	gerritCommit,
-	gerritCommitUrl,
-	gerritCompareUrl,
-	githubCommit,
-	githubCommitUrl,
-	githubCompareUrl,
+	manifestPins,
 	planPins,
 	readVariable,
 	replaceVariable,
 	request
 } from '../source-utils.js';
 
-export const wikimediaExtensions = [
-	['WIKIBASE_COMMIT', 'Wikibase'],
-	['BABEL_COMMIT', 'Babel'],
-	['CLDR_COMMIT', 'cldr'],
-	['CIRRUSSEARCH_COMMIT', 'CirrusSearch'],
-	['ELASTICA_COMMIT', 'Elastica'],
-	['ECHO_COMMIT', 'Echo'],
-	['ENTITYSCHEMA_COMMIT', 'EntitySchema'],
-	['OAUTH_COMMIT', 'OAuth'],
-	['PLUGGABLEAUTH_COMMIT', 'PluggableAuth'],
-	['UNIVERSALLANGUAGESELECTOR_COMMIT', 'UniversalLanguageSelector'],
-	['WIKIBASECIRRUSSEARCH_COMMIT', 'WikibaseCirrusSearch'],
-	['WIKIBASEMANIFEST_COMMIT', 'WikibaseManifest'],
-	['WSOAUTH_COMMIT', 'WSOAuth']
-] as const;
-
-export function wikibasePins(contents: string): SourcePin[] {
-	const mediaWikiVersion = readVariable(contents, 'MEDIAWIKI_VERSION');
-	const match = /^(\d+)\.(\d+)/u.exec(mediaWikiVersion);
-	if (!match) {
-		throw new Error(`Invalid MEDIAWIKI_VERSION "${mediaWikiVersion}".`);
-	}
-	const branch = `REL${match[1]}_${match[2]}`;
-	return [
-		...wikimediaExtensions.map(([variable, extension]) => ({
-			variable,
-			description: `${extension} ${branch}`,
-			resolve: async () =>
-				await gerritCommit(`mediawiki/extensions/${extension}`, branch),
-			compareUrl: (previous: string, next: string) =>
-				gerritCompareUrl(`mediawiki/extensions/${extension}`, previous, next),
-			commitUrl: (commit: string) =>
-				gerritCommitUrl(`mediawiki/extensions/${extension}`, commit)
-		})),
-		{
-			variable: 'WIKIBASELOCALMEDIA_COMMIT',
-			description: 'WikibaseLocalMedia master',
-			resolve: async () =>
-				await githubCommit('ProfessionalWiki/WikibaseLocalMedia', 'master'),
-			compareUrl: (previous, next) =>
-				githubCompareUrl('ProfessionalWiki/WikibaseLocalMedia', previous, next),
-			commitUrl: (commit) =>
-				githubCommitUrl('ProfessionalWiki/WikibaseLocalMedia', commit)
-		},
-		{
-			variable: 'WIKIBASEEDTF_COMMIT',
-			description: 'WikibaseEdtf master',
-			resolve: async () =>
-				await githubCommit('ProfessionalWiki/WikibaseEdtf', 'master'),
-			compareUrl: (previous, next) =>
-				githubCompareUrl('ProfessionalWiki/WikibaseEdtf', previous, next),
-			commitUrl: (commit) =>
-				githubCommitUrl('ProfessionalWiki/WikibaseEdtf', commit)
-		},
-		{
-			variable: 'WIKIBASEINWIKITEXT_COMMIT',
-			description: 'WikibaseInWikitext main',
-			resolve: async () =>
-				await githubCommit(
-					'wbstack/mediawiki-extensions-WikibaseInWikitext',
-					'main'
-				),
-			compareUrl: (previous, next) =>
-				githubCompareUrl(
-					'wbstack/mediawiki-extensions-WikibaseInWikitext',
-					previous,
-					next
-				),
-			commitUrl: (commit) =>
-				githubCommitUrl(
-					'wbstack/mediawiki-extensions-WikibaseInWikitext',
-					commit
-				)
-		}
-	];
+export function wikibasePins(contents: string) {
+	return manifestPins(contents);
 }
 
-async function mediaWikiVersionsInLine(line: string): Promise<string[]> {
-	const response = await request(
-		`https://releases.wikimedia.org/mediawiki/${line}/`
+interface MediaWikiSettings {
+	source: string;
+	releaseNotes: string;
+}
+
+function mediaWikiSettings(contents: string): MediaWikiSettings {
+	const mediaWiki = bakeObject(
+		resolveBakeVariables(contents, process.cwd()),
+		'MEDIAWIKI'
 	);
+	return {
+		source: String(mediaWiki.source).replace(/\/?$/u, '/'),
+		releaseNotes: String(mediaWiki.release_notes)
+	};
+}
+
+function releaseNotesUrl(settings: MediaWikiSettings, version: string): string {
+	return settings.releaseNotes.replace(
+		'{line}',
+		version.replace(/\.\d+$/u, '')
+	);
+}
+
+async function mediaWikiVersionsInLine(
+	line: string,
+	source: string
+): Promise<string[]> {
+	const response = await request(`${source}${line}/`);
 	const page = await response.text();
 	return [
 		...new Set(
@@ -111,13 +54,15 @@ async function mediaWikiVersionsInLine(line: string): Promise<string[]> {
 }
 
 export async function discoverMediaWikiCandidates(
-	currentVersion: string
+	currentVersion: string,
+	source = 'https://releases.wikimedia.org/mediawiki/'
 ): Promise<{ maintenance?: string; newerLine?: string }> {
 	const current = semver.parse(currentVersion);
 	if (!current) {
 		throw new Error(`Invalid MEDIAWIKI_VERSION "${currentVersion}".`);
 	}
-	const response = await request('https://releases.wikimedia.org/mediawiki/');
+	const normalizedSource = source.replace(/\/?$/u, '/');
+	const response = await request(normalizedSource);
 	const page = await response.text();
 	const lines = [
 		...new Set(
@@ -134,7 +79,7 @@ export async function discoverMediaWikiCandidates(
 	const versionsByLine = await Promise.all(
 		lines.map(async (line) => ({
 			line,
-			versions: await mediaWikiVersionsInLine(line)
+			versions: await mediaWikiVersionsInLine(line, normalizedSource)
 		}))
 	);
 	const currentLine = `${current.major}.${current.minor}`;
@@ -155,20 +100,21 @@ export async function discoverMediaWikiCandidates(
 export const wikibaseSourceProvider: SourceUpdateProvider = {
 	image: 'wikibase',
 	describeChanges: (previousContents, nextContents) => {
-		const previousVersion = readVariable(previousContents, 'MEDIAWIKI_VERSION');
-		const nextVersion = readVariable(nextContents, 'MEDIAWIKI_VERSION');
+		const settings = mediaWikiSettings(nextContents);
+		const previousVersion = readVariable(previousContents, 'MEDIAWIKI.version');
+		const nextVersion = readVariable(nextContents, 'MEDIAWIKI.version');
 		const mediaWikiChange: SourceChange[] =
 			previousVersion === nextVersion
 				? []
 				: [
 						{
-							variable: 'MEDIAWIKI_VERSION',
+							variable: 'MEDIAWIKI.version',
 							description: 'MediaWiki',
 							previous: previousVersion,
 							next: nextVersion,
 							link: {
 								label: 'Release notes',
-								url: `https://www.mediawiki.org/wiki/Release_notes/${nextVersion.replace(/\.\d+$/u, '')}`
+								url: releaseNotesUrl(settings, nextVersion)
 							}
 						}
 					];
@@ -182,8 +128,12 @@ export const wikibaseSourceProvider: SourceUpdateProvider = {
 		];
 	},
 	plan: async (contents, interaction) => {
-		const currentVersion = readVariable(contents, 'MEDIAWIKI_VERSION');
-		const candidates = await discoverMediaWikiCandidates(currentVersion);
+		const settings = mediaWikiSettings(contents);
+		const currentVersion = readVariable(contents, 'MEDIAWIKI.version');
+		const candidates = await discoverMediaWikiCandidates(
+			currentVersion,
+			settings.source
+		);
 		const options = [
 			...(candidates.maintenance
 				? [
@@ -225,17 +175,17 @@ export const wikibaseSourceProvider: SourceUpdateProvider = {
 		if (selectedVersion !== currentVersion) {
 			plannedContents = replaceVariable(
 				plannedContents,
-				'MEDIAWIKI_VERSION',
+				'MEDIAWIKI.version',
 				selectedVersion
 			);
 			changes.push({
-				variable: 'MEDIAWIKI_VERSION',
+				variable: 'MEDIAWIKI.version',
 				description: 'MediaWiki',
 				previous: currentVersion,
 				next: selectedVersion,
 				link: {
 					label: 'Release notes',
-					url: `https://www.mediawiki.org/wiki/Release_notes/${selectedVersion.replace(/\.\d+$/u, '')}`
+					url: releaseNotesUrl(settings, selectedVersion)
 				}
 			});
 		}

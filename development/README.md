@@ -49,6 +49,10 @@ wbs-dev lint
 
 The command help describes the available projects, test suites, and options. Commit completed work according to the [versioning and commit policy](./docs/versioning-and-commits.md).
 
+Every image directory contains an authoritative `docker-bake.hcl`. Running `docker buildx bake` there builds and loads the native local image with its `latest` tag, while `docker buildx bake --print` shows the resolved definition without building. Use `wbs-dev build` when you want the shared cache, CI publication, parallelism, or optional platform handling.
+
+WBS Tools is the one workspace-aware exception: its direct Bake build asks you to approve read access to the shared `development/` lockfile and package metadata. Confirm the Buildx prompt, or use `wbs-dev build wbs-tools`, which grants that exact path automatically.
+
 To run and manually test a complete Suite built from the checkout, use its normal lifecycle commands:
 
 ```bash

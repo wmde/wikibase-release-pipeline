@@ -14,12 +14,12 @@ OpenSearch does not yet have an automated source provider in `wbs-dev update`. T
 
 Prepare the compatibility set manually:
 
-1. Read the current OpenSearch and plugin versions from [`build.env`](./build.env).
+1. Read the current OpenSearch and plugin versions from [`docker-bake.hcl`](./docker-bake.hcl).
 2. Use the [CirrusSearch compatibility documentation](https://www.mediawiki.org/wiki/Extension:CirrusSearch) to identify the supported OpenSearch series for the CirrusSearch version bundled with Wikibase.
 3. Select an exact [OpenSearch Docker Image tag](https://hub.docker.com/r/opensearchproject/opensearch/tags) in that series.
-4. Select published `opensearch-extra` and Cirrus highlighter artifacts compatible with that exact OpenSearch version using the repository links in `build.env`.
-5. Update `OPENSEARCH_VERSION`, `OPENSEARCH_IMAGE_URL`, `OPENSEARCH_PLUGIN_WIKIMEDIA_EXTRA`, and `OPENSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER` together.
-6. Review all upstream release information and the resulting `build.env` diff before building or testing the image.
+4. Select published `opensearch-extra` and Cirrus highlighter artifacts compatible with that exact OpenSearch version using the repository links in `docker-bake.hcl`.
+5. Update the `OPENSEARCH` and plugin object attributes together; the build arguments are derived from those objects.
+6. Review all upstream release information and the resulting `docker-bake.hcl` diff before building or testing the image.
 
 ## Review
 

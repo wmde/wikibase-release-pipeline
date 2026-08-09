@@ -2,9 +2,11 @@ packages:
   - "images/*"
 
 allowBuilds:
+  "@tree-sitter-grammars/tree-sitter-hcl": true
   edgedriver: true
   esbuild: true
   geckodriver: true
+  tree-sitter: true
   vue-demi: true
 
 injectWorkspacePackages: true

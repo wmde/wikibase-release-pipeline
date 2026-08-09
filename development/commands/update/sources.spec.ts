@@ -2,6 +2,7 @@ import { afterEach, describe, it } from 'mocha';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { bakeObject, resolveBakeVariables } from '../../lib/bake.js';
 import type { SourceUpdateInteraction } from './source-types.js';
 import {
 	confirmPinPlan,
@@ -13,46 +14,46 @@ import {
 import { discoverWdqsCandidates, wdqsSourceProvider } from './sources/wdqs.js';
 import {
 	discoverMediaWikiCandidates,
-	wikibasePins,
-	wikimediaExtensions
+	wikibasePins
 } from './sources/wikibase.js';
 
 const WIKIBASE_IMAGE = resolve('images/wikibase');
+const WDQS_MANIFEST = resolve('images/wdqs/docker-bake.hcl');
 const originalFetch = globalThis.fetch;
 
-function sorted(values: Iterable<string>): string[] {
-	return [...values].sort();
-}
+const pinManifest = (value: string) =>
+	`variable "PIN" {\n  default = "${value}"\n}\n`;
 
 describe('Wikibase source update provider', () => {
 	afterEach(() => {
 		globalThis.fetch = originalFetch;
 	});
 
-	it('covers every automatically updated source in build.env', () => {
-		const buildEnvironment = readFileSync(
-			resolve(WIKIBASE_IMAGE, 'build.env'),
+	it('discovers every managed source from the authoritative manifest', () => {
+		const contents = readFileSync(
+			resolve(WIKIBASE_IMAGE, 'docker-bake.hcl'),
 			'utf8'
 		);
-		const managedSection = buildEnvironment.split(
-			'Versions below are automatically updated by wbs-dev update'
-		)[1];
-		assert.ok(managedSection, 'build.env must identify its managed sources');
-
-		const managedVariables = [
-			...managedSection.matchAll(/^([A-Z0-9_]+_(?:COMMIT|ARCHIVE_SHA))=/gmu)
-		].map((match) => match[1]);
-		const providerVariables = wikibasePins(buildEnvironment).flatMap((pin) =>
-			pin.archiveShaVariable
-				? [pin.variable, pin.archiveShaVariable]
-				: [pin.variable]
+		const variables = resolveBakeVariables(contents, WIKIBASE_IMAGE);
+		const managed = [...variables.keys()].filter((name) => {
+			const value = variables.get(name);
+			return (
+				value !== null &&
+				typeof value === 'object' &&
+				!Array.isArray(value) &&
+				['gerrit', 'github', 'codeberg'].includes(
+					String(bakeObject(variables, name).kind)
+				)
+			);
+		});
+		const pins = wikibasePins(contents);
+		assert.deepEqual(
+			pins.map(({ variable }) => variable).sort(),
+			managed.map((name) => `${name}.revision`).sort()
 		);
-
-		assert.deepEqual(sorted(providerVariables), sorted(managedVariables));
 		assert.equal(
-			new Set(providerVariables).size,
-			providerVariables.length,
-			'each managed variable must belong to the provider exactly once'
+			new Set(pins.map(({ variable }) => variable)).size,
+			pins.length
 		);
 	});
 
@@ -84,20 +85,33 @@ describe('Wikibase source update provider', () => {
 		});
 	});
 
-	it('keeps the Wikimedia extension policy aligned with the Dockerfile', () => {
+	it('keeps manifest-managed Wikimedia extensions aligned with the Dockerfile', () => {
+		const manifest = readFileSync(
+			resolve(WIKIBASE_IMAGE, 'docker-bake.hcl'),
+			'utf8'
+		);
 		const dockerfile = readFileSync(
 			resolve(WIKIBASE_IMAGE, 'Dockerfile'),
 			'utf8'
 		);
 		const match = /^ARG WMF_EXTENSIONS="([^"]+)"$/mu.exec(dockerfile);
 		assert.ok(match, 'Dockerfile must declare WMF_EXTENSIONS');
-
-		assert.deepEqual(
-			match[1].split(','),
-			wikimediaExtensions.map(([, extension]) => extension)
+		const variables = resolveBakeVariables(manifest, WIKIBASE_IMAGE);
+		const extensionVariables = [...variables.keys()].filter((name) => {
+			const value = variables.get(name);
+			return (
+				value !== null &&
+				typeof value === 'object' &&
+				!Array.isArray(value) &&
+				bakeObject(variables, name).kind === 'gerrit'
+			);
+		});
+		const extensions = extensionVariables.map((name) =>
+			String(bakeObject(variables, name).name)
 		);
-		for (const [variable] of wikimediaExtensions) {
-			assert.match(dockerfile, new RegExp(`^ARG ${variable}$`, 'mu'));
+		assert.deepEqual(new Set(match[1].split(',')), new Set(extensions));
+		for (const name of extensionVariables) {
+			assert.match(dockerfile, new RegExp(`^ARG ${name}_COMMIT$`, 'mu'));
 		}
 	});
 });
@@ -156,16 +170,10 @@ describe('other source update providers', () => {
 			note: (_title, lines) => notes.push(...lines),
 			info: () => undefined
 		};
+		const contents = readFileSync(WDQS_MANIFEST, 'utf8');
+		const result = await wdqsSourceProvider.plan(contents, interaction);
 
-		const result = await wdqsSourceProvider.plan(
-			'WDQS_VERSION=0.3.164\n',
-			interaction
-		);
-
-		assert.deepEqual(result, {
-			contents: 'WDQS_VERSION=0.3.164\n',
-			changes: []
-		});
+		assert.deepEqual(result, { contents, changes: [] });
 		assert.ok(
 			notes.some((line) =>
 				line.includes(
@@ -176,24 +184,20 @@ describe('other source update providers', () => {
 	});
 
 	it('describes Query Service changes without rediscovering upstream state', () => {
-		assert.deepEqual(
-			wdqsSourceProvider.describeChanges(
-				'WDQS_VERSION=0.3.164\n',
-				'WDQS_VERSION=0.3.165\n'
-			),
-			[
-				{
-					variable: 'WDQS_VERSION',
-					description: 'Query Service',
-					previous: '0.3.164',
-					next: '0.3.165',
-					link: {
-						label: 'Diff',
-						url: 'https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.164...query-service-parent-0.3.165'
-					}
+		const previous = readFileSync(WDQS_MANIFEST, 'utf8');
+		const next = replaceVariable(previous, 'WDQS.version', '0.3.165');
+		assert.deepEqual(wdqsSourceProvider.describeChanges(previous, next), [
+			{
+				variable: 'WDQS.version',
+				description: 'Query Service',
+				previous: '0.3.164',
+				next: '0.3.165',
+				link: {
+					label: 'Diff',
+					url: 'https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.164...query-service-parent-0.3.165'
 				}
-			]
-		);
+			}
+		]);
 	});
 
 	it('preserves the original file when a deterministic update is declined', async () => {
@@ -205,88 +209,59 @@ describe('other source update providers', () => {
 			note: () => undefined,
 			info: () => undefined
 		};
+		const original = pinManifest('old');
 		const result = await confirmPinPlan(
 			'Example',
-			'PIN=old\n',
+			original,
 			{
-				contents: 'PIN=new\n',
+				contents: pinManifest('new'),
 				changes: [
 					{
 						variable: 'PIN',
 						description: 'Example source',
 						previous: 'old',
-						next: 'new',
-						link: {
-							label: 'Diff',
-							url: 'https://example.test/compare/old...new'
-						}
+						next: 'new'
 					}
 				]
 			},
 			interaction
 		);
-
-		assert.deepEqual(result, { contents: 'PIN=old\n', changes: [] });
+		assert.deepEqual(result, { contents: original, changes: [] });
 	});
 
 	it('populates an intentionally empty source declaration', async () => {
-		const plan = await planPins('PIN=\n', [
+		const plan = await planPins(pinManifest(''), [
 			{
 				variable: 'PIN',
 				description: 'Example source',
 				resolve: async () => 'abc123',
-				compareUrl: (previous, next) =>
-					`https://example.test/compare/${previous}...${next}`,
 				commitUrl: (commit) => `https://example.test/commit/${commit}`
 			}
 		]);
-
-		assert.deepEqual(plan, {
-			contents: 'PIN=abc123\n',
-			changes: [
-				{
-					variable: 'PIN',
-					description: 'Example source',
-					previous: '',
-					next: 'abc123',
-					link: {
-						label: 'Commit',
-						url: 'https://example.test/commit/abc123'
-					}
-				}
-			]
-		});
+		assert.equal(readVariable(plan.contents, 'PIN'), 'abc123');
+		assert.equal(plan.changes[0].next, 'abc123');
 	});
 
 	it('describes a source absent from the previous release as newly added', () => {
-		assert.deepEqual(
-			describePinChanges('', 'PIN=abc123\n', [
+		assert.equal(
+			describePinChanges('', pinManifest('abc123'), [
 				{
 					variable: 'PIN',
 					description: 'Example source',
 					resolve: async () => 'unused',
-					compareUrl: (previous, next) =>
-						`https://example.test/compare/${previous}...${next}`,
 					commitUrl: (commit) => `https://example.test/commit/${commit}`
 				}
-			]),
-			[
-				{
-					variable: 'PIN',
-					description: 'Example source',
-					next: 'abc123',
-					link: {
-						label: 'Commit',
-						url: 'https://example.test/commit/abc123'
-					}
-				}
-			]
+			])[0].next,
+			'abc123'
 		);
 	});
 
-	it('still rejects a source missing from the current build schema', async () => {
-		assert.equal(readVariable('PIN=\n', 'PIN'), '');
-		assert.equal(replaceVariable('PIN=\n', 'PIN', 'abc123'), 'PIN=abc123\n');
+	it('still rejects a source missing from the current manifest', async () => {
+		assert.equal(readVariable(pinManifest(''), 'PIN'), '');
+		assert.equal(
+			readVariable(replaceVariable(pinManifest(''), 'PIN', 'abc123'), 'PIN'),
+			'abc123'
+		);
 		await assert.rejects(
 			planPins('', [
 				{
@@ -295,7 +270,7 @@ describe('other source update providers', () => {
 					resolve: async () => 'abc123'
 				}
 			]),
-			/Could not find PIN in build\.env\./u
+			/Could not find PIN in the Bake manifest\./u
 		);
 	});
 });

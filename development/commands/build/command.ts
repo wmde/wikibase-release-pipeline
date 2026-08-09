@@ -1,14 +1,11 @@
 import type { Command } from 'commander';
-import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { BAKE_MANIFEST, readImageManifest } from '../../lib/bake.js';
 import type { RepositoryContext } from '../../lib/context.js';
 import { discoverImageNames } from '../../lib/projects.js';
 import { resolveNames } from '../../lib/selection.js';
 import { assertStableVersion } from '../../lib/versioning.js';
-import {
-	buildImages,
-	DEFAULT_BUILD_PARALLELISM
-} from './images.js';
+import { DEFAULT_BUILD_PARALLELISM, buildImages } from './images.js';
 
 interface ParsedBuildArguments {
 	images: string[];
@@ -16,49 +13,49 @@ interface ParsedBuildArguments {
 	parallel: number;
 }
 
-function positiveInteger( value: string ): number {
-	const parsed = Number.parseInt( value, 10 );
-	if ( !/^\d+$/u.test( value ) || parsed < 1 ) {
+function positiveInteger(value: string): number {
+	const parsed = Number.parseInt(value, 10);
+	if (!/^\d+$/u.test(value) || parsed < 1) {
 		throw new Error(
-			`--parallel requires a positive integer, received "${ value }".`
+			`--parallel requires a positive integer, received "${value}".`
 		);
 	}
 	return parsed;
 }
 
-export function parseBuildArguments( args: string[] ): ParsedBuildArguments {
+export function parseBuildArguments(args: string[]): ParsedBuildArguments {
 	const images: string[] = [];
 	const forwarded: string[] = [];
 	let parallel = DEFAULT_BUILD_PARALLELISM;
 	let forwarding = false;
 	let explicitForwarding = false;
 
-	for ( let index = 0; index < args.length; index++ ) {
-		const argument = args[ index ];
-		if ( !explicitForwarding && argument === '--parallel' ) {
-			const value = args[ ++index ];
-			if ( value === undefined ) {
-				throw new Error( '--parallel requires a positive integer.' );
+	for (let index = 0; index < args.length; index++) {
+		const argument = args[index];
+		if (!explicitForwarding && argument === '--parallel') {
+			const value = args[++index];
+			if (value === undefined) {
+				throw new Error('--parallel requires a positive integer.');
 			}
-			parallel = positiveInteger( value );
+			parallel = positiveInteger(value);
 			continue;
 		}
-		if ( !explicitForwarding && argument.startsWith( '--parallel=' ) ) {
-			parallel = positiveInteger( argument.slice( '--parallel='.length ) );
+		if (!explicitForwarding && argument.startsWith('--parallel=')) {
+			parallel = positiveInteger(argument.slice('--parallel='.length));
 			continue;
 		}
-		if ( argument === '--' ) {
+		if (argument === '--') {
 			forwarding = true;
 			explicitForwarding = true;
 			continue;
 		}
-		if ( !forwarding && argument.startsWith( '-' ) ) {
+		if (!forwarding && argument.startsWith('-')) {
 			forwarding = true;
 		}
-		if ( forwarding ) {
-			forwarded.push( argument );
+		if (forwarding) {
+			forwarded.push(argument);
 		} else {
-			images.push( argument );
+			images.push(argument);
 		}
 	}
 
@@ -69,38 +66,35 @@ async function runBuild(
 	args: string[],
 	context: RepositoryContext
 ): Promise<void> {
-	const parsed = parseBuildArguments( args );
-	const selected = resolveNames( parsed.images, discoverImageNames( context ), {
+	const parsed = parseBuildArguments(args);
+	const selected = resolveNames(parsed.images, discoverImageNames(context), {
 		command: 'build',
 		noun: 'image'
-	} );
-	if ( parsed.forwarded.includes( '--publish' ) ) {
-		if ( parsed.images.length !== 1 || selected.length !== 1 ) {
+	});
+	if (parsed.forwarded.includes('--publish')) {
+		if (parsed.images.length !== 1 || selected.length !== 1) {
 			throw new Error(
 				'build --publish requires exactly one explicit image project.'
 			);
 		}
-		const packageJson = JSON.parse(
-			readFileSync(
-				join( context.imagesRoot, selected[ 0 ], 'package.json' ),
-				'utf8'
-			)
-		) as { version: string };
-		assertStableVersion( packageJson.version, `${ selected[ 0 ] } package` );
+		const manifest = readImageManifest(
+			join(context.imagesRoot, selected[0], BAKE_MANIFEST)
+		);
+		assertStableVersion(manifest.version, `${selected[0]} image`);
 	}
 
-	await buildImages( selected, parsed.forwarded, context, parsed.parallel );
+	await buildImages(selected, parsed.forwarded, context, parsed.parallel);
 }
 
 export function registerBuildCommand(
 	program: Command,
 	context: RepositoryContext
 ): void {
-	const images = discoverImageNames( context );
+	const images = discoverImageNames(context);
 	program
-		.command( 'build' )
-		.description( 'Build all or selected images.' )
-		.argument( '[arguments...]', '[IMAGE...] [docker buildx options...]' )
+		.command('build')
+		.description('Build all or selected images.')
+		.argument('[arguments...]', '[IMAGE...] [docker buildx options...]')
 		.allowUnknownOption()
 		.allowExcessArguments()
 		.passThroughOptions()
@@ -109,11 +103,11 @@ export function registerBuildCommand(
 			[
 				'',
 				'Targets:',
-				`  ${ images.join( ', ' ) }`,
+				`  ${images.join(', ')}`,
 				'  With no target or "all", build every image.',
 				'',
 				'wbs-dev build option:',
-				`  --parallel=N  maximum concurrent image builds (default: ${ DEFAULT_BUILD_PARALLELISM })`,
+				`  --parallel=N  maximum concurrent image builds (default: ${DEFAULT_BUILD_PARALLELISM})`,
 				'  Other options after the image list are forwarded to Docker Buildx.',
 				'',
 				'Examples:',
@@ -121,7 +115,7 @@ export function registerBuildCommand(
 				'  wbs-dev build wikibase wdqs --no-cache --pull',
 				'  wbs-dev build wikibase wdqs --parallel=2 --dry-run',
 				'  wbs-dev build wikibase --publish --dry-run'
-			].join( '\n' )
+			].join('\n')
 		)
-		.action( async ( args: string[] ) => await runBuild( args, context ) );
+		.action(async (args: string[]) => await runBuild(args, context));
 }

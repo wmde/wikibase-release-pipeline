@@ -1,4 +1,11 @@
 import { createHash } from 'node:crypto';
+import {
+	bakeObject,
+	readBakeValue,
+	replaceBakeValue,
+	resolveBakeVariables,
+	type BakeVariable
+} from '../../lib/bake.js';
 import type {
 	SourceChange,
 	SourcePin,
@@ -70,6 +77,92 @@ export async function codebergCommit(
 	return ((await response.json()) as { commit: { id: string } }).commit.id;
 }
 
+function repositorySlug(url: string, host: string): string {
+	const prefix = `https://${host}/`;
+	if (!url.startsWith(prefix)) {
+		throw new Error(`Expected a ${host} repository URL; received ${url}.`);
+	}
+	return url.slice(prefix.length).replace(/\.git$/u, '');
+}
+
+function sourceString(
+	source: Record<string, BakeVariable>,
+	key: string,
+	variable: string
+): string {
+	const value = source[key];
+	if (typeof value !== 'string' || value === '') {
+		throw new Error(`Bake source ${variable} has no string ${key}.`);
+	}
+	return value;
+}
+
+export function manifestPins(contents: string): SourcePin[] {
+	const variables = resolveBakeVariables(contents, process.cwd());
+	return [...variables.keys()].flatMap((variable) => {
+		const value = variables.get(variable);
+		if (!value || typeof value !== 'object' || Array.isArray(value)) {
+			return [];
+		}
+		const source = bakeObject(variables, variable);
+		if (!['gerrit', 'github', 'codeberg'].includes(String(source.kind))) {
+			return [];
+		}
+		const kind = sourceString(source, 'kind', variable);
+		const repo = sourceString(source, 'repo', variable);
+		const ref = sourceString(source, 'ref', variable).replace(
+			/^refs\/heads\//u,
+			''
+		);
+		const description = `${
+			typeof source.name === 'string' ? source.name : variable
+		} ${ref}`;
+		let resolve: SourcePin['resolve'];
+		let compareUrl: SourcePin['compareUrl'];
+		let commitUrl: SourcePin['commitUrl'];
+		if (kind === 'github') {
+			const repository = repositorySlug(repo, 'github.com');
+			resolve = async () => await githubCommit(repository, ref);
+			compareUrl = (previous, next) =>
+				githubCompareUrl(repository, previous, next);
+			commitUrl = (commit) => githubCommitUrl(repository, commit);
+		} else if (kind === 'codeberg') {
+			const repository = repositorySlug(repo, 'codeberg.org');
+			resolve = async () => await codebergCommit(repository, ref);
+			compareUrl = (previous, next) =>
+				`https://codeberg.org/${repository}/compare/${previous}...${next}`;
+			commitUrl = (commit) => codebergCommitUrl(repository, commit);
+		} else {
+			const repository = repositorySlug(repo, 'gerrit.wikimedia.org').replace(
+				/^r\//u,
+				''
+			);
+			resolve = async () => await gerritCommit(repository, ref);
+			compareUrl = (previous, next) =>
+				gerritCompareUrl(repository, previous, next);
+			commitUrl = (commit) => gerritCommitUrl(repository, commit);
+		}
+		const archive =
+			typeof source.archive === 'string' ? source.archive : undefined;
+		return [
+			{
+				variable: `${variable}.revision`,
+				description,
+				resolve,
+				compareUrl,
+				commitUrl,
+				...(archive
+					? {
+							archiveShaVariable: `${variable}.archive_sha256`,
+							archiveUrl: (revision: string) =>
+								archive.replace('{revision}', revision)
+						}
+					: {})
+			}
+		];
+	});
+}
+
 export async function archiveSha256(url: string): Promise<string> {
 	const response = await request(url);
 	return createHash('sha256')
@@ -77,21 +170,27 @@ export async function archiveSha256(url: string): Promise<string> {
 		.digest('hex');
 }
 
-function escapeRegExp(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
-}
-
 function findVariable(contents: string, variable: string): string | undefined {
-	const match = new RegExp(`^${escapeRegExp(variable)}=(.*)$`, 'mu').exec(
-		contents
-	);
-	return match?.[1];
+	const [name, attribute] = variable.split('.', 2);
+	try {
+		return readBakeValue(contents, name, attribute);
+	} catch (error) {
+		if (
+			error instanceof Error &&
+			/(?:Could not find Bake variable|has no (?:default|string))/u.test(
+				error.message
+			)
+		) {
+			return undefined;
+		}
+		throw error;
+	}
 }
 
 export function readVariable(contents: string, variable: string): string {
 	const value = findVariable(contents, variable);
 	if (value === undefined) {
-		throw new Error(`Could not find ${variable} in build.env.`);
+		throw new Error(`Could not find ${variable} in the Bake manifest.`);
 	}
 	return value;
 }
@@ -123,11 +222,8 @@ export function replaceVariable(
 	variable: string,
 	value: string
 ): string {
-	const pattern = new RegExp(`^${escapeRegExp(variable)}=[^\n]*$`, 'mu');
-	if (!pattern.test(contents)) {
-		throw new Error(`Could not find ${variable} in build.env.`);
-	}
-	return contents.replace(pattern, `${variable}=${value}`);
+	const [name, attribute] = variable.split('.', 2);
+	return replaceBakeValue(contents, name, attribute, value);
 }
 
 export async function planPins(

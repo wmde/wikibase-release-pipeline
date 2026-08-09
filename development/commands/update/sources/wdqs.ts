@@ -1,4 +1,5 @@
 import semver from 'semver';
+import { bakeObject, resolveBakeVariables } from '../../../lib/bake.js';
 import type { SourceUpdateProvider } from '../source-types.js';
 import {
 	changeLines,
@@ -12,17 +13,17 @@ interface GitHubTag {
 	name: string;
 }
 
-const TAG_PREFIX = 'query-service-parent-';
-
 export async function discoverWdqsCandidates(
-	currentVersion: string
+	currentVersion: string,
+	repository = 'wikimedia/wikidata-query-rdf',
+	tagPrefix = 'query-service-parent-'
 ): Promise<string[]> {
 	const tags = await githubJson<GitHubTag[]>(
-		'/repos/wikimedia/wikidata-query-rdf/tags?per_page=100'
+		`/repos/${repository}/tags?per_page=100`
 	);
 	return tags
 		.map(({ name }) =>
-			name.startsWith(TAG_PREFIX) ? name.slice(TAG_PREFIX.length) : ''
+			name.startsWith(tagPrefix) ? name.slice(tagPrefix.length) : ''
 		)
 		.filter(
 			(version) => semver.valid(version) && semver.gt(version, currentVersion)
@@ -30,10 +31,11 @@ export async function discoverWdqsCandidates(
 		.sort(semver.rcompare);
 }
 
-async function validateDistribution(version: string): Promise<void> {
-	const base =
-		`https://gitlab.wikimedia.org/api/v4/projects/2745/packages/maven/` +
-		`org/wikidata/query/rdf/service/${version}/service-${version}-dist.tar.gz`;
+async function validateDistribution(
+	version: string,
+	template: string
+): Promise<void> {
+	const base = template.replaceAll('{version}', version);
 	await request(base, {}, 'HEAD');
 	const checksum = await (await request(`${base}.md5`)).text();
 	if (!/^[a-f\d]{32}(?:\s|$)/iu.test(checksum.trim())) {
@@ -41,31 +43,56 @@ async function validateDistribution(version: string): Promise<void> {
 	}
 }
 
+function manifestSettings(contents: string): {
+	repository: string;
+	tagPrefix: string;
+	distribution: string;
+} {
+	const source = bakeObject(
+		resolveBakeVariables(contents, process.cwd()),
+		'WDQS'
+	);
+	const repo = String(source.repo);
+	return {
+		repository: repo
+			.replace(/^https:\/\/github\.com\//u, '')
+			.replace(/\.git$/u, ''),
+		tagPrefix: String(source.tag_prefix),
+		distribution: String(source.distribution)
+	};
+}
+
 export const wdqsSourceProvider: SourceUpdateProvider = {
 	image: 'wdqs',
 	describeChanges: (previousContents, nextContents) => {
-		const previous = readVariable(previousContents, 'WDQS_VERSION');
-		const next = readVariable(nextContents, 'WDQS_VERSION');
+		const previous = readVariable(previousContents, 'WDQS.version');
+		const next = readVariable(nextContents, 'WDQS.version');
+		const settings = manifestSettings(nextContents);
 		return previous === next
 			? []
 			: [
 					{
-						variable: 'WDQS_VERSION',
+						variable: 'WDQS.version',
 						description: 'Query Service',
 						previous,
 						next,
 						link: {
 							label: 'Diff',
 							url:
-								`https://github.com/wikimedia/wikidata-query-rdf/compare/` +
-								`${TAG_PREFIX}${previous}...${TAG_PREFIX}${next}`
+								`https://github.com/${settings.repository}/compare/` +
+								`${settings.tagPrefix}${previous}...${settings.tagPrefix}${next}`
 						}
 					}
 				];
 	},
 	plan: async (contents, interaction) => {
-		const currentVersion = readVariable(contents, 'WDQS_VERSION');
-		const candidates = await discoverWdqsCandidates(currentVersion);
+		const currentVersion = readVariable(contents, 'WDQS.version');
+		const settings = manifestSettings(contents);
+		const candidates = await discoverWdqsCandidates(
+			currentVersion,
+			settings.repository,
+			settings.tagPrefix
+		);
 		if (candidates.length === 0) {
 			interaction.info(`Query Service ${currentVersion} is already current.`);
 			return { contents, changes: [] };
@@ -74,19 +101,19 @@ export const wdqsSourceProvider: SourceUpdateProvider = {
 		interaction.info(
 			`Validating the Query Service ${candidate} distribution and checksum.`
 		);
-		await validateDistribution(candidate);
-		const previousTag = `${TAG_PREFIX}${currentVersion}`;
-		const nextTag = `${TAG_PREFIX}${candidate}`;
+		await validateDistribution(candidate, settings.distribution);
+		const previousTag = `${settings.tagPrefix}${currentVersion}`;
+		const nextTag = `${settings.tagPrefix}${candidate}`;
 		const changes = [
 			{
-				variable: 'WDQS_VERSION',
+				variable: 'WDQS.version',
 				description: 'Query Service',
 				previous: currentVersion,
 				next: candidate,
 				link: {
 					label: 'Diff',
 					url:
-						`https://github.com/wikimedia/wikidata-query-rdf/compare/` +
+						`https://github.com/${settings.repository}/compare/` +
 						`${previousTag}...${nextTag}`
 				}
 			}
@@ -99,7 +126,7 @@ export const wdqsSourceProvider: SourceUpdateProvider = {
 			return { contents, changes: [] };
 		}
 		return {
-			contents: replaceVariable(contents, 'WDQS_VERSION', candidate),
+			contents: replaceVariable(contents, 'WDQS.version', candidate),
 			changes
 		};
 	}

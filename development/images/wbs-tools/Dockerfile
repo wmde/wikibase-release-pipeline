@@ -4,7 +4,7 @@ WORKDIR /workspace/development
 
 RUN corepack enable && corepack prepare pnpm@11.20.0 --activate
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY images/wbs-tools/package.json ./images/wbs-tools/package.json
 RUN pnpm --filter wbs-tools install --frozen-lockfile
 

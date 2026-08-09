@@ -12,7 +12,7 @@ Wikibase Suite currently publishes and tests AMD64 images. We want to publish co
 
 The current tooling is partially prepared:
 
-- `wbs-dev build` forwards normal Buildx arguments, including a single `--platform=linux/arm64` target.
+- `wbs-dev build` accepts Buildx platform selection, including a comma-separated multi-platform set for registry builds. A multi-platform local load is rejected because the Docker image store cannot load it as one image.
 - Registry caches are scoped by the requested platform set.
 - The shared CI setup action can opt into QEMU without adding emulation overhead to normal AMD64 jobs.
 - The AMD64-only Wikimedia Composer images used by Wikibase and QuickStatements run as AMD64 intermediate stages and copy portable PHP dependencies into the target image.
