@@ -1,9 +1,8 @@
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import {
 	BAKE_MANIFEST,
 	readBakeScalar,
-	readImageManifest,
 	replaceBakeValue
 } from './bake.js';
 import type { RepositoryContext } from './context.js';
@@ -19,26 +18,14 @@ export interface ReleaseProject {
 }
 
 export function discoverImageNames(context: RepositoryContext): string[] {
-	return readdirSync(context.imagesRoot)
-		.filter((entry) => {
-			const projectRoot = join(context.imagesRoot, entry);
-			return (
-				statSync(projectRoot).isDirectory() &&
-				existsSync(join(projectRoot, 'Dockerfile')) &&
-				existsSync(join(projectRoot, BAKE_MANIFEST))
-			);
-		})
-		.map((entry) => {
-			const manifest = readImageManifest(
-				join(context.imagesRoot, entry, BAKE_MANIFEST)
-			);
-			if (manifest.name !== entry) {
-				throw new Error(
-					`Image directory ${entry} does not match manifest name ${manifest.name}.`
-				);
-			}
-			return entry;
-		})
+	return readdirSync(context.imagesRoot, { withFileTypes: true })
+		.filter(
+			(entry) =>
+				entry.isDirectory() &&
+				!entry.name.startsWith('_') &&
+				entry.name !== 'node_modules'
+		)
+		.map((entry) => entry.name)
 		.sort();
 }
 

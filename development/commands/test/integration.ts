@@ -56,15 +56,21 @@ function prepareWdioOptions( options: TestOptions ): WdioOptions {
 async function buildImages( context: RepositoryContext ): Promise<void> {
 	console.log( '🏗️ Building images...' );
 	await new Promise<void>( ( resolveBuild, rejectBuild ) => {
+		const outputLimit = 2 * 1024 * 1024;
+		let buildOutput = '';
 		const child = spawn(
 			'pnpm',
-			[ 'exec', 'tsx', 'wbs-dev.ts', 'build', '--quiet' ],
+			[ 'exec', 'tsx', 'wbs-dev.ts', 'build', 'all' ],
 			{
 				cwd: context.developmentRoot,
 				env: process.env,
-				stdio: [ 'inherit', 'ignore', 'inherit' ]
+				stdio: [ 'inherit', 'ignore', 'pipe' ]
 			}
 		);
+		child.stderr.setEncoding( 'utf8' );
+		child.stderr.on( 'data', ( chunk: string ) => {
+			buildOutput = `${ buildOutput }${ chunk }`.slice( -outputLimit );
+		} );
 		child.once( 'error', rejectBuild );
 		child.once( 'exit', ( code, signal ) => {
 			if ( signal ) {
@@ -72,6 +78,9 @@ async function buildImages( context: RepositoryContext ): Promise<void> {
 				return;
 			}
 			if ( code !== 0 ) {
+				if ( buildOutput ) {
+					process.stderr.write( buildOutput );
+				}
 				rejectBuild( new Error( 'One or more image builds failed.' ) );
 				return;
 			}
@@ -165,9 +174,9 @@ export async function runIntegrationSuites(
 
 	if ( suiteNames.length > 1 ) {
 		console.log( chalk.whiteBright.bold( '\nTest suite results:' ) );
-		console.log( chalk.green( `  Passed: ${ passedSuites.join( ', ' ) || 'none' }` ) );
+		console.log( chalk.green( `Passed: ${ passedSuites.join( ', ' ) || 'none' }` ) );
 		if ( failedSuites.length ) {
-			console.log( chalk.red( `  Failed: ${ failedSuites.join( ', ' ) }` ) );
+			console.log( chalk.red( `Failed: ${ failedSuites.join( ', ' ) }` ) );
 		}
 	}
 

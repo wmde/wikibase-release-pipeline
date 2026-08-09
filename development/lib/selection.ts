@@ -1,7 +1,41 @@
+import { cancel, isCancel, multiselect } from '@clack/prompts';
+import process from 'node:process';
+
 interface SelectionOptions {
 	command: string;
 	noun: string;
 	requireExplicit?: boolean;
+}
+
+interface TargetRequestOptions {
+	command: string;
+	message: string;
+	noun: string;
+}
+
+export async function requestTargetNames(
+	requested: string[],
+	available: string[],
+	options: TargetRequestOptions
+): Promise<string[] | undefined> {
+	if ( requested.length > 0 ) {
+		return requested;
+	}
+	if ( !process.stdin.isTTY || !process.stdout.isTTY ) {
+		throw new Error(
+			`${ options.command } requires explicit ${ options.noun } names or "all" when input is non-interactive.`
+		);
+	}
+	const selected = await multiselect<string>( {
+		message: `${ options.message } (press "a" to toggle all)`,
+		options: available.map( ( name ) => ( { value: name, label: name } ) ),
+		required: true
+	} );
+	if ( isCancel( selected ) ) {
+		cancel( 'No targets selected.' );
+		return undefined;
+	}
+	return selected;
 }
 
 export function resolveNames(

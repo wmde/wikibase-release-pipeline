@@ -44,6 +44,27 @@ describe('wbs-dev command contracts', () => {
 		assert.doesNotMatch(root.stdout, /update-(?:sources|versions)/u);
 	});
 
+	it('lists canonical build and test targets as JSON', () => {
+		const build = cli('build', '--list=json');
+		assert.equal(build.status, 0, build.stderr);
+		assert.ok((JSON.parse(build.stdout) as string[]).includes('wikibase'));
+
+		const test = cli('test', '--list=json');
+		assert.equal(test.status, 0, test.stderr);
+		assert.deepEqual((JSON.parse(test.stdout) as string[]).slice(0, 2), [
+			'wbs-dev-tools',
+			'extensions'
+		]);
+	});
+
+	it('requires explicit targets for non-interactive build and test runs', () => {
+		for (const command of ['build', 'test']) {
+			const result = cli(command);
+			assert.notEqual(result.status, 0);
+			assert.match(result.stderr, /requires explicit .* names or "all"/u);
+		}
+	});
+
 	it('rejects integration options for the wbs-dev-tools target', () => {
 		const result = cli('test', 'wbs-dev-tools', '--headed');
 		assert.notEqual(result.status, 0);

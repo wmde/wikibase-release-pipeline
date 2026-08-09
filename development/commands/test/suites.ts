@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { RepositoryContext } from '../../lib/context.js';
 
@@ -10,17 +10,22 @@ export function suiteConfigPath(
 }
 
 export function discoverSuiteNames( context: RepositoryContext ): string[] {
-	const suitesRoot = context.testRoot;
-	if ( !existsSync( suitesRoot ) ) {
+	if ( !existsSync( context.testRoot ) ) {
 		return [];
 	}
-	return readdirSync( suitesRoot )
-		.filter( ( entry ) => {
-			const suiteRoot = join( suitesRoot, entry );
-			return (
-				statSync( suiteRoot ).isDirectory() &&
-				existsSync( suiteConfigPath( context, entry ) )
-			);
-		} )
+	return readdirSync( context.testRoot, { withFileTypes: true } )
+		.filter(
+			( entry ) =>
+				entry.isDirectory() &&
+				!entry.name.startsWith( '_' ) &&
+				entry.name !== 'node_modules'
+		)
+		.map( ( entry ) => entry.name )
 		.sort();
+}
+
+export function discoverTestTargetNames(
+	context: RepositoryContext
+): string[] {
+	return [ 'wbs-dev-tools', ...discoverSuiteNames( context ) ];
 }

@@ -1,9 +1,9 @@
 import { InvalidArgumentError, Option, type Command } from 'commander';
 import type { RepositoryContext } from '../../lib/context.js';
-import { resolveNames } from '../../lib/selection.js';
+import { requestTargetNames, resolveNames } from '../../lib/selection.js';
 import { runTasks } from '../../lib/tasks.js';
 import type { TestOptions } from './integration.js';
-import { discoverSuiteNames } from './suites.js';
+import { discoverSuiteNames, discoverTestTargetNames } from './suites.js';
 
 function parseNumber( value: string ): number {
 	const parsed = Number( value );
@@ -93,8 +93,17 @@ async function runTests(
 	options: TestOptions,
 	context: RepositoryContext
 ): Promise<void> {
-	const suites = discoverSuiteNames( context );
-	const selected = resolveNames( requested, [ 'wbs-dev-tools', ...suites ], {
+	const startedAt = Date.now();
+	const available = discoverTestTargetNames( context );
+	const targetNames = await requestTargetNames( requested, available, {
+		command: 'test',
+		message: 'Select test targets to run',
+		noun: 'target'
+	} );
+	if ( !targetNames ) {
+		return;
+	}
+	const selected = resolveNames( targetNames, available, {
 		command: 'test',
 		noun: 'target'
 	} );
@@ -110,24 +119,30 @@ async function runTests(
 			'The wbs-dev-tools test target does not accept integration options.'
 		);
 	}
-	if ( includeWbsDevTools ) {
-		await runTasks(
-			[
-				{
-					label: 'test wbs-dev tooling',
-					command: 'pnpm',
-					args: [ 'test:wbs-dev-tools' ]
-				}
-			],
-			{ cwd: context.developmentRoot }
-		);
-	}
-	if ( integrationSuites.length > 0 ) {
-		const { runIntegrationSuites } = await import( './integration.js' );
-		await runIntegrationSuites( integrationSuites, options, context );
+	try {
+		if ( includeWbsDevTools ) {
+			await runTasks(
+				[
+					{
+						label: 'test wbs-dev tooling',
+						command: 'pnpm',
+						args: [ 'test:wbs-dev-tools' ]
+					}
+				],
+				{ cwd: context.developmentRoot }
+			);
+		}
+		if ( integrationSuites.length > 0 ) {
+			const { runIntegrationSuites } = await import( './integration.js' );
+			await runIntegrationSuites( integrationSuites, options, context );
+		}
+	} finally {
+		const elapsed = Math.floor( ( Date.now() - startedAt ) / 1000 );
+		const duration = new Date( elapsed * 1000 ).toISOString().slice( 11, 19 );
+		console.log( `\n⏱️ Total run time: ${ duration }` );
 	}
 	if ( selected.length > 1 ) {
-		console.log( '\n✅ All requested test targets passed.' );
+		console.log( '✅ All requested test targets passed.' );
 	}
 }
 
@@ -139,7 +154,13 @@ export function registerTestCommand(
 	const command = program
 		.command( 'test' )
 		.description( 'Run wbs-dev tooling tests and integration suites.' )
-		.argument( '[targets...]', 'wbs-dev-tools|SUITE...|all' );
+		.argument( '[targets...]', 'wbs-dev-tools|SUITE...|all' )
+		.addOption(
+			new Option(
+				'--list [format]',
+				'List available test targets as text or JSON.'
+			).choices( [ 'text', 'json' ] )
+		);
 	addIntegrationOptions( command );
 	command
 		.addHelpText(
@@ -149,9 +170,10 @@ export function registerTestCommand(
 				'Targets:',
 				'  wbs-dev-tools (fast development-tooling tests)',
 				`  ${ suites.join( ', ' ) }`,
-				'  With no target or "all", test wbs-dev tooling and every integration suite.',
+				'  With no target in a terminal, choose interactively. Use "all" to run every target.',
 				'',
 				'Examples:',
+				'  wbs-dev test --list=json',
 				'  wbs-dev test',
 				'  wbs-dev test wbs-dev-tools',
 				'  wbs-dev test repo queryservice --headed',
@@ -161,7 +183,20 @@ export function registerTestCommand(
 			].join( '\n' )
 		)
 		.action(
-			async ( requested: string[], options: TestOptions ) =>
-				await runTests( requested, options, context )
+			async (
+				requested: string[],
+				options: TestOptions & { list?: true | 'text' | 'json' }
+			) => {
+				if ( options.list ) {
+					const targets = discoverTestTargetNames( context );
+					console.log(
+						options.list === 'json' ?
+							JSON.stringify( targets ) :
+							targets.join( '\n' )
+					);
+					return;
+				}
+				await runTests( requested, options, context );
+			}
 		);
 }

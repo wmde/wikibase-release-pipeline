@@ -1,9 +1,9 @@
-import type { Command } from 'commander';
+import { Option, type Command } from 'commander';
 import { join } from 'node:path';
 import { BAKE_MANIFEST, readImageManifest } from '../../lib/bake.js';
 import type { RepositoryContext } from '../../lib/context.js';
 import { discoverImageNames } from '../../lib/projects.js';
-import { resolveNames } from '../../lib/selection.js';
+import { requestTargetNames, resolveNames } from '../../lib/selection.js';
 import { assertStableVersion } from '../../lib/versioning.js';
 import { DEFAULT_BUILD_PARALLELISM, buildImages } from './images.js';
 
@@ -67,12 +67,21 @@ async function runBuild(
 	context: RepositoryContext
 ): Promise<void> {
 	const parsed = parseBuildArguments(args);
-	const selected = resolveNames(parsed.images, discoverImageNames(context), {
+	const available = discoverImageNames(context);
+	const requested = await requestTargetNames(parsed.images, available, {
+		command: 'build',
+		message: 'Select images to build',
+		noun: 'image'
+	});
+	if (!requested) {
+		return;
+	}
+	const selected = resolveNames(requested, available, {
 		command: 'build',
 		noun: 'image'
 	});
 	if (parsed.forwarded.includes('--publish')) {
-		if (parsed.images.length !== 1 || selected.length !== 1) {
+		if (requested.length !== 1 || selected.length !== 1) {
 			throw new Error(
 				'build --publish requires exactly one explicit image project.'
 			);
@@ -98,24 +107,41 @@ export function registerBuildCommand(
 		.allowUnknownOption()
 		.allowExcessArguments()
 		.passThroughOptions()
+		.addOption(
+			new Option(
+				'--list [format]',
+				'List available image targets as text or JSON.'
+			).choices(['text', 'json'])
+		)
 		.addHelpText(
 			'after',
 			[
 				'',
 				'Targets:',
 				`  ${images.join(', ')}`,
-				'  With no target or "all", build every image.',
+				'  With no target in a terminal, choose interactively. Use "all" to build every image.',
 				'',
 				'wbs-dev build option:',
 				`  --parallel=N  maximum concurrent image builds (default: ${DEFAULT_BUILD_PARALLELISM})`,
 				'  Other options after the image list are forwarded to Docker Buildx.',
 				'',
 				'Examples:',
+				'  wbs-dev build --list=json',
 				'  wbs-dev build',
 				'  wbs-dev build wikibase wdqs --no-cache --pull',
 				'  wbs-dev build wikibase wdqs --parallel=2 --dry-run',
 				'  wbs-dev build wikibase --publish --dry-run'
 			].join('\n')
 		)
-		.action(async (args: string[]) => await runBuild(args, context));
+		.action(
+			async (args: string[], options: { list?: true | 'text' | 'json' }) => {
+				if (options.list) {
+					console.log(
+						options.list === 'json' ? JSON.stringify(images) : images.join('\n')
+					);
+					return;
+				}
+				await runBuild(args, context);
+			}
+		);
 }
