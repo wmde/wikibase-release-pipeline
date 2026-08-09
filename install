@@ -49,7 +49,7 @@ while (( $# )); do
 done
 
 echo
-echo "Wikibase Suite"
+echo "Wikibase Suite (WBS)"
 echo
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,7 +58,11 @@ if [[ -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
 else
   if ! command -v docker >/dev/null 2>&1; then
     echo "Installing Docker..."
-    curl -fsSL https://get.docker.com | sh
+    if ! docker_install_output="$({ curl -fsSL https://get.docker.com | sh; } 2>&1)"; then
+      printf '%s\n' "$docker_install_output"
+      echo "wbs: Docker installation failed."
+      exit 1
+    fi
   fi
   docker info >/dev/null
   docker compose version >/dev/null
