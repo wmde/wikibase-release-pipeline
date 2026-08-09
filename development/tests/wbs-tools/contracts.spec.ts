@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -162,6 +162,57 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 			assert.match(
 				readFileSync( join( composeRoot, 'docker-arguments' ), 'utf8' ),
 				/--env-file\n\/app\/wbs\/\.env\n--env-file\n\/app\/wbs\/local\.env\n/u
+			);
+		} finally {
+			rmSync( composeRoot, { recursive: true, force: true } );
+		}
+	} );
+
+	it( 'selects all images for a non-interactive source build', () => {
+		const composeRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'source-build-' ) );
+		try {
+			writeFileSync(
+				join( composeRoot, '.env' ),
+				[
+					'WIKIBASE_PUBLIC_HOST=wikibase.test',
+					'WDQS_PUBLIC_HOST=query.wikibase.test',
+					'MW_ADMIN_NAME=Admin',
+					'MW_ADMIN_EMAIL=admin@example.test',
+					'MW_ADMIN_PASS=AdminPassword-2026',
+					'DB_PASS=DatabasePassword-2026',
+					'DB_NAME=my_wiki',
+					'DB_USER=sqluser',
+					''
+				].join( '\n' )
+			);
+			writeFileSync( join( composeRoot, 'docker-compose.yml' ), 'services: {}\n' );
+			const developmentRoot = join( composeRoot, 'development' );
+			writeFileSync( join( composeRoot, 'docker-arguments' ), '' );
+			const fakeDocker = join( composeRoot, 'docker' );
+			writeFileSync(
+				fakeDocker,
+				'#!/bin/sh\nprintf "%s\\n" "$@" >> /app/wbs/docker-arguments\nprintf "%s\\n" --- >> /app/wbs/docker-arguments\n'
+			);
+			chmodSync( fakeDocker, 0o755 );
+			mkdirSync( developmentRoot );
+			writeFileSync( join( developmentRoot, 'docker-compose.yml' ), 'services: {}\n' );
+
+			execFileSync(
+				'docker',
+				[
+					'run', '--rm',
+					'-e', 'WBS_DIR=/app/wbs',
+					'-e', 'ENV_FILE_PATH=/app/wbs/.env',
+					'-v', `${ composeRoot }:/app/wbs`,
+					'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
+					toolsImage(), 'node', '--input-type=module', '--eval',
+					"import('./dist/lib/compose.js').then(({ up }) => up({ build: true }))"
+				],
+				{ encoding: 'utf8' }
+			);
+			assert.match(
+				readFileSync( join( composeRoot, 'docker-arguments' ), 'utf8' ),
+				/pnpm exec tsx wbs-dev\.ts build all/u
 			);
 		} finally {
 			rmSync( composeRoot, { recursive: true, force: true } );
