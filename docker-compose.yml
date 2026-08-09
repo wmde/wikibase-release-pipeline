@@ -20,7 +20,7 @@ services:
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     env_file:
-      - .wbs/version
+      - ${WBS_DIR:-.}/.wbs/version
     environment:
       METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}

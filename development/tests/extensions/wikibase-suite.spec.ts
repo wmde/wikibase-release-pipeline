@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { parseEnv } from 'node:util';
 import page from '../_helpers/pages/page.js';
 
@@ -30,7 +29,7 @@ const getWbsManifestVersions = (): Omit<
 	'wikibaseImageVersion'
 > => {
 	const values = parseEnv(
-		readFileSync( resolve( '../../../.wbs/version' ), 'utf8' )
+		readFileSync( new URL( '../../../.wbs/version', import.meta.url ), 'utf8' )
 	);
 	return {
 		wbsVersion: values.WBS_VERSION ?? '',
