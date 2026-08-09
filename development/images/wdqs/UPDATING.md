@@ -1,6 +1,6 @@
 # Updating Wikibase Suite (WBS) Query Service
 
-[Back to the release guide](../../docs/release.md#1-review-image-update-policies)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 Use this guide when the release refreshes Query Service.
 
@@ -46,4 +46,4 @@ The upstream Query Service version does not reliably indicate whether an update 
 - The JRE is copied from an Ubuntu-based Eclipse Temurin image into the Debian runtime. Confirm that this remains supported by the selected Temurin image and works on every published architecture.
 - Debian Bookworm remains an intentionally conservative runtime and fetcher base. Before moving to another Debian release, verify the required `bash`, `gettext`, `curl`, certificate, user-management, and archive-fetching behavior and run the Query Service integration tests. A Debian update is not required merely because a newer stable release exists.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)

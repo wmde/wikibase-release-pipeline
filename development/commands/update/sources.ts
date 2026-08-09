@@ -3,15 +3,15 @@ import { join } from 'node:path';
 import { BAKE_MANIFEST } from '../../lib/bake.js';
 import type { RepositoryContext } from '../../lib/context.js';
 import type { FileUpdate } from '../../lib/file-updates.js';
+import { quickStatementsSourceProvider } from './projects/quickstatements.js';
+import { wdqsFrontendSourceProvider } from './projects/wdqs-frontend.js';
+import { wdqsSourceProvider } from './projects/wdqs.js';
+import { wikibaseSourceProvider } from './projects/wikibase.js';
 import type {
 	SourceChange,
 	SourceUpdateInteraction,
 	SourceUpdateProvider
 } from './source-types.js';
-import { quickStatementsSourceProvider } from './sources/quickstatements.js';
-import { wdqsFrontendSourceProvider } from './sources/wdqs-frontend.js';
-import { wdqsSourceProvider } from './sources/wdqs.js';
-import { wikibaseSourceProvider } from './sources/wikibase.js';
 
 const providers = [
 	wikibaseSourceProvider,

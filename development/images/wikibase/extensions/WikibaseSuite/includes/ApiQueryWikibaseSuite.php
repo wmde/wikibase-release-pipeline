@@ -23,7 +23,8 @@ class ApiQueryWikibaseSuite extends ApiQueryBase {
 		if ( in_array( 'versions', $props, true ) ) {
 			$data['versions'] = [
 				'wikibase_image_version' => $this->getVersionValue( 'WIKIBASE_IMAGE_VERSION' ),
-				'deploy_version' => $this->getVersionValue( 'DEPLOY_VERSION' ),
+				'wbs_version' => $this->getVersionValue( 'WBS_VERSION' ),
+				'wbs_tools_image' => $this->getVersionValue( 'WBS_TOOLS_IMAGE' ),
 			];
 		}
 

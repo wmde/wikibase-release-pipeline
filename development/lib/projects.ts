@@ -1,12 +1,13 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import {
-	BAKE_MANIFEST,
-	readBakeScalar,
-	replaceBakeValue
-} from './bake.js';
+import { BAKE_MANIFEST, readBakeScalar, replaceBakeValue } from './bake.js';
 import type { RepositoryContext } from './context.js';
 import { resolveNames } from './selection.js';
+import {
+	WBS_VERSION_MANIFEST,
+	readWbsVersionManifest,
+	withWbsVersion
+} from './wbs-version.js';
 
 export interface ReleaseProject {
 	name: string;
@@ -35,12 +36,12 @@ export function discoverReleaseProjects(
 	return [
 		{
 			name: 'wbs',
-			versionPath: join(context.repositoryRoot, 'package.json'),
+			versionPath: join(context.repositoryRoot, WBS_VERSION_MANIFEST),
 			changelogPath: join(context.repositoryRoot, 'CHANGELOG.md'),
 			pathspecs: [
+				WBS_VERSION_MANIFEST,
 				'.env.example',
 				'README.md',
-				'package.json',
 				'CHANGELOG.md',
 				'docker-compose.yml',
 				'docker-compose.local.yml',
@@ -75,7 +76,7 @@ export function projectVersion(
 	if (project.isImage) {
 		return readBakeScalar(source, 'IMAGE_VERSION');
 	}
-	return (JSON.parse(source) as { version: string }).version;
+	return readWbsVersionManifest(source).version;
 }
 
 export function projectWithVersion(
@@ -86,9 +87,7 @@ export function projectWithVersion(
 	if (project.isImage) {
 		return replaceBakeValue(contents, 'IMAGE_VERSION', undefined, version);
 	}
-	const packageJson = JSON.parse(contents) as Record<string, unknown>;
-	packageJson.version = version;
-	return `${JSON.stringify(packageJson, null, '\t')}\n`;
+	return withWbsVersion(contents, version);
 }
 
 export function resolveProjectSelections(

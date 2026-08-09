@@ -3,7 +3,11 @@
 set -euo pipefail
 
 BOOTSTRAP_LOG_PATH="${WBS_BOOTSTRAP_LOG:-/tmp/wikibase-suite-bootstrap.log}"
-WBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1}"
+WBS_TOOLS_IMAGE_EXPLICIT=false
+if [[ -n "${WBS_TOOLS_IMAGE:-}" ]]; then
+  WBS_TOOLS_IMAGE_EXPLICIT=true
+fi
+WBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1.0.0}"
 WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-suite.git}"
 WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
 WBS_DOCKER_DIR="${WBS_DOCKER_DIR:-$WBS_DIR}"
@@ -11,6 +15,7 @@ WBS_DOCKER_REPO_URL="${WBS_DOCKER_REPO_URL:-$WBS_REPO_URL}"
 WBS_REF="${WBS_REF:-}"
 RUNTIME_ARGS=()
 WEB_SELECTED=false
+BOOTSTRAP_PULLED_TOOLS=false
 
 exec > >(tee "$BOOTSTRAP_LOG_PATH") 2>&1
 
@@ -62,6 +67,7 @@ else
     echo "Pulling $WBS_TOOLS_IMAGE..."
     docker pull "$WBS_TOOLS_IMAGE"
     export WBS_TOOLS_SKIP_PULL=true
+    BOOTSTRAP_PULLED_TOOLS=true
   fi
 
   target_parent="$(dirname "$WBS_DOCKER_DIR")"
@@ -83,10 +89,18 @@ else
 
 fi
 
+# After bootstrapping, prefer the checkout's image unless the caller chose one.
+if [[ "$WBS_TOOLS_IMAGE_EXPLICIT" != true ]]; then
+  unset WBS_TOOLS_IMAGE
+  if [[ "$BOOTSTRAP_PULLED_TOOLS" == true ]]; then
+    unset WBS_TOOLS_SKIP_PULL
+  fi
+fi
+
 WBS_STATE_DIR="$WBS_DIR/.wbs"
-WBS_LOG_PATH="$WBS_STATE_DIR/wbs.log"
-INSTALLATION_LOG_PATH="$WBS_STATE_DIR/installation.log"
-mkdir -p "$WBS_STATE_DIR"
+WBS_LOG_PATH="$WBS_STATE_DIR/logs/wbs.log"
+INSTALLATION_LOG_PATH="$WBS_STATE_DIR/logs/installation.log"
+mkdir -p "$WBS_STATE_DIR/logs"
 touch "$WBS_LOG_PATH"
 {
   echo "===== Bootstrap ====="

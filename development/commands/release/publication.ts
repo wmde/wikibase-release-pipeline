@@ -18,16 +18,6 @@ function readTarget(
 	project: ReleaseProject
 ): ReleaseTarget {
 	const version = projectVersion(project);
-	if (!project.isImage) {
-		const packageJson = JSON.parse(
-			readFileSync(project.versionPath, 'utf8')
-		) as { name: string };
-		if (packageJson.name !== project.name) {
-			throw new Error(
-				`${project.versionPath} has package name ${packageJson.name}.`
-			);
-		}
-	}
 	assertStableVersion(version, `${project.name} project`);
 	if (
 		!hasChangelogVersion(readFileSync(project.changelogPath, 'utf8'), version)

@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { bakeObject, resolveBakeVariables } from '../../lib/bake.js';
+import { discoverWdqsCandidates, wdqsSourceProvider } from './projects/wdqs.js';
+import {
+	discoverMediaWikiCandidates,
+	wikibasePins
+} from './projects/wikibase.js';
 import type { SourceUpdateInteraction } from './source-types.js';
 import {
 	confirmPinPlan,
@@ -11,11 +16,6 @@ import {
 	readVariable,
 	replaceVariable
 } from './source-utils.js';
-import { discoverWdqsCandidates, wdqsSourceProvider } from './sources/wdqs.js';
-import {
-	discoverMediaWikiCandidates,
-	wikibasePins
-} from './sources/wikibase.js';
 
 const WIKIBASE_IMAGE = resolve('images/wikibase');
 const WDQS_MANIFEST = resolve('images/wdqs/docker-bake.hcl');

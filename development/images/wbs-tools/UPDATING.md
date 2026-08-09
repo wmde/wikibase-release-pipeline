@@ -1,6 +1,6 @@
 # Maintaining Wikibase Suite (WBS) Tools
 
-[Back to the release guide](../../docs/release.md#2-complete-the-product-changes)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 WBS Tools is currently published for the Installer. Its shared configuration and lifecycle implementation also provides the internal `wbs configure`, `install`, `up`, `down`, `status`, and `reset` commands. Treat those commands as an unpublished foundation for possible future operational workflows, not as a supported end-user interface. See [ADR 22](../../docs/adr/0022-wbs-tools-foundation.md).
 
@@ -26,7 +26,7 @@ To exercise a complete installation with locally built tools and product images,
 
 ## Review and release
 
-WBS Tools is repository-owned code and has no upstream source pins or source-update interview. `wbs-dev update wbs-tools` derives its version and changelog from conventional commits.
+WBS Tools is repository-owned code and has no upstream source pins. `wbs-dev update wbs-tools` derives its version and changelog from conventional commits, then asks whether the current WBS release should adopt the proposed exact image. Declining leaves the WBS release on its existing tools image.
 
 Review changes since the latest `wbs-tools@X.Y.Z` tag. Verify the Installer, generated configuration, the mounted WBS checkout, host scripts, Docker and Compose integration, Git operations, and the internal lifecycle commands.
 
@@ -37,20 +37,20 @@ The release inputs are:
 | Input | Purpose | Release action |
 | --- | --- | --- |
 | `docker-bake.hcl` `IMAGE_VERSION` | Source of the image version, release tag, Docker tags, and changelog version. | Updated by `wbs-dev update wbs-tools`. |
-| Bootstrap `WBS_TOOLS_IMAGE` default in the root `install` script | Selects the tools image before a WBS checkout exists. | Change only when the next WBS release adopts a new tools major. |
-| Checkout `WBS_TOOLS_IMAGE` default in `scripts/_versions.sh` | Selects the compatible tools image after control passes to the WBS checkout. | Keep it aligned with the bootstrap default for that WBS release. |
+| `.wbs/version` `WBS_TOOLS_IMAGE` | Exact tools image adopted by this WBS release. | Updated only when the WBS Tools update interview is accepted. |
+| Bootstrap `WBS_TOOLS_IMAGE` default in the root `install` script | Selects the tools image before a WBS checkout exists. | Keep it aligned with `.wbs/version`; tooling tests enforce this bootstrap boundary. |
 | Docker build argument `WBS_TOOLS_VERSION` | Records the exact tools version inside the image. | Derived automatically from `IMAGE_VERSION`; do not edit it manually. |
 | Runtime override `WBS_TOOLS_IMAGE` | Selects a different image for development or verification. | Do not persist an override in a normal release. |
 
-Publishing `X.Y.Z` also updates the mutable `X.Y` and `X` Docker tags. The OCI version label records the exact version inside the image, but the runtime does not inspect that label and the image does not self-update from it.
+Publishing `X.Y.Z` also updates the mutable `X.Y` and `X` Docker tags. The OCI version label records the exact version inside the image, and released WBS checkouts select the exact `X.Y.Z` tag from `.wbs/version`.
 
-A WBS command uses the `WBS_TOOLS_IMAGE` selected by its checkout. It immediately uses the image when it exists locally and pulls it only when missing; it does not contact the registry to discover a newer minor or patch release. A fresh install or missing local image therefore receives the current image behind the selected major tag, while an existing cached image remains unchanged.
+A WBS command uses the exact `WBS_TOOLS_IMAGE` selected by its checkout. It immediately uses the image when it exists locally and pulls it only when missing. Updating to a WBS release that adopts a newer tools image therefore pulls that exact image on first use; publishing WBS Tools by itself does not change existing WBS releases.
 
 ### WBS compatibility contract
 
-Compatibility is currently declared in one direction: each WBS checkout selects a WBS Tools major through `scripts/_versions.sh`. The WBS Tools package and image do not declare a supported WBS version or version range, and the OCI labels record only the tools version.
+Compatibility is currently declared by adoption: each WBS checkout selects an exact WBS Tools image through `.wbs/version`. The WBS Tools package and image do not declare a supported WBS version or version range, and the OCI labels record only the tools version.
 
-Therefore, a minor or patch tools release must remain compatible with every supported WBS release that selects its major tag. Identify those WBS releases and verify their host scripts, configuration, and installation lifecycle before publishing. If a change cannot preserve that compatibility, release a new tools major and coordinate a WBS release that selects it; do not publish the change under the existing major.
+Before adopting a tools release, verify it with the WBS release that will select it, including its host scripts, configuration, and installation lifecycle. Publishing and adoption remain separate decisions so that tools development does not silently alter a released WBS product.
 
 ## Dependencies not updated automatically
 
@@ -60,4 +60,4 @@ Therefore, a minor or patch tools release must remain compatible with every supp
 - Confirm that Corepack installs the pinned pnpm version and production dependencies work on the selected Alpine release.
 - Test the CLI, Installer server, Docker and Compose invocation, Git operations, and every published architecture.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)

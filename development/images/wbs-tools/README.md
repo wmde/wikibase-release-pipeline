@@ -13,6 +13,6 @@ Users should follow the [WBS installation guide](../../../docs/install/README.md
 
 ## Releases and development
 
-The image is published as [`wikibase/wbs-tools`](https://hub.docker.com/r/wikibase/wbs-tools) with independent `wbs-tools@X.Y.Z` release tags. Each WBS release selects a compatible tools major version; minor and patch tools releases within that major must remain compatible with its checkout and host scripts.
+The image is published as [`wikibase/wbs-tools`](https://hub.docker.com/r/wikibase/wbs-tools) with independent `wbs-tools@X.Y.Z` release tags. A WBS release selects an exact compatible image in its checked-in `.wbs/version` manifest. Publishing WBS Tools does not change an existing WBS release until that release deliberately adopts the new image.
 
 See [UPDATING.md](./UPDATING.md) for development, testing, compatibility, and release guidance, and [CHANGELOG.md](./CHANGELOG.md) for released changes.

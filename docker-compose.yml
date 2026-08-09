@@ -19,9 +19,9 @@ services:
       - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
+    env_file:
+      - .wbs/version
     environment:
-      # Keep in sync with the root package.json version
-      DEPLOY_VERSION: "8.0.0"
       METADATA_CALLBACK: ${METADATA_CALLBACK}
       MW_ADMIN_NAME: ${MW_ADMIN_NAME}
       MW_ADMIN_PASS: ${MW_ADMIN_PASS}

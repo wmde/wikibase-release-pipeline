@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { promisify } from 'node:util';
+import { parseEnv, promisify } from 'node:util';
 
 const execFileAsync = promisify( execFile );
 
@@ -38,9 +38,9 @@ export async function prepareRepository( options: {
 		'clone', '--branch', ref, '--single-branch', '--depth', '1',
 		options.repository, options.target
 	] );
-	const packagePath = join( options.target, 'package.json' );
-	const version = existsSync( packagePath ) ?
-		( JSON.parse( readFileSync( packagePath, 'utf8' ) ) as { version?: string } ).version :
+	const versionPath = join( options.target, '.wbs/version' );
+	const version = existsSync( versionPath ) ?
+		parseEnv( readFileSync( versionPath, 'utf8' ) ).WBS_VERSION :
 		undefined;
 	console.log( `Checked out ${ ref }${ version ? ` (Wikibase Suite ${ version })` : '' } at ${ options.target }.` );
 }

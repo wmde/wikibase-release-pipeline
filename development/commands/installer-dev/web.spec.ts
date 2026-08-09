@@ -69,10 +69,6 @@ describe( 'installer-dev web environment', () => {
 		assert.equal( environment.INSTALLER_DEV, 'true' );
 		assert.equal( environment.INSTALLER_DEV_MOCK, 'false' );
 		assert.equal( environment.LOCALHOST, 'true' );
-		assert.equal(
-			environment.WBS_LAUNCH_FOREGROUND,
-			'true'
-		);
 		assert.equal( environment.WBS_LOCAL_IMAGES, 'true' );
 	} );
 

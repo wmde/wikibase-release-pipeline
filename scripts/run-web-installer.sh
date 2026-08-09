@@ -219,8 +219,8 @@ start_installer_webserver() {
     -e "LAUNCH_TRIGGER_PATH=$LAUNCH_TRIGGER_CONTAINER_PATH"
     -e "EXISTING_INSTALL_STATE=$EXISTING_INSTALL_STATE"
     -e "CONFIGURE_ONLY=${CONFIGURE_ONLY:-false}"
-    -e "WBS_LOG_PATH=/app/state/wbs.log"
-    -e "INSTALLATION_LOG_PATH=/app/state/installation.log"
+    -e "WBS_LOG_PATH=/app/state/logs/wbs.log"
+    -e "INSTALLATION_LOG_PATH=/app/state/logs/installation.log"
     -e INSTALLER_ACCESS_CODE
     -p "$INSTALLER_PORT:443"
     -v "$WBS_DIR:/app/wbs:ro"

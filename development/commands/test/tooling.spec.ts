@@ -10,7 +10,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { readBakeScalar } from '../../lib/bake.js';
+import { readWbsVersionManifest } from '../../lib/wbs-version.js';
 
 describe('WBS installation image selection', () => {
 	it('does not announce Docker when it is already installed', () => {
@@ -55,12 +55,11 @@ exit 0
 		}
 	});
 
-	it('selects the compatible major version published by the tools project', () => {
-		const toolsVersion = readBakeScalar(
-			readFileSync(resolve('images/wbs-tools/docker-bake.hcl'), 'utf8'),
-			'IMAGE_VERSION'
-		);
-		const major = toolsVersion.split('.', 1)[0];
+	it('keeps the WBS release and bootstrap on its exact tools image', () => {
+		const expectedImage = readWbsVersionManifest(
+			readFileSync(resolve('../.wbs/version'), 'utf8')
+		).toolsImage;
+		assert.match(expectedImage, /:\d+\.\d+\.\d+$/u);
 		const versionsScript = resolve('../scripts/_versions.sh');
 		const selectedImage = execFileSync(
 			'bash',
@@ -72,11 +71,20 @@ exit 0
 			],
 			{
 				encoding: 'utf8',
-				env: { ...process.env, WBS_TOOLS_IMAGE: '' }
+				env: {
+					...process.env,
+					WBS_DIR: resolve('..'),
+					WBS_TOOLS_IMAGE: ''
+				}
 			}
 		);
 
-		assert.equal(selectedImage, `wikibase/wbs-tools:${major}`);
+		assert.equal(selectedImage, expectedImage);
+		assert.ok(
+			readFileSync(resolve('../install'), 'utf8').includes(
+				`WBS_TOOLS_IMAGE="\${WBS_TOOLS_IMAGE:-${expectedImage}}"`
+			)
+		);
 	});
 
 	it('selects every locally built product image without pulling it', () => {

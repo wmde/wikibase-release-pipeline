@@ -9,7 +9,8 @@ local.env
 **/.env
 
 docker-compose.local.yml
-/.wbs/
+/.wbs/*
+!/.wbs/version
 
 log
 config/*.ini

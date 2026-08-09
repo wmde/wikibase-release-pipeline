@@ -17,6 +17,7 @@ import { applyFileUpdates, type FileUpdate } from '../../lib/file-updates.js';
 import { GitRepository } from '../../lib/git.js';
 import {
 	discoverReleaseProjects,
+	projectVersion,
 	resolveProjectSelections,
 	type ReleaseProject
 } from '../../lib/projects.js';
@@ -28,11 +29,16 @@ import {
 } from '../../lib/versioning.js';
 import { ClackInteraction, UpdateCancelled } from './interaction.js';
 import {
+	planWbsToolsAdoption,
+	type WbsToolsAdoption
+} from './projects/wbs-tools.js';
+import { planWbsUpdate } from './projects/wbs.js';
+import {
 	planSourceUpdate,
 	sourceUpdateProviderFor,
 	type PlannedSourceUpdate
 } from './sources.js';
-import { versionPolicyFor } from './versions.js';
+import { defaultVersionPolicy } from './versions.js';
 
 interface ProjectSources {
 	plan?: PlannedSourceUpdate;
@@ -117,9 +123,10 @@ async function update(
 	requested: string[],
 	context: RepositoryContext
 ): Promise<void> {
+	const releaseProjects = discoverReleaseProjects(context);
 	const projects = resolveProjectSelections(
 		requested,
-		discoverReleaseProjects(context),
+		releaseProjects,
 		'update',
 		{ requireExplicit: true }
 	);
@@ -143,7 +150,14 @@ async function update(
 		}
 
 		const versionPlans: VersionPlan[] = [];
-		for (const project of projects) {
+		const wbs = releaseProjects.find((project) => project.name === 'wbs')!;
+		const selectedWbs = projects.find((project) => project.name === 'wbs');
+		const selectedTools = projects.find(
+			(project) => project.name === 'wbs-tools'
+		);
+		for (const project of projects.filter(
+			(project) => project.name !== 'wbs'
+		)) {
 			const source = sources.get(project.name)!;
 			const proposedUpdates = source.plan?.changes.length ? [source.plan] : [];
 			const options = {
@@ -155,7 +169,7 @@ async function update(
 				context,
 				git,
 				project,
-				versionPolicyFor(project),
+				defaultVersionPolicy,
 				options
 			);
 			if (!proposal) {
@@ -169,11 +183,56 @@ async function update(
 			}
 			const targetVersion = await confirmVersion(project, proposal);
 			versionPlans.push(
-				planVersionUpdate(context, git, project, versionPolicyFor(project), {
+				planVersionUpdate(context, git, project, defaultVersionPolicy, {
 					...options,
 					targetVersion
 				})!
 			);
+		}
+
+		let adoption: WbsToolsAdoption | undefined;
+		if (selectedTools) {
+			const toolsPlan = versionPlans.find(
+				(plan) => plan.project.name === 'wbs-tools'
+			);
+			adoption = planWbsToolsAdoption(
+				wbs,
+				selectedTools,
+				toolsPlan?.targetVersion ?? projectVersion(selectedTools)
+			);
+			if (
+				adoption &&
+				!(await interaction.confirm(
+					`Adopt ${adoption.change.next} in the current WBS release?`
+				))
+			) {
+				adoption = undefined;
+			}
+		}
+
+		if (selectedWbs || adoption) {
+			const source = selectedWbs ? sources.get('wbs')! : { changes: [] };
+			const wbsOptions = {
+				source: {
+					...source,
+					plan: source.plan?.changes.length ? source.plan : undefined
+				},
+				toolsAdoption: adoption
+			};
+			const proposal = planWbsUpdate(context, git, wbs, wbsOptions);
+			if (proposal) {
+				const targetVersion = await confirmVersion(wbs, proposal);
+				versionPlans.push(
+					planWbsUpdate(context, git, wbs, {
+						...wbsOptions,
+						targetVersion
+					})!
+				);
+			} else if (adoption) {
+				throw new Error(
+					'WBS Tools adoption did not produce a WBS release plan.'
+				);
+			}
 		}
 
 		if (versionPlans.length === 0) {

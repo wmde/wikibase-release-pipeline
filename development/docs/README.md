@@ -17,7 +17,7 @@ Use these guides to develop, test, document, and release Wikibase Suite. End-use
 - [WBS Tools](../images/wbs-tools/README.md)<br>
   Understand the Installer image, its lifecycle foundation, and maintainer workflow.
 
-- [Documentation terminology](./document/terminology.md)<br>
+- [Documentation terminology](./terminology.md)<br>
   Use of consistent product terminology in documentation.
 
 ## ADRs

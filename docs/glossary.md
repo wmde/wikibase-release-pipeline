@@ -32,4 +32,4 @@ Wikibase Suite (WBS) is the full deployable Wikibase product, including its Dock
 
 ## Wikibase Suite (WBS) Docker Images
 
-Wikibase Suite (WBS) Docker Images are published and tested as components of WBS, including Wikibase, Query Service, Query Service frontend, OpenSearch, QuickStatements, and WBS Tools. Each image is released and versioned separately from WBS and can be used independently in other service configurations. They are sometimes referred to as Wikibase Suite (WBS) Images or WBS Images.
+Wikibase Suite (WBS) Docker Images are published and tested as components of WBS, including Wikibase, Query Service, Query Service frontend, OpenSearch, and QuickStatements. Each image is released and versioned separately from WBS and can be used independently in other service configurations. They are sometimes referred to as Wikibase Suite (WBS) Images or WBS Images.

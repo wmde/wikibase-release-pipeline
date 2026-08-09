@@ -102,11 +102,15 @@ function copyCheckout(): void {
 	for ( const file of [
 		'install',
 		'docker-compose.yml',
-		'.env.example',
-		'package.json'
+		'.env.example'
 	] ) {
 		copyFileSync( join( HOST_REPOSITORY_ROOT, file ), join( CHECKOUT_ROOT, file ) );
 	}
+	mkdirSync( join( CHECKOUT_ROOT, '.wbs' ), { recursive: true } );
+	copyFileSync(
+		join( HOST_REPOSITORY_ROOT, '.wbs/version' ),
+		join( CHECKOUT_ROOT, '.wbs/version' )
+	);
 	for ( const file of [ 'Extensions.php', 'traefik-dynamic.yml' ] ) {
 		copyFileSync(
 			join( HOST_REPOSITORY_ROOT, 'config', file ),

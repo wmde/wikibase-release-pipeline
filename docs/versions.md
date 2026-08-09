@@ -1,6 +1,6 @@
 # Wikibase Suite (WBS) Versions
 
-Wikibase Suite (WBS) and each WBS Docker Image have independent version numbers. Each WBS release identifies the compatible major version of each Image, while compatible Image updates can be released independently.
+Wikibase Suite (WBS) and each WBS Docker Image have independent version numbers. Each WBS release identifies the compatible image versions it uses, while images can be released independently.
 
 They all use [semantic versioning](https://semver.org/spec/v2.0.0.html), written as `MAJOR.MINOR.PATCH`. Major releases may require upgrade work, while minor and patch releases remain compatible.
 
@@ -8,7 +8,7 @@ This page explains how to read these versions. For update instructions, see [Upg
 
 ## WBS versions
 
-A WBS version identifies a published WBS configuration in this repository, including the Docker Compose file and the compatible major versions of its images. WBS 8 and later releases use Git tags such as `wbs@8.0.1`.
+A WBS version identifies a published WBS configuration in this repository, including the Docker Compose file and its image selections. WBS 8 and later releases use Git tags such as `wbs@8.0.1`.
 
 Compare the current and target versions from left to right. The first number that changes determines the version level:
 
@@ -22,7 +22,7 @@ WBS 7 and earlier releases use `deploy@MAJOR.MINOR.PATCH` tags. WBS 8 and later 
 
 ## Docker Image versions
 
-The WBS Docker Images—Wikibase, Query Service, Query Service frontend, OpenSearch, QuickStatements, and WBS Tools—are released and versioned separately from WBS. WBS releases normally reference compatible major-version tags. For example, `wikibase/wikibase:7` tracks the latest `7.x.x` release of the Wikibase Docker Image without pulling breaking changes from a later major version.
+The WBS Docker Images—Wikibase, Query Service, Query Service frontend, OpenSearch, and QuickStatements—are released and versioned separately from WBS. WBS releases normally use compatible major-version tags. For example, `wikibase/wikibase:7` tracks the latest `7.x.x` Wikibase image without pulling breaking changes from a later major version.
 
 WBS Docker Images are published to [Docker Hub](https://hub.docker.com/u/wikibase) with tags at the following version levels:
 

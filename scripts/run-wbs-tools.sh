@@ -150,8 +150,8 @@ main() {
   fi
   export WBS_STATE_DIR="${WBS_STATE_DIR:-$WBS_DIR/.wbs}"
   export ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
-  export WBS_LOG_PATH="${WBS_LOG_PATH:-$WBS_STATE_DIR/wbs.log}"
-  export INSTALLATION_LOG_PATH="${INSTALLATION_LOG_PATH:-$WBS_STATE_DIR/installation.log}"
+  export WBS_LOG_PATH="${WBS_LOG_PATH:-$WBS_STATE_DIR/logs/wbs.log}"
+  export INSTALLATION_LOG_PATH="${INSTALLATION_LOG_PATH:-$WBS_STATE_DIR/logs/installation.log}"
   export DEBUG="${DEBUG:-false}"
   export INSTALLER_DEV=false
   export INSTALLER_DEV_MOCK=false

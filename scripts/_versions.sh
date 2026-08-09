@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
-# Compatible WBS tools releases share this major version.
-export WBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1}"
+if [[ -z "${WBS_TOOLS_IMAGE:-}" ]]; then
+  # shellcheck disable=SC1091
+  source "$WBS_DIR/.wbs/version"
+fi
+export WBS_TOOLS_IMAGE

@@ -13,10 +13,17 @@ class Hooks {
 			(string)$wikibaseImageVersion
 		);
 
-		$deployVersion = getenv( 'DEPLOY_VERSION' );
-		if ( $deployVersion !== false && trim( (string)$deployVersion ) !== '' ) {
-			$software['[https://www.mediawiki.org/wiki/Wikibase/Suite/Deploy Wikibase Suite Deploy]'] = trim(
-				(string)$deployVersion
+		$wbsVersion = getenv( 'WBS_VERSION' );
+		if ( $wbsVersion !== false && trim( (string)$wbsVersion ) !== '' ) {
+			$software['[https://www.mediawiki.org/wiki/Wikibase/Suite Wikibase Suite]'] = trim(
+				(string)$wbsVersion
+			);
+		}
+
+		$wbsToolsImage = getenv( 'WBS_TOOLS_IMAGE' );
+		if ( $wbsToolsImage !== false && trim( (string)$wbsToolsImage ) !== '' ) {
+			$software['[https://www.mediawiki.org/wiki/Wikibase/Suite Wikibase Suite Tools]'] = trim(
+				(string)$wbsToolsImage
 			);
 		}
 

@@ -1,28 +1,23 @@
-import { createRequire } from 'module';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { parseEnv } from 'node:util';
 import page from '../_helpers/pages/page.js';
 
 type WikibaseSuiteVersions = {
 	wikibaseImageVersion: string;
-	deployVersion: string;
+	wbsVersion: string;
+	wbsToolsImage: string;
 };
 
 type WikibaseSuitePublicMetrics = {
 	wikimediaLinkedUserCount?: number;
 };
 
-type DockerComposeConfig = {
-	services?: {
-		wikibase?: {
-			environment?: Record<string, string> | string[];
-		};
-	};
-};
-
 const getInstalledSoftwareVersionForProduct = async (
 	productName: string
 ): Promise<string> =>
 	$(
-		`//*[@id="sv-software"]//tr[td and contains(normalize-space(string(td[1])),"${ productName }")]/td[2]`
+		`//*[@id="sv-software"]//tr[td and normalize-space(string(td[1]))="${ productName }"]/td[2]`
 	).getText();
 
 const normalizeVersionValue = ( value: string ): string => value.trim();
@@ -30,47 +25,23 @@ const getVersionOrEmpty = (
 	source: Record<string, string>,
 	key: string
 ): string => source[ key ] ?? '';
-const require = createRequire( import.meta.url );
-const getSuitePackageVersion = (): string => {
-	const suitePackageJson = require( '../../../package.json' ) as {
-		version?: string;
+const getWbsManifestVersions = (): Omit<
+	WikibaseSuiteVersions,
+	'wikibaseImageVersion'
+> => {
+	const values = parseEnv(
+		readFileSync( resolve( '../../../.wbs/version' ), 'utf8' )
+	);
+	return {
+		wbsVersion: values.WBS_VERSION ?? '',
+		wbsToolsImage: values.WBS_TOOLS_IMAGE ?? ''
 	};
-
-	return suitePackageJson.version ?? '';
 };
-const getDeployVersionFromComposeWikibaseService =
-	async (): Promise<string> => {
-		const dockerComposeConfigOutput = await testEnv.runDockerComposeCmd(
-			'config --format json'
-		);
-		const dockerComposeConfig = JSON.parse(
-			dockerComposeConfigOutput
-		) as DockerComposeConfig;
-		const services = dockerComposeConfig.services || {};
-		const wikibaseService = services.wikibase || {};
-		const environment = wikibaseService.environment;
-
-		if ( !environment ) {
-			return '';
-		}
-
-		if ( Array.isArray( environment ) ) {
-			const deployVersionEntry = environment.find( ( entry ) =>
-				entry.startsWith( 'DEPLOY_VERSION=' )
-			);
-
-			return deployVersionEntry ?
-				deployVersionEntry.split( '=' )[ 1 ] :
-				'';
-		}
-
-		return environment.DEPLOY_VERSION || '';
-	};
 
 const getRuntimeVersionsFromWikibaseContainer =
 	async (): Promise<WikibaseSuiteVersions> => {
 		const runtimeOutput = await testEnv.runDockerComposeCmd(
-			'exec -T wikibase sh -lc \'printf "wikibaseImageVersion=%s\\n" "$WIKIBASE_IMAGE_VERSION"; printf "deployVersion=%s\\n" "$DEPLOY_VERSION"\''
+			'exec -T wikibase sh -lc \'printf "wikibaseImageVersion=%s\\n" "$WIKIBASE_IMAGE_VERSION"; printf "wbsVersion=%s\\n" "$WBS_VERSION"; printf "wbsToolsImage=%s\\n" "$WBS_TOOLS_IMAGE"\''
 		);
 		const runtimeEntries = runtimeOutput
 			.trim()
@@ -84,7 +55,8 @@ const getRuntimeVersionsFromWikibaseContainer =
 		return {
 			wikibaseImageVersion:
 				runtimeEntries.wikibaseImageVersion ?? '',
-			deployVersion: runtimeEntries.deployVersion ?? ''
+			wbsVersion: runtimeEntries.wbsVersion ?? '',
+			wbsToolsImage: runtimeEntries.wbsToolsImage ?? ''
 		};
 	};
 
@@ -98,7 +70,8 @@ const getWikibaseSuiteApiVersions =
 		return {
 			wikibaseImageVersion:
 				getVersionOrEmpty( apiVersions, 'wikibase_image_version' ),
-			deployVersion: getVersionOrEmpty( apiVersions, 'deploy_version' )
+			wbsVersion: getVersionOrEmpty( apiVersions, 'wbs_version' ),
+			wbsToolsImage: getVersionOrEmpty( apiVersions, 'wbs_tools_image' )
 		};
 	};
 
@@ -117,11 +90,9 @@ const getWikibaseSuiteApiPublicMetrics =
 
 describe( 'Wikibase Suite extension', function () {
 	let runtimeVersions: WikibaseSuiteVersions;
-	let composeDeployVersion: string;
 
 	before( async function () {
 		runtimeVersions = await getRuntimeVersionsFromWikibaseContainer();
-		composeDeployVersion = await getDeployVersionFromComposeWikibaseService();
 	} );
 
 	it( 'Should expose suite versions through action API', async function () {
@@ -130,8 +101,11 @@ describe( 'Wikibase Suite extension', function () {
 		expect( normalizeVersionValue( versions.wikibaseImageVersion ) ).toEqual(
 			normalizeVersionValue( runtimeVersions.wikibaseImageVersion )
 		);
-		expect( normalizeVersionValue( versions.deployVersion ) ).toEqual(
-			normalizeVersionValue( runtimeVersions.deployVersion )
+		expect( normalizeVersionValue( versions.wbsVersion ) ).toEqual(
+			normalizeVersionValue( runtimeVersions.wbsVersion )
+		);
+		expect( normalizeVersionValue( versions.wbsToolsImage ) ).toEqual(
+			normalizeVersionValue( runtimeVersions.wbsToolsImage )
 		);
 	} );
 
@@ -144,11 +118,18 @@ describe( 'Wikibase Suite extension', function () {
 			normalizeVersionValue( runtimeVersions.wikibaseImageVersion )
 		);
 
-		const deployValue = await getInstalledSoftwareVersionForProduct(
-			'Wikibase Suite Deploy'
+		const wbsVersion = await getInstalledSoftwareVersionForProduct(
+			'Wikibase Suite'
 		);
-		expect( normalizeVersionValue( deployValue ) ).toEqual(
-			normalizeVersionValue( runtimeVersions.deployVersion )
+		expect( normalizeVersionValue( wbsVersion ) ).toEqual(
+			normalizeVersionValue( runtimeVersions.wbsVersion )
+		);
+
+		const wbsToolsImage = await getInstalledSoftwareVersionForProduct(
+			'Wikibase Suite Tools'
+		);
+		expect( normalizeVersionValue( wbsToolsImage ) ).toEqual(
+			normalizeVersionValue( runtimeVersions.wbsToolsImage )
 		);
 	} );
 
@@ -164,10 +145,13 @@ describe( 'Wikibase Suite extension', function () {
 		expect( metrics.wikimediaLinkedUserCount ).toEqual( 0 );
 	} );
 
-	it( 'Should keep deploy package version in sync with DEPLOY_VERSION in wikibase compose service', function () {
-		const deployPackageVersion = getSuitePackageVersion();
-		expect( normalizeVersionValue( composeDeployVersion ) ).toEqual(
-			normalizeVersionValue( deployPackageVersion )
+	it( 'Should expose the WBS release manifest in the wikibase service', function () {
+		const manifestVersions = getWbsManifestVersions();
+		expect( normalizeVersionValue( runtimeVersions.wbsVersion ) ).toEqual(
+			normalizeVersionValue( manifestVersions.wbsVersion )
+		);
+		expect( normalizeVersionValue( runtimeVersions.wbsToolsImage ) ).toEqual(
+			normalizeVersionValue( manifestVersions.wbsToolsImage )
 		);
 	} );
 } );

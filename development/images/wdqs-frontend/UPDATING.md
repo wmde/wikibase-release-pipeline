@@ -1,6 +1,6 @@
 # Updating Wikibase Suite (WBS) Query Service frontend
 
-[Back to the release guide](../../docs/release.md#1-review-image-update-policies)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 Use this guide when the release refreshes the Query Service frontend.
 
@@ -46,4 +46,4 @@ Query GUI is pinned by commit rather than by an upstream release version, so det
 - Node is used only to build the static frontend. Review build warnings and the generated output when changing it.
 - For nginx updates, retain a Debian-based variant compatible with the Dockerfile's `apt` installation of `jq`, and verify the nginx configuration, entrypoint templating, static assets, health check, and every published architecture.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)

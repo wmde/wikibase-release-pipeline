@@ -1,6 +1,6 @@
 # Updating Wikibase Suite (WBS) QuickStatements
 
-[Back to the release guide](../../docs/release.md#1-review-image-update-policies)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 QuickStatements is built from pinned QuickStatements and MagnusTools development commits rather than published releases. QuickStatements uses MagnusTools directly but does not declare a matching MagnusTools version or commit, so the image treats the latest commit from each development branch as one update candidate.
 
@@ -51,4 +51,4 @@ QuickStatements source updates are usually small and remain compatible with the 
 - Confirm that the Composer image can install the pinned QuickStatements dependency set. It is an AMD64-only intermediate stage and must continue to produce portable dependencies for the final image.
 - Keep the PHP image's Debian variant compatible with the packages installed by the Dockerfile, and build and test every published architecture after changing either image.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)

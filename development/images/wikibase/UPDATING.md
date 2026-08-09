@@ -1,6 +1,6 @@
 # Updating Wikibase Suite (WBS) Wikibase
 
-[Back to the release guide](../../docs/release.md#1-review-image-update-policies)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 Use this guide when the release refreshes MediaWiki or bundled extensions.
 
@@ -51,4 +51,4 @@ Treat the MediaWiki release line as a compatibility boundary. Although the secon
 - Treat the Wikimedia Composer image as a build dependency. Confirm that it can install the selected MediaWiki and extension dependency set; it is an AMD64-only intermediate stage and must continue to produce portable dependencies for the final image.
 - Review upstream PHP, MediaWiki, and Composer image support and security information before changing a pin, then build and test every published architecture.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)

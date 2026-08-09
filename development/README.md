@@ -117,5 +117,5 @@ See the [integration test guide](./tests/README.md) for test suites, exploratory
 - [Contributor guide](../CONTRIBUTING.md)
 - [Development documentation](./docs/README.md)
 - [WBS Tools image](./images/wbs-tools/README.md)
-- [Documentation guide](./docs/document/README.md)
+- [Documentation terminology](./docs/terminology.md)
 - [Architecture Decision Records](./docs/adr/index.md)

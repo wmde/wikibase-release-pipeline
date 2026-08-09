@@ -19,8 +19,11 @@ import {
 	resolveProjectSelections
 } from '../../lib/projects.js';
 import { planVersionUpdate, type VersionPlan } from '../../lib/versioning.js';
+import { readWbsVersionManifest } from '../../lib/wbs-version.js';
+import { planWbsToolsAdoption } from '../update/projects/wbs-tools.js';
+import { planWbsUpdate } from '../update/projects/wbs.js';
 import { readVariable } from '../update/source-utils.js';
-import { defaultVersionPolicy, versionPolicyFor } from '../update/versions.js';
+import { defaultVersionPolicy } from '../update/versions.js';
 
 const CLI = resolve('wbs-dev.ts');
 const TSX = resolve('node_modules/.bin/tsx');
@@ -78,6 +81,12 @@ function imageVersion(fixture: Fixture): string {
 	).version;
 }
 
+function wbsVersion(fixture: Fixture): string {
+	return readWbsVersionManifest(
+		readFileSync(join(fixture.root, '.wbs/version'), 'utf8')
+	).version;
+}
+
 function createFixture(): Fixture {
 	const parent = mkdtempSync(join(tmpdir(), 'wbs-dev-release-'));
 	fixtures.push(parent);
@@ -102,8 +111,13 @@ function createFixture(): Fixture {
 	);
 	write(
 		fixture,
-		'package.json',
-		'{\n\t"name": "wbs",\n\t"version": "1.0.0",\n\t"private": true\n}\n'
+		'.wbs/version',
+		'WBS_VERSION=1.0.0\nWBS_TOOLS_IMAGE=wikibase/wbs-tools:1.0.0\n'
+	);
+	write(
+		fixture,
+		'install',
+		'#!/usr/bin/env bash\nWBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1.0.0}"\n'
 	);
 	write(
 		fixture,
@@ -113,7 +127,7 @@ function createFixture(): Fixture {
 	write(
 		fixture,
 		'docker-compose.yml',
-		'services:\n  wikibase:\n    environment:\n      DEPLOY_VERSION: "1.0.0"\n'
+		'services:\n  wikibase:\n    env_file:\n      - .wbs/version\n'
 	);
 	commitAll(fixture, 'chore: initial release');
 	git(fixture, 'tag', 'wikibase@1.0.0');
@@ -149,12 +163,7 @@ function versions(fixture: Fixture, ...projects: string[]): CliResult {
 			{ requireExplicit: true }
 		)
 			.map((project) =>
-				planVersionUpdate(
-					context,
-					gitRepository,
-					project,
-					versionPolicyFor(project)
-				)
+				planVersionUpdate(context, gitRepository, project, defaultVersionPolicy)
 			)
 			.filter((plan): plan is VersionPlan => plan !== undefined);
 		if (plans.length === 0) {
@@ -450,40 +459,50 @@ describe('wbs-dev preparation and release workflow', () => {
 			assert.match(update.stderr, /unknown option '--dry-run'/u);
 		});
 
-		it('uses legacy deploy tags for WBS and keeps DEPLOY_VERSION aligned', () => {
+		it('uses legacy deploy tags for WBS', () => {
 			const fixture = createFixture();
 			write(fixture, 'install', '#!/usr/bin/env bash\necho changed\n');
 			commitAll(fixture, 'feat!: replace the WBS installation contract');
 			const result = versions(fixture, 'wbs');
 			assert.equal(result.status, 0, result.stderr);
-			assert.equal(
-				JSON.parse(readFileSync(join(fixture.root, 'package.json'), 'utf8'))
-					.version,
-				'2.0.0'
-			);
-			assert.match(
-				readFileSync(join(fixture.root, 'docker-compose.yml'), 'utf8'),
-				/DEPLOY_VERSION: "2\.0\.0"/u
-			);
+			assert.equal(wbsVersion(fixture), '2.0.0');
 		});
 
-		it('does not treat a generated WBS deploy version as a release change', () => {
+		it('prepares an accepted WBS Tools adoption as a WBS patch', () => {
 			const fixture = createFixture();
 			write(
 				fixture,
-				'docker-compose.yml',
-				'services:\n  wikibase:\n    environment:\n      DEPLOY_VERSION: "2.0.0"\n'
+				'development/images/wbs-tools/docker-bake.hcl',
+				'variable "IMAGE_REPOSITORY" { default = "wikibase/wbs-tools" }\nvariable "IMAGE_VERSION" { default = "1.1.0" }\n'
 			);
-			const result = versions(fixture, 'wbs');
-			assert.equal(result.status, 0, result.stderr);
+			write(
+				fixture,
+				'development/images/wbs-tools/CHANGELOG.md',
+				'# 1.1.0 (2026-01-01)\n\n- Tools update.\n'
+			);
+			const context = createRepositoryContext(fixture.development);
+			const gitRepository = new GitRepository(context);
+			gitRepository.fetchRemoteTags();
+			const projects = discoverReleaseProjects(context);
+			const wbs = projects.find((project) => project.name === 'wbs')!;
+			const tools = projects.find((project) => project.name === 'wbs-tools')!;
+			const adoption = planWbsToolsAdoption(wbs, tools, '1.1.0')!;
+			const plan = planWbsUpdate(context, gitRepository, wbs, {
+				toolsAdoption: adoption
+			})!;
+
+			assert.equal(plan.targetVersion, '1.0.1');
+			const versionUpdate = plan.updates.find(
+				(update) => update.path === wbs.versionPath
+			)!.contents;
+			assert.deepEqual(readWbsVersionManifest(versionUpdate), {
+				version: '1.0.1',
+				toolsImage: 'wikibase/wbs-tools:1.1.0'
+			});
 			assert.match(
-				result.stdout,
-				/No selected projects have releasable changes\./u
-			);
-			assert.equal(
-				JSON.parse(readFileSync(join(fixture.root, 'package.json'), 'utf8'))
-					.version,
-				'1.0.0'
+				plan.updates.find((update) => update.path.endsWith('CHANGELOG.md'))!
+					.contents,
+				/WBS Tools image from wikibase\/wbs-tools:1\.0\.0 to wikibase\/wbs-tools:1\.1\.0\./u
 			);
 		});
 

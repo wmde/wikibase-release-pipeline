@@ -21,9 +21,12 @@ trap cleanup EXIT
 create_commit() {
   local fixture_repo="$1"
   local version="$2"
+  local tools_image="${3:-wikibase/wbs-tools:1.0.0}"
 
-  printf '{\n  "version": "%s"\n}\n' "$version" > "$fixture_repo/package.json"
-  git -C "$fixture_repo" add package.json
+  mkdir -p "$fixture_repo/.wbs"
+  printf 'WBS_VERSION=%s\nWBS_TOOLS_IMAGE=%s\n' \
+    "$version" "$tools_image" > "$fixture_repo/.wbs/version"
+  git -C "$fixture_repo" add .wbs/version
   git -C "$fixture_repo" commit -q -m "WBS $version"
 }
 
@@ -38,11 +41,11 @@ create_fixture_remote() {
 
   mkdir -p "$fixture_repo/scripts"
   # shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
-  printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$fixture_repo/scripts/run-wbs-tools.sh"
+  printf '#!/usr/bin/env bash\nif [[ -z "${WBS_TOOLS_IMAGE:-}" ]]; then source "$WBS_DIR/.wbs/version"; fi\nprintf "%%s\\n" "$WBS_TOOLS_IMAGE" > "$WBS_DIR/wbs-tools-image"\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$fixture_repo/scripts/run-wbs-tools.sh"
   chmod +x "$fixture_repo/scripts/run-wbs-tools.sh"
   git -C "$fixture_repo" add scripts/run-wbs-tools.sh
 
-  create_commit "$fixture_repo" "1.9.0"
+  create_commit "$fixture_repo" "1.9.0" "wikibase/wbs-tools:0.9.0"
   git -C "$fixture_repo" tag 'wbs@1.9.0'
 
   create_commit "$fixture_repo" "1.10.0"
@@ -67,31 +70,57 @@ run_bootstrap() {
   mkdir -p "$case_dir/bootstrap"
   cp "$REPO_DIR/install" "$case_dir/bootstrap/install"
 
-  WBS_DIR="$case_dir/wikibase-suite" \
-    WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
-    WBS_REPO_URL="$fixture_remote" \
-    WBS_DOCKER_REPO_URL="$host_fixture_remote" \
-    WBS_REF='' \
-    WBS_TOOLS_IMAGE="${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}" \
-    WBS_TOOLS_SKIP_PULL=true \
-    WBS_SKIP_DEPENDENCY_INSTALLS=true \
-    bash "$case_dir/bootstrap/install" "$@"
+  local bootstrap_image="${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}"
+  if [[ "${WBS_TEST_USE_INSTALL_DEFAULT:-false}" == true ]]; then
+    sed "s|wikibase/wbs-tools:1.0.0|$bootstrap_image|" \
+      "$case_dir/bootstrap/install" > "$case_dir/bootstrap/install.tmp"
+    mv "$case_dir/bootstrap/install.tmp" "$case_dir/bootstrap/install"
+  fi
+
+  if [[ "${WBS_TEST_USE_INSTALL_DEFAULT:-false}" == true ]]; then
+    env -u WBS_TOOLS_IMAGE \
+      WBS_DIR="$case_dir/wikibase-suite" \
+      WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
+      WBS_REPO_URL="$fixture_remote" \
+      WBS_DOCKER_REPO_URL="$host_fixture_remote" \
+      WBS_REF='' \
+      WBS_TOOLS_SKIP_PULL=true \
+      WBS_SKIP_DEPENDENCY_INSTALLS=true \
+      bash "$case_dir/bootstrap/install" "$@"
+  else
+    WBS_DIR="$case_dir/wikibase-suite" \
+      WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
+      WBS_REPO_URL="$fixture_remote" \
+      WBS_DOCKER_REPO_URL="$host_fixture_remote" \
+      WBS_REF='' \
+      WBS_TOOLS_IMAGE="$bootstrap_image" \
+      WBS_TOOLS_SKIP_PULL=true \
+      WBS_SKIP_DEPENDENCY_INSTALLS=true \
+      bash "$case_dir/bootstrap/install" "$@"
+  fi
 }
 
 fixture_remote="$(create_fixture_remote releases)"
 
 run_bootstrap latest "$fixture_remote"
-grep -q '"version": "1.10.0"' "$TEST_ROOT/latest/wikibase-suite/package.json"
+grep -q '^WBS_VERSION=1.10.0$' "$TEST_ROOT/latest/wikibase-suite/.wbs/version"
+grep -qx "${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}" \
+  "$TEST_ROOT/latest/wikibase-suite/wbs-tools-image"
 grep -qx 'install' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 grep -qx -- '--web' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
-test -f "$TEST_ROOT/latest/wikibase-suite/.wbs/wbs.log"
-grep -q '===== Bootstrap =====' "$TEST_ROOT/latest/wikibase-suite/.wbs/wbs.log"
+test -f "$TEST_ROOT/latest/wikibase-suite/.wbs/logs/wbs.log"
+grep -q '===== Bootstrap =====' "$TEST_ROOT/latest/wikibase-suite/.wbs/logs/wbs.log"
 
 run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0' --local --from-source --debug
-grep -q '"version": "1.9.0"' "$TEST_ROOT/explicit/wikibase-suite/package.json"
+grep -q '^WBS_VERSION=1.9.0$' "$TEST_ROOT/explicit/wikibase-suite/.wbs/version"
 grep -qx -- '--local' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--from-source' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--debug' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
+
+WBS_TEST_USE_INSTALL_DEFAULT=true \
+  run_bootstrap checkout-pin "$fixture_remote" --wbs-ref 'wbs@1.9.0'
+grep -qx 'wikibase/wbs-tools:0.9.0' \
+  "$TEST_ROOT/checkout-pin/wikibase-suite/wbs-tools-image"
 
 prerelease_repo="$TEST_ROOT/prerelease-only"
 prerelease_remote="$TEST_ROOT/prerelease-only.git"
@@ -117,10 +146,14 @@ mkdir -p "$local_checkout/scripts"
 git init -q "$local_checkout"
 cp "$REPO_DIR/install" "$local_checkout/install"
 # shellcheck disable=SC2016 # The generated fixture expands these variables when invoked.
-printf '#!/usr/bin/env bash\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$local_checkout/scripts/run-wbs-tools.sh"
+printf '#!/usr/bin/env bash\nif [[ -z "${WBS_TOOLS_IMAGE:-}" ]]; then source "$WBS_DIR/.wbs/version"; fi\nprintf "%%s\\n" "$WBS_TOOLS_IMAGE" > "$WBS_DIR/wbs-tools-image"\nprintf "%%s\\n" "$@" > "$WBS_DIR/wbs-invocation"\n' > "$local_checkout/scripts/run-wbs-tools.sh"
 chmod +x "$local_checkout/scripts/run-wbs-tools.sh"
+mkdir -p "$local_checkout/.wbs"
+printf 'WBS_VERSION=1.10.0\nWBS_TOOLS_IMAGE=wikibase/wbs-tools:1.0.0\n' \
+  > "$local_checkout/.wbs/version"
 WBS_REPO_URL="$TEST_ROOT/missing.git" WBS_REF='' \
   WBS_SKIP_DEPENDENCY_INSTALLS=true bash "$local_checkout/install"
 grep -qx -- '--web' "$local_checkout/wbs-invocation"
+grep -qx 'wikibase/wbs-tools:1.0.0' "$local_checkout/wbs-tools-image"
 
 echo "WBS bootstrap selection tests passed"

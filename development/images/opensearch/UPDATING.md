@@ -1,6 +1,6 @@
 # Updating OpenSearch (`wikibase/opensearch`)
 
-[Back to the release guide](../../docs/release.md#1-review-image-update-policies)
+[Back to the release guide](../../docs/release.md#prepare-a-release)
 
 OpenSearch and its Wikimedia plugins form a compatibility set selected for the CirrusSearch version in Wikibase.
 
@@ -29,4 +29,4 @@ Check CirrusSearch and Elastica compatibility, index compatibility, reindexing, 
 
 The selected OpenSearch release is itself the image's runtime base; its operating system and JVM are supplied by that upstream image rather than pinned separately here. In addition to the compatibility-set review above, inspect the selected OpenSearch image's release and security information, confirm support for every published architecture, and verify the image health check and installed plugin loading.
 
-[Continue with testing](../../docs/release.md#3-test-and-fix)
+[Continue with release preparation](../../docs/release.md#prepare-a-release)
