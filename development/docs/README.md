@@ -1,26 +1,26 @@
-# Contributor Documentation
+# Development documentation
 
-This directory contains guidance for developing and maintaining Wikibase Suite. Add documentation here when it is intended for contributors rather than people installing or operating a published WBS release.
+Use these guides to develop, test, document, and release Wikibase Suite. End-user documentation belongs under [`docs/`](../../docs).
 
-End-user documentation belongs under [`docs/`](../../docs).
+- [Getting started](../README.md#getting-started)<br>
+  Set up the development environment, learn the `wbs-dev` and `wbs` commands, and follow the normal development cycle.
 
-## Development and Release
+- [Testing](../tests/README.md)<br>
+  Run the browser-based integration suites, choose a suite or spec, configure local test environments, and add new tests.
 
-Guidance for recording changes and preparing Wikibase Suite releases.
+- [Releasing](./release.md)<br>
+  Prepare, review, publish, and verify Wikibase Suite and Docker Image releases.
 
-- [Release Guide](./release.md)
-- [Versioning and Conventional Commits](./versioning-and-commits.md)
+- [Versioning and Conventional Commits](./versioning-and-commits.md)<br>
+  Apply versioning rules and conventional commit messages so release tooling can derive versions and changelogs.
 
-## Architecture Decision Records
+- [WBS Tools](../images/wbs-tools/README.md)<br>
+  Understand the Installer image, its lifecycle foundation, and maintainer workflow.
 
-Records of significant engineering decisions and their context.
+- [Documentation terminology](./document/terminology.md)<br>
+  Use of consistent product terminology in documentation.
 
-- [Architecture Decision Records](./adr/index.md)
-- [ADR Template](./adr/NNNN-adr-template.md)
+## ADRs
 
-## User Documentation
-
-Presentation and terminology conventions currently used in the end-user documentation.
-
-- [User Documentation Presentation (DRAFT)](./document/README.md)
-- [Documentation Terminology](./document/terminology.md)
+- [Architecture Decision Records](./adr/index.md)<br>
+  Browse the recorded engineering decisions covering image distribution, releases, versioning, security updates, and the product-first monorepo.
