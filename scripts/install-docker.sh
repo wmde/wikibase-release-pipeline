@@ -73,17 +73,6 @@ install_docker() {
   run_args docker compose version || true
 }
 
-confirm_arch() {
-  local arch
-  arch="$(uname -m)"
-  if [[ "$arch" == "x86_64" || "$arch" == "amd64" ]]; then
-    return 0
-  else
-    status "Computer architecture is '$arch' (AMD64 required; ARM not currently supported)"
-    return 1
-  fi
-}
-
 confirm_docker_version() {
   local docker_ver
   docker_ver="$(docker --version)"

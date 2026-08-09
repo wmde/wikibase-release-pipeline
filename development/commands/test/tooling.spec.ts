@@ -34,7 +34,7 @@ exit 0
 				[
 					'-c',
 					'source "$1"; SCRIPTS_DIR="$(dirname "$1")"; ' +
-						'SKIP_DEPENDENCY_INSTALLS=false; WBS_SKIP_ARCH_CHECK=true; ' +
+						'SKIP_DEPENDENCY_INSTALLS=false; ' +
 						'DEBUG=false; prepare_install_runtime',
 					'bash',
 					resolve('../scripts/run-wbs-tools.sh')
@@ -137,7 +137,6 @@ exit 0
 					FAKE_DOCKER_LOG: dockerLog,
 					PATH: `${fixture}:${process.env.PATH}`,
 					WBS_DIR: fixture,
-					WBS_SKIP_ARCH_CHECK: 'true',
 					WBS_TOOLS_IMAGE: '',
 					WBS_TOOLS_SKIP_PULL: ''
 				}

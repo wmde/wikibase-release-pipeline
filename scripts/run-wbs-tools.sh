@@ -35,9 +35,6 @@ prepare_install_runtime() {
   if [[ "$SKIP_DEPENDENCY_INSTALLS" != true ]]; then
     install_docker
   fi
-  if [[ "${WBS_SKIP_ARCH_CHECK:-false}" != true ]]; then
-    confirm_arch
-  fi
   confirm_docker_version
   confirm_docker_compose_version
   confirm_docker_running
