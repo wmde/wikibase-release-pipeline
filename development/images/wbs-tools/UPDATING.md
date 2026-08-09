@@ -2,7 +2,7 @@
 
 [Back to the release guide](../../docs/release.md#prepare-a-release)
 
-WBS Tools is currently published for the Installer. Its shared configuration and lifecycle implementation also provides the internal `wbs configure`, `install`, `up`, `down`, `status`, and `reset` commands. Treat those commands as an unpublished foundation for possible future operational workflows, not as a supported end-user interface. See [ADR 22](../../docs/adr/0022-wbs-tools-foundation.md).
+WBS Tools is currently published for the Installer. Its shared configuration and lifecycle implementation also provides the internal `wbs install`, `up`, `down`, `status`, and `reset` commands. Installation-only stages live beneath `wbs install`. Treat those commands as an unpublished foundation for possible future operational workflows, not as a supported end-user interface. See [ADR 22](../../docs/adr/0022-wbs-tools-foundation.md).
 
 ## Develop and test
 

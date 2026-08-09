@@ -108,7 +108,7 @@ remove_any_existing_installer_webserver() {
 }
 
 start_installer_worker() {
-  local worker_args=(install-worker)
+  local worker_args=(install worker)
   if [[ "${WBS_BUILD_IMAGES:-false}" == true ]]; then
     worker_args+=(--build)
   elif [[ "${WBS_LOCAL_IMAGES:-false}" == true ]]; then
@@ -228,7 +228,7 @@ start_installer_webserver() {
     -v "$WBS_STATE_DIR:/app/state"
     -v "$CERTS_DIR:/app/certs"
     "$WBS_TOOLS_IMAGE"
-    node dist/wbs.js configure "${CONFIGURE_ARGS[@]}"
+    node dist/wbs.js install configure "${CONFIGURE_ARGS[@]}"
   )
 
   run_args "${command[@]}"

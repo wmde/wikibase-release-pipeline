@@ -72,7 +72,7 @@ else
 
   target_parent="$(dirname "$WBS_DOCKER_DIR")"
   mkdir -p "$target_parent"
-  prepare_args=(prepare --target "$WBS_DOCKER_DIR" --repository "$WBS_DOCKER_REPO_URL")
+  prepare_args=(install prepare --target "$WBS_DOCKER_DIR" --repository "$WBS_DOCKER_REPO_URL")
   repository_mount=()
   if [[ "$WBS_DOCKER_REPO_URL" == /* && ( -e "$WBS_DOCKER_REPO_URL" || -e "$WBS_REPO_URL" ) ]]; then
     repository_parent="$(dirname "$WBS_DOCKER_REPO_URL")"

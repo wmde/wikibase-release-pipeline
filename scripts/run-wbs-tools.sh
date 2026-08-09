@@ -61,8 +61,13 @@ prepare_source_tools_image() {
 }
 
 run_configurator() {
-  local command="$1"
-  shift
+  local configure_only=false
+  local application_args=(install)
+  if [[ "${1:-}" == configure ]]; then
+    configure_only=true
+    application_args+=(configure)
+    shift
+  fi
   local request_args=( "$@" )
   local configure_args=()
   local cli=true
@@ -97,17 +102,17 @@ run_configurator() {
 
   if [[ "$show_help" == true ]]; then
     exec docker run --rm "$WBS_TOOLS_IMAGE" \
-      node dist/wbs.js "$command" "${request_args[@]}"
+      node dist/wbs.js "${application_args[@]}" "${request_args[@]}"
   fi
 
-  run_wbs_tools_validation "$command" "${request_args[@]}"
+  run_wbs_tools_validation "${application_args[@]}" "${request_args[@]}"
 
-  if [[ "$command" == configure ]]; then
+  if [[ "$configure_only" == true ]]; then
     export CONFIGURE_ONLY=true
   fi
 
   if [[ "$cli" == true ]]; then
-    run_wbs_tools_command "$command" "${request_args[@]}"
+    run_wbs_tools_command "${application_args[@]}" "${request_args[@]}"
   fi
 
   exec bash "$SCRIPTS_DIR/run-web-installer.sh" "${configure_args[@]}"
@@ -126,14 +131,6 @@ prepare_install() {
   if [[ "$from_source" == true ]]; then
     prepare_source_tools_image
   fi
-}
-
-run_install() {
-  run_configurator install "$@"
-}
-
-run_configure() {
-  run_configurator configure "$@"
 }
 
 main() {
@@ -166,18 +163,20 @@ main() {
   source "$SCRIPTS_DIR/_wbs-tools-runtime.sh"
 
   if [[ "$command" == install ]]; then
-    prepare_install "${@:2}"
+    case "${2:-}" in
+      configure|prepare|worker) ;;
+      *) prepare_install "${@:2}" ;;
+    esac
   fi
   ensure_wbs_tools_image " For an unpublished source checkout, rerun wbs install with --from-source."
 
   case "$command" in
     install)
       shift
-      run_install "$@"
-      ;;
-    configure)
-      shift
-      run_configure "$@"
+      case "${1:-}" in
+        configure|''|--*) run_configurator "$@" ;;
+        *) run_wbs_tools_command install "$@" ;;
+      esac
       ;;
     *)
       # All other verbs are implemented entirely by the tools application.

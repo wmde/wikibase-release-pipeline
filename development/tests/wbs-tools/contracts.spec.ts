@@ -77,7 +77,7 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 				[
 					'run', '--rm', '-i',
 					'-v', `${ configRoot }:/app/wbs`,
-					toolsImage(), 'node', 'dist/wbs.js', 'configure', '--local'
+					toolsImage(), 'node', 'dist/wbs.js', 'install', 'configure', '--local'
 				],
 				{ encoding: 'utf8', input: '\n'.repeat( 9 ), stdio: 'pipe' }
 			);
@@ -206,7 +206,7 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 					'-v', `${ failureRoot }:/app/wbs`,
 					'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
 					toolsImage(),
-					'node', '/app/dist/wbs.js', 'install-worker'
+					'node', '/app/dist/wbs.js', 'install', 'worker'
 				],
 				{ encoding: 'utf8', stdio: 'pipe' }
 			);

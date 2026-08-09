@@ -28,8 +28,9 @@ export function addConfigureOptions( command: Command ): Command {
 		.addOption( new Option( '--debug', 'Show verbose diagnostic output.' ) );
 }
 
-export function registerConfigureCommand( program: Command ): void {
-	addConfigureOptions( program.command( 'configure' )
-		.description( 'Create or update Wikibase Suite configuration.' ) )
-		.action( configure );
+export function registerConfigureCommand( install: Command ): void {
+	addConfigureOptions( install.command( 'configure' )
+		.description( 'Run only the Wikibase Suite installation configurator.' ) )
+		.action( ( _options: ConfigureOptions, command: Command ) =>
+			configure( command.optsWithGlobals() as ConfigureOptions ) );
 }

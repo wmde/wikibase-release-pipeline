@@ -6,8 +6,10 @@ import { getConfig } from '../lib/configuration.js';
 import {
 	addConfigureOptions,
 	configure,
+	registerConfigureCommand,
 	type ConfigureOptions
 } from './configure.js';
+import { registerPrepareCommand } from './prepare.js';
 
 function printInstallationComplete(): void {
 	const { config } = getConfig();
@@ -23,7 +25,7 @@ function printInstallationComplete(): void {
 }
 
 export function registerInstallCommand( program: Command ): void {
-	addConfigureOptions( program.command( 'install' )
+	const install = addConfigureOptions( program.command( 'install' )
 		.description( 'Configure and install Wikibase Suite.' ) )
 		.addOption( new Option( '--from-source', 'Build and install images from this checkout.' ) )
 		.action( async ( options: ConfigureOptions & { fromSource: boolean } ) => {
@@ -37,7 +39,10 @@ export function registerInstallCommand( program: Command ): void {
 			}
 		} );
 
-	program.command( 'install-worker', { hidden: true } )
+	registerConfigureCommand( install );
+	registerPrepareCommand( install );
+
+	install.command( 'worker', { hidden: true } )
 		.option( '--local-images' )
 		.option( '--build' )
 		.action( completeWebInstallation );
