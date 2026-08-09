@@ -40,7 +40,7 @@ describe('wbs-dev command contracts', () => {
 
 		const root = cli('--help');
 		assert.equal(root.status, 0, root.stderr);
-		assert.match(root.stdout, /^\s{2}update <projects\.\.\.>/mu);
+		assert.match(root.stdout, /^\s{2}update \[projects\.\.\.\]/mu);
 		assert.doesNotMatch(root.stdout, /update-(?:sources|versions)/u);
 	});
 
@@ -57,8 +57,8 @@ describe('wbs-dev command contracts', () => {
 		]);
 	});
 
-	it('requires explicit targets for non-interactive build and test runs', () => {
-		for (const command of ['build', 'test']) {
+	it('requires explicit targets for non-interactive target commands', () => {
+		for (const command of ['build', 'test', 'update']) {
 			const result = cli(command);
 			assert.notEqual(result.status, 0);
 			assert.match(result.stderr, /requires explicit .* names or "all"/u);

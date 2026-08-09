@@ -1,5 +1,6 @@
 import semver from 'semver';
 import { bakeObject, resolveBakeVariables } from '../../../lib/bake.js';
+import { strong } from '../presentation.js';
 import type { SourceUpdateProvider } from '../source-types.js';
 import {
 	changeLines,
@@ -94,13 +95,9 @@ export const wdqsSourceProvider: SourceUpdateProvider = {
 			settings.tagPrefix
 		);
 		if (candidates.length === 0) {
-			interaction.info(`Query Service ${currentVersion} is already current.`);
 			return { contents, changes: [] };
 		}
 		const candidate = candidates[0];
-		interaction.info(
-			`Validating the Query Service ${candidate} distribution and checksum.`
-		);
 		await validateDistribution(candidate, settings.distribution);
 		const previousTag = `${settings.tagPrefix}${currentVersion}`;
 		const nextTag = `${settings.tagPrefix}${candidate}`;
@@ -118,11 +115,11 @@ export const wdqsSourceProvider: SourceUpdateProvider = {
 				}
 			}
 		];
-		interaction.note('Query Service candidate', [
+		interaction.note('Source candidate', [
 			...changeLines(changes),
 			'  Distribution and checksum: available'
 		]);
-		if (!(await interaction.confirm(`Update Query Service to ${candidate}?`))) {
+		if (!(await interaction.confirm(`Update to ${strong(candidate)}?`))) {
 			return { contents, changes: [] };
 		}
 		return {

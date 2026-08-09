@@ -6,6 +6,7 @@ import {
 	resolveBakeVariables,
 	type BakeVariable
 } from '../../lib/bake.js';
+import { strong } from './presentation.js';
 import type {
 	SourceChange,
 	SourcePin,
@@ -304,8 +305,8 @@ function shortReference(reference: string): string {
 export function changeLines(changes: SourceChange[]): string[] {
 	return changes.flatMap((change) => {
 		const summary = change.previous
-			? `${change.description}: ${shortReference(change.previous)} → ${shortReference(change.next)}`
-			: `${change.description}: add ${shortReference(change.next)}`;
+			? `${strong(change.description)}: ${strong(shortReference(change.previous))} → ${strong(shortReference(change.next))}`
+			: `${strong(change.description)}: add ${strong(shortReference(change.next))}`;
 		return [
 			summary,
 			...(change.link ? [`  ${change.link.label}: ${change.link.url}`] : [])
@@ -320,10 +321,9 @@ export async function confirmPinPlan(
 	interaction: SourceUpdateInteraction
 ): Promise<SourceUpdatePlan> {
 	if (plan.changes.length === 0) {
-		interaction.info(`${imageLabel} is already current.`);
 		return plan;
 	}
-	interaction.note(`${imageLabel} candidate`, changeLines(plan.changes));
+	interaction.note('Source candidate', changeLines(plan.changes));
 	if (!(await interaction.confirm(`Update ${imageLabel}?`))) {
 		return { contents: originalContents, changes: [] };
 	}

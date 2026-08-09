@@ -21,6 +21,7 @@ import {
 	resolveProjectSelections,
 	type ReleaseProject
 } from '../../lib/projects.js';
+import { requestTargetNames } from '../../lib/selection.js';
 import type { SourceChange } from '../../lib/source-changes.js';
 import {
 	findPreviousRelease,
@@ -28,6 +29,7 @@ import {
 	type VersionPlan
 } from '../../lib/versioning.js';
 import { ClackInteraction, UpdateCancelled } from './interaction.js';
+import { projectLabel, projectOptionLabel, strong } from './presentation.js';
 import {
 	planWbsToolsAdoption,
 	type WbsToolsAdoption
@@ -44,6 +46,11 @@ interface ProjectSources {
 	plan?: PlannedSourceUpdate;
 	changes: SourceChange[];
 	path?: string;
+}
+
+interface VersionChoice {
+	includeChangelog: boolean;
+	targetVersion: string;
 }
 
 function unwrapPrompt<T>(value: T | symbol): T {
@@ -74,23 +81,21 @@ function sourceState(
 }
 
 function versionValidation(
-	minimum: string
+	minimum: string,
+	allowedNoOpVersion?: string
 ): (value: string | undefined) => string | undefined {
 	return (value) => {
 		if (!value || !semver.valid(value) || !/^\d+\.\d+\.\d+$/u.test(value)) {
 			return 'Enter a stable semantic version such as 8.1.0.';
 		}
-		if (semver.lt(value, minimum)) {
+		if (value !== allowedNoOpVersion && semver.lt(value, minimum)) {
 			return `The version must be at least ${minimum}.`;
 		}
 		return undefined;
 	};
 }
 
-async function confirmVersion(
-	project: ReleaseProject,
-	plan: VersionPlan
-): Promise<string> {
+async function confirmVersion(plan: VersionPlan): Promise<VersionChoice> {
 	note(
 		[
 			...(plan.changelogSections.changes.length > 0
@@ -108,15 +113,51 @@ async function confirmVersion(
 					]
 				: [])
 		].join('\n') || 'No generated changelog entries.',
-		`${project.name} changelog draft`
+		'Changelog draft'
 	);
-	return unwrapPrompt(
-		await text({
-			message: `Version for ${project.name}`,
-			initialValue: plan.targetVersion,
-			validate: versionValidation(plan.minimumVersion)
+	const includeChangelog = unwrapPrompt(
+		await confirm({
+			message: 'Use this changelog draft?',
+			initialValue: true
 		})
 	);
+	const allowedNoOpVersion =
+		!includeChangelog && plan.changelogSections.dependencies.length === 0
+			? plan.currentVersion
+			: undefined;
+	const targetVersion = unwrapPrompt(
+		await text({
+			message: `Release version (current: ${strong(plan.currentVersion)})`,
+			initialValue: plan.targetVersion,
+			validate: versionValidation(plan.minimumVersion, allowedNoOpVersion)
+		})
+	);
+	return { includeChangelog, targetVersion };
+}
+
+export function isNoOpVersionChoice(
+	plan: VersionPlan,
+	choice: VersionChoice
+): boolean {
+	return (
+		!choice.includeChangelog &&
+		plan.changelogSections.dependencies.length === 0 &&
+		choice.targetVersion === plan.currentVersion
+	);
+}
+
+export function applyVersionChoice(
+	plan: VersionPlan,
+	choice: VersionChoice
+): VersionPlan {
+	return choice.includeChangelog
+		? plan
+		: {
+				...plan,
+				updates: plan.updates.filter(
+					(update) => update.path !== plan.project.changelogPath
+				)
+			};
 }
 
 async function update(
@@ -124,11 +165,23 @@ async function update(
 	context: RepositoryContext
 ): Promise<void> {
 	const releaseProjects = discoverReleaseProjects(context);
-	const projects = resolveProjectSelections(
+	const requestedProjects = await requestTargetNames(
 		requested,
+		releaseProjects.map((project) => project.name),
+		{
+			command: 'update',
+			label: projectOptionLabel,
+			message: 'Select projects to update',
+			noun: 'project'
+		}
+	);
+	if (!requestedProjects) {
+		return;
+	}
+	const projects = resolveProjectSelections(
+		requestedProjects,
 		releaseProjects,
-		'update',
-		{ requireExplicit: true }
+		'update'
 	);
 	intro('Prepare Wikibase Suite updates');
 	const interaction = new ClackInteraction();
@@ -136,19 +189,6 @@ async function update(
 		const git = new GitRepository(context);
 		git.fetchRemoteTags();
 		const sources = new Map<string, ProjectSources>();
-		for (const project of projects) {
-			if (!sourceUpdateProviderFor(project.name)) {
-				sources.set(project.name, { changes: [] });
-				continue;
-			}
-			const sourcePlan = await planSourceUpdate(
-				context,
-				project.name,
-				interaction
-			);
-			sources.set(project.name, sourceState(context, git, project, sourcePlan));
-		}
-
 		const versionPlans: VersionPlan[] = [];
 		const wbs = releaseProjects.find((project) => project.name === 'wbs')!;
 		const selectedWbs = projects.find((project) => project.name === 'wbs');
@@ -158,7 +198,17 @@ async function update(
 		for (const project of projects.filter(
 			(project) => project.name !== 'wbs'
 		)) {
-			const source = sources.get(project.name)!;
+			log.step(strong(projectLabel(project.name)));
+			let source: ProjectSources = { changes: [] };
+			if (sourceUpdateProviderFor(project.name)) {
+				const sourcePlan = await planSourceUpdate(
+					context,
+					project.name,
+					interaction
+				);
+				source = sourceState(context, git, project, sourcePlan);
+			}
+			sources.set(project.name, source);
 			const proposedUpdates = source.plan?.changes.length ? [source.plan] : [];
 			const options = {
 				proposedUpdates,
@@ -173,20 +223,27 @@ async function update(
 				options
 			);
 			if (!proposal) {
-				log.info(`${project.name} has no releasable changes.`);
+				log.info('No releasable changes were found.');
 				continue;
 			}
 			if (proposal.replacesGeneratedChangelogSections) {
 				log.warn(
-					`${project.name}: this rerun will replace the generated changelog sections; manual prose outside them will be preserved.`
+					'This rerun will replace the generated changelog sections; manual prose outside them will be preserved.'
 				);
 			}
-			const targetVersion = await confirmVersion(project, proposal);
+			const choice = await confirmVersion(proposal);
+			if (isNoOpVersionChoice(proposal, choice)) {
+				log.info('No release update selected.');
+				continue;
+			}
 			versionPlans.push(
-				planVersionUpdate(context, git, project, defaultVersionPolicy, {
-					...options,
-					targetVersion
-				})!
+				applyVersionChoice(
+					planVersionUpdate(context, git, project, defaultVersionPolicy, {
+						...options,
+						targetVersion: choice.targetVersion
+					})!,
+					choice
+				)
 			);
 		}
 
@@ -203,7 +260,7 @@ async function update(
 			if (
 				adoption &&
 				!(await interaction.confirm(
-					`Adopt ${adoption.change.next} in the current WBS release?`
+					`Adopt ${strong(adoption.change.next)} in the current ${strong('WBS')} release?`
 				))
 			) {
 				adoption = undefined;
@@ -211,7 +268,11 @@ async function update(
 		}
 
 		if (selectedWbs || adoption) {
-			const source = selectedWbs ? sources.get('wbs')! : { changes: [] };
+			log.step(strong(projectLabel('wbs')));
+			const source: ProjectSources = { changes: [] };
+			if (selectedWbs) {
+				sources.set('wbs', source);
+			}
 			const wbsOptions = {
 				source: {
 					...source,
@@ -221,17 +282,26 @@ async function update(
 			};
 			const proposal = planWbsUpdate(context, git, wbs, wbsOptions);
 			if (proposal) {
-				const targetVersion = await confirmVersion(wbs, proposal);
-				versionPlans.push(
-					planWbsUpdate(context, git, wbs, {
-						...wbsOptions,
-						targetVersion
-					})!
-				);
+				const choice = await confirmVersion(proposal);
+				if (isNoOpVersionChoice(proposal, choice)) {
+					log.info('No release update selected.');
+				} else {
+					versionPlans.push(
+						applyVersionChoice(
+							planWbsUpdate(context, git, wbs, {
+								...wbsOptions,
+								targetVersion: choice.targetVersion
+							})!,
+							choice
+						)
+					);
+				}
 			} else if (adoption) {
 				throw new Error(
 					'WBS Tools adoption did not produce a WBS release plan.'
 				);
+			} else {
+				log.info('No releasable changes were found.');
 			}
 		}
 
@@ -249,7 +319,7 @@ async function update(
 			versionPlans
 				.map(
 					(plan) =>
-						`${plan.project.name}: ${plan.targetVersion} (${plan.reason})`
+						`${strong(projectLabel(plan.project.name))}: ${strong(plan.targetVersion)} (${plan.reason})`
 				)
 				.join('\n'),
 			'Planned release drafts'
@@ -257,8 +327,7 @@ async function update(
 		if (
 			!unwrapPrompt(
 				await confirm({
-					message:
-						'Write these source, version, and changelog updates as unstaged changes?',
+					message: 'Write these selected release updates as unstaged changes?',
 					initialValue: true
 				})
 			)
@@ -296,10 +365,10 @@ export function registerUpdateCommand(
 		.description(
 			'Interactively prepare upstream sources, versions, and changelogs atomically.'
 		)
-		.argument('<projects...>', 'PROJECT...|all')
+		.argument('[projects...]', 'PROJECT...|all')
 		.addHelpText(
 			'after',
-			`\nProjects:\n  ${projectNames.join(', ')}\n  Select one or more projects, or "all" by itself.`
+			`\nProjects:\n  ${projectNames.join(', ')}\n  With no project in a terminal, choose interactively. Use "all" to update every project.`
 		)
 		.action(async (selected: string[]) => await update(selected, context));
 }

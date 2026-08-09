@@ -32,6 +32,7 @@ export function assertStableVersion(version: string, context: string): void {
 
 export interface VersionPlan {
 	project: ReleaseProject;
+	currentVersion: string;
 	targetVersion: string;
 	updates: FileUpdate[];
 	reason: string;
@@ -509,6 +510,7 @@ export function planVersionUpdate(
 	);
 	return {
 		project,
+		currentVersion,
 		targetVersion,
 		updates,
 		reason: bump ? `${bump} release` : 'existing untagged release draft',

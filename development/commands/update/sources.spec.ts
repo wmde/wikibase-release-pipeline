@@ -6,6 +6,7 @@ import { bakeObject, resolveBakeVariables } from '../../lib/bake.js';
 import { discoverWdqsCandidates, wdqsSourceProvider } from './projects/wdqs.js';
 import {
 	discoverMediaWikiCandidates,
+	selectMediaWikiUpdate,
 	wikibasePins
 } from './projects/wikibase.js';
 import type { SourceUpdateInteraction } from './source-types.js';
@@ -83,6 +84,66 @@ describe('Wikibase source update provider', () => {
 			maintenance: '1.46.2',
 			newerLine: '1.47.0'
 		});
+	});
+
+	it('asks only about extensions when MediaWiki is already current', async () => {
+		const prompts: string[] = [];
+		const selected = await selectMediaWikiUpdate(
+			'1.46.0',
+			{},
+			{
+				confirm: async (message) => {
+					prompts.push(message);
+					return true;
+				},
+				select: async () => {
+					throw new Error('MediaWiki choices should not be shown.');
+				}
+			}
+		);
+
+		assert.equal(selected, '1.46.0');
+		assert.deepEqual(prompts, ['Refresh extensions?']);
+	});
+
+	it('offers update choices when a newer MediaWiki version exists', async () => {
+		const prompts: string[] = [];
+		const selected = await selectMediaWikiUpdate(
+			'1.46.0',
+			{ maintenance: '1.46.1' },
+			{
+				confirm: async (message) => {
+					prompts.push(message);
+					return false;
+				},
+				select: async (_message, options) => {
+					assert.equal(options.at(-1)?.label, 'No');
+					return options.at(-1)!.value;
+				}
+			}
+		);
+
+		assert.equal(selected, undefined);
+		assert.deepEqual(prompts, ['Refresh extensions?']);
+	});
+
+	it('refreshes extensions implicitly with a MediaWiki update', async () => {
+		const selected = await selectMediaWikiUpdate(
+			'1.46.0',
+			{ maintenance: '1.46.1', newerLine: '1.47.0' },
+			{
+				confirm: async () => {
+					throw new Error('The extension-only prompt should not be shown.');
+				},
+				select: async (_message, options) => {
+					assert.match(options[0].label, /compatible extensions/u);
+					assert.match(options[1].label, /compatible extensions/u);
+					return options[0].value;
+				}
+			}
+		);
+
+		assert.equal(selected, '1.46.1');
 	});
 
 	it('keeps manifest-managed Wikimedia extensions aligned with the Dockerfile', () => {

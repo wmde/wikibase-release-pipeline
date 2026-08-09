@@ -9,6 +9,7 @@ interface SelectionOptions {
 
 interface TargetRequestOptions {
 	command: string;
+	label?: (name: string) => string;
 	message: string;
 	noun: string;
 }
@@ -28,7 +29,10 @@ export async function requestTargetNames(
 	}
 	const selected = await multiselect<string>( {
 		message: `${ options.message } (press "a" to toggle all)`,
-		options: available.map( ( name ) => ( { value: name, label: name } ) ),
+		options: available.map( ( name ) => ( {
+			value: name,
+			label: options.label?.( name ) ?? name
+		} ) ),
 		required: true
 	} );
 	if ( isCancel( selected ) ) {

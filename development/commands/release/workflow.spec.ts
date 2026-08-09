@@ -447,6 +447,8 @@ describe('wbs-dev preparation and release workflow', () => {
 			const manifestUpdate = plan.updates.find(
 				(update) => update.path === project.versionPath
 			)!.contents;
+			assert.equal(plan.currentVersion, '1.0.0');
+			assert.equal(plan.targetVersion, '1.0.1');
 			assert.equal(readVariable(manifestUpdate, 'WIKIBASE.revision'), 'bbb');
 			assert.equal(readImageManifest(project.versionPath).version, '1.0.0');
 			assert.equal(readVariable(manifestUpdate, 'IMAGE_VERSION'), '1.0.1');

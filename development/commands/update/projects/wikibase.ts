@@ -1,6 +1,11 @@
 import semver from 'semver';
 import { bakeObject, resolveBakeVariables } from '../../../lib/bake.js';
-import type { SourceChange, SourceUpdateProvider } from '../source-types.js';
+import { strong } from '../presentation.js';
+import type {
+	SourceChange,
+	SourceUpdateInteraction,
+	SourceUpdateProvider
+} from '../source-types.js';
 import {
 	changeLines,
 	describePinChanges,
@@ -97,6 +102,47 @@ export async function discoverMediaWikiCandidates(
 	};
 }
 
+export async function selectMediaWikiUpdate(
+	currentVersion: string,
+	candidates: { maintenance?: string; newerLine?: string },
+	interaction: Pick<SourceUpdateInteraction, 'confirm' | 'select'>
+): Promise<string | undefined> {
+	if (!candidates.maintenance && !candidates.newerLine) {
+		return (await interaction.confirm('Refresh extensions?'))
+			? currentVersion
+			: undefined;
+	}
+	const selection = await interaction.select(
+		`Update ${strong('MediaWiki')}? (current: ${strong(currentVersion)})`,
+		[
+			...(candidates.maintenance
+				? [
+						{
+							value: candidates.maintenance,
+							label: `Update to ${strong(candidates.maintenance)} and refresh compatible extensions`
+						}
+					]
+				: []),
+			...(candidates.newerLine
+				? [
+						{
+							value: candidates.newerLine,
+							label: `Move to ${strong(candidates.newerLine)} and refresh compatible extensions`,
+							hint: 'requires major-version compatibility review'
+						}
+					]
+				: []),
+			{ value: 'skip', label: 'No' }
+		]
+	);
+	if (selection === 'skip') {
+		return (await interaction.confirm('Refresh extensions?'))
+			? currentVersion
+			: undefined;
+	}
+	return selection;
+}
+
 export const wikibaseSourceProvider: SourceUpdateProvider = {
 	image: 'wikibase',
 	describeChanges: (previousContents, nextContents) => {
@@ -134,42 +180,14 @@ export const wikibaseSourceProvider: SourceUpdateProvider = {
 			currentVersion,
 			settings.source
 		);
-		const options = [
-			...(candidates.maintenance
-				? [
-						{
-							value: candidates.maintenance,
-							label: `Update within the current release line to ${candidates.maintenance}`
-						}
-					]
-				: []),
-			...(candidates.newerLine
-				? [
-						{
-							value: candidates.newerLine,
-							label: `Move to the newer stable release line ${candidates.newerLine}`,
-							hint: 'requires major-version compatibility review'
-						}
-					]
-				: []),
-			{
-				value: 'refresh',
-				label: `Keep MediaWiki ${currentVersion} and refresh extensions`
-			},
-			{ value: 'skip', label: 'Skip Wikibase' }
-		];
-		interaction.info(
-			'Bundled extensions will be updated automatically to the latest commits on the selected MediaWiki release branch; community extensions will use their configured branches.'
+		const selectedVersion = await selectMediaWikiUpdate(
+			currentVersion,
+			candidates,
+			interaction
 		);
-		const selection = await interaction.select(
-			`Wikibase currently uses MediaWiki ${currentVersion}. What should be updated?`,
-			options
-		);
-		if (selection === 'skip') {
+		if (!selectedVersion) {
 			return { contents, changes: [] };
 		}
-		const selectedVersion =
-			selection === 'refresh' ? currentVersion : selection;
 		let plannedContents = contents;
 		const changes: SourceChange[] = [];
 		if (selectedVersion !== currentVersion) {
@@ -193,11 +211,11 @@ export const wikibaseSourceProvider: SourceUpdateProvider = {
 		changes.push(...pins.changes);
 		if (changes.length === 0) {
 			interaction.info(
-				'Wikibase and its configured extensions are already current.'
+				'The image and its configured extensions are already current.'
 			);
 			return { contents, changes: [] };
 		}
-		interaction.note('Wikibase update', changeLines(changes));
+		interaction.note('Source update', changeLines(changes));
 		return { contents: pins.contents, changes };
 	}
 };
