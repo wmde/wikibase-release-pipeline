@@ -1,4 +1,4 @@
-# Enabling Login with Wikimedia
+# Enabling login with Wikimedia
 
 Login with Wikimedia lets people sign in to your Wikibase with the same Wikimedia account they use on Wikidata, Wikipedia, and other Wikimedia projects. It gives members of the Wikimedia community a familiar way to participate without creating and managing another password.
 
@@ -63,7 +63,7 @@ You need a Wikimedia account to register the OAuth consumer. Your WBS instance m
 
 10. Select **Login with Wikimedia** and complete the Wikimedia authorization flow. Confirm that you return to your Wikibase and are logged in.
 
-## Optional: Require an existing local account
+## Optional: require an existing local account
 
 By default, anyone who can authenticate with Wikimedia can create a corresponding local account on your Wikibase. You can instead require people to create a local account and link it to their Wikimedia account before using Wikimedia login.
 

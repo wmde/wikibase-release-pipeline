@@ -1,4 +1,4 @@
-# Resetting an Instance
+# Resetting an instance
 
 Reset an instance when you need to run Wikibase Suite (WBS) setup again, usually after changing first-start values in `.env` or when another procedure directs you here.
 

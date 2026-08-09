@@ -1,4 +1,4 @@
-# Documentation Terminology
+# Documentation terminology
 
 Current terminology conventions and presentation choices currently used in Wikibase Suite documentation.
 
@@ -18,7 +18,7 @@ Current terminology conventions and presentation choices currently used in Wikib
 
 - Do not use **Wikibase** as shorthand for **Wikibase Suite**. Wikibase is a service within WBS and is distributed through the Wikibase Docker Image.
 
-## WBS Docker Image Terminology
+## WBS Docker Image terminology
 
 - Prefer the forms containing **Docker**. Use **WBS Image** or **WBS Images** only when nearby text has already established that the subject is Docker images.
 

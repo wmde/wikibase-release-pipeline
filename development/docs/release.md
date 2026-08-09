@@ -1,4 +1,4 @@
-# Release Guide
+# Release guide
 
 Prepare each release in a pull request containing the implementation, versions, and changelogs. Publish only after that pull request is reviewed and merged into `main`.
 

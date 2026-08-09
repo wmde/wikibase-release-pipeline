@@ -1,4 +1,4 @@
-# Updating Extensions
+# Updating extensions
 
 These instructions apply only to extensions installed specifically for a Wikibase Suite (WBS) instance in `config/extensions`. Extensions bundled with the Wikibase Docker Image are updated with the Image and require no separate action.
 

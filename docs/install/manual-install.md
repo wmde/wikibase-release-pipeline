@@ -1,4 +1,4 @@
-# Manual Installation
+# Manual installation
 
 This page describes the manual path for installing Wikibase Suite (WBS) with Docker Compose. For the recommended browser-based setup flow, see [Installing Wikibase Suite (WBS)](./README.md).
 
