@@ -42,14 +42,20 @@ This directory contains the build, test, update, and release tooling for Wikibas
 Make changes in the checkout, then use the relevant `wbs-dev` commands to build, test, and lint them:
 
 ```bash
-wbs-dev build
-wbs-dev test
+wbs-dev build all
+wbs-dev test all
 wbs-dev lint
 ```
 
 The command help describes the available projects, test suites, and options. Commit completed work according to the [versioning and commit policy](./docs/versioning-and-commits.md).
 
 Every image directory contains an authoritative `docker-bake.hcl`. Running `docker buildx bake` there builds and loads the native local image with its `latest` tag, while `docker buildx bake --print` shows the resolved definition without building. Use `wbs-dev build` when you want the shared cache, CI publication, parallelism, or optional platform handling.
+
+The WBS DevTools image follows the same convention with `development/docker-bake.hcl`: run `docker buildx bake` from `development/` for a direct local build. The `wbs-dev` launcher uses that manifest too, adding the shared cache policy and rebuilding only when its image inputs change.
+
+`wbs-dev build --list=json` and `wbs-dev test --list=json` expose the same convention-based target lists used by CI. Omit `=json` for a human-readable list.
+
+With no targets in an interactive terminal, `build` and `test` present a target picker; press `a` to toggle every target. Non-interactive calls require explicit target names or `all`.
 
 WBS Tools is the one workspace-aware exception: its direct Bake build asks you to approve read access to the shared `development/` lockfile and package metadata. Confirm the Buildx prompt, or use `wbs-dev build wbs-tools`, which grants that exact path automatically.
 

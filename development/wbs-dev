@@ -28,7 +28,7 @@ if [[ " $* " == *" update-sources "* ]] &&
 fi
 
 run_cli() {
-  exec pnpm exec tsx wbs-dev.ts "$@"
+  exec tsx wbs-dev.ts "$@"
 }
 
 # Commands already running in the wbs-dev container can execute directly.
@@ -41,23 +41,81 @@ docker network create wbs-dev > /dev/null 2>&1 || true
 
 WBS_DEV_IMAGE=${WBS_DEV_IMAGE:-wbs-dev:latest}
 export WBS_DEV_IMAGE
-build_args=(
-  --file Dockerfile
-  --load
-  --quiet
-  --tag "$WBS_DEV_IMAGE"
+
+sha256() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$@"
+  else
+    shasum -a 256 "$@"
+  fi
+}
+
+image_fingerprint=$(
+  sha256 \
+    docker-bake.hcl \
+    Dockerfile \
+    .dockerignore \
+    package.json \
+    pnpm-lock.yaml \
+    pnpm-workspace.yaml \
+    images/wbs-tools/package.json |
+    sha256 |
+    cut -d ' ' -f 1
 )
+installed_fingerprint=$(docker image inspect \
+  --format '{{ index .Config.Labels "org.wikibase-suite.wbs-dev.fingerprint" }}' \
+  "$WBS_DEV_IMAGE" 2>/dev/null || true)
 
-if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]]; then
-  build_args+=(--no-cache --pull)
+if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]] ||
+  [[ "$installed_fingerprint" != "$image_fingerprint" ]]; then
+  bake_args=(--progress quiet)
+
+  if [[ "${WBS_DEV_NO_CACHE:-false}" == true ]]; then
+    bake_args+=(--no-cache --pull)
+  fi
+
+  if [[ -n "$BUILD_CACHE_REGISTRY" ]]; then
+    builder_name=wbs-dev-builder
+    cache_registry=${BUILD_CACHE_REGISTRY%/}
+    cache_scope=${BUILD_CACHE_SCOPE:-$(docker info --format '{{.OSType}}-{{.Architecture}}')}
+    cache_scope=${cache_scope//\//-}
+    cache_scope=${cache_scope//,/_}
+    cache_scope=${cache_scope//aarch64/arm64}
+    cache_scope=${cache_scope//x86_64/amd64}
+    cache_ref="${cache_registry}/wbs-dev:buildcache-${cache_scope}"
+    legacy_cache_ref="${cache_registry}/wbs-dev:buildcache"
+
+    bake_args+=(--builder "$builder_name")
+    if [[ "${WBS_DEV_NO_CACHE:-false}" != true ]]; then
+      bake_args+=(
+        --set "wbs-dev.cache-from=type=registry,ref=${cache_ref}"
+        --set "wbs-dev.cache-from+=type=registry,ref=${legacy_cache_ref}"
+      )
+    fi
+    if [[ "${BUILD_CACHE_PUSH:-false}" == true ]]; then
+      bake_args+=(
+        --set "wbs-dev.cache-to=type=registry,ref=${cache_ref},mode=max,ignore-error=true"
+      )
+    fi
+
+    if ! docker buildx inspect "$builder_name" >/dev/null 2>&1; then
+      if ! create_output=$(docker buildx create \
+        --name "$builder_name" \
+        --driver docker-container 2>&1); then
+        docker buildx inspect "$builder_name" >/dev/null 2>&1 || {
+          printf '%s\n' "$create_output" >&2
+          exit 1
+        }
+      fi
+    fi
+    docker buildx inspect "$builder_name" --bootstrap >/dev/null
+  fi
+
+  env \
+    WBS_DEV_IMAGE="$WBS_DEV_IMAGE" \
+    WBS_DEV_IMAGE_FINGERPRINT="$image_fingerprint" \
+    docker buildx bake "${bake_args[@]}" wbs-dev >/dev/null
 fi
-
-lib/buildx.sh \
-  --cache-name wbs-dev \
-  --builder-name wbs-dev-builder \
-  --context . \
-  --silent \
-  -- "${build_args[@]}"
 
 compose_run_args=(--progress quiet run --rm)
 # Interactive commands need the host terminal forwarded so prompt libraries can
@@ -75,11 +133,22 @@ if [[ "${1:-}" == "installer-dev" && "${2:-}" == "web" ]]; then
   trap cleanup_installer_dev EXIT
 
   docker compose "${compose_run_args[@]}" wbs-dev \
-    -c 'pnpm exec tsx wbs-dev.ts "$@"' \
+    -c 'tsx wbs-dev.ts "$@"' \
     -- "$@"
   exit 0
 fi
 
+# Docker and Compose versions differ in whether incidental status messages use
+# stdout or stderr. Keep the documented machine-readable list contract exact.
+if [[ "$#" -eq 2 ]] &&
+  [[ "${1:-}" == "build" || "${1:-}" == "test" ]] &&
+  [[ "${2:-}" == "--list=json" ]]; then
+  docker compose "${compose_run_args[@]}" wbs-dev \
+    -c 'tsx wbs-dev.ts "$@"' \
+    -- "$@" | tail -n 1
+  exit 0
+fi
+
 exec docker compose "${compose_run_args[@]}" wbs-dev \
-  -c 'pnpm exec tsx wbs-dev.ts "$@"' \
+  -c 'tsx wbs-dev.ts "$@"' \
   -- "$@"
