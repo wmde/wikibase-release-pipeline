@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
 import { runProcess } from './command-runner.js';
@@ -11,7 +11,7 @@ export type SuiteOptions = {
 };
 
 export type ResetOptions = {
-	configuration: boolean;
+	environment: boolean;
 	data: boolean;
 };
 
@@ -94,25 +94,15 @@ export async function status(): Promise<void> {
 }
 
 export async function reset( options: ResetOptions ): Promise<void> {
-	// Compose needs .env while it removes the instance, so configuration is
-	// deliberately deleted only after any requested data reset has completed.
+	// Compose needs .env while it removes the instance, so the environment file
+	// is deliberately deleted only after any requested data reset has completed.
 	if ( options.data ) {
 		await runProcess( 'docker', [ ...composeArgs(), 'down', '--volumes' ] );
 		for ( const filename of [ 'LocalSettings.php', 'wikibase-php.ini', 'wdqs-frontend-config.json' ] ) {
 			rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
 		}
 	}
-	if ( options.configuration ) {
+	if ( options.environment ) {
 		rmSync( envFile, { force: true } );
 	}
-}
-
-export function appendOperationLog( message: string, code?: string ): void {
-	const logPath = process.env.LOG_PATH || join( repositoryRoot, '.wbs/installation.log' );
-	mkdirSync( join( repositoryRoot ), { recursive: true } );
-	writeFileSync(
-		logPath,
-		`${ new Date().toISOString() } ${ message }${ code ? ` [${ code }]` : '' }\n`,
-		{ flag: 'a' }
-	);
 }

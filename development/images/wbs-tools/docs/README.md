@@ -2,7 +2,7 @@
 
 This document covers local testing, advanced installer options, and the current release model for the installer code.
 
-The installer currently supports first-time Wikibase Suite installation through a web UI or command-line wizard. It is also intended to become the foundation for a broader `wbs` operations CLI with commands for installing, backing up, resetting, upgrading, updating, and maintaining a Wikibase Suite instance. See [ADR 0001: Expand the Installer into an Operations Tool](adrs/0001-expand-installer-into-operations-tool.md).
+The installer currently supports first-time Wikibase Suite installation through a web UI or interactive command-line flow. It is also intended to become the foundation for a broader `wbs` operations CLI with commands for installing, backing up, resetting, upgrading, updating, and maintaining a Wikibase Suite instance. See [ADR 0001: Expand the Installer into an Operations Tool](adrs/0001-expand-installer-into-operations-tool.md).
 
 ## Versioning and releases
 
@@ -80,7 +80,7 @@ cd development
 
 This builds all local Suite images, mounts the installer application source for live reload, and launches the normal installer and service-startup flow with local test domains. Cached build stages make repeat starts substantially faster.
 
-Use `./wbs-dev installer-dev web --mock` for UI and UX development without changing installer or Suite state. Mock mode uses the same live development server, enables direct navigation among the progress steps, and retains the normal form and validation behavior. Starting installation streams a short simulated image-pull and service-startup log through the completed screen. It does not write configuration, signal the host launcher, or start services. Without `--mock`, steps cannot be skipped and the real installation flow is used.
+Use `./wbs-dev installer-dev web --mock` for UI and UX development without changing installer or Suite state. Mock mode uses the same live development server, enables direct navigation among the progress steps, and retains the normal form and validation behavior. Starting installation streams a short simulated image-pull and service-startup log through the completed screen. Use `--mock failure` to preview the installation failure state directly and to end the simulated sequence on that screen; `--mock` and `--mock success` both use the successful sequence. Mock mode does not write configuration, signal the host launcher, or start services. Without `--mock`, steps cannot be skipped and the real installation flow is used.
 
 To test a complete installation from the current checkout, build the tools and product images before starting the installer:
 
@@ -96,7 +96,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/wmde/wikibase-suite/main/ins
   --from-source
 ```
 
-This first builds the checkout's tools image and then uses it to build every product image through `development/wbs-dev`. The operation selects `development/docker-compose.local-images.yml` only for that invocation. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. After checkout, installation output is written to `.wbs/installation.log`; add `--debug` to stream it in the terminal. Other lifecycle commands use `.wbs/wbs.log`.
+This first builds the checkout's tools image and then uses it to build every product image through `development/wbs-dev`. The operation selects `development/docker-compose.local-images.yml` only for that invocation. Local builds retain the development build system's normal `latest` tags; they do not replace the published compatible-major tags. Source builds require more time, CPU, memory, and storage than a normal installation. They anonymously reuse the public build cache produced by CI in GHCR; prefix the command with `BUILD_CACHE_REGISTRY=` to use only the server's local BuildKit cache. WBS tools output is written to `.wbs/wbs.log`; add `--debug` to stream host-side preparation in the terminal. The web installer separately maintains `.wbs/installation.log` for its internal progress events.
 
 ## Runtime behavior
 

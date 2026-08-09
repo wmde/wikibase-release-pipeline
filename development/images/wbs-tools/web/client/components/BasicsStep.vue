@@ -1,7 +1,7 @@
 <template>
-	<section class="wizard-panel is-active">
-		<div class="wizard-panel__body wizard-panel__body--form">
-			<header class="wizard-panel__header">
+	<section class="installer-panel is-active">
+		<div class="installer-panel__body installer-panel__body--form">
+			<header class="installer-panel__header">
 				<h2>Connect domains</h2>
 				<p>
 					Enter the domain names you have linked via DNS A records to your server’s IP address:
@@ -58,15 +58,15 @@
 						To update your DNS settings, log in to your domain provider and navigate to DNS settings (often
 						called “DNS Management,” “DNS Settings,” or “Zone File Editor”). For more information, follow
 						the domain instructions in the
-						<a href="https://github.com/wmde/wikibase-suite/blob/main/docs/installation/README.md" target="_blank" rel="noreferrer">installation guide</a>.
+						<a href="https://github.com/wmde/wikibase-suite/blob/main/docs/install/README.md" target="_blank" rel="noreferrer">installation guide</a>.
 					</p>
 				</div>
 			</cdx-message>
 		</div>
 
-		<div class="wizard-actions">
+		<div class="installer-actions">
 			<span></span>
-			<div class="wizard-actions__group">
+			<div class="installer-actions__group">
 				<cdx-button type="button" weight="quiet" :disabled="disabled" @click="emit( 'back' )">
 					Back
 				</cdx-button>
