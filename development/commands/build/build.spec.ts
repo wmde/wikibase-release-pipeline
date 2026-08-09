@@ -48,7 +48,10 @@ describe('wbs-dev build', () => {
 
 	it('composes optional multi-platform registry builds', () => {
 		const command = dryRun('--push', '--platform=linux/amd64,linux/arm64');
-		assert.match(command, /"linux\/amd64,linux\/arm64"/u);
+		assert.match(
+			command,
+			/"platforms": \[\s+"linux\/amd64",\s+"linux\/arm64"\s+\]/u
+		);
 		assert.match(command, /"type": "registry"/u);
 	});
 

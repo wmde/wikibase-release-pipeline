@@ -6,21 +6,214 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      build_arm64:
+        description: Build and assemble CI images for AMD64 and ARM64.
+        type: boolean
+        required: true
+        default: true
+      test_arm64:
+        description: Run every test suite against the ARM64 image set too.
+        type: boolean
+        required: true
+        default: false
+  workflow_call:
+    inputs:
+      build_arm64:
+        description: Build native ARM64 images and include them in CI manifests.
+        type: boolean
+        required: false
+        default: false
+      test_arm64:
+        description: Run every integration suite against the native ARM64 images.
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
   packages: write
 
-jobs:
-  build_and_test:
-    uses: ./.github/workflows/_build_and_test.yml
-    secrets: inherit
+env:
+  BUILD_CACHE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
+  BUILD_CACHE_PUSH: "true"
+  CI_IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
 
-  # Post-test CI step - to check all tests succeeded
-  # Github Branch Protection rules require this to pass to allow merging
+jobs:
+  setup:
+    runs-on: ubuntu-24.04
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      images: ${{ steps.targets.outputs.images }}
+      test_targets: ${{ steps.targets.outputs.test_targets }}
+    steps:
+      - name: Check for duplicate successful runs
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          paths_ignore: '["docs/**", "**/*.md", "**/*.txt", "*.md", "*.txt"]'
+          skip_after_successful_duplicate: true
+          cancel_others: true
+          do_not_skip: '["schedule"]'
+
+      - uses: actions/checkout@v4
+        if: steps.skip_check.outputs.should_skip != 'true'
+
+      - uses: ./.github/actions/setup-environment
+        if: steps.skip_check.outputs.should_skip != 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: List build and test targets
+        if: steps.skip_check.outputs.should_skip != 'true'
+        id: targets
+        shell: bash
+        working-directory: development
+        run: |
+          set -euo pipefail
+          images=$(./wbs-dev build --list=json | jq -ce '.')
+          test_targets=$(./wbs-dev test --list=json | jq -ce '.')
+          echo "images=$images" >> "$GITHUB_OUTPUT"
+          echo "test_targets=$test_targets" >> "$GITHUB_OUTPUT"
+
+  lint:
+    needs:
+      - setup
+    if: needs.setup.outputs.should_skip != 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - run: ./wbs-dev lint
+        working-directory: development
+
+  build:
+    name: build/${{ matrix.imageName }} (${{ matrix.architecture }})
+    needs:
+      - setup
+    if: needs.setup.outputs.should_skip != 'true'
+    runs-on: ${{ matrix.architecture == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        imageName: ${{ fromJSON(needs.setup.outputs.images) }}
+        architecture: ${{ fromJSON((inputs.build_arm64 || inputs.test_arm64) && '["amd64","arm64"]' || '["amd64"]') }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+          # Two Composer source images are AMD64-only intermediate stages. All
+          # final-image stages still execute natively on this ARM64 runner.
+          qemu_platforms: ${{ matrix.architecture == 'arm64' && 'amd64' || '' }}
+
+      - name: build-and-push/${{ matrix.imageName }} (${{ matrix.architecture }})
+        env:
+          IMAGE_NAME: ${{ matrix.imageName }}
+          ARCHITECTURE: ${{ matrix.architecture }}
+        run: |
+          ./wbs-dev build "$IMAGE_NAME" --push \
+            --platform="linux/$ARCHITECTURE" \
+            --set "$IMAGE_NAME.tags=$CI_IMAGE_REGISTRY/$IMAGE_NAME:dev-${GITHUB_RUN_ID}-$ARCHITECTURE"
+        working-directory: development
+
+  assemble:
+    name: assemble multi-platform CI images
+    needs:
+      - setup
+      - build
+    if: >-
+      always() &&
+      needs.setup.outputs.should_skip != 'true' &&
+      inputs.build_arm64 &&
+      needs.build.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Assemble multi-platform manifests
+        env:
+          IMAGES: ${{ needs.setup.outputs.images }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r image_name; do
+            image="$CI_IMAGE_REGISTRY/$image_name"
+            docker buildx imagetools create \
+              --tag "$image:dev-${GITHUB_RUN_ID}" \
+              "$image:dev-${GITHUB_RUN_ID}-amd64" \
+              "$image:dev-${GITHUB_RUN_ID}-arm64"
+          done < <(jq -r '.[]' <<< "$IMAGES")
+
+  test:
+    name: test/${{ matrix.target }} (${{ matrix.architecture }})
+    needs:
+      - setup
+      - build
+    if: needs.setup.outputs.should_skip != 'true'
+    runs-on: ${{ matrix.architecture == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    timeout-minutes: 30
+    env:
+      WBS_TEST_IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
+      WBS_TEST_IMAGE_TAG: dev-${{ github.run_id }}-${{ matrix.architecture }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.setup.outputs.test_targets) }}
+        architecture: ${{ fromJSON(inputs.test_arm64 && '["amd64","arm64"]' || '["amd64"]') }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - uses: ./.github/actions/run-test-target
+        with:
+          target: ${{ matrix.target }}
+          architecture: ${{ matrix.architecture }}
+
+  # Stable branch-protection check covering every build-and-test job.
   test-success:
-    needs: build_and_test
-    if: needs.build_and_test.result == 'success'
+    needs:
+      - setup
+      - lint
+      - build
+      - assemble
+      - test
+    if: >-
+      always() &&
+      needs.setup.result == 'success' &&
+      (
+        needs.setup.outputs.should_skip == 'true' ||
+        (
+          needs.lint.result == 'success' &&
+          needs.build.result == 'success' &&
+          needs.test.result == 'success' &&
+          (needs.assemble.result == 'success' || needs.assemble.result == 'skipped')
+        )
+      )
     runs-on: ubuntu-24.04
     steps:
       - run: "true"

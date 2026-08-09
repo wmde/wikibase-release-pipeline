@@ -106,7 +106,11 @@ if [ -n "$PLATFORMS" ]; then
 		echo "Multi-platform builds require --push or --publish; Docker cannot load a multi-platform image." >&2
 		exit 1
 	fi
-	BAKE_ARGS+=(--set "${TARGET}.platform=${PLATFORMS}")
+	IFS=',' read -r -a PLATFORM_LIST <<<"$PLATFORMS"
+	BAKE_ARGS+=(--set "${TARGET}.platform=${PLATFORM_LIST[0]}")
+	for PLATFORM in "${PLATFORM_LIST[@]:1}"; do
+		BAKE_ARGS+=(--set "${TARGET}.platform+=${PLATFORM}")
+	done
 fi
 
 BUILDER_NAME=wbs-application-builder

@@ -36,6 +36,12 @@ function topLevelBody(root: Parser.SyntaxNode): Parser.SyntaxNode {
 	return root.namedChildren.find((child) => child.type === 'body') ?? root;
 }
 
+function variableBlocks(contents: string): Parser.SyntaxNode[] {
+	return topLevelBody(parseHcl(contents)).namedChildren.filter(
+		(node) => node.type === 'block' && node.namedChildren[0]?.text === 'variable'
+	);
+}
+
 function decodeStringLiteral(node: Parser.SyntaxNode, context: string): string {
 	if (
 		node.type !== 'string_lit' ||
@@ -58,11 +64,7 @@ function decodeStringLiteral(node: Parser.SyntaxNode, context: string): string {
 }
 
 function variableBlock(contents: string, variable: string): Parser.SyntaxNode {
-	const body = topLevelBody(parseHcl(contents));
-	const matches = body.namedChildren.filter((node) => {
-		if (node.type !== 'block') {
-			return false;
-		}
+	const matches = variableBlocks(contents).filter((node) => {
 		const [kind, label] = node.namedChildren;
 		return (
 			kind?.type === 'identifier' &&
@@ -196,12 +198,20 @@ export function resolveBakeVariables(
 	contents: string,
 	cwd: string
 ): Map<string, BakeVariable> {
+	const environment = { ...process.env };
+	for (const block of variableBlocks(contents)) {
+		const label = block.namedChildren[1];
+		if (label?.type === 'string_lit') {
+			delete environment[decodeStringLiteral(label, 'Bake variable label')];
+		}
+	}
 	const result = spawnSync(
 		'docker',
 		['buildx', 'bake', '--file', '-', '--list=type=variables,format=json'],
 		{
 			cwd,
 			encoding: 'utf8',
+			env: environment,
 			input: contents,
 			maxBuffer: 10 * 1024 * 1024
 		}

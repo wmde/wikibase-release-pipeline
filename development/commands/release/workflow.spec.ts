@@ -19,7 +19,7 @@ import {
 	resolveProjectSelections
 } from '../../lib/projects.js';
 import { planVersionUpdate, type VersionPlan } from '../../lib/versioning.js';
-import { readVariable, replaceVariable } from '../update/source-utils.js';
+import { readVariable } from '../update/source-utils.js';
 import { defaultVersionPolicy, versionPolicyFor } from '../update/versions.js';
 
 const CLI = resolve('wbs-dev.ts');
@@ -191,19 +191,6 @@ describe('wbs-dev preparation and release workflow', () => {
 	});
 
 	describe('release preparation', () => {
-		it('updates only the exact requested source variable', () => {
-			const manifest = `${wikibaseManifest('1.0.0')}
-variable "WSOAUTH" {
-  default = {
-    revision = "bbb"
-  }
-}
-`;
-			const updated = replaceVariable(manifest, 'WIKIBASE.revision', 'ccc');
-			assert.equal(readVariable(updated, 'WIKIBASE.revision'), 'ccc');
-			assert.equal(readVariable(updated, 'WSOAUTH.revision'), 'bbb');
-		});
-
 		it('infers a minor version and generates a structured changelog entry', () => {
 			const fixture = createFixture();
 			write(

@@ -14,26 +14,18 @@ permissions:
   contents: write
   packages: write
 
-jobs:
-  build_and_test:
-    uses: ./.github/workflows/_build_and_test.yml
-    secrets: inherit
+env:
+  BUILD_CACHE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
+  BUILD_CACHE_PUSH: "true"
 
-  extract_tag_and_publish:
-    needs: build_and_test
-    if: needs.build_and_test.result == 'success'
+jobs:
+  release_metadata:
     runs-on: ubuntu-24.04
+    outputs:
+      image_name: ${{ steps.release.outputs.image_name }}
+      release_tags: ${{ steps.release.outputs.release_tags }}
 
     steps:
-      # The Bake manifest and wbs-dev validate that this tag exactly matches the
-      # selected image's stable IMAGE_VERSION before anything is published.
-      - name: Read image name from release tag
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          set -euo pipefail
-          echo "IMAGE_NAME=${RELEASE_TAG%%@*}" >> "$GITHUB_ENV"
-
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup-environment
@@ -41,19 +33,121 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
 
-      - name: Build image and push to Dockerhub with release tags
+      - name: Resolve release metadata from the Bake manifest
+        id: release
         env:
-          BUILD_CACHE_REGISTRY: ghcr.io/${{ github.repository_owner }}/wikibase
-          BUILD_CACHE_PUSH: "true"
+          RELEASE_TAG: ${{ github.ref_name }}
+        working-directory: development
         run: |
           set -euo pipefail
-          ./wbs-dev build "$IMAGE_NAME" --publish
-        working-directory: development
+          image_name=${RELEASE_TAG%%@*}
+          bake_output=$(./wbs-dev build "$image_name" --publish --dry-run)
+          bake_json=$(sed -n '/^{/,$p' <<< "$bake_output")
+          release_tags=$(jq -ce \
+            --arg target "${image_name}-release" \
+            '.target[$target].tags' <<< "$bake_json")
+
+          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+          echo "release_tags=$release_tags" >> "$GITHUB_OUTPUT"
+
+  publish_amd64:
+    name: publish (amd64)
+    needs: release_metadata
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Build the AMD64 release image
+        id: build
+        uses: ./.github/actions/build-image-digest
+        with:
+          image_name: ${{ needs.release_metadata.outputs.image_name }}
+          platform: linux/amd64
+
+  publish_arm64:
+    name: publish (arm64)
+    needs: release_metadata
+    if: vars.WBS_RELEASE_ARM64 == 'true'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+          # Two Composer source images are AMD64-only intermediate stages. All
+          # final-image stages still execute natively on this ARM64 runner.
+          qemu_platforms: amd64
+
+      - name: Build the ARM64 release image
+        id: build
+        uses: ./.github/actions/build-image-digest
+        with:
+          image_name: ${{ needs.release_metadata.outputs.image_name }}
+          platform: linux/arm64
+
+  publish_manifest:
+    name: publish release manifest
+    needs:
+      - release_metadata
+      - publish_amd64
+      - publish_arm64
+    if: >-
+      always() &&
+      needs.release_metadata.result == 'success' &&
+      needs.publish_amd64.result == 'success' &&
+      (vars.WBS_RELEASE_ARM64 != 'true' || needs.publish_arm64.result == 'success')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-environment
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token: ${{ secrets.WBS_PUBLISH_TOKEN }}
+
+      - name: Publish the release tags
+        env:
+          IMAGE_NAME: ${{ needs.release_metadata.outputs.image_name }}
+          RELEASE_ARM64: ${{ vars.WBS_RELEASE_ARM64 == 'true' }}
+          RELEASE_TAGS: ${{ needs.release_metadata.outputs.release_tags }}
+          AMD64_DIGEST: ${{ needs.publish_amd64.outputs.digest }}
+          ARM64_DIGEST: ${{ needs.publish_arm64.outputs.digest }}
+        run: |
+          set -euo pipefail
+          image="wikibase/$IMAGE_NAME"
+          sources=("$image@$AMD64_DIGEST")
+          if [ "$RELEASE_ARM64" = "true" ]; then
+            sources+=("$image@$ARM64_DIGEST")
+          fi
+          tag_arguments=()
+          while IFS= read -r release_tag; do
+            tag_arguments+=(--tag "$release_tag")
+          done < <(jq -r '.[]' <<< "$RELEASE_TAGS")
+          docker buildx imagetools create \
+            "${tag_arguments[@]}" \
+            "${sources[@]}"
 
       - name: Publish image documentation to Docker Hub
         uses: peter-evans/dockerhub-description@v4
         with:
           username: wmdetravisbot
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
-          repository: wikibase/${{ env.IMAGE_NAME }}
-          readme-filepath: development/images/${{ env.IMAGE_NAME }}/README.md
+          repository: wikibase/${{ needs.release_metadata.outputs.image_name }}
+          readme-filepath: development/images/${{ needs.release_metadata.outputs.image_name }}/README.md

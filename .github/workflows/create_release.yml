@@ -29,7 +29,10 @@ permissions:
 
 jobs:
   build_and_test:
-    uses: ./.github/workflows/_build_and_test.yml
+    uses: ./.github/workflows/build_and_test.yml
+    with:
+      build_arm64: ${{ vars.WBS_RELEASE_ARM64 == 'true' }}
+      test_arm64: ${{ vars.WBS_RELEASE_ARM64 == 'true' }}
     secrets: inherit
 
   release:

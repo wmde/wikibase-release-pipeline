@@ -22,7 +22,7 @@ Integration suite settings live in `tests/<suite>/<suite>.conf.ts`. Each combine
 
 ```bash
 # Run every test target sequentially
-wbs-dev test
+wbs-dev test all
 
 # Run the WBS DevTools test suite
 wbs-dev test wbs-dev-tools
@@ -59,7 +59,7 @@ wbs-dev test queryservice --setup
 - Change shared runner lifecycle code in `tests/_setup/` only when the behavior should apply to every suite.
 - Put reusable TypeScript declarations in `tests/_types/`.
 
-An existing suite automatically discovers a new spec only when its `<suite>.conf.ts` `specs` patterns include the new path. When a change needs a different combination of Compose profiles or overrides, add a suite directory with a matching `<suite>.conf.ts` and include it in the CI test matrix.
+An existing suite automatically discovers a new spec only when its `<suite>.conf.ts` `specs` patterns include the new path. Every direct child directory of `tests/` is a test target except underscore-prefixed infrastructure directories and `node_modules`; a target named `<suite>` therefore supplies `<suite>/<suite>.conf.ts`. The scattered development-tooling specs are exposed explicitly as the synthetic `wbs-dev-tools` target.
 
 ### WBS Tools Suite
 
@@ -87,7 +87,7 @@ Run the suite with `wbs-dev test wbs-dev-tools`.
 
 ## Test Configuration Notes
 
-Most local development needs no configuration. `wbs-dev test` builds local images before running integration suites; use `--skip-build` only when those images were built separately.
+Most local development needs no configuration. `wbs-dev test all` builds local images before running integration suites; use `--skip-build` only when those images were built separately. Running `wbs-dev test` in an interactive terminal presents a target picker.
 
 ### Common Local Adjustments
 
@@ -99,6 +99,14 @@ Most local development needs no configuration. `wbs-dev test` builds local image
 `development/local.env` overrides the test defaults. The root `.env.example`, [`test-services.env`](./test-services.env), and [`test-runner.env`](./test-runner.env) define service URLs, credentials, test-property IDs, runner timeouts, logging, and other test-system settings. Most contributors do not need to change them.
 
 CI uses `--skip-build` and supplies `WBS_TEST_IMAGE_REGISTRY` and `WBS_TEST_IMAGE_TAG` to select its workflow images. These settings are normally not needed for local development.
+
+### Architecture Coverage in CI
+
+CI always runs every suite above against the native AMD64 image set. The suites collectively exercise all distributed images: Wikibase through the repository, extension, client, pingback, and installer scenarios; WDQS and its frontend through `queryservice`; QuickStatements through `quickstatements`; OpenSearch through `opensearch`; and WBS Tools through its end-to-end suite.
+
+Create Release repeats the complete target matrix on native ARM64 runners when `WBS_RELEASE_ARM64=true`. Pull requests and pushes to `main` remain AMD64-only.
+
+For a one-off confidence run, start the **Build and Test** workflow manually and enable **Build and assemble CI images for AMD64 and ARM64** and **Run every test suite against the ARM64 image set too**. These inputs affect that run only, so an AMD64-only production interval does not remove the ARM64 test capability.
 
 ## Further Reading
 

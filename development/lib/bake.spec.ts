@@ -1,6 +1,11 @@
 import { describe, it } from 'mocha';
 import assert from 'node:assert/strict';
-import { readBakeScalar, readBakeValue, replaceBakeValue } from './bake.js';
+import {
+	readBakeScalar,
+	readBakeValue,
+	replaceBakeValue,
+	resolveBakeVariables
+} from './bake.js';
 
 const manifest = `# ünicode keeps source offsets honest
 variable "IMAGE_VERSION" { default = "8.0.0" } # retained
@@ -53,5 +58,22 @@ describe('Bake manifest editing', () => {
 			() => readBakeScalar('variable "X" { default = "${OTHER}" }', 'X'),
 			/no string default attribute/u
 		);
+	});
+
+	it('resolves checked-in defaults independently of the shell environment', () => {
+		const previous = process.env.IMAGE_VERSION;
+		process.env.IMAGE_VERSION = '99.0.0';
+		try {
+			assert.equal(
+				resolveBakeVariables(manifest, process.cwd()).get('IMAGE_VERSION'),
+				'8.0.0'
+			);
+		} finally {
+			if (previous === undefined) {
+				delete process.env.IMAGE_VERSION;
+			} else {
+				process.env.IMAGE_VERSION = previous;
+			}
+		}
 	});
 });

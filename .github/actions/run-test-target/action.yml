@@ -1,0 +1,38 @@
+name: Run WBS test target
+description: Run one tooling or integration test target and preserve failure diagnostics.
+inputs:
+  target:
+    description: Test target name.
+    required: true
+  architecture:
+    description: Image architecture used by the target.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Run wbs-dev tooling tests
+      if: inputs.target == 'wbs-dev-tools'
+      shell: bash
+      run: ./wbs-dev test wbs-dev-tools
+      working-directory: development
+
+    - name: Run ${{ inputs.target }} integration tests
+      if: inputs.target != 'wbs-dev-tools'
+      shell: bash
+      run: ./wbs-dev test "${{ inputs.target }}" --skip-build
+      working-directory: development
+
+    - name: Show logs
+      if: failure() && inputs.target != 'wbs-dev-tools'
+      shell: bash
+      run: |
+        ls -lahr "development/tests/${{ inputs.target }}/results" development/tests/${{ inputs.target }}/results/*
+        tail -n +1 development/tests/${{ inputs.target }}/results/*.log
+      continue-on-error: true
+
+    - uses: actions/upload-artifact@v4
+      if: failure() && inputs.target != 'wbs-dev-tools'
+      with:
+        name: dev-${{ github.run_id }}-${{ inputs.architecture }}-${{ inputs.target }}-test-results
+        path: development/tests/*/results

@@ -48,4 +48,13 @@ Run **Create a WBS Release** in GitHub Actions:
 
 Publish required images before WBS. **All projects** performs that ordering and waits for the images before publishing WBS.
 
-The workflow rebuilds and tests image releases before publishing them. It skips existing tags, so interrupted runs can be repeated. Never move a published tag; release a correction as a new version.
+Create Release runs the complete build and test gate once before creating any release tags. Each resulting image-tag workflow then builds and publishes only that image instead of repeating the complete matrix. Release tags should therefore be created through Create Release rather than pushed manually. Existing tags are skipped, so interrupted runs can be repeated. Never move a published tag; release a correction as a new version.
+
+When ARM64 releases are enabled, image releases are built natively for AMD64 and ARM64 and published as one OCI image index. Each architecture is pushed by digest first; the release tags resolved from the image's `docker-bake.hcl` are created only after the required builds succeed.
+
+The `WBS_RELEASE_ARM64` Actions repository variable controls the rollout without changing the manifests or release tooling:
+
+- `true` builds and tests both architectures, then publishes a multi-platform release.
+- Any other value builds, tests, and publishes AMD64 only. This is the temporary production fallback.
+
+Set it under **Repository settings → Secrets and variables → Actions → Variables**. Pull-request and `main` CI remain AMD64-only regardless of this release setting; use the manually dispatched **Build and Test** workflow for one-off ARM64 confidence runs.
