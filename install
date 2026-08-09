@@ -69,7 +69,11 @@ else
 
   if [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
     echo "Pulling $WBS_TOOLS_IMAGE..."
-    docker pull "$WBS_TOOLS_IMAGE"
+    if ! tools_pull_output="$(docker pull "$WBS_TOOLS_IMAGE" 2>&1)"; then
+      printf '%s\n' "$tools_pull_output"
+      echo "wbs: WBS Tools image pull failed."
+      exit 1
+    fi
     export WBS_TOOLS_SKIP_PULL=true
     BOOTSTRAP_PULLED_TOOLS=true
   fi
