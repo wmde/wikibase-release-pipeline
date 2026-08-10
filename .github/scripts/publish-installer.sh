@@ -48,10 +48,6 @@ wait_for_publication() {
 
 prepare_pr() {
   validate_origin_repository
-  [[ "${SOURCE_REPOSITORY:-}" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || {
-    echo "Invalid source repository." >&2
-    exit 1
-  }
   [[ "${PR_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || {
     echo "Invalid PR number." >&2
     exit 1
@@ -97,10 +93,11 @@ prepare_pr() {
       '. + {($name): $image}' <<< "$images_json")"
   done
 
+  # Coordinated image publication currently supports same-repository PRs.
   jq -n \
     --arg event_type publish-pr-installation \
     --arg origin_repository "$ORIGIN_REPOSITORY" \
-    --arg source_repository "$SOURCE_REPOSITORY" \
+    --arg source_repository "$ORIGIN_REPOSITORY" \
     --argjson pr "$PR_NUMBER" \
     --arg commit "$PR_HEAD_SHA" \
     --argjson current "$current" \
