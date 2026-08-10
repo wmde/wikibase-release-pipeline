@@ -65,24 +65,20 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           AUTOMATIC_PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
           AUTOMATIC_HEAD_SHA: ${{ github.event.workflow_run.pull_requests[0].head.sha }}
-          AUTOMATIC_SOURCE_REPOSITORY: ${{ github.event.workflow_run.pull_requests[0].head.repo.full_name }}
           MANUAL_TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           if [[ "$EVENT_NAME" == 'workflow_run' ]]; then
             pr_number="$AUTOMATIC_PR_NUMBER"
             head_sha="$AUTOMATIC_HEAD_SHA"
-            source_repository="$AUTOMATIC_SOURCE_REPOSITORY"
           else
             pr_number="${MANUAL_TARGET#pr-}"
             pull_request="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number")"
             head_sha="$(jq -r '.head.sha' <<< "$pull_request")"
-            source_repository="$(jq -r '.head.repo.full_name' <<< "$pull_request")"
           fi
           {
             echo "number=$pr_number"
             echo "head_sha=$head_sha"
-            echo "source_repository=$source_repository"
           } >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
@@ -95,7 +91,6 @@ jobs:
       - name: Publish coordinated PR images
         env:
           ORIGIN_REPOSITORY: ${{ github.repository }}
-          SOURCE_REPOSITORY: ${{ steps.pull-request.outputs.source_repository }}
           PR_NUMBER: ${{ steps.pull-request.outputs.number }}
           PR_HEAD_SHA: ${{ steps.pull-request.outputs.head_sha }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
