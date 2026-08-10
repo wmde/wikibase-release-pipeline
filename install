@@ -53,8 +53,11 @@ echo
 echo "Wikibase Suite (WBS)"
 echo
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+if [[ -n "$SCRIPT_DIR" && -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
   WBS_DIR="$SCRIPT_DIR"
 else
   if ! command -v docker >/dev/null 2>&1; then

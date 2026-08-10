@@ -77,6 +77,13 @@ run_bootstrap() {
     mv "$case_dir/bootstrap/install.tmp" "$case_dir/bootstrap/install"
   fi
 
+  local installer_input=/dev/null
+  local -a installer_command=(bash "$case_dir/bootstrap/install")
+  if [[ "${WBS_TEST_INSTALL_FROM_STDIN:-false}" == true ]]; then
+    installer_input="$case_dir/bootstrap/install"
+    installer_command=(bash -s --)
+  fi
+
   if [[ "${WBS_TEST_USE_INSTALL_DEFAULT:-false}" == true ]]; then
     env -u WBS_TOOLS_IMAGE \
       WBS_DIR="$case_dir/wikibase-suite" \
@@ -86,7 +93,7 @@ run_bootstrap() {
       WBS_REF='' \
       WBS_TOOLS_SKIP_PULL=true \
       WBS_SKIP_DEPENDENCY_INSTALLS=true \
-      bash "$case_dir/bootstrap/install" "$@"
+      "${installer_command[@]}" "$@" < "$installer_input"
   else
     WBS_DIR="$case_dir/wikibase-suite" \
       WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
@@ -96,7 +103,7 @@ run_bootstrap() {
       WBS_TOOLS_IMAGE="$bootstrap_image" \
       WBS_TOOLS_SKIP_PULL=true \
       WBS_SKIP_DEPENDENCY_INSTALLS=true \
-      bash "$case_dir/bootstrap/install" "$@"
+      "${installer_command[@]}" "$@" < "$installer_input"
   fi
 }
 
@@ -110,6 +117,11 @@ grep -qx 'install' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 grep -qx -- '--web' "$TEST_ROOT/latest/wikibase-suite/wbs-invocation"
 test -f "$TEST_ROOT/latest/wikibase-suite/.wbs/logs/wbs.log"
 grep -q '===== Bootstrap =====' "$TEST_ROOT/latest/wikibase-suite/.wbs/logs/wbs.log"
+
+WBS_TEST_INSTALL_FROM_STDIN=true \
+  run_bootstrap piped "$fixture_remote"
+grep -q '^WBS_VERSION=1.10.0$' "$TEST_ROOT/piped/wikibase-suite/.wbs/version"
+grep -qx -- '--web' "$TEST_ROOT/piped/wikibase-suite/wbs-invocation"
 
 run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0' --local --from-source --debug
 grep -q '^WBS_VERSION=1.9.0$' "$TEST_ROOT/explicit/wikibase-suite/.wbs/version"
