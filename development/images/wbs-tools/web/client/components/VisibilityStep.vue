@@ -34,7 +34,7 @@
 				</p>
 				<p>
 					Write to us if you change your mind:
-					<a href="mailto:support@wikimedia.de">support@wikimedia.de</a>
+					<a href="mailto:wikibase-suite-support@wikimedia.de">wikibase-suite-support@wikimedia.de</a>
 				</p>
 			</div>
 		</div>
