@@ -1,9 +1,9 @@
-name: Publish documentation
+name: Publish Documentation
 
 on:
   push:
     branches:
-      - wbs-8.0.0-product-first-monorepo
+      - main
     paths:
       - ".github/pages/**"
       - ".github/workflows/publish_documentation.yml"

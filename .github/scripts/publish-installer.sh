@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-readonly INSTALLER_REPOSITORY="wmde/unused-repository"
-readonly PAGES_ROOT="https://wmde.github.io/unused-repository"
+readonly INSTALLER_REPOSITORY="wmde/wikibase-suite-install"
+readonly PAGES_ROOT="https://wmde.github.io/wikibase-suite-install"
 readonly STATE_DIR="${RUNNER_TEMP:-/tmp}/wikibase-suite-installer"
 readonly PR_PAYLOAD_PATH="$STATE_DIR/pr-dispatch.json"
 readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"

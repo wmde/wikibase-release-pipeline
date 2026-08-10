@@ -1,4 +1,4 @@
-name: 🧪 Build and Test
+name: Build and Test
 
 on:
   pull_request:
@@ -231,60 +231,3 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - run: "true"
-
-  # A manual recovery path when automatic PR installer publication needs to
-  # be rerun or inspected independently.
-  publish-pr-installer:
-    needs:
-      - test-success
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Resolve the open pull request
-        id: pull-request
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          pull_request="$(gh api --method GET "repos/$GITHUB_REPOSITORY/pulls" \
-            -f state=open \
-            -f head="$GITHUB_REPOSITORY_OWNER:$GITHUB_REF_NAME" \
-            --jq '.[0]')"
-          if [[ -z "$pull_request" || "$pull_request" == "null" ]]; then
-            echo "No open pull request found for $GITHUB_REF_NAME; nothing to publish."
-            echo "found=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          {
-            echo "found=true"
-            echo "number=$(jq -r '.number' <<< "$pull_request")"
-            echo "head_sha=$(jq -r '.head.sha' <<< "$pull_request")"
-            echo "source_repository=$(jq -r '.head.repo.full_name' <<< "$pull_request")"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Log in to GHCR
-        if: steps.pull-request.outputs.found == 'true'
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish coordinated PR images
-        if: steps.pull-request.outputs.found == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ORIGIN_REPOSITORY: ${{ github.repository }}
-          SOURCE_REPOSITORY: ${{ steps.pull-request.outputs.source_repository }}
-          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
-          PR_HEAD_SHA: ${{ steps.pull-request.outputs.head_sha }}
-        run: .github/scripts/publish-installer.sh prepare-pr
-
-      - name: Dispatch PR installer publication
-        if: steps.pull-request.outputs.found == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GH_WBS_BOT_TOKEN }}
-        run: .github/scripts/publish-installer.sh dispatch-pr

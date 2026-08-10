@@ -1,4 +1,4 @@
-name: 📦 Build and Publish a WBS Image Release to Dockerhub
+name: Build and Publish an Image
 
 on:
   push:
@@ -41,8 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           image_name=${RELEASE_TAG%%@*}
-          bake_output=$(./wbs-dev build "$image_name" --publish --dry-run)
-          bake_json=$(sed -n '/^{/,$p' <<< "$bake_output")
+          bake_json=$(./wbs-dev build "$image_name" --publish --dry-run)
           release_tags=$(jq -ce \
             --arg target "${image_name}-release" \
             '.target[$target].tags' <<< "$bake_json")
