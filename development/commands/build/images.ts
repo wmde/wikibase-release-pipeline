@@ -12,7 +12,6 @@ export async function buildImages(
 ): Promise<void> {
 	await runTasks(
 		images.map( ( image ) => ( {
-			label: `build ${ image }`,
 			command: 'commands/build/image.sh',
 			args: [ image, ...forwarded ]
 		} ) ),
