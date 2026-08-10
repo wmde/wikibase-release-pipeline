@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly INSTALLER_REPOSITORY="wmde/wikibase-suite-install"
+readonly PAGES_ROOT="https://wmde.github.io/wikibase-suite-install"
+readonly STATE_DIR="${RUNNER_TEMP:-/tmp}/wikibase-suite-installer"
+readonly PR_PAYLOAD_PATH="$STATE_DIR/pr-dispatch.json"
+readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"
+readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
+
+validate_origin_repository() {
+  [[ "${ORIGIN_REPOSITORY:-}" == "wmde/wikibase-release-pipeline" ]] || {
+    echo "Unexpected origin repository: ${ORIGIN_REPOSITORY:-unset}" >&2
+    exit 1
+  }
+}
+
+dispatch_payload() {
+  local payload_path="$1"
+  [[ -s "$payload_path" ]] || {
+    echo "No installer publication payload found at $payload_path." >&2
+    exit 1
+  }
+  gh api --method POST \
+    "repos/$INSTALLER_REPOSITORY/dispatches" \
+    --input "$payload_path"
+}
+
+wait_for_publication() {
+  local url="$1"
+  local expected="$2"
+  local description="$3"
+  local content
+
+  echo "Waiting for $description at $url..."
+  for _ in {1..60}; do
+    if content="$(curl --location --connect-timeout 3 --max-time 5 --fail --silent --show-error "$url" 2>/dev/null)" &&
+      grep -Fq "$expected" <<< "$content"; then
+      echo "Published $description."
+      return
+    fi
+    sleep 5
+  done
+  echo "Timed out waiting for $description at $url." >&2
+  exit 1
+}
+
+prepare_pr() {
+  validate_origin_repository
+  [[ "${SOURCE_REPOSITORY:-}" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || {
+    echo "Invalid source repository." >&2
+    exit 1
+  }
+  [[ "${PR_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || {
+    echo "Invalid PR number." >&2
+    exit 1
+  }
+  [[ "${PR_HEAD_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || {
+    echo "Invalid PR head SHA." >&2
+    exit 1
+  }
+
+  mkdir -p "$STATE_DIR"
+  rm -f "$PR_PAYLOAD_PATH"
+
+  local short_sha="${PR_HEAD_SHA:0:12}"
+  local tag="pr-${PR_NUMBER}-${short_sha}"
+  local current_sha
+  current_sha="$(gh api "repos/$ORIGIN_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)"
+  local current=false
+  if [[ "$current_sha" == "$PR_HEAD_SHA" ]]; then
+    current=true
+  fi
+
+  local images_json='{}'
+  local image_name image source_amd64 source_arm64
+  local -a sources
+  for image_name in "${IMAGES[@]}"; do
+    image="ghcr.io/wmde/wikibase/$image_name"
+    source_amd64="$image:$tag-amd64"
+    source_arm64="$image:$tag-arm64"
+    if ! docker buildx imagetools inspect "$source_amd64" >/dev/null 2>&1; then
+      echo "No PR image found at $source_amd64; this successful run did not publish a PR set."
+      return
+    fi
+
+    sources=("$source_amd64")
+    if docker buildx imagetools inspect "$source_arm64" >/dev/null 2>&1; then
+      sources+=("$source_arm64")
+    fi
+    docker buildx imagetools create --tag "$image:$tag" "${sources[@]}"
+    if [[ "$current" == true ]]; then
+      docker buildx imagetools create --tag "$image:pr-$PR_NUMBER" "$image:$tag"
+    fi
+    images_json="$(jq -c --arg name "$image_name" --arg image "$image:$tag" \
+      '. + {($name): $image}' <<< "$images_json")"
+  done
+
+  jq -n \
+    --arg event_type publish-pr-installation \
+    --arg origin_repository "$ORIGIN_REPOSITORY" \
+    --arg source_repository "$SOURCE_REPOSITORY" \
+    --argjson pr "$PR_NUMBER" \
+    --arg commit "$PR_HEAD_SHA" \
+    --argjson current "$current" \
+    --argjson images "$images_json" \
+    '{
+      event_type: $event_type,
+      client_payload: {
+        schemaVersion: 1,
+        originRepository: $origin_repository,
+        sourceRepository: $source_repository,
+        pr: $pr,
+        commit: $commit,
+        current: $current,
+        images: $images
+      }
+    }' > "$PR_PAYLOAD_PATH"
+}
+
+dispatch_pr() {
+  if [[ ! -s "$PR_PAYLOAD_PATH" ]]; then
+    echo "No coordinated PR payload was produced; skipping installer publication."
+    return
+  fi
+  dispatch_payload "$PR_PAYLOAD_PATH"
+
+  local pr commit short_sha current
+  pr="$(jq -r '.client_payload.pr' "$PR_PAYLOAD_PATH")"
+  commit="$(jq -r '.client_payload.commit' "$PR_PAYLOAD_PATH")"
+  current="$(jq -r '.client_payload.current' "$PR_PAYLOAD_PATH")"
+  short_sha="${commit:0:12}"
+  wait_for_publication \
+    "$PAGES_ROOT/pr-$pr-$short_sha" "export WBS_REF='$commit'" \
+    "immutable PR installer"
+  wait_for_publication \
+    "$PAGES_ROOT/manifests/pr-$pr-$short_sha.json" "\"commit\": \"$commit\"" \
+    "PR installation manifest"
+  if [[ "$current" == true ]]; then
+    wait_for_publication \
+      "$PAGES_ROOT/pr-$pr" "export WBS_REF='$commit'" \
+      "current PR installer"
+  fi
+}
+
+publish_release() {
+  validate_origin_repository
+
+  # shellcheck disable=SC1091
+  source .wbs/version
+  [[ "${WBS_VERSION:-}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+    echo "Invalid WBS_VERSION in .wbs/version." >&2
+    exit 1
+  }
+  local release_ref="wbs@$WBS_VERSION"
+  git rev-parse --verify --quiet "refs/tags/$release_ref" >/dev/null || {
+    echo "Release tag $release_ref was not created." >&2
+    exit 1
+  }
+
+  mkdir -p "$STATE_DIR"
+  jq -n \
+    --arg event_type publish-release \
+    --arg origin_repository "$ORIGIN_REPOSITORY" \
+    --arg source_repository "$ORIGIN_REPOSITORY" \
+    --arg version "$WBS_VERSION" \
+    '{
+      event_type: $event_type,
+      client_payload: {
+        schemaVersion: 1,
+        originRepository: $origin_repository,
+        sourceRepository: $source_repository,
+        version: $version
+      }
+    }' > "$RELEASE_PAYLOAD_PATH"
+
+  dispatch_payload "$RELEASE_PAYLOAD_PATH"
+  local expected="export WBS_REF='$release_ref'"
+  wait_for_publication "$PAGES_ROOT/$WBS_VERSION" "$expected" \
+    "Wikibase Suite $WBS_VERSION installer"
+  wait_for_publication "$PAGES_ROOT/latest" "$expected" \
+    "latest release installer"
+  wait_for_publication "$PAGES_ROOT/" "$expected" \
+    "canonical release installer"
+}
+
+case "${1:-}" in
+  prepare-pr) prepare_pr ;;
+  dispatch-pr) dispatch_pr ;;
+  publish-release) publish_release ;;
+  *)
+    echo "Usage: $0 {prepare-pr|dispatch-pr|publish-release}" >&2
+    exit 2
+    ;;
+esac

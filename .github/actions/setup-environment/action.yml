@@ -35,7 +35,7 @@ runs:
         username: ${{ github.repository_owner }}
         password: ${{ inputs.github_token }}
 
-    - name: Forward registry credentials to build tools
+    - name: Forward registry credentials to wbs-dev
       shell: bash
       env:
         GHCR_TOKEN: ${{ inputs.github_token }}
