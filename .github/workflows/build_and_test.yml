@@ -111,6 +111,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - uses: ./.github/actions/setup-environment
         with:
@@ -124,10 +126,20 @@ jobs:
         env:
           IMAGE_NAME: ${{ matrix.imageName }}
           ARCHITECTURE: ${{ matrix.architecture }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          ./wbs-dev build "$IMAGE_NAME" --push \
+          set -euo pipefail
+          build_args=(
+            "$IMAGE_NAME" --push
             --platform="linux/$ARCHITECTURE" \
             --set "$IMAGE_NAME.tags=$CI_IMAGE_REGISTRY/$IMAGE_NAME:dev-${GITHUB_RUN_ID}-$ARCHITECTURE"
+          )
+          if [[ -n "$PR_NUMBER" && "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            pr_tag="pr-${PR_NUMBER}-${PR_HEAD_SHA:0:12}-${ARCHITECTURE}"
+            build_args+=(--set "$IMAGE_NAME.tags+=$CI_IMAGE_REGISTRY/$IMAGE_NAME:$pr_tag")
+          fi
+          ./wbs-dev build "${build_args[@]}"
         working-directory: development
 
   assemble:
@@ -183,6 +195,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - uses: ./.github/actions/setup-environment
         with:

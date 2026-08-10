@@ -83,3 +83,12 @@ jobs:
           fi
 
           ./wbs-dev release "${release_target[@]}" "${release_options[@]}"
+
+      - name: Publish canonical installer
+        if: >-
+          inputs.dry_run == false &&
+          (inputs.project_name == 'wbs' || inputs.project_name == 'All projects')
+        env:
+          GH_TOKEN: ${{ secrets.GH_WBS_BOT_TOKEN }}
+          ORIGIN_REPOSITORY: ${{ github.repository }}
+        run: .github/scripts/publish-installer.sh publish-release

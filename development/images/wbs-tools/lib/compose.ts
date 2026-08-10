@@ -45,6 +45,10 @@ function composeArgs( localImages = false ): string[] {
 		args.push( '--env-file', localEnvFile );
 	}
 	args.push( '--file', join( repositoryRoot, 'docker-compose.yml' ) );
+	const managedOverride = join( repositoryRoot, 'docker-compose.override.yml' );
+	if ( existsSync( managedOverride ) ) {
+		args.push( '--file', managedOverride );
+	}
 	if ( localImages ) {
 		args.push( '--file', join( repositoryRoot, 'development/docker-compose.local-images.yml' ) );
 	}

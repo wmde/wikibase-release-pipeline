@@ -117,6 +117,18 @@ grep -qx -- '--local' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--from-source' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--debug' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 
+commit_ref="$(git --git-dir="$fixture_remote" rev-parse 'refs/tags/wbs@1.9.0^{commit}')"
+run_bootstrap commit "$fixture_remote" --wbs-ref "$commit_ref"
+test "$(git -C "$TEST_ROOT/commit/wikibase-suite" rev-parse HEAD)" = "$commit_ref"
+
+if WBS_INSTALL_MANIFEST_URL='https://127.0.0.1:1/missing.json' \
+  run_bootstrap manifest-failure "$fixture_remote" --wbs-ref "$commit_ref" \
+  >"$TEST_ROOT/manifest-failure.log" 2>&1; then
+  echo "Expected bootstrap with an unavailable installation manifest to fail."
+  exit 1
+fi
+test ! -e "$TEST_ROOT/manifest-failure/wikibase-suite"
+
 WBS_TEST_USE_INSTALL_DEFAULT=true \
   run_bootstrap checkout-pin "$fixture_remote" --wbs-ref 'wbs@1.9.0'
 grep -qx 'wikibase/wbs-tools:0.9.0' \

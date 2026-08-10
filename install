@@ -13,6 +13,7 @@ WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
 WBS_DOCKER_DIR="${WBS_DOCKER_DIR:-$WBS_DIR}"
 WBS_DOCKER_REPO_URL="${WBS_DOCKER_REPO_URL:-$WBS_REPO_URL}"
 WBS_REF="${WBS_REF:-}"
+WBS_INSTALL_MANIFEST_URL="${WBS_INSTALL_MANIFEST_URL:-}"
 RUNTIME_ARGS=()
 WEB_SELECTED=false
 BOOTSTRAP_PULLED_TOOLS=false
@@ -87,6 +88,9 @@ else
   fi
   if [[ -n "$WBS_REF" ]]; then
     prepare_args+=(--ref "$WBS_REF")
+  fi
+  if [[ -n "$WBS_INSTALL_MANIFEST_URL" ]]; then
+    prepare_args+=(--manifest-url "$WBS_INSTALL_MANIFEST_URL")
   fi
   docker run --rm \
     -v "$target_parent:$target_parent" \

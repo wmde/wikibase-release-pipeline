@@ -6,6 +6,7 @@ export function registerPrepareCommand( install: Command ): void {
 		.description( 'Clone a Wikibase Suite release into a host-mounted directory.' )
 		.requiredOption( '--target <path>' )
 		.option( '--repository <url>', 'WBS Git repository.', 'https://github.com/wmde/wikibase-suite.git' )
-		.option( '--ref <ref>', 'Branch or release tag.' )
+		.option( '--ref <ref>', 'Branch, release tag, or commit.' )
+		.option( '--manifest-url <url>', 'Published installation manifest.' )
 		.action( prepareRepository );
 }
