@@ -73,7 +73,7 @@ ensure_wbs_tools_image() {
 
 run_wbs_tools_command() {
   local tty_flags=()
-  if [[ "${WBS_TOOLS_FORCE_TTY:-false}" == true || ( -t 0 && -t 1 ) ]]; then
+  if [[ -t 0 && -t 1 ]]; then
     tty_flags=(-it)
   else
     tty_flags=(-i)

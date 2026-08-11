@@ -122,9 +122,9 @@ exec 3>&-
 export WBS_STATE_DIR WBS_LOG_PATH INSTALLATION_LOG_PATH WBS_LOG_INITIALIZED=1
 export WBS_DIR WBS_TOOLS_IMAGE WBS_DOCKER_BOOTSTRAPPED
 if [[ "$WBS_BOOTSTRAP_TERMINAL_AVAILABLE" == true ]]; then
-  # `curl … | bash` consumes standard input while loading this script. Hand the
-  # delegated installer the user's terminal so safety confirmations still work.
-  export WBS_TOOLS_FORCE_TTY=true
-  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" <&4
+  # Hand all terminal streams to the delegated installer. Docker uses stdout to
+  # size its container TTY, so leaving it attached to tee would collapse prompts
+  # even though stdin is interactive. WBS Tools records its own output from here.
+  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" <&4 >&4 2>&4
 fi
 exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"
