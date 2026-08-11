@@ -44,7 +44,7 @@ services:
 
   wikibase-jobrunner:
     image: wikibase/wikibase:8
-    command: /jobrunner-entrypoint.sh
+    command: jobrunner
     environment:
       WIKIMEDIA_OAUTH_CONSUMER_TOKEN: ${WIKIMEDIA_OAUTH_CONSUMER_TOKEN:-}
       WIKIMEDIA_OAUTH_SECRET_TOKEN: ${WIKIMEDIA_OAUTH_SECRET_TOKEN:-}

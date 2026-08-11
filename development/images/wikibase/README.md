@@ -18,7 +18,7 @@ This image contains the Wikibase extension running on top of MediaWiki. Wikibase
     - If `/config/LocalSettings.php` is missing, the image runs MediaWiki setup using the current image and environment.
 
 - **Job runner**
-    MediaWiki/Wikibase depends on [background jobs](https://www.mediawiki.org/wiki/Manual:Job_queue), which can run during HTTP requests or through a dedicated runner. The image's default configuration requires an external job runner. Run a second container from this image with its command set to `/jobrunner-entrypoint.sh`, and share the same configuration volume with it.
+    MediaWiki/Wikibase depends on [background jobs](https://www.mediawiki.org/wiki/Manual:Job_queue), which can run during HTTP requests or through a dedicated runner. The image's default configuration requires an external job runner. Run a second container from this image with its command set to `jobrunner`, and share the same configuration volume with it.
 
 ### 2) Set the environment variables
 
@@ -96,6 +96,12 @@ The bundled Wikibase Suite extension adds entries to the `Special:Version` page 
 The same values are also exposed through the Action API metadata endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=versions&format=json`
 
 When Wikimedia login is enabled, its aggregate linked-user count is exposed through the public metrics endpoint: `/w/api.php?action=query&meta=wikibasesuite&wbsprop=publicmetrics&format=json`. The `publicmetrics` object is empty when Wikimedia login is not enabled.
+
+### Externally managed configuration
+
+Set MediaWiki's native `MW_CONFIG_FILE` environment variable to load a complete configuration entry point from another path. The selected file may contain static `LocalSettings.php` configuration or resolve configuration dynamically. Bundled extensions remain available, but your configuration must load those you want to enable.
+
+> ⚠️ `MW_CONFIG_FILE` is an advanced custom-configuration option not recommended for most users. It replaces the default WBS configuration and bypasses all WBS bootstrapping, making you responsible for MediaWiki installation, updates, configuration persistence, and extension loading. WBS setup variables are not applied automatically.
 
 ## Internal filesystem layout
 

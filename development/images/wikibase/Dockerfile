@@ -228,9 +228,10 @@ RUN chmod o-w /var/www/html && \
     chown www-data /var/www/html/images -R
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
-COPY entrypoint.sh /entrypoint.sh
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+COPY --chmod=755 prepare-runtime.sh /prepare-runtime.sh
+COPY --chmod=755 wbs-bootstrap.sh /wbs-bootstrap.sh
 COPY callback.sh /callback.sh
-COPY jobrunner-entrypoint.sh /jobrunner-entrypoint.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 COPY htaccess /var/www/html/.htaccess
 COPY extensions/WikibaseSuite /var/www/html/extensions/WikibaseSuite
@@ -245,5 +246,5 @@ ENV DB_NAME=my_wiki \
     MW_WG_SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en
 
-ENTRYPOINT ["/bin/bash"]
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["web"]

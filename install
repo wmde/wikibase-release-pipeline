@@ -39,7 +39,7 @@ if [[ -n "$SCRIPT_DIR" && -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; 
   WBS_DIR="$SCRIPT_DIR"
 else
   if ! command -v docker >/dev/null 2>&1; then
-    echo "Installing Docker..."
+    echo "🔧 Installing Docker..."
     if ! docker_install_output="$({ curl -fsSL https://get.docker.com | sh; } 2>&1)"; then
       printf '%s\n' "$docker_install_output"
       echo "wbs: Docker installation failed."
