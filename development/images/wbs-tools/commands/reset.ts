@@ -3,16 +3,16 @@ import { Option, type Command } from 'commander';
 import process from 'node:process';
 import { configurationExists, missingConfigurationKeys, reset } from '../lib/compose.js';
 import {
-	stopWebInstaller,
-	webInstallerIsRunning
-} from '../lib/web-installer-controller.js';
+	installerSessionIsRunning,
+	stopInstallerSession
+} from '../lib/installer-session.js';
 
 type ResetOptions = {
 	force?: boolean;
 };
 
 async function resetSuite( options: ResetOptions ): Promise<void> {
-	const installerRunning = await webInstallerIsRunning();
+	const installerRunning = await installerSessionIsRunning();
 	const environmentExists = configurationExists();
 	const suiteIsConfigured = missingConfigurationKeys().length === 0;
 	if ( !installerRunning && !environmentExists ) {
@@ -67,7 +67,7 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 		}
 	}
 	if ( stopInstaller ) {
-		await stopWebInstaller();
+		await stopInstallerSession();
 		console.log( 'The Wikibase Suite web installer was stopped.' );
 	}
 	await reset( {

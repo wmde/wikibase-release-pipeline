@@ -17,7 +17,6 @@ export type ResetOptions = {
 
 const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
-const localEnvFile = join( repositoryRoot, 'local.env' );
 const REQUIRED_CONFIGURATION_KEYS = [
 	'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST', 'MW_ADMIN_NAME', 'MW_ADMIN_EMAIL',
 	'MW_ADMIN_PASS', 'DB_PASS', 'DB_NAME', 'DB_USER'
@@ -35,26 +34,22 @@ export function configurationExists(): boolean {
 	return existsSync( envFile );
 }
 
-function composeArgs( localImages = false ): string[] {
-	const args = [
-		'compose',
+function composeArgs( localImages = false, interactiveProgress = false ): string[] {
+	const args = [ 'compose' ];
+	if ( interactiveProgress ) {
+		args.push( '--ansi', 'always', '--progress', 'tty' );
+	}
+	args.push(
 		'--project-directory', repositoryRoot,
 		'--env-file', envFile
-	];
-	if ( existsSync( localEnvFile ) ) {
-		args.push( '--env-file', localEnvFile );
-	}
-	args.push( '--file', join( repositoryRoot, 'docker-compose.yml' ) );
-	const managedOverride = join( repositoryRoot, 'docker-compose.override.yml' );
-	if ( existsSync( managedOverride ) ) {
-		args.push( '--file', managedOverride );
-	}
+	);
 	if ( localImages ) {
+		args.push( '--file', join( repositoryRoot, 'docker-compose.yml' ) );
+		const conventionalOverride = join( repositoryRoot, 'docker-compose.override.yml' );
+		if ( existsSync( conventionalOverride ) ) {
+			args.push( '--file', conventionalOverride );
+		}
 		args.push( '--file', join( repositoryRoot, 'development/docker-compose.local-images.yml' ) );
-	}
-	const localOverride = join( repositoryRoot, 'docker-compose.local.yml' );
-	if ( existsSync( localOverride ) ) {
-		args.push( '--file', localOverride );
 	}
 	return args;
 }
@@ -86,7 +81,7 @@ export async function up( options: SuiteOptions = {} ): Promise<void> {
 		console.log( 'Building Wikibase Suite images from this checkout...' );
 		await buildImages();
 	}
-	const args = composeArgs( localImages );
+	const args = composeArgs( localImages, process.stdout.isTTY === true );
 	if ( options.update ) {
 		console.log( 'Pulling selected Wikibase Suite images...' );
 		await runProcess( 'docker', [ ...args, 'pull' ] );

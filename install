@@ -21,7 +21,9 @@ RUNTIME_ARGS=(--web "$@")
 BOOTSTRAP_PULLED_TOOLS=false
 WBS_DOCKER_BOOTSTRAPPED=false
 
-exec > >(tee "$BOOTSTRAP_LOG_PATH") 2>&1
+: > "$BOOTSTRAP_LOG_PATH"
+exec 3>> "$BOOTSTRAP_LOG_PATH"
+exec > >(tee -a "$BOOTSTRAP_LOG_PATH") 2>&1
 
 echo
 echo "Wikibase Suite (WBS)"
@@ -71,11 +73,19 @@ else
   if [[ -n "$WBS_INSTALL_MANIFEST_URL" ]]; then
     prepare_args+=(--manifest-url "$WBS_INSTALL_MANIFEST_URL")
   fi
-  docker run --rm \
+  if ! prepare_output="$(docker run --rm \
     -v "$target_parent:$target_parent" \
     "${repository_mount[@]}" \
     "$WBS_TOOLS_IMAGE" \
-    node /app/dist/wbs.js "${prepare_args[@]}"
+    node /app/dist/wbs.js "${prepare_args[@]}" 2>&1)"; then
+    printf '%s\n' "$prepare_output"
+    echo "wbs: Wikibase Suite checkout preparation failed."
+    exit 1
+  fi
+  if [[ -n "$prepare_output" ]]; then
+    # Successful checkout details are diagnostic rather than user-facing.
+    printf '%s\n' "$prepare_output" >&3
+  fi
 
 fi
 
@@ -99,6 +109,7 @@ touch "$WBS_LOG_PATH"
   cat "$BOOTSTRAP_LOG_PATH"
   echo "===== WBS tools ====="
 } >> "$WBS_LOG_PATH"
+exec 3>&-
 export WBS_STATE_DIR WBS_LOG_PATH INSTALLATION_LOG_PATH WBS_LOG_INITIALIZED=1
 export WBS_DIR WBS_TOOLS_IMAGE WBS_DOCKER_BOOTSTRAPPED
 exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

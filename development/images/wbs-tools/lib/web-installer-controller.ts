@@ -10,6 +10,11 @@ import {
 import { join } from 'node:path';
 import { captureProcess, runProcess } from './command-runner.js';
 import { composeServicesAreRunning } from './compose.js';
+import {
+	installerWebContainer,
+	installerWorkerContainer,
+	stopInstallerSession
+} from './installer-session.js';
 import { resolveServerIp } from './server-ip.js';
 
 export type WebInstallerOptions = {
@@ -30,10 +35,6 @@ const triggerContainerPath = '/app/state/install-request';
 const certificateRoot = join( stateRoot, 'certs' );
 const letsEncryptRoot = join( stateRoot, 'letsencrypt' );
 const toolsImage = process.env.WBS_TOOLS_IMAGE || 'wikibase/wbs-tools:latest';
-const webContainer = process.env.WBS_INSTALLER_CONTAINER_NAME ||
-	'wikibase-suite-installer-webserver';
-const workerContainer = process.env.WBS_INSTALLER_WORKER_CONTAINER_NAME ||
-	'wikibase-suite-installer-worker';
 const installerPort = process.env.WBS_INSTALLER_PORT || '8888';
 
 function accessCode(): string {
@@ -43,24 +44,6 @@ function accessCode(): string {
 		throw new Error( 'WBS_INSTALLER_ACCESS_CODE must contain exactly six digits.' );
 	}
 	return value;
-}
-
-async function removeContainer( name: string ): Promise<void> {
-	await captureProcess( 'docker', [ 'rm', '-fv', name ] );
-}
-
-export async function webInstallerIsRunning(): Promise<boolean> {
-	const result = await captureProcess( 'docker', [
-		'inspect', '--format', '{{.State.Running}}', webContainer
-	] );
-	return result.exitCode === 0 && result.stdout.trim() === 'true';
-}
-
-export async function stopWebInstaller(): Promise<void> {
-	// The worker is an implementation detail of a running web installation and
-	// must not remain waiting after its web server has been removed.
-	await removeContainer( webContainer );
-	await removeContainer( workerContainer );
 }
 
 async function provisionCertificate(
@@ -147,7 +130,7 @@ async function startWorker( build: boolean, debug: boolean ): Promise<void> {
 		roleArgs.push( '--local-images' );
 	}
 	await runProcess( 'docker', [
-		'run', '-d', '--name', workerContainer, '--network', 'none',
+		'run', '-d', '--name', installerWorkerContainer, '--network', 'none',
 		'-e', `LAUNCH_TRIGGER_PATH=${ triggerPath }`,
 		...sharedWorkerArgs(), toolsImage,
 		'node', '/app/dist/wbs.js', ...roleArgs
@@ -181,7 +164,7 @@ async function startDevelopmentServer(
 			}
 		} );
 	} finally {
-		await removeContainer( workerContainer );
+		await stopInstallerSession();
 	}
 }
 
@@ -208,8 +191,7 @@ export async function launchWebInstaller( options: WebInstallerOptions ): Promis
 	console.log( '🔧 Launching web-based installer...' );
 	console.log();
 	const selfSigned = await provisionCertificate( host, options.local, options.debug );
-	await removeContainer( webContainer );
-	await removeContainer( workerContainer );
+	await stopInstallerSession();
 	mkdirSync( join( stateRoot, 'logs' ), { recursive: true } );
 	for ( const path of [ envFile, wbsLog ] ) {
 		if ( !existsSync( path ) ) {
@@ -226,7 +208,7 @@ export async function launchWebInstaller( options: WebInstallerOptions ): Promis
 	}
 
 	await runProcess( 'docker', [
-		'run', '-d', '--name', webContainer,
+		'run', '-d', '--name', installerWebContainer,
 		'-e', `SERVER_IP=${ serverIp }`,
 		'-e', `LOCALHOST=${ options.local }`,
 		'-e', `LAUNCH_TRIGGER_PATH=${ triggerContainerPath }`,
@@ -245,8 +227,8 @@ export async function launchWebInstaller( options: WebInstallerOptions ): Promis
 	showUrl( host, code, selfSigned );
 
 	if ( options.configurationOnly ) {
-		await runProcess( 'docker', [ 'wait', webContainer ], { quiet: !options.debug } );
-		await stopWebInstaller();
+		await runProcess( 'docker', [ 'wait', installerWebContainer ], { quiet: !options.debug } );
+		await stopInstallerSession();
 	} else {
 		await startWorker( options.build, options.debug );
 	}

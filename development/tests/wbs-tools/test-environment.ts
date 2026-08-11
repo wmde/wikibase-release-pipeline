@@ -44,7 +44,7 @@ const INSTALL_LOG = join( CHECKOUT_ROOT, 'installation.log' );
 const WBS_LOG = join( CHECKOUT_ROOT, 'wbs.log' );
 const COMPOSE_FILES = [
 	join( CHECKOUT_ROOT, 'docker-compose.yml' ),
-	join( CHECKOUT_ROOT, 'docker-compose.local.yml' )
+	join( CHECKOUT_ROOT, 'docker-compose.override.yml' )
 ];
 
 type CommandOptions = {
@@ -122,7 +122,7 @@ function copyCheckout(): void {
 	} );
 	copyFileSync(
 		join( SUITE_ROOT, 'docker-compose.install.yml' ),
-		join( CHECKOUT_ROOT, 'docker-compose.local.yml' )
+		join( CHECKOUT_ROOT, 'docker-compose.override.yml' )
 	);
 	writeFileSync( INSTALL_LOG, '' );
 }
@@ -153,7 +153,7 @@ export function verifyCliInstallWaitsForConfiguration(): void {
 		'query.wikibase.test',
 		'n',
 		'CliAdmin',
-		'CliAdminPassword-2026',
+		'',
 		'cli_wiki',
 		'cli_user',
 		'CliDatabasePassword-2026',
@@ -171,12 +171,19 @@ export function verifyCliInstallWaitsForConfiguration(): void {
 	);
 	assert.equal( existsSync( join( auditRoot, 'docker-called-after-configuration' ) ), true );
 	assert.match( output, /Wikibase Suite is now running\./u );
+	assert.match( output, /Admin username:\s+CliAdmin/u );
+	assert.match( output, /Admin password:\s+\S+/u );
+	assert.doesNotMatch( output, /Database username:/u );
+	assert.doesNotMatch( output, /CliDatabasePassword-2026/u );
 	assert.match( output, /Wikibase:\s+https:\/\/wikibase\.test/u );
 	assert.match( output, /Query Service:\s+https:\/\/query\.wikibase\.test/u );
 	assert.match(
 		output,
 		/QuickStatements:\s+https:\/\/wikibase\.test\/tools\/quickstatements/u
 	);
+	const savedEnvironment = readFileSync( join( auditRoot, '.env' ), 'utf8' );
+	assert.match( savedEnvironment, /^MW_ADMIN_PASS=$/mu );
+	assert.match( savedEnvironment, /^DB_PASS=$/mu );
 }
 
 export function startInstaller(): void {

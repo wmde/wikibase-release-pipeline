@@ -136,13 +136,6 @@ main() {
   SCRIPTS_DIR="${SCRIPTS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
   WBS_DIR="${WBS_DIR:-$(cd "$SCRIPTS_DIR/.." && pwd)}"
   export WBS_DIR SCRIPTS_DIR
-  if [[ -f "$WBS_DIR/local.env" ]]; then
-    set -a
-    # local.env is an operator-owned, shell-compatible override file.
-    # shellcheck disable=SC1091
-    source "$WBS_DIR/local.env"
-    set +a
-  fi
   export WBS_STATE_DIR="${WBS_STATE_DIR:-$WBS_DIR/.wbs}"
   export ENV_FILE_PATH="${ENV_FILE_PATH:-$WBS_DIR/.env}"
   export WBS_LOG_PATH="${WBS_LOG_PATH:-$WBS_STATE_DIR/logs/wbs.log}"

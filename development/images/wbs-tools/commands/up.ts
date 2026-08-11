@@ -15,11 +15,13 @@ async function startSuite( options: UpOptions ): Promise<void> {
 			throw new Error( `Suite configuration is incomplete. Missing: ${ missing.join( ', ' ) }.` );
 		}
 		console.log( 'Suite configuration is incomplete; resuming configuration.' );
-		await configure( {
+		if ( !await configure( {
 			web: false,
 			local: options.build === true,
 			debug: false
-		} );
+		} ) ) {
+			return;
+		}
 	}
 	await up( options );
 }

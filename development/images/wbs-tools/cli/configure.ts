@@ -42,6 +42,11 @@ type CliConfigInput = {
 	DB_PASS: string;
 };
 
+export type GeneratedPasswordFlags = {
+	admin: boolean;
+	database: boolean;
+};
+
 type ValidationMessage = string | undefined;
 
 let serverIp = '';
@@ -247,7 +252,10 @@ async function hostResolvesToServer( hostname: string ): Promise<boolean> {
 	}
 }
 
-async function gatherConfig(): Promise<CliConfigInput> {
+async function gatherConfig(): Promise<{
+	input: CliConfigInput;
+	generatedPasswords: GeneratedPasswordFlags;
+}> {
 	const { config: defaults } = getConfig();
 	const wikibaseHostDefault = defaults.WIKIBASE_PUBLIC_HOST || '';
 
@@ -268,7 +276,7 @@ async function gatherConfig(): Promise<CliConfigInput> {
 
 	const WDQS_PUBLIC_HOST = await promptUntil(
 		'Query Service host',
-		defaults.WDQS_PUBLIC_HOST || `query.${ WIKIBASE_PUBLIC_HOST }`,
+		defaults.WDQS_PUBLIC_HOST || '',
 		async ( value ) => areHostsDistinct( WIKIBASE_PUBLIC_HOST, value ) &&
 			await hostResolvesToServer( value ),
 		`Host must be different from the Wikibase host and resolve to this server IP address (${ serverIp }).`,
@@ -312,22 +320,28 @@ async function gatherConfig(): Promise<CliConfigInput> {
 	);
 
 	return {
-		MW_ADMIN_EMAIL,
-		WIKIBASE_PUBLIC_HOST,
-		WDQS_PUBLIC_HOST,
-		METADATA_CALLBACK: METADATA_CALLBACK ? 'true' : 'false',
-		MW_ADMIN_NAME,
-		MW_ADMIN_PASS: MW_ADMIN_PASS || defaults.MW_ADMIN_PASS || '',
-		DB_NAME,
-		DB_USER,
-		DB_PASS: DB_PASS || defaults.DB_PASS || ''
+		input: {
+			MW_ADMIN_EMAIL,
+			WIKIBASE_PUBLIC_HOST,
+			WDQS_PUBLIC_HOST,
+			METADATA_CALLBACK: METADATA_CALLBACK ? 'true' : 'false',
+			MW_ADMIN_NAME,
+			MW_ADMIN_PASS: MW_ADMIN_PASS || defaults.MW_ADMIN_PASS || '',
+			DB_NAME,
+			DB_USER,
+			DB_PASS: DB_PASS || defaults.DB_PASS || ''
+		},
+		generatedPasswords: {
+			admin: !MW_ADMIN_PASS && !defaults.MW_ADMIN_PASS,
+			database: !DB_PASS && !defaults.DB_PASS
+		}
 	};
 }
 
-export async function configureFromTerminal(): Promise<void> {
+export async function configureFromTerminal(): Promise<GeneratedPasswordFlags> {
 	serverIp = await resolveServerIp( isLocalMode() );
 	showIntro();
-	const inputConfig = await gatherConfig();
+	const { input: inputConfig, generatedPasswords } = await gatherConfig();
 	const { configText } = getConfig( inputConfig, { generateMissingPasswords: true } );
 	saveConfigText( configText );
 
@@ -343,4 +357,6 @@ export async function configureFromTerminal(): Promise<void> {
 			`127.0.0.1 ${ inputConfig.WIKIBASE_PUBLIC_HOST } ${ inputConfig.WDQS_PUBLIC_HOST }\n`
 		);
 	}
+
+	return generatedPasswords;
 }

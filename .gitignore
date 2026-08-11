@@ -5,10 +5,9 @@ pnpm
 *.swp
 .direnv
 
-local.env
+/development/local.env
 **/.env
 
-docker-compose.local.yml
 docker-compose.override.yml
 /.wbs/*
 !/.wbs/version

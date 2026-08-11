@@ -22,6 +22,7 @@ LABEL org.opencontainers.image.version="${WBS_TOOLS_VERSION}"
 
 WORKDIR /app
 ENV NODE_ENV=production
+ENV WBS_TOOLS_VERSION=${WBS_TOOLS_VERSION}
 
 RUN apk add --no-cache bash docker-cli docker-cli-compose git openssl curl
 

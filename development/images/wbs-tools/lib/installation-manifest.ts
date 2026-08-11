@@ -92,6 +92,7 @@ export async function applyInstallationManifest( options: {
 		[
 			'# Generated from a Wikibase Suite installation manifest. Do not edit.',
 			`WBS_INSTALL_MANIFEST_URL=${ shellValue( url.toString() ) }`,
+			`WBS_INSTALL_SOURCE_COMMIT=${ shellValue( manifest.source.commit ) }`,
 			`WBS_TOOLS_IMAGE=${ shellValue( manifest.images[ WBS_TOOLS_IMAGE ] ) }`,
 			''
 		].join( '\n' ),

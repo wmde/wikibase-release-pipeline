@@ -31,7 +31,7 @@ export async function resolveServerIp( local: boolean ): Promise<string> {
 		const reason = error instanceof Error ? ` (${ error.message })` : '';
 		throw new Error(
 			`Could not determine this server's public IPv4 address${ reason }. ` +
-			'Set SERVER_IP in local.env and retry.',
+			'Set SERVER_IP for this command and retry.',
 			{ cause: error }
 		);
 	}

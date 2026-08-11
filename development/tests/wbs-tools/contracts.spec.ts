@@ -125,45 +125,6 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 		}
 	} );
 
-	it( 'loads local.env after .env for lifecycle Compose commands', () => {
-		const composeRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'compose-' ) );
-		try {
-			writeFileSync( join( composeRoot, '.env' ), 'IMAGE_TAG=published\n' );
-			writeFileSync( join( composeRoot, 'local.env' ), 'IMAGE_TAG=local\n' );
-			writeFileSync( join( composeRoot, 'docker-compose.yml' ), 'services: {}\n' );
-			writeFileSync( join( composeRoot, 'docker-compose.override.yml' ), 'services: {}\n' );
-			writeFileSync( join( composeRoot, 'docker-compose.local.yml' ), 'services: {}\n' );
-			const fakeDocker = join( composeRoot, 'docker' );
-			writeFileSync(
-				fakeDocker,
-				'#!/bin/sh\nprintf "%s\\n" "$@" > /app/wbs/docker-arguments\n'
-			);
-			chmodSync( fakeDocker, 0o755 );
-			execFileSync(
-				'docker',
-				[
-					'run', '--rm',
-					'-v', `${ composeRoot }:/app/wbs`,
-					'-v', `${ fakeDocker }:/usr/local/bin/docker:ro`,
-					toolsImage(), 'node', '--input-type=module', '--eval',
-					"import('./dist/lib/compose.js').then(({ status }) => status())"
-				],
-				{ encoding: 'utf8' }
-			);
-			const dockerArguments = readFileSync( join( composeRoot, 'docker-arguments' ), 'utf8' );
-			assert.match(
-				dockerArguments,
-				/--env-file\n\/app\/wbs\/\.env\n--env-file\n\/app\/wbs\/local\.env\n/u
-			);
-			assert.match(
-				dockerArguments,
-				/--file\n\/app\/wbs\/docker-compose\.yml\n--file\n\/app\/wbs\/docker-compose\.override\.yml\n--file\n\/app\/wbs\/docker-compose\.local\.yml\n/u
-			);
-		} finally {
-			rmSync( composeRoot, { recursive: true, force: true } );
-		}
-	} );
-
 	it( 'persists a validated installation manifest and Compose override', () => {
 		const manifestRoot = mkdtempSync( join( INSTALLER_TEMP_ROOT, 'manifest-' ) );
 		try {
@@ -204,7 +165,7 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 			);
 			assert.match(
 				readFileSync( join( manifestRoot, '.wbs/install.env' ), 'utf8' ),
-				/WBS_TOOLS_IMAGE='ghcr\.io\/wmde\/wikibase\/wbs-tools:pr-942-a1b2c3d4e5f6'/u
+				/WBS_INSTALL_SOURCE_COMMIT='a1b2c3d4e5f678901234567890abcdef12345678'[\s\S]*WBS_TOOLS_IMAGE='ghcr\.io\/wmde\/wikibase\/wbs-tools:pr-942-a1b2c3d4e5f6'/u
 			);
 		} finally {
 			rmSync( manifestRoot, { recursive: true, force: true } );

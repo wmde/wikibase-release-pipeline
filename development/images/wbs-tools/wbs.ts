@@ -5,6 +5,7 @@ import { registerInstallCommand } from './commands/install.js';
 import { registerResetCommand } from './commands/reset.js';
 import { registerStatusCommand } from './commands/status.js';
 import { registerUpCommand } from './commands/up.js';
+import { versionText } from './lib/version.js';
 import { captureProcessOutputInWbsLog } from './lib/wbs-log.js';
 
 async function main(): Promise<void> {
@@ -13,6 +14,7 @@ async function main(): Promise<void> {
 	program
 		.name( 'wbs' )
 		.description( 'Install and operate Wikibase Suite.' )
+		.version( versionText(), '-v, --version', 'Show Wikibase Suite and WBS Tools versions.' )
 		.showHelpAfterError()
 		.showSuggestionAfterError();
 

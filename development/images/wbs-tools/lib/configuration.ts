@@ -193,12 +193,14 @@ export function getConfig(
 	return { config: configObject, configText: makeConfigText( configObject ) };
 }
 
-export function sanitizeConfig(): void {
+export function sanitizeConfig( options: { announce?: boolean } = {} ): void {
 	if ( isConfigSaved() ) {
 		const { configText } = getConfig();
 		// blank password values
 		const sanitized = configText.replace( /^(\s*[A-Z0-9_]*PASS(?:WORD)?=).+$/gim, '$1' );
 		saveConfigText( sanitized );
-		console.log( '🧼 Passwords sanitized' );
+		if ( options.announce !== false ) {
+			console.log( '🧼 Passwords sanitized' );
+		}
 	}
 }

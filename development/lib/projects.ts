@@ -44,7 +44,6 @@ export function discoverReleaseProjects(
 				'README.md',
 				'CHANGELOG.md',
 				'docker-compose.yml',
-				'docker-compose.local.yml',
 				'install',
 				'wbs',
 				'config',

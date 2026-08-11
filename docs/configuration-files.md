@@ -47,14 +47,14 @@ docker compose restart wdqs-frontend
 
 By default, query examples are loaded from the local Wikibase page `Project:SPARQL/examples`. Administrators can create that page and add local examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 
-## docker-compose.yml
+## docker-compose.override.yml
 
-To further customize your instance, you can also make changes to `docker-compose.yml`. To ease updating to newer versions of WBS, consider putting your customizations into `docker-compose.override.yml` instead.
+To use custom service images or change other Docker Compose settings, create `docker-compose.override.yml` in your WBS directory. Keep these customizations out of the tracked `docker-compose.yml`; editing that file directly can cause conflicts when updating WBS.
 
-Docker Compose automatically reads `docker-compose.override.yml`. Apply your changes by running:
+The override file is ignored by Git, and Docker Compose reads it automatically. Apply your changes by running:
 
 ```sh
 docker compose up -d
 ```
 
-This way, your changes are kept separate from the original WBS code. If you use a different override filename, pass both files explicitly with `-f`.
+Review your override after each WBS update to make sure that it remains compatible with the updated services. If you use a different override filename, pass both files explicitly with `-f`.
