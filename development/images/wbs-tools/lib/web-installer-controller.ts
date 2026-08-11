@@ -49,6 +49,20 @@ async function removeContainer( name: string ): Promise<void> {
 	await captureProcess( 'docker', [ 'rm', '-fv', name ] );
 }
 
+export async function webInstallerIsRunning(): Promise<boolean> {
+	const result = await captureProcess( 'docker', [
+		'inspect', '--format', '{{.State.Running}}', webContainer
+	] );
+	return result.exitCode === 0 && result.stdout.trim() === 'true';
+}
+
+export async function stopWebInstaller(): Promise<void> {
+	// The worker is an implementation detail of a running web installation and
+	// must not remain waiting after its web server has been removed.
+	await removeContainer( webContainer );
+	await removeContainer( workerContainer );
+}
+
 async function provisionCertificate(
 	host: string,
 	local: boolean,
@@ -232,7 +246,7 @@ export async function launchWebInstaller( options: WebInstallerOptions ): Promis
 
 	if ( options.configurationOnly ) {
 		await runProcess( 'docker', [ 'wait', webContainer ], { quiet: !options.debug } );
-		await removeContainer( webContainer );
+		await stopWebInstaller();
 	} else {
 		await startWorker( options.build, options.debug );
 	}

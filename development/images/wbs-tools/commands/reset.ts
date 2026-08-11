@@ -2,37 +2,57 @@ import { confirm, isCancel } from '@clack/prompts';
 import { Option, type Command } from 'commander';
 import process from 'node:process';
 import { configurationExists, missingConfigurationKeys, reset } from '../lib/compose.js';
+import {
+	stopWebInstaller,
+	webInstallerIsRunning
+} from '../lib/web-installer-controller.js';
 
 type ResetOptions = {
 	force?: boolean;
 };
 
 async function resetSuite( options: ResetOptions ): Promise<void> {
-	if ( missingConfigurationKeys().length > 0 ) {
+	const installerRunning = await webInstallerIsRunning();
+	const environmentExists = configurationExists();
+	const suiteIsConfigured = missingConfigurationKeys().length === 0;
+	if ( !installerRunning && !environmentExists ) {
+		console.log( 'There is nothing to reset.' );
 		return;
 	}
-	let deleteEnvironment = options.force === true;
-	let deleteData = options.force === true;
+	let stopInstaller = options.force === true && installerRunning;
+	let deleteEnvironment = options.force === true && environmentExists;
+	let deleteData = options.force === true && suiteIsConfigured;
 	if ( options.force !== true ) {
 		if ( !process.stdin.isTTY ) {
 			throw new Error( 'reset requires confirmation; rerun with --force for automation.' );
 		}
-		const dataAnswer = await confirm( {
-			message: 'Permanently delete all Wikibase Suite services, data, and generated runtime configuration files?',
-			initialValue: false
-		} );
-		if ( isCancel( dataAnswer ) ) {
-			console.log( 'Reset canceled.' );
-			return;
+		if ( installerRunning ) {
+			const installerAnswer = await confirm( {
+				message: 'Wikibase Suite web installer is running. Stop it?',
+				initialValue: false
+			} );
+			if ( isCancel( installerAnswer ) ) {
+				console.log( 'Reset canceled.' );
+				return;
+			}
+			stopInstaller = installerAnswer;
 		}
-		deleteData = dataAnswer;
-		if ( !deleteData ) {
-			console.log( 'Nothing was reset.' );
-			return;
+		if ( suiteIsConfigured ) {
+			const dataAnswer = await confirm( {
+				message: 'Permanently delete all Wikibase Suite services, data, and generated runtime configuration files?',
+				initialValue: false
+			} );
+			if ( isCancel( dataAnswer ) ) {
+				console.log( 'Reset canceled.' );
+				return;
+			}
+			deleteData = dataAnswer;
 		}
-		if ( configurationExists() ) {
+		if ( environmentExists && ( deleteData || !suiteIsConfigured ) ) {
 			const environmentAnswer = await confirm( {
-				message: 'Also delete the saved installer configuration in .env?',
+				message: suiteIsConfigured ?
+					'Also delete the saved installer configuration in .env?' :
+					'Delete the incomplete installer configuration in .env?',
 				initialValue: false
 			} );
 			if ( isCancel( environmentAnswer ) ) {
@@ -41,6 +61,14 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 			}
 			deleteEnvironment = environmentAnswer;
 		}
+		if ( !stopInstaller && !deleteData && !deleteEnvironment ) {
+			console.log( 'Nothing was reset.' );
+			return;
+		}
+	}
+	if ( stopInstaller ) {
+		await stopWebInstaller();
+		console.log( 'The Wikibase Suite web installer was stopped.' );
 	}
 	await reset( {
 		environment: deleteEnvironment,
@@ -56,7 +84,7 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 
 export function registerResetCommand( program: Command ): void {
 	program.command( 'reset' )
-		.description( 'Reset Suite services, data, and generated runtime configuration, optionally including .env.' )
-		.addOption( new Option( '--force', 'Delete services, data, generated runtime configuration, and .env without prompting.' ) )
+		.description( 'Stop the web installer or reset Suite services, data, and generated runtime configuration, optionally including .env.' )
+		.addOption( new Option( '--force', 'Stop the web installer and delete services, data, generated runtime configuration, and .env without prompting.' ) )
 		.action( resetSuite );
 }
