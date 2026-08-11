@@ -6,6 +6,7 @@ readonly INSTALLER_REPOSITORY="wmde/wikibase-suite-install"
 readonly PAGES_ROOT="https://wmde.github.io/wikibase-suite-install"
 readonly STATE_DIR="${RUNNER_TEMP:-/tmp}/wikibase-suite-installer"
 readonly PR_PAYLOAD_PATH="$STATE_DIR/pr-dispatch.json"
+readonly PR_CLEANUP_PAYLOAD_PATH="$STATE_DIR/pr-cleanup-dispatch.json"
 readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"
 readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
 
@@ -62,8 +63,14 @@ prepare_pr() {
 
   local short_sha="${PR_HEAD_SHA:0:12}"
   local tag="pr-${PR_NUMBER}-${short_sha}"
-  local current_sha
-  current_sha="$(gh api "repos/$ORIGIN_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)"
+  local pull_request current_sha state
+  pull_request="$(gh api "repos/$ORIGIN_REPOSITORY/pulls/$PR_NUMBER")"
+  current_sha="$(jq -r '.head.sha' <<< "$pull_request")"
+  state="$(jq -r '.state' <<< "$pull_request")"
+  if [[ "$state" != open ]]; then
+    echo "Pull request $PR_NUMBER is no longer open; skipping installer publication."
+    return
+  fi
   local current=false
   if [[ "$current_sha" == "$PR_HEAD_SHA" ]]; then
     current=true
@@ -114,6 +121,32 @@ prepare_pr() {
         images: $images
       }
     }' > "$PR_PAYLOAD_PATH"
+}
+
+cleanup_pr() {
+  validate_origin_repository
+  [[ "${PR_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || {
+    echo "Invalid PR number." >&2
+    exit 1
+  }
+
+  mkdir -p "$STATE_DIR"
+  jq -n \
+    --arg event_type cleanup-pr-installation \
+    --arg origin_repository "$ORIGIN_REPOSITORY" \
+    --arg source_repository "$ORIGIN_REPOSITORY" \
+    --argjson pr "$PR_NUMBER" \
+    '{
+      event_type: $event_type,
+      client_payload: {
+        schemaVersion: 1,
+        operation: "delete-pr",
+        originRepository: $origin_repository,
+        sourceRepository: $source_repository,
+        pr: $pr
+      }
+    }' > "$PR_CLEANUP_PAYLOAD_PATH"
+  dispatch_payload "$PR_CLEANUP_PAYLOAD_PATH"
 }
 
 dispatch_pr() {
@@ -185,9 +218,10 @@ publish_release() {
 case "${1:-}" in
   prepare-pr) prepare_pr ;;
   dispatch-pr) dispatch_pr ;;
+  cleanup-pr) cleanup_pr ;;
   publish-release) publish_release ;;
   *)
-    echo "Usage: $0 {prepare-pr|dispatch-pr|publish-release}" >&2
+    echo "Usage: $0 {prepare-pr|dispatch-pr|cleanup-pr|publish-release}" >&2
     exit 2
     ;;
 esac
