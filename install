@@ -22,9 +22,11 @@ BOOTSTRAP_PULLED_TOOLS=false
 WBS_DOCKER_BOOTSTRAPPED=false
 WBS_BOOTSTRAP_TERMINAL_AVAILABLE=false
 
-# Preserve this before output is redirected through tee below. In particular,
-# `curl ... | bash` has a terminal on stdout but consumes the script on stdin.
-if [[ -t 1 && -r /dev/tty ]]; then
+# The supported `curl ... | bash` invocation consumes stdin with the script,
+# while direct interactive execution already has a terminal there. Open the
+# controlling terminal explicitly before tee redirects output so both forms can
+# pass an interactive stdin through to the containerized installer.
+if { exec 4<> /dev/tty; } 2>/dev/null; then
   WBS_BOOTSTRAP_TERMINAL_AVAILABLE=true
 fi
 
@@ -123,6 +125,6 @@ if [[ "$WBS_BOOTSTRAP_TERMINAL_AVAILABLE" == true ]]; then
   # `curl … | bash` consumes standard input while loading this script. Hand the
   # delegated installer the user's terminal so safety confirmations still work.
   export WBS_TOOLS_FORCE_TTY=true
-  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" < /dev/tty
+  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" <&4
 fi
 exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"
