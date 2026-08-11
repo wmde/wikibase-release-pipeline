@@ -2,8 +2,9 @@ import { confirm, isCancel } from '@clack/prompts';
 import { Option, type Command } from 'commander';
 import process from 'node:process';
 import type { GeneratedPasswordFlags } from '../cli/configure.js';
+import { installedSuiteExists, reset } from '../lib/compose.js';
 import {
-	installerSessionIsRunning,
+	activeInstallerSession,
 	stopInstallerSession
 } from '../lib/installer-session.js';
 
@@ -19,18 +20,19 @@ export type ConfigureResult = {
 	generatedPasswords: GeneratedPasswordFlags;
 };
 
-async function claimTerminalInstallation(): Promise<boolean> {
-	if ( !await installerSessionIsRunning() ) {
+async function claimInstallation( requestedKind: 'cli' | 'web' ): Promise<boolean> {
+	const session = await activeInstallerSession();
+	if ( !session ) {
 		return true;
 	}
+	const existingDescription = session.kind === 'web' ?
+		`A Wikibase Suite web installer is already running${ session.url ? ` at ${ session.url }` : '' }.` :
+		'A Wikibase Suite command-line installer is already running.';
 	if ( !process.stdin.isTTY ) {
-		throw new Error(
-			'A web installation is already running. Stop it with "wbs reset --force" ' +
-			'before configuring from a non-interactive session.'
-		);
+		throw new Error( `${ existingDescription } Stop it before starting another installer.` );
 	}
 	const answer = await confirm( {
-		message: 'A Wikibase Suite web installation is running. Stop it and continue in the terminal?',
+		message: `${ existingDescription } Cancel it and start again ${ requestedKind === 'web' ? 'in the browser' : 'in the terminal' }?`,
 		initialValue: false
 	} );
 	if ( isCancel( answer ) || !answer ) {
@@ -38,13 +40,44 @@ async function claimTerminalInstallation(): Promise<boolean> {
 		return false;
 	}
 	await stopInstallerSession();
-	console.log( 'The Wikibase Suite web installer was stopped.' );
+	console.log( 'The existing Wikibase Suite installer was stopped.' );
+	return true;
+}
+
+async function resetExistingSuite(): Promise<boolean> {
+	if ( !await installedSuiteExists() ) {
+		return true;
+	}
+	if ( !process.stdin.isTTY ) {
+		throw new Error(
+			'An existing Wikibase Suite installation was found. Run "wbs reset" interactively before installing again.'
+		);
+	}
+	const answer = await confirm( {
+		message: '⚠️ Permanently delete all Wikibase Suite data and configuration, including .env, then install from scratch?',
+		initialValue: false
+	} );
+	if ( isCancel( answer ) || !answer ) {
+		console.log( 'Installation canceled.' );
+		return false;
+	}
+	// This is the same destructive operation used by `wbs reset`; reaching it here
+	// requires explicit confirmation of the complete reset scope above.
+	await reset( { data: true, environment: true } );
+	console.log( 'The existing Wikibase Suite installation was reset.' );
 	return true;
 }
 
 export async function configure( options: ConfigureOptions ): Promise<ConfigureResult | false> {
 	process.env.LOCALHOST = String( options.local );
 	process.env.DEBUG = String( options.debug );
+	const requestedKind = options.web ? 'web' : 'cli';
+	if ( !await claimInstallation( requestedKind ) ) {
+		return false;
+	}
+	if ( options.configurationOnly !== true && !await resetExistingSuite() ) {
+		return false;
+	}
 	if ( options.web ) {
 		const { launchWebInstaller } = await import( '../lib/web-installer-controller.js' );
 		await launchWebInstaller( {
@@ -54,9 +87,6 @@ export async function configure( options: ConfigureOptions ): Promise<ConfigureR
 			build: options.build === true
 		} );
 		return { generatedPasswords: { admin: false, database: false } };
-	}
-	if ( !await claimTerminalInstallation() ) {
-		return false;
 	}
 	const { configureFromTerminal } = await import( '../cli/configure.js' );
 	return { generatedPasswords: await configureFromTerminal() };

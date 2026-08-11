@@ -7,6 +7,12 @@
 prepare_wbs_tools_container_args() {
   WBS_TOOLS_CONTAINER_ARGS=(--rm)
 
+  if [[ -n "${WBS_INSTALLER_SESSION_KIND:-}" ]]; then
+    WBS_TOOLS_CONTAINER_ARGS+=(
+      --label "org.wikibase-suite.installer=${WBS_INSTALLER_SESSION_KIND}"
+    )
+  fi
+
   local variable_name
   local variable_names=(
     COMPOSE_PROJECT_NAME
@@ -149,6 +155,19 @@ main() {
     case "${2:-}" in
       configure|prepare|worker) ;;
       *) prepare_install "${@:2}" ;;
+    esac
+
+    case "${2:-}" in
+      prepare|worker|web-server) ;;
+      *)
+        WBS_INSTALLER_SESSION_KIND=cli
+        for argument in "${@:2}"; do
+          if [[ "$argument" == --web ]]; then
+            WBS_INSTALLER_SESSION_KIND=web
+          fi
+        done
+        export WBS_INSTALLER_SESSION_KIND
+        ;;
     esac
   fi
   ensure_wbs_tools_image " For an unpublished source checkout, rerun wbs install with --from-source."

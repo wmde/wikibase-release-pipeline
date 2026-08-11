@@ -217,6 +217,7 @@ export async function launchWebInstaller( options: WebInstallerOptions ): Promis
 		'-e', 'WBS_LOG_PATH=/app/state/logs/wbs.log',
 		'-e', 'INSTALLATION_LOG_PATH=/app/state/logs/installation.log',
 		'-e', `INSTALLER_ACCESS_CODE=${ code }`,
+		'-e', `WBS_INSTALLER_URL=https://${ host }:${ installerPort }/access/${ code }`,
 		'-p', `${ installerPort }:443`,
 		'-v', `${ repositoryRoot }:/app/wbs:ro`,
 		'-v', `${ envFile }:/app/wbs/.env`,

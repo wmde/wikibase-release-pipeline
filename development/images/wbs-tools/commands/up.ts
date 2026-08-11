@@ -1,7 +1,5 @@
 import { Option, type Command } from 'commander';
-import process from 'node:process';
-import { missingConfigurationKeys, up } from '../lib/compose.js';
-import { configure } from './configure.js';
+import { composeServicesAreRunning, missingConfigurationKeys, up } from '../lib/compose.js';
 
 type UpOptions = {
 	update?: boolean;
@@ -9,19 +7,15 @@ type UpOptions = {
 };
 
 async function startSuite( options: UpOptions ): Promise<void> {
+	if ( options.update !== true && options.build !== true && await composeServicesAreRunning() ) {
+		console.log( 'Wikibase Suite is already running.' );
+		return;
+	}
 	const missing = missingConfigurationKeys();
 	if ( missing.length ) {
-		if ( !process.stdin.isTTY ) {
-			throw new Error( `Suite configuration is incomplete. Missing: ${ missing.join( ', ' ) }.` );
-		}
-		console.log( 'Suite configuration is incomplete; resuming configuration.' );
-		if ( !await configure( {
-			web: false,
-			local: options.build === true,
-			debug: false
-		} ) ) {
-			return;
-		}
+		throw new Error(
+			`Wikibase Suite is not configured. Run "wbs install" first. Missing: ${ missing.join( ', ' ) }.`
+		);
 	}
 	await up( options );
 }

@@ -2,9 +2,8 @@ import { confirm, isCancel } from '@clack/prompts';
 import { Option, type Command } from 'commander';
 import process from 'node:process';
 import {
-	composeServicesAreRunning,
 	configurationExists,
-	missingConfigurationKeys,
+	installedSuiteExists,
 	reset
 } from '../lib/compose.js';
 import {
@@ -19,10 +18,8 @@ type ResetOptions = {
 async function resetSuite( options: ResetOptions ): Promise<void> {
 	const installerRunning = await installerSessionIsRunning();
 	const environmentExists = configurationExists();
-	const suiteIsConfigured = missingConfigurationKeys().length === 0;
-	const suiteIsRunning = await composeServicesAreRunning();
-	const suiteCanBeReset = suiteIsConfigured || suiteIsRunning;
-	if ( !installerRunning && !environmentExists && !suiteIsRunning ) {
+	const suiteCanBeReset = await installedSuiteExists();
+	if ( !installerRunning && !environmentExists && !suiteCanBeReset ) {
 		console.log( 'There is nothing to reset.' );
 		return;
 	}

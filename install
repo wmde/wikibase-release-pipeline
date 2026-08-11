@@ -112,4 +112,9 @@ touch "$WBS_LOG_PATH"
 exec 3>&-
 export WBS_STATE_DIR WBS_LOG_PATH INSTALLATION_LOG_PATH WBS_LOG_INITIALIZED=1
 export WBS_DIR WBS_TOOLS_IMAGE WBS_DOCKER_BOOTSTRAPPED
+if [[ -t 1 && -r /dev/tty ]]; then
+  # `curl … | bash` consumes standard input while loading this script. Hand the
+  # delegated installer the user's terminal so safety confirmations still work.
+  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" < /dev/tty
+fi
 exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

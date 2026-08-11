@@ -17,6 +17,7 @@ export type ResetOptions = {
 
 const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
+const localSettingsFile = join( repositoryRoot, 'config/LocalSettings.php' );
 const REQUIRED_CONFIGURATION_KEYS = [
 	'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST', 'MW_ADMIN_NAME', 'MW_ADMIN_EMAIL',
 	'MW_ADMIN_PASS', 'DB_PASS', 'DB_NAME', 'DB_USER'
@@ -27,7 +28,10 @@ export function missingConfigurationKeys(): string[] {
 		return [ ...REQUIRED_CONFIGURATION_KEYS ];
 	}
 	const config = parseEnvContent( readFileSync( envFile, 'utf8' ) );
-	return REQUIRED_CONFIGURATION_KEYS.filter( ( key ) => !config[ key ]?.trim() );
+	const requiredKeys = existsSync( localSettingsFile ) ?
+		REQUIRED_CONFIGURATION_KEYS.filter( key => key !== 'MW_ADMIN_PASS' && key !== 'DB_PASS' ) :
+		REQUIRED_CONFIGURATION_KEYS;
+	return requiredKeys.filter( ( key ) => !config[ key ]?.trim() );
 }
 
 export function configurationExists(): boolean {
@@ -58,6 +62,41 @@ export async function composeServicesAreRunning( localImages = false ): Promise<
 		...composeArgs( localImages ), 'ps', '--services', '--status', 'running'
 	] );
 	return result.exitCode === 0 && result.stdout.trim().length > 0;
+}
+
+export async function composeServicesExist( localImages = false ): Promise<boolean> {
+	const result = await captureProcess( 'docker', [
+		...composeArgs( localImages ), 'ps', '--services', '--all'
+	] );
+	return result.exitCode === 0 && result.stdout.trim().length > 0;
+}
+
+async function composeVolumesExist( localImages = false ): Promise<boolean> {
+	const config = await captureProcess( 'docker', [
+		...composeArgs( localImages ), 'config', '--format', 'json'
+	] );
+	if ( config.exitCode !== 0 ) {
+		return false;
+	}
+	let projectName: string;
+	try {
+		projectName = String( ( JSON.parse( config.stdout ) as { name?: unknown } ).name || '' );
+	} catch {
+		return false;
+	}
+	if ( !projectName ) {
+		return false;
+	}
+	const volumes = await captureProcess( 'docker', [
+		'volume', 'ls', '--quiet', '--filter', `label=com.docker.compose.project=${ projectName }`
+	] );
+	return volumes.exitCode === 0 && volumes.stdout.trim().length > 0;
+}
+
+export async function installedSuiteExists( localImages = false ): Promise<boolean> {
+	return existsSync( localSettingsFile ) ||
+		await composeServicesExist( localImages ) ||
+		await composeVolumesExist( localImages );
 }
 
 async function buildImages(): Promise<void> {
