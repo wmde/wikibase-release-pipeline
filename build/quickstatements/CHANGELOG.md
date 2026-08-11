@@ -1,3 +1,7 @@
+## Unreleased
+
+- Adds an optional image-owned healthcheck script.
+
 ## 1.1.0 (2026-02-16)
 
 Updates in concert with Wikibase image v6.0.0 (mw-1.45) release
