@@ -1,0 +1,29 @@
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+    volumes:
+      # Set CADDY_TLS_FILE_PATH to ./config/Caddyfile.files.tls if you're
+      # providing your own TLS/SSL certs. This is particularly useful when
+      # needing valid certificates in a localhost scenario (see mkcert).
+      - ${CADDY_TLS_FILE_PATH:-./config/Caddyfile.letsencrypt.tls}:/etc/caddy/tls.caddy:ro
+      - ./config/certs:/certs:ro
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro      
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      default:
+        aliases:
+          - ${WIKIBASE_PUBLIC_HOST}
+          - ${WDQS_PUBLIC_HOST}
+
+volumes:
+  caddy-data:
+  caddy-config:

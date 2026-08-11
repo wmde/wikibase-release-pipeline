@@ -1,0 +1,23 @@
+services:
+  wikibase:
+    image: wikibase/wikibase
+    pull_policy: never
+  wikibase-jobrunner:
+    image: wikibase/wikibase
+    pull_policy: never
+  elasticsearch:
+    image: wikibase/elasticsearch
+    pull_policy: never
+  wdqs:
+    image: wikibase/wdqs
+    pull_policy: never
+  wdqs-updater:
+    image: wikibase/wdqs
+    pull_policy: never
+  wdqs-frontend:
+    image: wikibase/wdqs-frontend
+    pull_policy: never
+  quickstatements:
+    image: wikibase/quickstatements
+    pull_policy: never
+  
