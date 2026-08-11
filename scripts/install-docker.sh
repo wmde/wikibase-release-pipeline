@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- Expected Variables ---
+# Host Docker installation and minimum-version checks. This file is sourced by
+# the WBS Tools launcher after its logging environment has been established.
 
 export SCRIPTS_DIR
 
 MIN_DOCKER_VERSION="22.0"
 MIN_DOCKER_COMPOSE_VERSION="2.10"
 
-# --- Bootstrap Logging ---
-
 # shellcheck disable=SC1091
 source "$SCRIPTS_DIR/_logging.sh"
-
-# --- Functions ---
 
 install_docker() {
   debug "Checking for Docker..."
 
   if command -v docker >/dev/null 2>&1; then
-    # This script is sourced by the host-side wbs runner.
     return 0
   fi
 

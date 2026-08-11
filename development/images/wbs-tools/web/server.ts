@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { INSTALLATION_LOG_PATH } from '../lib/installation-log.js';
 import { WBS_LOG_PATH } from '../lib/wbs-log.js';
+import { resolveServerIp } from '../lib/server-ip.js';
 import { createInstallerAccess } from './installer-access.js';
 import { createInstallerLifecycle } from './installer-lifecycle.js';
 import { createMockInstallation } from './mock-installation.js';
@@ -24,7 +25,7 @@ const INSTALLER_DEV_MOCK_OUTCOME = process.env.INSTALLER_DEV_MOCK_OUTCOME === 'f
 	'failure' : 'success';
 const CONFIGURE_ONLY = process.env.CONFIGURE_ONLY === 'true';
 const INSTALLER_ACCESS_CODE = process.env.INSTALLER_ACCESS_CODE || '';
-const SERVER_IP = process.env.SERVER_IP || '';
+const SERVER_IP = await resolveServerIp( process.env.LOCALHOST === 'true' );
 const APP_ROOT = DEV_SERVER ? moduleDir : join( dirname( dirname( moduleDir ) ), 'web' );
 const INDEX_TEMPLATE_PATH = join( APP_ROOT, 'index.html' );
 

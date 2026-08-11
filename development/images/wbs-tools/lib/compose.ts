@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
-import { runProcess } from './command-runner.js';
+import { captureProcess, runProcess } from './command-runner.js';
 
 export type SuiteOptions = {
 	update?: boolean;
@@ -57,6 +57,13 @@ function composeArgs( localImages = false ): string[] {
 		args.push( '--file', localOverride );
 	}
 	return args;
+}
+
+export async function composeServicesAreRunning( localImages = false ): Promise<boolean> {
+	const result = await captureProcess( 'docker', [
+		...composeArgs( localImages ), 'ps', '--services', '--status', 'running'
+	] );
+	return result.exitCode === 0 && result.stdout.trim().length > 0;
 }
 
 async function buildImages(): Promise<void> {

@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Public installer entry point. It works both from a source checkout and when
+# piped from the installer URL; the latter bootstraps Docker and a checkout.
+# Both paths ultimately delegate to that checkout's WBS Tools launcher.
 BOOTSTRAP_LOG_PATH="${WBS_BOOTSTRAP_LOG:-/tmp/wikibase-suite-bootstrap.log}"
 WBS_TOOLS_IMAGE_EXPLICIT=false
 if [[ -n "${WBS_TOOLS_IMAGE:-}" ]]; then
@@ -14,40 +17,11 @@ WBS_DOCKER_DIR="${WBS_DOCKER_DIR:-$WBS_DIR}"
 WBS_DOCKER_REPO_URL="${WBS_DOCKER_REPO_URL:-$WBS_REPO_URL}"
 WBS_REF="${WBS_REF:-}"
 WBS_INSTALL_MANIFEST_URL="${WBS_INSTALL_MANIFEST_URL:-}"
-RUNTIME_ARGS=()
-WEB_SELECTED=false
+RUNTIME_ARGS=(--web "$@")
 BOOTSTRAP_PULLED_TOOLS=false
+WBS_DOCKER_BOOTSTRAPPED=false
 
 exec > >(tee "$BOOTSTRAP_LOG_PATH") 2>&1
-
-while (( $# )); do
-  case "$1" in
-    --web)
-      WEB_SELECTED=true
-      RUNTIME_ARGS+=("$1")
-      ;;
-    --wbs-ref)
-      [[ -n "${2:-}" ]] || { echo "wbs: --wbs-ref requires a value."; exit 1; }
-      WBS_REF="$2"
-      shift
-      ;;
-    --wbs-ref=*)
-      WBS_REF="${1#*=}"
-      ;;
-    --installer-dev|--dev)
-      echo "wbs: installer development requires an existing checkout."
-      exit 1
-      ;;
-    --skip-clone|--skip-deps|--skip-launch|--reset|--cli)
-      echo "wbs: unsupported install option: $1"
-      exit 1
-      ;;
-    *)
-      RUNTIME_ARGS+=("$1")
-      ;;
-  esac
-  shift
-done
 
 echo
 echo "Wikibase Suite (WBS)"
@@ -57,6 +31,8 @@ SCRIPT_DIR=""
 if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 fi
+# A real checkout can be used in place. A downloaded or piped copy uses the
+# bootstrap tools image to materialize the selected checkout first.
 if [[ -n "$SCRIPT_DIR" && -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
   WBS_DIR="$SCRIPT_DIR"
 else
@@ -69,7 +45,7 @@ else
     fi
   fi
   docker info >/dev/null
-  docker compose version >/dev/null
+  WBS_DOCKER_BOOTSTRAPPED=true
 
   if [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
     if ! tools_pull_output="$(docker pull "$WBS_TOOLS_IMAGE" 2>&1)"; then
@@ -116,16 +92,13 @@ WBS_LOG_PATH="$WBS_STATE_DIR/logs/wbs.log"
 INSTALLATION_LOG_PATH="$WBS_STATE_DIR/logs/installation.log"
 mkdir -p "$WBS_STATE_DIR/logs"
 touch "$WBS_LOG_PATH"
+# Preserve the bootstrap transcript, then let the delegated launcher append to
+# the same log without rotating it at the handoff.
 {
   echo "===== Bootstrap ====="
   cat "$BOOTSTRAP_LOG_PATH"
   echo "===== WBS tools ====="
 } >> "$WBS_LOG_PATH"
 export WBS_STATE_DIR WBS_LOG_PATH INSTALLATION_LOG_PATH WBS_LOG_INITIALIZED=1
-
-if [[ "$WEB_SELECTED" != true ]]; then
-  RUNTIME_ARGS=(--web "${RUNTIME_ARGS[@]}")
-fi
-
-export WBS_DIR WBS_TOOLS_IMAGE
+export WBS_DIR WBS_TOOLS_IMAGE WBS_DOCKER_BOOTSTRAPPED
 exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

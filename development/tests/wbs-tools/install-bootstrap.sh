@@ -90,7 +90,7 @@ run_bootstrap() {
       WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
       WBS_REPO_URL="$fixture_remote" \
       WBS_DOCKER_REPO_URL="$host_fixture_remote" \
-      WBS_REF='' \
+      WBS_REF="${WBS_REF:-}" \
       WBS_TOOLS_SKIP_PULL=true \
       WBS_SKIP_DEPENDENCY_INSTALLS=true \
       "${installer_command[@]}" "$@" < "$installer_input"
@@ -99,7 +99,7 @@ run_bootstrap() {
       WBS_DOCKER_DIR="$host_case_dir/wikibase-suite" \
       WBS_REPO_URL="$fixture_remote" \
       WBS_DOCKER_REPO_URL="$host_fixture_remote" \
-      WBS_REF='' \
+      WBS_REF="${WBS_REF:-}" \
       WBS_TOOLS_IMAGE="$bootstrap_image" \
       WBS_TOOLS_SKIP_PULL=true \
       WBS_SKIP_DEPENDENCY_INSTALLS=true \
@@ -123,18 +123,19 @@ WBS_TEST_INSTALL_FROM_STDIN=true \
 grep -q '^WBS_VERSION=1.10.0$' "$TEST_ROOT/piped/wikibase-suite/.wbs/version"
 grep -qx -- '--web' "$TEST_ROOT/piped/wikibase-suite/wbs-invocation"
 
-run_bootstrap explicit "$fixture_remote" --wbs-ref 'wbs@1.9.0' --local --from-source --debug
+WBS_REF='wbs@1.9.0' \
+  run_bootstrap explicit "$fixture_remote" --local --from-source --debug
 grep -q '^WBS_VERSION=1.9.0$' "$TEST_ROOT/explicit/wikibase-suite/.wbs/version"
 grep -qx -- '--local' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--from-source' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 grep -qx -- '--debug' "$TEST_ROOT/explicit/wikibase-suite/wbs-invocation"
 
 commit_ref="$(git --git-dir="$fixture_remote" rev-parse 'refs/tags/wbs@1.9.0^{commit}')"
-run_bootstrap commit "$fixture_remote" --wbs-ref "$commit_ref"
+WBS_REF="$commit_ref" run_bootstrap commit "$fixture_remote"
 test "$(git -C "$TEST_ROOT/commit/wikibase-suite" rev-parse HEAD)" = "$commit_ref"
 
 if WBS_INSTALL_MANIFEST_URL='https://127.0.0.1:1/missing.json' \
-  run_bootstrap manifest-failure "$fixture_remote" --wbs-ref "$commit_ref" \
+  WBS_REF="$commit_ref" run_bootstrap manifest-failure "$fixture_remote" \
   >"$TEST_ROOT/manifest-failure.log" 2>&1; then
   echo "Expected bootstrap with an unavailable installation manifest to fail."
   exit 1
@@ -142,7 +143,7 @@ fi
 test ! -e "$TEST_ROOT/manifest-failure/wikibase-suite"
 
 WBS_TEST_USE_INSTALL_DEFAULT=true \
-  run_bootstrap checkout-pin "$fixture_remote" --wbs-ref 'wbs@1.9.0'
+  WBS_REF='wbs@1.9.0' run_bootstrap checkout-pin "$fixture_remote"
 grep -qx 'wikibase/wbs-tools:0.9.0' \
   "$TEST_ROOT/checkout-pin/wikibase-suite/wbs-tools-image"
 

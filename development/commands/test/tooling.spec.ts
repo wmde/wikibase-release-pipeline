@@ -34,7 +34,7 @@ exit 0
 				[
 					'-c',
 					'source "$1"; SCRIPTS_DIR="$(dirname "$1")"; ' +
-						'SKIP_DEPENDENCY_INSTALLS=false; ' +
+						'WBS_SKIP_DEPENDENCY_INSTALLS=false; ' +
 						'DEBUG=false; prepare_install_runtime',
 					'bash',
 					resolve('../scripts/run-wbs-tools.sh')

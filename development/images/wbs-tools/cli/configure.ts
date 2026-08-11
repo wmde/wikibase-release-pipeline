@@ -28,6 +28,7 @@ import {
 	isValidConfigurationEmailAddress,
 	isValidHostname
 } from '../lib/validation.js';
+import { resolveServerIp } from '../lib/server-ip.js';
 
 type CliConfigInput = {
 	MW_ADMIN_EMAIL: string;
@@ -43,7 +44,7 @@ type CliConfigInput = {
 
 type ValidationMessage = string | undefined;
 
-const serverIp = process.env.SERVER_IP || '';
+let serverIp = '';
 const pipedAnswers = input.isTTY ? [] : readFileSync( 0, 'utf8' ).split( /\r?\n/ );
 
 function abortConfiguration(): never {
@@ -324,6 +325,7 @@ async function gatherConfig(): Promise<CliConfigInput> {
 }
 
 export async function configureFromTerminal(): Promise<void> {
+	serverIp = await resolveServerIp( isLocalMode() );
 	showIntro();
 	const inputConfig = await gatherConfig();
 	const { configText } = getConfig( inputConfig, { generateMissingPasswords: true } );

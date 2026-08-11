@@ -1,13 +1,16 @@
 import { confirm, isCancel } from '@clack/prompts';
 import { Option, type Command } from 'commander';
 import process from 'node:process';
-import { configurationExists, reset } from '../lib/compose.js';
+import { configurationExists, missingConfigurationKeys, reset } from '../lib/compose.js';
 
 type ResetOptions = {
 	force?: boolean;
 };
 
 async function resetSuite( options: ResetOptions ): Promise<void> {
+	if ( missingConfigurationKeys().length > 0 ) {
+		return;
+	}
 	let deleteEnvironment = options.force === true;
 	let deleteData = options.force === true;
 	if ( options.force !== true ) {

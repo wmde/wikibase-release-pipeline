@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
-# -----------------------------------------------------------------------------
-# Clean stdout, structured log:
-# - stdout: no timestamps / no metadata
-# - log   : ISO8601 timestamp + message + optional trailing [code]
-# -----------------------------------------------------------------------------
+# Host-side logging helpers. User-facing output stays clean while status and
+# command details are retained in a timestamped diagnostic log.
 
 : "${WBS_LOG_PATH:?WBS_LOG_PATH must be set before sourcing _logging.sh}"
 export WBS_LOG_PATH
 
 DEBUG=${DEBUG:=false}
 
-# Are we attached to a terminal?
 INTERACTIVE=false
 [ -t 1 ] && INTERACTIVE=true
 
 _timestamp() { date -u +"%FT%TZ"; }
 
-# --- one-shot init that rotates the previous file and starts clean -----------
+# Rotate a previous run once; the bootstrap sets WBS_LOG_INITIALIZED when it
+# has already started the combined bootstrap/tools log.
 log_init() {
   if [ "${WBS_LOG_INITIALIZED:-}" = "1" ]; then
     return
@@ -28,7 +25,7 @@ log_init() {
   if [ -f "$WBS_LOG_PATH" ] && [ -s "$WBS_LOG_PATH" ]; then
     ts=$(date -u +"%Y%m%d-%H%M%S")
     backup="${WBS_LOG_PATH}.${ts}"
-    # Prefer mv; fall back to cp if moving across devices fails
+    # Fall back to copying when the log and backup are on different devices.
     mv -- "$WBS_LOG_PATH" "$backup" 2>/dev/null || {
       cp --preserve=mode,timestamps -- "$WBS_LOG_PATH" "$backup" 2>/dev/null || true
       touch "$WBS_LOG_PATH"
@@ -37,7 +34,6 @@ log_init() {
   touch "$WBS_LOG_PATH"
 }
 
-# run init immediately
 log_init
 
 # status "Message..." ["status_code"]

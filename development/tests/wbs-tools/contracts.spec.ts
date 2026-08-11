@@ -35,23 +35,12 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 		const invalid = spawnSync(
 			'docker',
 			[
-				'run', '--rm', '-e', 'WBS_VALIDATE_OPTIONS=true', image,
+				'run', '--rm', image,
 				'node', 'dist/wbs.js', 'install', '--unknown-option'
 			],
 			{ encoding: 'utf8', stdio: 'pipe' }
 		);
 		assert.notEqual( invalid.status, 0 );
-
-		const valid = spawnSync(
-			'docker',
-			[
-				'run', '--rm', '-e', 'WBS_VALIDATE_OPTIONS=true', image,
-				'node', 'dist/wbs.js', 'install', '--local'
-			],
-			{ encoding: 'utf8', stdio: 'pipe' }
-		);
-		assert.equal( valid.status, 0, valid.stderr );
-		assert.doesNotMatch( valid.stderr, /configuration is incomplete/u );
 	} );
 
 	it( 'describes generated and retained passwords independently', () => {

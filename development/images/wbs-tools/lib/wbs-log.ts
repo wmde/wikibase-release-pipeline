@@ -16,6 +16,14 @@ export function appendWbsLogEntry( message: string, code?: string ): void {
 	);
 }
 
+export function appendWbsLogOutput( output: string | Uint8Array ): void {
+	if ( !WBS_LOG_PATH ) {
+		return;
+	}
+	mkdirSync( dirname( WBS_LOG_PATH ), { recursive: true } );
+	appendFileSync( WBS_LOG_PATH, output );
+}
+
 function mirrorProcessStream( stream: NodeJS.WriteStream ): void {
 	const originalWrite = stream.write.bind( stream ) as ( ...args: unknown[] ) => boolean;
 	stream.write = ( (

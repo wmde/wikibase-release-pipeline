@@ -49,8 +49,10 @@ describe( 'installer-dev web environment', () => {
 
 		assert.equal( localBuilds, 1 );
 		assert.equal( runner.calls.length, 1 );
+		assert.equal( runner.calls[ 0 ].command, 'pnpm' );
 		assert.deepEqual( runner.calls[ 0 ].args, [
-			'/host/repo/scripts/run-web-installer.sh'
+			'--filter', 'wbs-tools', 'exec', 'tsx', 'wbs.ts',
+			'install', '--web', '--local'
 		] );
 		const environment = runner.calls[ 0 ].options.env;
 		assert.ok( environment );

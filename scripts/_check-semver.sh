@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# _check-semver
+# Compare the first version-like value in ACTUAL with a required minimum. This
+# deliberately accepts command output such as "Docker version 28.3.3, build …"
+# rather than implementing the complete SemVer grammar.
 # Usage:
 #   _check-semver.sh MIN [ACTUAL]
 #   echo ACTUAL | _check-semver.sh MIN
@@ -20,12 +22,10 @@ else
   read -r actual || actual=""
 fi
 
-# Extract first version-like token (handles "v2.39.2", commas, extra text)
 _extract_first_version() {
   printf '%s' "$1" | grep -oE -m1 'v?[0-9]+(\.[0-9]+){1,2}' || true
 }
 
-# Normalize: strip leading v, cut non-numeric, ensure 3 components
 _norm() {
   local v="${1#v}"
   v="${v%%[^0-9.]*}"
@@ -34,7 +34,6 @@ _norm() {
   printf "%d.%d.%d\n" "$a" "$b" "$c"
 }
 
-# Make ACTUAL robust to raw strings like "Docker version 28.3.3, build …"
 actual="$(_extract_first_version "$actual")"
 if [[ -z "$actual" ]]; then
   exit 2
@@ -46,7 +45,6 @@ actualVersion=$(_norm "$actual")
 IFS='.' read -r minMajor minMinor minPatch <<<"$minVersion"
 IFS='.' read -r actualMajor actualMinor actualPatch <<<"$actualVersion"
 
-# Compare
 if   (( actualMajor >  minMajor )); then exit 0
 elif (( actualMajor == minMajor )); then
   if   (( actualMinor >  minMinor )); then exit 0
