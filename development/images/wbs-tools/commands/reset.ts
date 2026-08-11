@@ -1,7 +1,12 @@
 import { confirm, isCancel } from '@clack/prompts';
 import { Option, type Command } from 'commander';
 import process from 'node:process';
-import { configurationExists, missingConfigurationKeys, reset } from '../lib/compose.js';
+import {
+	composeServicesAreRunning,
+	configurationExists,
+	missingConfigurationKeys,
+	reset
+} from '../lib/compose.js';
 import {
 	installerSessionIsRunning,
 	stopInstallerSession
@@ -15,13 +20,15 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 	const installerRunning = await installerSessionIsRunning();
 	const environmentExists = configurationExists();
 	const suiteIsConfigured = missingConfigurationKeys().length === 0;
-	if ( !installerRunning && !environmentExists ) {
+	const suiteIsRunning = await composeServicesAreRunning();
+	const suiteCanBeReset = suiteIsConfigured || suiteIsRunning;
+	if ( !installerRunning && !environmentExists && !suiteIsRunning ) {
 		console.log( 'There is nothing to reset.' );
 		return;
 	}
 	let stopInstaller = options.force === true && installerRunning;
 	let deleteEnvironment = options.force === true && environmentExists;
-	let deleteData = options.force === true && suiteIsConfigured;
+	let deleteData = options.force === true && suiteCanBeReset;
 	if ( options.force !== true ) {
 		if ( !process.stdin.isTTY ) {
 			throw new Error( 'reset requires confirmation; rerun with --force for automation.' );
@@ -37,7 +44,7 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 			}
 			stopInstaller = installerAnswer;
 		}
-		if ( suiteIsConfigured ) {
+		if ( suiteCanBeReset ) {
 			const dataAnswer = await confirm( {
 				message: 'Permanently delete all Wikibase Suite services, data, and generated runtime configuration files?',
 				initialValue: false
@@ -48,11 +55,11 @@ async function resetSuite( options: ResetOptions ): Promise<void> {
 			}
 			deleteData = dataAnswer;
 		}
-		if ( environmentExists && ( deleteData || !suiteIsConfigured ) ) {
+		if ( environmentExists ) {
 			const environmentAnswer = await confirm( {
-				message: suiteIsConfigured ?
+				message: deleteData ?
 					'Also delete the saved installer configuration in .env?' :
-					'Delete the incomplete installer configuration in .env?',
+					'Delete the saved installer configuration in .env?',
 				initialValue: false
 			} );
 			if ( isCancel( environmentAnswer ) ) {

@@ -34,15 +34,14 @@ export function configurationExists(): boolean {
 	return existsSync( envFile );
 }
 
-function composeArgs( localImages = false, interactiveProgress = false ): string[] {
-	const args = [ 'compose' ];
-	if ( interactiveProgress ) {
-		args.push( '--ansi', 'always', '--progress', 'tty' );
+function composeArgs( localImages = false ): string[] {
+	const args = [
+		'compose',
+		'--project-directory', repositoryRoot
+	];
+	if ( existsSync( envFile ) ) {
+		args.push( '--env-file', envFile );
 	}
-	args.push(
-		'--project-directory', repositoryRoot,
-		'--env-file', envFile
-	);
 	if ( localImages ) {
 		args.push( '--file', join( repositoryRoot, 'docker-compose.yml' ) );
 		const conventionalOverride = join( repositoryRoot, 'docker-compose.override.yml' );
@@ -81,7 +80,7 @@ export async function up( options: SuiteOptions = {} ): Promise<void> {
 		console.log( 'Building Wikibase Suite images from this checkout...' );
 		await buildImages();
 	}
-	const args = composeArgs( localImages, process.stdout.isTTY === true );
+	const args = composeArgs( localImages );
 	if ( options.update ) {
 		console.log( 'Pulling selected Wikibase Suite images...' );
 		await runProcess( 'docker', [ ...args, 'pull' ] );
@@ -100,10 +99,13 @@ export async function status(): Promise<void> {
 }
 
 export async function reset( options: ResetOptions ): Promise<void> {
-	// Compose needs .env while it removes the instance, so the environment file
-	// is deliberately deleted only after any requested data reset has completed.
+	// Use .env when available, then delete it only after Compose has removed the instance.
 	if ( options.data ) {
-		await runProcess( 'docker', [ ...composeArgs(), 'down', '--volumes' ] );
+		await runProcess(
+			'docker',
+			[ ...composeArgs(), 'down', '--volumes' ],
+			{ quiet: true }
+		);
 		for ( const filename of [ 'LocalSettings.php', 'wikibase-php.ini', 'wdqs-frontend-config.json' ] ) {
 			rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
 		}

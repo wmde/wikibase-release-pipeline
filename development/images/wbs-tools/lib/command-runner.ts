@@ -59,7 +59,8 @@ export async function runProcess(
 	appendWbsLogEntry( `BEGIN RUN: ${ renderedCommand }`, 'debug' );
 	try {
 		await new Promise<void>( ( resolve, reject ) => {
-			const captureOutput = Boolean( WBS_LOG_PATH ) || options.quiet === true;
+			const captureOutput = options.quiet === true ||
+				( Boolean( WBS_LOG_PATH ) && process.stdout.isTTY !== true );
 			const child = spawn( command, args, {
 				cwd: options.cwd,
 				env: options.env ?? process.env,
@@ -73,7 +74,7 @@ export async function runProcess(
 					stderr += chunk;
 					appendWbsLogOutput( chunk );
 				} );
-			} else {
+			} else if ( captureOutput ) {
 				child.stdout?.pipe( process.stdout, { end: false } );
 				child.stderr?.pipe( process.stderr, { end: false } );
 			}
