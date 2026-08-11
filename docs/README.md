@@ -1,4 +1,4 @@
-# Operating Wikibase Suite (WBS)
+# Wikibase Suite (WBS)
 
 Find instructions below for configuring and maintaining an existing WBS installation. If you’re setting up WBS for the first time, start by [Installing WBS](./install/README.md)⁠.
 
@@ -32,22 +32,22 @@ These are the default locations used by the installation instructions. If you ch
 
 Manage configuration files, connect WBS to other services, or install additional extensions.
 
-- [Configuration Files](./configuration-files.md)
-- [Adding Extensions](./add-extensions.md)
-- [Enabling Login with Wikimedia](./enable-login-with-wikimedia.md)
+- [Configuration Files](./configure/configuration-files.md)
+- [Adding Extensions](./operate/add-extensions.md)
+- [Enabling Login with Wikimedia](./configure/enable-login-with-wikimedia.md)
 
 ## Maintain
 
 Keep your installation current, protect or restore its data, and diagnose problems.
 
-- [Upgrading](./upgrade.md)
-- [Backing Up and Restoring](./backup-and-restore.md)
-- [Troubleshooting](./troubleshooting.md)
+- [Upgrading](./operate/upgrade.md)
+- [Backing Up and Restoring](./operate/backup-and-restore.md)
+- [Troubleshooting](./operate/troubleshooting.md)
 
 ## Reference
 
 Learn about WBS versions, Docker images, and terminology.
 
-- [Docker Images](./docker-images.md)
-- [Versions](./versions.md)
-- [Glossary](./glossary.md)
+- [Docker Images](./assets/docker-images.md)
+- [Versions](./assets/versions.md)
+- [Glossary](./assets/glossary.md)

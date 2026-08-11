@@ -6,7 +6,7 @@ This procedure removes the Wikibase Suite (WBS) containers, data, configuration,
 
 1. If you have not already, [log in to your server and change to your WBS directory](../README.md#access-your-wbs-server).
 
-2. If you might need anything from the instance later, follow [Back up your data](../backup-and-restore.md#back-up-your-data) and [Back up your configuration](../backup-and-restore.md#back-up-your-configuration).
+2. If you might need anything from the instance later, follow [Back up your data](../operate/backup-and-restore.md#back-up-your-data) and [Back up your configuration](../operate/backup-and-restore.md#back-up-your-configuration).
 
 3. Remove the containers, Docker volumes, and images used by the WBS services.
 
