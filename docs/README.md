@@ -32,7 +32,7 @@ These are the default locations used by the installation instructions. If you ch
 
 Manage configuration files, connect WBS to other services, or install additional extensions.
 
-- [Configuration Files](./configure/configuration-files.md)
+- [Advanced Configuration](./configure/advanced-configuration.md)
 - [Adding Extensions](./configure/add-extensions.md)
 - [Enabling Login with Wikimedia](./configure/enable-login-with-wikimedia.md)
 

@@ -18,7 +18,7 @@ WBS is a supported and tested Docker Compose configuration for deploying the fol
 
 Start here for guidance on preparing a server and domain names, then use the web-based installer to configure and start WBS.
 
-**[Install WBS](./docs/install/README.md)**
+**[Install WBS](./docs/install/installer.md)**
 
 ## Current users
 
