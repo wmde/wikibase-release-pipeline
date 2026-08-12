@@ -33,7 +33,7 @@ These are the default locations used by the installation instructions. If you ch
 Manage configuration files, connect WBS to other services, or install additional extensions.
 
 - [Configuration Files](./configure/configuration-files.md)
-- [Adding Extensions](./operate/add-extensions.md)
+- [Adding Extensions](./configure/add-extensions.md)
 - [Enabling Login with Wikimedia](./configure/enable-login-with-wikimedia.md)
 
 ## Maintain
@@ -48,6 +48,6 @@ Keep your installation current, protect or restore its data, and diagnose proble
 
 Learn about WBS versions, Docker images, and terminology.
 
-- [Docker Images](./assets/docker-images.md)
-- [Versions](./assets/versions.md)
-- [Glossary](./assets/glossary.md)
+- [Docker Images](./reference/docker-images.md)
+- [Versions](./reference/versions.md)
+- [Glossary](./reference/glossary.md)

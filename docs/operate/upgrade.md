@@ -2,7 +2,7 @@
 
 Wikibase Suite (WBS) uses semantic versioning. Patch and minor releases within your current major version are compatible and can be upgraded directly, while major releases may contain breaking changes and require a version-specific upgrade procedure.
 
-WBS Docker Images are released separately and can receive compatible updates without changing your WBS version. See [Wikibase Suite (WBS) Versions](../assets/versions.md) for a full explanation of WBS and Docker Image versioning.
+WBS Docker Images are released separately and can receive compatible updates without changing your WBS version. See [Wikibase Suite (WBS) Versions](../reference/versions.md) for a full explanation of WBS and Docker Image versioning.
 
 ## Upgrade WBS
 
@@ -12,7 +12,7 @@ Before upgrading WBS, review the [WBS changelog](../../CHANGELOG.md) for the rel
 
 Patch and minor upgrades within your current major WBS version do not require a migration.
 
-1. If you have not already, [log in to your server and change to your WBS directory](./README.md#access-your-wbs-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#access-your-wbs-server).
 
 2. If you customized `docker-compose.yml`, commit your changes and reconcile them with the target release. Otherwise, continue to the next step.
 
@@ -52,15 +52,15 @@ WBS Docker Images are released independently from WBS. Your WBS configuration re
 
 Before updating, you can review the changelog for any images you want to check:
 
-- [Wikibase](../development/images/wikibase/CHANGELOG.md)
-- [Query Service](../development/images/wdqs/CHANGELOG.md)
-- [Query Service frontend](../development/images/wdqs-frontend/CHANGELOG.md)
-- [QuickStatements](../development/images/quickstatements/CHANGELOG.md)
-- [OpenSearch](../development/images/opensearch/CHANGELOG.md)
+- [Wikibase](../../development/images/wikibase/CHANGELOG.md)
+- [Query Service](../../development/images/wdqs/CHANGELOG.md)
+- [Query Service frontend](../../development/images/wdqs-frontend/CHANGELOG.md)
+- [QuickStatements](../../development/images/quickstatements/CHANGELOG.md)
+- [OpenSearch](../../development/images/opensearch/CHANGELOG.md)
 
 To update the images used by your installation:
 
-1. If you have not already, [log in to your server and change to your WBS directory](./README.md#access-your-wbs-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#access-your-wbs-server).
 
 2. For a production instance, [back up your data](./backup-and-restore.md#back-up-your-data) if you need a rollback point. The backup procedure stops WBS; continue directly with the next step.
 
@@ -77,7 +77,7 @@ To update the images used by your installation:
 
 To pull compatible WBS Docker Image updates whenever you start the stack:
 
-1. If you have not already, [log in to your server and change to your WBS directory](./README.md#access-your-wbs-server).
+1. If you have not already, [log in to your server and change to your WBS directory](../README.md#access-your-wbs-server).
 
 2. Run:
 
