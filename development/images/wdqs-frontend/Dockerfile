@@ -6,7 +6,7 @@ ARG WDQSQUERYGUI_COMMIT
 # hadolint ignore=DL3006
 FROM ${NODE_IMAGE_URL} as builder
 
-RUN git clone https://gerrit.wikimedia.org/r/wikidata/query/gui /tmp/wikidata-query-gui && \
+RUN git clone https://gitlab.wikimedia.org/repos/wmde/wikidata-query-gui.git /tmp/wikidata-query-gui && \
     git -C /tmp/wikidata-query-gui checkout ${WDQSQUERYGUI_COMMIT} && \
     find /tmp/wikidata-query-gui -name ".git*" -exec rm -rf {} +
 
@@ -31,7 +31,8 @@ LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends jq && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    sed -i 's/application\/javascript[[:space:]]*js;/application\/javascript                           js mjs;/' /etc/nginx/mime.types
 
 WORKDIR /usr/share/nginx/html
 

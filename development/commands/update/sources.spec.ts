@@ -13,6 +13,7 @@ import type { SourceUpdateInteraction } from './source-types.js';
 import {
 	confirmPinPlan,
 	describePinChanges,
+	manifestPins,
 	planPins,
 	readVariable,
 	replaceVariable
@@ -42,7 +43,7 @@ describe('Wikibase source update provider', () => {
 				value !== null &&
 				typeof value === 'object' &&
 				!Array.isArray(value) &&
-				['gerrit', 'github', 'codeberg'].includes(
+				['gerrit', 'github', 'codeberg', 'gitlab'].includes(
 					String(bakeObject(variables, name).kind)
 				)
 			);
@@ -206,8 +207,8 @@ describe('other source update providers', () => {
 			if (url.startsWith('https://api.github.com/')) {
 				return new Response(
 					JSON.stringify([
-						{ name: 'query-service-parent-0.3.165' },
-						{ name: 'query-service-parent-0.3.164' }
+						{ name: 'query-service-parent-0.3.166' },
+						{ name: 'query-service-parent-0.3.165' }
 					]),
 					{ status: 200 }
 				);
@@ -238,7 +239,7 @@ describe('other source update providers', () => {
 		assert.ok(
 			notes.some((line) =>
 				line.includes(
-					'compare/query-service-parent-0.3.164...query-service-parent-0.3.165'
+					'compare/query-service-parent-0.3.165...query-service-parent-0.3.166'
 				)
 			)
 		);
@@ -246,16 +247,16 @@ describe('other source update providers', () => {
 
 	it('describes Query Service changes without rediscovering upstream state', () => {
 		const previous = readFileSync(WDQS_MANIFEST, 'utf8');
-		const next = replaceVariable(previous, 'WDQS.version', '0.3.165');
+		const next = replaceVariable(previous, 'WDQS.version', '0.3.166');
 		assert.deepEqual(wdqsSourceProvider.describeChanges(previous, next), [
 			{
 				variable: 'WDQS.version',
 				description: 'Query Service',
-				previous: '0.3.164',
-				next: '0.3.165',
+				previous: '0.3.165',
+				next: '0.3.166',
 				link: {
 					label: 'Diff',
-					url: 'https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.164...query-service-parent-0.3.165'
+					url: 'https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.165...query-service-parent-0.3.166'
 				}
 			}
 		]);
@@ -301,6 +302,35 @@ describe('other source update providers', () => {
 		]);
 		assert.equal(readVariable(plan.contents, 'PIN'), 'abc123');
 		assert.equal(plan.changes[0].next, 'abc123');
+	});
+
+	it('resolves Wikimedia GitLab source pins and comparison links', async () => {
+		globalThis.fetch = async (input) => {
+			assert.equal(
+				String(input),
+				'https://gitlab.wikimedia.org/api/v4/projects/repos%2Fwmde%2Fexample/repository/branches/main'
+			);
+			return new Response(JSON.stringify({ commit: { id: 'new-commit' } }), {
+				status: 200
+			});
+		};
+		const manifest = `variable "SOURCE" {
+  default = {
+    kind = "gitlab"
+    name = "Example"
+    repo = "https://gitlab.wikimedia.org/repos/wmde/example.git"
+    ref = "refs/heads/main"
+    revision = "old-commit"
+  }
+}
+`;
+		const plan = await planPins(manifest, manifestPins(manifest));
+
+		assert.equal(readVariable(plan.contents, 'SOURCE.revision'), 'new-commit');
+		assert.equal(
+			plan.changes[0].link?.url,
+			'https://gitlab.wikimedia.org/repos/wmde/example/-/compare/old-commit...new-commit'
+		);
 	});
 
 	it('describes a source absent from the previous release as newly added', () => {

@@ -78,6 +78,18 @@ export async function codebergCommit(
 	return ((await response.json()) as { commit: { id: string } }).commit.id;
 }
 
+export async function gitlabCommit(
+	repository: string,
+	branch: string
+): Promise<string> {
+	const project = encodeURIComponent(repository);
+	const ref = encodeURIComponent(branch);
+	const response = await request(
+		`https://gitlab.wikimedia.org/api/v4/projects/${project}/repository/branches/${ref}`
+	);
+	return ((await response.json()) as { commit: { id: string } }).commit.id;
+}
+
 function repositorySlug(url: string, host: string): string {
 	const prefix = `https://${host}/`;
 	if (!url.startsWith(prefix)) {
@@ -106,7 +118,7 @@ export function manifestPins(contents: string): SourcePin[] {
 			return [];
 		}
 		const source = bakeObject(variables, variable);
-		if (!['gerrit', 'github', 'codeberg'].includes(String(source.kind))) {
+		if (!['gerrit', 'github', 'codeberg', 'gitlab'].includes(String(source.kind))) {
 			return [];
 		}
 		const kind = sourceString(source, 'kind', variable);
@@ -133,6 +145,13 @@ export function manifestPins(contents: string): SourcePin[] {
 			compareUrl = (previous, next) =>
 				`https://codeberg.org/${repository}/compare/${previous}...${next}`;
 			commitUrl = (commit) => codebergCommitUrl(repository, commit);
+		} else if (kind === 'gitlab') {
+			const repository = repositorySlug(repo, 'gitlab.wikimedia.org');
+			resolve = async () => await gitlabCommit(repository, ref);
+			compareUrl = (previous, next) =>
+				`https://gitlab.wikimedia.org/${repository}/-/compare/${previous}...${next}`;
+			commitUrl = (commit) =>
+				`https://gitlab.wikimedia.org/${repository}/-/commit/${commit}`;
 		} else {
 			const repository = repositorySlug(repo, 'gerrit.wikimedia.org').replace(
 				/^r\//u,

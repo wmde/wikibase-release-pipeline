@@ -302,6 +302,16 @@ describe('wbs-dev preparation and release workflow', () => {
 						label: 'Commit',
 						url: 'https://example.test/commit/cccccccccccccccccccccccccccccccccccccccc'
 					}
+				},
+				{
+					variable: 'SOURCE.revision',
+					description: 'Manifest source main',
+					previous: 'dddddddddddddddddddddddddddddddddddddddd',
+					next: 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+					link: {
+						label: 'Diff',
+						url: 'https://example.test/compare/dddd...eeee'
+					}
 				}
 			];
 			gitRepository.fetchRemoteTags();
@@ -358,6 +368,11 @@ describe('wbs-dev preparation and release workflow', () => {
 				changelog,
 				/Added Example extension REL1_46 at \[Commit\]\(https:\/\/example\.test\/commit\/cccccccccccccccccccccccccccccccccccccccc\)\./u
 			);
+			assert.match(
+				changelog,
+				/Manifest source main \(\[Diff\]\(https:\/\/example\.test\/compare\/dddd\.\.\.eeee\)\)\./u
+			);
+			assert.doesNotMatch(changelog, /Manifest source main from/u);
 			assert.match(
 				changelog,
 				/## Changes\n\n- feat\(wikibase\): add behavior after the first draft/u

@@ -263,13 +263,18 @@ function findDraftHeadings(
 		);
 }
 
+function isCommitPin(change: SourceChange): boolean {
+	return change.variable.endsWith('_COMMIT') ||
+		change.variable.endsWith('.revision');
+}
+
 function visibleSourceRange(
 	change: SourceChange
 ): { previous: string; next: string } | undefined {
 	if (!change.previous) {
 		return undefined;
 	}
-	if (!change.variable.endsWith('_COMMIT')) {
+	if (!isCommitPin(change)) {
 		return { previous: change.previous, next: change.next };
 	}
 	if (change.link) {
@@ -285,14 +290,14 @@ function dependencyChangelogEntry(change: SourceChange): string {
 	if (!change.previous) {
 		const source = change.link
 			? `[${change.link.label}](${change.link.url})`
-			: change.variable.endsWith('_COMMIT')
+			: isCommitPin(change)
 				? `commit \`${change.next.slice(0, 12)}\``
 				: change.next;
 		return `Added ${change.description} at ${source}.`;
 	}
 	const range = visibleSourceRange(change);
 	const values = range
-		? change.variable.endsWith('_COMMIT')
+		? isCommitPin(change)
 			? ` from \`${range.previous}\` to \`${range.next}\``
 			: ` from ${range.previous} to ${range.next}`
 		: '';

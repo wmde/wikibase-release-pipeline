@@ -1,3 +1,13 @@
+# 2.2.0 (2026-08-12)
+
+## Changes
+
+- Serves the Query GUI's ES modules with a browser-compatible JavaScript media type.
+
+## Dependency updates
+
+- Wikidata Query GUI main ([Diff](https://gitlab.wikimedia.org/repos/wmde/wikidata-query-gui/-/compare/35a3c0c39b7c9e555fcba77032de9eef4694d722...3647637ca5bfcb5162137c9a4fe2cd2eb87b9a8c)).
+
 # 2.1.1 (2026-07-14)
 
 - Loads query examples from the local Wikibase `Project:SPARQL/examples` page instead of Wikidata, migrating the previous Wikidata configuration when present.

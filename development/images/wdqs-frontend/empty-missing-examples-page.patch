@@ -1,9 +1,7 @@
-diff --git a/wikibase/queryService/api/QuerySamples.js b/wikibase/queryService/api/QuerySamples.js
---- a/wikibase/queryService/api/QuerySamples.js
-+++ b/wikibase/queryService/api/QuerySamples.js
-@@ -50,4 +50,9 @@ wikibase.queryService/api/QuerySamples.js
- 		} ).then( function ( response ) {
- 			return self._parseHTML( response.parse.text );
+diff --git a/wikibase/queryService/api/QuerySamples.mjs b/wikibase/queryService/api/QuerySamples.mjs
+--- a/wikibase/queryService/api/QuerySamples.mjs
++++ b/wikibase/queryService/api/QuerySamples.mjs
+@@ -44,1 +44,6 @@
 -		} );
 +		} ).catch( function ( error ) {
 +			if ( error.code === 'missingtitle' ) {
@@ -11,4 +9,3 @@ diff --git a/wikibase/queryService/api/QuerySamples.js b/wikibase/queryService/a
 +			}
 +			throw error;
 +		} );
- 	};
