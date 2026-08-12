@@ -41,7 +41,27 @@ Variables in **bold** are required.
 
 ### Local query examples
 
-By default, the frontend loads query examples from the local Wikibase page `Project:SPARQL/examples`. Create that page on the Wikibase side and add examples with `<sparql>` blocks. On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
+By default, the frontend loads query examples from the local Wikibase page `Project:SPARQL/examples`. Create that page on the Wikibase side and add a section for each example. The section heading becomes the example's label in the Query Service frontend, and the following text becomes its description:
+
+```wikitext
+== Recently modified items ==
+
+Lists the 25 most recently modified items.
+
+<sparql>
+SELECT ?item ?itemLabel ?modified WHERE {
+  ?item schema:dateModified ?modified.
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+  }
+}
+ORDER BY DESC(?modified)
+LIMIT 25
+</sparql>
+```
+
+On startup, an existing configuration that still points at Wikidata is migrated by removing that legacy setting; a deliberately configured non-Wikidata examples source is preserved.
 
 ## Internal filesystem layout
 
