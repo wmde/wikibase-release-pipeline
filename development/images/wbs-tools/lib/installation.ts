@@ -2,6 +2,7 @@ import { existsSync, rmSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
 import { up } from './compose.js';
 import { appendInstallationLog } from './installation-log.js';
+import { INSTALLATION_STATUS } from './installation-status.js';
 
 export async function completeWebInstallation( options: {
 	localImages?: boolean;
@@ -15,24 +16,24 @@ export async function completeWebInstallation( options: {
 		await delay( 500 );
 	}
 	rmSync( requestPath, { force: true } );
-	appendInstallationLog( 'Configuration saved.', 'config_saved' );
-	appendInstallationLog( 'Updating Docker images...', 'images_pull_started' );
+	appendInstallationLog( 'Configuration saved.', INSTALLATION_STATUS.configSaved );
+	appendInstallationLog( 'Updating Docker images...', INSTALLATION_STATUS.imagesPullStarted );
 	try {
 		await up( {
 			...( options.build ? { build: true } : {
 				update: true,
 				localImages: options.localImages
 			} ),
-			onStartingServices: () => appendInstallationLog(
+				onStartingServices: () => appendInstallationLog(
 				'Starting Docker Compose services. Generally takes 2–6 minutes...',
-				'services_waiting'
+				INSTALLATION_STATUS.servicesWaiting
 			)
 		} );
 	} catch ( error ) {
 		const detail = error instanceof Error ? error.message : String( error );
-		appendInstallationLog( `Installation failed: ${ detail }`, 'installation_failed' );
+		appendInstallationLog( `Installation failed: ${ detail }`, INSTALLATION_STATUS.failed );
 		throw error;
 	}
-	appendInstallationLog( 'Docker Compose services reported ready.', 'services_ready' );
-	appendInstallationLog( 'Installation is complete.', 'installation_complete' );
+	appendInstallationLog( 'Docker Compose services reported ready.', INSTALLATION_STATUS.servicesReady );
+	appendInstallationLog( 'Installation is complete.', INSTALLATION_STATUS.complete );
 }

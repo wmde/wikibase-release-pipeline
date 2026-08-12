@@ -1,8 +1,6 @@
-import {
-	isBooted,
-	sanitizeConfig
-} from '../lib/configuration.js';
+import { sanitizeConfig } from '../lib/configuration.js';
 import { clearInstallationLog } from '../lib/installation-log.js';
+import { inspectInstallationAttempt } from '../lib/installation-state.js';
 
 // 10 minutes
 const AUTO_FINALIZE_TIMEOUT_MS = 10 * 60 * 1000;
@@ -35,7 +33,7 @@ export function createInstallerLifecycle(
 	}
 
 	function scheduleAutoFinalizeAfterBoot(): void {
-		if ( !isBooted() ) {
+		if ( !inspectInstallationAttempt().completed ) {
 			setTimeout( scheduleAutoFinalizeAfterBoot, INSTALLATION_STATUS_POLL_MS );
 			return;
 		}

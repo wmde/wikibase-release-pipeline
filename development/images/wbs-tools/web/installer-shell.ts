@@ -1,11 +1,10 @@
 import { readFileSync } from 'fs';
+import { isLocalMode } from '../lib/configuration.js';
 import {
-	getExistingInstallState,
-	isBooted,
-	isConfigSaved,
-	isLocalMode,
-	isInstallationStarted
-} from '../lib/configuration.js';
+	configuredExistingInstallState,
+	inspectInstallationAttempt,
+	installationAttemptStarted
+} from '../lib/installation-state.js';
 
 export interface InstallerShellOptions {
 	configurationOnly: boolean;
@@ -31,13 +30,19 @@ export function createInstallerShellRenderer(
 	options: InstallerShellOptions
 ): ( scriptSrc: string ) => string {
 	return ( scriptSrc: string ): string => {
+		const installationAttempt = options.installerDevMock ? {
+			configurationSaved: false,
+			completed: false,
+			failed: false
+		} : inspectInstallationAttempt();
+		const installationStarted = !options.installerDevMock &&
+			installationAttemptStarted( installationAttempt );
 		const initialState = {
 			installerDevMock: options.installerDevMock,
 			configurationOnly: options.configurationOnly,
-			isConfigSaved: options.installerDevMock ? false : isConfigSaved(),
-			isBooted: options.installerDevMock ? false : isBooted(),
-			isInstallationStarted: options.installerDevMock ? false : isInstallationStarted(),
-			existingInstallState: options.installerDevMock ? 'none' : getExistingInstallState(),
+			installationCompleted: installationAttempt.completed,
+			installationStarted,
+			existingInstallState: options.installerDevMock ? 'none' : configuredExistingInstallState(),
 			isLocalMode: isLocalMode(),
 			serverIp: options.serverIp
 		};

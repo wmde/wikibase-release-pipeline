@@ -1,10 +1,14 @@
 import { computed, ref } from 'vue';
 import {
+	INSTALLATION_STATUS,
+	INSTALLATION_STATUS_CODE_SUFFIX_REGEX,
+	installationStatusCode
+} from '../../../lib/installation-status.ts';
+import {
 	DEBUG_LOG_SUFFIX_REGEX,
 	INSTALLATION_PROGRESS_EVENTS,
 	INSTALLATION_PROGRESS_TIMER_TICK_MS,
 	INSTALLATION_STATUS_LINE_LIMIT,
-	STATUS_CODE_SUFFIX_REGEX,
 	TIMESTAMPED_LOG_ENTRY_REGEX
 } from '../constants';
 
@@ -80,9 +84,9 @@ export function useInstallationProgress( onComplete: () => Promise<void> | void 
 			return null;
 		}
 
-		const code = message.match( STATUS_CODE_SUFFIX_REGEX )?.[ 1 ];
+		const code = installationStatusCode( message );
 		return {
-			message: code ? message.replace( STATUS_CODE_SUFFIX_REGEX, '' ).trim() : message,
+			message: code ? message.replace( INSTALLATION_STATUS_CODE_SUFFIX_REGEX, '' ).trim() : message,
 			code
 		};
 	}
@@ -133,7 +137,7 @@ export function useInstallationProgress( onComplete: () => Promise<void> | void 
 		for ( const line of parsedStatusLines ) {
 			updateProgressFromStatusCode( line.code );
 		}
-		if ( !handledComplete && parsedStatusLines.some( ( line ) => line.code === 'installation_complete' ) ) {
+		if ( !handledComplete && parsedStatusLines.some( ( line ) => line.code === INSTALLATION_STATUS.complete ) ) {
 			handledComplete = true;
 			await onComplete();
 		}

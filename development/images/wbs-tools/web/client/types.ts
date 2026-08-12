@@ -23,9 +23,8 @@ export type ConfigResponse = {
 export type InitialInstallerState = {
 	installerDevMock: boolean;
 	configurationOnly: boolean;
-	isConfigSaved: boolean;
-	isBooted: boolean;
-	isInstallationStarted: boolean;
+	installationCompleted: boolean;
+	installationStarted: boolean;
 	existingInstallState: ExistingInstallState;
 	isLocalMode: boolean;
 	serverIp: string;

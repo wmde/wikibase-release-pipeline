@@ -177,9 +177,8 @@ type FormFieldName = keyof ConfigForm;
 const fallbackState: InitialInstallerState = {
 	installerDevMock: false,
 	configurationOnly: false,
-	isConfigSaved: false,
-	isBooted: false,
-	isInstallationStarted: false,
+	installationCompleted: false,
+	installationStarted: false,
 	existingInstallState: 'none',
 	isLocalMode: false,
 	serverIp: ''
@@ -192,12 +191,12 @@ const existingInstallIsRunning = !initialState.configurationOnly &&
 const existingInstallBlocksInstallation = !initialState.configurationOnly &&
 	initialState.existingInstallState === 'previous';
 const initialInstallationComplete = !initialState.configurationOnly &&
-	( initialState.isBooted || existingInstallIsRunning );
+	( initialState.installationCompleted || existingInstallIsRunning );
 const initialInstallationLocked = initialInstallationComplete ||
-	( !initialState.configurationOnly && initialState.isInstallationStarted ) ||
+	( !initialState.configurationOnly && initialState.installationStarted ) ||
 	existingInstallBlocksInstallation;
 const currentStep = ref<InstallerStep>(
-	initialInstallationComplete || ( !initialState.configurationOnly && initialState.isInstallationStarted ) ? 5 : 0
+	initialInstallationComplete || ( !initialState.configurationOnly && initialState.installationStarted ) ? 5 : 0
 );
 const configLocked = ref( initialInstallationLocked );
 const installationComplete = ref( initialInstallationComplete );

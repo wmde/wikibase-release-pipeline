@@ -3,27 +3,28 @@ import {
 	appendInstallationLog,
 	clearInstallationLog
 } from '../lib/installation-log.js';
+import { INSTALLATION_STATUS } from '../lib/installation-status.js';
 import { appendWbsLogEntry } from '../lib/wbs-log.js';
 
 type ConfigResponse = ReturnType<typeof getConfig>;
 
 const MOCK_INSTALLATION_EVENTS = [
-	{ delayMs: 250, message: 'Configuration saved.', code: 'config_saved' },
-	{ delayMs: 900, message: 'Pulling Docker images...', code: 'images_pull_started' },
-	{ delayMs: 1700, message: 'Starting Docker Compose services...', code: 'services_waiting' },
-	{ delayMs: 2700, message: 'Docker Compose services reported ready.', code: 'services_ready' },
-	{ delayMs: 3400, message: 'Installation is complete.', code: 'installation_complete' }
+	{ delayMs: 250, message: 'Configuration saved.', code: INSTALLATION_STATUS.configSaved },
+	{ delayMs: 900, message: 'Pulling Docker images...', code: INSTALLATION_STATUS.imagesPullStarted },
+	{ delayMs: 1700, message: 'Starting Docker Compose services...', code: INSTALLATION_STATUS.servicesWaiting },
+	{ delayMs: 2700, message: 'Docker Compose services reported ready.', code: INSTALLATION_STATUS.servicesReady },
+	{ delayMs: 3400, message: 'Installation is complete.', code: INSTALLATION_STATUS.complete }
 ] as const;
 
 const MOCK_INSTALLATION_FAILURE = {
 	delayMs: 1700,
 	message: 'Installation failed: simulated Docker image pull failure.',
-	code: 'installation_failed'
+	code: INSTALLATION_STATUS.failed
 } as const;
 
 const MOCK_INSTALLATION_FAILURE_EVENTS = [
-	{ delayMs: 250, message: 'Configuration saved.', code: 'config_saved' },
-	{ delayMs: 900, message: 'Pulling Docker images...', code: 'images_pull_started' },
+	{ delayMs: 250, message: 'Configuration saved.', code: INSTALLATION_STATUS.configSaved },
+	{ delayMs: 900, message: 'Pulling Docker images...', code: INSTALLATION_STATUS.imagesPullStarted },
 	MOCK_INSTALLATION_FAILURE
 ] as const;
 

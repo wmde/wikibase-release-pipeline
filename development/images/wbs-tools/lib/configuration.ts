@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { INSTALLATION_LOG_PATH } from './installation-log.js';
+import { LAUNCH_TRIGGER_PATH } from './installation-state.js';
 import {
 	parseEnvContent,
 	serializeEnvContent
@@ -11,57 +11,11 @@ const WBS_DIR = process.env.WBS_DIR || '/app/wbs';
 export const ENV_FILE_PATH = process.env.ENV_FILE_PATH || join( WBS_DIR, '.env' );
 export const ENV_TEMPLATE_FILE_PATH = join( WBS_DIR, 'template.env' );
 export const DOT_ENV_EXAMPLE_FILE_PATH = join( WBS_DIR, '.env.example' );
-export const LOCAL_SETTINGS_FILE_PATH = join( WBS_DIR, 'config', 'LocalSettings.php' );
-export const LAUNCH_TRIGGER_PATH = process.env.LAUNCH_TRIGGER_PATH || '';
 const DEFAULT_DB_NAME = 'my_wiki';
 const DEFAULT_DB_USER = 'sqluser';
-const EXISTING_INSTALL_STATES = new Set( [ 'none', 'running', 'previous' ] );
 
-export type ExistingInstallState = 'none' | 'running' | 'previous';
-
-// Status
-
-export function isBooted(): boolean {
-	if ( !existsSync( INSTALLATION_LOG_PATH ) ) {
-		return false;
-	}
-	return readFileSync( INSTALLATION_LOG_PATH, 'utf8' )
-		.split( '\n' )
-		.some( ( line ) => line.endsWith( ' [installation_complete]' ) );
-}
-
-export function isInstallationStarted(): boolean {
-	if ( LAUNCH_TRIGGER_PATH && existsSync( LAUNCH_TRIGGER_PATH ) ) {
-		return true;
-	}
-
-	if ( !existsSync( INSTALLATION_LOG_PATH ) ) {
-		return false;
-	}
-
-	return readFileSync( INSTALLATION_LOG_PATH, 'utf8' )
-		.split( '\n' )
-		.some( ( line ) => {
-			const match = line.match( /\s\[([a-z0-9_]+)\]$/i );
-			return match?.[ 1 ].toLowerCase() === 'config_saved';
-		} );
-}
-
-export function isConfigSaved(): boolean {
+function savedConfigurationExists(): boolean {
 	return existsSync( ENV_FILE_PATH ) && statSync( ENV_FILE_PATH ).size > 0;
-}
-
-export function getExistingInstallState(): ExistingInstallState {
-	const state = process.env.EXISTING_INSTALL_STATE || '';
-	if ( EXISTING_INSTALL_STATES.has( state ) ) {
-		return state as ExistingInstallState;
-	}
-
-	if ( existsSync( LOCAL_SETTINGS_FILE_PATH ) ) {
-		return 'previous';
-	}
-
-	return 'none';
 }
 
 export function isLocalMode(): boolean {
@@ -71,7 +25,7 @@ export function isLocalMode(): boolean {
 // Configuration
 
 function getEnv(): Record<string, string> | null {
-	if ( !isConfigSaved() ) {
+	if ( !savedConfigurationExists() ) {
 		return null;
 	}
 	return parseEnvContent( readFileSync( ENV_FILE_PATH, 'utf8' ) );
@@ -194,7 +148,7 @@ export function getConfig(
 }
 
 export function sanitizeConfig( options: { announce?: boolean } = {} ): void {
-	if ( isConfigSaved() ) {
+	if ( savedConfigurationExists() ) {
 		const { configText } = getConfig();
 		// blank password values
 		const sanitized = configText.replace( /^(\s*[A-Z0-9_]*PASS(?:WORD)?=).+$/gim, '$1' );

@@ -3,13 +3,17 @@ import {
 	copyFileSync,
 	existsSync,
 	mkdirSync,
-	readFileSync,
 	rmSync,
 	writeFileSync
 } from 'node:fs';
 import { join } from 'node:path';
 import { captureProcess, runProcess } from './command-runner.js';
 import { composeServicesAreRunning, installedSuiteExists } from './compose.js';
+import {
+	classifyExistingInstallState,
+	inspectInstallationAttempt,
+	type ExistingInstallState
+} from './installation-state.js';
 import {
 	installerWebContainer,
 	installerWorkerContainer,
@@ -85,16 +89,16 @@ async function provisionCertificate(
 	return true;
 }
 
-async function existingInstallState( localImages: boolean ): Promise<string> {
-	if ( existsSync( installationLog ) ) {
-		if ( readFileSync( installationLog, 'utf8' ).includes( '[installation_failed]' ) ) {
-			return 'none';
-		}
-	}
-	if ( await composeServicesAreRunning( localImages ) ) {
-		return 'running';
-	}
-	return await installedSuiteExists( localImages ) ? 'previous' : 'none';
+async function existingInstallState( localImages: boolean ): Promise<ExistingInstallState> {
+	const lastAttemptFailed = inspectInstallationAttempt( installationLog ).failed;
+	const servicesRunning = !lastAttemptFailed && await composeServicesAreRunning( localImages );
+	const persistentInstallExists = !lastAttemptFailed &&
+		( servicesRunning || await installedSuiteExists( localImages ) );
+	return classifyExistingInstallState( {
+		lastAttemptFailed,
+		servicesRunning,
+		installedSuiteExists: persistentInstallExists
+	} );
 }
 
 function sharedWorkerArgs(): string[] {

@@ -13,6 +13,7 @@ export const testEnv = TestEnv.create( {
 	maxInstances: 1,
 	specs: [
 		'wbs-tools/contracts.spec.ts',
+		'wbs-tools/installation-state.spec.ts',
 		'wbs-tools/installer-access.spec.ts',
 		'wbs-tools/install.spec.ts'
 	],
