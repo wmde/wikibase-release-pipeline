@@ -3,6 +3,7 @@ name: Publish Documentation
 on:
   push:
     branches:
+      - main
       - wbs-8.0.0-product-first-monorepo
     paths:
       - ".github/pages/**"

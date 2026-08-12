@@ -1,6 +1,6 @@
+<!-- Optional documentation banner. Uncomment this style block and the
+corresponding script block below when a site-wide notice is needed.
 <style>
-  /* Preview banner */
-
   .alpha-docs-banner {
     background: #fff8c5;
     border-bottom: 1px solid #d4a72c;
@@ -15,7 +15,10 @@
   .alpha-docs-banner__inner p {
     margin: 0;
   }
+</style>
+-->
 
+<style>
   /* Homepage actions */
 
   .docs-homepage .markdown-body a[href$="/docs/install/installer.html"],
@@ -97,7 +100,7 @@
       document.body.classList.add("docs-homepage");
     }
 
-    /* Preview banner. */
+    /* Optional documentation banner.
     document.body.insertAdjacentHTML("afterbegin", `
       <div class="alpha-docs-banner">
         <div class="alpha-docs-banner__inner">
@@ -109,6 +112,7 @@
         </div>
       </div>
     `);
+    */
 
     /* Copy buttons. */
     document.querySelectorAll(".markdown-body pre > code").forEach(code => {
