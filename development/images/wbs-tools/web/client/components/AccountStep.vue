@@ -21,7 +21,6 @@
 					:status="emailStatus"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'MW_ADMIN_EMAIL', $event )"
-					@touch="emit( 'touch', 'MW_ADMIN_EMAIL' )"
 				/>
 
 				<validated-text-field
@@ -35,7 +34,6 @@
 					:status="textStatus"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'MW_ADMIN_NAME', $event )"
-					@touch="emit( 'touch', 'MW_ADMIN_NAME' )"
 				/>
 
 				<password-field
@@ -49,7 +47,6 @@
 					show-generate-button
 					@update:model-value="emit( 'update-field', 'MW_ADMIN_PASS', $event )"
 					@generate="emit( 'generate-password', 'MW_ADMIN_PASS' )"
-					@touch="emit( 'touch', 'MW_ADMIN_PASS' )"
 				/>
 			</div>
 		</div>
@@ -94,7 +91,6 @@ defineProps<{
 const emit = defineEmits<{
 	'update-field': [ name: AccountFieldName, value: string ];
 	'generate-password': [ name: 'MW_ADMIN_PASS' ];
-	touch: [ name: AccountFieldName ];
 	back: [];
 	continue: [];
 }>();

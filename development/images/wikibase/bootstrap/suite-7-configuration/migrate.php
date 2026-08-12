@@ -119,7 +119,7 @@ function legacyCustomTail( string $source, int $markerPosition ): string {
 	return $tail;
 }
 
-function prepareMigration( string $legacyPath, string $actualJsonPath, string $instancePath ): void {
+function stageInstanceSettings( string $legacyPath, string $actualJsonPath, string $instancePath ): void {
 	$actual = readJsonObject( $actualJsonPath );
 	$source = file_get_contents( $legacyPath );
 	if ( $source === false ) {
@@ -128,7 +128,7 @@ function prepareMigration( string $legacyPath, string $actualJsonPath, string $i
 	atomicWrite( $instancePath, phpAssignments( $actual, legacyElasticsearchHost( $source ) ) );
 }
 
-function writeLegacyPrefix( string $legacyPath, string $prefixPath ): void {
+function writeLoadableLegacyConfiguration( string $legacyPath, string $prefixPath ): void {
 	$source = file_get_contents( $legacyPath );
 	if ( $source === false ) {
 		fail( "Could not read $legacyPath." );
@@ -141,7 +141,7 @@ function writeLegacyPrefix( string $legacyPath, string $prefixPath ): void {
 	echo "$shape\n";
 }
 
-function finishMigration(
+function stageMigratedConfiguration(
 	string $legacyPath,
 	string $actualJsonPath,
 	string $referenceJsonPath,
@@ -197,30 +197,30 @@ function installStagedFile( string $sourcePath, string $destinationPath ): void 
 
 $command = $argv[1] ?? '';
 switch ( $command ) {
-	case 'prepare':
+	case 'stage-instance-settings':
 		if ( count( $argv ) !== 5 ) {
-			fail( 'Usage: configuration-tool.php prepare LEGACY ACTUAL_JSON INSTANCE' );
+			fail( 'Usage: migrate.php stage-instance-settings LEGACY ACTUAL_JSON INSTANCE' );
 		}
-		prepareMigration( $argv[2], $argv[3], $argv[4] );
+		stageInstanceSettings( $argv[2], $argv[3], $argv[4] );
 		break;
-	case 'legacy-prefix':
+	case 'write-loadable-legacy-config':
 		if ( count( $argv ) !== 4 ) {
-			fail( 'Usage: configuration-tool.php legacy-prefix LEGACY PREFIX' );
+			fail( 'Usage: migrate.php write-loadable-legacy-config LEGACY OUTPUT' );
 		}
-		writeLegacyPrefix( $argv[2], $argv[3] );
+		writeLoadableLegacyConfiguration( $argv[2], $argv[3] );
 		break;
-	case 'finish':
+	case 'stage-migrated-configuration':
 		if ( count( $argv ) !== 8 ) {
-			fail( 'Usage: configuration-tool.php finish LEGACY ACTUAL_JSON REFERENCE_JSON CUSTOM INSTANCE_TEMP INSTANCE' );
+			fail( 'Usage: migrate.php stage-migrated-configuration LEGACY ACTUAL_JSON REFERENCE_JSON CUSTOM INSTANCE_TEMP INSTANCE' );
 		}
-		finishMigration( $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7] );
+		stageMigratedConfiguration( $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7] );
 		break;
 	case 'install':
 		if ( count( $argv ) !== 4 ) {
-			fail( 'Usage: configuration-tool.php install SOURCE DESTINATION' );
+			fail( 'Usage: migrate.php install SOURCE DESTINATION' );
 		}
 		installStagedFile( $argv[2], $argv[3] );
 		break;
 	default:
-		fail( 'Expected prepare, legacy-prefix, finish, or install.' );
+		fail( 'Expected stage-instance-settings, write-loadable-legacy-config, stage-migrated-configuration, or install.' );
 }

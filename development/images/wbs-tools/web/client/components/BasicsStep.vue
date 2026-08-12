@@ -27,7 +27,6 @@
 					:status="hostStatuses.WIKIBASE_PUBLIC_HOST"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'WIKIBASE_PUBLIC_HOST', $event )"
-					@touch="emit( 'touch', 'WIKIBASE_PUBLIC_HOST' )"
 					@blur="emit( 'flush-host', 'WIKIBASE_PUBLIC_HOST' )"
 				/>
 
@@ -43,7 +42,6 @@
 					:status="hostStatuses.WDQS_PUBLIC_HOST"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'WDQS_PUBLIC_HOST', $event )"
-					@touch="emit( 'touch', 'WDQS_PUBLIC_HOST' )"
 					@blur="emit( 'flush-host', 'WDQS_PUBLIC_HOST' )"
 				/>
 			</div>
@@ -104,7 +102,6 @@ defineProps<{
 
 const emit = defineEmits<{
 	'update-field': [ name: BasicFieldName, value: string ];
-	touch: [ name: BasicFieldName ];
 	'flush-host': [ name: HostFieldName ];
 	back: [];
 	continue: [];

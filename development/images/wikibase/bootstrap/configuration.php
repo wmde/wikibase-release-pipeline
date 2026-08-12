@@ -117,7 +117,7 @@ if ( realpath( $_SERVER['SCRIPT_FILENAME'] ?? '' ) === __FILE__ ) {
 	switch ( $command ) {
 		case 'fresh':
 			if ( count( $argv ) !== 4 ) {
-				fail( 'Usage: configuration-tool.php fresh INSTANCE CUSTOM' );
+				fail( 'Usage: configuration.php fresh INSTANCE CUSTOM' );
 			}
 			fresh( $argv[2], $argv[3] );
 			break;

@@ -21,7 +21,6 @@
 					:status="textStatuses.DB_NAME"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'DB_NAME', $event )"
-					@touch="emit( 'touch', 'DB_NAME' )"
 				/>
 
 				<validated-text-field
@@ -35,7 +34,6 @@
 					:status="textStatuses.DB_USER"
 					:disabled="disabled"
 					@update:model-value="emit( 'update-field', 'DB_USER', $event )"
-					@touch="emit( 'touch', 'DB_USER' )"
 				/>
 
 				<password-field
@@ -49,7 +47,6 @@
 					show-generate-button
 					@update:model-value="emit( 'update-field', 'DB_PASS', $event )"
 					@generate="emit( 'generate-password', 'DB_PASS' )"
-					@touch="emit( 'touch', 'DB_PASS' )"
 				/>
 			</div>
 
@@ -106,7 +103,6 @@ defineProps<{
 const emit = defineEmits<{
 	'update-field': [ name: DatabaseFieldName, value: string ];
 	'generate-password': [ name: 'DB_PASS' ];
-	touch: [ name: DatabaseFieldName ];
 	back: [];
 	continue: [];
 }>();

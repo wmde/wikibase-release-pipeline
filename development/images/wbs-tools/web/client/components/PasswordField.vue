@@ -13,7 +13,6 @@
 					status="default"
 					v-bind="$attrs"
 					@update:model-value="emit( 'update:modelValue', String( $event ) )"
-					@focus="emit( 'touch' )"
 					@blur="emit( 'blur' )"
 				/>
 				<cdx-icon
@@ -74,14 +73,12 @@ const props = withDefaults( defineProps<{
 const emit = defineEmits<{
 	'update:modelValue': [ value: string ];
 	generate: [];
-	touch: [];
 	blur: [];
 }>();
 
 const visible = ref( false );
 
 function generatePassword(): void {
-	emit( 'touch' );
 	emit( 'generate' );
 }
 

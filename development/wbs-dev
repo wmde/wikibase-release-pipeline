@@ -17,9 +17,9 @@ if [[ -z "${BUILD_CACHE_REGISTRY+x}" ]]; then
 fi
 export BUILD_CACHE_REGISTRY
 
-# Reuse an existing GitHub CLI login for update-sources API requests.
+# Reuse an existing GitHub CLI login for update API requests.
 # If gh is unavailable or unauthenticated, the updater falls back to anonymous access.
-if [[ " $* " == *" update-sources "* ]] &&
+if [[ "${1:-}" == "update" ]] &&
   [[ -z "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]] &&
   command -v gh > /dev/null 2>&1; then
   if github_api_token="$(gh auth token 2> /dev/null)"; then

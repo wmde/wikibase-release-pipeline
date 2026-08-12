@@ -31,10 +31,10 @@ fi
 instance_settings=/config/InstanceSettings.php
 custom_settings=/config/LocalSettings.php
 image_state_directory=/config/.wikibase-image
-migration_state=$image_state_directory/config-migration
-staged_instance=$migration_state/InstanceSettings.php
-staged_custom=$migration_state/LocalSettings.php
-installation_state=$image_state_directory/installation-state
+migration_directory=$image_state_directory/config-migration
+staged_instance_settings=$migration_directory/InstanceSettings.php
+staged_custom_settings=$migration_directory/LocalSettings.php
+installation_state_file=$image_state_directory/installation-state
 
 ensure_image_state_directory() {
     mkdir -p "$image_state_directory"
@@ -47,12 +47,12 @@ remove_image_state_directory_if_empty() {
 set_installation_phase() {
     next_phase=$1
     ensure_image_state_directory
-    printf '%s\n' "$next_phase" > "$installation_state.tmp"
-    mv "$installation_state.tmp" "$installation_state"
+    printf '%s\n' "$next_phase" > "$installation_state_file.tmp"
+    mv "$installation_state_file.tmp" "$installation_state_file"
 }
 
-complete_fresh_installation() {
-    current_phase=$(cat "$installation_state")
+resume_fresh_installation() {
+    current_phase=$(cat "$installation_state_file")
 
     if [ "$current_phase" = configured ]; then
         php /var/www/html/maintenance/run.php installPreConfigured
@@ -86,7 +86,7 @@ complete_fresh_installation() {
         if [ -f /extra-install.sh ]; then
             bash /extra-install.sh
         fi
-        rm -f "$installation_state"
+        rm -f "$installation_state_file"
         remove_image_state_directory_if_empty
         return
     fi
@@ -94,16 +94,16 @@ complete_fresh_installation() {
     exit 1
 }
 
-install_migrated_configuration() {
-    if [ ! -r "$staged_instance" ] || [ ! -r "$staged_custom" ]; then
+install_staged_configuration() {
+    if [ ! -r "$staged_instance_settings" ] || [ ! -r "$staged_custom_settings" ]; then
         echo "The staged WBS 8 configuration migration is incomplete."
         exit 1
     fi
     php /opt/wbs/bootstrap/suite-7-configuration/migrate.php install \
-        "$staged_instance" \
+        "$staged_instance_settings" \
         "$instance_settings"
     php /opt/wbs/bootstrap/suite-7-configuration/migrate.php install \
-        "$staged_custom" \
+        "$staged_custom_settings" \
         "$custom_settings"
 }
 
@@ -112,16 +112,16 @@ migrate_legacy_configuration() {
     backup_directory=/config/backups
     actual_configuration=/tmp/LocalSettings.actual.json
     reference_configuration=/tmp/LocalSettings.reference.json
-    temporary_instance=$migration_state/InstanceSettings.php.tmp
+    temporary_instance=$migration_directory/InstanceSettings.php.tmp
     legacy_prefix=/tmp/LocalSettings.legacy-prefix.php
 
     echo "Legacy LocalSettings.php found; preserving and migrating it."
     ensure_image_state_directory
-    mkdir -p "$backup_directory" "$migration_state"
+    mkdir -p "$backup_directory" "$migration_directory"
     if [ ! -e "$backup_directory/LocalSettings.pre-wbs-8.php.backup" ]; then
         cp "$legacy_settings" "$backup_directory/LocalSettings.pre-wbs-8.php.backup"
     fi
-    legacy_shape=$(php /opt/wbs/bootstrap/suite-7-configuration/migrate.php legacy-prefix \
+    legacy_shape=$(php /opt/wbs/bootstrap/suite-7-configuration/migrate.php write-loadable-legacy-config \
         "$legacy_settings" \
         "$legacy_prefix")
     echo "Recognized $legacy_shape generated configuration."
@@ -129,7 +129,7 @@ migrate_legacy_configuration() {
         --conf "$legacy_prefix" \
         --format=json \
         --json-partial-output-on-error > "$actual_configuration"
-    php /opt/wbs/bootstrap/suite-7-configuration/migrate.php prepare \
+    php /opt/wbs/bootstrap/suite-7-configuration/migrate.php stage-instance-settings \
         "$legacy_settings" \
         "$actual_configuration" \
         "$temporary_instance"
@@ -137,44 +137,52 @@ migrate_legacy_configuration() {
         --conf /opt/wbs/bootstrap/suite-7-configuration/ReferenceConfig.php \
         --format=json \
         --json-partial-output-on-error > "$reference_configuration"
-    php /opt/wbs/bootstrap/suite-7-configuration/migrate.php finish \
+    php /opt/wbs/bootstrap/suite-7-configuration/migrate.php stage-migrated-configuration \
         "$legacy_settings" \
         "$actual_configuration" \
         "$reference_configuration" \
-        "$staged_custom" \
+        "$staged_custom_settings" \
         "$temporary_instance" \
-        "$staged_instance"
+        "$staged_instance_settings"
     rm -f "$actual_configuration" "$reference_configuration" "$legacy_prefix"
-    install_migrated_configuration
+    install_staged_configuration
     echo "Legacy configuration saved in $backup_directory."
 }
 
-if [ -d "$migration_state" ]; then
+is_recognized_legacy_configuration() {
+    grep -q '^# End of generated LocalSettings.php$' "$custom_settings"
+}
+
+resume_configuration_migration() {
     ensure_image_state_directory
-    if [ ! -r "$staged_instance" ] || [ ! -r "$staged_custom" ]; then
-        if ! grep -q '^# End of generated LocalSettings.php$' "$custom_settings"; then
+    if [ ! -r "$staged_instance_settings" ] || [ ! -r "$staged_custom_settings" ]; then
+        if ! is_recognized_legacy_configuration; then
             echo "The interrupted WBS 8 configuration migration cannot be resumed."
             exit 1
         fi
         migrate_legacy_configuration
     else
         echo "Resuming the WBS 8 configuration migration."
-        install_migrated_configuration
+        install_staged_configuration
     fi
     php /var/www/html/maintenance/run.php update --quick
-    rm -rf "$migration_state"
+    rm -rf "$migration_directory"
     remove_image_state_directory_if_empty
-elif [ -e "$installation_state" ]; then
+}
+
+resume_interrupted_installation() {
     ensure_image_state_directory
-    if [ "$(cat "$installation_state")" = preparing ]; then
+    if [ "$(cat "$installation_state_file")" = preparing ]; then
         if [ ! -r "$instance_settings" ] || [ ! -r "$custom_settings" ]; then
             php /opt/wbs/bootstrap/configuration.php fresh "$instance_settings" "$custom_settings"
         fi
         set_installation_phase configured
     fi
-    echo "Resuming WBS installation at phase $(cat "$installation_state")."
-    complete_fresh_installation
-elif [ -e "$instance_settings" ]; then
+    echo "Resuming WBS installation at phase $(cat "$installation_state_file")."
+    resume_fresh_installation
+}
+
+update_existing_installation() {
     # These values are inputs to initial setup. Existing configuration is authoritative.
     unset \
         DB_SERVER DB_PASS DB_USER DB_NAME \
@@ -182,16 +190,20 @@ elif [ -e "$instance_settings" ]; then
         MW_WG_SERVER MW_WG_LANGUAGE_CODE MW_WG_SITENAME \
         ELASTICSEARCH_HOST
     php /var/www/html/maintenance/run.php update --quick
-elif [ -e "$custom_settings" ]; then
-    if ! grep -q '^# End of generated LocalSettings.php$' "$custom_settings"; then
+}
+
+upgrade_legacy_installation() {
+    if ! is_recognized_legacy_configuration; then
         echo "$custom_settings exists without $instance_settings and is not a recognized Wikibase Suite 7 configuration."
         exit 1
     fi
     migrate_legacy_configuration
     php /var/www/html/maintenance/run.php update --quick
-    rm -rf "$migration_state"
+    rm -rf "$migration_directory"
     remove_image_state_directory_if_empty
-else
+}
+
+install_new_instance() {
     echo "No instance configuration found; installing MediaWiki from the image-owned configuration."
 
     # Check for required environment variables
@@ -219,5 +231,20 @@ else
     set_installation_phase preparing
     php /opt/wbs/bootstrap/configuration.php fresh "$instance_settings" "$custom_settings"
     set_installation_phase configured
-    complete_fresh_installation
+    resume_fresh_installation
+}
+
+# Persistent artifacts determine which idempotent lifecycle action is safe.
+# Test the interrupted operations first because their working files may include
+# otherwise valid InstanceSettings.php and LocalSettings.php files.
+if [ -d "$migration_directory" ]; then
+    resume_configuration_migration
+elif [ -e "$installation_state_file" ]; then
+    resume_interrupted_installation
+elif [ -e "$instance_settings" ]; then
+    update_existing_installation
+elif [ -e "$custom_settings" ]; then
+    upgrade_legacy_installation
+else
+    install_new_instance
 fi

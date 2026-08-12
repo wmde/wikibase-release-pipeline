@@ -48,7 +48,6 @@
 						:can-continue="domainReady"
 						:disabled="configLocked"
 						@update-field="updateField"
-						@touch="touchField"
 						@flush-host="flushHost"
 						@back="currentStep = 0"
 						@continue="continueToAccount"
@@ -72,7 +71,6 @@
 						:disabled="configLocked"
 						@update-field="updateField"
 						@generate-password="generatePasswordForField"
-						@touch="touchField"
 						@back="currentStep = 1"
 						@continue="continueToDatabase"
 					/>
@@ -86,7 +84,6 @@
 						:disabled="configLocked"
 						@update-field="updateField"
 						@generate-password="generatePasswordForField"
-						@touch="touchField"
 						@back="currentStep = 2"
 						@continue="continueToVisibility"
 					/>
@@ -299,9 +296,6 @@ function getTextStatus( name: TextValidationFieldName ): FieldValidationStatus {
 	return validators[ name ]( form[ name ] ) ? 'valid' : 'invalid';
 }
 
-function touchField( _name: FormFieldName ): void {
-}
-
 function showStep( index: number ): void {
 	currentStep.value = ( index + 1 ) as InstallerStep;
 }
@@ -332,7 +326,6 @@ function generateSecurePassword(): string {
 
 function generatePasswordForField( name: PasswordFieldName ): void {
 	const password = generateSecurePassword();
-	touchField( name );
 	updateField( name, password );
 	void passwordValidation.validateNow( name, password );
 }
@@ -346,8 +339,6 @@ async function flushHost( name: HostFieldName ): Promise<void> {
 }
 
 async function continueToAccount(): Promise<void> {
-	touchField( 'WIKIBASE_PUBLIC_HOST' );
-	touchField( 'WDQS_PUBLIC_HOST' );
 	await Promise.all( [
 		hostValidation.validateNow( 'WIKIBASE_PUBLIC_HOST', form.WIKIBASE_PUBLIC_HOST ),
 		hostValidation.validateNow( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST )
@@ -359,9 +350,6 @@ async function continueToAccount(): Promise<void> {
 }
 
 async function continueToDatabase(): Promise<void> {
-	touchField( 'MW_ADMIN_NAME' );
-	touchField( 'MW_ADMIN_EMAIL' );
-	touchField( 'MW_ADMIN_PASS' );
 	await passwordValidation.validateNow( 'MW_ADMIN_PASS', form.MW_ADMIN_PASS );
 
 	if ( accountReady.value ) {
@@ -370,9 +358,6 @@ async function continueToDatabase(): Promise<void> {
 }
 
 async function continueToVisibility(): Promise<void> {
-	touchField( 'DB_NAME' );
-	touchField( 'DB_USER' );
-	touchField( 'DB_PASS' );
 	await passwordValidation.validateNow( 'DB_PASS', form.DB_PASS );
 
 	if ( databaseReady.value ) {
@@ -382,14 +367,6 @@ async function continueToVisibility(): Promise<void> {
 
 async function startInstallation(): Promise<void> {
 	clearSaveError();
-	touchField( 'MW_ADMIN_EMAIL' );
-	touchField( 'WIKIBASE_PUBLIC_HOST' );
-	touchField( 'WDQS_PUBLIC_HOST' );
-	touchField( 'MW_ADMIN_NAME' );
-	touchField( 'MW_ADMIN_PASS' );
-	touchField( 'DB_NAME' );
-	touchField( 'DB_USER' );
-	touchField( 'DB_PASS' );
 	await Promise.all( [
 		hostValidation.validateNow( 'WIKIBASE_PUBLIC_HOST', form.WIKIBASE_PUBLIC_HOST ),
 		hostValidation.validateNow( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST ),

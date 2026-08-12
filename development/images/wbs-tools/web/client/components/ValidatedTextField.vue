@@ -12,7 +12,6 @@
 				:disabled="disabled"
 				v-bind="inputAttrs"
 				@update:model-value="emit( 'update:modelValue', String( $event ) )"
-				@focus="emit( 'touch' )"
 				@blur="emit( 'blur' )"
 			/>
 			<span v-if="status === 'pending'" class="host-input__spinner" aria-hidden="true"></span>
@@ -46,7 +45,6 @@ const props = withDefaults( defineProps<{
 
 const emit = defineEmits<{
 	'update:modelValue': [ value: string ];
-	touch: [];
 	blur: [];
 }>();
 
