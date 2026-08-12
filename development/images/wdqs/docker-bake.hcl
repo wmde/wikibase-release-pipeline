@@ -14,7 +14,7 @@ variable "WDQS" {
     kind            = "github-tags"
     repo            = "https://github.com/wikimedia/wikidata-query-rdf.git"
     tag_prefix      = "query-service-parent-"
-    version         = "0.3.164"
+    version         = "0.3.165"
     distribution    = "https://gitlab.wikimedia.org/api/v4/projects/2745/packages/maven/org/wikidata/query/rdf/service/{version}/service-{version}-dist.tar.gz"
   }
 }

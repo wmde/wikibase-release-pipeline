@@ -1,6 +1,8 @@
 # 2.2.0 (2026-08-06)
 
-Updates to verison 0.3.164
+## Dependency updates
+
+- Query Service from 0.3.164 to 0.3.165 ([Diff](https://github.com/wikimedia/wikidata-query-rdf/compare/query-service-parent-0.3.156...query-service-parent-0.3.165)).
 
 # 2.1.1 (2026-07-14)
 

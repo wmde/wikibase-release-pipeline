@@ -148,7 +148,7 @@ variable "OAUTH" {
     name     = "OAuth"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/OAuth"
     ref      = WMF_EXTENSION_REF
-    revision = "7ea998c0a5db9e89cef2c6aa5b8c8cefae1d1a36"
+    revision = "4f0532740ba691103a6e697f9d1a8d860ee97ddf"
   }
 }
 
