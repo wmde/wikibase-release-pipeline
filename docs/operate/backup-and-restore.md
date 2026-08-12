@@ -46,8 +46,11 @@ To back up these data volumes:
 WBS configuration is contained in the following files:
 
 - `.env`: installation settings and credentials
-- `config/LocalSettings.php`: MediaWiki and Wikibase configuration
-- `config/Extensions.php` and `config/extensions/`: instance-specific extensions
+- `config/LocalSettings.php`: user-owned MediaWiki and Wikibase configuration
+- `config/InstanceSettings.php`: WBS-managed instance configuration and
+  secrets
+- `config/Extensions.php`: optional instance-specific extension configuration
+- `config/extensions/`: instance-specific extension code
 - `config/wikibase-php.ini`: PHP configuration
 - `config/wdqs-frontend-config.json`: Query Service frontend configuration
 - `config/traefik-dynamic.yml`: web routing configuration

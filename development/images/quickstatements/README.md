@@ -36,10 +36,10 @@ Variables in **bold** are required.
 
 | Variable                         | Default     | Description                                                                                            |
 | -------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
-| **`WIKIBASE_PUBLIC_URL`**        | undefined   | Host and port of Wikibase as seen by the user's browser (required)                                     |
-| **`QUICKSTATEMENTS_PUBLIC_URL`** | undefined   | Host and port of QuickStatements as seen by the user's browser (required)                              |
-| **`OAUTH_CONSUMER_KEY`**         | undefined   | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
-| **`OAUTH_CONSUMER_SECRET`**      | undefined   | OAuth consumer secret (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.  |
+| **`WIKIBASE_PUBLIC_URL`**        |             | Host and port of Wikibase as seen by the user's browser (required)                                     |
+| **`QUICKSTATEMENTS_PUBLIC_URL`** |             | Host and port of QuickStatements as seen by the user's browser (required)                              |
+| **`OAUTH_CONSUMER_KEY`**         |             | OAuth consumer key (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.     |
+| **`OAUTH_CONSUMER_SECRET`**      |             | OAuth consumer secret (from MediaWiki), required on initial setup, stored in `/quickstatements/data`.  |
 | `WB_ITEM_NAMESPACE`              | 120         | Wikibase Item namespace                                                                                |
 | `WB_PROPERTY_NAMESPACE`          | 122         | Wikibase Property namespace                                                                            |
 | `WB_ITEM_PREFIX`                 | "Item:"     | Wikibase Item prefix                                                                                   |
@@ -81,7 +81,7 @@ Official releases of this image can be found on [Docker Hub wikibase/quickstatem
 
 See the [image changelog](./CHANGELOG.md) for release notes. Documentation at previous releases is preserved in the repository under the corresponding [`quickstatements@…` tag](https://github.com/wmde/wikibase-suite/tags).
 
-This image uses the shared tag format for WBS Docker Images. See [WBS Versions](../../../docs/versions.md).
+This image uses the shared tag format for WBS Docker Images. See [WBS Versions](../../../docs/reference/versions.md).
 
 ## Authors & contact
 

@@ -28,7 +28,7 @@ RUN composer install --no-dev
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${PHP_IMAGE_URL}
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends gettext-base jq libicu-dev && \

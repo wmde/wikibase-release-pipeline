@@ -2,7 +2,9 @@
 
 Reset an instance when you need to run Wikibase Suite (WBS) setup again, usually after changing first-start values in `.env` or when another procedure directs you here.
 
-Resetting deletes the current Docker volumes and generated configuration before running setup again. Back up any data or local configuration you want to preserve.
+Resetting deletes the current Docker volumes and active configuration before
+running setup again. Back up any data or local configuration you want to
+preserve.
 
 ## Instructions
 
@@ -24,10 +26,10 @@ Resetting deletes the current Docker volumes and generated configuration before 
    docker compose down --volumes
    ```
 
-4. Remove the generated configuration files.
+4. Remove the active configuration and any incomplete image setup state.
 
    ```sh
-   rm -vf config/{LocalSettings.php,wikibase-php.ini,wdqs-frontend-config.json}
+   rm -rvf -- config/{LocalSettings.php,InstanceSettings.php,wikibase-php.ini,wdqs-frontend-config.json,.wikibase-image}
    ```
 
 5. Make the needed changes to `.env`.
@@ -42,7 +44,8 @@ Resetting deletes the current Docker volumes and generated configuration before 
 
 If you did not back up anything in step 2, the reset is complete. Otherwise, continue:
 
-7. After the Wikibase service starts successfully and `config/LocalSettings.php` exists, stop WBS.
+7. After the Wikibase service starts successfully and
+   `config/InstanceSettings.php` exists, stop WBS.
 
    ```sh
    docker compose down

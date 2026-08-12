@@ -18,6 +18,7 @@ export type ResetOptions = {
 const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
 const localSettingsFile = join( repositoryRoot, 'config/LocalSettings.php' );
+const instanceSettingsFile = join( repositoryRoot, 'config/InstanceSettings.php' );
 const REQUIRED_CONFIGURATION_KEYS = [
 	'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST', 'MW_ADMIN_NAME', 'MW_ADMIN_EMAIL',
 	'MW_ADMIN_PASS', 'DB_PASS', 'DB_NAME', 'DB_USER'
@@ -28,7 +29,7 @@ export function missingConfigurationKeys(): string[] {
 		return [ ...REQUIRED_CONFIGURATION_KEYS ];
 	}
 	const config = parseEnvContent( readFileSync( envFile, 'utf8' ) );
-	const requiredKeys = existsSync( localSettingsFile ) ?
+	const requiredKeys = ( existsSync( instanceSettingsFile ) || existsSync( localSettingsFile ) ) ?
 		REQUIRED_CONFIGURATION_KEYS.filter( key => key !== 'MW_ADMIN_PASS' && key !== 'DB_PASS' ) :
 		REQUIRED_CONFIGURATION_KEYS;
 	return requiredKeys.filter( ( key ) => !config[ key ]?.trim() );
@@ -94,7 +95,8 @@ async function composeVolumesExist( localImages = false ): Promise<boolean> {
 }
 
 export async function installedSuiteExists( localImages = false ): Promise<boolean> {
-	return existsSync( localSettingsFile ) ||
+	return existsSync( instanceSettingsFile ) ||
+		existsSync( localSettingsFile ) ||
 		await composeServicesExist( localImages ) ||
 		await composeVolumesExist( localImages );
 }
@@ -145,9 +147,18 @@ export async function reset( options: ResetOptions ): Promise<void> {
 			[ ...composeArgs(), 'down', '--volumes' ],
 			{ quiet: true }
 		);
-		for ( const filename of [ 'LocalSettings.php', 'wikibase-php.ini', 'wdqs-frontend-config.json' ] ) {
+		for ( const filename of [
+			'LocalSettings.php',
+			'InstanceSettings.php',
+			'wikibase-php.ini',
+			'wdqs-frontend-config.json'
+		] ) {
 			rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
 		}
+		rmSync( join( repositoryRoot, 'config', '.wikibase-image' ), {
+			recursive: true,
+			force: true
+		} );
 	}
 	if ( options.environment ) {
 		rmSync( envFile, { force: true } );

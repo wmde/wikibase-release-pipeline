@@ -8,6 +8,7 @@ Run the fast development-tooling tests and browser-based integration suites thro
 | --- | --- | --- |
 | `wbs-dev-tools` | Tooling | The `wbs-dev` CLI, development commands, and shared development libraries. |
 | `repo` | Integration | Core Wikibase repository behavior; runs up to three WDIO workers. |
+| `upgrade` | Integration | Upgrades from earlier Wikibase Suite configuration and data layouts. |
 | `extensions` | Integration | Bundled MediaWiki and Wikibase extensions; runs up to three WDIO workers. |
 | `repo-client` | Integration | Repository/client federation and change dispatch. |
 | `queryservice` | Integration | WDQS, updater, and WDQS frontend through the `queryservice` Compose profile. |

@@ -6,7 +6,7 @@ Wikibase Suite and each published image have independent versions. All use [Sema
 - increment `MINOR` for backward-compatible functionality
 - increment `MAJOR` for incompatible changes
 
-The [WBS version policy](../../docs/versions.md) explains how product and image versions relate. This guide explains how commit messages provide the release impact used by the development tooling.
+The [WBS version policy](../../docs/reference/versions.md) explains how product and image versions relate. This guide explains how commit messages provide the release impact used by the development tooling.
 
 ## Release impact
 

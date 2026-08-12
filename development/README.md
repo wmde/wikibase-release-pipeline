@@ -65,7 +65,7 @@ To run and manually test a complete Suite built from the checkout, use its norma
 wbs up --build
 ```
 
-If `.env` is absent or incomplete, `wbs up` directs you to run `wbs install`. Use `wbs reset` when you need to reset the local instance; see the [reset documentation](../docs/reset.md) for exactly what it can remove.
+If `.env` is absent or incomplete, `wbs up` directs you to run `wbs install`. Use `wbs reset` when you need to reset the local instance; see the [reset documentation](../docs/operate/reset.md) for exactly what it can remove.
 
 When an image or WBS itself is ready for release preparation, run the update interview for the relevant projects or for all projects:
 

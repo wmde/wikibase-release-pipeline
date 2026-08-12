@@ -49,7 +49,7 @@ target "wdqs-frontend-base" {
     NODE_IMAGE_URL      = "${NODE_IMAGE.image}:${NODE_IMAGE.tag}"
   }
   labels = {
-    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-release-pipeline"
+    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-suite"
     "org.opencontainers.image.version" = IMAGE_VERSION
   }
 }

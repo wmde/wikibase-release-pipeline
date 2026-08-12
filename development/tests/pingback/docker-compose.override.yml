@@ -1,7 +1,7 @@
 services:
   wikibase:
     volumes:
-      - ./pingback/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.pingback.php
+      - ./pingback/LocalSettings.php:/test-settings/LocalSettings.php:ro
 
   pingback-beacon:
     image: "node:lts-alpine"

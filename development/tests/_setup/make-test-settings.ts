@@ -82,6 +82,7 @@ export const makeTestSettings = (
 	// Docker Compose uses this value to configure the Selenium session limit.
 	// Keep it aligned with the number of workers WebdriverIO will start.
 	testEnvVars.MAX_INSTANCES = maxInstances.toString();
+	testEnvVars.WBS_TEST_CONFIG_DIR = `${ settings.name }/tmp/config`;
 	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';
 	const debugNode = process.env.DEBUG === 'node';
 	const outputDir = `${ settings.name }/results`;
@@ -105,6 +106,10 @@ export const makeTestSettings = (
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || baseTestSettings.composeFiles,
 		composeProfiles: settings.composeProfiles || [],
+		configurationDirectories: settings.configurationDirectories || [
+			testEnvVars.WBS_TEST_CONFIG_DIR
+		],
+		prepareConfigurationDirectory: settings.prepareConfigurationDirectory,
 		waitForUrls: settings.waitForUrls || baseTestSettings.waitForUrls,
 		envFiles: settings.envFiles || baseTestSettings.envFiles,
 		vars: testEnvVars

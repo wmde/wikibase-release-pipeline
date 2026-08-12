@@ -49,7 +49,7 @@ target "wdqs-base" {
     DEBIAN_IMAGE_URL = "${DEBIAN_IMAGE.image}:${DEBIAN_IMAGE.tag}"
   }
   labels = {
-    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-release-pipeline"
+    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-suite"
     "org.opencontainers.image.version" = IMAGE_VERSION
   }
 }

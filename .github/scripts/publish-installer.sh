@@ -11,10 +11,13 @@ readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"
 readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
 
 validate_origin_repository() {
-  [[ "${ORIGIN_REPOSITORY:-}" == "wmde/wikibase-release-pipeline" ]] || {
-    echo "Unexpected origin repository: ${ORIGIN_REPOSITORY:-unset}" >&2
-    exit 1
-  }
+  case "${ORIGIN_REPOSITORY:-}" in
+    wmde/wikibase-release-pipeline | wmde/wikibase-suite) ;;
+    *)
+      echo "Unexpected origin repository: ${ORIGIN_REPOSITORY:-unset}" >&2
+      exit 1
+      ;;
+  esac
 }
 
 dispatch_payload() {

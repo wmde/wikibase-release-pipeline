@@ -20,7 +20,7 @@ target "wbs-tools-base" {
     WBS_TOOLS_VERSION = IMAGE_VERSION
   }
   labels = {
-    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-release-pipeline"
+    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-suite"
     "org.opencontainers.image.version" = IMAGE_VERSION
   }
 }

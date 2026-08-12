@@ -12,10 +12,8 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - wikibase-config:/config
+      - ./${WBS_TEST_CONFIG_DIR}:/config
       - wikibase-extensions:/var/www/html/extensions/extensions
-      - ./_setup/LocalSettings.override.php:/var/www/html/LocalSettings.d/LocalSettings.override.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php
       - ./${OUTPUT_DIR}:/var/log/mediawiki
     environment:
       ELASTICSEARCH_HOST: !reset null
@@ -47,7 +45,7 @@ services:
     image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs-frontend:${WBS_TEST_IMAGE_TAG:-latest}
     profiles: [ queryservice ]
     volumes:
-      - wdqs-frontend-config:/config
+      - ./${WBS_TEST_CONFIG_DIR}:/config
     environment:
       WDQS_PUBLIC_URL: http://${WDQS_PUBLIC_HOST}/sparql
       WIKIBASE_PUBLIC_URL: http://${WIKIBASE_PUBLIC_HOST}/w/api.php
@@ -90,6 +88,4 @@ services:
           - ${WDQS_PUBLIC_HOST}
 
 volumes:
-  wikibase-config:
-  wdqs-frontend-config:
   wikibase-extensions:

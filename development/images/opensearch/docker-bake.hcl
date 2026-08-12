@@ -45,7 +45,7 @@ target "opensearch-base" {
     OPENSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER = OPENSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER.version
   }
   labels = {
-    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-release-pipeline"
+    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-suite"
     "org.opencontainers.image.version" = IMAGE_VERSION
   }
 }

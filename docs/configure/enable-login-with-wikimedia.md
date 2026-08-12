@@ -67,7 +67,7 @@ You need a Wikimedia account to register the OAuth consumer. Your WBS instance m
 
 By default, anyone who can authenticate with Wikimedia can create a corresponding local account on your Wikibase. You can instead require people to create a local account and link it to their Wikimedia account before using Wikimedia login.
 
-1. Near the end of `config/LocalSettings.php`, after the managed `require_once '/LocalSettings.Extensions.php';` line, add:
+1. Add the following to `config/LocalSettings.php`:
 
    ```php
    $wgOAuthDisallowRemoteOnlyAccounts = true;

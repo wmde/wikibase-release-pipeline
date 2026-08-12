@@ -3,7 +3,7 @@ ARG OPENSEARCH_IMAGE_URL
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${OPENSEARCH_IMAGE_URL}
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 ARG OPENSEARCH_PLUGIN_WIKIMEDIA_EXTRA
 ARG OPENSEARCH_PLUGIN_WIKIMEDIA_HIGHLIGHTER
 

@@ -1,7 +1,8 @@
 import logger, { Logger } from '@wdio/logger';
 import chalk from 'chalk';
 import { spawnSync } from 'child_process';
-import { existsSync, mkdirSync, rmSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
 import * as readline from 'readline';
 import { SevereServiceError } from 'webdriverio';
 import TestSettings from '../_types/test-settings.js';
@@ -48,7 +49,6 @@ export default class TestEnv {
 	public async up(): Promise<void> {
 		try {
 			await this.setupExitListener();
-			this.resetOutputDir();
 			if ( this.settings.beforeServices ) {
 				await this.settings.beforeServices();
 			}
@@ -57,6 +57,8 @@ export default class TestEnv {
 			);
 
 			await this.stopServices();
+			this.resetOutputDir();
+			this.prepareConfigurationDirectories();
 			await this.startServices();
 
 			if ( this.settings.runHeaded ) {
@@ -215,6 +217,35 @@ export default class TestEnv {
 			this.testLog.error(
 				'❌ Error occurred in setting-up outuput directory:',
 				e
+			);
+		}
+	}
+
+	protected prepareConfigurationDirectories(): void {
+		for ( const relativeDirectory of this.settings.configurationDirectories ) {
+			const configurationDirectory = resolve(
+				process.cwd(),
+				relativeDirectory
+			);
+			rmSync( configurationDirectory, { recursive: true, force: true } );
+			if ( this.settings.prepareConfigurationDirectory ) {
+				mkdirSync( configurationDirectory, { recursive: true } );
+				this.settings.prepareConfigurationDirectory( configurationDirectory );
+				continue;
+			}
+			mkdirSync( resolve( configurationDirectory, '.wikibase-image' ), {
+				recursive: true
+			} );
+			writeFileSync(
+				resolve(
+					configurationDirectory,
+					'.wikibase-image/installation-state'
+				),
+				'preparing\n'
+			);
+			copyFileSync(
+				resolve( process.cwd(), '_setup/LocalSettings.php' ),
+				resolve( configurationDirectory, 'LocalSettings.php' )
 			);
 		}
 	}

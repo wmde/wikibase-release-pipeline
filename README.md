@@ -4,14 +4,14 @@ Wikibase Suite (WBS) helps you run your own [Wikibase](https://wikiba.se/) on a 
 
 WBS is a supported and tested Docker Compose configuration for deploying the following services to a publicly accessible server:
 
-- **[Wikibase](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wikibase/README.md):** MediaWiki service with the Wikibase extension included for creating and managing your Wikibase data.
+- **[Wikibase](./development/images/wikibase/README.md):** MediaWiki service with the Wikibase extension included for creating and managing your Wikibase data.
 - **Job Runner:** Background job service used by Wikibase.
 - **[MariaDB](https://hub.docker.com/_/mariadb):** Database service used by Wikibase.
-- **[Elasticsearch](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/elasticsearch/README.md):** Search service used by Wikibase.
-- **[Query service](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs/README.md):** SPARQL service for querying Wikibase data.
-- **[Query service frontend](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs-frontend/README.md):** Web interface for SPARQL queries.
-- **[Query service updater](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/wdqs/README.md):** Keeps query service data in sync with Wikibase.
-- **[QuickStatements](https://github.com/wmde/wikibase-release-pipeline/blob/main/build/quickstatements/README.md):** A web-based tool to import and manipulate large amounts of data.
+- **[OpenSearch](./development/images/opensearch/README.md):** Search service used by Wikibase.
+- **[Query service](./development/images/wdqs/README.md):** SPARQL service for querying Wikibase data.
+- **[Query service frontend](./development/images/wdqs-frontend/README.md):** Web interface for SPARQL queries.
+- **[Query service updater](./development/images/wdqs/README.md):** Keeps query service data in sync with Wikibase.
+- **[QuickStatements](./development/images/quickstatements/README.md):** A web-based tool to import and manipulate large amounts of data.
 - **[Traefik](https://hub.docker.com/_/traefik):** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 
 ## Getting started
@@ -35,7 +35,7 @@ If you’re already running WBS, find instructions for updating to the latest re
 - [Wikibase Suite Phabricator board](https://phabricator.wikimedia.org/project/board/5755/)
 - [Wikibase Suite team email](mailto:wikibase-suite-support@wikimedia.de)
 
-If something is not working as expected, start with [Troubleshooting](./docs/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
+If something is not working as expected, start with [Troubleshooting](./docs/operate/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
 
 ## Development
 

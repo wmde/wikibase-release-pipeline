@@ -49,6 +49,8 @@ export type TestHooks = {
 export type TestEnvSettings = {
 	composeFiles?: string[];
 	composeProfiles?: string[];
+	configurationDirectories?: string[];
+	prepareConfigurationDirectory?( directory: string ): void;
 	waitForUrls?(): string[];
 	envFiles?: string[];
 	vars: Record<string, string>;

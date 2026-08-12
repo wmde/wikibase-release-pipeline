@@ -27,7 +27,7 @@ RUN npm ci && \
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${NGINX_IMAGE_URL}
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends jq && \

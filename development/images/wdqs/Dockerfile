@@ -49,7 +49,7 @@ RUN set -x; \
 # ###########################################################################
 # hadolint ignore=DL3006
 FROM ${DEBIAN_IMAGE_URL}
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 
 # Base as many images as possible on debian.
 # eclipse-temurin is not available for debian, so we copy the JRE over from

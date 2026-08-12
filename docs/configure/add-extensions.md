@@ -30,13 +30,19 @@ To install an extension, copy its files into `config/extensions`, load it from `
 
 6. Confirm that `config/extensions/MyExtension` exists and contains an `extension.json` file.
 
-7. Follow the extension's installation instructions. In many cases, loading it only requires adding the following line to `config/Extensions.php`:
+7. If `config/Extensions.php` does not exist, create it:
+
+   ```sh
+   printf '<?php\n' > config/Extensions.php
+   ```
+
+8. Follow the extension's installation instructions. In many cases, loading it only requires adding the following line to `config/Extensions.php`:
 
    ```php
    wfLoadExtension( 'extensions/MyExtension' );
    ```
 
-8. Restart the Wikibase and job-runner services so MediaWiki can update itself and both services load the extension:
+9. Restart the Wikibase and job-runner services so MediaWiki can update itself and both services load the extension:
 
    ```sh
    docker compose restart wikibase wikibase-jobrunner
@@ -45,7 +51,7 @@ To install an extension, copy its files into `config/extensions`, load it from `
    > [!NOTE]
    > Some extensions instruct you to run `update.php` during installation. The Wikibase Docker Image runs `update.php` during startup, so you do not need to run it manually.
 
-9. Visit `https://<WIKIBASE_PUBLIC_HOST>/wiki/Special:Version` and confirm that the extension appears in the list of installed extensions.
+10. Visit `https://<WIKIBASE_PUBLIC_HOST>/wiki/Special:Version` and confirm that the extension appears in the list of installed extensions.
 
 To keep an extension you installed in `config/extensions` current, follow [Updating Extensions](../operate/update-extensions.md).
 

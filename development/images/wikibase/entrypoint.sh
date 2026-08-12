@@ -32,7 +32,18 @@ if [ "$workload" = 'command' ]; then
     exec docker-php-entrypoint "$@"
 fi
 
-/prepare-runtime.sh "$workload"
+# MW_CONFIG_FILE is the configuration ownership boundary. The image default is
+# its WBS configuration entry point. Replacing that default selects a complete
+# externally managed configuration and bypasses WBS preparation.
+wbs_config_file=/opt/wbs/WBSConfig.php
+if [ "${MW_CONFIG_FILE:-}" = "$wbs_config_file" ]; then
+    if [ "$workload" = 'web' ]; then
+        /opt/wbs/bootstrap/bootstrap.sh
+    elif [ ! -r /config/InstanceSettings.php ]; then
+        echo "/config/InstanceSettings.php is required for the $workload workload."
+        exit 1
+    fi
+fi
 
 case "$workload" in
     web)

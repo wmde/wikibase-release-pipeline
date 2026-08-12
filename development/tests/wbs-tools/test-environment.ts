@@ -111,12 +111,10 @@ function copyCheckout(): void {
 		join( HOST_REPOSITORY_ROOT, '.wbs/version' ),
 		join( CHECKOUT_ROOT, '.wbs/version' )
 	);
-	for ( const file of [ 'Extensions.php', 'traefik-dynamic.yml' ] ) {
-		copyFileSync(
-			join( HOST_REPOSITORY_ROOT, 'config', file ),
-			join( CHECKOUT_ROOT, 'config', file )
-		);
-	}
+	copyFileSync(
+		join( HOST_REPOSITORY_ROOT, 'config/traefik-dynamic.yml' ),
+		join( CHECKOUT_ROOT, 'config/traefik-dynamic.yml' )
+	);
 	cpSync( join( HOST_REPOSITORY_ROOT, 'scripts' ), join( CHECKOUT_ROOT, 'scripts' ), {
 		recursive: true
 	} );

@@ -16,7 +16,6 @@ services:
     volumes:
       - ./config:/config:z
       - ./config/extensions:/var/www/html/extensions/extensions:z
-      - ./config/Extensions.php:/var/www/html/LocalSettings.d/90_UserDefinedExtensions.php:z
       - wikibase-image-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
     env_file:

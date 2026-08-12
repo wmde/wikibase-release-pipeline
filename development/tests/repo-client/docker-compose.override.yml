@@ -5,7 +5,7 @@ services:
 
   wikibase:
     volumes:
-      - ./_setup/repo-LocalSettings.php:/var/www/html/LocalSettings.d/10_Wikibase.php
+      - ./_setup/repo-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
       - ./_setup/repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
@@ -15,13 +15,10 @@ services:
         condition: service_healthy
     restart: always
     volumes:
-      - wikibase-client-config:/config
-      - ./_setup/client-LocalSettings.php:/var/www/html/LocalSettings.d/10_Wikibase.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/15_EntitySchema.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/20_WikibaseLocalMedia.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/60_Elastica.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/61_CirrusSearch.php
-      - ./_setup/empty.php:/var/www/html/LocalSettings.d/62_WikibaseCirrusSearch.php
+      - ./repo-client/tmp/client-config:/config
+      - ./_setup/client-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
+      - ./_setup/empty.php:/opt/wbs/extension-loaders/EntitySchema.php:ro
+      - ./_setup/empty.php:/opt/wbs/extension-loaders/WikibaseLocalMedia.php:ro
       - ./_setup/client-extra-install.sh:/extra-install.sh
       - ./${OUTPUT_DIR}:/var/log/mediawiki
     ports:
@@ -40,6 +37,3 @@ services:
       test: curl --silent --fail http://localhost/wiki/Main_Page
       interval: 10s
       start_period: 2m
-
-volumes:
-  wikibase-client-config:

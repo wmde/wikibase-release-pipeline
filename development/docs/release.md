@@ -2,7 +2,7 @@
 
 Prepare each release in a pull request containing the implementation, versions, and changelogs. Publish only after that pull request is reviewed and merged into `main`.
 
-WBS and each image are versioned independently according to the [WBS version policy](../../docs/versions.md) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+WBS and each image are versioned independently according to the [WBS version policy](../../docs/reference/versions.md) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 The primary release-preparation workflow is the `wbs-dev update` interview. It gathers supported upstream updates, proposes versions, and drafts changelogs for the products being released.
 

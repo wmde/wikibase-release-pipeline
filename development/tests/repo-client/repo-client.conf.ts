@@ -12,6 +12,10 @@ export const testEnv = TestEnv.create( {
 	composeFiles: [
 		...defaultSettings.composeFiles,
 		'repo-client/docker-compose.override.yml'
+	],
+	configurationDirectories: [
+		'repo-client/tmp/config',
+		'repo-client/tmp/client-config'
 	]
 } );
 

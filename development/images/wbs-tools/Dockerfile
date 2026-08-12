@@ -17,7 +17,7 @@ RUN pnpm --filter wbs-tools build && \
 FROM node:24-alpine
 
 ARG WBS_TOOLS_VERSION
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 LABEL org.opencontainers.image.version="${WBS_TOOLS_VERSION}"
 
 WORKDIR /app

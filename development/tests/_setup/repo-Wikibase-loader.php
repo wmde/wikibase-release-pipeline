@@ -9,4 +9,5 @@ wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.j
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 
 $wgWBRepoSettings['siteLinkGroups'] = [ 'mywikigroup' ];
+$wgWBRepoSettings['siteGlobalID'] = 'my_wiki';
 $wgLocalDatabases = $wgWBRepoSettings['localClientDatabases'] = [ 'client_wiki', ];

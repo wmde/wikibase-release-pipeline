@@ -67,4 +67,19 @@ Look for Let's Encrypt errors such as `rateLimited`, `too many certificates alre
 
 This can happen if the `traefik-letsencrypt-data` volume was removed repeatedly while resetting or reinstalling WBS. Keep this volume unless you are intentionally removing the instance.
 
-If Let's Encrypt has rate-limited certificate requests, you may need to wait before another certificate can be issued. Failed validation attempts usually recover gradually within about an hour, but repeatedly requesting certificates for the same domain names can block new certificates for longer. See the [Let's Encrypt rate limits documentation](https://letsencrypt.org/docs/rate-limits/) for the current limits and retry behavior.
+If Let's Encrypt has rate-limited certificate requests, wait until the latest `retry after` time reported in the Traefik logs. At the time of writing, Let's Encrypt allows up to five certificates for the exact same set of domain names in seven days, with capacity for one certificate restoring every 34 hours. Failed validation attempts use a different limit and usually recover more quickly. See the [Let's Encrypt rate limits documentation](https://letsencrypt.org/docs/rate-limits/#new-certificates-per-exact-set-of-identifiers) for the current limits and retry behavior.
+
+After the reported retry time has passed, restart Traefik so that it attempts certificate issuance again:
+
+```sh
+docker compose restart traefik
+```
+
+Then check the new certificate request in the logs:
+
+```sh
+docker compose logs --since=2m traefik |
+  grep -Ei 'acme|certificate|letsencrypt|rate|error'
+```
+
+If the logs report another `retry after` time, wait until that time before restarting Traefik again. Repeated restarts do not bypass a Let's Encrypt rate limit.

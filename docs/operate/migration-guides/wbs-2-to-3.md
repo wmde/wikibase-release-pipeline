@@ -11,7 +11,7 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 2 to 3 whil
 
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
-   - [WBS 3.0.4](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%403.0.4/deploy/CHANGELOG.md#304-2025-02-24)
+   - [WBS 3.0.4](https://github.com/wmde/wikibase-suite/blob/deploy%403.0.4/deploy/CHANGELOG.md#304-2025-02-24)
    - [Wikibase Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wikibase/CHANGELOG.md)
    - [Query Service Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wdqs/CHANGELOG.md)
 

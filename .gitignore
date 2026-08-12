@@ -16,9 +16,10 @@ log
 config/*.ini
 config/*.json
 config/*.php
-!config/Extensions.php
 config/extensions/*
 !config/extensions/.gitkeep
+config/backups/
+config/.wikibase-image/
 
 # Keep the pre-8.0 product directory ignored while installations migrate to root
 deploy/

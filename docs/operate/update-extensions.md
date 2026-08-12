@@ -13,7 +13,7 @@ Instance-specific extensions have their own release cycles. You are responsible 
 
 2. Read the extension's release notes and update instructions. Select an extension release that supports the required MediaWiki version and check for new dependencies or configuration changes.
 
-3. [Back up your WBS configuration](./backup-and-restore.md#back-up-your-configuration). The backup includes `config/extensions` and `config/Extensions.php`. If WBS is already stopped by an upgrade or backup procedure, leave it stopped and continue below.
+3. [Back up your WBS configuration](./backup-and-restore.md#back-up-your-configuration). The backup includes `config/extensions` and, when present, `config/Extensions.php`. If WBS is already stopped by an upgrade or backup procedure, leave it stopped and continue below.
 
 4. On your computer, download the updated `.tar.gz` package from the [MediaWiki Extension Distributor](https://www.mediawiki.org/wiki/Special:ExtensionDistributor). Then copy it to your WBS directory as described in the [installation instructions](../configure/add-extensions.md#instructions). For the default WBS 8 installation:
 

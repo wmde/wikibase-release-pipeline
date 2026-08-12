@@ -137,7 +137,7 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 				schemaVersion: 1,
 				channel: 'pr',
 				pr: 942,
-				source: { repository: 'wmde/wikibase-release-pipeline', commit },
+				source: { repository: 'wmde/wikibase-suite', commit },
 				images: Object.fromEntries( imageNames.map( ( name ) => [
 					name, `ghcr.io/wmde/wikibase/${ name }:${ tag }`
 				] ) )

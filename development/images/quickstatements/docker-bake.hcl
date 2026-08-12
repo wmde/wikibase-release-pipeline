@@ -68,7 +68,7 @@ target "quickstatements-base" {
     PHP_IMAGE_URL            = "${PHP_IMAGE.image}:${PHP_IMAGE.tag}"
   }
   labels = {
-    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-release-pipeline"
+    "org.opencontainers.image.source"  = "https://github.com/wmde/wikibase-suite"
     "org.opencontainers.image.version" = IMAGE_VERSION
   }
 }

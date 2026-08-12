@@ -11,7 +11,7 @@ This guide explains how to upgrade Wikibase Suite (WBS) from version 5 to 6 whil
 
 2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
 
-   - [WBS 6.0.0](https://github.com/wmde/wikibase-release-pipeline/blob/deploy%406.0.0/deploy/CHANGELOG.md#600-2026-02-16)
+   - [WBS 6.0.0](https://github.com/wmde/wikibase-suite/blob/deploy%406.0.0/deploy/CHANGELOG.md#600-2026-02-16)
    - [Wikibase Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wikibase/CHANGELOG.md)
    - [Query Service Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wdqs/CHANGELOG.md)
    - [Query Service frontend Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wdqs-frontend/CHANGELOG.md)

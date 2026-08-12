@@ -1,69 +1,96 @@
-# Upgrading Wikibase Suite (WBS) from 7 to 8
+# Migrating from Wikibase Suite 7 to Wikibase Suite 8
 
-As of Wikibase Suite (WBS) 8, the source repository has moved from `wikibase-release-pipeline` to `wikibase-suite`, and the contents of the `deploy/` directory—from which WBS was previously operated—have moved to the project root. These instructions create a new WBS 8 checkout beside the existing WBS 7 checkout, then copy the local configuration into it. The existing checkout remains available until the upgrade succeeds.
+Wikibase Suite 8 uses a new repository and project layout. These instructions
+create a Suite 8 checkout beside the existing Suite 7 checkout, preserve its
+configuration and Docker volumes, and start the upgraded deployment.
+
+Follow these steps carefully and in order.
 
 > [!WARNING]
-> On startup, the Wikibase Docker Image automatically applies the MediaWiki database schema updates. Do not remove `config/LocalSettings.php` or any Docker volumes as part of this upgrade.
+> The first Suite 8 startup updates the database schema and configuration.
+> Back up the Suite 7 deployment, including its Docker volumes and complete
+> `deploy/config/` directory, before proceeding.
 
 ## Prepare
 
-1. If you have not already, [log in to your server and change to your WBS directory](../../README.md#access-your-wbs-server).
+1. Read the changelogs for the target WBS release and the images changed by
+   the upgrade:
 
-2. Read the `CHANGELOG` entries for the target WBS release and images changed by this upgrade:
+   - [WBS changelog](../../../CHANGELOG.md)
+   - [Wikibase image changelog](../../../development/images/wikibase/CHANGELOG.md)
+   - [OpenSearch image changelog](../../../development/images/opensearch/CHANGELOG.md)
+   - [QuickStatements image changelog](../../../development/images/quickstatements/CHANGELOG.md)
 
-   - [WBS 8.0.0](../../../CHANGELOG.md#800-2026-07-20)
-   - [Wikibase Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/wikibase/CHANGELOG.md)
-   - [OpenSearch Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/opensearch/CHANGELOG.md)
-   - [QuickStatements Docker Image changelog](https://github.com/wmde/wikibase-suite/blob/main/docker-images/quickstatements/CHANGELOG.md)
+2. Follow [Backing Up and Restoring](../backup-and-restore.md) to back up the
+   existing deployment. The backup procedure stops WBS, so continue directly
+   with the migration afterward.
 
-3. Back up your data and configuration. See [Backing Up and Restoring](../backup-and-restore.md). The backup procedure stops WBS; continue directly with the migration. Keep the existing WBS 7 checkout and configuration backup until the migration has succeeded and the new instance has been verified.
+## Migration steps
 
-## Migrate
-
-1. While still in your WBS directory, ensure the services are stopped by running.
+1. In the Suite 7 checkout, stop the deployment:
 
    ```sh
+   cd /path/to/wikibase-release-pipeline/deploy
    docker compose down
    ```
 
-2. From the directory above `wikibase-release-pipeline`, clone the WBS 8 release, which will create a new `wikibase-suite` directory.
+2. Clone Wikibase Suite 8 beside the existing Suite 7 checkout and check out
+   the release tag you want to install. Replace the example tag with the target
+   release:
 
    ```sh
    cd ../..
-   git clone --branch wbs@8.0.0 --single-branch https://github.com/wmde/wikibase-suite.git
+   git clone https://github.com/wmde/wikibase-suite.git
    cd wikibase-suite
+   git checkout wbs@8.0.0
    ```
 
-3. Copy `.env` and `LocalSettings.php` into the new checkout.
+3. Copy the Suite 7 environment and configuration into the Suite 8 checkout.
+   Adjust the source path if the checkouts are located elsewhere:
 
    ```sh
    cp -a ../wikibase-release-pipeline/deploy/.env .env
-   cp -a ../wikibase-release-pipeline/deploy/config/LocalSettings.php config/
+   cp -a ../wikibase-release-pipeline/deploy/config/. config/
    ```
 
-   WBS 8 will use the existing `LocalSettings.php`, including any changes you added to it, and apply the required database updates when it starts.
+4. If the Suite 7 deployment has a `docker-compose.override.yml`, copy it into
+   the Suite 8 project root as well and review it for compatibility with the
+   new Compose file.
 
-4. If you customized the WBS 7 installation, reconcile those changes with the WBS 8 files. This includes files under `config` and `docker-compose.yml`. Keep the WBS 8 files as the base.
+5. Check whether extensions installed in `config/extensions` need an upgrade
+   for the MediaWiki version included in Suite 8. See the
+   [Wikibase image changelog](../../../development/images/wikibase/CHANGELOG.md)
+   for the included MediaWiki version.
 
-5. If you installed extensions specifically for this instance, follow [Updating Extensions](../update-extensions.md).
-
-6. Pull the latest WBS 8 images and start WBS from the new repository root.
+6. Pull the Suite 8 images and start the deployment:
 
    ```sh
    docker compose pull
    docker compose up -d
-   docker compose ps
    ```
 
-   WBS 8 automatically uses the existing database, media, Query Service, QuickStatements, and certificate data.
+   The existing Docker volumes are reused.
 
-7. Once the services show `healthy` and you have confirmed that WBS—including any customizations or installed extensions—works as expected, you can safely delete the old `wikibase-release-pipeline` directory to avoid future confusion:
+7. Wait for the services to become healthy and verify the site. Review
+   `config/LocalSettings.php` and confirm that it contains your custom settings,
+   including any MediaWiki settings you changed in the previously generated
+   section.
+
+   Do not edit `config/InstanceSettings.php`. If any custom settings are missing,
+   copy them into `config/LocalSettings.php` from
+   `config/backups/LocalSettings.pre-wbs-8.php.backup`.
+
+   If the Wikibase service does not start, inspect its logs:
 
    ```sh
-   cd ..
-   rm -r wikibase-release-pipeline
-   cd wikibase-suite
+   docker compose logs wikibase
    ```
 
+8. After the upgrade is complete, it is safe to delete the old
+   `wikibase-release-pipeline` directory and `config/backups/`. Keep your
+   pre-upgrade backup until you are comfortable that everything is working.
+
 > [!NOTE]
-> Update any custom scripts, scheduled jobs, or service definitions that previously ran Docker Compose from `wikibase-release-pipeline/deploy` to use `wikibase-suite/`.
+> Update any scripts, scheduled jobs, or services that use the old
+> `wikibase-release-pipeline/deploy` path to use the `wikibase-suite` project
+> root.

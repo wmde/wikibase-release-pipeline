@@ -9,7 +9,7 @@ import {
 } from 'node:fs';
 import { join } from 'node:path';
 import { captureProcess, runProcess } from './command-runner.js';
-import { composeServicesAreRunning } from './compose.js';
+import { composeServicesAreRunning, installedSuiteExists } from './compose.js';
 import {
 	installerWebContainer,
 	installerWorkerContainer,
@@ -94,7 +94,7 @@ async function existingInstallState( localImages: boolean ): Promise<string> {
 	if ( await composeServicesAreRunning( localImages ) ) {
 		return 'running';
 	}
-	return existsSync( join( repositoryRoot, 'config/LocalSettings.php' ) ) ? 'previous' : 'none';
+	return await installedSuiteExists( localImages ) ? 'previous' : 'none';
 }
 
 function sharedWorkerArgs(): string[] {

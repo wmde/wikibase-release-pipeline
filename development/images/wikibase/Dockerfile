@@ -205,7 +205,7 @@ RUN patch -d /var/www/html/extensions/OAuth -Np1 </tmp/mediawiki-extensions-OAut
 # hadolint ignore=DL3006
 FROM mediawiki AS wikibase
 
-LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-release-pipeline"
+LABEL org.opencontainers.image.source="https://github.com/wmde/wikibase-suite"
 
 ARG WIKIBASE_IMAGE_VERSION
 
@@ -221,7 +221,7 @@ RUN { \
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
 
 # Remove world writable flag, in combination with sticky bit it breaks the w link
-# https://github.com/wmde/wikibase-release-pipeline/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
+# https://github.com/wmde/wikibase-suite/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
 # Make upload path writable for the webserver user
 RUN chmod o-w /var/www/html && \
     ln -s /var/www/html/ /var/www/html/w && \
@@ -229,20 +229,19 @@ RUN chmod o-w /var/www/html && \
 
 COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
-COPY --chmod=755 prepare-runtime.sh /prepare-runtime.sh
-COPY --chmod=755 wbs-bootstrap.sh /wbs-bootstrap.sh
+COPY --chmod=755 bootstrap/bootstrap.sh /opt/wbs/bootstrap/bootstrap.sh
+COPY bootstrap/configuration.php /opt/wbs/bootstrap/configuration.php
+COPY bootstrap/suite-7-configuration /opt/wbs/bootstrap/suite-7-configuration
 COPY callback.sh /callback.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh
 COPY htaccess /var/www/html/.htaccess
 COPY extensions/WikibaseSuite /var/www/html/extensions/WikibaseSuite
-COPY LocalSettings.d LocalSettings.d
-COPY LocalSettings.MediaWiki.php /LocalSettings.MediaWiki.php
-COPY LocalSettings.Extensions.php /LocalSettings.Extensions.php
+COPY configuration /opt/wbs
 COPY default-extra-install.sh /default-extra-install.sh
 COPY oauth.ini /templates/oauth.ini
-COPY LocalSettings.wbs.php /templates/LocalSettings.wbs.php
 
 ENV DB_NAME=my_wiki \
+    MW_CONFIG_FILE=/opt/wbs/WBSConfig.php \
     MW_WG_SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en
 
