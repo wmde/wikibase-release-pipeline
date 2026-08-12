@@ -65,7 +65,7 @@ ssh root@SERVER_IP_ADDRESS
 <br>
 
 ```sh
-curl -fsSL https://wmde.github.io/wikibase-suite-install/ | bash
+curl -fsSL https://wmde.github.io/wikibase-suite-install | bash
 ```
 
 This command installs the latest stable WBS release identified by a

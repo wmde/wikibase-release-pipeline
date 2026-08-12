@@ -10,16 +10,12 @@ if [ ! -d "/config" ]; then
     exit 1
 fi
 
+# The callback is opt-in. Treat an omitted or empty value as disabled so this
+# optional WBS service does not prevent an otherwise valid image from starting.
+export METADATA_CALLBACK="${METADATA_CALLBACK:-false}"
+
 # Exit immediately on errors or unset variables from here onwards
 set -eu
-
-if ! [ -v METADATA_CALLBACK ] || [ -z "$METADATA_CALLBACK" ]; then
-    echo "*** ERROR ***"
-    echo "METADATA_CALLBACK not configured."
-    echo "https://github.com/wmde/wikibase-suite/blob/main/development/images/wikibase/README.md"
-    echo "Exiting Wikibase container now."
-    exit 1
-fi
 
 bash /callback.sh || true
 
