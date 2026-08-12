@@ -23,7 +23,6 @@ import { readWbsVersionManifest } from '../../lib/wbs-version.js';
 import { planWbsToolsAdoption } from '../update/projects/wbs-tools.js';
 import { planWbsUpdate } from '../update/projects/wbs.js';
 import { readVariable } from '../update/source-utils.js';
-import { defaultVersionPolicy } from '../update/versions.js';
 
 const CLI = resolve('wbs-dev.ts');
 const TSX = resolve('node_modules/.bin/tsx');
@@ -163,7 +162,7 @@ function versions(fixture: Fixture, ...projects: string[]): CliResult {
 			{ requireExplicit: true }
 		)
 			.map((project) =>
-				planVersionUpdate(context, gitRepository, project, defaultVersionPolicy)
+				planVersionUpdate(context, gitRepository, project)
 			)
 			.filter((plan): plan is VersionPlan => plan !== undefined);
 		if (plans.length === 0) {
@@ -319,7 +318,6 @@ describe('wbs-dev preparation and release workflow', () => {
 				context,
 				gitRepository,
 				project,
-				defaultVersionPolicy,
 				{
 					date: '2026-08-07',
 					sourceChanges,
@@ -338,7 +336,6 @@ describe('wbs-dev preparation and release workflow', () => {
 				context,
 				gitRepository,
 				project,
-				defaultVersionPolicy,
 				{
 					date: '2026-08-08',
 					sourceChanges,
@@ -399,12 +396,7 @@ describe('wbs-dev preparation and release workflow', () => {
 			)!;
 			assert.throws(
 				() =>
-					planVersionUpdate(
-						context,
-						gitRepository,
-						project,
-						defaultVersionPolicy
-					),
+					planVersionUpdate(context, gitRepository, project),
 				/multiple "Changes" sections/u
 			);
 		});
@@ -443,7 +435,6 @@ describe('wbs-dev preparation and release workflow', () => {
 				context,
 				gitRepository,
 				project,
-				defaultVersionPolicy,
 				{
 					proposedUpdates: [
 						{ path: project.versionPath, contents: proposedManifest }

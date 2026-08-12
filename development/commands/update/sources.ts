@@ -24,30 +24,27 @@ const providersByImage = new Map<string, SourceUpdateProvider>(
 	providers.map((provider) => [provider.image, provider])
 );
 
-export const sourceUpdateImages = providers.map((provider) => provider.image);
-
 export function sourceUpdateProviderFor(
 	image: string
 ): SourceUpdateProvider | undefined {
 	return providersByImage.get(image);
 }
 
-export interface PlannedSourceUpdate extends FileUpdate {
-	image: string;
+export interface SourceFileUpdate extends FileUpdate {
 	changes: SourceChange[];
 }
 
-export async function planSourceUpdate(
+export async function planSourceFileUpdate(
 	context: RepositoryContext,
-	image: string,
+	provider: SourceUpdateProvider,
 	interaction: SourceUpdateInteraction
-): Promise<PlannedSourceUpdate> {
-	const provider = sourceUpdateProviderFor(image);
-	if (!provider) {
-		throw new Error(`No source update provider exists for ${image}.`);
-	}
-	const path = join(context.imagesRoot, image, BAKE_MANIFEST);
+): Promise<SourceFileUpdate> {
+	const path = join(context.imagesRoot, provider.image, BAKE_MANIFEST);
 	const original = readFileSync(path, 'utf8');
 	const plan = await provider.plan(original, interaction);
-	return { path, image, contents: plan.contents, changes: plan.changes };
+	return {
+		path,
+		contents: plan.contents,
+		changes: plan.changes
+	};
 }

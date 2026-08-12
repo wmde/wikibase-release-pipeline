@@ -47,7 +47,7 @@ export async function githubJson<T>(path: string): Promise<T> {
 	return (await response.json()) as T;
 }
 
-export async function githubCommit(
+async function githubCommit(
 	repository: string,
 	branch: string
 ): Promise<string> {
@@ -58,7 +58,7 @@ export async function githubCommit(
 	return ((await response.json()) as { sha: string }).sha;
 }
 
-export async function gerritCommit(
+async function gerritCommit(
 	repository: string,
 	branch: string
 ): Promise<string> {
@@ -68,7 +68,7 @@ export async function gerritCommit(
 	return (JSON.parse(body) as { commit: string }).commit;
 }
 
-export async function codebergCommit(
+async function codebergCommit(
 	repository: string,
 	branch: string
 ): Promise<string> {
@@ -78,7 +78,7 @@ export async function codebergCommit(
 	return ((await response.json()) as { commit: { id: string } }).commit.id;
 }
 
-export async function gitlabCommit(
+async function gitlabCommit(
 	repository: string,
 	branch: string
 ): Promise<string> {
@@ -183,7 +183,7 @@ export function manifestPins(contents: string): SourcePin[] {
 	});
 }
 
-export async function archiveSha256(url: string): Promise<string> {
+async function archiveSha256(url: string): Promise<string> {
 	const response = await request(url);
 	return createHash('sha256')
 		.update(Buffer.from(await response.arrayBuffer()))
@@ -213,13 +213,6 @@ export function readVariable(contents: string, variable: string): string {
 		throw new Error(`Could not find ${variable} in the Bake manifest.`);
 	}
 	return value;
-}
-
-function readPreviousVariable(
-	contents: string,
-	variable: string
-): string | undefined {
-	return findVariable(contents, variable);
 }
 
 function pinLink(
@@ -276,7 +269,7 @@ export function describePinChanges(
 	pins: SourcePin[]
 ): SourceChange[] {
 	return pins.flatMap((pin) => {
-		const previous = readPreviousVariable(previousContents, pin.variable);
+		const previous = findVariable(previousContents, pin.variable);
 		const next = readVariable(nextContents, pin.variable);
 		if (previous === next) {
 			return [];
@@ -349,7 +342,7 @@ export async function confirmPinPlan(
 	return plan;
 }
 
-export function githubCompareUrl(
+function githubCompareUrl(
 	repository: string,
 	previous: string,
 	next: string
@@ -357,11 +350,11 @@ export function githubCompareUrl(
 	return `https://github.com/${repository}/compare/${previous}...${next}`;
 }
 
-export function githubCommitUrl(repository: string, commit: string): string {
+function githubCommitUrl(repository: string, commit: string): string {
 	return `https://github.com/${repository}/commit/${commit}`;
 }
 
-export function gerritCompareUrl(
+function gerritCompareUrl(
 	repository: string,
 	previous: string,
 	next: string
@@ -369,10 +362,10 @@ export function gerritCompareUrl(
 	return `https://gerrit.wikimedia.org/r/plugins/gitiles/${repository}/+log/${previous}..${next}`;
 }
 
-export function gerritCommitUrl(repository: string, commit: string): string {
+function gerritCommitUrl(repository: string, commit: string): string {
 	return `https://gerrit.wikimedia.org/r/plugins/gitiles/${repository}/+/${commit}`;
 }
 
-export function codebergCommitUrl(repository: string, commit: string): string {
+function codebergCommitUrl(repository: string, commit: string): string {
 	return `https://codeberg.org/${repository}/commit/${commit}`;
 }

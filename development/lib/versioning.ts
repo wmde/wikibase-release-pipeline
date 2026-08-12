@@ -52,24 +52,6 @@ export interface VersionPlanOptions {
 	targetVersion?: string;
 }
 
-export interface VersionPolicy {
-	generatedPaths?: (update: {
-		context: RepositoryContext;
-		project: ReleaseProject;
-	}) => string[];
-	isRelevantWorkingChange: (change: {
-		context: RepositoryContext;
-		git: GitRepository;
-		project: ReleaseProject;
-		path: string;
-	}) => boolean;
-	additionalUpdates: (update: {
-		context: RepositoryContext;
-		project: ReleaseProject;
-		targetVersion: string;
-	}) => FileUpdate[];
-}
-
 interface ChangelogHeading {
 	start: number;
 	end: number;
@@ -173,7 +155,6 @@ function hasRelevantWorkingChanges(
 	git: GitRepository,
 	context: RepositoryContext,
 	project: ReleaseProject,
-	policy: VersionPolicy,
 	proposedUpdates: FileUpdate[]
 ): boolean {
 	const proposedByPath = new Map(
@@ -213,7 +194,7 @@ function hasRelevantWorkingChanges(
 				committed.trimEnd()
 			);
 		}
-		return policy.isRelevantWorkingChange({ context, git, project, path });
+		return true;
 	});
 }
 
@@ -415,18 +396,15 @@ export function planVersionUpdate(
 	context: RepositoryContext,
 	git: GitRepository,
 	project: ReleaseProject,
-	policy: VersionPolicy,
 	options: VersionPlanOptions = {}
 ): VersionPlan | undefined {
 	const date = options.date ?? new Date().toISOString().slice(0, 10);
 	const proposedUpdates = options.proposedUpdates ?? [];
 	const sourcePaths = new Set(options.sourcePaths ?? []);
 	const generatedPaths = new Set(
-		[
-			project.versionPath,
-			project.changelogPath,
-			...(policy.generatedPaths?.({ context, project }) ?? [])
-		].map((path) => relative(context.repositoryRoot, path))
+		[project.versionPath, project.changelogPath].map((path) =>
+			relative(context.repositoryRoot, path)
+		)
 	);
 	const versionContents =
 		proposedUpdates.find((update) => update.path === project.versionPath)
@@ -446,7 +424,7 @@ export function planVersionUpdate(
 		bumps.push('patch');
 	}
 	if (
-		hasRelevantWorkingChanges(git, context, project, policy, proposedUpdates)
+		hasRelevantWorkingChanges(git, context, project, proposedUpdates)
 	) {
 		bumps.push('patch');
 	}
@@ -510,9 +488,6 @@ export function planVersionUpdate(
 			)
 		}
 	];
-	updates.push(
-		...policy.additionalUpdates({ context, project, targetVersion })
-	);
 	return {
 		project,
 		currentVersion,

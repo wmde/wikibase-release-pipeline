@@ -30,22 +30,22 @@ import {
 } from '../../lib/versioning.js';
 import { ClackInteraction, UpdateCancelled } from './interaction.js';
 import { projectLabel, projectOptionLabel, strong } from './presentation.js';
+import type { SourceUpdateProvider } from './source-types.js';
 import {
 	planWbsToolsAdoption,
 	type WbsToolsAdoption
 } from './projects/wbs-tools.js';
 import { planWbsUpdate } from './projects/wbs.js';
 import {
-	planSourceUpdate,
+	planSourceFileUpdate,
 	sourceUpdateProviderFor,
-	type PlannedSourceUpdate
+	type SourceFileUpdate
 } from './sources.js';
-import { defaultVersionPolicy } from './versions.js';
 
-interface ProjectSources {
-	plan?: PlannedSourceUpdate;
-	changes: SourceChange[];
-	path?: string;
+interface ProjectSourceUpdate {
+	fileUpdate: SourceFileUpdate;
+	releaseChanges: SourceChange[];
+	relativePath: string;
 }
 
 interface VersionChoice {
@@ -60,23 +60,23 @@ function unwrapPrompt<T>(value: T | symbol): T {
 	return value;
 }
 
-function sourceState(
+function describeSourceUpdate(
 	context: RepositoryContext,
 	git: GitRepository,
 	project: ReleaseProject,
-	plan: PlannedSourceUpdate
-): ProjectSources {
-	const provider = sourceUpdateProviderFor(project.name)!;
-	const path = relative(context.repositoryRoot, plan.path);
+	provider: SourceUpdateProvider,
+	fileUpdate: SourceFileUpdate
+): ProjectSourceUpdate {
+	const relativePath = relative(context.repositoryRoot, fileUpdate.path);
 	const previousTag = findPreviousRelease(git, project).tag;
 	const releasedContents = previousTag
-		? git.run(['show', `${previousTag}:${path}`], { allowFailure: true })
+		? git.run(['show', `${previousTag}:${relativePath}`], { allowFailure: true })
 		: '';
-	const baseline = releasedContents || readFileSync(plan.path, 'utf8');
+	const baseline = releasedContents || readFileSync(fileUpdate.path, 'utf8');
 	return {
-		plan,
-		changes: provider.describeChanges(baseline, plan.contents),
-		path
+		fileUpdate,
+		releaseChanges: provider.describeChanges(baseline, fileUpdate.contents),
+		relativePath
 	};
 }
 
@@ -188,7 +188,7 @@ async function update(
 	try {
 		const git = new GitRepository(context);
 		git.fetchRemoteTags();
-		const sources = new Map<string, ProjectSources>();
+		const sourceUpdates: SourceFileUpdate[] = [];
 		const versionPlans: VersionPlan[] = [];
 		const wbs = releaseProjects.find((project) => project.name === 'wbs')!;
 		const selectedWbs = projects.find((project) => project.name === 'wbs');
@@ -199,27 +199,37 @@ async function update(
 			(project) => project.name !== 'wbs'
 		)) {
 			log.step(strong(projectLabel(project.name)));
-			let source: ProjectSources = { changes: [] };
-			if (sourceUpdateProviderFor(project.name)) {
-				const sourcePlan = await planSourceUpdate(
+			let sourceUpdate: ProjectSourceUpdate | undefined;
+			const provider = sourceUpdateProviderFor(project.name);
+			if (provider) {
+				const fileUpdate = await planSourceFileUpdate(
 					context,
-					project.name,
+					provider,
 					interaction
 				);
-				source = sourceState(context, git, project, sourcePlan);
+				sourceUpdate = describeSourceUpdate(
+					context,
+					git,
+					project,
+					provider,
+					fileUpdate
+				);
 			}
-			sources.set(project.name, source);
-			const proposedUpdates = source.plan?.changes.length ? [source.plan] : [];
+			if (sourceUpdate?.fileUpdate.changes.length) {
+				sourceUpdates.push(sourceUpdate.fileUpdate);
+			}
+			const proposedUpdates = sourceUpdate?.fileUpdate.changes.length
+				? [sourceUpdate.fileUpdate]
+				: [];
 			const options = {
 				proposedUpdates,
-				sourceChanges: source.changes,
-				sourcePaths: source.path ? [source.path] : []
+				sourceChanges: sourceUpdate?.releaseChanges ?? [],
+				sourcePaths: sourceUpdate ? [sourceUpdate.relativePath] : []
 			};
 			const proposal = planVersionUpdate(
 				context,
 				git,
 				project,
-				defaultVersionPolicy,
 				options
 			);
 			if (!proposal) {
@@ -238,7 +248,7 @@ async function update(
 			}
 			versionPlans.push(
 				applyVersionChoice(
-					planVersionUpdate(context, git, project, defaultVersionPolicy, {
+					planVersionUpdate(context, git, project, {
 						...options,
 						targetVersion: choice.targetVersion
 					})!,
@@ -269,15 +279,7 @@ async function update(
 
 		if (selectedWbs || adoption) {
 			log.step(strong(projectLabel('wbs')));
-			const source: ProjectSources = { changes: [] };
-			if (selectedWbs) {
-				sources.set('wbs', source);
-			}
 			const wbsOptions = {
-				source: {
-					...source,
-					plan: source.plan?.changes.length ? source.plan : undefined
-				},
 				toolsAdoption: adoption
 			};
 			const proposal = planWbsUpdate(context, git, wbs, wbsOptions);
@@ -309,12 +311,6 @@ async function update(
 			outro('No updates were selected. No files were changed.');
 			return;
 		}
-		const sourceUpdates = [...sources.values()]
-			.map(({ plan }) => plan)
-			.filter(
-				(plan): plan is PlannedSourceUpdate =>
-					plan !== undefined && plan.changes.length > 0
-			);
 		note(
 			versionPlans
 				.map(
