@@ -53,7 +53,7 @@ You need two domain configurations – a main domain for your Wikibase and a sub
 ```sh
 ssh root@SERVER_IP_ADDRESS
 ```
-<img width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/05/Bildschirmfoto-2026-05-17-um-19.13.06.png.webp" alt="Terminal showing SSH access to the server">
+<img width="600" src="./assets/installer-terminal-access.webp" alt="Terminal showing SSH access to the server">
 <br>
 
 ### Start the installer
@@ -72,7 +72,7 @@ This command installs the latest stable WBS release identified by a
 `wbs@MAJOR.MINOR.PATCH` tag and starts its browser installer.
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/05/Bildschirmfoto-2026-05-17-um-19.17.17.png.webp" alt="Terminal showing the installer URL">
+<img width="600" src="./assets/installer-run-command.webp" alt="Terminal showing the installer URL">
 <br>
 
 ## Configure and install Wikibase Suite
@@ -80,7 +80,7 @@ This command installs the latest stable WBS release identified by a
 The Wikibase Suite Installer walks you through the steps to configure and install your Wikibase instance.
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Start-Screen.png.webp">
+<img width="600" src="./assets/installer-start.webp" alt="Wikibase Suite Installer welcome screen">
 <br>
 
 
@@ -91,7 +91,7 @@ Enter the domain names you registered in the requirements step:
 - Subdomain to access the Query Service software.
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Step1_connect-domains.png.webp">
+<img width="600" src="./assets/installer-step-1-domains.webp" alt="Installer fields for the Wikibase and Query Service domains">
 <br>
 
 
@@ -103,7 +103,7 @@ This is your personal login for managing your Wikibase. Fill in:
 
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Step2_Admin-Account.png.webp">
+<img width="600" src="./assets/installer-step-2-admin.webp" alt="Installer fields for creating the administrator account">
 <br>
 
 
@@ -114,7 +114,7 @@ The database is where all your Wikibase content is stored behind the scenes. You
 - Database password – set a strong, unique password
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Step3_Database-credentials.png.webp">
+<img width="600" src="./assets/installer-step-3-database.webp" alt="Installer fields for the database credentials">
 <br>
 
 ### Visibility
@@ -122,7 +122,7 @@ The database is where all your Wikibase content is stored behind the scenes. You
 Help us understand the Wikibase ecosystem. Wikibase is used by hundreds of libraries, museums, research projects and companies — but nobody has a clear picture of how big or how diverse that ecosystem really is. You can help change that by providing some statistics from your Wikibase.
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Step4_Visibility-statistics.png.webp">
+<img width="600" src="./assets/installer-step-4-visibility.webp" alt="Installer options for sharing visibility statistics">
 <br>
 
 ### Run the installation for all WBS components.
@@ -130,7 +130,7 @@ Help us understand the Wikibase ecosystem. Wikibase is used by hundreds of libra
 All Wikibase Suite components will be downloaded and installed. This may take a few minutes.
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Step5_Installation.png.webp">
+<img width="600" src="./assets/installer-step-5-installation.webp" alt="Installer progress for all Wikibase Suite components">
 <br>
 
 ### Congratulations: You have installed your own Wikibase instance!
@@ -140,7 +140,7 @@ You can directly access your Wikibase, the Query Service and QuickStatements. Ev
 Note: **Download the configuration file.**
 
 <br>
-<img  width="600" src="https://wikiba.se/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/sites/7/2026/08/Wikibase-Suite-Installer-Success-Message.png.webp">
+<img width="600" src="./assets/installer-success.webp" alt="Wikibase Suite installation success screen">
 <br>
 
 ### Share your feedback with us
