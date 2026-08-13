@@ -65,4 +65,4 @@ Analysis revealed localization updates, routine maintenance, and feature additio
 
 ### 🩹 Fixes
 
-- Link to Query Builder now points to the source code repository ([#664](https://github.com/wmde/wikibase-release-pipeline/issues/664))
+- Link to Query Builder now points to the source code repository ([#664](https://github.com/wmde/wikibase-suite/issues/664))

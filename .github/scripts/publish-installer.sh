@@ -12,7 +12,7 @@ readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibas
 
 validate_origin_repository() {
   case "${ORIGIN_REPOSITORY:-}" in
-    wmde/wikibase-release-pipeline | wmde/wikibase-suite) ;;
+    wmde/wikibase-suite) ;;
     *)
       echo "Unexpected origin repository: ${ORIGIN_REPOSITORY:-unset}" >&2
       exit 1
