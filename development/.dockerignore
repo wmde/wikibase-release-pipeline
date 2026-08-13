@@ -1,0 +1,10 @@
+.git
+.nx
+.pnpm-store
+node_modules
+tests/*/results
+tests/log
+tests/mwlog
+docs/diagrams/node_modules/
+artifacts/*
+docs/*

@@ -1,16 +1,33 @@
-# Wikibase Suite release pipeline
+# Wikibase Suite (WBS)
 
-This repository contains both Wikibase Suite and the tools used to update, build, test, publish, and release it.
+Wikibase Suite (WBS) helps you run your own [Wikibase](https://wikiba.se/) on a server.
 
-## Install Wikibase Suite
+WBS is a supported and tested Docker Compose configuration for deploying the following services to a publicly accessible server:
 
-Wikibase Suite is a supported configuration for running your own [Wikibase](https://wikiba.se) on your own server and maintaining a knowledge graph similar to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) as part of the Linked Open Data initiative.
+- **[Wikibase](./development/images/wikibase/README.md):** MediaWiki service with the Wikibase extension included for creating and managing your Wikibase data.
+- **Job Runner:** Background job service used by Wikibase.
+- **[MariaDB](https://hub.docker.com/_/mariadb):** Database service used by Wikibase.
+- **[OpenSearch](./development/images/opensearch/README.md):** Search service used by Wikibase.
+- **[Query service](./development/images/wdqs/README.md):** SPARQL service for querying Wikibase data.
+- **[Query service frontend](./development/images/wdqs-frontend/README.md):** Web interface for SPARQL queries.
+- **[Query service updater](./development/images/wdqs/README.md):** Keeps query service data in sync with Wikibase.
+- **[QuickStatements](./development/images/quickstatements/README.md):** A web-based tool to import and manipulate large amounts of data.
+- **[Traefik](https://hub.docker.com/_/traefik):** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 
-To install or maintain Wikibase Suite on your own server, start here: [Wikibase Suite guide](./deploy/README.md).
+## Getting started
 
-## Community and support
+Start here for guidance on preparing a server and domain names, then use the web-based installer to configure and start WBS.
 
-- [Wikibase Suite guide](./deploy/README.md)
+**[Install WBS](./docs/install/installer.md)**
+
+## Current users
+
+If you’re already running WBS, find instructions for updating to the latest release, changing your configuration, enabling features, adding extensions, backing up your data, and troubleshooting your installation.
+
+**[Operate WBS](./docs/README.md)**
+
+## Community and Support
+
 - [Wikibase website](https://wikiba.se/)
 - [Wikibase Telegram community channel](https://t.me/+WBsf9-C9KPuMZCDT)
 - [Wikibase Mastodon](https://wikis.world/@Wikibase)
@@ -18,18 +35,8 @@ To install or maintain Wikibase Suite on your own server, start here: [Wikibase 
 - [Wikibase Suite Phabricator board](https://phabricator.wikimedia.org/project/board/5755/)
 - [Wikibase Suite team email](mailto:wikibase-suite-support@wikimedia.de)
 
-## Advanced: Docker images
+If something is not working as expected, start with [Troubleshooting](./docs/operate/troubleshooting.md). If you have questions or need help, use this [bug report form](https://phabricator.wikimedia.org/maniphest/task/edit/form/129/) to start a conversation with the engineering team.
 
-Each individual service packaged by Wikibase Suite is published as a Docker image on Docker Hub. For custom setups outside Wikibase Suite, you can run these images independently or combine them in your own orchestration layer, such as Kubernetes. See the documentation for each Docker image for setup requirements and configuration options:
+## Development
 
-- [Wikibase](./build/wikibase/README.md)
-- [Elasticsearch](./build/elasticsearch/README.md)
-- [Query service](./build/wdqs/README.md)
-- [Query service frontend](./build/wdqs-frontend/README.md)
-- [QuickStatements](./build/quickstatements/README.md)
-
-## Repository development
-
-This repository contains the Wikibase Suite toolset used for [building](./build), [testing](./test), and [publishing](.github/workflows) Wikibase Suite images and the deployment setup in [deploy](./deploy).
-
-For development setup, build and test commands, and release process notes, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+Image sources and the build, integration-test, and release tooling are maintained in [`development/`](./development/README.md). Most WBS users do not need these tools. They are available for contributors and advanced users who want to build customized images.

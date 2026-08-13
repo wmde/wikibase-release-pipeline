@@ -5,31 +5,35 @@ pnpm
 *.swp
 .direnv
 
-local.env
+/development/local.env
 **/.env
 
-docker-compose.local.yml
+docker-compose.override.yml
+/.wbs/*
+!/.wbs/version
 
-deploy/log
-deploy/config/*.ini
-deploy/config/*.json
-deploy/config/*.php
-deploy/config/extensions
+log
+config/*.ini
+config/*.json
+config/*.php
+config/extensions/*
+!config/extensions/.gitkeep
+config/backups/
+config/.wikibase-image/
 
-test/log
-test/mwlog
-test/suites/config
-test/suites/**/results/
+# Keep the pre-8.0 product directory ignored while installations migrate to root
+deploy/
+
+development/tests/log
+development/tests/mwlog
+development/tests/config
+development/tests/*/results/
 
 # dependencies
 node_modules
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/
 
 # misc
 npm-debug.log
@@ -37,6 +41,3 @@ npm-debug.log
 # System Files
 .DS_Store
 Thumbs.db
-
-.nx/cache
-.nx/workspace-data

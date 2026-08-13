@@ -1,4 +1,0 @@
-services:
-  wikibase:
-    volumes:
-      - ./quickstatements/LocalSettings.php:/var/www/html/LocalSettings.d/LocalSettings.quickstatements.php

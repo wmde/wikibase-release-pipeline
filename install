@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Public installer entry point. It works both from a source checkout and when
+# piped from the installer URL; the latter bootstraps Docker and a checkout.
+# Both paths ultimately delegate to that checkout's WBS Tools launcher.
+BOOTSTRAP_LOG_PATH="${WBS_BOOTSTRAP_LOG:-/tmp/wikibase-suite-bootstrap.log}"
+WBS_TOOLS_IMAGE_EXPLICIT=false
+if [[ -n "${WBS_TOOLS_IMAGE:-}" ]]; then
+  WBS_TOOLS_IMAGE_EXPLICIT=true
+fi
+WBS_TOOLS_IMAGE="${WBS_TOOLS_IMAGE:-wikibase/wbs-tools:1.0.0}"
+WBS_REPO_URL="${WBS_REPO_URL:-https://github.com/wmde/wikibase-suite.git}"
+WBS_DIR="${WBS_DIR:-$HOME/wikibase-suite}"
+WBS_DOCKER_DIR="${WBS_DOCKER_DIR:-$WBS_DIR}"
+WBS_DOCKER_REPO_URL="${WBS_DOCKER_REPO_URL:-$WBS_REPO_URL}"
+WBS_REF="${WBS_REF:-}"
+WBS_INSTALL_MANIFEST_URL="${WBS_INSTALL_MANIFEST_URL:-}"
+RUNTIME_ARGS=(--web "$@")
+BOOTSTRAP_PULLED_TOOLS=false
+WBS_DOCKER_BOOTSTRAPPED=false
+WBS_BOOTSTRAP_TERMINAL_AVAILABLE=false
+
+# The supported `curl ... | bash` invocation consumes stdin with the script,
+# while direct interactive execution already has a terminal there. Open the
+# controlling terminal explicitly before tee redirects output so both forms can
+# pass an interactive stdin through to the containerized installer.
+if { exec 4<> /dev/tty; } 2>/dev/null; then
+  WBS_BOOTSTRAP_TERMINAL_AVAILABLE=true
+fi
+
+: > "$BOOTSTRAP_LOG_PATH"
+exec 3>> "$BOOTSTRAP_LOG_PATH"
+exec > >(tee -a "$BOOTSTRAP_LOG_PATH") 2>&1
+
+echo
+echo "Wikibase Suite (WBS)"
+echo
+
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
+# A real checkout can be used in place. A downloaded or piped copy uses the
+# bootstrap tools image to materialize the selected checkout first.
+if [[ -n "$SCRIPT_DIR" && -e "$SCRIPT_DIR/.git" && -d "$SCRIPT_DIR/scripts" ]]; then
+  WBS_DIR="$SCRIPT_DIR"
+else
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "🔧 Installing Docker..."
+    if ! docker_install_output="$({ curl -fsSL https://get.docker.com | sh; } 2>&1)"; then
+      printf '%s\n' "$docker_install_output"
+      echo "wbs: Docker installation failed."
+      exit 1
+    fi
+  fi
+  docker info >/dev/null
+  WBS_DOCKER_BOOTSTRAPPED=true
+
+  if [[ "${WBS_TOOLS_SKIP_PULL:-false}" != true ]]; then
+    if ! tools_pull_output="$(docker pull "$WBS_TOOLS_IMAGE" 2>&1)"; then
+      printf '%s\n' "$tools_pull_output"
+      echo "wbs: WBS Tools image pull failed."
+      exit 1
+    fi
+    export WBS_TOOLS_SKIP_PULL=true
+    BOOTSTRAP_PULLED_TOOLS=true
+  fi
+
+  target_parent="$(dirname "$WBS_DOCKER_DIR")"
+  mkdir -p "$target_parent"
+  prepare_args=(install prepare --target "$WBS_DOCKER_DIR" --repository "$WBS_DOCKER_REPO_URL")
+  repository_mount=()
+  if [[ "$WBS_DOCKER_REPO_URL" == /* && ( -e "$WBS_DOCKER_REPO_URL" || -e "$WBS_REPO_URL" ) ]]; then
+    repository_parent="$(dirname "$WBS_DOCKER_REPO_URL")"
+    repository_mount=(-v "$repository_parent:$repository_parent:ro")
+  fi
+  if [[ -n "$WBS_REF" ]]; then
+    prepare_args+=(--ref "$WBS_REF")
+  fi
+  if [[ -n "$WBS_INSTALL_MANIFEST_URL" ]]; then
+    prepare_args+=(--manifest-url "$WBS_INSTALL_MANIFEST_URL")
+  fi
+  if ! prepare_output="$(docker run --rm \
+    -v "$target_parent:$target_parent" \
+    "${repository_mount[@]}" \
+    "$WBS_TOOLS_IMAGE" \
+    node /app/dist/wbs.js "${prepare_args[@]}" 2>&1)"; then
+    printf '%s\n' "$prepare_output"
+    echo "wbs: Wikibase Suite checkout preparation failed."
+    exit 1
+  fi
+  if [[ -n "$prepare_output" ]]; then
+    # Successful checkout details are diagnostic rather than user-facing.
+    printf '%s\n' "$prepare_output" >&3
+  fi
+
+fi
+
+# After bootstrapping, prefer the checkout's image unless the caller chose one.
+if [[ "$WBS_TOOLS_IMAGE_EXPLICIT" != true ]]; then
+  unset WBS_TOOLS_IMAGE
+  if [[ "$BOOTSTRAP_PULLED_TOOLS" == true ]]; then
+    unset WBS_TOOLS_SKIP_PULL
+  fi
+fi
+
+WBS_STATE_DIR="$WBS_DIR/.wbs"
+WBS_LOG_PATH="$WBS_STATE_DIR/logs/wbs.log"
+INSTALLATION_LOG_PATH="$WBS_STATE_DIR/logs/installation.log"
+mkdir -p "$WBS_STATE_DIR/logs"
+touch "$WBS_LOG_PATH"
+# Preserve the bootstrap transcript, then let the delegated launcher append to
+# the same log without rotating it at the handoff.
+{
+  echo "===== Bootstrap ====="
+  cat "$BOOTSTRAP_LOG_PATH"
+  echo "===== WBS tools ====="
+} >> "$WBS_LOG_PATH"
+exec 3>&-
+export WBS_STATE_DIR WBS_LOG_PATH INSTALLATION_LOG_PATH WBS_LOG_INITIALIZED=1
+export WBS_DIR WBS_TOOLS_IMAGE WBS_DOCKER_BOOTSTRAPPED
+if [[ "$WBS_BOOTSTRAP_TERMINAL_AVAILABLE" == true ]]; then
+  # Hand all terminal streams to the delegated installer. Docker uses stdout to
+  # size its container TTY, so leaving it attached to tee would collapse prompts
+  # even though stdin is interactive. WBS Tools records its own output from here.
+  exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}" <&4 >&4 2>&4
+fi
+exec "$WBS_DIR/scripts/run-wbs-tools.sh" install "${RUNTIME_ARGS[@]}"

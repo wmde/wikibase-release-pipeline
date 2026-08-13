@@ -1,0 +1,59 @@
+name: wbs-dev
+
+networks:
+  default:
+    name: wbs-dev
+    external: true
+
+volumes:
+  buildx:
+    name: wbs-dev-buildx
+  node-modules:
+    name: wbs-dev-node-modules
+  wbs-tools-node-modules:
+    name: wbs-dev-wbs-tools-node-modules
+
+services:
+  wbs-dev:
+    image: ${WBS_DEV_IMAGE:-wbs-dev:latest}
+    scale: 0
+    working_dir: /workspace/development
+    stop_grace_period: 1s
+    ports:
+      - 9229:9229
+      - 4211:4211
+    volumes:
+      - ..:/workspace:z
+      # Installer tests launch nested containers whose bind mounts must use
+      # paths understood by the host Docker daemon.
+      - ${PWD}/..:${PWD}/..:z
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Keep Linux dependencies out of the host checkout so host-side pnpm can
+      # maintain its own platform-specific installation.
+      - node-modules:/workspace/development/node_modules
+      - wbs-tools-node-modules:/workspace/development/images/wbs-tools/node_modules
+      # Preserve named-builder metadata alongside its persistent BuildKit container.
+      - buildx:/root/.docker/buildx
+    privileged: true
+    env_file:
+      - tests/test-runner.env
+      - local.env
+    environment:
+      HOST_PWD: ${PWD}/..
+      WBS_DIR: /workspace
+      BUILD_CACHE_PUSH: ${BUILD_CACHE_PUSH:-false}
+      BUILD_CACHE_REGISTRY: ${BUILD_CACHE_REGISTRY:-}
+      BUILD_CACHE_SCOPE: ${BUILD_CACHE_SCOPE:-}
+      DOCKERHUB_TOKEN: ${DOCKERHUB_TOKEN:-}
+      GITHUB_ACTIONS: ${GITHUB_ACTIONS:-false}
+      GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME:-}
+      GITHUB_REF: ${GITHUB_REF:-}
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-}
+      GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER:-}
+      GITHUB_RUN_ID: ${GITHUB_RUN_ID:-}
+      GITHUB_SHA: ${GITHUB_SHA:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GH_TOKEN: ${GH_TOKEN:-}
+      WBS_GHCR_TOKEN: ${WBS_GHCR_TOKEN:-}
+      WBS_TEST_IMAGE_REGISTRY: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}
+      WBS_TEST_IMAGE_TAG: ${WBS_TEST_IMAGE_TAG:-latest}

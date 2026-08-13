@@ -1,0 +1,491 @@
+<template>
+	<main class="page-shell">
+		<div class="installer-layout">
+			<header class="installer-header">
+				<div class="installer-header__brand" aria-hidden="true">
+					<img :src="logoSrc" alt="" />
+				</div>
+				<div class="installer-header__identity">
+					<h1>{{ initialState.configurationOnly ? 'Configure' : 'Installer' }}</h1>
+				</div>
+			</header>
+
+			<section
+				class="installer-progress-area"
+				:aria-label="initialState.configurationOnly ? 'Configuration progress' : 'Installation progress'"
+			>
+				<installer-steps
+					:current-step="currentStep - 1"
+					:interactive="initialState.installerDevMock"
+					:locked="configLocked"
+					:steps="steps"
+					@select-step="showStep"
+				/>
+			</section>
+
+			<section class="surface-card installer-card">
+				<cdx-message v-if="saveErrorMessage" class="installer-callout installer-callout--error final-save-error">
+					<div class="callout-heading">
+						<div class="callout-title">Configuration could not be saved</div>
+					</div>
+					<p class="installer-callout__text">
+						The final validation check found a problem before the configuration file was written. Try starting over.
+						If this keeps happening, contact Wikibase Suite support.
+					</p>
+					<ul v-if="saveErrorDetails.length" class="final-save-error__details">
+						<li v-for="detail in saveErrorDetails" :key="detail">
+							{{ detail }}
+						</li>
+					</ul>
+				</cdx-message>
+				<form @submit.prevent="submitCurrentStep">
+					<button class="form-submit-proxy" type="submit" aria-hidden="true" tabindex="-1"></button>
+					<basics-step
+						v-if="currentStep === 1"
+						:form="form"
+						:server-ip="initialState.serverIp"
+						:host-statuses="displayedHostStatuses"
+						:can-continue="domainReady"
+						:disabled="configLocked"
+						@update-field="updateField"
+						@flush-host="flushHost"
+						@back="currentStep = 0"
+						@continue="continueToAccount"
+					/>
+
+					<welcome-step
+						v-else-if="currentStep === 0"
+						:configuration-only="initialState.configurationOnly"
+						:disabled="configLocked"
+						:existing-install-state="initialState.configurationOnly ? 'none' : initialState.existingInstallState"
+						@continue="currentStep = 1"
+					/>
+
+					<account-step
+						v-else-if="currentStep === 2"
+						:form="form"
+						:text-status="adminNameStatus"
+						:email-status="emailStatus"
+						:password-status="passwordStatuses.MW_ADMIN_PASS"
+						:can-continue="accountReady"
+						:disabled="configLocked"
+						@update-field="updateField"
+						@generate-password="generatePasswordForField"
+						@back="currentStep = 1"
+						@continue="continueToDatabase"
+					/>
+
+					<database-step
+						v-else-if="currentStep === 3"
+						:form="form"
+						:text-statuses="databaseTextStatuses"
+						:password-status="passwordStatuses.DB_PASS"
+						:can-continue="databaseReady"
+						:disabled="configLocked"
+						@update-field="updateField"
+						@generate-password="generatePasswordForField"
+						@back="currentStep = 2"
+						@continue="continueToVisibility"
+					/>
+
+					<visibility-step
+						v-else-if="currentStep === 4"
+						:configuration-only="initialState.configurationOnly"
+						:enabled="form.METADATA_CALLBACK"
+						:can-start="canStartInstallation"
+						:disabled="configLocked"
+						@update:enabled="form.METADATA_CALLBACK = $event"
+						@back="currentStep = 3"
+						@start="startInstallation"
+					/>
+
+					<installation-step
+						v-else
+						:complete="installationComplete"
+						:configuration-only="initialState.configurationOnly"
+						:form="form"
+						:config-text="configText"
+						:progress="installationProgress"
+						:summary="installationSummary"
+						:failed="installationFailed"
+						:status-lines="installationStatusLines"
+						:has-status-lines="installationHasStatusLines"
+						@open-log="logOpen = true"
+					/>
+				</form>
+			</section>
+
+			<div v-if="currentStep === 5 && installationComplete && !initialState.configurationOnly" class="feedback-action">
+				<a
+					class="feedback-link"
+					href="https://forms.zohopublic.eu/wmde/form/ServiceSatisfaction1/formperma/6KQbSMNVmkO-wrpPWa5OW_9HUQbTFdPBRP07Q94fe-8"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<cdx-icon :icon="cdxIconSpeechBubble" size="small" />
+					<span>Tell us how it went</span>
+				</a>
+			</div>
+		</div>
+
+		<domain-help
+			v-model:open="dnsHelpOpen"
+			:server-ip="initialState.serverIp"
+		/>
+
+		<log-dialog
+			v-model:open="logOpen"
+			:log-text="wbsLogText"
+		/>
+	</main>
+</template>
+
+<script setup lang="ts">
+import { CdxIcon, CdxMessage } from '@wikimedia/codex';
+import { cdxIconSpeechBubble } from '@wikimedia/codex-icons';
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { HOST_VALIDATION_POLL_MS } from './constants';
+import { SaveConfigError, configToForm, fetchConfig, saveConfig } from './config';
+import { useHostValidation } from './composables/useHostValidation';
+import { usePasswordValidation } from './composables/usePasswordValidation';
+import { useInstallationProgress } from './composables/useInstallationProgress';
+import {
+	areHostsDistinct,
+	isValidAdminUsername,
+	isValidDatabaseName,
+	isValidDatabaseUser,
+	isValidConfigurationEmailAddress,
+	isValidHostname
+} from '../../lib/validation.ts';
+import type { ConfigForm, FieldValidationStatus, InitialInstallerState, InstallerStep } from './types';
+import AccountStep from './components/AccountStep.vue';
+import BasicsStep from './components/BasicsStep.vue';
+import DatabaseStep from './components/DatabaseStep.vue';
+import DomainHelp from './components/DomainHelp.vue';
+import LogDialog from './components/LogDialog.vue';
+import InstallationStep from './components/InstallationStep.vue';
+import VisibilityStep from './components/VisibilityStep.vue';
+import WelcomeStep from './components/WelcomeStep.vue';
+import InstallerSteps from './components/InstallerSteps.vue';
+
+type HostFieldName = 'WIKIBASE_PUBLIC_HOST' | 'WDQS_PUBLIC_HOST';
+type PasswordFieldName = 'MW_ADMIN_PASS' | 'DB_PASS';
+type TextValidationFieldName = 'MW_ADMIN_NAME' | 'DB_NAME' | 'DB_USER';
+type DatabaseTextFieldName = 'DB_NAME' | 'DB_USER';
+type FormFieldName = keyof ConfigForm;
+
+const fallbackState: InitialInstallerState = {
+	installerDevMock: false,
+	configurationOnly: false,
+	installationCompleted: false,
+	installationStarted: false,
+	existingInstallState: 'none',
+	isLocalMode: false,
+	serverIp: ''
+};
+
+const initialState = window.__INSTALLER_STATE__ || fallbackState;
+const logoSrc = '/Wikibase_Suite_(RGB).png';
+const existingInstallIsRunning = !initialState.configurationOnly &&
+	initialState.existingInstallState === 'running';
+const existingInstallBlocksInstallation = !initialState.configurationOnly &&
+	initialState.existingInstallState === 'previous';
+const initialInstallationComplete = !initialState.configurationOnly &&
+	( initialState.installationCompleted || existingInstallIsRunning );
+const initialInstallationLocked = initialInstallationComplete ||
+	( !initialState.configurationOnly && initialState.installationStarted ) ||
+	existingInstallBlocksInstallation;
+const currentStep = ref<InstallerStep>(
+	initialInstallationComplete || ( !initialState.configurationOnly && initialState.installationStarted ) ? 5 : 0
+);
+const configLocked = ref( initialInstallationLocked );
+const installationComplete = ref( initialInstallationComplete );
+const form = reactive<ConfigForm>( configToForm( null ) );
+const configText = ref( '' );
+const dnsHelpOpen = ref( false );
+const logOpen = ref( false );
+const saveErrorMessage = ref( '' );
+const saveErrorDetails = ref<string[]>( [] );
+let pollTimer: number | undefined;
+
+const hostValidation = useHostValidation( initialState.isLocalMode );
+const passwordValidation = usePasswordValidation();
+const installationActivity = useInstallationProgress( handleInstallationComplete );
+const installationProgress = computed( () => installationActivity.progress.value );
+const installationSummary = computed( () => installationActivity.summary.value );
+const installationFailed = computed( () => installationActivity.failed.value );
+const installationStatusLines = computed( () => installationActivity.statusLines.value );
+const installationHasStatusLines = computed( () => installationActivity.hasStatusLines.value );
+const wbsLogText = computed( () => installationActivity.logText.value );
+
+const steps = computed( () => [
+	{ title: 'Domains' },
+	{ title: 'Account' },
+	{ title: 'Database' },
+	{ title: 'Visibility' },
+	{
+		title: initialState.configurationOnly ? 'Configuration' : 'Installation',
+		complete: installationComplete.value
+	}
+] );
+
+const emailStatus = computed<FieldValidationStatus>( () => {
+	return isValidConfigurationEmailAddress( form.MW_ADMIN_EMAIL, initialState.isLocalMode ) ?
+		'valid' : 'invalid';
+} );
+
+const passwordStatuses = computed<Record<PasswordFieldName, FieldValidationStatus>>( () => ( {
+	MW_ADMIN_PASS: passwordValidation.statuses.MW_ADMIN_PASS,
+	DB_PASS: passwordValidation.statuses.DB_PASS
+} ) );
+
+const textStatuses = computed<Record<TextValidationFieldName, FieldValidationStatus>>( () => ( {
+	MW_ADMIN_NAME: getTextStatus( 'MW_ADMIN_NAME' ),
+	DB_NAME: getTextStatus( 'DB_NAME' ),
+	DB_USER: getTextStatus( 'DB_USER' )
+} ) );
+
+const adminNameStatus = computed<FieldValidationStatus>( () => textStatuses.value.MW_ADMIN_NAME );
+
+const databaseTextStatuses = computed<Record<DatabaseTextFieldName, FieldValidationStatus>>( () => ( {
+	DB_NAME: textStatuses.value.DB_NAME,
+	DB_USER: textStatuses.value.DB_USER
+} ) );
+
+const displayedHostStatuses = computed<Record<HostFieldName, FieldValidationStatus>>( () => ( {
+	WIKIBASE_PUBLIC_HOST: hostValidation.statuses.WIKIBASE_PUBLIC_HOST,
+	WDQS_PUBLIC_HOST: !areHostsDistinct( form.WIKIBASE_PUBLIC_HOST, form.WDQS_PUBLIC_HOST ) &&
+		hostValidation.statuses.WIKIBASE_PUBLIC_HOST === 'valid' &&
+		hostValidation.statuses.WDQS_PUBLIC_HOST === 'valid' ?
+		'invalid' :
+		hostValidation.statuses.WDQS_PUBLIC_HOST
+} ) );
+
+const domainReady = computed( () => (
+	hostValidation.statuses.WIKIBASE_PUBLIC_HOST === 'valid' &&
+	hostValidation.statuses.WDQS_PUBLIC_HOST === 'valid' &&
+	areHostsDistinct( form.WIKIBASE_PUBLIC_HOST, form.WDQS_PUBLIC_HOST )
+) );
+
+const accountReady = computed( () => (
+	isValidAdminUsername( form.MW_ADMIN_NAME ) &&
+	isValidConfigurationEmailAddress( form.MW_ADMIN_EMAIL, initialState.isLocalMode ) &&
+	isPasswordAccepted( 'MW_ADMIN_PASS' )
+) );
+
+const databaseReady = computed( () => (
+	isValidDatabaseName( form.DB_NAME ) &&
+	isValidDatabaseUser( form.DB_USER ) &&
+	isPasswordAccepted( 'DB_PASS' )
+) );
+
+const canStartInstallation = computed( () => domainReady.value && accountReady.value && databaseReady.value );
+
+function isPasswordAccepted( name: PasswordFieldName ): boolean {
+	return passwordValidation.statuses[ name ] === 'valid';
+}
+
+function getTextStatus( name: TextValidationFieldName ): FieldValidationStatus {
+	const validators: Record<TextValidationFieldName, ( value: string ) => boolean> = {
+		MW_ADMIN_NAME: isValidAdminUsername,
+		DB_NAME: isValidDatabaseName,
+		DB_USER: isValidDatabaseUser
+	};
+
+	return validators[ name ]( form[ name ] ) ? 'valid' : 'invalid';
+}
+
+function showStep( index: number ): void {
+	currentStep.value = ( index + 1 ) as InstallerStep;
+}
+
+function updateField( name: FormFieldName, value: string ): void {
+	clearSaveError();
+	form[ name ] = value as never;
+
+	if ( name === 'WIKIBASE_PUBLIC_HOST' ) {
+		hostValidation.scheduleValidation( name, value );
+	}
+
+	if ( name === 'WDQS_PUBLIC_HOST' ) {
+		hostValidation.scheduleValidation( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST );
+	}
+
+	if ( name === 'MW_ADMIN_PASS' || name === 'DB_PASS' ) {
+		passwordValidation.scheduleValidation( name, value );
+	}
+}
+
+function generateSecurePassword(): string {
+	const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+	const bytes = new Uint8Array( 24 );
+	window.crypto.getRandomValues( bytes );
+	return Array.from( bytes, ( byte ) => alphabet[ byte % alphabet.length ] ).join( '' );
+}
+
+function generatePasswordForField( name: PasswordFieldName ): void {
+	const password = generateSecurePassword();
+	updateField( name, password );
+	void passwordValidation.validateNow( name, password );
+}
+
+async function flushHost( name: HostFieldName ): Promise<void> {
+	if ( hostValidation.statuses[ name ] === 'valid' ) {
+		return;
+	}
+
+	await hostValidation.validateNow( name, form[ name ] );
+}
+
+async function continueToAccount(): Promise<void> {
+	await Promise.all( [
+		hostValidation.validateNow( 'WIKIBASE_PUBLIC_HOST', form.WIKIBASE_PUBLIC_HOST ),
+		hostValidation.validateNow( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST )
+	] );
+
+	if ( domainReady.value ) {
+		currentStep.value = 2;
+	}
+}
+
+async function continueToDatabase(): Promise<void> {
+	await passwordValidation.validateNow( 'MW_ADMIN_PASS', form.MW_ADMIN_PASS );
+
+	if ( accountReady.value ) {
+		currentStep.value = 3;
+	}
+}
+
+async function continueToVisibility(): Promise<void> {
+	await passwordValidation.validateNow( 'DB_PASS', form.DB_PASS );
+
+	if ( databaseReady.value ) {
+		currentStep.value = 4;
+	}
+}
+
+async function startInstallation(): Promise<void> {
+	clearSaveError();
+	await Promise.all( [
+		hostValidation.validateNow( 'WIKIBASE_PUBLIC_HOST', form.WIKIBASE_PUBLIC_HOST ),
+		hostValidation.validateNow( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST ),
+		passwordValidation.validateNow( 'MW_ADMIN_PASS', form.MW_ADMIN_PASS ),
+		passwordValidation.validateNow( 'DB_PASS', form.DB_PASS )
+	] );
+
+	if ( !canStartInstallation.value ) {
+		if ( !domainReady.value ) {
+			currentStep.value = 1;
+		} else if ( !accountReady.value ) {
+			currentStep.value = 2;
+		} else {
+			currentStep.value = 3;
+		}
+		return;
+	}
+
+	try {
+		const response = await saveConfig( form );
+		Object.assign( form, configToForm( response.config ) );
+		configText.value = response.configText || '';
+		configLocked.value = true;
+		currentStep.value = 5;
+		if ( initialState.configurationOnly ) {
+			installationComplete.value = true;
+			installationActivity.setProgress( 100, 'Configuration saved.' );
+		} else {
+			installationComplete.value = false;
+			installationActivity.resetForRun();
+		}
+	} catch ( error ) {
+		console.error( error );
+		saveErrorMessage.value = 'Configuration could not be saved';
+		saveErrorDetails.value = error instanceof SaveConfigError ? error.details : [];
+	}
+}
+
+function submitCurrentStep(): void {
+	if ( configLocked.value ) {
+		return;
+	}
+
+	if ( currentStep.value === 0 && initialState.existingInstallState !== 'previous' ) {
+		currentStep.value = 1;
+	} else if ( currentStep.value === 1 ) {
+		void continueToAccount();
+	} else if ( currentStep.value === 2 ) {
+		void continueToDatabase();
+	} else if ( currentStep.value === 3 ) {
+		void continueToVisibility();
+	} else if ( currentStep.value === 4 ) {
+		void startInstallation();
+	}
+}
+
+function clearSaveError(): void {
+	saveErrorMessage.value = '';
+	saveErrorDetails.value = [];
+}
+
+async function handleInstallationComplete(): Promise<void> {
+	const response = await fetchConfig();
+	if ( response ) {
+		Object.assign( form, configToForm( response.config ) );
+		configText.value = response.configText || '';
+	}
+	installationActivity.setProgress( 100, 'Installation complete. Your services are ready.' );
+	installationComplete.value = true;
+	currentStep.value = 5;
+}
+
+async function hydrateInitialConfig(): Promise<void> {
+	const response = await fetchConfig();
+	if ( response ) {
+		Object.assign( form, configToForm( response.config ) );
+		configText.value = response.configText || '';
+	}
+
+	await Promise.all( [
+		hostValidation.validateNow( 'WIKIBASE_PUBLIC_HOST', form.WIKIBASE_PUBLIC_HOST ),
+		hostValidation.validateNow( 'WDQS_PUBLIC_HOST', form.WDQS_PUBLIC_HOST ),
+		passwordValidation.validateNow( 'MW_ADMIN_PASS', form.MW_ADMIN_PASS ),
+		passwordValidation.validateNow( 'DB_PASS', form.DB_PASS )
+	] );
+
+	if ( initialInstallationComplete ) {
+		await handleInstallationComplete();
+	}
+}
+
+function startHostValidationPolling(): void {
+	pollTimer = window.setInterval( () => {
+		if ( currentStep.value !== 1 || configLocked.value ) {
+			return;
+		}
+
+		( [ 'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST' ] as HostFieldName[] ).forEach( ( name ) => {
+			const value = form[ name ].trim();
+			if ( !value ||
+				!isValidHostname( value, initialState.isLocalMode ) ||
+				hostValidation.statuses[ name ] === 'valid'
+			) {
+				return;
+			}
+			void hostValidation.validateNow( name, value );
+		} );
+	}, HOST_VALIDATION_POLL_MS );
+}
+
+onMounted( async () => {
+	installationActivity.start();
+	await hydrateInitialConfig();
+	startHostValidationPolling();
+} );
+
+onUnmounted( () => {
+	installationActivity.stop();
+	if ( pollTimer ) {
+		window.clearInterval( pollTimer );
+	}
+} );
+</script>

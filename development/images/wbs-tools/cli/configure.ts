@@ -1,0 +1,362 @@
+import { promises as dns } from 'dns';
+import { readFileSync } from 'fs';
+import {
+	cancel,
+	confirm,
+	intro,
+	isCancel,
+	log,
+	note,
+	outro,
+	password,
+	spinner,
+	text
+} from '@clack/prompts';
+import { stdin as input, stdout as output } from 'process';
+import {
+	getConfig,
+	isLocalMode,
+	saveConfigText
+} from '../lib/configuration.js';
+import { validateConfigurationPassword } from '../lib/password-policy.js';
+import {
+	areHostsDistinct,
+	canSkipDnsValidation,
+	isValidAdminUsername,
+	isValidDatabaseName,
+	isValidDatabaseUser,
+	isValidConfigurationEmailAddress,
+	isValidHostname
+} from '../lib/validation.js';
+import { resolveServerIp } from '../lib/server-ip.js';
+
+type CliConfigInput = {
+	MW_ADMIN_EMAIL: string;
+	WIKIBASE_PUBLIC_HOST: string;
+	WDQS_PUBLIC_HOST: string;
+	METADATA_CALLBACK: string;
+	MW_ADMIN_NAME: string;
+	MW_ADMIN_PASS: string;
+	DB_NAME: string;
+	DB_USER: string;
+	DB_PASS: string;
+};
+
+export type GeneratedPasswordFlags = {
+	admin: boolean;
+	database: boolean;
+};
+
+type ValidationMessage = string | undefined;
+
+let serverIp = '';
+const pipedAnswers = input.isTTY ? [] : readFileSync( 0, 'utf8' ).split( /\r?\n/ );
+
+function abortConfiguration(): never {
+	cancel( 'Installation canceled.' );
+	process.exit( 130 );
+}
+
+function unwrapPromptValue( value: string | boolean | symbol ): string | boolean {
+	if ( isCancel( value ) ) {
+		abortConfiguration();
+	}
+	return value;
+}
+
+function unwrapPromptString( value: string | symbol | undefined ): string {
+	if ( isCancel( value ) ) {
+		abortConfiguration();
+	}
+	return value ?? '';
+}
+
+function readPipedAnswer( label: string ): string {
+	const answer = ( pipedAnswers.shift() ?? '' ).trim();
+	output.write( `${ label }: ${ answer }\n` );
+	return answer;
+}
+
+function readPipedSecret( label: string, placeholder: string ): string {
+	output.write( `${ label } (${ placeholder }):\n` );
+	return ( pipedAnswers.shift() ?? '' ).trim();
+}
+
+function showIntro(): void {
+	if ( input.isTTY ) {
+		intro( 'Configure Wikibase Suite' );
+		if ( !isLocalMode() ) {
+			note( serverIp, 'Public IP of this server' );
+		}
+		return;
+	}
+
+	console.log( '\nConfigure Wikibase Suite\n' );
+	if ( !isLocalMode() ) {
+		console.log( `Public IP of this server: ${ serverIp }\n` );
+	}
+}
+
+async function promptText(
+	label: string,
+	defaultValue = '',
+	validate?: ( value: string ) => ValidationMessage
+): Promise<string> {
+	if ( !input.isTTY ) {
+		return readPipedAnswer( defaultValue ? `${ label } [${ defaultValue }]` : label ) || defaultValue;
+	}
+
+	return unwrapPromptString( await text( {
+		message: label,
+		defaultValue: defaultValue || undefined,
+		initialValue: defaultValue || undefined,
+		validate: ( value ) => validate?.( String( value ?? '' ).trim() )
+	} ) );
+}
+
+async function promptUntil(
+	label: string,
+	defaultValue: string,
+	validator: ( value: string ) => boolean | Promise<boolean>,
+	message: string,
+	options: { required?: boolean; spinnerMessage?: string } = { required: true }
+): Promise<string> {
+	while ( true ) {
+		const value = ( await promptText(
+			label,
+			defaultValue,
+			( candidate ) => {
+				if ( !candidate && options.required !== false ) {
+					return 'This field is required.';
+				}
+				return undefined;
+			}
+		) ).trim();
+
+		if ( !value && options.required === false ) {
+			return value;
+		}
+
+		const progress = input.isTTY && options.spinnerMessage ? spinner() : null;
+		progress?.start( options.spinnerMessage );
+		const valid = await validator( value );
+		progress?.stop( valid ? 'Validated.' : undefined );
+
+		if ( valid ) {
+			return value;
+		}
+
+		if ( input.isTTY ) {
+			log.error( message );
+		} else {
+			console.log( message );
+		}
+	}
+}
+
+async function promptYesNo( label: string, defaultValue: boolean ): Promise<boolean> {
+	if ( !input.isTTY ) {
+		const suffix = defaultValue ? '[Y/n]' : '[y/N]';
+		const answer = readPipedAnswer( `${ label } ${ suffix }` ).toLowerCase();
+		if ( !answer ) {
+			return defaultValue;
+		}
+		return answer.startsWith( 'y' );
+	}
+
+	return unwrapPromptValue( await confirm( {
+		message: label,
+		initialValue: defaultValue
+	} ) ) as boolean;
+}
+
+function validatePasswordMessage( value: string | undefined ): ValidationMessage {
+	const passwordValue = value ?? '';
+	if ( passwordValue.length === 0 ) {
+		return undefined;
+	}
+
+	const validation = validateConfigurationPassword( passwordValue );
+	if ( validation.valid ) {
+		return undefined;
+	}
+
+	if ( validation.reason === 'common-password' ) {
+		return 'That password is too common. Press Enter to use a generated password, or choose another password.';
+	}
+
+	return 'Password must be at least 10 characters. Press Enter to use a generated password.';
+}
+
+async function promptPasswordUntil(
+	label: string,
+	hasExistingPassword: boolean
+): Promise<string> {
+	const promptHelp = hasExistingPassword ?
+		'press Enter to keep existing password' :
+		'press Enter to use generated password';
+	const promptLabel = `${ label } (${ promptHelp })`;
+
+	if ( !input.isTTY ) {
+		while ( true ) {
+			const value = readPipedSecret( label, promptHelp );
+			const validationMessage = validatePasswordMessage( value );
+			if ( validationMessage === undefined ) {
+				return value;
+			}
+			console.log( validationMessage );
+		}
+	}
+
+	while ( true ) {
+		const value = unwrapPromptString( await password( {
+			message: promptLabel,
+			validate: validatePasswordMessage
+		} ) );
+
+		if ( value.length === 0 ) {
+			return value;
+		}
+
+		const confirmation = unwrapPromptString( await password( {
+			message: `Confirm ${ label.toLowerCase() }`
+		} ) );
+
+		if ( value === confirmation ) {
+			return value;
+		}
+
+		log.error( 'Passwords do not match. Try again, or press Enter to generate one.' );
+	}
+}
+
+async function hostResolvesToServer( hostname: string ): Promise<boolean> {
+	const host = hostname.trim();
+	if ( !isValidHostname( host, isLocalMode() ) ) {
+		return false;
+	}
+
+	if ( canSkipDnsValidation( host, isLocalMode() ) ) {
+		return true;
+	}
+
+	if ( !serverIp ) {
+		return false;
+	}
+
+	try {
+		const addresses = await dns.resolve4( host );
+		return addresses.includes( serverIp );
+	} catch {
+		return false;
+	}
+}
+
+async function gatherConfig(): Promise<{
+	input: CliConfigInput;
+	generatedPasswords: GeneratedPasswordFlags;
+}> {
+	const { config: defaults } = getConfig();
+	const wikibaseHostDefault = defaults.WIKIBASE_PUBLIC_HOST || '';
+
+	const MW_ADMIN_EMAIL = await promptUntil(
+		'Admin email address',
+		defaults.MW_ADMIN_EMAIL || '',
+		( value ) => isValidConfigurationEmailAddress( value, isLocalMode() ),
+		'Enter a valid email address.'
+	);
+
+	const WIKIBASE_PUBLIC_HOST = await promptUntil(
+		'Wikibase host',
+		wikibaseHostDefault,
+		hostResolvesToServer,
+		`Host must resolve to this server IP address (${ serverIp }).`,
+		{ spinnerMessage: 'Checking DNS for Wikibase host...' }
+	);
+
+	const WDQS_PUBLIC_HOST = await promptUntil(
+		'Query Service host',
+		defaults.WDQS_PUBLIC_HOST || '',
+		async ( value ) => areHostsDistinct( WIKIBASE_PUBLIC_HOST, value ) &&
+			await hostResolvesToServer( value ),
+		`Host must be different from the Wikibase host and resolve to this server IP address (${ serverIp }).`,
+		{ spinnerMessage: 'Checking DNS for Query Service host...' }
+	);
+
+	const METADATA_CALLBACK = await promptYesNo(
+		'Make this Wikibase visible in the global Wikibase directory?',
+		String( defaults.METADATA_CALLBACK ).toLowerCase() !== 'false'
+	);
+
+	const MW_ADMIN_NAME = await promptUntil(
+		'Admin username',
+		defaults.MW_ADMIN_NAME || '',
+		isValidAdminUsername,
+		'Admin username must be at least 4 characters and use MediaWiki-compatible characters.'
+	);
+
+	const MW_ADMIN_PASS = await promptPasswordUntil(
+		'Admin password',
+		Boolean( defaults.MW_ADMIN_PASS )
+	);
+
+	const DB_NAME = await promptUntil(
+		'Database name',
+		defaults.DB_NAME || 'my_wiki',
+		isValidDatabaseName,
+		'Database name must be 1-64 characters and use letters, numbers, or underscores.'
+	);
+
+	const DB_USER = await promptUntil(
+		'Database user',
+		defaults.DB_USER || 'sqluser',
+		isValidDatabaseUser,
+		'Database user must be at least 4 characters and use letters, numbers, or underscores.'
+	);
+
+	const DB_PASS = await promptPasswordUntil(
+		'Database password',
+		Boolean( defaults.DB_PASS )
+	);
+
+	return {
+		input: {
+			MW_ADMIN_EMAIL,
+			WIKIBASE_PUBLIC_HOST,
+			WDQS_PUBLIC_HOST,
+			METADATA_CALLBACK: METADATA_CALLBACK ? 'true' : 'false',
+			MW_ADMIN_NAME,
+			MW_ADMIN_PASS: MW_ADMIN_PASS || defaults.MW_ADMIN_PASS || '',
+			DB_NAME,
+			DB_USER,
+			DB_PASS: DB_PASS || defaults.DB_PASS || ''
+		},
+		generatedPasswords: {
+			admin: !MW_ADMIN_PASS && !defaults.MW_ADMIN_PASS,
+			database: !DB_PASS && !defaults.DB_PASS
+		}
+	};
+}
+
+export async function configureFromTerminal(): Promise<GeneratedPasswordFlags> {
+	serverIp = await resolveServerIp( isLocalMode() );
+	showIntro();
+	const { input: inputConfig, generatedPasswords } = await gatherConfig();
+	const { configText } = getConfig( inputConfig, { generateMissingPasswords: true } );
+	saveConfigText( configText );
+
+	if ( input.isTTY ) {
+		outro( 'Configuration saved.' );
+	} else {
+		console.log( '\nConfiguration saved.\n' );
+	}
+
+	if ( isLocalMode() ) {
+		console.log( 'Local hostnames must resolve to this machine. Add this hosts-file entry if needed:' );
+		console.log(
+			`127.0.0.1 ${ inputConfig.WIKIBASE_PUBLIC_HOST } ${ inputConfig.WDQS_PUBLIC_HOST }\n`
+		);
+	}
+
+	return generatedPasswords;
+}

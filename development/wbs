@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WBS_DEV_IMAGE="${WBS_DEV_IMAGE:-wbs-dev:latest}"
+export WBS_DEV_IMAGE
+
+needs_development_image=false
+if [[ "${1:-}" == up ]]; then
+  for argument in "${@:2}"; do
+    if [[ "$argument" == --build ]]; then
+      needs_development_image=true
+      break
+    fi
+  done
+fi
+
+# This entry point executes the WBS application from the source checkout. Use
+# its local tools image instead of resolving the published product image. Build
+# it on first use; subsequent commands reuse it until a developer explicitly
+# rebuilds it through wbs-dev.
+if [[ -z "${WBS_TOOLS_IMAGE:-}" ]]; then
+  export WBS_TOOLS_IMAGE="wikibase/wbs-tools:latest"
+  export WBS_TOOLS_SKIP_PULL=true
+  if ! docker image inspect "$WBS_TOOLS_IMAGE" >/dev/null 2>&1 ||
+    { [[ "$needs_development_image" == true ]] &&
+      ! docker image inspect "$WBS_DEV_IMAGE" >/dev/null 2>&1; }; then
+    "$REPOSITORY_ROOT/development/wbs-dev" build wbs-tools
+  fi
+fi
+
+exec "$REPOSITORY_ROOT/scripts/run-wbs-tools.sh" "$@"
