@@ -153,6 +153,8 @@ jobs:
           # Docker Hub URL completion resolves links from the repository root,
           # while the checked-in READMEs use paths relative to their directory.
           # Normalize only the disposable Actions checkout; source stays portable.
+          # TODO: Once main represents the latest released state rather than active
+          # development, replace this normalization with stable default-branch links.
           sed -i \
             -e "s#](\\./#](development/images/$IMAGE_NAME/#g" \
             -e 's#](\.\./\.\./\.\./#](#g' \
