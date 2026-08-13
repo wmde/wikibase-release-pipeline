@@ -144,9 +144,10 @@ jobs:
             "${sources[@]}"
 
       - name: Publish image documentation to Docker Hub
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: wmdetravisbot
           password: ${{ secrets.WBS_PUBLISH_TOKEN }}
           repository: wikibase/${{ needs.release_metadata.outputs.image_name }}
           readme-filepath: development/images/${{ needs.release_metadata.outputs.image_name }}/README.md
+          enable-url-completion: true
