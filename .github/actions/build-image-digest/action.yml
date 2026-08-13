@@ -25,6 +25,8 @@ runs:
         metadata_file="$RUNNER_TEMP/release-metadata.json"
         ./wbs-dev build "$image_name" --publish \
           --platform="${{ inputs.platform }}" \
+          --provenance=false \
+          --set "$image_name-release.tags=" \
           --set "$image_name-release.output=type=image,name=wikibase/$image_name,push-by-digest=true,name-canonical=true,push=true" \
           --metadata-file="$metadata_file"
         digest=$(jq -er \

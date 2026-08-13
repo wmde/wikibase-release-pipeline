@@ -132,14 +132,18 @@ jobs:
           set -euo pipefail
           image="wikibase/$IMAGE_NAME"
           sources=("$image@$AMD64_DIGEST")
+          create_arguments=()
           if [ "$RELEASE_ARM64" = "true" ]; then
             sources+=("$image@$ARM64_DIGEST")
+          else
+            create_arguments+=(--prefer-index=false)
           fi
           tag_arguments=()
           while IFS= read -r release_tag; do
             tag_arguments+=(--tag "$release_tag")
           done < <(jq -r '.[]' <<< "$RELEASE_TAGS")
           docker buildx imagetools create \
+            "${create_arguments[@]}" \
             "${tag_arguments[@]}" \
             "${sources[@]}"
 
