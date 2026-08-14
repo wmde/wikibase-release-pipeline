@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\WikibaseSuite;
 
-use MediaWiki\Registration\ExtensionRegistry;
 use OutputPage;
 use Skin;
 use SpecialPage;
@@ -24,41 +23,37 @@ class Hooks {
 	public static function onSidebarBeforeOutput( Skin $skin, array &$sidebar ): void {
 		$authority = $skin->getAuthority();
 		$wikibaseLinks = [];
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikibaseRepository' ) ) {
-			$canCreateEntity = $authority->isAllowed( 'edit' )
-				&& $authority->isAllowed( 'createpage' );
-			if ( $canCreateEntity ) {
-				$wikibaseLinks[] = self::sidebarLink(
-					$skin,
-					'wikibasesuite-create-new-item',
-					SpecialPage::getTitleFor( 'NewItem' )->getLocalURL(),
-					'n-wikibasesuite-create-new-item'
-				);
-			}
-			if ( $canCreateEntity && $authority->isAllowed( 'property-create' ) ) {
-				$wikibaseLinks[] = self::sidebarLink(
-					$skin,
-					'wikibasesuite-create-new-property',
-					SpecialPage::getTitleFor( 'NewProperty' )->getLocalURL(),
-					'n-wikibasesuite-create-new-property'
-				);
-			}
-
+		$canCreateEntity = $authority->isAllowed( 'edit' )
+			&& $authority->isAllowed( 'createpage' );
+		if ( $canCreateEntity ) {
 			$wikibaseLinks[] = self::sidebarLink(
 				$skin,
-				'wikibasesuite-all-items',
-				SpecialPage::getTitleFor( 'AllPages' )->getLocalURL( [
-					'namespace' => constant( 'WB_NS_ITEM' ),
-				] ),
-				'n-wikibasesuite-all-items'
-			);
-			$wikibaseLinks[] = self::sidebarLink(
-				$skin,
-				'wikibasesuite-all-properties',
-				SpecialPage::getTitleFor( 'ListProperties' )->getLocalURL(),
-				'n-wikibasesuite-all-properties'
+				'wikibasesuite-create-new-item',
+				SpecialPage::getTitleFor( 'NewItem' )->getLocalURL(),
+				'n-wikibasesuite-create-new-item'
 			);
 		}
+		if ( $canCreateEntity && $authority->isAllowed( 'property-create' ) ) {
+			$wikibaseLinks[] = self::sidebarLink(
+				$skin,
+				'wikibasesuite-create-new-property',
+				SpecialPage::getTitleFor( 'NewProperty' )->getLocalURL(),
+				'n-wikibasesuite-create-new-property'
+			);
+		}
+
+		$wikibaseLinks[] = self::sidebarLink(
+			$skin,
+			'wikibasesuite-all-items',
+			SpecialPage::getTitleFor( 'AllPages' )->getLocalURL( [ 'namespace' => WB_NS_ITEM ] ),
+			'n-wikibasesuite-all-items'
+		);
+		$wikibaseLinks[] = self::sidebarLink(
+			$skin,
+			'wikibasesuite-all-properties',
+			SpecialPage::getTitleFor( 'ListProperties' )->getLocalURL(),
+			'n-wikibasesuite-all-properties'
+		);
 
 		$queryServiceUrl = self::environmentUrl( 'WDQS_PUBLIC_FRONTEND_URL' );
 		$quickStatementsUrl = self::environmentUrl( 'QUICKSTATEMENTS_PUBLIC_URL' );
@@ -78,10 +73,9 @@ class Hooks {
 				'n-wikibasesuite-query-service'
 			);
 		}
-		$sections = [];
-		if ( $wikibaseLinks !== [] ) {
-			$sections['wikibasesuite-wikibase-sidebar-heading'] = $wikibaseLinks;
-		}
+		$sections = [
+			'wikibasesuite-wikibase-sidebar-heading' => $wikibaseLinks,
+		];
 
 		if ( $authority->isAllowed( 'wbs-manage-instance' ) ) {
 			$sections['wikibasesuite-sidebar-heading'] = [

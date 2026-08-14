@@ -1,5 +1,8 @@
 <?php
 
+$wgEnableWikibaseRepo = true;
+$wgEnableWikibaseClient = true;
+
 # Wikibase Repository
 wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.json" );
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";

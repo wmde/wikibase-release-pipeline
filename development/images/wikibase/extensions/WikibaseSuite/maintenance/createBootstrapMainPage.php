@@ -24,6 +24,11 @@ class CreateBootstrapMainPage extends Maintenance {
 	}
 
 	public function execute() {
+		if ( !( $GLOBALS['wgEnableWikibaseRepo'] ?? true ) ) {
+			$this->output( "Wikibase Repository is disabled; leaving the Main Page unchanged.\n" );
+			return;
+		}
+
 		$title = Title::newFromText( wfMessage( 'mainpage' )->inContentLanguage()->text() );
 		if ( !$title ) {
 			$this->fatalError( 'The configured Main Page title is invalid.' );

@@ -1,6 +1,7 @@
 import { stringify } from 'querystring';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
+import { getInstalledExtensions } from '../_helpers/default-functions.js';
 import ItemPage from '../_helpers/pages/entity/item.page.js';
 import LoginPage from '../_helpers/pages/login.page.js';
 import page from '../_helpers/pages/page.js';
@@ -40,6 +41,17 @@ describe( 'Item', function () {
 		await expect( SpecialNewItemPage.firstHeading ).toHaveText(
 			'(nosuchspecialpage)'
 		);
+	} );
+
+	it( 'Wikibase Suite should only be loaded on repository', async function () {
+		const repositoryExtensions = await getInstalledExtensions(
+			testEnv.vars.WIKIBASE_URL
+		);
+		const clientExtensions = await getInstalledExtensions(
+			testEnv.vars.WIKIBASE_CLIENT_URL
+		);
+		expect( repositoryExtensions ).toContain( 'WikibaseSuite' );
+		expect( clientExtensions ).not.toContain( 'WikibaseSuite' );
 	} );
 
 	it( 'Special:NewItem should be visible on repo', async function () {

@@ -1,3 +1,5 @@
 <?php
 
-wfLoadExtension( 'WikibaseSuite' );
+if ( $wgEnableWikibaseRepo ?? true ) {
+	wfLoadExtension( 'WikibaseSuite' );
+}
