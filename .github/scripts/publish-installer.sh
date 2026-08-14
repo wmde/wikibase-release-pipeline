@@ -66,9 +66,10 @@ prepare_pr() {
 
   local short_sha="${PR_HEAD_SHA:0:12}"
   local tag="pr-${PR_NUMBER}-${short_sha}"
-  local pull_request current_sha state
+  local pull_request current_sha head_ref state
   pull_request="$(gh api "repos/$ORIGIN_REPOSITORY/pulls/$PR_NUMBER")"
   current_sha="$(jq -r '.head.sha' <<< "$pull_request")"
+  head_ref="$(jq -r '.head.ref' <<< "$pull_request")"
   state="$(jq -r '.state' <<< "$pull_request")"
   if [[ "$state" != open ]]; then
     echo "Pull request $PR_NUMBER is no longer open; skipping installer publication."
@@ -78,6 +79,10 @@ prepare_pr() {
   if [[ "$current_sha" == "$PR_HEAD_SHA" ]]; then
     current=true
   fi
+  git check-ref-format --branch "$head_ref" >/dev/null || {
+    echo "Invalid PR head branch: $head_ref" >&2
+    exit 1
+  }
 
   local images_json='{}'
   local image_name image source_amd64 source_arm64
@@ -108,6 +113,7 @@ prepare_pr() {
     --arg event_type publish-pr-installation \
     --arg origin_repository "$ORIGIN_REPOSITORY" \
     --arg source_repository "$ORIGIN_REPOSITORY" \
+    --arg source_ref "$head_ref" \
     --argjson pr "$PR_NUMBER" \
     --arg commit "$PR_HEAD_SHA" \
     --argjson current "$current" \
@@ -118,6 +124,7 @@ prepare_pr() {
         schemaVersion: 1,
         originRepository: $origin_repository,
         sourceRepository: $source_repository,
+        sourceRef: $source_ref,
         pr: $pr,
         commit: $commit,
         current: $current,
@@ -159,9 +166,10 @@ dispatch_pr() {
   fi
   dispatch_payload "$PR_PAYLOAD_PATH"
 
-  local pr commit short_sha current
+  local pr commit source_ref short_sha current
   pr="$(jq -r '.client_payload.pr' "$PR_PAYLOAD_PATH")"
   commit="$(jq -r '.client_payload.commit' "$PR_PAYLOAD_PATH")"
+  source_ref="$(jq -r '.client_payload.sourceRef' "$PR_PAYLOAD_PATH")"
   current="$(jq -r '.client_payload.current' "$PR_PAYLOAD_PATH")"
   short_sha="${commit:0:12}"
   wait_for_publication \
@@ -172,7 +180,7 @@ dispatch_pr() {
     "PR installation manifest"
   if [[ "$current" == true ]]; then
     wait_for_publication \
-      "$PAGES_ROOT/pr-$pr" "export WBS_REF='$commit'" \
+      "$PAGES_ROOT/pr-$pr" "export WBS_REF='$source_ref'" \
       "current PR installer"
     wait_for_publication \
       "$PAGES_ROOT/manifests/pr-$pr.json" \
