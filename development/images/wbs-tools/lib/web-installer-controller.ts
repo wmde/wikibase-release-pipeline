@@ -106,7 +106,7 @@ function sharedWorkerArgs(): string[] {
 		.split( /\s+/ ).filter( Boolean );
 	const environment = [
 		'COMPOSE_PROJECT_NAME', 'BUILD_CACHE_REGISTRY', 'GITHUB_ACTIONS',
-		'SERVER_IP', 'WBS_DEV_IMAGE', ...passthrough
+		'SERVER_IP', 'WBS_DEV_IMAGE', 'WBS_TOOLS_IMAGE', ...passthrough
 	];
 	const args = [ '--rm' ];
 	for ( const name of environment ) {
