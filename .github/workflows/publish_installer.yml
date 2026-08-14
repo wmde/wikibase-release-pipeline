@@ -176,7 +176,7 @@ jobs:
             "curl -fsSL $INSTALLER_URL | bash" \
             '```' \
             '' \
-            'This URL tracks the latest successfully published build for this PR.')"
+            'This URL tracks the latest successfully published source and image build for this PR.')"
           comment_id="$(
             gh api --paginate \
               "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" \

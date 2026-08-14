@@ -1,3 +1,5 @@
+<img src="docs/install/assets/Wikibase-Suite_Knowledge-graph-software" alt="Wikibase Suite header image with logo and graphics" >
+
 # Wikibase Suite (WBS)
 
 Wikibase Suite (WBS) helps you run your own [Wikibase](https://wikiba.se/) on a server.
