@@ -202,6 +202,104 @@ variable "WSOAUTH" {
   }
 }
 
+variable "REVISIONSLIDER" {
+  default = {
+    kind = "gerrit", name = "RevisionSlider", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/RevisionSlider"
+    ref = WMF_EXTENSION_REF, revision = "bcf88506161d57001b523bf9c2ff3a03cf565255"
+  }
+}
+
+variable "TORBLOCK" {
+  default = {
+    kind = "gerrit", name = "TorBlock", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/TorBlock"
+    ref = WMF_EXTENSION_REF, revision = "7a34e88517b1bd70856b299aec7563eb9091606b"
+  }
+}
+
+variable "JSONCONFIG" {
+  default = {
+    kind = "gerrit", name = "JsonConfig", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/JsonConfig"
+    ref = WMF_EXTENSION_REF, revision = "f9015ed89d7aedeb6c5d18fed6b58bb598a7dc20"
+  }
+}
+
+variable "KARTOGRAPHER" {
+  default = {
+    kind = "gerrit", name = "Kartographer", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/Kartographer"
+    ref = WMF_EXTENSION_REF, revision = "634b552f6f5d3c47dd9413dde00d81e0efcb4c81"
+  }
+}
+
+variable "TEMPLATESANDBOX" {
+  default = {
+    kind = "gerrit", name = "TemplateSandbox", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/TemplateSandbox"
+    ref = WMF_EXTENSION_REF, revision = "7fd76b37e6d85418ff082ab8127cf1c51c7fa466"
+  }
+}
+
+variable "CODEMIRROR" {
+  default = {
+    kind = "gerrit", name = "CodeMirror", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/CodeMirror"
+    ref = WMF_EXTENSION_REF, revision = "31801f4f592c30786a8845b4503855860b41be81"
+  }
+}
+
+variable "ADVANCEDSEARCH" {
+  default = {
+    kind = "gerrit", name = "AdvancedSearch", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/AdvancedSearch"
+    ref = WMF_EXTENSION_REF, revision = "23ae0b9718b368673ac86fbc86d0c701a54b48fa"
+  }
+}
+
+variable "TWOCOLCONFLICT" {
+  default = {
+    kind = "gerrit", name = "TwoColConflict", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/TwoColConflict"
+    ref = WMF_EXTENSION_REF, revision = "d4c4742626c2bec7720b5552c1e8d853fdc37f71"
+  }
+}
+
+variable "STOPFORUMSPAM" {
+  default = {
+    kind = "gerrit", name = "StopForumSpam", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/StopForumSpam"
+    ref = WMF_EXTENSION_REF, revision = "b133d7b9f3822b217d0b396359aa931e5a7497d3"
+  }
+}
+
+variable "MOBILEFRONTEND" {
+  default = {
+    kind = "gerrit", name = "MobileFrontend", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/MobileFrontend"
+    ref = WMF_EXTENSION_REF, revision = "e00881d4d6f2e91f57026e8fa81a7dd8ad71cda4"
+  }
+}
+
+variable "CONFIRMACCOUNT" {
+  default = {
+    kind = "gerrit", name = "ConfirmAccount", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/ConfirmAccount"
+    ref = WMF_EXTENSION_REF, revision = "a3227fdc9413ec8c3b50d671ee389a72d818257b"
+  }
+}
+
+variable "INVITESIGNUP" {
+  default = {
+    kind = "gerrit", name = "InviteSignup", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/InviteSignup"
+    ref = WMF_EXTENSION_REF, revision = "07463e8d97370a36bc8ef47153c818ef9e3b7cd3"
+  }
+}
+
+variable "WIKIBASELEXEME" {
+  default = {
+    kind = "gerrit", name = "WikibaseLexeme", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/WikibaseLexeme"
+    ref = WMF_EXTENSION_REF, revision = "f71760e895a3b0793a946f976bd5783409f87536"
+  }
+}
+
+variable "WIKIBASELEXEMECIRRUSSEARCH" {
+  default = {
+    kind = "gerrit", name = "WikibaseLexemeCirrusSearch", repo = "https://gerrit.wikimedia.org/r/mediawiki/extensions/WikibaseLexemeCirrusSearch"
+    ref = WMF_EXTENSION_REF, revision = "3fbbbe32baac83146a1ff3f939e2631dc12de708"
+  }
+}
+
 # ==============================================================================
 # Community-maintained extensions
 # ==============================================================================
@@ -234,6 +332,16 @@ variable "WIKIBASEINWIKITEXT" {
     repo     = "https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext.git"
     ref      = "refs/heads/main"
     revision = "5175dceecd2f0522b0ab9a9dae7b1bc304e359b7"
+  }
+}
+
+variable "WIKIHIERO" {
+  default = {
+    kind     = "github"
+    name     = "WikiHiero"
+    repo     = "https://github.com/wikimedia/mediawiki-extensions-WikiHiero.git"
+    ref      = WMF_EXTENSION_REF
+    revision = "d3a78de14f7869286032a10a6736e57ca5855e98"
   }
 }
 
@@ -270,10 +378,25 @@ target "wikibase-base" {
     WIKIBASECIRRUSSEARCH_COMMIT      = WIKIBASECIRRUSSEARCH.revision
     WIKIBASEMANIFEST_COMMIT          = WIKIBASEMANIFEST.revision
     WSOAUTH_COMMIT                   = WSOAUTH.revision
+    REVISIONSLIDER_COMMIT            = REVISIONSLIDER.revision
+    TORBLOCK_COMMIT                  = TORBLOCK.revision
+    JSONCONFIG_COMMIT                = JSONCONFIG.revision
+    KARTOGRAPHER_COMMIT              = KARTOGRAPHER.revision
+    TEMPLATESANDBOX_COMMIT           = TEMPLATESANDBOX.revision
+    CODEMIRROR_COMMIT                = CODEMIRROR.revision
+    ADVANCEDSEARCH_COMMIT            = ADVANCEDSEARCH.revision
+    TWOCOLCONFLICT_COMMIT            = TWOCOLCONFLICT.revision
+    STOPFORUMSPAM_COMMIT             = STOPFORUMSPAM.revision
+    MOBILEFRONTEND_COMMIT            = MOBILEFRONTEND.revision
+    CONFIRMACCOUNT_COMMIT            = CONFIRMACCOUNT.revision
+    INVITESIGNUP_COMMIT              = INVITESIGNUP.revision
+    WIKIBASELEXEME_COMMIT            = WIKIBASELEXEME.revision
+    WIKIBASELEXEMECIRRUSSEARCH_COMMIT = WIKIBASELEXEMECIRRUSSEARCH.revision
 
     WIKIBASELOCALMEDIA_COMMIT = WIKIBASELOCALMEDIA.revision
     WIKIBASEEDTF_COMMIT       = WIKIBASEEDTF.revision
     WIKIBASEINWIKITEXT_COMMIT = WIKIBASEINWIKITEXT.revision
+    WIKIHIERO_COMMIT           = WIKIHIERO.revision
   }
 
   labels = {

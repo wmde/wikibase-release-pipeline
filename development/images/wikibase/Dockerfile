@@ -128,7 +128,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 USER nobody
 
-ARG WMF_EXTENSIONS="Wikibase,Babel,cldr,CirrusSearch,Elastica,Echo,EntitySchema,OAuth,PluggableAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest,WSOAuth"
+ARG WMF_EXTENSIONS="Wikibase,Babel,cldr,CirrusSearch,Elastica,Echo,EntitySchema,OAuth,PluggableAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest,WSOAuth,RevisionSlider,TorBlock,JsonConfig,Kartographer,TemplateSandbox,CodeMirror,AdvancedSearch,TwoColConflict,StopForumSpam,MobileFrontend,ConfirmAccount,InviteSignup,WikibaseLexeme,WikibaseLexemeCirrusSearch"
 ARG WIKIBASE_COMMIT
 ARG BABEL_COMMIT
 ARG CLDR_COMMIT
@@ -142,11 +142,26 @@ ARG UNIVERSALLANGUAGESELECTOR_COMMIT
 ARG WIKIBASECIRRUSSEARCH_COMMIT
 ARG WIKIBASEMANIFEST_COMMIT
 ARG WSOAUTH_COMMIT
+ARG REVISIONSLIDER_COMMIT
+ARG TORBLOCK_COMMIT
+ARG JSONCONFIG_COMMIT
+ARG KARTOGRAPHER_COMMIT
+ARG TEMPLATESANDBOX_COMMIT
+ARG CODEMIRROR_COMMIT
+ARG ADVANCEDSEARCH_COMMIT
+ARG TWOCOLCONFLICT_COMMIT
+ARG STOPFORUMSPAM_COMMIT
+ARG MOBILEFRONTEND_COMMIT
+ARG CONFIRMACCOUNT_COMMIT
+ARG INVITESIGNUP_COMMIT
+ARG WIKIBASELEXEME_COMMIT
+ARG WIKIBASELEXEMECIRRUSSEARCH_COMMIT
 
 # third-party extensions
 ARG WIKIBASEEDTF_COMMIT
 ARG WIKIBASELOCALMEDIA_COMMIT
 ARG WIKIBASEINWIKITEXT_COMMIT
+ARG WIKIHIERO_COMMIT
 
 # WORKAROUND for https://phabricator.wikimedia.org/T372458
 # Take wikibase submodules from github as phabricator rate limits us
@@ -188,6 +203,10 @@ RUN set -x; \
     git clone "https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext.git" "extensions/WikibaseInWikitext" && \
     git -C "extensions/WikibaseInWikitext" checkout "${WIKIBASEINWIKITEXT_COMMIT}" && \
     rm -rf "extensions/WikibaseInWikitext/.git*" && \
+    \
+    git clone "https://github.com/wikimedia/mediawiki-extensions-WikiHiero.git" "extensions/WikiHiero" && \
+    git -C "extensions/WikiHiero" checkout "${WIKIHIERO_COMMIT}" && \
+    rm -rf "extensions/WikiHiero/.git*" && \
     \
     rm -rf vendor && \
     rm -rf composer.lock && \
