@@ -1,4 +1,5 @@
 import { Frameworks } from '@wdio/types';
+import { resolve } from 'node:path';
 import { saveScreenshot } from 'wdio-mediawiki';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 import { SevereServiceError } from 'webdriverio';
@@ -82,7 +83,9 @@ export const makeTestSettings = (
 	// Docker Compose uses this value to configure the Selenium session limit.
 	// Keep it aligned with the number of workers WebdriverIO will start.
 	testEnvVars.MAX_INSTANCES = maxInstances.toString();
-	testEnvVars.WBS_TEST_CONFIG_DIR = `${ settings.name }/tmp/config`;
+	const configurationDirectory = `${ settings.name }/tmp/config`;
+	testEnvVars.WBS_TEST_CONFIG_DIR = `development/tests/${ configurationDirectory }`;
+	testEnvVars.WBS_TEST_OUTPUT_DIR = `development/tests/${ settings.name }/results`;
 	const debug = process.env.DEBUG === 'true' || process.env.DEBUG === 'node';
 	const debugNode = process.env.DEBUG === 'node';
 	const outputDir = `${ settings.name }/results`;
@@ -99,15 +102,13 @@ export const makeTestSettings = (
 			ONE_DAY_IN_MS :
 			parseInt( process.env.WAIT_FOR_TIMEOUT ),
 		maxInstances,
-		pwd: process.env.HOST_PWD ?
-			`${ process.env.HOST_PWD }/development/tests` :
-			process.cwd()
+		pwd: process.env.HOST_PWD || resolve( process.cwd(), '../..' )
 	};
 	const testEnvironmentSettings: TestEnvSettings = {
 		composeFiles: settings.composeFiles || baseTestSettings.composeFiles,
 		composeProfiles: settings.composeProfiles || [],
 		configurationDirectories: settings.configurationDirectories || [
-			testEnvVars.WBS_TEST_CONFIG_DIR
+			configurationDirectory
 		],
 		prepareConfigurationDirectory: settings.prepareConfigurationDirectory,
 		waitForUrls: settings.waitForUrls || baseTestSettings.waitForUrls,
@@ -136,7 +137,7 @@ export const defaultSettings: Partial<TestSettings> = {
 		'../local.env'
 	],
 	composeFiles: [
-		'_setup/docker-compose.base.yml',
+		'../../docker-compose.yml',
 		'_setup/docker-compose.override.yml'
 	]
 };

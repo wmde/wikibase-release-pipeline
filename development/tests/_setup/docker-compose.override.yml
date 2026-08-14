@@ -14,7 +14,7 @@ services:
     volumes:
       - ./${WBS_TEST_CONFIG_DIR}:/config
       - wikibase-extensions:/var/www/html/extensions/extensions
-      - ./${OUTPUT_DIR}:/var/log/mediawiki
+      - ./${WBS_TEST_OUTPUT_DIR}:/var/log/mediawiki
     environment:
       ELASTICSEARCH_HOST: !reset null
       MW_WG_SERVER: ${WIKIBASE_URL}
@@ -75,7 +75,7 @@ services:
       - 7900:7900
     volumes:
       # Should map to the same location as the wbs-dev workspace root
-      - ../../:/workspace
+      - ./:/workspace
     shm_size: 2g
     environment:
       SE_NODE_MAX_SESSIONS: ${MAX_INSTANCES}
@@ -89,7 +89,7 @@ services:
     ports: !override
       - 8081:80
     volumes:
-      - ../../config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./config/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
     networks:
       default:
         aliases:

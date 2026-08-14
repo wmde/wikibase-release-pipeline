@@ -1,4 +1,4 @@
 services:
   wikibase:
     volumes:
-      - ./quickstatements/LocalSettings.php:/test-settings/LocalSettings.php:ro
+      - ./development/tests/quickstatements/LocalSettings.php:/test-settings/LocalSettings.php:ro

@@ -1,7 +1,7 @@
 services:
   wikibase:
     volumes:
-      - ./pingback/LocalSettings.php:/test-settings/LocalSettings.php:ro
+      - ./development/tests/pingback/LocalSettings.php:/test-settings/LocalSettings.php:ro
 
   pingback-beacon:
     image: "node:lts-alpine"
@@ -10,6 +10,6 @@ services:
     working_dir: /home/node/app
     restart: always
     volumes:
-      - ./pingback/beacon.mjs:/home/node/app/beacon.mjs
+      - ./development/tests/pingback/beacon.mjs:/home/node/app/beacon.mjs
     ports:
       - 7171:80

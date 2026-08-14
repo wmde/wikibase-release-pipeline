@@ -1,12 +1,12 @@
 services:
   mysql:
     volumes:
-      - ./_setup/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
+      - ./development/tests/_setup/client-create-db.sql:/docker-entrypoint-initdb.d/02-client-create-db.sql
 
   wikibase:
     volumes:
-      - ./_setup/repo-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
-      - ./_setup/repo-extra-install.sh:/extra-install.sh
+      - ./development/tests/_setup/repo-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
+      - ./development/tests/_setup/repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
     image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wikibase:${WBS_TEST_IMAGE_TAG:-latest}
@@ -15,12 +15,12 @@ services:
         condition: service_healthy
     restart: always
     volumes:
-      - ./repo-client/tmp/client-config:/config
-      - ./_setup/client-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
-      - ./_setup/empty.php:/opt/wbs/extension-loaders/EntitySchema.php:ro
-      - ./_setup/empty.php:/opt/wbs/extension-loaders/WikibaseLocalMedia.php:ro
-      - ./_setup/client-extra-install.sh:/extra-install.sh
-      - ./${OUTPUT_DIR}:/var/log/mediawiki
+      - ./development/tests/repo-client/tmp/client-config:/config
+      - ./development/tests/_setup/client-Wikibase-loader.php:/opt/wbs/extension-loaders/Wikibase.php:ro
+      - ./development/tests/_setup/empty.php:/opt/wbs/extension-loaders/EntitySchema.php:ro
+      - ./development/tests/_setup/empty.php:/opt/wbs/extension-loaders/WikibaseLocalMedia.php:ro
+      - ./development/tests/_setup/client-extra-install.sh:/extra-install.sh
+      - ./${WBS_TEST_OUTPUT_DIR}:/var/log/mediawiki
     ports:
       - 8383:80
     environment:
