@@ -73,7 +73,24 @@ describe( 'Complete installer user journey', () => {
 		verifyInstallerContainerIsolation();
 
 		const completionHeading = await $( 'h2=Installation complete! 🎉' );
-		await completionHeading.waitForDisplayed( { timeout: INSTALL_TIMEOUT } );
+		const failurePanel = await $( '.installation-failure' );
+		await browser.waitUntil(
+			async () => await completionHeading.isDisplayed() || await failurePanel.isDisplayed(),
+			{
+				timeout: INSTALL_TIMEOUT,
+				timeoutMsg: 'Installation neither completed nor reported a failure.'
+			}
+		);
+		if ( await failurePanel.isDisplayed() ) {
+			const failureSummary = await failurePanel.getText();
+			const viewLogButton = await $( 'button=View installation log' );
+			await viewLogButton.click();
+			const logContent = await $( '#log-content' );
+			await logContent.waitForDisplayed();
+			throw new Error(
+				`Installer reported a failure:\n${ failureSummary }\n\n${ await logContent.getText() }`
+			);
+		}
 		await waitForInstalledServicesHealthy();
 		verifySubmittedInstallerConfiguration();
 		await clickEnabledButton( 'View log' );

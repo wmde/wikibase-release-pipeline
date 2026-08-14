@@ -1,3 +1,5 @@
+/* global mw, document, window, Event */
+
 ( function () {
 	if ( mw.config.get( 'wgUserName' ) !== null ) {
 		return;

@@ -32,6 +32,14 @@ services:
     image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/quickstatements:${WBS_TEST_IMAGE_TAG:-latest}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
+  wbs-tools:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}
+    pull_policy: ${WBS_E2E_PULL_POLICY:-never}
+
+  wbs-tools-controller:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}
+    pull_policy: ${WBS_E2E_PULL_POLICY:-never}
+
   traefik:
     ports: !override
       - "${WBS_E2E_HTTP_PORT:-18080}:80"

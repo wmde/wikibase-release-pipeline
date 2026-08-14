@@ -57,6 +57,15 @@ services:
       WIKIBASE_PUBLIC_URL: ${WIKIBASE_URL}
       QUICKSTATEMENTS_PUBLIC_URL: ${QUICKSTATEMENTS_URL}
 
+  # These services are covered by the dedicated WBS Tools suite. Keep them out
+  # of every unrelated integration environment while retaining their production
+  # definitions in the shared test composition.
+  wbs-tools:
+    profiles: [ wbs-operations ]
+
+  wbs-tools-controller:
+    profiles: [ wbs-operations ]
+
   browser:
     image: ${TEST_BROWSER_IMAGE_URL}
     stop_grace_period: 1s

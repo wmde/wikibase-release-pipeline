@@ -200,6 +200,10 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 			chmodSync( fakeDocker, 0o755 );
 			mkdirSync( developmentRoot );
 			writeFileSync( join( developmentRoot, 'docker-compose.yml' ), 'services: {}\n' );
+			writeFileSync(
+				join( developmentRoot, 'docker-compose.local-images.yml' ),
+				'services: {}\n'
+			);
 
 			execFileSync(
 				'docker',

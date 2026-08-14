@@ -136,7 +136,7 @@ export const defaultSettings: Partial<TestSettings> = {
 		'../local.env'
 	],
 	composeFiles: [
-		'../../docker-compose.yml',
+		'_setup/docker-compose.base.yml',
 		'_setup/docker-compose.override.yml'
 	]
 };

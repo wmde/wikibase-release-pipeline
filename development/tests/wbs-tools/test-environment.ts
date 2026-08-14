@@ -106,6 +106,9 @@ function copyCheckout(): void {
 	] ) {
 		copyFileSync( join( HOST_REPOSITORY_ROOT, file ), join( CHECKOUT_ROOT, file ) );
 	}
+	cpSync( join( HOST_REPOSITORY_ROOT, 'compose' ), join( CHECKOUT_ROOT, 'compose' ), {
+		recursive: true
+	} );
 	mkdirSync( join( CHECKOUT_ROOT, '.wbs' ), { recursive: true } );
 	copyFileSync(
 		join( HOST_REPOSITORY_ROOT, '.wbs/version' ),
