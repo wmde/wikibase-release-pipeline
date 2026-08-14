@@ -93,6 +93,13 @@ function composeArgs( command: string[] ): string[] {
 	];
 }
 
+function composeEnvironment(): NodeJS.ProcessEnv {
+	return {
+		...process.env,
+		WBS_TOOLS_IMAGE: toolsImage()
+	};
+}
+
 function copyCheckout(): void {
 	rmSync( TEMP_ROOT, { recursive: true, force: true } );
 	mkdirSync( CHECKOUT_ROOT, { recursive: true } );
@@ -229,14 +236,16 @@ function wait( milliseconds: number ): Promise<void> {
 
 function installedServicesHealthProblem(): string | undefined {
 	const expected = run( 'docker', composeArgs( [ 'config', '--services' ] ), {
-		cwd: CHECKOUT_ROOT
+		cwd: CHECKOUT_ROOT,
+		env: composeEnvironment()
 	} )
 		.trim()
 		.split( /\s+/ )
 		.filter( Boolean );
 	const running = new Set(
 		run( 'docker', composeArgs( [ 'ps', '--services', '--status', 'running' ] ), {
-			cwd: CHECKOUT_ROOT
+			cwd: CHECKOUT_ROOT,
+			env: composeEnvironment()
 		} )
 			.trim()
 			.split( /\s+/ )
@@ -248,7 +257,8 @@ function installedServicesHealthProblem(): string | undefined {
 	}
 
 	const ids = run( 'docker', composeArgs( [ 'ps', '-q' ] ), {
-		cwd: CHECKOUT_ROOT
+		cwd: CHECKOUT_ROOT,
+		env: composeEnvironment()
 	} )
 		.trim()
 		.split( /\s+/ )
@@ -258,6 +268,7 @@ function installedServicesHealthProblem(): string | undefined {
 	}
 	const inspected = JSON.parse( run( 'docker', [ 'inspect', ...ids ] ) ) as {
 		Name: string;
+		Config: { Image: string; Labels?: Record<string, string> };
 		State: { Status: string; Health?: { Status: string } };
 	}[];
 	const unhealthy = inspected.filter(
@@ -277,6 +288,19 @@ function installedServicesHealthProblem(): string | undefined {
 					})`
 			)
 			.join( ', ' ) }`;
+	}
+	const expectedToolsImage = toolsImage();
+	const toolsWithWrongImage = inspected.filter(
+		( container ) => {
+			const service = container.Config.Labels?.['com.docker.compose.service'];
+			return ( service === 'wbs-tools' || service === 'wbs-tools-controller' ) &&
+				container.Config.Image !== expectedToolsImage;
+		}
+	);
+	if ( toolsWithWrongImage.length > 0 ) {
+		return `WBS Tools image mismatch: ${ toolsWithWrongImage
+			.map( ( container ) => `${ container.Name } (${ container.Config.Image })` )
+			.join( ', ' ) }; expected ${ expectedToolsImage }`;
 	}
 	return undefined;
 }
@@ -416,6 +440,7 @@ export function collectDiagnostics(): void {
 			join( RESULT_ROOT, 'installed-services.log' ),
 			run( 'docker', composeArgs( [ 'logs', '--no-color' ] ), {
 				cwd: CHECKOUT_ROOT,
+				env: composeEnvironment(),
 				allowFailure: true
 			} )
 		);
@@ -429,7 +454,7 @@ export function stopInstaller(): void {
 		run(
 			'docker',
 			composeArgs( [ 'down', '--volumes', '--remove-orphans', '--timeout', '1' ] ),
-			{ cwd: CHECKOUT_ROOT, allowFailure: true }
+			{ cwd: CHECKOUT_ROOT, env: composeEnvironment(), allowFailure: true }
 		);
 	}
 	rmSync( TEMP_ROOT, { recursive: true, force: true } );

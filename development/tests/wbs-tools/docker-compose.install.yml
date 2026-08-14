@@ -33,11 +33,11 @@ services:
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
   wbs-tools:
-    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}
+    image: ${WBS_TOOLS_IMAGE}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
   wbs-tools-controller:
-    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wbs-tools:${WBS_TEST_IMAGE_TAG:-latest}
+    image: ${WBS_TOOLS_IMAGE}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
   traefik:
