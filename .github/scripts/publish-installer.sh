@@ -174,6 +174,10 @@ dispatch_pr() {
     wait_for_publication \
       "$PAGES_ROOT/pr-$pr" "export WBS_REF='$commit'" \
       "current PR installer"
+    wait_for_publication \
+      "$PAGES_ROOT/manifests/pr-$pr.json" \
+      "ghcr.io/wmde/wikibase/wikibase:pr-$pr" \
+      "current PR installation manifest"
   fi
 }
 
