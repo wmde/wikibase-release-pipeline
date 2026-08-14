@@ -1,5 +1,6 @@
 # Local image selection used by wbs install --from-source.
-# It is selected explicitly by lifecycle command options and is never persistent.
+# WBS copies this to the conventional docker-compose.override.yml path so the
+# same selection applies to direct Docker Compose and WBS Tools operations.
 
 services:
   wikibase:
@@ -22,4 +23,10 @@ services:
     pull_policy: never
   quickstatements:
     image: wikibase/quickstatements:latest
+    pull_policy: never
+  wbs-tools:
+    image: wikibase/wbs-tools:latest
+    pull_policy: never
+  wbs-tools-controller:
+    image: wikibase/wbs-tools:latest
     pull_policy: never

@@ -189,7 +189,16 @@ update_existing_installation() {
         MW_ADMIN_NAME MW_ADMIN_EMAIL MW_ADMIN_PASS \
         MW_WG_SERVER MW_WG_LANGUAGE_CODE MW_WG_SITENAME \
         ELASTICSEARCH_HOST
-    php /var/www/html/maintenance/run.php update --quick
+	# update.php clears the objectcache table, which also stores authenticated
+	# sessions when CACHE_DB is selected. Preserve only those rows so routine
+	# service recreation does not sign everyone out.
+	session_backup=/tmp/wbs-session-cache.json
+	php /var/www/html/maintenance/run.php /opt/wbs/bootstrap/preserveSessions.php \
+		export "$session_backup"
+	php /var/www/html/maintenance/run.php update --quick
+	php /var/www/html/maintenance/run.php /opt/wbs/bootstrap/preserveSessions.php \
+		import "$session_backup"
+	rm -f "$session_backup"
 }
 
 upgrade_legacy_installation() {

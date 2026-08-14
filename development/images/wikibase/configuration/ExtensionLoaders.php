@@ -28,10 +28,37 @@ $wbsExtensionLoaders = [
 	'WikibaseCirrusSearch.php',
 	'WikimediaLogin.php',
 	'WikibaseSuite.php',
+	'WikibaseEdtf.php',
 ];
 
-foreach ( $wbsExtensionLoaders as $wbsExtensionLoader ) {
-	require "/opt/wbs/extension-loaders/$wbsExtensionLoader";
+$wbsExtensionDefaults = array_fill_keys( $wbsExtensionLoaders, true );
+$wbsExtensionDefaults['WikibaseEdtf.php'] = false;
+$wbsExtensionStatePath = '/config/WBSExtensions.json';
+$wbsExtensionState = [];
+if ( is_file( $wbsExtensionStatePath ) ) {
+	$wbsExtensionState = json_decode( (string)file_get_contents( $wbsExtensionStatePath ), true );
+	if ( !is_array( $wbsExtensionState ) ) {
+		$wbsExtensionState = [];
+	}
+}
+$wbsExtensionState += $wbsExtensionDefaults;
+if ( empty( $wbsExtensionState['VisualEditor.php'] ) ) {
+	$wbsExtensionState['DiscussionTools.php'] = false;
+}
+if ( !empty( $wbsExtensionState['DiscussionTools.php'] ) ) {
+	$wbsExtensionState['Linter.php'] = true;
 }
 
-unset( $wbsExtensionLoader, $wbsExtensionLoaders );
+foreach ( $wbsExtensionLoaders as $wbsExtensionLoader ) {
+	if ( !empty( $wbsExtensionState[$wbsExtensionLoader] ) ) {
+		require "/opt/wbs/extension-loaders/$wbsExtensionLoader";
+	}
+}
+
+unset(
+	$wbsExtensionDefaults,
+	$wbsExtensionLoader,
+	$wbsExtensionLoaders,
+	$wbsExtensionState,
+	$wbsExtensionStatePath
+);

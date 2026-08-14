@@ -231,6 +231,7 @@ COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 COPY --chmod=755 bootstrap/bootstrap.sh /opt/wbs/bootstrap/bootstrap.sh
 COPY bootstrap/configuration.php /opt/wbs/bootstrap/configuration.php
+COPY bootstrap/preserveSessions.php /opt/wbs/bootstrap/preserveSessions.php
 COPY bootstrap/suite-7-configuration /opt/wbs/bootstrap/suite-7-configuration
 COPY callback.sh /callback.sh
 COPY --chmod=755 healthcheck.sh /healthcheck.sh

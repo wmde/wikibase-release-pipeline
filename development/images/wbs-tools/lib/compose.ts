@@ -1,4 +1,9 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import {
+	copyFileSync,
+	existsSync,
+	readFileSync,
+	rmSync
+} from 'node:fs';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
 import { captureProcess, runProcess } from './command-runner.js';
@@ -39,7 +44,7 @@ export function configurationExists(): boolean {
 	return existsSync( envFile );
 }
 
-function composeArgs( localImages = false ): string[] {
+export function composeArgs( localImages = false ): string[] {
 	const args = [
 		'compose',
 		'--project-directory', repositoryRoot
@@ -56,6 +61,23 @@ function composeArgs( localImages = false ): string[] {
 		args.push( '--file', join( repositoryRoot, 'development/docker-compose.local-images.yml' ) );
 	}
 	return args;
+}
+
+function selectLocalImagesInCompose(): void {
+	const source = join(
+		repositoryRoot,
+		'development/docker-compose.local-images.yml'
+	);
+	const override = join( repositoryRoot, 'docker-compose.override.yml' );
+	if ( existsSync( override ) ) {
+		if ( readFileSync( override, 'utf8' ) === readFileSync( source, 'utf8' ) ) {
+			return;
+		}
+		throw new Error(
+			'Cannot select source-built images because docker-compose.override.yml already exists.'
+		);
+	}
+	copyFileSync( source, override );
 }
 
 export async function composeServicesAreRunning( localImages = false ): Promise<boolean> {
@@ -117,11 +139,14 @@ export async function up( options: SuiteOptions = {} ): Promise<void> {
 		throw new Error( `Suite configuration is incomplete. Missing: ${ missing.join( ', ' ) }.` );
 	}
 	const localImages = options.localImages === true || options.build === true;
+	if ( localImages ) {
+		selectLocalImagesInCompose();
+	}
 	if ( options.build ) {
 		console.log( 'Building Wikibase Suite images from this checkout...' );
 		await buildImages();
 	}
-	const args = composeArgs( localImages );
+	const args = composeArgs();
 	if ( options.update ) {
 		console.log( 'Pulling selected Wikibase Suite images...' );
 		await runProcess( 'docker', [ ...args, 'pull' ] );

@@ -1,0 +1,16 @@
+services:
+  quickstatements:
+    image: wikibase/quickstatements:1
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    environment:
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m

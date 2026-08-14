@@ -21,6 +21,7 @@ export type ConfigResponse = {
 };
 
 export type InitialInstallerState = {
+	operationsPanel?: boolean;
 	installerDevMock: boolean;
 	configurationOnly: boolean;
 	installationCompleted: boolean;
@@ -28,6 +29,7 @@ export type InitialInstallerState = {
 	existingInstallState: ExistingInstallState;
 	isLocalMode: boolean;
 	serverIp: string;
+	basePath?: string;
 };
 
 export type InstallationProgressEvent = {

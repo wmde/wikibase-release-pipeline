@@ -48,6 +48,8 @@ export function createInstallerShellRenderer(
 		};
 
 		return readFileSync( options.indexTemplatePath, 'utf8' )
+			.replace( '%PUBLIC_BASE_PATH%', '' )
+			.replace( '%PAGE_TITLE%', 'Wikibase Suite Installer' )
 			.replace( '%INSTALLER_STATE%', escapeJsonForHtml( initialState ) )
 			.replace(
 				'%BUILT_STYLE_LINK%',

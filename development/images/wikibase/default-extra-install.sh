@@ -12,6 +12,12 @@ else
     php /var/www/html/extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
 fi
 
+# Replace only MediaWiki's untouched installer Main Page. The maintenance
+# command lives in WikibaseSuite and refuses to overwrite instance content.
+php /var/www/html/maintenance/run.php \
+    /var/www/html/extensions/WikibaseSuite/maintenance/createBootstrapMainPage.php \
+    --user "$MW_ADMIN_NAME"
+
 # Creates an OAuth consumer for quickstatements
 if [ -z "${QUICKSTATEMENTS_PUBLIC_URL:-}" ] ; then
     echo "OAuth Skipping QuickStatements setup... QUICKSTATEMENTS_PUBLIC_URL not set"

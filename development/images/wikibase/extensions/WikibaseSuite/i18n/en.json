@@ -3,5 +3,16 @@
 		"authors": ["Wikibase Suite Team"]
 	},
 	"wikibasesuite-extensionname": "Wikibase Suite",
-	"wikibasesuite-desc": "Adds Wikibase Suite version reporting and public metrics"
+	"wikibasesuite-desc": "Adds Wikibase Suite version reporting, public metrics, and instance operations authorization",
+	"wikibasesuite-wikibase-sidebar-heading": "Wikibase",
+	"wikibasesuite-create-new-item": "Create new item",
+	"wikibasesuite-create-new-property": "Create new property",
+	"wikibasesuite-all-items": "All items",
+	"wikibasesuite-all-properties": "All properties",
+	"wikibasesuite-sidebar-heading": "Wikibase Suite",
+	"wikibasesuite-query-service": "SPARQL Query Service",
+	"wikibasesuite-quickstatements": "QuickStatements",
+	"wikibasesuite-configure-instance": "Configure instance",
+	"right-wbs-manage-instance": "Manage Wikibase Suite instance configuration",
+	"action-wbs-manage-instance": "manage Wikibase Suite instance configuration"
 }

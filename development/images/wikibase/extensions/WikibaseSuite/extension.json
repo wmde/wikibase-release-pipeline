@@ -13,8 +13,26 @@
 	"APIMetaModules": {
 		"wikibasesuite": "MediaWiki\\Extension\\WikibaseSuite\\ApiQueryWikibaseSuite"
 	},
+	"AvailableRights": ["wbs-manage-instance"],
+	"GroupPermissions": {
+		"sysop": {
+			"wbs-manage-instance": true
+		}
+	},
 	"Hooks": {
+		"BeforePageDisplay": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onBeforePageDisplay",
+		"SidebarBeforeOutput": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onSidebarBeforeOutput",
 		"SoftwareInfo": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onSoftwareInfo"
+	},
+	"ResourceModules": {
+		"ext.wikibasesuite.pinAnonymousMainMenu": {
+			"scripts": ["resources/pinAnonymousMainMenu.js"],
+			"dependencies": ["skins.vector.js"]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": ".",
+		"remoteExtPath": "WikibaseSuite"
 	},
 	"MessagesDirs": {
 		"WikibaseSuite": ["i18n"]

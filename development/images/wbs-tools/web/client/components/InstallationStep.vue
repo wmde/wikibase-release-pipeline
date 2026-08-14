@@ -86,7 +86,7 @@
 					<li>
 						Consult the
 						<a
-							href="https://github.com/wmde/wikibase-suite/blob/main/docs/operate/troubleshooting.md"
+							href="https://wmde.github.io/wikibase-suite/docs/operate/troubleshooting.html"
 							target="_blank"
 							rel="noopener noreferrer"
 						>troubleshooting guide</a>

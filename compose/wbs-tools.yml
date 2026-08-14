@@ -1,0 +1,25 @@
+services:
+  wbs-tools:
+    image: ${WBS_TOOLS_IMAGE}
+    restart: unless-stopped
+    command: node /app/dist/web/operations-server.js
+    environment:
+      PUBLIC_BASE_PATH: /tools/configure
+      WIKIBASE_INTERNAL_URL: http://wikibase
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+      WBS_OPERATIONS_DIR: /app/state/operations
+    volumes:
+      - wbs-operations-data:/app/state/operations
+
+  wbs-tools-controller:
+    image: ${WBS_TOOLS_IMAGE}
+    restart: unless-stopped
+    command: node /app/dist/operations-controller.js
+    working_dir: ${WBS_DIR:-${PWD}}
+    environment:
+      WBS_DIR: ${WBS_DIR:-${PWD}}
+      WBS_OPERATIONS_DIR: /app/state/operations
+    volumes:
+      - ${WBS_DIR:-${PWD}}:${WBS_DIR:-${PWD}}
+      - /var/run/docker.sock:/var/run/docker.sock
+      - wbs-operations-data:/app/state/operations

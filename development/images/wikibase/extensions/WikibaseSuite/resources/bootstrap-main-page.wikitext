@@ -1,0 +1,10 @@
+== Welcome to Wikibase ==
+This is the main page of your self-hosted Wikibase. We have assembled some information here that may be useful as your organization sets up and configures its instance.
+
+This page is yours to adapt. You are welcome to modify, relocate, or remove its content entirely once it no longer serves your needs. To edit it, ensure you are logged in and select '''Edit''' at the top right of the page.
+
+== Configuring your instance ==
+As a self-hosted deployment, configuration can be managed through the Wikibase Suite configuration panel and, for advanced changes, your <code>config/LocalSettings.php</code> file. Before inviting editors, you may wish to review and adjust your site identity, user access and permissions, enabled extensions, and associated services such as the Query Service and other connected tools. Refer to the [https://wmde.github.io/wikibase-suite/ Wikibase Suite documentation] for detailed configuration guidance, upgrade procedures, and maintenance recommendations.
+
+== How to create items and properties ==
+Create an item via [[Special:NewItem]]. You will be prompted to provide a label and description. Create a property via [[Special:NewProperty]]. Properties are edited like items, with labels, descriptions, aliases, and statements. For bulk creation and editing, consult the [https://wmde.github.io/wikibase-suite/ documentation] or use QuickStatements from the Wikibase sidebar. You may also use the [[Special:ApiHelp|Wikibase Action API]] or the REST API to query and modify data programmatically.

@@ -22,6 +22,11 @@ http:
         servers:
           - url: "http://quickstatements:80"
 
+    wbs-tools:
+      loadBalancer:
+        servers:
+          - url: "http://wbs-tools:80"
+
   routers:
     wikibase-router:
       rule: 'Host(`{{ env "WIKIBASE_PUBLIC_HOST" }}`) && !PathPrefix(`/tools`)'
@@ -40,6 +45,11 @@ http:
       rule: 'Host(`{{ env "WIKIBASE_PUBLIC_HOST" }}`) && PathPrefix(`/tools/quickstatements`)'
       service: quickstatements
       middlewares: [ quickstatements-redirectregex, quickstatements-stripprefix ]
+
+    wbs-tools-router:
+      rule: 'Host(`{{ env "WIKIBASE_PUBLIC_HOST" }}`) && PathPrefix(`/tools/configure`)'
+      service: wbs-tools
+      middlewares: [ wbs-tools-redirectregex, wbs-tools-stripprefix ]
 
   middlewares:
     wdqs-prefix:
@@ -74,3 +84,13 @@ http:
     quickstatements-stripprefix:
       stripPrefix:
         prefixes: [ /tools/quickstatements ]
+
+    wbs-tools-redirectregex:
+      redirectRegex:
+        regex: /tools/configure$
+        replacement: /tools/configure/
+        permanent: true
+
+    wbs-tools-stripprefix:
+      stripPrefix:
+        prefixes: [ /tools/configure ]

@@ -1,0 +1,90 @@
+services:
+  wikibase:
+    image: wikibase/wikibase:8
+    depends_on:
+      mysql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./config:/config:z
+      - ./config/extensions:/var/www/html/extensions/extensions:z
+      - wikibase-image-data:/var/www/html/images
+      - quickstatements-data:/quickstatements/data
+    env_file:
+      - ${WBS_DIR:-.}/.wbs/version
+    environment:
+      METADATA_CALLBACK: ${METADATA_CALLBACK}
+      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+      DB_SERVER: mysql:3306
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      ELASTICSEARCH_HOST: elasticsearch
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
+      WIKIMEDIA_OAUTH_CONSUMER_TOKEN: ${WIKIMEDIA_OAUTH_CONSUMER_TOKEN:-}
+      WIKIMEDIA_OAUTH_SECRET_TOKEN: ${WIKIMEDIA_OAUTH_SECRET_TOKEN:-}
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+
+  wikibase-jobrunner:
+    image: wikibase/wikibase:8
+    command: jobrunner
+    environment:
+      WIKIMEDIA_OAUTH_CONSUMER_TOKEN: ${WIKIMEDIA_OAUTH_CONSUMER_TOKEN:-}
+      WIKIMEDIA_OAUTH_SECRET_TOKEN: ${WIKIMEDIA_OAUTH_SECRET_TOKEN:-}
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  # The legacy service name is retained for existing generated configuration.
+  elasticsearch:
+    image: wikibase/opensearch:1
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/opensearch/data
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_PERFORMANCE_ANALYZER_AGENT_CLI: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: curl --silent --fail localhost:9200
+      interval: 10s
+      start_period: 2m
