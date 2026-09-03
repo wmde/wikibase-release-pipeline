@@ -14,7 +14,21 @@
 		"wikibasesuite": "MediaWiki\\Extension\\WikibaseSuite\\ApiQueryWikibaseSuite"
 	},
 	"Hooks": {
-		"SoftwareInfo": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onSoftwareInfo"
+		"BeforePageDisplay": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onBeforePageDisplay",
+		"SoftwareInfo": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onSoftwareInfo",
+		"SidebarBeforeOutput": "MediaWiki\\Extension\\WikibaseSuite\\Hooks::onSidebarBeforeOutput"
+	},
+	"ResourceModules": {
+		"ext.wikibasesuite.vector2022": {
+			"styles": ["resources/wbs.css"]
+		},
+		"ext.wikibasesuite.pinAnonymousMainMenu": {
+			"scripts": ["resources/pinAnonymousMainMenu.js"]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": ".",
+		"remoteExtPath": "WikibaseSuite"
 	},
 	"MessagesDirs": {
 		"WikibaseSuite": ["i18n"]
