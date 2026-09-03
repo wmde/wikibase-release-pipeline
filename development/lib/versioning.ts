@@ -471,6 +471,11 @@ export function planVersionUpdate(
 		);
 	}
 	const updates: FileUpdate[] = [
+		...proposedUpdates.filter(
+			(update) =>
+				update.path !== project.versionPath &&
+				update.path !== project.changelogPath
+		),
 		{
 			path: project.versionPath,
 			contents: projectWithVersion(project, versionContents, targetVersion)

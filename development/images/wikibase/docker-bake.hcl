@@ -9,7 +9,7 @@ variable "IMAGE_NAME" {
 }
 
 variable "IMAGE_VERSION" {
-  default = "8.0.0"
+  default = "8.1.0"
 
   validation {
     condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+$", IMAGE_VERSION))
@@ -78,7 +78,7 @@ variable "WIKIBASE" {
     name     = "Wikibase"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/Wikibase"
     ref      = WMF_EXTENSION_REF
-    revision = "beac6f2208f9ccd824e7ddbe0c5cf79445f71df1"
+    revision = "f62f48ccf21c13cf5d129df501736580a972a846"
   }
 }
 
@@ -88,7 +88,7 @@ variable "BABEL" {
     name     = "Babel"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/Babel"
     ref      = WMF_EXTENSION_REF
-    revision = "921d538763ed4bc084519f41fad4d7306c979fbd"
+    revision = "d0bc56f94e2fd13532c6ddf8b0ba3743d3f7bce6"
   }
 }
 
@@ -98,7 +98,7 @@ variable "CLDR" {
     name     = "cldr"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/cldr"
     ref      = WMF_EXTENSION_REF
-    revision = "b65931db807edfe24238830d75c0bec0825d4e10"
+    revision = "df46697fe3fda0d5a185eb7204f1e463f2f2b9ec"
   }
 }
 
@@ -108,7 +108,7 @@ variable "CIRRUSSEARCH" {
     name     = "CirrusSearch"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch"
     ref      = WMF_EXTENSION_REF
-    revision = "4bd99abfc1f9f8b50c8eb24b68c296afbd57e9c4"
+    revision = "04a58b2f1cba6372bba550dce5720182df937a8f"
   }
 }
 
@@ -118,7 +118,7 @@ variable "ELASTICA" {
     name     = "Elastica"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica"
     ref      = WMF_EXTENSION_REF
-    revision = "b03db3803b4af48c092462c8872ffa38f6d0fe8a"
+    revision = "bc44b8c5f15fa1e927fb43a32c22237b6fd0dfbc"
   }
 }
 
@@ -128,7 +128,7 @@ variable "ECHO" {
     name     = "Echo"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/Echo"
     ref      = WMF_EXTENSION_REF
-    revision = "6b3af80c5052a338ae947f1aec1935c87d1f7bae"
+    revision = "314bfedd6cfea7574a2375fab2a007a260d9856a"
   }
 }
 
@@ -138,7 +138,7 @@ variable "ENTITYSCHEMA" {
     name     = "EntitySchema"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/EntitySchema"
     ref      = WMF_EXTENSION_REF
-    revision = "bbf6d21dd67bb96fc628040295c0ca276a2e8d93"
+    revision = "a53c0b4049e4e804b17dda4250d8c0a6fcb8072d"
   }
 }
 
@@ -148,7 +148,7 @@ variable "OAUTH" {
     name     = "OAuth"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/OAuth"
     ref      = WMF_EXTENSION_REF
-    revision = "4f0532740ba691103a6e697f9d1a8d860ee97ddf"
+    revision = "41369bf47b4b612324482c22f7bf15d3803d30ee"
   }
 }
 
@@ -158,7 +158,7 @@ variable "PLUGGABLEAUTH" {
     name     = "PluggableAuth"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth"
     ref      = WMF_EXTENSION_REF
-    revision = "b5b4d2fd44a653e4a2c4ab56c6e6c1b948d43bac"
+    revision = "b758a14b00904aab3d50b4409e687de9d6d9d53e"
   }
 }
 
@@ -168,7 +168,7 @@ variable "UNIVERSALLANGUAGESELECTOR" {
     name     = "UniversalLanguageSelector"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/UniversalLanguageSelector"
     ref      = WMF_EXTENSION_REF
-    revision = "62f29f154efc8f79f33c2b1a0bc4a81a6786db5f"
+    revision = "d33a5434bd80c3f7acb02541b9394665c84ea585"
   }
 }
 
@@ -178,7 +178,7 @@ variable "WIKIBASECIRRUSSEARCH" {
     name     = "WikibaseCirrusSearch"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/WikibaseCirrusSearch"
     ref      = WMF_EXTENSION_REF
-    revision = "be1b8cbaf6abe37278b01d5d36ebe02e5d7f0e0f"
+    revision = "2e8b98e2434a14cd250f6ebae131853439ffdada"
   }
 }
 
@@ -188,7 +188,7 @@ variable "WIKIBASEMANIFEST" {
     name     = "WikibaseManifest"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/WikibaseManifest"
     ref      = WMF_EXTENSION_REF
-    revision = "8290c98d766d8d52a7e7ec0fe1ce3a2d6cd76731"
+    revision = "e5de11dcb21c2623ec4f3e5c35137e389bfe66a3"
   }
 }
 
@@ -198,7 +198,7 @@ variable "WSOAUTH" {
     name     = "WSOAuth"
     repo     = "https://gerrit.wikimedia.org/r/mediawiki/extensions/WSOAuth"
     ref      = WMF_EXTENSION_REF
-    revision = "cefce57e41c87ecadd744ace75fefa5311ffa5cf"
+    revision = "9ee898eb5b4f0110f9fb6ab3397b3be8ea78c5a1"
   }
 }
 
@@ -213,7 +213,7 @@ variable "WIKIBASELOCALMEDIA" {
     name     = "WikibaseLocalMedia"
     repo     = "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git"
     ref      = "refs/heads/master"
-    revision = "ddc6c87292429b662644cdc7c24402b12336377a"
+    revision = "26795a660a2d870e7f87f29e388ca8abb9220510"
   }
 }
 
@@ -223,7 +223,7 @@ variable "WIKIBASEEDTF" {
     name     = "WikibaseEdtf"
     repo     = "https://github.com/ProfessionalWiki/WikibaseEdtf.git"
     ref      = "refs/heads/master"
-    revision = "e94c2fcdbcb91124978ac20f6d912d8cdd2ecaae"
+    revision = "3bfad88a9a71222e9ddc3df2b80f095be059b365"
   }
 }
 

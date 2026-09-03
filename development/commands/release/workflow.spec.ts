@@ -508,6 +508,11 @@ describe('wbs-dev preparation and release workflow', () => {
 				toolsImage: 'wikibase/wbs-tools:1.1.0'
 			});
 			assert.match(
+				plan.updates.find((update) => update.path.endsWith('/install'))!
+					.contents,
+				/WBS_TOOLS_IMAGE="\$\{WBS_TOOLS_IMAGE:-wikibase\/wbs-tools:1\.1\.0\}"/u
+			);
+			assert.match(
 				plan.updates.find((update) => update.path.endsWith('CHANGELOG.md'))!
 					.contents,
 				/WBS Tools image from wikibase\/wbs-tools:1\.0\.0 to wikibase\/wbs-tools:1\.1\.0\./u

@@ -1,7 +1,7 @@
 # Query Service frontend image manifest. Runtime policy is supplied by wbs-dev.
 
 variable "IMAGE_NAME" { default = "wdqs-frontend" }
-variable "IMAGE_VERSION" { default = "2.2.0" }
+variable "IMAGE_VERSION" { default = "2.2.1" }
 variable "IMAGE_REPOSITORY" { default = "wikibase/wdqs-frontend" }
 variable "TAGS" {
   type    = list(string)
@@ -15,7 +15,7 @@ variable "WDQS_QUERY_GUI" {
     name     = "Wikidata Query GUI"
     repo     = "https://gitlab.wikimedia.org/repos/wmde/wikidata-query-gui.git"
     ref      = "refs/heads/main"
-    revision = "3647637ca5bfcb5162137c9a4fe2cd2eb87b9a8c"
+    revision = "176149abd58c475f8670965fa6f695ca10274a56"
   }
 }
 

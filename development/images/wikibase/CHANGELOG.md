@@ -1,3 +1,31 @@
+# 8.1.0 (2026-09-03)
+
+## Changes
+
+- Adds a Wikibase navigation section with links to create and browse items and
+  properties, plus QuickStatements and the SPARQL Query Service.
+- Keeps the main navigation available to signed-out visitors, providing the
+  same Wikibase entry points before and after sign-in.
+- Uses the Wikibase logo as the default header branding.
+
+## Dependency updates
+
+- Babel REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Babel/+log/921d538763ed4bc084519f41fad4d7306c979fbd..d0bc56f94e2fd13532c6ddf8b0ba3743d3f7bce6)).
+- CirrusSearch REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/CirrusSearch/+log/4bd99abfc1f9f8b50c8eb24b68c296afbd57e9c4..04a58b2f1cba6372bba550dce5720182df937a8f)).
+- cldr REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/cldr/+log/b65931db807edfe24238830d75c0bec0825d4e10..df46697fe3fda0d5a185eb7204f1e463f2f2b9ec)).
+- Echo REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Echo/+log/6b3af80c5052a338ae947f1aec1935c87d1f7bae..314bfedd6cfea7574a2375fab2a007a260d9856a)).
+- Elastica REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Elastica/+log/b03db3803b4af48c092462c8872ffa38f6d0fe8a..bc44b8c5f15fa1e927fb43a32c22237b6fd0dfbc)).
+- EntitySchema REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/EntitySchema/+log/bbf6d21dd67bb96fc628040295c0ca276a2e8d93..a53c0b4049e4e804b17dda4250d8c0a6fcb8072d)).
+- OAuth REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/OAuth/+log/4f0532740ba691103a6e697f9d1a8d860ee97ddf..41369bf47b4b612324482c22f7bf15d3803d30ee)).
+- PluggableAuth REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/PluggableAuth/+log/b5b4d2fd44a653e4a2c4ab56c6e6c1b948d43bac..b758a14b00904aab3d50b4409e687de9d6d9d53e)).
+- UniversalLanguageSelector REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/UniversalLanguageSelector/+log/62f29f154efc8f79f33c2b1a0bc4a81a6786db5f..d33a5434bd80c3f7acb02541b9394665c84ea585)).
+- Wikibase REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Wikibase/+log/beac6f2208f9ccd824e7ddbe0c5cf79445f71df1..f62f48ccf21c13cf5d129df501736580a972a846)).
+- WikibaseCirrusSearch REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/WikibaseCirrusSearch/+log/be1b8cbaf6abe37278b01d5d36ebe02e5d7f0e0f..2e8b98e2434a14cd250f6ebae131853439ffdada)).
+- WikibaseEdtf master ([Diff](https://github.com/ProfessionalWiki/WikibaseEdtf/compare/e94c2fcdbcb91124978ac20f6d912d8cdd2ecaae...3bfad88a9a71222e9ddc3df2b80f095be059b365)).
+- WikibaseLocalMedia master ([Diff](https://github.com/ProfessionalWiki/WikibaseLocalMedia/compare/ddc6c87292429b662644cdc7c24402b12336377a...26795a660a2d870e7f87f29e388ca8abb9220510)).
+- WikibaseManifest REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/WikibaseManifest/+log/8290c98d766d8d52a7e7ec0fe1ce3a2d6cd76731..e5de11dcb21c2623ec4f3e5c35137e389bfe66a3)).
+- WSOAuth REL1_46 ([Diff](https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/WSOAuth/+log/cefce57e41c87ecadd744ace75fefa5311ffa5cf..9ee898eb5b4f0110f9fb6ab3397b3be8ea78c5a1)).
+
 # 8.0.0 (2026-07-20)
 
 ## Changes
