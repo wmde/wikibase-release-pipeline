@@ -16,6 +16,8 @@ if ( !in_array( 'actor', $wgSharedTables, true ) ) {
 }
 
 $wgMainCacheType = CACHE_ACCEL;
+$wgSessionCacheType = CACHE_DB;
+$wgParserCacheType = CACHE_DB;
 $wgMemCachedServers = [];
 $wgUseImageMagick = true;
 

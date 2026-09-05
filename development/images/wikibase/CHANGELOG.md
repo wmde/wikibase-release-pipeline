@@ -7,6 +7,8 @@
 - Keeps the main navigation available to signed-out visitors, providing the
   same Wikibase entry points before and after sign-in.
 - Uses the Wikibase logo as the default header branding.
+- Stores authenticated sessions and parser output in the database rather than
+  process-local APCu.
 
 ## Dependency updates
 
