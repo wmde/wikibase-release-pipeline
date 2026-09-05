@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\WikibaseSuite;
 
 use OutputPage;
 use Skin;
+use SpecialPage;
 
 class Hooks {
 	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ): void {
@@ -45,33 +46,33 @@ class Hooks {
 	}
 
 	public static function onSidebarBeforeOutput( Skin $skin, array &$sidebar ): void {
-		$quickStatementsUrl = getenv( 'QUICKSTATEMENTS_PUBLIC_URL' );
-		$queryServiceUrl = getenv( 'WDQS_PUBLIC_FRONTEND_URL' );
-
 		$wikibaseLinks = [
 			[
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-create-item' )->text(),
-				'href' => '/wiki/Special:NewItem',
+				'href' => SpecialPage::getTitleFor( 'NewItem' )->getLocalURL(),
 				'id'   => 'n-wbs-link-one',
 			],
 			[
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-create-property' )->text(),
-				'href' => '/wiki/Special:NewProperty',
+				'href' => SpecialPage::getTitleFor( 'NewProperty' )->getLocalURL(),
 				'id'   => 'n-wbs-link-two',
 			],
 			[
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-all-items' )->text(),
-				'href' => '/wiki/Special:AllPages?namespace=120',
+				'href' => SpecialPage::getTitleFor( 'AllPages' )->getLocalURL( [
+					'namespace' => WB_NS_ITEM,
+				] ),
 				'id'   => 'n-wbs-link-three',
 			],
 			[
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-all-properties' )->text(),
-				'href' => '/wiki/Special:ListProperties',
+				'href' => SpecialPage::getTitleFor( 'ListProperties' )->getLocalURL(),
 				'id'   => 'n-wbs-link-four',
 			],
 		];
 
-		if ( is_string( $quickStatementsUrl ) && $quickStatementsUrl !== '' ) {
+		$quickStatementsUrl = self::environmentUrl( 'QUICKSTATEMENTS_PUBLIC_URL' );
+		if ( $quickStatementsUrl !== null ) {
 			$wikibaseLinks[] = [
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-quickstatements' )->text(),
 				'href' => $quickStatementsUrl,
@@ -79,23 +80,38 @@ class Hooks {
 			];
 		}
 
-		$wikibaseLinks[] = [
+		$queryServiceUrl = self::environmentUrl( 'WDQS_PUBLIC_FRONTEND_URL' );
+		if ( $queryServiceUrl !== null ) {
+			$wikibaseLinks[] = [
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-sparql-query-service' )->text(),
 				'href' => $queryServiceUrl,
 				'id'   => 'n-wbs-link-six',
 			];
-
-		$newSidebar = [];
-		foreach ( $sidebar as $key => $value ) {
-			if ( $key === 'TOOLBOX' || $key === 'SEARCH' ) {
-				$newSidebar['wikibase-suite-sidebar'] = $wikibaseLinks;
-			}
-			$newSidebar[$key] = $value;
-		}
-		if ( !isset( $newSidebar['wikibase-suite-sidebar'] ) ) {
-			$newSidebar['wikibase-suite-sidebar'] = $wikibaseLinks;
 		}
 
-		$sidebar = $newSidebar;
+		self::insertBeforeToolbox( $sidebar, [
+			'wikibase-suite-sidebar' => $wikibaseLinks,
+		] );
+	}
+
+	private static function insertBeforeToolbox( array &$sidebar, array $sections ): void {
+		$toolboxPosition = array_search( 'TOOLBOX', array_keys( $sidebar ), true );
+		if ( $toolboxPosition === false ) {
+			$sidebar += $sections;
+			return;
+		}
+
+		$sidebar = array_slice( $sidebar, 0, $toolboxPosition, true )
+			+ $sections
+			+ array_slice( $sidebar, $toolboxPosition, null, true );
+	}
+
+	private static function environmentUrl( string $name ): ?string {
+		$value = getenv( $name );
+		if ( $value === false || trim( (string)$value ) === '' ) {
+			return null;
+		}
+
+		return trim( (string)$value );
 	}
 }
