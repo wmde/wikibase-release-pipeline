@@ -13,22 +13,20 @@ variable "QUICKSTATEMENTS_GENERATION" { default = "2" }
 
 variable "QUICKSTATEMENTS" {
   default = {
-    kind     = "github"
     name     = "QuickStatements"
     repo     = "https://github.com/magnusmanske/quickstatements.git"
     ref      = "refs/heads/master"
-    revision = "5daef4bcb4a99eea27b3a3ccc10cae21e6c746f9"
+    commit   = "5daef4bcb4a99eea27b3a3ccc10cae21e6c746f9"
   }
 }
 
 variable "MAGNUSTOOLS" {
   default = {
-    kind           = "codeberg"
     name           = "MagnusTools"
     repo           = "https://codeberg.org/magnusmanske/magnustools.git"
     ref            = "refs/heads/master"
-    revision       = "b5686e6b4bc8f95095eea295031718a9186d1510"
-    archive        = "https://codeberg.org/magnusmanske/magnustools/archive/{revision}.tar.gz"
+    commit         = "b5686e6b4bc8f95095eea295031718a9186d1510"
+    archive        = "https://codeberg.org/magnusmanske/magnustools/archive/{commit}.tar.gz"
     archive_sha256 = "0c9eed7856e2437b26defae4ef4a14145c0e5f1caabbe8c64a77a46b7ec72413"
   }
 }
@@ -60,8 +58,8 @@ target "quickstatements-base" {
   context    = "."
   dockerfile = "Dockerfile"
   args = {
-    QUICKSTATEMENTS_COMMIT   = QUICKSTATEMENTS.revision
-    MAGNUSTOOLS_COMMIT       = MAGNUSTOOLS.revision
+    QUICKSTATEMENTS_COMMIT   = QUICKSTATEMENTS.commit
+    MAGNUSTOOLS_COMMIT       = MAGNUSTOOLS.commit
     MAGNUSTOOLS_ARCHIVE_SHA  = MAGNUSTOOLS.archive_sha256
     COMPOSER_IMAGE_URL       = "${COMPOSER_IMAGE.image}:${COMPOSER_IMAGE.tag}"
     COMPOSER_IMAGE_PLATFORM  = COMPOSER_IMAGE.platform
