@@ -46,6 +46,12 @@ class Hooks {
 	}
 
 	public static function onSidebarBeforeOutput( Skin $skin, array &$sidebar ): void {
+		// These links target Wikibase Repository special pages and namespaces.
+		// A client-only wiki does not define the repository namespace constants.
+		if ( !defined( 'WB_NS_ITEM' ) ) {
+			return;
+		}
+
 		$wikibaseLinks = [
 			[
 				'text' => $skin->msg( 'wikibasesuite-sidebar-link-create-item' )->text(),
