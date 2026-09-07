@@ -1,0 +1,218 @@
+# Keep WBS's normal project name so this replacement configuration reuses the
+# database and media volumes initialized by `wbs install --local`, rather than
+# booting a second, uninitialized Wikibase alongside it.
+name: wbs-deploy
+
+# Experimental, static-index QLever configuration. This is intentionally a
+# complete Compose application, not an override for docker-compose.yml.
+services:
+  wikibase:
+    image: wikibase/wikibase:8
+    depends_on:
+      mysql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./config:/config:z
+      - ./config/extensions:/var/www/html/extensions/extensions:z
+      - wikibase-image-data:/var/www/html/images
+      - quickstatements-data:/quickstatements/data
+    env_file:
+      - ${WBS_DIR:-.}/.wbs/version
+    environment:
+      METADATA_CALLBACK: ${METADATA_CALLBACK}
+      MW_ADMIN_NAME: ${MW_ADMIN_NAME}
+      MW_ADMIN_PASS: ${MW_ADMIN_PASS}
+      MW_ADMIN_EMAIL: ${MW_ADMIN_EMAIL}
+      MW_WG_SERVER: https://${WIKIBASE_PUBLIC_HOST}
+      DB_SERVER: mysql:3306
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      ELASTICSEARCH_HOST: elasticsearch
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WDQS_PUBLIC_ENDPOINT_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WDQS_PUBLIC_FRONTEND_URL: https://${WDQS_PUBLIC_HOST}
+      WIKIMEDIA_OAUTH_CONSUMER_TOKEN: ${WIKIMEDIA_OAUTH_CONSUMER_TOKEN:-}
+      WIKIMEDIA_OAUTH_SECRET_TOKEN: ${WIKIMEDIA_OAUTH_SECRET_TOKEN:-}
+    healthcheck:
+      test: curl --silent --fail localhost/wiki/Main_Page
+      interval: 10s
+      start_period: 5m
+
+  wikibase-jobrunner:
+    image: wikibase/wikibase:8
+    command: jobrunner
+    environment:
+      WIKIMEDIA_OAUTH_CONSUMER_TOKEN: ${WIKIMEDIA_OAUTH_CONSUMER_TOKEN:-}
+      WIKIMEDIA_OAUTH_SECRET_TOKEN: ${WIKIMEDIA_OAUTH_SECRET_TOKEN:-}
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes_from:
+      - wikibase
+
+  mysql:
+    image: mariadb:10.11
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
+      start_period: 1m
+      interval: 20s
+      timeout: 5s
+
+  elasticsearch:
+    image: wikibase/opensearch:1
+    restart: unless-stopped
+    volumes:
+      - elasticsearch-data:/usr/share/opensearch/data
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_PERFORMANCE_ANALYZER_AGENT_CLI: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: curl --silent --fail localhost:9200
+      interval: 10s
+      start_period: 2m
+
+  # Produces a point-in-time RDF export on the first `up`. It is deliberately
+  # not an updater: rerun it and qlever-indexer to rebuild after wiki edits.
+  qlever-rdf-dump:
+    image: wikibase/wikibase:8
+    command: >-
+      php extensions/Wikibase/repo/maintenance/dumpRdf.php
+      --format nt --output /data/wikibase.nt
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: "no"
+    volumes_from:
+      - wikibase:ro
+    volumes:
+      - qlever-data:/data
+
+  qlever-indexer:
+    image: adfreiburg/qlever:latest
+    # The upstream entrypoint's UID/GID remapping conflicts with macOS's
+    # standard GID 20. Run both QLever one-shots as root for this local POC.
+    user: root
+    working_dir: /data
+    # Compose may recreate this one-shot while starting a dependent service;
+    # rebuilding the static index must therefore be safe when files exist.
+    command: ["-c", "qlever index --overwrite-existing"]
+    depends_on:
+      qlever-rdf-dump:
+        condition: service_completed_successfully
+    restart: "no"
+    volumes:
+      - qlever-data:/data
+      - ./Qleverfile:/data/Qleverfile:ro
+
+  qlever:
+    image: adfreiburg/qlever:latest
+    user: root
+    working_dir: /data
+    command:
+      - -c
+      - >-
+        qlever-server -i wikibase -j 2 -p 7001 -m 256M -c 64M -e 32M -k 100
+        -a ${QLEVER_ACCESS_TOKEN:-replace-this-before-exposing} --persist-updates
+    depends_on:
+      qlever-indexer:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    volumes:
+      - qlever-data:/data
+    healthcheck:
+      test: curl --silent --fail http://localhost:7001/ping
+      interval: 10s
+      start_period: 2m
+
+  # Existing Suite UI, retained here to verify its standard-SPARQL behavior
+  # against QLever before deciding whether a dedicated QLever UI is needed.
+  wdqs-frontend:
+    image: wikibase/wdqs-frontend:2
+    depends_on:
+      qlever:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./config:/config:z
+    environment:
+      WDQS_PUBLIC_URL: https://${WDQS_PUBLIC_HOST}/sparql
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/w/api.php
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
+
+  quickstatements:
+    image: wikibase/quickstatements:1
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    environment:
+      QUICKSTATEMENTS_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}/tools/quickstatements
+      WIKIBASE_PUBLIC_URL: https://${WIKIBASE_PUBLIC_HOST}
+    healthcheck:
+      test: curl --silent --fail localhost
+      interval: 10s
+      start_period: 2m
+
+  traefik:
+    image: traefik:3
+    command:
+      - "--accesslog.format=common"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.asdefault"
+      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${MW_ADMIN_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/traefik-qlever-dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - traefik-letsencrypt-data:/letsencrypt
+    environment:
+      WIKIBASE_PUBLIC_HOST: ${WIKIBASE_PUBLIC_HOST}
+      WDQS_PUBLIC_HOST: ${WDQS_PUBLIC_HOST}
+
+volumes:
+  wikibase-image-data:
+  mysql-data:
+  elasticsearch-data:
+  quickstatements-data:
+  qlever-data:
+  traefik-letsencrypt-data:
