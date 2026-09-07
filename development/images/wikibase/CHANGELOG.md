@@ -2,13 +2,16 @@
 
 ## Changes
 
-- Adds a Wikibase navigation section with links to create and browse items and
-  properties, plus QuickStatements and the SPARQL Query Service.
-- Keeps the main navigation available to signed-out visitors, providing the
-  same Wikibase entry points before and after sign-in.
+- Adds a Wikibase navigation section to the Vector 2022 main menu with links
+  to create and browse items and properties, plus QuickStatements and the
+  SPARQL Query Service.
+- Uses the configured public URLs for QuickStatements and Query Service links.
 - Uses the Wikibase logo as the default header branding.
-- Stores authenticated sessions and parser output in the database rather than
-  process-local APCu.
+- Adds a "Powered by Wikibase" footer badge for Vector 2022.
+- Aligns standard Wikibase RDF URL redirects with WBStack routing for entity
+  statements, values, references, properties, and EntitySchemas.
+- Configures authenticated sessions and parser output to use the database
+  instead of process-local APCu, following MediaWiki's cache guidance.
 
 ## Dependency updates
 
