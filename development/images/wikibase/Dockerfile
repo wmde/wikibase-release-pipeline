@@ -72,30 +72,6 @@ RUN savedAptMark="$(apt-mark showmanual)"; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*
 
-# Enable Short URLs
-RUN a2enmod rewrite; \
-    { \
-    echo "<Directory /var/www/html>"; \
-    echo "  RewriteEngine On"; \
-    echo "  RewriteCond %{REQUEST_FILENAME} !-f"; \
-    echo "  RewriteCond %{REQUEST_FILENAME} !-d"; \
-    echo "  RewriteRule ^ %{DOCUMENT_ROOT}/index.php [L]"; \
-    echo "</Directory>"; \
-    } > "$APACHE_CONFDIR/conf-available/short-url.conf"; \
-    a2enconf short-url
-
-# Enable AllowEncodedSlashes for VisualEditor
-RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
-
-# set recommended PHP.ini settings
-# see https://secure.php.net/manual/en/opcache.installation.php
-RUN { \
-    echo 'opcache.memory_consumption=128'; \
-    echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=4000'; \
-    echo 'opcache.revalidate_freq=60'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
 # MediaWiki setup
 WORKDIR /var/www/html
 ARG MEDIAWIKI_VERSION
@@ -116,7 +92,7 @@ COPY --from=mediawiki --chown=nobody:nogroup /var/www/html /var/www/html
 WORKDIR /var/www/html
 
 # Ensure relaxed permissions so that the file is readable by the container user
-COPY --chown=nobody:nogroup --chmod=755 composer.local.json composer.local.json
+COPY --chown=nobody:nogroup --chmod=755 build/composer.local.json composer.local.json
 
 USER root
 RUN set -eux; \
@@ -128,78 +104,15 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 USER nobody
 
-ARG WMF_EXTENSIONS="Wikibase,Babel,cldr,CirrusSearch,Elastica,Echo,EntitySchema,OAuth,PluggableAuth,UniversalLanguageSelector,WikibaseCirrusSearch,WikibaseManifest,WSOAuth"
-ARG WIKIBASE_COMMIT
-ARG BABEL_COMMIT
-ARG CLDR_COMMIT
-ARG CIRRUSSEARCH_COMMIT
-ARG ELASTICA_COMMIT
-ARG ECHO_COMMIT
-ARG ENTITYSCHEMA_COMMIT
-ARG OAUTH_COMMIT
-ARG PLUGGABLEAUTH_COMMIT
-ARG UNIVERSALLANGUAGESELECTOR_COMMIT
-ARG WIKIBASECIRRUSSEARCH_COMMIT
-ARG WIKIBASEMANIFEST_COMMIT
-ARG WSOAUTH_COMMIT
-
-# third-party extensions
-ARG WIKIBASEEDTF_COMMIT
-ARG WIKIBASELOCALMEDIA_COMMIT
-ARG WIKIBASEINWIKITEXT_COMMIT
-
-# WORKAROUND for https://phabricator.wikimedia.org/T372458
-# Take wikibase submodules from github as phabricator rate limits us
-COPY --chown=nobody:nogroup --chmod=755 \
-  wikibase-submodules-from-github-instead-of-phabricator.patch \
-  /tmp/wikibase-submodules-from-github-instead-of-phabricator.patch
+COPY --chown=nobody:nogroup --chmod=755 build/extensions.json /tmp/extensions.json
+COPY --chown=nobody:nogroup --chmod=755 build/InstallExtensions.php /tmp/InstallExtensions.php
+COPY --chown=nobody:nogroup --chmod=755 build/patches /tmp/patches
+COPY --chown=nobody:nogroup --chmod=755 runtime/var/www/html/extensions /tmp/wbs-local-sources/runtime/var/www/html/extensions
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
-RUN set -x; \
-    IFS=',' read -ra EXTENSIONS <<< ${WMF_EXTENSIONS}; \
-    for EXTENSION in "${EXTENSIONS[@]}"; do \
-        rm -rf "extensions/${EXTENSION}" && \
-        mkdir -p "extensions/${EXTENSION}" && \
-        pushd "extensions/${EXTENSION}" && \
-        git init . && \
-        git remote add origin "https://gerrit.wikimedia.org/r/mediawiki/extensions/${EXTENSION}" && \
-        EXTENSION_COMMIT_VAR="${EXTENSION^^}_COMMIT"; \
-        EXTENSION_COMMIT="${!EXTENSION_COMMIT_VAR}"; \
-        git fetch origin --depth 1 ${EXTENSION_COMMIT} && \
-        git checkout ${EXTENSION_COMMIT} && \
-        \
-        if [ "${EXTENSION}" = "Wikibase" ]; then \
-            patch -d /var/www/html/extensions/Wikibase -Np1 </tmp/wikibase-submodules-from-github-instead-of-phabricator.patch; \
-        fi && \
-        \
-        git submodule update --init --recursive --depth 1 && \
-        find . -name ".git*" -exec rm -rf {} + && \
-        popd; \
-    done && \
-    \
-    git clone "https://github.com/ProfessionalWiki/WikibaseEdtf.git" "extensions/WikibaseEdtf" && \
-    git -C "extensions/WikibaseEdtf" checkout "${WIKIBASEEDTF_COMMIT}" && \
-    rm -rf "extensions/WikibaseEdtf/.git*" && \
-    \
-    git clone "https://github.com/ProfessionalWiki/WikibaseLocalMedia.git" "extensions/WikibaseLocalMedia" && \
-    git -C "extensions/WikibaseLocalMedia" checkout "${WIKIBASELOCALMEDIA_COMMIT}" && \
-    rm -rf "extensions/WikibaseLocalMedia/.git*" && \
-    \
-    git clone "https://github.com/wbstack/mediawiki-extensions-WikibaseInWikitext.git" "extensions/WikibaseInWikitext" && \
-    git -C "extensions/WikibaseInWikitext" checkout "${WIKIBASEINWIKITEXT_COMMIT}" && \
-    rm -rf "extensions/WikibaseInWikitext/.git*" && \
-    \
-    rm -rf vendor && \
+RUN php /tmp/InstallExtensions.php /tmp/extensions.json /tmp/wbs-local-sources && \
     rm -rf composer.lock && \
-    ls -la && pwd && \
-    composer install --no-dev -vv -n
-
-# WORKAROUND for oauth on same domain problem introduced 
-# by https://phabricator.wikimedia.org/T299737#8171169
-COPY --chown=nobody:nogroup --chmod=755 \
-  mediawiki-extensions-OAuth-same-domain.patch \
-  /tmp/mediawiki-extensions-OAuth-same-domain.patch
-RUN patch -d /var/www/html/extensions/OAuth -Np1 </tmp/mediawiki-extensions-OAuth-same-domain.patch
+    composer update --no-dev -vv -n
 
 # ###########################################################################
 # hadolint ignore=DL3006
@@ -227,21 +140,27 @@ RUN chmod o-w /var/www/html && \
     ln -s /var/www/html/ /var/www/html/w && \
     chown www-data /var/www/html/images -R
 
-COPY wikibase-php.ini /usr/local/etc/php/conf.d/wikibase-php.ini
-COPY --chmod=755 entrypoint.sh /entrypoint.sh
-COPY --chmod=755 bootstrap/bootstrap.sh /opt/wbs/bootstrap/bootstrap.sh
-COPY bootstrap/configuration.php /opt/wbs/bootstrap/configuration.php
-COPY bootstrap/suite-7-configuration /opt/wbs/bootstrap/suite-7-configuration
-COPY callback.sh /callback.sh
-COPY --chmod=755 healthcheck.sh /healthcheck.sh
-COPY htaccess /var/www/html/.htaccess
-COPY extensions/WikibaseSuite /var/www/html/extensions/WikibaseSuite
-COPY configuration /opt/wbs
-COPY default-extra-install.sh /default-extra-install.sh
-COPY oauth.ini /templates/oauth.ini
+# Copy image-owned runtime files into their final container paths.
+COPY runtime/ /
+
+# Enable the static Apache configuration for short URLs and VisualEditor.
+RUN a2enmod rewrite && a2enconf wikibase
+
+RUN chmod 755 \
+    /entrypoint.sh \
+    /healthcheck.sh \
+    /var/www/html/extensions/WikibaseSuite/setup/setup.sh \
+    /var/www/html/extensions/WikibaseSuite/setup/migration/migrate.sh \
+    /var/www/html/extensions/WikibaseSuite/setup/scripts/*.sh
+
+# Docker reuses this layer when the image inputs are unchanged. When a build
+# changes those inputs, this versioned last-update value lets WBS run its
+# updater once.
+RUN printf '%s-%s\n' "$WIKIBASE_IMAGE_VERSION" "$(date -u +%s%N)" \
+    > /var/www/html/extensions/WikibaseSuite/setup/last-update
 
 ENV DB_NAME=my_wiki \
-    MW_CONFIG_FILE=/opt/wbs/WBSConfig.php \
+    MW_CONFIG_FILE=/var/www/html/extensions/WikibaseSuite/config/Settings.php \
     MW_WG_SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en
 
