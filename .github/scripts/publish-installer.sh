@@ -166,10 +166,9 @@ dispatch_pr() {
   fi
   dispatch_payload "$PR_PAYLOAD_PATH"
 
-  local pr commit source_ref short_sha current
+  local pr commit short_sha current
   pr="$(jq -r '.client_payload.pr' "$PR_PAYLOAD_PATH")"
   commit="$(jq -r '.client_payload.commit' "$PR_PAYLOAD_PATH")"
-  source_ref="$(jq -r '.client_payload.sourceRef' "$PR_PAYLOAD_PATH")"
   current="$(jq -r '.client_payload.current' "$PR_PAYLOAD_PATH")"
   short_sha="${commit:0:12}"
   wait_for_publication \
@@ -180,7 +179,7 @@ dispatch_pr() {
     "PR installation manifest"
   if [[ "$current" == true ]]; then
     wait_for_publication \
-      "$PAGES_ROOT/pr-$pr" "export WBS_REF='$source_ref'" \
+      "$PAGES_ROOT/pr-$pr" "export WBS_REF='$commit'" \
       "current PR installer"
     wait_for_publication \
       "$PAGES_ROOT/manifests/pr-$pr.json" \
