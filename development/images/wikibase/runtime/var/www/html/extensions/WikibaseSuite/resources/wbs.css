@@ -3,6 +3,17 @@
  * Keep additions limited to documented Vector customization points:
  * https://www.mediawiki.org/wiki/Skin:Vector/Customizing_the_logo_for_special_events
  */
+#footer-poweredbyico {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+#footer-poweredbyico > a {
+	align-items: center;
+	margin: 0;
+}
+
 .skin-vector-2022 .mw-logo-icon {
 	width: 80px;
 	height: 80px;

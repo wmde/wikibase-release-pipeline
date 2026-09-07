@@ -8,6 +8,14 @@ $wgLogos = [
 	'icon' => "$wgScriptPath/extensions/WikibaseSuite/resources/assets/wikibase_vertical.svg",
 ];
 
+$wgFooterIcons['poweredby'] = [
+	'wikibase' => [
+		'src' => "$wgScriptPath/extensions/WikibaseSuite/resources/assets/poweredby_wikibase.svg",
+		'url' => 'https://www.mediawiki.org/wiki/Wikibase',
+		'alt' => 'Powered by Wikibase',
+	],
+] + ( $wgFooterIcons['poweredby'] ?? [] );
+
 $wgEmergencyContact = '';
 $wgPasswordSender = '';
 
