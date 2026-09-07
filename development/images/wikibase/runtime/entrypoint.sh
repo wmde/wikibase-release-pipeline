@@ -35,10 +35,10 @@ fi
 # MW_CONFIG_FILE is the configuration ownership boundary. The image default is
 # its WBS configuration entry point. Replacing that default selects a complete
 # externally managed configuration and bypasses WBS preparation.
-wbs_settings_file=/opt/wbs/Settings.php
+wbs_settings_file=/var/www/html/extensions/WikibaseSuite/config/Settings.php
 if [ "${MW_CONFIG_FILE:-}" = "$wbs_settings_file" ]; then
     if [ "$workload" = 'web' ]; then
-        /opt/wbs/setup/setup.sh
+        /var/www/html/extensions/WikibaseSuite/setup/setup.sh
     elif [ ! -r /config/InstanceSettings.php ]; then
         echo "/config/InstanceSettings.php is required for the $workload workload."
         exit 1

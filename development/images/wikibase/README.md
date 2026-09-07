@@ -143,20 +143,11 @@ The job runner and maintenance workloads use the same configuration as the web
 workload but do not initialize it. The web workload must initialize the shared
 `/config` volume first.
 
-### Cache configuration
-
-The image uses APCu for lightweight, local caching, while its default WBS
-configuration stores authenticated sessions and parser output in the database.
-
-Deployments with more than one Wikibase web container need a shared main cache.
-This image supports Redis for that purpose; configure `REDIS_SERVER` and, when
-needed, `REDIS_PASSWORD`, or use a custom MediaWiki configuration. See
-[MediaWiki's Redis documentation](https://www.mediawiki.org/wiki/Redis).
-
 ### Externally managed configuration
 
 The image sets MediaWiki's native `MW_CONFIG_FILE` environment variable to its
-Wikibase Suite-managed `/opt/wbs/Settings.php` entry point. Override
+Wikibase Suite-managed
+`/var/www/html/extensions/WikibaseSuite/config/Settings.php` entry point. Override
 `MW_CONFIG_FILE` with another path to supply a complete externally managed
 configuration. The selected file may contain static configuration or resolve
 configuration dynamically. Bundled extensions remain available, but your
@@ -164,31 +155,22 @@ configuration must load those you want to enable.
 
 > ⚠️ `MW_CONFIG_FILE` is an advanced custom-configuration option not recommended for most users. It replaces the default WBS configuration and bypasses all WBS bootstrapping, making you responsible for MediaWiki installation, updates, configuration persistence, and extension loading. WBS setup variables are not applied automatically.
 
-## Internal filesystem layout
+## Filesystem layout
 
-The following internal and extension paths are important when working with the
-image. See the [Dockerfile](./Dockerfile) for their source.
+These configuration and extension paths are the useful boundaries for image
+operators. Other files in the MediaWiki installation are implementation
+details.
 
 | Path | Description |
 | --- | --- |
-| `/var/www/html` | Base MediaWiki directory. |
-| `/var/www/html/images` | MediaWiki image and media upload directory. |
-| `/var/www/html/skins` | MediaWiki skins directory. |
-| `/var/www/html/extensions` | MediaWiki extensions directory. |
-| `/opt/wbs/Settings.php` | Image-owned Wikibase Suite entry point selected by the default `MW_CONFIG_FILE`. Override the environment variable rather than replacing this file. |
-| `/opt/wbs/DefaultSettings.php` | Image-owned Wikibase Suite MediaWiki defaults, loaded before bundled extensions. MediaWiki supplies its own core defaults. |
-| `/opt/wbs/LoadExtensions.php` | Image-owned extension loading and related configuration, loaded before user configuration. |
-| `/opt/wbs/extensions.json` | Image-owned build manifest of additional extension sources, pins, and patches included in this image. |
-| `/opt/wbs/extension-profiles/` | Image-specific extension profiles for defaults that need more than normal MediaWiki loading. |
-| `/opt/wbs/setup/` | Default Wikibase Suite installation, configuration, and migration machinery. |
 | `/config/InstanceSettings.php` | Persistent image-generated settings unique to an installed instance. Loaded first by `Settings.php`; do not edit it. |
 | `/config/LocalSettings.php` | Persistent user-owned MediaWiki and extension customizations, loaded last. |
 | `/config/Extensions.php` | Optional user-owned extension configuration loaded by `LocalSettings.php` for compatibility. New configuration can go directly in `LocalSettings.php`. |
 | `/config/wikibase-php.ini` | Persistent user-customizable PHP settings. The image seeds it during managed setup. |
-| `/config/.wikibase-image/` | Image-managed transient installation and migration state. |
-| `/entrypoint.sh` | Selects the requested workload and runs managed setup only when the default `MW_CONFIG_FILE` is in use. |
-| `/healthcheck.sh` | Verifies that MediaWiki is serving requests. |
-| `/opt/wbs/setup/scripts/` | WBS-owned setup scripts, including optional OpenSearch and QuickStatements configuration and the opted-in metadata callback. |
+| `/var/www/html/extensions/WikibaseSuite/config/Settings.php` | Image-owned WBS configuration entry point selected by the default `MW_CONFIG_FILE`. Override the environment variable rather than replacing this file. |
+| `/var/www/html/extensions/WikibaseSuite/config/` | Image-owned WBS defaults, extension loading, and extension profiles. |
+| `/var/www/html/extensions/` | Bundled MediaWiki and Wikibase extensions, available for configuration in `LocalSettings.php`. |
+| `/var/www/html/images/` | MediaWiki image and media upload directory. |
 | `/extra-install.sh` | Optional script for custom functionality run during a fresh installation. |
 
 ## Releases

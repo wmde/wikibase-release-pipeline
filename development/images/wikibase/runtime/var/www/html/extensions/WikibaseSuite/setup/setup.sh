@@ -17,7 +17,9 @@ export METADATA_CALLBACK="${METADATA_CALLBACK:-false}"
 # Exit immediately on errors or unset variables from here onwards
 set -eu
 
-bash /opt/wbs/setup/scripts/metadata-callback.sh || true
+setup_directory=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
+bash "$setup_directory/scripts/metadata-callback.sh" || true
 
 # Take wikibase-php.ini from user config if present
 if [ -e "/config/wikibase-php.ini" ]; then
@@ -77,8 +79,8 @@ resume_fresh_installation() {
         current_phase=administrator-created
     fi
     if [ "$current_phase" = administrator-created ]; then
-        bash /opt/wbs/setup/scripts/create-opensearch-index.sh
-        bash /opt/wbs/setup/scripts/setup-quickstatements-oauth.sh
+        bash "$setup_directory/scripts/create-opensearch-index.sh"
+        bash "$setup_directory/scripts/setup-quickstatements-oauth.sh"
 
         if [ -f /extra-install.sh ]; then
             bash /extra-install.sh
@@ -95,7 +97,7 @@ resume_interrupted_installation() {
     ensure_image_state_directory
     if [ "$(cat "$installation_state_file")" = preparing ]; then
         if [ ! -r "$instance_settings" ] || [ ! -r "$custom_settings" ]; then
-            php /opt/wbs/setup/Configuration.php fresh "$instance_settings" "$custom_settings"
+            php "$setup_directory/Configuration.php" fresh "$instance_settings" "$custom_settings"
         fi
         set_installation_phase configured
     fi
@@ -139,7 +141,7 @@ install_new_instance() {
     set -u
 
     set_installation_phase preparing
-    php /opt/wbs/setup/Configuration.php fresh "$instance_settings" "$custom_settings"
+    php "$setup_directory/Configuration.php" fresh "$instance_settings" "$custom_settings"
     set_installation_phase configured
     resume_fresh_installation
 }
@@ -148,13 +150,13 @@ install_new_instance() {
 # Test the interrupted operations first because their working files may include
 # otherwise valid InstanceSettings.php and LocalSettings.php files.
 if [ -d "$migration_directory" ]; then
-    bash /opt/wbs/setup/migration/migrate.sh
+    bash "$setup_directory/migration/migrate.sh"
 elif [ -e "$installation_state_file" ]; then
     resume_interrupted_installation
 elif [ -e "$instance_settings" ]; then
     update_existing_installation
 elif [ -e "$custom_settings" ]; then
-    bash /opt/wbs/setup/migration/migrate.sh
+    bash "$setup_directory/migration/migrate.sh"
 else
     install_new_instance
 fi

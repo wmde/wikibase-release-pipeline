@@ -35,10 +35,10 @@
 - Adds PluggableAuth, WSOAuth, and related config to enabled Wikimedia OAuth logins option
 - Ignores one-time setup values from .env after installation
 - Separates WBS bootstrap from image startup, adds the `jobrunner` workload, and supports external configuration with `MW_CONFIG_FILE`
-- Roots the default MediaWiki configuration in the image-owned
-  `MW_CONFIG_FILE=/opt/wbs/WBSConfig.php` entry point, stores generated
-  instance values in `InstanceSettings.php`, and reserves the persistent
-  `LocalSettings.php` for user customizations
+- Roots the default MediaWiki configuration in an image-owned
+  `MW_CONFIG_FILE` entry point, stores generated instance values in
+  `InstanceSettings.php`, and reserves the persistent `LocalSettings.php`
+  for user customizations
 - Replaces numeric bundled-extension configuration prefixes with an explicit
   ordered registry in `ExtensionLoaders.php`
 - Preserves existing configuration when adopting the new configuration layout

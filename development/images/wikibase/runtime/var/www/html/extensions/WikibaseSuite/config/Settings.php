@@ -14,8 +14,8 @@ if ( !is_readable( $wbsInstanceSettings ) ) {
 }
 
 require $wbsInstanceSettings;
-require '/opt/wbs/DefaultSettings.php';
-require '/opt/wbs/LoadExtensions.php';
+require __DIR__ . '/DefaultSettings.php';
+require __DIR__ . '/LoadExtensions.php';
 
 $wbsCustomSettings = '/config/LocalSettings.php';
 if ( is_readable( $wbsCustomSettings ) ) {

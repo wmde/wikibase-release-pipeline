@@ -72,30 +72,6 @@ RUN savedAptMark="$(apt-mark showmanual)"; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*
 
-# Enable Short URLs
-RUN a2enmod rewrite; \
-    { \
-    echo "<Directory /var/www/html>"; \
-    echo "  RewriteEngine On"; \
-    echo "  RewriteCond %{REQUEST_FILENAME} !-f"; \
-    echo "  RewriteCond %{REQUEST_FILENAME} !-d"; \
-    echo "  RewriteRule ^ %{DOCUMENT_ROOT}/index.php [L]"; \
-    echo "</Directory>"; \
-    } > "$APACHE_CONFDIR/conf-available/short-url.conf"; \
-    a2enconf short-url
-
-# Enable AllowEncodedSlashes for VisualEditor
-RUN sed -i "s/<\/VirtualHost>/\tAllowEncodedSlashes NoDecode\n<\/VirtualHost>/" "$APACHE_CONFDIR/sites-available/000-default.conf"
-
-# set recommended PHP.ini settings
-# see https://secure.php.net/manual/en/opcache.installation.php
-RUN { \
-    echo 'opcache.memory_consumption=128'; \
-    echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=4000'; \
-    echo 'opcache.revalidate_freq=60'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
 # MediaWiki setup
 WORKDIR /var/www/html
 ARG MEDIAWIKI_VERSION
@@ -156,7 +132,6 @@ RUN { \
 } > /usr/local/etc/php/conf.d/error_reporting.ini
 
 COPY --from=composer --chown=nobody:nogroup /var/www/html /var/www/html
-COPY --from=composer --chown=nobody:nogroup /tmp/extensions.json /opt/wbs/extensions.json
 
 # Remove world writable flag, in combination with sticky bit it breaks the w link
 # https://github.com/wmde/wikibase-suite/commit/545c7aeec8d0245dc597d500afc934b40e656b3c
@@ -165,19 +140,21 @@ RUN chmod o-w /var/www/html && \
     ln -s /var/www/html/ /var/www/html/w && \
     chown www-data /var/www/html/images -R
 
-# Copy image-owned runtime files into their final container paths. The generated
-# /opt/wbs/extensions.json above remains separate because it comes from build.
+# Copy image-owned runtime files into their final container paths.
 COPY runtime/ /
+
+# Enable the static Apache configuration for short URLs and VisualEditor.
+RUN a2enmod rewrite && a2enconf wikibase
 
 RUN chmod 755 \
     /entrypoint.sh \
     /healthcheck.sh \
-    /opt/wbs/setup/setup.sh \
-    /opt/wbs/setup/migration/migrate.sh \
-    /opt/wbs/setup/scripts/*.sh
+    /var/www/html/extensions/WikibaseSuite/setup/setup.sh \
+    /var/www/html/extensions/WikibaseSuite/setup/migration/migrate.sh \
+    /var/www/html/extensions/WikibaseSuite/setup/scripts/*.sh
 
 ENV DB_NAME=my_wiki \
-    MW_CONFIG_FILE=/opt/wbs/Settings.php \
+    MW_CONFIG_FILE=/var/www/html/extensions/WikibaseSuite/config/Settings.php \
     MW_WG_SITENAME=wikibase \
     MW_WG_LANGUAGE_CODE=en
 

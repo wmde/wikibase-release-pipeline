@@ -8,4 +8,4 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 }
 
 require '/config/.wikibase-image/config-migration/InstanceSettings.php.tmp';
-require '/opt/wbs/DefaultSettings.php';
+require dirname( dirname( __DIR__ ) ) . '/config/DefaultSettings.php';

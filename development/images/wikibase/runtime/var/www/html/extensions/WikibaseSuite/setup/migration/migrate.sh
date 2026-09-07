@@ -6,6 +6,8 @@
 
 set -eu
 
+migration_directory_path=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+
 instance_settings=/config/InstanceSettings.php
 custom_settings=/config/LocalSettings.php
 image_state_directory=/config/.wikibase-image
@@ -26,10 +28,10 @@ install_staged_configuration() {
         echo "The staged WBS 8 configuration migration is incomplete."
         exit 1
     fi
-    php /opt/wbs/setup/migration/MigrateConfiguration.php install \
+    php "$migration_directory_path/MigrateConfiguration.php" install \
         "$staged_instance_settings" \
         "$instance_settings"
-    php /opt/wbs/setup/migration/MigrateConfiguration.php install \
+    php "$migration_directory_path/MigrateConfiguration.php" install \
         "$staged_custom_settings" \
         "$custom_settings"
 }
@@ -52,7 +54,7 @@ migrate_legacy_configuration() {
     if [ ! -e "$backup_directory/LocalSettings.pre-wbs-8.php.backup" ]; then
         cp "$legacy_settings" "$backup_directory/LocalSettings.pre-wbs-8.php.backup"
     fi
-    legacy_shape=$(php /opt/wbs/setup/migration/MigrateConfiguration.php write-loadable-legacy-config \
+    legacy_shape=$(php "$migration_directory_path/MigrateConfiguration.php" write-loadable-legacy-config \
         "$legacy_settings" \
         "$legacy_prefix")
     echo "Recognized $legacy_shape generated configuration."
@@ -60,15 +62,15 @@ migrate_legacy_configuration() {
         --conf "$legacy_prefix" \
         --format=json \
         --json-partial-output-on-error > "$actual_configuration"
-    php /opt/wbs/setup/migration/MigrateConfiguration.php stage-instance-settings \
+    php "$migration_directory_path/MigrateConfiguration.php" stage-instance-settings \
         "$legacy_settings" \
         "$actual_configuration" \
         "$temporary_instance"
     php /var/www/html/maintenance/run.php getConfiguration \
-        --conf /opt/wbs/setup/migration/ReferenceConfig.php \
+        --conf "$migration_directory_path/ReferenceConfig.php" \
         --format=json \
         --json-partial-output-on-error > "$reference_configuration"
-    php /opt/wbs/setup/migration/MigrateConfiguration.php stage-migrated-configuration \
+    php "$migration_directory_path/MigrateConfiguration.php" stage-migrated-configuration \
         "$legacy_settings" \
         "$actual_configuration" \
         "$reference_configuration" \

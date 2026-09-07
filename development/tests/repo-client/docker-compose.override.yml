@@ -5,7 +5,7 @@ services:
 
   wikibase:
     volumes:
-      - ./_setup/repo-Wikibase-loader.php:/opt/wbs/extension-profiles/Wikibase.php:ro
+      - ./_setup/repo-Wikibase-loader.php:/var/www/html/extensions/WikibaseSuite/config/extension-profiles/Wikibase.php:ro
       - ./_setup/repo-extra-install.sh:/extra-install.sh
 
   wikibase-client:
@@ -16,7 +16,7 @@ services:
     restart: always
     volumes:
       - ./repo-client/tmp/client-config:/config
-      - ./_setup/client-LoadExtensions.php:/opt/wbs/LoadExtensions.php:ro
+      - ./_setup/client-LoadExtensions.php:/var/www/html/extensions/WikibaseSuite/config/LoadExtensions.php:ro
       - ./_setup/client-extra-install.sh:/extra-install.sh
       - ./${OUTPUT_DIR}:/var/log/mediawiki
     ports:

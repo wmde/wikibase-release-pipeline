@@ -2,7 +2,7 @@
 
 declare( strict_types=1 );
 
-require '/opt/wbs/setup/Configuration.php';
+require dirname( __DIR__ ) . '/Configuration.php';
 
 function readJsonObject( string $path ): array {
 	$contents = file_get_contents( $path );
@@ -88,12 +88,12 @@ function adaptLegacyPrefix( string $prefix ): array {
 	) {
 		$prefix = str_replace(
 			$mediaWikiLoader,
-			"require '/opt/wbs/setup/migration/Suite7Defaults.php';",
+			"require '" . __DIR__ . "/Suite7Defaults.php';",
 			$prefix
 		);
 		$prefix = str_replace(
 			$extensionLoader,
-			"require '/opt/wbs/LoadExtensions.php';",
+			"require '" . dirname( dirname( __DIR__ ) ) . "/config/LoadExtensions.php';",
 			$prefix
 		);
 		return [ $prefix, 'wbs-7' ];
