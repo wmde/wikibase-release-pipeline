@@ -97,6 +97,13 @@ describe( 'Property', function () {
 				await PropertyPage.open( propertyId );
 			} );
 
+			it( 'Should resolve its canonical entity URI to the property page', async function () {
+				await page.open( `/entity/${ propertyId }` );
+				await expect( browser ).toHaveUrl(
+					`${ testEnv.vars.WIKIBASE_URL }/wiki/Property:${ propertyId }`
+				);
+			} );
+
 			it( 'Should be able to add statement to property', async function () {
 				await $( '=add statement' ).click();
 				await browser.waitUntil(

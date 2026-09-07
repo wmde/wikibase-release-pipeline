@@ -144,7 +144,7 @@ RUN chmod o-w /var/www/html && \
 COPY runtime/ /
 
 # Enable the static Apache configuration for short URLs and VisualEditor.
-RUN a2enmod rewrite && a2enconf wikibase
+RUN a2enmod rewrite && a2enconf mediawiki
 
 RUN chmod 755 \
     /entrypoint.sh \
