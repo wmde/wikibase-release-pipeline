@@ -85,3 +85,7 @@ services:
 
 volumes:
   wikibase-extensions:
+
+secrets:
+  query_access_token:
+    file: ./_setup/query-access-token

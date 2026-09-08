@@ -3,7 +3,8 @@ set -eu
 
 token_file=/run/secrets/query_access_token
 if [ -r "$token_file" ]; then
-  export QLEVER_ACCESS_TOKEN="$(cat "$token_file")"
+  QLEVER_ACCESS_TOKEN="$(cat "$token_file")"
+  export QLEVER_ACCESS_TOKEN
 fi
 
 exec php "/updater/${1:-updater.php}"
