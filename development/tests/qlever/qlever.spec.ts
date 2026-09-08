@@ -1,7 +1,7 @@
 import { getTestString } from 'wdio-mediawiki/Util.js';
 import WikibaseApi from 'wdio-wikibase/wikibase.api.js';
 
-type Binding = { value: string };
+type Binding = { value: string; datatype?: string };
 
 const qleverQuery = async ( query: string ): Promise<Record<string, Binding>[]> => {
 	const result = await browser.makeRequest( 'http://query:7001/', {
@@ -68,6 +68,33 @@ describe( 'QLever incremental updater', function () {
 		);
 	} );
 
+	it( 'indexes a quantity statement as a typed RDF literal', async function () {
+		const propertyId = await WikibaseApi.createProperty( 'quantity' );
+		const itemId = await WikibaseApi.createItem( getTestString( 'qlever-quantity-item-' ), {
+			claims: [ {
+				mainsnak: {
+					snaktype: 'value', property: propertyId,
+					datavalue: {
+						value: { amount: '+42', unit: '1' }, type: 'quantity'
+					}
+				},
+				type: 'statement', rank: 'normal'
+			} ]
+		} );
+
+		await waitForBindings(
+			`SELECT ?value WHERE {
+				<${ testEnv.vars.WIKIBASE_URL }/entity/${ itemId }>
+					<${ testEnv.vars.WIKIBASE_URL }/prop/direct/${ propertyId }> ?value
+			}`,
+			( bindings ) => bindings.some( ( binding ) =>
+				binding.value.value === '42.0' &&
+				binding.value.datatype === 'http://www.w3.org/2001/XMLSchema#decimal'
+			),
+			`Expected QLever to index the ${ itemId } quantity as an xsd:decimal literal`
+		);
+	} );
+
 	it( 'indexes statement qualifiers and references in the same entity graph', async function () {
 		const mainProperty = await WikibaseApi.createProperty( 'string' );
 		const qualifierProperty = await WikibaseApi.createProperty( 'string' );
@@ -127,6 +154,36 @@ describe( 'QLever incremental updater', function () {
 			( bindings ) => bindings.length === 1 && bindings[0].label.value === secondLabel,
 			`Expected QLever to replace ${ itemId } with its edited RDF graph`
 		);
+	} );
+
+	it( 'replays an edit made while the updater is interrupted', async function () {
+		const label = getTestString( 'qlever-replayed-edit-' );
+		let updaterStopped = false;
+
+		try {
+			await testEnv.runDockerComposeCmd( 'stop query-updater' );
+			updaterStopped = true;
+			const itemId = await WikibaseApi.createItem( label );
+			const query = `SELECT ?item WHERE {
+				?item <http://www.w3.org/2000/01/rdf-schema#label> ${ JSON.stringify( label ) }@en
+			}`;
+
+			expect( await qleverQuery( query ) ).toHaveLength( 0 );
+			await testEnv.runDockerComposeCmd(
+				'up -d --no-deps --force-recreate query-updater'
+			);
+			updaterStopped = false;
+
+			await waitForBindings(
+				query,
+				( bindings ) => bindings.some( ( binding ) => binding.item.value.endsWith( `/entity/${ itemId }` ) ),
+				`Expected QLever to replay the change to ${ itemId } after the updater restarted`
+			);
+		} finally {
+			if ( updaterStopped ) {
+				await testEnv.runDockerComposeCmd( 'up -d --no-deps --force-recreate query-updater' );
+			}
+		}
 	} );
 
 	it( 'updates property RDF and removes an entity graph on deletion', async function () {
