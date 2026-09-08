@@ -7,6 +7,10 @@ clears persisted update deltas. After a successful development bootstrap it
 also releases the updater pause lock. Advanced deployments can mount a
 replacement file directly at `/etc/qlever/Qleverfile` for an index build.
 
+If no index exists, `server` builds an empty index once, so a new wiki can
+begin accepting edits immediately. Upgrade detection and guided historical
+reindexing are intentionally deferred to Suite-level migration work.
+
 `Qleverfile` controls index construction, including `STXXL_MEMORY`. The server
 command controls live serving separately: `-m` is total query memory, `-c` is
 the cache limit, `-e` caps an individual result, and `-k` caps cached results.

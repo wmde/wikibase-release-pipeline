@@ -7,5 +7,6 @@ USER root
 COPY runtime/ /
 RUN chmod 755 /usr/local/bin/wbs-qlever
 
+WORKDIR /data
 ENTRYPOINT ["/usr/local/bin/wbs-qlever"]
 CMD ["server"]

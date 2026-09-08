@@ -3,10 +3,20 @@ set -eu
 
 token_file=/run/secrets/query_access_token
 
+initialize_empty_index() {
+  [ -f /data/wikibase.meta-data.json ] && return
+  echo 'No QLever index found; initializing an empty index.' >&2
+  : > /data/wikibase.nq
+  qlever --qleverfile /etc/qlever/Qleverfile index --overwrite-existing
+  rm -f /data/wikibase.update-triples /data/qlever-bootstrap.lock \
+    /data/qlever-updater-paused.json /data/qlever-bootstrap-required
+}
+
 case "${1:-server}" in
   server)
     [ -r "$token_file" ] || { echo 'Missing Query Service access-token secret.' >&2; exit 1; }
     shift
+    initialize_empty_index
     exec qlever-server -i wikibase -j "${QLEVER_THREADS:-2}" -p 7001 \
       -m "${QLEVER_QUERY_MEMORY:-256M}" -c "${QLEVER_CACHE_MEMORY:-64M}" \
       -e "${QLEVER_MAX_RESULT_SIZE:-32M}" -k "${QLEVER_MAX_CACHED_RESULTS:-100}" \
