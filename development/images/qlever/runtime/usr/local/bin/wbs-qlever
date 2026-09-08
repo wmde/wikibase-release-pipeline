@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+
+token_file=/run/secrets/query_access_token
+
+case "${1:-server}" in
+  server)
+    [ -r "$token_file" ] || { echo 'Missing Query Service access-token secret.' >&2; exit 1; }
+    shift
+    exec qlever-server -i wikibase -j "${QLEVER_THREADS:-2}" -p 7001 \
+      -m "${QLEVER_QUERY_MEMORY:-256M}" -c "${QLEVER_CACHE_MEMORY:-64M}" \
+      -e "${QLEVER_MAX_RESULT_SIZE:-32M}" -k "${QLEVER_MAX_CACHED_RESULTS:-100}" \
+      -a "$(cat "$token_file")" --persist-updates "$@"
+    ;;
+  index)
+    shift
+    rm -f /data/wikibase.update-triples
+    qlever --qleverfile /etc/qlever/Qleverfile index --overwrite-existing "$@"
+    status=$?
+    if [ "$status" -eq 0 ]; then
+      rm -f /data/qlever-bootstrap.lock /data/qlever-updater-paused.json /data/qlever-bootstrap-required
+    fi
+    exit "$status"
+    ;;
+  *)
+    exec "$@"
+    ;;
+esac

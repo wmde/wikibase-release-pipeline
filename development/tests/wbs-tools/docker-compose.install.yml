@@ -16,15 +16,15 @@ services:
     image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/opensearch:${WBS_TEST_IMAGE_TAG:-latest}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
-  wdqs:
-    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
+  query:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/qlever:${WBS_TEST_IMAGE_TAG:-latest}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
-  wdqs-updater:
-    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
+  query-updater:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/qlever-updater:${WBS_TEST_IMAGE_TAG:-latest}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 
-  wdqs-frontend:
+  query-ui:
     image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs-frontend:${WBS_TEST_IMAGE_TAG:-latest}
     pull_policy: ${WBS_E2E_PULL_POLICY:-never}
 

@@ -131,7 +131,7 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 			const commit = 'a1b2c3d4e5f678901234567890abcdef12345678';
 			const tag = 'pr-942-a1b2c3d4e5f6';
 			const imageNames = [
-				'opensearch', 'quickstatements', 'wbs-tools', 'wdqs', 'wdqs-frontend', 'wikibase'
+				'opensearch', 'qlever', 'qlever-updater', 'quickstatements', 'wbs-tools', 'wdqs-frontend', 'wikibase'
 			];
 			const manifest = {
 				schemaVersion: 1,

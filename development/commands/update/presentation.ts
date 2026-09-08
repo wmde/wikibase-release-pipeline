@@ -6,6 +6,7 @@ export function strong(value: string): string {
 
 const projectLabels: Record<string, string> = {
 	opensearch: 'OpenSearch',
+	qlever: 'QLever Query Service',
 	quickstatements: 'QuickStatements',
 	'wbs-tools': 'WBS Tools',
 	wbs: 'Wikibase Suite',

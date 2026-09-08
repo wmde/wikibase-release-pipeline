@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
 import { captureProcess, runProcess } from './command-runner.js';
@@ -19,6 +20,7 @@ const repositoryRoot = process.env.WBS_DIR || '/app/wbs';
 const envFile = process.env.ENV_FILE_PATH || join( repositoryRoot, '.env' );
 const localSettingsFile = join( repositoryRoot, 'config/LocalSettings.php' );
 const instanceSettingsFile = join( repositoryRoot, 'config/InstanceSettings.php' );
+const queryAccessTokenFile = join( repositoryRoot, '.wbs/query-access-token' );
 const REQUIRED_CONFIGURATION_KEYS = [
 	'WIKIBASE_PUBLIC_HOST', 'WDQS_PUBLIC_HOST', 'MW_ADMIN_NAME', 'MW_ADMIN_EMAIL',
 	'MW_ADMIN_PASS', 'DB_PASS', 'DB_NAME', 'DB_USER'
@@ -111,6 +113,14 @@ async function buildImages(): Promise<void> {
 	] );
 }
 
+function ensureQueryAccessToken(): void {
+	if ( existsSync( queryAccessTokenFile ) ) {
+		return;
+	}
+	mkdirSync( join( repositoryRoot, '.wbs' ), { recursive: true, mode: 0o700 } );
+	writeFileSync( queryAccessTokenFile, randomBytes( 32 ).toString( 'base64url' ) + '\n', { mode: 0o600 } );
+}
+
 export async function up( options: SuiteOptions = {} ): Promise<void> {
 	const missing = missingConfigurationKeys();
 	if ( missing.length ) {
@@ -126,6 +136,7 @@ export async function up( options: SuiteOptions = {} ): Promise<void> {
 		console.log( 'Pulling selected Wikibase Suite images...' );
 		await runProcess( 'docker', [ ...args, 'pull' ] );
 	}
+	ensureQueryAccessToken();
 	await options.onStartingServices?.();
 	console.log( 'Starting Wikibase Suite services...' );
 	await runProcess( 'docker', [ ...args, 'up', '--detach', '--wait' ] );
@@ -155,6 +166,7 @@ export async function reset( options: ResetOptions ): Promise<void> {
 		] ) {
 			rmSync( join( repositoryRoot, 'config', filename ), { force: true } );
 		}
+		rmSync( queryAccessTokenFile, { force: true } );
 		rmSync( join( repositoryRoot, 'config', '.wikibase-image' ), {
 			recursive: true,
 			force: true

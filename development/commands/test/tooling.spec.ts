@@ -107,7 +107,8 @@ exit 0
 		for (const image of [
 			'wikibase/wikibase:latest',
 			'wikibase/opensearch:latest',
-			'wikibase/wdqs:latest',
+			'wikibase/qlever:latest',
+			'wikibase/qlever-updater:latest',
 			'wikibase/wdqs-frontend:latest',
 			'wikibase/quickstatements:latest'
 		]) {

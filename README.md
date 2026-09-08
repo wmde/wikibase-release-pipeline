@@ -10,9 +10,9 @@ WBS is a supported and tested Docker Compose configuration for deploying the fol
 - **Job Runner:** Background job service used by Wikibase.
 - **[MariaDB](https://hub.docker.com/_/mariadb):** Database service used by Wikibase.
 - **[OpenSearch](./development/images/opensearch/README.md):** Search service used by Wikibase.
-- **[Query service](./development/images/wdqs/README.md):** SPARQL service for querying Wikibase data.
+- **[Query Service](./development/images/qlever/README.md):** QLever-backed SPARQL service for querying Wikibase data.
+- **[Query Service updater](./development/images/qlever-updater/README.md):** Synchronizes entity RDF into the Query Service.
 - **[Query service frontend](./development/images/wdqs-frontend/README.md):** Web interface for SPARQL queries.
-- **[Query service updater](./development/images/wdqs/README.md):** Keeps query service data in sync with Wikibase.
 - **[QuickStatements](./development/images/quickstatements/README.md):** A web-based tool to import and manipulate large amounts of data.
 - **[Traefik](https://hub.docker.com/_/traefik):** A reverse proxy that handles TLS termination and SSL certificate renewal through ACME.
 

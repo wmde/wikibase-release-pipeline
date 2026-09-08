@@ -8,7 +8,7 @@ readonly STATE_DIR="${RUNNER_TEMP:-/tmp}/wikibase-suite-installer"
 readonly PR_PAYLOAD_PATH="$STATE_DIR/pr-dispatch.json"
 readonly PR_CLEANUP_PAYLOAD_PATH="$STATE_DIR/pr-cleanup-dispatch.json"
 readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"
-readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
+readonly IMAGES=(opensearch qlever qlever-updater quickstatements wbs-tools wdqs-frontend wikibase)
 
 validate_origin_repository() {
   case "${ORIGIN_REPOSITORY:-}" in

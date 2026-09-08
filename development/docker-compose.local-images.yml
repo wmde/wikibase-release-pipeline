@@ -11,13 +11,13 @@ services:
   elasticsearch:
     image: wikibase/opensearch:latest
     pull_policy: never
-  wdqs:
-    image: wikibase/wdqs:latest
+  query:
+    image: wikibase/qlever:latest
     pull_policy: never
-  wdqs-updater:
-    image: wikibase/wdqs:latest
+  query-updater:
+    image: wikibase/qlever-updater:latest
     pull_policy: never
-  wdqs-frontend:
+  query-ui:
     image: wikibase/wdqs-frontend:latest
     pull_policy: never
   quickstatements:

@@ -4,8 +4,10 @@ Wikibase Suite (WBS) uses the following published Docker images. These images ar
 
 - [Wikibase](../../development/images/wikibase/README.md)
 - [OpenSearch](../../development/images/opensearch/README.md)
-- [Query Service](../../development/images/wdqs/README.md)
+- [QLever Query Service](../../development/images/qlever/README.md)
+- [QLever updater](../../development/images/qlever-updater/README.md)
 - [Query Service frontend](../../development/images/wdqs-frontend/README.md)
+- [Legacy WDQS Query Service](../../development/images/wdqs/README.md)
 - [QuickStatements](../../development/images/quickstatements/README.md)
 
 The Dockerfiles and supporting build inputs are maintained under [`development/images`](../../development/images). See [Wikibase Suite development](../../development/README.md) if you need to build customized images.

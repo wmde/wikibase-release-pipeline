@@ -4,8 +4,9 @@ import { join } from 'node:path';
 const IMAGE_SERVICES = {
 	wikibase: [ 'wikibase', 'wikibase-jobrunner' ],
 	opensearch: [ 'elasticsearch' ],
-	wdqs: [ 'wdqs', 'wdqs-updater' ],
-	'wdqs-frontend': [ 'wdqs-frontend' ],
+	qlever: [ 'query' ],
+	'qlever-updater': [ 'query-updater' ],
+	'wdqs-frontend': [ 'query-ui' ],
 	quickstatements: [ 'quickstatements' ]
 } as const;
 const WBS_TOOLS_IMAGE = 'wbs-tools';

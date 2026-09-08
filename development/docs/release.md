@@ -25,6 +25,8 @@ The primary release-preparation workflow is the `wbs-dev update` interview. It g
    - [QuickStatements (`quickstatements`)](../images/quickstatements/UPDATING.md)
    - [OpenSearch (`opensearch`)](../images/opensearch/UPDATING.md)
    - [WBS tools (`wbs-tools`)](../images/wbs-tools/UPDATING.md)
+   - [QLever Query Service (`qlever`)](../images/qlever/UPDATING.md)
+   - [QLever updater (`qlever-updater`)](../images/qlever-updater/UPDATING.md)
 
    The generated changes are local and unstaged: the command does not commit, tag, or push. Review them with `git diff`, including upstream comparisons, compatibility implications, version proposals, and changelog wording.
 

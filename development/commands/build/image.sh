@@ -150,7 +150,7 @@ if [ -n "${BUILD_CACHE_REGISTRY:-}" ]; then
 	fi
 fi
 
-if [ "$IMAGE_NAME" = "wbs-tools" ]; then
+if [ "$IMAGE_NAME" = "wbs-tools" ] || [ "$IMAGE_NAME" = "qlever" ] || [ "$IMAGE_NAME" = "qlever-updater" ]; then
 	BAKE_ARGS+=(--allow "fs.read=$DEVELOPMENT_ROOT")
 fi
 
