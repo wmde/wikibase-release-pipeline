@@ -12,6 +12,7 @@ import {
 	writeFileSync
 } from 'fs';
 import { join, resolve } from 'path';
+import { composeOverride, runtimeImageNames } from '../../images/wbs-tools/lib/compose-image-overrides.js';
 
 export const INSTALLER_PORT = 18888;
 export const INSTALLER_ACCESS_CODE = '482193';
@@ -118,9 +119,15 @@ function copyCheckout(): void {
 	cpSync( join( HOST_REPOSITORY_ROOT, 'scripts' ), join( CHECKOUT_ROOT, 'scripts' ), {
 		recursive: true
 	} );
-	copyFileSync(
-		join( SUITE_ROOT, 'docker-compose.install.yml' ),
-		join( CHECKOUT_ROOT, 'docker-compose.override.yml' )
+	const registry = process.env.WBS_TEST_IMAGE_REGISTRY || 'wikibase';
+	const tag = process.env.WBS_TEST_IMAGE_TAG || 'latest';
+	const images = Object.fromEntries( runtimeImageNames( HOST_REPOSITORY_ROOT ).map(
+		( imageName ) => [ imageName, `${ registry }/${ imageName }:${ tag }` ]
+	) );
+	const testNetworking = readFileSync( join( SUITE_ROOT, 'docker-compose.install.yml' ), 'utf8' );
+	writeFileSync(
+		join( CHECKOUT_ROOT, 'docker-compose.override.yml' ),
+		`${ composeOverride( HOST_REPOSITORY_ROOT, images, { pullPolicy: 'never' } ) }${ testNetworking }`
 	);
 	writeFileSync( INSTALL_LOG, '' );
 }

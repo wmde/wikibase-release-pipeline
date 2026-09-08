@@ -8,7 +8,15 @@ readonly STATE_DIR="${RUNNER_TEMP:-/tmp}/wikibase-suite-installer"
 readonly PR_PAYLOAD_PATH="$STATE_DIR/pr-dispatch.json"
 readonly PR_CLEANUP_PAYLOAD_PATH="$STATE_DIR/pr-cleanup-dispatch.json"
 readonly RELEASE_PAYLOAD_PATH="$STATE_DIR/release-dispatch.json"
-readonly IMAGES=(opensearch quickstatements wbs-tools wdqs wdqs-frontend wikibase)
+declare -a IMAGES=()
+
+load_images() {
+  mapfile -t IMAGES < <(cd development && ./wbs-dev build --list=json | jq -r '.[]')
+  ((${#IMAGES[@]} > 0)) || {
+    echo "Could not discover any Suite images." >&2
+    exit 1
+  }
+}
 
 validate_origin_repository() {
   case "${ORIGIN_REPOSITORY:-}" in
@@ -52,6 +60,7 @@ wait_for_publication() {
 
 prepare_pr() {
   validate_origin_repository
+  load_images
   [[ "${PR_NUMBER:-}" =~ ^[1-9][0-9]*$ ]] || {
     echo "Invalid PR number." >&2
     exit 1

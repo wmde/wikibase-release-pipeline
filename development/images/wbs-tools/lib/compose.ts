@@ -1,7 +1,8 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
 import { captureProcess, runProcess } from './command-runner.js';
+import { composeOverride, runtimeImageNames } from './compose-image-overrides.js';
 
 export type SuiteOptions = {
 	update?: boolean;
@@ -39,6 +40,20 @@ export function configurationExists(): boolean {
 	return existsSync( envFile );
 }
 
+function localImagesOverridePath(): string {
+	return join( repositoryRoot, '.wbs/local-images.override.yml' );
+}
+
+function writeLocalImagesOverride(): string {
+	const images = Object.fromEntries( runtimeImageNames( repositoryRoot ).map(
+		( imageName ) => [ imageName, `wikibase/${ imageName }:latest` ]
+	) );
+	const path = localImagesOverridePath();
+	mkdirSync( join( repositoryRoot, '.wbs' ), { recursive: true } );
+	writeFileSync( path, composeOverride( repositoryRoot, images, { pullPolicy: 'never' } ), { mode: 0o600 } );
+	return path;
+}
+
 function composeArgs( localImages = false ): string[] {
 	const args = [
 		'compose',
@@ -53,7 +68,7 @@ function composeArgs( localImages = false ): string[] {
 		if ( existsSync( conventionalOverride ) ) {
 			args.push( '--file', conventionalOverride );
 		}
-		args.push( '--file', join( repositoryRoot, 'development/docker-compose.local-images.yml' ) );
+		args.push( '--file', writeLocalImagesOverride() );
 	}
 	return args;
 }

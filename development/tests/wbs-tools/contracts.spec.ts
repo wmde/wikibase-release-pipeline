@@ -8,6 +8,7 @@ import {
 	toolsImage,
 	verifyCliInstallWaitsForConfiguration
 } from './test-environment.js';
+import { runtimeImageNames } from '../../images/wbs-tools/lib/compose-image-overrides.js';
 
 describe( 'WBS Tools installer lifecycle contracts', () => {
 	it( 'selects stable releases and forwards supported bootstrap options', () => {
@@ -130,8 +131,19 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 		try {
 			const commit = 'a1b2c3d4e5f678901234567890abcdef12345678';
 			const tag = 'pr-942-a1b2c3d4e5f6';
+			writeFileSync( join( manifestRoot, 'docker-compose.yml' ), [
+				'services:',
+				'  wikibase:', '    image: wikibase/wikibase:8',
+				'  wikibase-jobrunner:', '    image: wikibase/wikibase:8',
+				'  elasticsearch:', '    image: wikibase/opensearch:1',
+				'  query:', '    image: wikibase/wdqs:2',
+				'  query-updater:', '    image: wikibase/wdqs:2',
+				'  wdqs-frontend:', '    image: wikibase/wdqs-frontend:2',
+				'  quickstatements:', '    image: wikibase/quickstatements:1',
+				''
+			].join( '\n' ) );
 			const imageNames = [
-				'opensearch', 'quickstatements', 'wbs-tools', 'wdqs', 'wdqs-frontend', 'wikibase'
+				...runtimeImageNames( manifestRoot ), 'wbs-tools', 'unused-build-target'
 			];
 			const manifest = {
 				schemaVersion: 1,
@@ -164,6 +176,14 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 				/wikibase-jobrunner:\n[ ]{4}image: "ghcr\.io\/wmde\/wikibase\/wikibase:pr-942-a1b2c3d4e5f6"/u
 			);
 			assert.match(
+				readFileSync( join( manifestRoot, 'docker-compose.override.yml' ), 'utf8' ),
+				/query-updater:\n[ ]{4}image: "ghcr\.io\/wmde\/wikibase\/wdqs:pr-942-a1b2c3d4e5f6"/u
+			);
+			assert.doesNotMatch(
+				readFileSync( join( manifestRoot, 'docker-compose.override.yml' ), 'utf8' ),
+				/unused-build-target/u
+			);
+			assert.match(
 				readFileSync( join( manifestRoot, '.wbs/install.env' ), 'utf8' ),
 				/WBS_INSTALL_SOURCE_COMMIT='a1b2c3d4e5f678901234567890abcdef12345678'[\s\S]*WBS_TOOLS_IMAGE='ghcr\.io\/wmde\/wikibase\/wbs-tools:pr-942-a1b2c3d4e5f6'/u
 			);
@@ -189,7 +209,12 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 					''
 				].join( '\n' )
 			);
-			writeFileSync( join( composeRoot, 'docker-compose.yml' ), 'services: {}\n' );
+			writeFileSync( join( composeRoot, 'docker-compose.yml' ), [
+				'services:',
+				'  wikibase:',
+				'    image: wikibase/wikibase:8',
+				''
+			].join( '\n' ) );
 			const developmentRoot = join( composeRoot, 'development' );
 			writeFileSync( join( composeRoot, 'docker-arguments' ), '' );
 			const fakeDocker = join( composeRoot, 'docker' );
@@ -217,6 +242,10 @@ describe( 'WBS Tools installer lifecycle contracts', () => {
 			assert.match(
 				readFileSync( join( composeRoot, 'docker-arguments' ), 'utf8' ),
 				/pnpm exec tsx wbs-dev\.ts build all/u
+			);
+			assert.match(
+				readFileSync( join( composeRoot, '.wbs/local-images.override.yml' ), 'utf8' ),
+				/wikibase:\n[ ]{4}image: "wikibase\/wikibase:latest"\n[ ]{4}pull_policy: never/u
 			);
 		} finally {
 			rmSync( composeRoot, { recursive: true, force: true } );
