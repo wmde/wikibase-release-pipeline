@@ -9,6 +9,7 @@ import {
 	mkdirSync,
 	readFileSync,
 	rmSync,
+	statSync,
 	writeFileSync
 } from 'fs';
 import { join, resolve } from 'path';
@@ -367,6 +368,8 @@ export function verifySubmittedInstallerConfiguration(): void {
 
 export function verifyFinalizedInstallerArtifacts(): void {
 	const configPath = join( CHECKOUT_ROOT, '.env' );
+	const runtimeDirectory = join( CHECKOUT_ROOT, '.wbs' );
+	const queryAccessToken = join( runtimeDirectory, 'query-access-token' );
 	const passwordEntries = readFileSync( configPath, 'utf8' )
 		.split( '\n' )
 		.map( ( line ) => /^\s*([A-Z0-9_]*PASS(?:WORD)?)=(.*)$/i.exec( line ) )
@@ -388,6 +391,8 @@ export function verifyFinalizedInstallerArtifacts(): void {
 	if ( readFileSync( INSTALL_LOG, 'utf8' ) !== '' ) {
 		throw new Error( 'Finalized installer did not clear its installation log.' );
 	}
+	assert.equal( statSync( runtimeDirectory ).mode & 0o777, 0o700 );
+	assert.equal( statSync( queryAccessToken ).mode & 0o777, 0o644 );
 }
 
 export function collectDiagnostics(): void {

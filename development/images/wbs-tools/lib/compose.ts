@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import { join } from 'node:path';
 import { parseEnvContent } from './validation.js';
@@ -114,11 +114,17 @@ async function buildImages(): Promise<void> {
 }
 
 function ensureQueryAccessToken(): void {
+	const runtimeDirectory = join( repositoryRoot, '.wbs' );
+	mkdirSync( runtimeDirectory, { recursive: true, mode: 0o700 } );
+	// Docker Compose mounts file-backed secrets with the source file's host
+	// permissions. Keep the containing runtime directory private, while making
+	// the secret readable by the unprivileged query service inside its container.
+	chmodSync( runtimeDirectory, 0o700 );
 	if ( existsSync( queryAccessTokenFile ) ) {
+		chmodSync( queryAccessTokenFile, 0o644 );
 		return;
 	}
-	mkdirSync( join( repositoryRoot, '.wbs' ), { recursive: true, mode: 0o700 } );
-	writeFileSync( queryAccessTokenFile, randomBytes( 32 ).toString( 'base64url' ) + '\n', { mode: 0o600 } );
+	writeFileSync( queryAccessTokenFile, randomBytes( 32 ).toString( 'base64url' ) + '\n', { mode: 0o644 } );
 }
 
 export async function up( options: SuiteOptions = {} ): Promise<void> {
