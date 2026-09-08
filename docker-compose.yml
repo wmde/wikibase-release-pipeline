@@ -120,6 +120,8 @@ services:
   query-updater:
     image: wikibase/qlever-updater:0.1.0
     depends_on:
+      wikibase:
+        condition: service_healthy
       query:
         condition: service_healthy
     restart: unless-stopped
