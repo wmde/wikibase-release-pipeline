@@ -1,0 +1,62 @@
+# Legacy Blazegraph query-service fixture. The queryservice suite asserts
+# WDQS-specific HTTP and federation behavior, so it remains independent from
+# the QLever integration suite.
+services:
+  query:
+    profiles: [ qlever ]
+
+  query-updater:
+    profiles: [ qlever ]
+
+  wdqs:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
+    command: /runBlazegraph.sh
+    profiles: [ queryservice ]
+    depends_on:
+      wikibase:
+        condition: service_healthy
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    volumes:
+      - wdqs-data:/wdqs/data
+    environment:
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs
+      WDQS_PORT: 9999
+    healthcheck:
+      test: curl --silent --fail localhost:9999/bigdata/namespace/wdq/sparql
+      interval: 10s
+      start_period: 2m
+
+  wdqs-updater:
+    image: ${WBS_TEST_IMAGE_REGISTRY:-wikibase}/wdqs:${WBS_TEST_IMAGE_TAG:-latest}
+    command: /runUpdate.sh
+    profiles: [ queryservice ]
+    depends_on:
+      wdqs:
+        condition: service_healthy
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    environment:
+      WIKIBASE_HOST: wikibase
+      WDQS_HOST: wdqs
+      WDQS_PORT: 9999
+      WIKIBASE_CONCEPT_URI: ${WIKIBASE_URL}
+
+  query-ui:
+    depends_on: !override
+      wdqs:
+        condition: service_healthy
+
+  traefik:
+    volumes: !override
+      - ./queryservice/traefik-dynamic.yml:/etc/traefik/dynamic.yml:ro
+
+volumes:
+  wdqs-data:

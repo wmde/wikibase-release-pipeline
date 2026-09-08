@@ -6,7 +6,11 @@ export const testEnv = TestEnv.create( {
 	...defaultSettings,
 	name: 'queryservice',
 	specs: [ 'queryservice/*.spec.ts' ],
-	composeProfiles: [ 'queryservice' ]
+	composeProfiles: [ 'queryservice' ],
+	composeFiles: [
+		...defaultSettings.composeFiles,
+		'queryservice/docker-compose.override.yml'
+	]
 } );
 
 export const config = wdioConfig( testEnv );
